@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bc-framework" basedir="." default="buildsql">
+	<!-- 支持的数据库：mysql,mssql,oracle -->
+	<property name="db" value="mysql" />
+	<property name="src.dir" value="." />
+	<property name="build.dir" value="./build" />
+	<property name="resources.dir" value="./resources" />
+	<property name="force" value="true" />
+	<property name="fixlastline" value="true" />
+	<property name="encoding" value="UTF-8" />
+
+	<target name="cleanAll">
+		
+	</target>
+
+	<target name="build">
+		<antcall target="buildsql" />
+		<!--<antcall target="db.drop" />
+		<antcall target="db.create"/> -->
+	</target>
+
+	<!-- 构建项目的sql脚本 -->
+	<target name="buildsql">
+		<antcall target="build4${db}">
+		</antcall>
+		<!--<antcall target="build4${db}-test"></antcall> -->
+	</target>
+
+	<!-- mysql脚本 -->
+	<target name="build4mysql">
+		<!-- 建表 -->
+		<concatSql file="db.mysql.create.sql" />
+		<!-- 初始化数据 -->
+		<concatSql file="db.mysql.data.sql" />
+		<!-- 删表 -->
+		<concatSql2 file="db.mysql.drop.sql" />
+	</target>
+
+	<!-- mysql脚本 -->
+	<target name="build4mysql-test">
+		<!-- 建表 -->
+		<concatSql file="test.db.mysql.create.sql" />
+		<!-- 初始化数据 -->
+		<concatSql file="test.db.mysql.data.sql" />
+		<!-- 删表 -->
+		<concatSql2 file="test.db.mysql.drop.sql" />
+	</target>
+
+	<!-- mssql脚本 -->
+	<target name="build4mssql">
+		<!-- 建表 -->
+		<concatSql file="db.mssql.create.sql" />
+		<!-- 初始化数据 -->
+		<concatSql file="db.mssql.data.sql" />
+		<!-- 删表 -->
+		<concatSql2 file="db.mssql.drop.sql" />
+	</target>
+
+	<!-- mssql脚本 -->
+	<target name="build4oracle">
+		<!-- 建表 -->
+		<concatSql file="db.oracle.create.sql" />
+		<!-- 初始化数据 -->
+		<concatSql file="db.oracle.data.sql" />
+		<!-- 删表 -->
+		<concatSql2 file="db.oracle.drop.sql" />
+	</target>
+
+	<!-- 合并各个模块中定义的sql脚本文件的宏：create、data -->
+	<macrodef name="concatSql">
+		<!-- 要合并的sql文件名 -->
+		<attribute name="file" />
+		<!-- 要合并的sql文件来源目录：值为main或test -->
+		<attribute name="fromDir" default="main" />
+		<sequential>
+			<concat destfile="${build.dir}/@{file}" encoding="${encoding}" fixlastline="${fixlastline}" force="${force}">
+				<fileset dir="${resources.dir}">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-test/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-security/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-identity/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-desktop/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-message/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-work/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+			</concat>
+		</sequential>
+	</macrodef>
+	<!-- 合并各个模块中定义的sql脚本文件的宏：drop -->
+	<macrodef name="concatSql2">
+		<!-- 要合并的sql文件名 -->
+		<attribute name="file" />
+		<!-- 要合并的sql文件来源目录：值为main或test -->
+		<attribute name="fromDir" default="main" />
+		<sequential>
+			<concat destfile="${build.dir}/@{file}" encoding="${encoding}" fixlastline="${fixlastline}" force="${force}">
+				<fileset dir="${src.dir}/bc-test/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-work/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-message/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-desktop/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-identity/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-security/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${resources.dir}">
+					<include name="**/@{file}" />
+				</fileset>
+			</concat>
+		</sequential>
+	</macrodef>
+
+	<target name="db.create" depends="buildsql">
+		<echo message="db.create" />
+	</target>
+
+	<target name="db.drop" depends="buildsql">
+		<echo message="db.drop" />
+		<sql driver="${db.driverClassName}" password="${db.password}" url="${db.url}" userid="${db.username}" 
+			src="${build.dir}/db.${db}.drop.sql" >
+			<classpath refid="maven.compile.classpath"></classpath>
+		</sql>
+	</target>
+
+	<target name="db.demo.data" depends="buildsql">
+		<sql driver="${db.driverClassName}" password="${db.password}" url="${db.url}" userid="${db.username}" 
+			classpathref="classpath.libs" src="${build.dir}/db.${db}.data.sql" />
+	</target>
+</project>

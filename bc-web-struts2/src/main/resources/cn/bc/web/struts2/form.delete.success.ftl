@@ -1,0 +1,1 @@
+{"msg":"<@s.text name="form.delete.success"/>"}

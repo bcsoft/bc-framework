@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="personal" extends="bc-default" namespace="/bc/personal">
+		<action name="edit" class="personalAction" method="edit">
+			<result name="form">/bc/desktop/personal/form.jsp</result>
+		</action>
+		<action name="save" class="personalAction" method="save"/>
+		<action name="update" class="personalAction" method="update"/>
+	</package>
+	<package name="shortcut" extends="bc-default" namespace="/bc/shortcut">
+		<action name="create" class="shortcutAction" method="create">
+			<result name="form">/bc/desktop/shortcut/form.jsp</result>
+		</action>
+		<action name="edit" class="shortcutAction" method="edit">
+			<result name="form">/bc/desktop/shortcut/form.jsp</result>
+		</action>
+		<action name="save" class="shortcutAction" method="save"/>
+		<action name="delete" class="shortcutAction" method="delete"/>
+		<action name="list" class="shortcutAction" method="list"/>
+		<action name="paging" class="shortcutAction" method="paging"/>
+		<action name="data" class="shortcutAction" method="data"/>
+		
+		<action name="selectIconClass" class="shortcutAction" method="selectIconClass">
+			<result>/bc/desktop/shortcut/selectIconClass.jsp</result>
+		</action>
+	</package>
+</struts>

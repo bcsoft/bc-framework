@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 项目的Struts2全局配置文件，在这里通过include引用其他模块的配置文件 -->
+<struts>
+	<!-- 配置开发模式：产品环境下必须修改为false -->
+	<constant name="struts.devMode" value="true" />
+
+	<!-- 配置i18n全局配置文件的文件名 ：global.properties -->
+	<constant name="struts.custom.i18n.resources" value="global" />
+
+	<!-- 配置struts2内部缓存freemarker的模板文件，这个值默认是false的 。
+		当从classpath中加载模板文件时，因freemarker是使用 last modified time来判断的，
+		而从classpath中加载的Resources没有last modified time，故freemarker
+		每次都会重新加载这些模板；这里设为true可以避免这个问题。
+		ref:http://struts.apache.org/2.0.14/docs/performance-tuning.html#PerformanceTuning-%28!%29Createafreemarker.propertiesfileinyourWEBINF/classesdirectory.
+	-->
+	<constant name="struts.freemarker.templatesCache" value="true" />
+
+	<!-- 配置Struts2的Spring插件： http://struts.apache.org/2.x/docs/spring-plugin.html -->
+	<constant name="struts.objectFactory"
+		value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+
+	<!-- 平台基础模块的配置文件 -->
+	<include file="cn/bc/web/struts2/struts.xml" />
+
+	<!-- 本模块的配置文件 -->
+	<include file="cn/bc/identity/web/struts2/struts.xml" />
+</struts>

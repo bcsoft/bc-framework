@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- struts.xml should be in the src/main/resources folder (struts.xml must 
+	be on the web application's root class path). -->
+<struts>
+	<constant name="struts.devMode" value="true" />
+
+	<!-- Configuration Spring plugin. http://struts.apache.org/2.x/docs/spring-plugin.html -->
+	<constant name="struts.objectFactory"
+		value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="struts-default" namespace="/">
+		<!-- Default interceptor stack.
+		<default-interceptor-ref name="paramsPrepareParamsStack" /> -->
+		<action name="example" class="example">
+			<result>/example/success.jsp</result>
+			<result name="input">/example/input.jsp</result>
+			
+			<result name="open">/example/Open.jsp</result>
+			<result name="edit">/example/Edit.jsp</result>
+			<result name="view">/example/View.jsp</result>
+			<result name="save">/example/Save.jsp</result>
+			<result name="delete">/example/Delete.jsp</result>
+		</action>
+
+		<action name="crud" class="crudAction">
+			<result>/example/success.jsp</result>
+			<result name="open">/crud/Open.jsp</result>
+			<result name="edit">/crud/Edit.jsp</result>
+			<result name="view">/crud/View.jsp</result>
+			<result name="save">/crud/Save.jsp</result>
+			<result name="delete">/crud/Delete.jsp</result>
+		</action>
+	</package>
+
+	<!--More includes... <include file="/com/jmc/textil/productcard/action/productcard.xml"/> -->
+</struts>

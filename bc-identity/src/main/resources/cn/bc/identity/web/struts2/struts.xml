@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="duty" extends="bc-default" namespace="/bc/duty">
+		<action name="create" class="dutyAction" method="create">
+<!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
+			<result name="form">/bc/identity/duty/form.jsp</result>
+		</action>
+		<action name="edit" class="dutyAction" method="edit">
+			<result name="form">/bc/identity/duty/form.jsp</result>
+<!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
+		</action>
+		<action name="save" class="dutyAction" method="save"/>
+		<action name="delete" class="dutyAction" method="delete"/>
+		
+		<action name="data" class="dutyAction" method="data">
+			<result name="data">/bc/identity/duty/data.jsp</result>
+		</action>
+		<action name="list" class="dutyAction" method="list">
+			<result name="list">/bc/identity/duty/list.jsp</result>
+		</action>
+		<action name="paging" class="dutyAction" method="paging">
+			<result name="paging">/bc/identity/duty/paging.jsp</result>
+		</action>
+		<action name="export" class="dutyAction" method="export"/>
+	</package>
+	<package name="unit" extends="bc-default" namespace="/bc/unit">
+		<action name="create" class="unitAction" method="create">
+			<result name="form">/bc/identity/unit/form.jsp</result>
+		</action>
+		<action name="edit" class="unitAction" method="edit">
+			<result name="form">/bc/identity/unit/form.jsp</result>
+		</action>
+				
+		<action name="save" class="unitAction" method="save"/>
+		<action name="delete" class="unitAction" method="delete"/>
+		<action name="list" class="unitAction" method="list"/>
+		<action name="paging" class="unitAction" method="paging"/>
+		<action name="data" class="unitAction" method="data"/>
+		<action name="export" class="unitAction" method="export"/>
+	</package>
+	<package name="department" extends="bc-default" namespace="/bc/department">
+		<action name="create" class="departmentAction" method="create">
+			<result name="form">/bc/identity/department/form.jsp</result>
+		</action>
+		<action name="edit" class="departmentAction" method="edit">
+			<result name="form">/bc/identity/department/form.jsp</result>
+		</action>
+				
+		<action name="save" class="departmentAction" method="save"/>
+		<action name="delete" class="departmentAction" method="delete"/>
+		<action name="list" class="departmentAction" method="list"/>
+		<action name="paging" class="departmentAction" method="paging"/>
+		<action name="data" class="departmentAction" method="data"/>
+		<action name="export" class="departmentAction" method="export"/>
+	</package>
+	<package name="group" extends="bc-default" namespace="/bc/group">
+		<action name="create" class="groupAction" method="create">
+			<result name="form">/bc/identity/group/form.jsp</result>
+		</action>
+		<action name="edit" class="groupAction" method="edit">
+			<result name="form">/bc/identity/group/form.jsp</result>
+		</action>
+				
+		<action name="save" class="groupAction" method="save"/>
+		<action name="delete" class="groupAction" method="delete"/>
+		<action name="list" class="groupAction" method="list"/>
+		<action name="paging" class="groupAction" method="paging"/>
+		<action name="data" class="groupAction" method="data"/>
+		<action name="export" class="groupAction" method="export"/>
+	</package>
+	<package name="user" extends="bc-default" namespace="/bc/user">
+		<action name="create" class="userAction" method="create">
+			<result name="form">/bc/identity/user/form.jsp</result>
+		</action>
+		<action name="edit" class="userAction" method="edit">
+			<result name="form">/bc/identity/user/form.jsp</result>
+		</action>
+				
+		<action name="save" class="userAction" method="save"/>
+		<action name="delete" class="userAction" method="delete"/>
+		<action name="list" class="userAction" method="list"/>
+		<action name="paging" class="userAction" method="paging"/>
+		<action name="data" class="userAction" method="data"/>
+		<action name="export" class="userAction" method="export"/>
+	</package>
+	
+	<package name="selectUnit" extends="bc-default" namespace="/bc">
+		<action name="selectUnit" class="selectUnitAction">
+			<result>/bc/identity/unit/select.jsp</result>
+		</action>
+	</package>
+	<package name="selectUnitOrDepartment" extends="bc-default" namespace="/bc">
+		<action name="selectUnitOrDepartment" class="selectUnitOrDepartmentAction">
+			<result>/bc/identity/department/select2.jsp</result>
+		</action>
+	</package>
+	<package name="selectGroup" extends="bc-default" namespace="/bc">
+		<action name="selectGroup" class="selectGroupAction">
+			<result>/bc/identity/group/select.jsp</result>
+		</action>
+	</package>
+	<package name="selectUser" extends="bc-default" namespace="/bc">
+		<action name="selectUser" class="selectUserAction">
+			<result>/bc/identity/user/select.jsp</result>
+		</action>
+	</package>
+	<package name="authData" extends="bc-default" namespace="/bc/auth">
+		<action name="setPassword" class="authDataAction" method="setPassword">
+			<result name="form">/bc/identity/user/password.jsp</result>
+		</action>
+		<action name="updatePassword" class="authDataAction" method="updatePassword"/>
+	</package>
+</struts>

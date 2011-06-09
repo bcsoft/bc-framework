@@ -1,0 +1,10 @@
+.metadata
+.settings
+.classpath
+.project
+target
+Thumbs.db
+*.log
+*.log.*
+build
+bin

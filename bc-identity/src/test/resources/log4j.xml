@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <!-- 控制台的日志信息配置 -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{HH:mm:ss} %5p %c{1} %m%n"/>
+			<!-- 
+			<param name="ConversionPattern" value="%d{HH:mm:ss} %5p [%c{2} %l] %m%n"/>
+			 --> 
+		</layout>  
+	</appender>
+
+    <!-- 日志文件的配置 -->
+	<appender name="rollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize"  value="1024KB"/>
+		<param name="MaxBackupIndex" value="4"/> 
+
+		<param name="File" value="bc-test.log"/> 
+		
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p %c{1} %m%n"/>
+	   </layout>
+	</appender>
+	
+  	<!-- spring -->
+	<category name="org.springframework">
+	  <priority value="ERROR" />
+	</category>
+  	<!-- spring：设为INFO，查看加载了哪些xml配置文件 -->
+	<category name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader">
+	  <priority value="INFO" />
+	</category>
+    
+  	<!-- hibernate -->
+	<category name="org.hibernate">
+	  <priority value="ERROR" />
+	</category>
+	<!-- hibernate：设为INFO，查看实体对象映射到哪张数据表；设为DEBUG则可以查看实体属性与表中列的映射对应关系 -->
+	<category name="org.hibernate.cfg.HbmBinder">
+	  <priority value="INFO" />
+	</category>
+	
+	<!-- struts2 -->
+    <category name="org.apache.struts2">
+    	 <priority value="ERROR" />
+    </category>
+	<!-- struts2：设为DEBUG，查看转发到那个jsp文件 -->
+    <category name="org.apache.struts2.dispatcher.ServletDispatcherResult">
+    	 <priority value="DEBUG" />
+    </category>
+    <category name="com.opensymphony">
+    	<priority value="ERROR" />
+    </category>
+	<!-- struts2：设为DEBUG，查看加载了哪些xml配置文件 -->
+    <category name="com.opensymphony.xwork2.util.FileManager">
+    	<priority value="DEBUG" />
+    </category>
+	<category name="freemarker">
+	  <priority value="ERROR" />
+	</category>
+
+	<!-- bc -->
+	<category name="cn.bc">
+	  <priority value="DEBUG" />
+	</category>
+    	
+  	<!-- 设置默认的日志级别(该设置必须放在最后,否则加载会解析出错) -->
+	<!-- 优先级别:OFF/FATAL/ERROR/WARN /INFO /DEBUG /ALL -->
+	<root>
+	   <priority value ="ERROR" />
+   	   <appender-ref ref="console" />
+   	   <appender-ref ref="rollingFile" />
+	</root>
+</log4j:configuration>

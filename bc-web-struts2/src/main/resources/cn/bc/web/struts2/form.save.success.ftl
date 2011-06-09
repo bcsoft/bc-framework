@@ -1,0 +1,1 @@
+{"id":"<@s.property value="e.id"/>","msg":"<@s.text name="form.save.success"/>"}

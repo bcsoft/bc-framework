@@ -1,0 +1,7 @@
+-- 系统标识相关模块
+drop table BC_SECURITY_ROLE_ACTOR;
+drop table BC_IDENTITY_ACTOR_RELATION;
+drop table BC_IDENTITY_ACTOR;
+drop table BC_IDENTITY_ACTOR_DETAIL;
+drop table BC_IDENTITY_DUTY;
+drop table BC_IDENTITY_IDGENERATOR;

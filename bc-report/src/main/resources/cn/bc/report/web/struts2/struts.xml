@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="exportsvg" extends="struts-default" namespace="/bc">
+		<action name="exportsvg" class="exportSvgAction">
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${type}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">attachment; filename="${filename}"</param>
+			</result>
+		</action>
+	</package>
+</struts>

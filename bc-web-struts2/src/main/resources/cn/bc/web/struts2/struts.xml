@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 定义平台的全局抽象包 -->
+	<package name="bc-default" extends="struts-default" abstract="true">
+		<interceptors>
+			<!-- 禁用缓存控制的过滤器 -->
+			<interceptor name="noCacheInterceptor" class="cn.bc.web.struts2.interceptor.CacheInterceptor">
+				<!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
+				<param name="expires">0</param>
+			</interceptor>
+			<interceptor-stack name="noCacheStack">
+				<interceptor-ref name="noCacheInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="noCacheStack"/>
+		
+		<global-results>
+			<result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
+			</result>
+			<result name="container" type="freemarker">/cn/bc/web/struts2/container.ftl
+			</result>
+			<result name="commonSuccess" type="freemarker">/cn/bc/web/struts2/success.ftl
+			</result>
+			<result name="saveSuccess" type="freemarker">/cn/bc/web/struts2/form.save.success.ftl
+			</result>
+			<result name="deleteSuccess" type="freemarker">/cn/bc/web/struts2/form.delete.success.ftl
+			</result>
+			<!-- 导出视图数据为Excel文件 -->
+			<result name="export" type="stream"/>
+		</global-results>
+
+			<!-- <global-exception-mappings> <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping> 
+				</global-exception-mappings> -->
+	</package>
+</struts>

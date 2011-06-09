@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    <!-- 
+    	启用 Spring 2.5 注释驱动功能: http://www.ibm.com/developerworks/cn/java/j-lo-spring25-ioc/
+     --> 
+	<context:annotation-config/>
+	<context:component-scan base-package="cn.bc"/>
+	
+	<!-- 数据库连接及事务管理配置 -->
+	<import resource="classpath:spring-test-db.xml" />
+
+	<!-- 标准的crud事务拦截配置：拦截所有实现CrudService接口的类 -->
+	<import resource="classpath:cn/bc/core/spring.xml" />
+
+	<!-- 所依赖模块的配置 -->
+	<import resource="classpath:cn/bc/identity/spring.xml"/>
+	<import resource="classpath:cn/bc/security/spring.xml"/>
+
+	<!-- 本模块的配置 -->
+	<import resource="classpath:cn/bc/desktop/spring.xml"/>
+</beans>
