@@ -622,7 +622,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getEntityStatuses() {
+	protected Map<String, String> getSyslogTypes() {
 		Map<String, String> statuses = new HashMap<String, String>();
 		statuses.put(String.valueOf(Entity.STATUS_DISABLED),
 				getText("entity.status.disabled"));

@@ -22,7 +22,11 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,A
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
 	select 1, 0, '50', 0, null, null, id, null from BC_SECURITY_MODULE where name='个性化设置';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '51', 0, null, null, id, null from BC_SECURITY_MODULE where name='桌面管理';
+	select 1, 0, '51', 0, null, null, id, null from BC_SECURITY_MODULE where name='我的桌面';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
+	select 1, 0, '52', 0, null, null, id, null from BC_SECURITY_MODULE where name='我的日志';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
+	select 1, 0, '53', 0, null, null, id, null from BC_SECURITY_MODULE where name='系统日志';
 
 -- 报表
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 

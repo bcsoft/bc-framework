@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 所有用户的登录日志 -->
+	<package name="syslog" extends="bc-default" namespace="/bc/syslog">
+		<action name="edit" class="syslogAction" method="edit">
+			<result name="form">/bc/log/syslog/form.jsp</result>
+		</action>
+		<action name="list" class="syslogAction" method="list" />
+		<action name="paging" class="syslogAction" method="paging" />
+		<action name="data" class="syslogAction" method="data" />
+		<action name="export" class="syslogAction" method="export" />
+	</package>
+	<!-- 我的登录日志 -->
+	<package name="mysyslog" extends="bc-default" namespace="/bc/mysyslog">
+		<action name="list" class="syslogAction" method="list">
+			<param name="my">true</param>
+		</action>
+		<action name="paging" class="syslogAction" method="paging">
+			<param name="my">true</param>
+		</action>
+		<action name="data" class="syslogAction" method="data">
+			<param name="my">true</param>
+		</action>
+		<action name="edit" class="syslogAction" method="edit">
+			<param name="my">true</param>
+			<result name="form">/bc/log/syslog/form.jsp</result>
+		</action>
+		<action name="export" class="syslogAction" method="export">
+			<param name="my">true</param>
+		</action>
+	</package>
+</struts>

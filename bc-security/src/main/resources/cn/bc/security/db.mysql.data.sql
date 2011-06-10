@@ -12,9 +12,13 @@ insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCL
 
 -- 插入链接资源数据
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '98','个性化设置', '/bc/personal/edit', 'i0504');
+	values(1, 0, 2, null, '91','个性化设置', '/bc/personal/edit', 'i0504');
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '99','桌面管理', '/bc/shortcut/list', 'i0504');
+	values(1, 0, 2, null, '92','我的桌面', '/bc/shortcut/list', 'i0504');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '93','我的日志', '/bc/mysyslog/paging', 'i0504');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '94','系统日志', '/bc/syslog/paging', 'i0504');
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '10-01','待办事务', '/bc/todoWork/list', 'i0605' from BC_SECURITY_MODULE m where m.code='10';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
@@ -39,7 +43,13 @@ insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCL
 
 -- 插入超级管理员角色数据
 insert into BC_SECURITY_ROLE (STATUS_,INNER_,TYPE_,CODE,NAME) 
-	values(1, 0, 0, 'admin','超级管理员');
+	values(1, 0, 0, 'adminRole','超级管理员');
+insert into BC_SECURITY_ROLE (STATUS_,INNER_,TYPE_,CODE,NAME) 
+	values(1, 0, 0, 'commonRole','通用角色');
 -- 让超级管理员角色拥有所有模块
 insert into BC_SECURITY_ROLE_MODULE (RID,MID) 
-	select r.id,m.id from BC_SECURITY_ROLE r,BC_SECURITY_MODULE m where r.code='admin' order by m.code;
+	select r.id,m.id from BC_SECURITY_ROLE r,BC_SECURITY_MODULE m where r.code='adminRole' order by m.code;
+insert into BC_SECURITY_ROLE_MODULE (RID,MID) 
+	select r.id,m.id from BC_SECURITY_ROLE r,BC_SECURITY_MODULE m where r.code='commonRole' 
+	and m.code in ('91','92','93','10')
+	order by m.code;

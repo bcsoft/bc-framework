@@ -108,6 +108,9 @@
 				<fileset dir="${src.dir}/bc-work/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
+				<fileset dir="${src.dir}/bc-log/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
 			</concat>
 		</sequential>
 	</macrodef>
@@ -120,6 +123,9 @@
 		<sequential>
 			<concat destfile="${build.dir}/@{file}" encoding="${encoding}" fixlastline="${fixlastline}" force="${force}">
 				<fileset dir="${src.dir}/bc-test/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-log/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
 				<fileset dir="${src.dir}/bc-work/src/@{fromDir}/resources">

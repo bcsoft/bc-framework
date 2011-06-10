@@ -112,4 +112,8 @@ UPDATE BC_IDENTITY_ACTOR SET UID_=CONCAT('ACTOR-',id);
 
 -- 让超级管理员拥有超级管理员角色
 insert into BC_SECURITY_ROLE_ACTOR (AID,RID) 
-	select a.id, r.id from BC_IDENTITY_ACTOR a,BC_SECURITY_ROLE r where a.code='admin' and r.code='admin';
+	select a.id, r.id from BC_IDENTITY_ACTOR a,BC_SECURITY_ROLE r where a.code='admin' and r.code='adminRole';
+
+-- 让顶层单位拥有通用角色
+insert into BC_SECURITY_ROLE_ACTOR (AID,RID) 
+	select a.id, r.id from BC_IDENTITY_ACTOR a,BC_SECURITY_ROLE r where a.code='D0000' and r.code='commonRole';

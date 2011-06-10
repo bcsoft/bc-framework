@@ -23,8 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.bc.core.exception.CoreException;
 
@@ -34,17 +37,24 @@ import cn.bc.core.exception.CoreException;
  * @author dragon
  * @since 1.0.0
  */
-public class WebUtils implements ServletContextAware {
+public class WebUtils implements ServletContextAware, InitializingBean {
 	static Log logger = LogFactory.getLog(WebUtils.class);
 	private ServletContext servletContext = null;
+	private WebApplicationContext wac = null;
+	private static WebUtils instance = null;
 
 	private WebUtils() {
 	}
 
+	public void afterPropertiesSet() throws Exception {
+		instance = new WebUtils();
+		instance.setServletContext(servletContext);
+	}
+
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		
-		//获取web应用访问的上下文路径:部署到根目录为"",否则为"/[appName]"
+
+		// 获取web应用访问的上下文路径:部署到根目录为"",否则为"/[appName]"
 		rootPath = this.servletContext.getRealPath("/");
 		if (null == rootPath)
 			throw new CoreException("Error occured when getting context path.");
@@ -182,5 +192,43 @@ public class WebUtils implements ServletContextAware {
 			_fileName = srcFileName;
 		}
 		return _fileName;
+	}
+
+	/**
+	 * 获取指定ip的mac地址
+	 * 
+	 * @param ip
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getMac(String ip) throws Exception {
+		return new UdpGetClientMacAddr(ip).GetRemoteMacAddr();
+	}
+
+	/**
+	 * 获取 WebApplicationContext 对象
+	 * 
+	 * @return
+	 */
+	public synchronized WebApplicationContext getWac() {
+		if (null == wac)
+			wac = WebApplicationContextUtils
+					.getRequiredWebApplicationContext(this.servletContext);
+		return wac;
+	}
+
+	/**
+	 * 获取Spring对象
+	 * 
+	 * @param name
+	 *            bean的配置名称
+	 * @return bean对象
+	 */
+	public static <T> T getBean(String name, Class<T> requiredType) {
+		return instance.getWac().getBean(name, requiredType);
+	}
+
+	public static <T> T getSpringBean(Class<T> requiredType) {
+		return instance.getWac().getBean(requiredType);
 	}
 }
