@@ -8,9 +8,22 @@
 	<property name="force" value="true" />
 	<property name="fixlastline" value="true" />
 	<property name="encoding" value="UTF-8" />
+	
+	<target name="help">
+		<echo message="运行 'ant cleanAll' 删除除源代码之外的所有文件和目录" />
+	</target>
 
 	<target name="cleanAll">
-		
+		<delete verbose="true" includeemptydirs="true">  
+			<fileset dir="${basedir}">  
+				<include name="**/.classpath"/>
+				<include name="**/.project"/>
+				<include name="**/*.log"/>
+				<include name="**/*.log.*"/>
+				<include name="**/target/**"/>
+				<include name="**/.settings/**"/>
+			</fileset>  
+		</delete>
 	</target>
 
 	<target name="build">
