@@ -43,11 +43,23 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONC
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 
 	values(1, 0, '76', 1, '百度搜索', 'http://www.baidu.com/', 'i0506');
 	
--- 视图设计
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 
-	values(1, 0, '77', 0, '分页设计', '/bc/duty/paging', 'i0604');
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 
-	values(1, 0, '78', 0, '无分页设计', '/bc/duty/list', 'i0604');
+-- 设计用的快捷方式
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '77', 0, '分页设计', '/bc/duty/paging', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '78', 0, '无分页设计', '/bc/duty/list', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '79', 1, 'highcharts', '/ui-libs-demo/highcharts/2.1.4/index.htm', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '79', 1, 'jqueryUI', '/ui-libs-demo/jquery-ui/1.8.13/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '80', 1, 'jqGrid', '/ui-libs-demo/jqGrid/3.8.2/jqgrid.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '81', 1, 'jqLayout', '/ui-libs-demo/jquery-layout/1.2.0/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '82', 1, 'xheditor', '/ui-libs-demo/xheditor/1.1.7/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '83', 1, 'zTree', '/ui-libs-demo/zTree/2.6/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
 
 -- 插入全局配置信息
 insert into BC_DESKTOP_PERSONAL (STATUS_,INNER_,FONT,THEME,AID) 

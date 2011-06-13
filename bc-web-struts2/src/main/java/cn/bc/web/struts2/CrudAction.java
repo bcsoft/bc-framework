@@ -554,8 +554,8 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 				.setTitle(getText("label.export")));
 
 		// 打印按钮
-		footer.addButton(new FooterButton().setIcon("ui-icon-print")
-				.setAction("print").setTitle(getText("label.print")));
+		//footer.addButton(new FooterButton().setIcon("ui-icon-print")
+		//		.setAction("print").setTitle(getText("label.print")));
 
 		return footer;
 	}

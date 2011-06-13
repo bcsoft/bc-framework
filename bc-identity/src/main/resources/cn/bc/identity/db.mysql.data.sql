@@ -105,14 +105,16 @@ insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
     select 0,am.id,af.id from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af where am.code='B0099' and af.code='G9907'; 
 -- 让超级管理员拥有超级管理岗
 insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID) 
-    select 0,am.id,af.id from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af where am.code in ('G0001','G9901','G9902','G9903','G9904','G9905','G9906','G9907') and af.code = 'admin'; 
+    select 0,am.id,af.id from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af where af.code = 'admin' and am.code = 'G0001'; 
+insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID) 
+    select 0,am.id,af.id from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af where af.code = 'huangrongji' and am.code in ('G0001','G9901','G9902','G9903','G9904','G9905','G9906','G9907'); 
 
 -- 更新Actor的uid为'ACTOR-'+id
 UPDATE BC_IDENTITY_ACTOR SET UID_=CONCAT('ACTOR-',id);
 
--- 让超级管理员拥有超级管理员角色
+-- 让超级管理岗拥有超级管理员角色
 insert into BC_SECURITY_ROLE_ACTOR (AID,RID) 
-	select a.id, r.id from BC_IDENTITY_ACTOR a,BC_SECURITY_ROLE r where a.code='admin' and r.code='adminRole';
+	select a.id, r.id from BC_IDENTITY_ACTOR a,BC_SECURITY_ROLE r where a.code='G0001' and r.code='adminRole';
 
 -- 让顶层单位拥有通用角色
 insert into BC_SECURITY_ROLE_ACTOR (AID,RID) 
