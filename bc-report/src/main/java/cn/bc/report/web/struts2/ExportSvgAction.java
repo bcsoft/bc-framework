@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.exception.CoreException;
-import cn.bc.web.util.WebUtils;
+import cn.bc.core.util.DateUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -29,6 +31,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ExportSvgAction extends ActionSupport {
+	private static Log logger = LogFactory.getLog(ExportSvgAction.class);
 	private static final long serialVersionUID = 1L;
 	// private static Log logger = LogFactory.getLog(ExportSvgAction.class);
 	// 下载的文件名（不包含扩展名部分）
@@ -40,6 +43,7 @@ public class ExportSvgAction extends ActionSupport {
 	// svg的html内容，格式为"<svg ...>...</svg>"
 	private String svg;
 	private InputStream inputStream;
+	public String dataPath;//导出的文件在服务器保存的路径
 
 	public String getFilename() {
 		return filename;
@@ -118,8 +122,12 @@ public class ExportSvgAction extends ActionSupport {
 			this.inputStream = new ByteArrayInputStream(this.getSvg().getBytes(
 					encode));
 		} else if (ext != null) {// 使用batik执行转换
-			String tempPath = WebUtils.rootPath + File.separator + "temp"
-					+ File.separator + new Date().getTime();
+			if(this.dataPath == null || this.dataPath.length() == 0){
+				this.dataPath = getText("app.data.path");//该目录需要部署时手动生成好
+			}
+			String tempPath = this.dataPath + File.separator + "temp"//该目录也需要部署时手动生成好
+					+ File.separator + "ExportSvg" + DateUtils.formatDateTime(new Date(),"yyyyMMddHHmmssSSSS");
+			logger.debug("tempFile=" + tempPath + ".svg");
 
 			// 将svg文件保存到临时文件夹
 			File outF = new File(tempPath + ".svg");
