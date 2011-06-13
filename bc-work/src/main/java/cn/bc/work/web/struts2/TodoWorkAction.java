@@ -37,17 +37,17 @@ import cn.bc.work.service.TodoWorkService;
 @Controller
 public class TodoWorkAction extends CrudAction<Long, TodoWork> {
 	private static final long serialVersionUID = 1L;
-	private TodoWorkService todoWorkService;
+	//private TodoWorkService todoWorkService;
 
 	@Autowired
 	public void setTodoWorkService(TodoWorkService todoWorkService) {
-		this.todoWorkService = todoWorkService;
+		//this.todoWorkService = todoWorkService;
 		this.setCrudService(todoWorkService);
 	}
 
 	@Override
-	protected GridData buildGridData() {
-		return super.buildGridData().setRowLabelExpression("work.subject");
+	protected GridData buildGridData(List<Column> columns) {
+		return super.buildGridData(columns).setRowLabelExpression("work.subject");
 	}
 
 	@Override

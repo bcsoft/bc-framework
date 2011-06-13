@@ -108,18 +108,18 @@ public class GridHeader extends Div {
 				td.addClazz("sortable");
 				switch (column.getDir()) {
 				case Asc:
-					td.addClazz("current");// 标记当前列处于排序状态
+					td.addClazz("current asc");// 标记当前列处于排序状态
 					wrapper.addChild(new Span()
 							.addClazz("sortableIcon ui-icon ui-icon-triangle-1-n"));// 正序
 					break;
 				case Desc:
-					td.addClazz("current");// 标记当前列处于排序状态
+					td.addClazz("current desc");// 标记当前列处于排序状态
 					wrapper.addChild(new Span()
 							.addClazz("sortableIcon ui-icon ui-icon-triangle-1-s"));// 逆序
 					break;
 				default:
 					wrapper.addChild(new Span()
-							.addClazz("sortableIcon ui-icon hide"));
+							.addClazz("sortableIcon ui-icon hide"));//无序
 					break;
 				}
 			}

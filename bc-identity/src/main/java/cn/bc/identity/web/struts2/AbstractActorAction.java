@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.ActorRelationService;
 import cn.bc.identity.service.ActorService;
@@ -143,5 +145,10 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 
 	protected Integer[] getBelongTypes() {
 		return null;
+	}
+
+	@Override
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("order", Direction.Asc);
 	};
 }

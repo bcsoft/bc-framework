@@ -27,8 +27,11 @@ import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.grid.Column;
@@ -72,8 +75,9 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	private Component html; // 后台生成的html页面
 	private Class<E> entityClass;
 	private Page<E> page; // 分页页面用
-	private String search; // 搜索框输入的文本
+	public String search; // 搜索框输入的文本
 	public String contextPath; // 系统部署的路径，如"/bc"
+	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 
 	@SuppressWarnings("unchecked")
 	public CrudAction() {
@@ -98,14 +102,6 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 	public void setPage(Page<E> page) {
 		this.page = page;
-	}
-
-	public String getSearch() {
-		return search;
-	}
-
-	public void setSearch(String search) {
-		this.search = search;
 	}
 
 	protected Class<? extends E> getEntityClass() {
@@ -238,7 +234,8 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		if (this.page == null)
 			this.page = new Page<E>();
 		if (this.page.getPageSize() < 1)
-			this.page.setPageSize(Integer.parseInt(getText("app.pageSize")));
+			this.page.setPageSize(Integer
+					.parseInt(getText("app.grid.pageSize")));
 
 		// 根据请求的条件查找分页信息
 		this.page = this.findPage();
@@ -259,13 +256,13 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 			this.es = this.page.getData();
 
 			// 构建页面的html
-			this.setHtml(buildGridData());
+			this.setHtml(buildGridData(this.buildGridColumns()));
 		} else {// 非分页的处理
 			// 根据请求的条件查找分页信息
 			this.es = this.findList();
 
 			// 构建页面的html
-			this.setHtml(buildGridData());
+			this.setHtml(buildGridData(this.buildGridColumns()));
 		}
 
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
@@ -329,9 +326,9 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected GridHeader buildGridHeader() {
+	protected GridHeader buildGridHeader(List<Column> columns) {
 		GridHeader header = new GridHeader();
-		header.setColumns(this.buildGridColumns());
+		header.setColumns(columns);
 		header.setToggleSelectTitle(getText("title.toggleSelect"));
 		return header;
 	}
@@ -341,14 +338,14 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected GridData buildGridData() {
+	protected GridData buildGridData(List<Column> columns) {
 		GridData data = new GridData();
 		if (this.page != null) {
 			data.setPageNo(page.getPageNo());
 			data.setPageCount(page.getPageCount());
 		}
 		data.setData(this.es);
-		data.setColumns(this.buildGridColumns());
+		data.setColumns(columns);
 		data.setRowLabelExpression("name");
 		data.setName(getText(StringUtils.uncapitalize(getEntityConfigName())));
 		return data;
@@ -377,7 +374,54 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 页面条件
 	protected Condition getCondition() {
-		return getSearchCondition();
+		return new AndCondition().add(getSpecalCondition())
+				.add(getSearchCondition()).add(getOrderCondition());
+	}
+
+	/**
+	 * 构建排序条件
+	 * 
+	 * @return
+	 */
+	protected OrderCondition getOrderCondition() {
+		if (this.sort == null || this.sort.length() == 0)
+			return getDefaultOrderCondition();
+
+		// sort为grid的排序配置，格式为"filed1 asc,filed2 desc,..."
+		String[] cfgs = this.sort.split(",");
+		String[] cfg = cfgs[0].split(" ");
+
+		OrderCondition oc = new OrderCondition(cfg[0],
+				cfg.length > 1 ? (Direction.Desc.toSymbol().equalsIgnoreCase(
+						cfg[1]) ? Direction.Desc : Direction.Asc)
+						: Direction.Asc);
+
+		for (int i = 1; i < cfgs.length; i++) {
+			cfg = cfgs[i].split(" ");
+			oc.add(cfg[0], cfg.length > 1 ? (Direction.Desc.toSymbol()
+					.equalsIgnoreCase(cfg[1]) ? Direction.Desc : Direction.Asc)
+					: Direction.Asc);
+		}
+
+		return oc;
+	}
+
+	/**
+	 * 构建默认的排序条件，通常用于子类复写
+	 * 
+	 * @return
+	 */
+	protected OrderCondition getDefaultOrderCondition() {
+		return null;
+	}
+
+	/**
+	 * 构建特殊的条件，通常用于子类复写
+	 * 
+	 * @return
+	 */
+	protected Condition getSpecalCondition() {
+		return null;
 	}
 
 	/**
@@ -386,11 +430,11 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * @return
 	 */
 	protected OrCondition getSearchCondition() {
-		if (this.getSearch() == null || this.getSearch().length() == 0)
+		if (this.search == null || this.search.length() == 0)
 			return null;
 
 		// 用空格分隔多个查询条件的值的处理
-		String[] values = this.getSearch().split(" ");
+		String[] values = this.search.split(" ");
 
 		// 用空格分隔多个查询条件的值的处理
 		String[] likeFields = this.getSearchFields();
@@ -413,7 +457,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/**
-	 * 查询条件中要匹配的域
+	 * 查询条件中要匹配的域，通常用于子类复写
 	 * 
 	 * @return
 	 */
@@ -496,8 +540,10 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 		// id列
 		Grid grid = new Grid();
-		grid.setGridHeader(this.buildGridHeader());
-		grid.setGridData(this.buildGridData());
+		grid.setGridHeader(this.buildGridHeader(columns));
+		grid.setGridData(this.buildGridData(columns));
+		grid.setRemoteSort("true"
+				.equalsIgnoreCase(getText("app.grid.remoteSort")));
 		grid.setColumns(columns);
 		// name属性设为bean的名称
 		grid.setName(getText(StringUtils.uncapitalize(getEntityConfigName())));
@@ -505,7 +551,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		grid.setSingleSelect(false).setDblClickRow("bc.page.edit");
 
 		// 分页条
-		grid.setFooter(buildGridFooter());
+		grid.setFooter(buildGridFooter(grid));
 
 		return grid;
 	}
@@ -518,11 +564,18 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 判断指定的列是否应该添加
+	 * <ul>
 	 * 返回true的情况：
-	 * 1)非导出状态
-	 * 2)导出状态，用户没有排除某些列不导出
-	 * 3)导出状态，用户选定的某些列
-	 * @param key 列的标识
+	 * <li>
+	 * 1)非导出状态</li>
+	 * <li>
+	 * 2)导出状态，用户没有排除某些列不导出</li>
+	 * <li>
+	 * 3)导出状态，用户选定的某些列</li>
+	 * </ul>
+	 * 
+	 * @param key
+	 *            列的标识
 	 * @return
 	 */
 	protected boolean useColumn(String key) {
@@ -532,12 +585,25 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/** 构建视图页面表格底部的工具条 */
-	protected GridFooter buildGridFooter() {
+	protected GridFooter buildGridFooter(Grid grid) {
 		GridFooter footer = new GridFooter();
 
 		// 刷新按钮
 		footer.addButton(new FooterButton().setIcon("ui-icon-refresh")
 				.setAction("refresh").setTitle(getText("label.refresh")));
+
+		// 本地或远程排序方式切换按钮
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-transferthick-e-w");
+		fb.setAction("changeSortType");
+		fb.setAttr("title4clickToRemoteSort", getText("title.click2remoteSort"));
+		fb.setAttr("title4clickToLocalSort", getText("title.click2localSort"));
+		if (grid.isRemoteSort()) {// 远程排序
+			footer.addButton(fb.setTitle(getText("title.click2localSort"))
+					.addClazz("ui-state-active"));
+		} else {// 本地排序
+			footer.addButton(fb.setTitle(getText("title.click2remoteSort")));
+		}
 
 		// 分页按钮
 		if (this.page != null) {
@@ -554,8 +620,8 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 				.setTitle(getText("label.export")));
 
 		// 打印按钮
-		//footer.addButton(new FooterButton().setIcon("ui-icon-print")
-		//		.setAction("print").setTitle(getText("label.print")));
+		// footer.addButton(new FooterButton().setIcon("ui-icon-print")
+		// .setAction("print").setTitle(getText("label.print")));
 
 		return footer;
 	}

@@ -23,10 +23,7 @@ import org.springframework.util.StringUtils;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.MixCondition;
-import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.log.domain.Syslog;
@@ -70,26 +67,22 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 	}
 
 	@Override
-	protected GridData buildGridData() {
-		return super.buildGridData().setRowLabelExpression("subject");
+	protected GridData buildGridData(List<Column> columns) {
+		return super.buildGridData(columns).setRowLabelExpression("subject");
 	}
 
 	@Override
-	protected Condition getCondition() {
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("createDate", Direction.Desc);
+	}
+
+	@Override
+	protected Condition getSpecalCondition() {
 		if (!my) {// 查看所有用户的日志信息
-			OrCondition condition = this.getSearchCondition();
-			if (condition != null) {
-				condition.add(new OrderCondition("createDate", Direction.Desc));
-				return condition;
-			} else {
-				return new OrderCondition("createDate", Direction.Desc);
-			}
+			return null;
 		} else {// 仅查看自己的日志信息
-			MixCondition condition = new AndCondition();
 			Actor curUser = (Actor) this.session.get("user");
-			condition.add(new EqualsCondition("creater.id", curUser.getId()));
-			condition.add(new OrderCondition("createDate", Direction.Desc));
-			return condition.add(this.getSearchCondition());
+			return new EqualsCondition("creater.id", curUser.getId());
 		}
 	}
 

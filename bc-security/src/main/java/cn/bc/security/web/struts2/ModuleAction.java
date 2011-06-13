@@ -16,9 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.KeyValue;
-import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.security.domain.Module;
 import cn.bc.security.service.ModuleService;
@@ -61,17 +59,15 @@ public class ModuleAction extends CrudAction<Long, Module> {
 		return r;
 	}
 
-	// 附加查询条件
-	protected Condition getCondition() {
-		OrCondition or = this.getSearchCondition();
-		OrderCondition order = new OrderCondition("code", Direction.Asc);
-		return or == null ? order : or.add(order);
-	}
-
 	// 设置页面的尺寸
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(800).setHeight(400)
 				.setMinWidth(450).setMinHeight(200);
+	}
+
+	@Override
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("code", Direction.Asc);
 	}
 
 	// 设置表格的列

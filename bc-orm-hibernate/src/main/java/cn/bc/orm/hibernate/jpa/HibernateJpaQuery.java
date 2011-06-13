@@ -195,10 +195,15 @@ public class HibernateJpaQuery<T extends Object> implements
 	protected String getHql() {
 		String hql = "from " + this.getEntityClass().getSimpleName();
 		if (condition != null){
+			String expression = this.condition.getExpression();
 			if (condition instanceof OrderCondition){
-				hql += " order by " + this.condition.getExpression();
+				hql += " order by " + expression;
 			}else{
-				hql += " where " + this.condition.getExpression();
+				if (expression != null && expression.startsWith("order by")){
+					hql += " " + expression;
+				}else{
+					hql += " where " + expression;
+				}
 			}
 		}
 		return hql;

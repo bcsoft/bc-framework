@@ -14,8 +14,8 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.BooleanFormater;
+import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.CrudAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
@@ -37,17 +37,17 @@ import cn.bc.work.service.DoneWorkService;
 @Controller
 public class DoneWorkAction extends CrudAction<Long, DoneWork> {
 	private static final long serialVersionUID = 1L;
-	private DoneWorkService doneWorkService;
+	//private DoneWorkService doneWorkService;
 
 	@Autowired
 	public void setDoneWorkService(DoneWorkService doneWorkService) {
-		this.doneWorkService = doneWorkService;
+		//this.doneWorkService = doneWorkService;
 		this.setCrudService(doneWorkService);
 	}
 
 	@Override
-	protected GridData buildGridData() {
-		return super.buildGridData().setRowLabelExpression("work.subject");
+	protected GridData buildGridData(List<Column> columns) {
+		return super.buildGridData(columns).setRowLabelExpression("work.subject");
 	}
 
 	@Override

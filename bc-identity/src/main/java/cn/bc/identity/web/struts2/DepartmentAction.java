@@ -11,9 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.ui.html.grid.Column;
@@ -70,19 +68,13 @@ public class DepartmentAction extends AbstractActorAction {
 		return columns;
 	}
 
-	// 附加部门的查询条件
-	protected Condition getCondition() {
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("type", new Integer(
-				Actor.TYPE_DEPARTMENT)));
-		// condition.add(new EqualsCondition("status", new
-		// Integer(Entity.STATUS_ENABLED)));
-		condition.add(new OrderCondition("order", Direction.Asc).add("code",
-				Direction.Asc));
-		return condition.add(this.getSearchCondition());
-	}
-
 	protected Integer[] getBelongTypes() {
 		return new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT };
+	}
+
+	@Override
+	protected Condition getSpecalCondition() {
+		// 附加部门的查询条件
+		return new EqualsCondition("type", new Integer(Actor.TYPE_DEPARTMENT));
 	}
 }

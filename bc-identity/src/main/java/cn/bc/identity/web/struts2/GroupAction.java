@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.service.GroupService;
@@ -80,20 +78,14 @@ public class GroupAction extends AbstractActorAction {
 		return columns;
 	}
 
-	// 附加岗位的查询条件
-	protected Condition getCondition() {
-		AndCondition condition = new AndCondition();
-		condition
-				.add(new EqualsCondition("type", new Integer(Actor.TYPE_GROUP)));
-		// condition.add(new EqualsCondition("status", new
-		// Integer(Entity.STATUS_ENABLED)));
-		condition.add(new OrderCondition("order", Direction.Asc).add("code",
-				Direction.Asc));
-		return condition.add(this.getSearchCondition());
-	}
-
 	protected Integer[] getBelongTypes() {
 		return new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT };
+	}
+
+	@Override
+	protected Condition getSpecalCondition() {
+		// 附加岗位的查询条件
+		return new EqualsCondition("type", new Integer(Actor.TYPE_GROUP));
 	}
 
 	public String assignUserIds;// 分配的用户id，多个id用逗号连接

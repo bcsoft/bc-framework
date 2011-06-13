@@ -46,8 +46,8 @@ public class MessageAction extends CrudAction<Long, Message> {
 	}
 
 	@Override
-	protected GridData buildGridData() {
-		return super.buildGridData().setRowLabelExpression("subject");
+	protected GridData buildGridData(List<Column> columns) {
+		return super.buildGridData(columns).setRowLabelExpression("subject");
 	}
 
 	@Override

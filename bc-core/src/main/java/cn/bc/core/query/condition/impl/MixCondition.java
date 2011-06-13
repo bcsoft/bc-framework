@@ -16,9 +16,9 @@ import cn.bc.core.query.condition.Condition;
  */
 public abstract class MixCondition implements Condition {
 	protected List<Condition> conditions = new ArrayList<Condition>();
-	protected OrderCondition orderCondition = new OrderCondition();
+	protected OrderCondition orderCondition;
 	protected String misSymbol;
-	private boolean addBracket;//是否将表达式用括号括住
+	private boolean addBracket;// 是否将表达式用括号括住
 
 	public MixCondition(String misSymbol) {
 		this.misSymbol = misSymbol;
@@ -48,35 +48,60 @@ public abstract class MixCondition implements Condition {
 		if (conditions != null) {
 			for (Condition condition : conditions) {
 				if (condition instanceof OrderCondition)
-					orderCondition.add((OrderCondition) condition);
+					this.addOrder((OrderCondition) condition);
 				else if (condition != null)
 					this.conditions.add(condition);
 			}
 		}
 		return this;
 	}
+	private void addOrder(OrderCondition condition){
+		if(orderCondition == null)
+			this.orderCondition = new OrderCondition();
+		this.orderCondition.add(condition);
+	}
 
 	public String getExpression() {
-		if (conditions.isEmpty()) {
+		if (conditions.isEmpty() && orderCondition == null) {
 			return "";
 			// }else if(conditions.size() == 1){
 			// return conditions.get(0).getExpression();
 		} else {
-			StringBuffer s = new StringBuffer();
-			if (conditions.size() > 1 && isAddBracket())
-				s.append("(");
-			int i = 0;
-			for (Condition condition : conditions) {
-				s.append((i == 0 ? "" : " " + this.misSymbol + " ")
-						+ condition.getExpression());
-				i++;
+			StringBuffer mc = new StringBuffer();
+			boolean add = false;
+			if (conditions != null && !conditions.isEmpty()) {
+				add = conditions.size() > 1 && isAddBracket();
+				if (add)
+					mc.append("(");
+				int i = 0;
+				for (Condition condition : conditions) {
+					mc.append((i == 0 ? "" : " " + this.misSymbol + " ")
+							+ condition.getExpression());
+					i++;
+				}
+				if (add)
+					mc.append(")");
 			}
-			if (conditions.size() > 1 && isAddBracket())
-				s.append(")");
-			String order = this.orderCondition.getExpression();
-			if (order != null && order.length() > 0)
-				s.append(" order by " + order);
-			return s.toString();
+
+			if ((!add && mc.length() > 0) || (add && mc.length() > 2)) {
+				if (this.orderCondition != null) {
+					String order = this.orderCondition.getExpression();
+					if (order != null && order.length() > 0)
+						mc.append(" order by " + order);
+				}
+
+				return mc.toString();
+			} else {
+				if (this.orderCondition != null) {
+					String order = this.orderCondition.getExpression();
+					if (order != null && order.length() > 0) {
+						return "order by " + order;
+					} else {
+						return "";
+					}
+				}
+				return "";
+			}
 		}
 	}
 

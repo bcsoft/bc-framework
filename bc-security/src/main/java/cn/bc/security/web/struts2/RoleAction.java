@@ -12,9 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.security.domain.Module;
 import cn.bc.security.domain.Role;
@@ -46,11 +44,9 @@ public class RoleAction extends CrudAction<Long, Role> {
 		return r;
 	}
 
-	// 附加查询条件
-	protected Condition getCondition() {
-		OrCondition or = this.getSearchCondition();
-		OrderCondition order = new OrderCondition("code", Direction.Asc);
-		return or == null ? order : or.add(order);
+	@Override
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("code", Direction.Asc);
 	}
 
 	// 设置页面的尺寸

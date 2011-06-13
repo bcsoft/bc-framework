@@ -18,6 +18,16 @@ public class Grid extends Div {
 	private GridData gridData;
 	private GridHeader gridHeader;
 
+	// 是否使用服务器排序
+	public boolean isRemoteSort() {
+		return "true".equalsIgnoreCase(getAttr("remoteSort"));
+	}
+
+	public Grid setRemoteSort(boolean remoteSort) {
+		setAttr("remoteSort", String.valueOf(remoteSort));
+		return this;
+	}
+
 	public List<Column> getColumns() {
 		return columns;
 	}
@@ -123,8 +133,8 @@ public class Grid extends Div {
 		for (int i = 1; i < columns.size(); i++) {
 			if (columns.get(i).getWidth() > 0) {
 				totalWidth += columns.get(i).getWidth();
-			}else{
-				totalWidth += 150;//默认按100的占位宽度
+			} else {
+				totalWidth += 150;// 默认按100的占位宽度
 			}
 		}
 		return totalWidth;

@@ -20,8 +20,11 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.identity.domain.Duty;
 import cn.bc.identity.service.DutyService;
@@ -54,6 +57,7 @@ public class DutyAction extends ActionSupport {
 	private Page<Duty> page;// 分页页面用
 	private String ids;
 	private String search;// 搜索框输入的文本
+	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 
 	@Autowired
 	public void setDutyService(DutyService dutyService) {
@@ -161,7 +165,7 @@ public class DutyAction extends ActionSupport {
 
 	protected List<Duty> findList() {
 		return this.dutyService.createQuery()
-				.condition(this.getSearchCondition()).list();
+				.condition(this.getCondition()).list();
 	}
 
 	// 获取列表视图页面----分页
@@ -179,8 +183,60 @@ public class DutyAction extends ActionSupport {
 
 	protected Page<Duty> findPage() {
 		return this.dutyService.createQuery()
-				.condition(this.getSearchCondition())
+				.condition(this.getCondition())
 				.page(page.getPageNo(), page.getPageSize());
+	}
+
+	// 页面条件
+	protected Condition getCondition() {
+		return new AndCondition().add(getSpecalCondition())
+				.add(getSearchCondition()).add(getOrderCondition());
+	}
+
+	/**
+	 * 构建排序条件
+	 * 
+	 * @return
+	 */
+	protected OrderCondition getOrderCondition() {
+		if (this.sort == null || this.sort.length() == 0)
+			return getDefaultOrderCondition();
+
+		// sort为grid的排序配置，格式为"filed1 asc,filed2 desc,..."
+		String[] cfgs = this.sort.split(",");
+		String[] cfg = cfgs[0].split(" ");
+
+		OrderCondition oc = new OrderCondition(cfg[0],
+				cfg.length > 1 ? (Direction.Desc.toSymbol().equalsIgnoreCase(
+						cfg[1]) ? Direction.Desc : Direction.Asc)
+						: Direction.Asc);
+
+		for (int i = 1; i < cfgs.length; i++) {
+			cfg = cfgs[i].split(" ");
+			oc.add(cfg[0], cfg.length > 1 ? (Direction.Desc.toSymbol()
+					.equalsIgnoreCase(cfg[1]) ? Direction.Desc : Direction.Asc)
+					: Direction.Asc);
+		}
+
+		return oc;
+	}
+
+	/**
+	 * 构建默认的排序条件，通常用于子类复写
+	 * 
+	 * @return
+	 */
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("code", Direction.Asc);
+	}
+
+	/**
+	 * 构建特殊的条件，通常用于子类复写
+	 * 
+	 * @return
+	 */
+	protected Condition getSpecalCondition() {
+		return null;
 	}
 
 	/**
@@ -202,12 +258,12 @@ public class DutyAction extends ActionSupport {
 	public String data() throws Exception {
 		if (this.page != null) {// 分页的处理
 			this.page = this.dutyService.createQuery()
-					.condition(this.getSearchCondition())
+					.condition(this.getCondition())
 					.page(page.getPageNo(), page.getPageSize());
 			this.es = page.getData();
 		} else {// 非分页的处理
 			this.es = this.dutyService.createQuery()
-					.condition(this.getSearchCondition()).list();
+					.condition(this.getCondition()).list();
 		}
 		return "data";
 	}

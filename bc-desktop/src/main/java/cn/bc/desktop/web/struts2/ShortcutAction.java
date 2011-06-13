@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.Entity;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.desktop.domain.Shortcut;
@@ -63,17 +62,20 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 	}
 
 	@Override
-	protected GridData buildGridData() {
-		return super.buildGridData().setRowLabelExpression("name");
+	protected GridData buildGridData(List<Column> columns) {
+		return super.buildGridData(columns).setRowLabelExpression("name");
 	}
 
 	@Override
-	protected Condition getCondition() {
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("order", Direction.Asc);
+	}
+
+	@Override
+	protected Condition getSpecalCondition() {
+		// 当前用户的桌面快捷方式
 		Actor curUser = (Actor) this.session.get("user");
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("actor.id", curUser.getId()));// 当前用户的桌面快捷方式
-		condition.add(new OrderCondition("order", Direction.Asc));
-		return condition.add(this.getSearchCondition());
+		return new EqualsCondition("actor.id", curUser.getId());
 	}
 
 	@Override
@@ -101,9 +103,9 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 		columns.add(new TextColumn("name", getText("shortcut.name"), 100)
 				.setSortable(true));
 		columns.add(new TextColumn("url", getText("shortcut.url"))
-				.setSortable(true));
+				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("iconClass", getText("shortcut.iconClass"),
-				80).setSortable(true));
+				90).setSortable(true));
 		return columns;
 	}
 
