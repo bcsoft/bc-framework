@@ -92,14 +92,14 @@ public class DoneWorkAction extends CrudAction<Long, DoneWork> {
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("work.finishDate",
 				getText("doneWork.finishDate"), 120).setSortable(true)
-				.setDir(Direction.Desc).setFormater(new CalendarFormater()));
+				.setDir(Direction.Desc).setValueFormater(new CalendarFormater()));
 		columns.add(new TextColumn("work.classifier",
-				getText("work.classifier"), 150).setSortable(true).setFormater(
+				getText("work.classifier"), 150).setSortable(true).setValueFormater(
 				new BooleanFormater(getText("label.yes"), getText("label.no"))));
 		columns.add(new TextColumn("work.subject", getText("work.subject"))
 				.setSortable(true));
 		columns.add(new TextColumn("work.sendDate", getText("work.sendDate"),
-				120).setSortable(true).setFormater(new CalendarFormater()));
+				120).setSortable(true).setValueFormater(new CalendarFormater()));
 		columns.add(new TextColumn("sender.name", getText("work.sender.name"),
 				120).setSortable(true));
 		return columns;

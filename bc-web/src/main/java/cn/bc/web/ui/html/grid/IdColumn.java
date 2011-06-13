@@ -22,7 +22,7 @@ public class IdColumn extends AbstractColumn {
 		this();
 		this.canCheckedAll = canCheckedAll;
 		this.setId("id");
-		this.setExpression("id");
+		this.setValueExpression("id");
 	}
 	public IdColumn(boolean canCheckedAll, String nameExpression) {
 		this(canCheckedAll);

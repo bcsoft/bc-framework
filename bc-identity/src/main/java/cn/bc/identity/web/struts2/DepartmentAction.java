@@ -53,7 +53,7 @@ public class DepartmentAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setFormater(new EntityStatusFormater(getSyslogTypes())));
+					.setValueFormater(new EntityStatusFormater(getSyslogTypes())));
 		if (this.useColumn("order"))
 			columns.add(new TextColumn("order", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));

@@ -91,13 +91,13 @@ public class TodoWorkAction extends CrudAction<Long, TodoWork> {
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("work.classifier",
-				getText("work.classifier"), 150).setSortable(true).setFormater(
+				getText("work.classifier"), 150).setSortable(true).setValueFormater(
 				new BooleanFormater(getText("label.yes"), getText("label.no"))));
 		columns.add(new TextColumn("work.subject", getText("work.subject"))
 				.setSortable(true));
 		columns.add(new TextColumn("work.sendDate", getText("work.sendDate"),
 				120).setSortable(true).setDir(Direction.Desc)
-				.setFormater(new CalendarFormater()));
+				.setValueFormater(new CalendarFormater()));
 		columns.add(new TextColumn("sender.name", getText("work.sender.name"),
 				120).setSortable(true));
 		return columns;

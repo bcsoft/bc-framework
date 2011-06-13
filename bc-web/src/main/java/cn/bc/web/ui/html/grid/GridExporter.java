@@ -156,8 +156,8 @@ public class GridExporter implements Exporter {
 					value = i + "";
 					row.add(value);
 				} else {
-					value = GridData.getValue(obj, column.getExpression(),
-							parser, column.getFormater());
+					value = GridData.getValue(obj, column.getValueExpression(),
+							parser, column.getValueFormater());
 					row.add(value == null || value.length() == 0 ? "" : value);
 				}
 			}

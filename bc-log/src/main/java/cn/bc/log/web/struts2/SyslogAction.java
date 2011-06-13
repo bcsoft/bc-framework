@@ -128,9 +128,9 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("createDate", getText("syslog.createDate"),
 				150).setSortable(true).setDir(Direction.Desc)
-				.setFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		columns.add(new TextColumn("type", getText("syslog.type"), 80)
-				.setSortable(true).setFormater(
+				.setSortable(true).setValueFormater(
 						new SyslogTypeFormater(getSyslogTypes())));
 		columns.add(new TextColumn("clientIp", getText("syslog.clientIp"), 120)
 				.setSortable(true));
@@ -144,7 +144,7 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 			columns.add(new TextColumn("serverIp", getText("syslog.serverIp"),
 					120).setSortable(true));
 		columns.add(new TextColumn("clientInfo", getText("syslog.clientInfo"))
-				.setSortable(true));
+				.setSortable(true).setUseTitleFromLabel(true));
 		return columns;
 	}
 

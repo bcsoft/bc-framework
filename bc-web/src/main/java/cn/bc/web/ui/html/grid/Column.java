@@ -35,15 +35,21 @@ public interface Column {
 	Column setLabel(String label);
 	
 	/**
-	 * @return 表达式
+	 * @return 单元格值的计算表达式
 	 */
-	String getExpression();
-	Column setExpression(String expression);
+	String getValueExpression();
+	Column setValueExpression(String valueExpression);
 	
 	/**
-	 * 值的格式化处理器
+	 * 单元格值的格式化处理器
 	 * @return
 	 */
-	Formater getFormater();
-	Column setFormater(Formater formater);
+	Formater getValueFormater();
+	Column setValueFormater(Formater valueFormater);
+	
+	/**
+	 * @return 是否将单元格值同时作为提示信息
+	 */
+	boolean isUseTitleFromLabel();
+	Column setUseTitleFromLabel(boolean useTitleFromLabel);
 }

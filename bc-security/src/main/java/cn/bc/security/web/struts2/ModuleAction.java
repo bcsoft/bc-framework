@@ -81,7 +81,7 @@ public class ModuleAction extends CrudAction<Long, Module> {
 		// columns.add(new TextColumn("status", getText("actor.status"), 40));
 		if (this.useColumn("type"))
 			columns.add(new TextColumn("type", getText("module.type"), 80)
-					.setSortable(true).setFormater(
+					.setSortable(true).setValueFormater(
 							new ModuleTypeFormater(getModuleTypes())));
 		if (this.useColumn("belong.name"))
 			columns.add(new TextColumn("belong.name", getText("module.belong"),

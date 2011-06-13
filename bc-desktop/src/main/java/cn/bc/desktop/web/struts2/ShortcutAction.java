@@ -95,7 +95,7 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 				.setDir(Direction.Asc).setSortable(true));
 		columns.add(new TextColumn("standalone",
 				getText("shortcut.standalone"), 80).setSortable(true)
-				.setFormater(
+				.setValueFormater(
 						new BooleanFormater(getText("shortcut.standalone.yes"),
 								getText("shortcut.standalone.no"))));
 		columns.add(new TextColumn("name", getText("shortcut.name"), 100)

@@ -199,8 +199,10 @@ public class GridData extends Div {
 									obj,
 									getRowLabelExpression() != null ? getRowLabelExpression()
 											: "id", null));// 行的标题
-			td.setAttr("data-id",
-					getValue(obj, column.getExpression(), column.getFormater()));// 行的id
+			td.setAttr(
+					"data-id",
+					getValue(obj, column.getValueExpression(),
+							column.getValueFormater()));// 行的id
 			td.addChild(new Span().addClazz("ui-icon"));// 勾选标记符
 			td.addChild(new Text(String.valueOf(rc + 1)));// 行号
 
@@ -215,6 +217,7 @@ public class GridData extends Div {
 		rightTable.addStyle("width", totalWidth + "px");
 		rightTable.setAttr("originWidth", totalWidth + "");
 		rc = 0;
+		String value;
 		for (Object obj : this.data) {
 			// 行设置
 			tr = new Tr().addClazz("ui-state-default row");
@@ -250,8 +253,12 @@ public class GridData extends Div {
 				// td.addChild(wrapper);
 
 				// 单元格内容
-				td.addChild(new Text(getValue(obj, column.getExpression(),
-						column.getFormater())));
+				value = getValue(obj, column.getValueExpression(),
+						column.getValueFormater());
+				td.addChild(new Text(value));
+				if (column.isUseTitleFromLabel()) {
+					td.setTitle(value);
+				}
 			}
 
 			// 添加一列空列

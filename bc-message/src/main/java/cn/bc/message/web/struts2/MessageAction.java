@@ -89,10 +89,10 @@ public class MessageAction extends CrudAction<Long, Message> {
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("read", getText("message.read"), 40)
-				.setSortable(true).setFormater(new BooleanFormater()));
+				.setSortable(true).setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn("sendDate", getText("message.sendDate"), 120)
 				.setSortable(true).setDir(Direction.Asc)
-				.setFormater(new CalendarFormater()));
+				.setValueFormater(new CalendarFormater()));
 		columns.add(new TextColumn("sender.name",
 				getText("message.sender.name"), 100).setSortable(true));
 		columns.add(new TextColumn("subject", getText("message.subject"))

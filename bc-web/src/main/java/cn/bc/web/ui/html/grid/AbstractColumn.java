@@ -17,11 +17,19 @@ public abstract class AbstractColumn implements Column {
 	private int width;
 	private String id;
 	private String label;
-	private String expression;
+	private String valueExpression;
 	private boolean sortable;
 	private Direction dir = Direction.None;
-	private Formater formater;
+	private Formater valueFormater;
+	private boolean useTitleFromLabel;
 	
+	public boolean isUseTitleFromLabel() {
+		return useTitleFromLabel;
+	}
+	public Column setUseTitleFromLabel(boolean useTitleFromLabel) {
+		this.useTitleFromLabel = useTitleFromLabel;
+		return this;
+	}
 	public boolean isSortable() {
 		return sortable;
 	}
@@ -57,18 +65,18 @@ public abstract class AbstractColumn implements Column {
 		this.label = label;
 		return this;
 	}
-	public String getExpression() {
-		return expression;
+	public String getValueExpression() {
+		return valueExpression;
 	}
-	public Column setExpression(String expression) {
-		this.expression = expression;
+	public Column setValueExpression(String valueExpression) {
+		this.valueExpression = valueExpression;
 		return this;
 	}
-	public Formater getFormater() {
-		return formater;
+	public Formater getValueFormater() {
+		return valueFormater;
 	}
-	public Column setFormater(Formater formater) {
-		this.formater = formater;
+	public Column setValueFormater(Formater formater) {
+		this.valueFormater = formater;
 		return this;
 	}
 }
