@@ -131,6 +131,25 @@
 						</execution>
 					</executions>
 				</plugin>
+				<!-- 版本发布工具 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<!--<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
+					</configuration>
+				</plugin>
+				<!-- 版本管理工具 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>1.5</version>
+					<configuration>
+						<!--<goals>install</goals> -->
+						<connectionType>developerConnection</connectionType>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -455,42 +474,42 @@
 				<artifactId>commontemplate</artifactId>
 				<version>0.8.7</version>
 			</dependency>
-			
+
 			<dependency>
-			 	<groupId>quartz</groupId>
-			 	<artifactId>quartz</artifactId>
-			 	<version>2.0.1</version>
+				<groupId>quartz</groupId>
+				<artifactId>quartz</artifactId>
+				<version>2.0.1</version>
 			</dependency>
 			<dependency>
-  				<groupId>org.safehaus.jug</groupId>
-  				<artifactId>jug</artifactId>
-  				<version>2.0.0</version>
-  				<classifier>lgpl</classifier>
+				<groupId>org.safehaus.jug</groupId>
+				<artifactId>jug</artifactId>
+				<version>2.0.0</version>
+				<classifier>lgpl</classifier>
 			</dependency>
 			<dependency>
-			  <groupId>net.sf.jxls</groupId>
-			  <artifactId>jxls-core</artifactId>
-			  <version>0.9.8</version>
+				<groupId>net.sf.jxls</groupId>
+				<artifactId>jxls-core</artifactId>
+				<version>0.9.8</version>
 			</dependency>
 			<dependency>
-			  <groupId>net.sf.jxls</groupId>
-			  <artifactId>jxls-reader</artifactId>
-			  <version>0.9.8</version>
+				<groupId>net.sf.jxls</groupId>
+				<artifactId>jxls-reader</artifactId>
+				<version>0.9.8</version>
 			</dependency>
 			<dependency>
-			  <groupId>org.apache.poi</groupId>
-			  <artifactId>poi</artifactId>
-			  <version>3.2-FINAL</version>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>3.2-FINAL</version>
 			</dependency>
 			<dependency>
-			  <groupId>org.apache.poi</groupId>
-			  <artifactId>poi-scratchpad</artifactId>
-			  <version>3.2-FINAL</version>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>3.2-FINAL</version>
 			</dependency>
 			<dependency>
-			  <groupId>org.apache.commons</groupId>
-			  <artifactId>commons-jexl</artifactId>
-			  <version>2.0.1</version>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-jexl</artifactId>
+				<version>2.0.1</version>
 			</dependency>
 
 			<!-- database -->

@@ -23,8 +23,7 @@
 		<module>bc-web-struts2</module>
 
 		<module>bc-identity</module>
-		<!--<module>bc-identity-impl-extras</module>
-		<module>bc-identity-impl</module>-->
+		<!--<module>bc-identity-impl-extras</module> <module>bc-identity-impl</module> -->
 		<module>bc-security</module>
 		<module>bc-desktop</module>
 		<module>bc-report</module>
@@ -41,4 +40,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	<scm>
+		<connection>scm:git:git://github.com/rongjihuang/bc-framework.git</connection>
+		<developerConnection>scm:git:[fetch=]git://github.com/rongjihuang/bc-framework.git[push=]git@github.com:rongjihuang/bc-framework.git</developerConnection>
+		<url>https://github.com/rongjihuang/bc-framework</url>
+	</scm>
 </project>
