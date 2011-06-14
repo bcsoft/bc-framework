@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.bc</groupId>
 	<artifactId>bc-parent</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>pom</packaging>
 	<name>bc-parent</name>
 	<build>
@@ -553,7 +552,7 @@
 		<db.password>bcdemo</db.password>
 		<jndi.name>${db.name}</jndi.name>
 		<!-- 使用oracle数据库时设置为sequence的名称，用于测试中qc.core.jdbc.SimpleJdbcInsertEx插入数据并返回id值 -->
-		<db.sequence></db.sequence>
+		<db.sequence />
 		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
 		<hibernate.show_sql>false</hibernate.show_sql>
 		<!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件， 
