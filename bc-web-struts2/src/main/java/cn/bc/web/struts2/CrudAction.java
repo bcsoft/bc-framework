@@ -17,11 +17,14 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.RequestAware;
+import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import cn.bc.Context;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
@@ -34,6 +37,7 @@ import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.web.ui.Component;
+import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.Grid;
@@ -63,7 +67,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class CrudAction<K extends Serializable, E extends Entity<K>> extends
-		ActionSupport implements SetEntityClass<E> {
+		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(getClass());
 
@@ -78,6 +82,20 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	public String search; // 搜索框输入的文本
 	public String contextPath; // 系统部署的路径，如"/bc"
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
+	protected Map<String, Object> session;
+	protected Map<String, Object> request;
+
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+	}
+
+	public void setRequest(Map<String, Object> request) {
+		this.request = request;
+	}
+
+	public Context getContext() {
+		return (Context) this.session.get(Context.KEY);
+	}
 
 	@SuppressWarnings("unchecked")
 	public CrudAction() {
@@ -517,21 +535,49 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		Toolbar tb = new Toolbar();
 
 		// 新建按钮
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
-				.setText(getText("label.create")).setAction("create"));
+		tb.addButton(getDefaultCreateToolbarButton());
+
 		// 编辑按钮
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
-				.setText(getText("label.edit")).setAction("edit"));
+		tb.addButton(getDefaultEditToolbarButton());
+
 		// 删除按钮
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-				.setText(getText("label.delete")).setAction("delete"));
+		tb.addButton(getDefaultDeleteToolbarButton());
 
 		// 搜索按钮
-		ToolbarSearchButton sb = new ToolbarSearchButton();
-		sb.setAction("search").setTitle(getText("title.click2search"));
-		tb.addButton(sb);
+		tb.addButton(getDefaultSearchToolbarButton());
 
 		return tb;
+	}
+
+	// 创建默认的新建按钮
+	protected Button getDefaultCreateToolbarButton() {
+		return new ToolbarButton().setIcon("ui-icon-document")
+				.setText(getText("label.create")).setAction("create");
+	}
+
+	// 创建默认的查看按钮
+	protected Button getDefaultOpenToolbarButton() {
+		return new ToolbarButton().setIcon("ui-icon-check")
+				.setText(getText("label.check")).setClick("open");
+	}
+
+	// 创建默认的编辑按钮
+	protected Button getDefaultEditToolbarButton() {
+		return new ToolbarButton().setIcon("ui-icon-pencil")
+				.setText(getText("label.edit")).setAction("edit");
+	}
+
+	// 创建默认的删除按钮
+	protected Button getDefaultDeleteToolbarButton() {
+		return new ToolbarButton().setIcon("ui-icon-trash")
+				.setText(getText("label.delete")).setAction("delete");
+	}
+
+	// 创建默认的删除按钮
+	protected Button getDefaultSearchToolbarButton() {
+		ToolbarSearchButton sb = new ToolbarSearchButton();
+		sb.setAction("search").setTitle(getText("title.click2search"));
+		return sb;
 	}
 
 	/** 构建视图页面的表格 */
@@ -688,7 +734,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getSyslogTypes() {
+	protected Map<String, String> getScopes() {
 		Map<String, String> statuses = new HashMap<String, String>();
 		statuses.put(String.valueOf(Entity.STATUS_DISABLED),
 				getText("entity.status.disabled"));

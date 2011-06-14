@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- bulletin -->
+	<package name="bulletin" extends="bc-default" namespace="/bc/bulletin">
+		<action name="create" class="bulletinAction" method="create">
+			<result name="form">/bc/bulletin/form.jsp</result>
+		</action>
+		<action name="edit" class="bulletinAction" method="edit">
+			<result name="form">/bc/bulletin/form.jsp</result>
+		</action>
+		<action name="save" class="bulletinAction" method="save"/>
+		<action name="delete" class="bulletinAction" method="delete"/>
+		<action name="list" class="bulletinAction" method="list"/>
+		<action name="paging" class="bulletinAction" method="paging"/>
+		<action name="data" class="bulletinAction" method="data"/>
+		<action name="export" class="bulletinAction" method="export"/>
+	</package>
+</struts>

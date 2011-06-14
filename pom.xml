@@ -22,13 +22,13 @@
 		<module>bc-web-struts2</module>
 
 		<module>bc-identity</module>
-		<!--<module>bc-identity-impl-extras</module> <module>bc-identity-impl</module> -->
 		<module>bc-security</module>
 		<module>bc-desktop</module>
 		<module>bc-report</module>
 		<module>bc-message</module>
 		<module>bc-work</module>
 		<module>bc-log</module>
+		<module>bc-bulletin</module>
 	</modules>
 
 	<build>

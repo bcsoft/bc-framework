@@ -124,7 +124,7 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		columns.add(new TextColumn("type", getText("syslog.type"), 80)
 				.setSortable(true).setValueFormater(
-						new SyslogTypeFormater(getSyslogTypes())));
+						new SyslogTypeFormater(getScopes())));
 		columns.add(new TextColumn("clientIp", getText("syslog.clientIp"), 120)
 				.setSortable(true));
 		columns.add(new TextColumn("userName", getText("syslog.userName"), 80)
@@ -151,7 +151,7 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getSyslogTypes() {
+	protected Map<String, String> getScopes() {
 		Map<String, String> types = new HashMap<String, String>();
 		types = new HashMap<String, String>();
 		types.put(String.valueOf(Syslog.TYPE_LOGIN),

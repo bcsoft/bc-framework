@@ -61,7 +61,7 @@ public class GroupAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getSyslogTypes())));
+					.setValueFormater(new EntityStatusFormater(getScopes())));
 		if (this.useColumn("order"))
 			columns.add(new TextColumn("order", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));

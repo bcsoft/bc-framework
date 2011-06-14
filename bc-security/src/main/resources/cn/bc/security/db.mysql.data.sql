@@ -12,17 +12,23 @@ insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCL
 
 -- 插入链接资源数据
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '91','个性化设置', '/bc/personal/edit', 'i0504');
-insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '92','我的桌面', '/bc/shortcut/list', 'i0504');
-insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '93','我的日志', '/bc/mysyslog/paging', 'i0504');
-insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '94','系统日志', '/bc/syslog/paging', 'i0504');
-insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '10-01','待办事务', '/bc/todoWork/list', 'i0605' from BC_SECURITY_MODULE m where m.code='10';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '10-02','已办事务', '/bc/doneWork/paging', 'i0606' from BC_SECURITY_MODULE m where m.code='10';
+
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, 'bulletin','电子公告', '/bc/bulletin/paging', 'ixxxx');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 5, null, 'bulletin.manager','公告管理', null, null);
+
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '91','个性化设置', '/bc/personal/edit', 'i0504');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '92','我的桌面', '/bc/shortcut/list', 'ixxxx');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '93','我的日志', '/bc/mysyslog/paging', 'ixxxx');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+	values(1, 0, 2, null, '94','系统日志', '/bc/syslog/paging', 'ixxxx');
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '90-09','消息记录', '/bc/message/paging', 'i0603' from BC_SECURITY_MODULE m where m.code='90';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 

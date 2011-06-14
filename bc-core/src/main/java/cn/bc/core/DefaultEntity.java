@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 /**
- * 用户
+ * 默认的实体基类
  * 
  * @author dragon
  */
