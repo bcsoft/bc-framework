@@ -173,7 +173,7 @@ public class DutyAction extends ActionSupport {
 		if (page == null)
 			page = new Page<Duty>();
 		if (page.getPageSize() < 1)
-			page.setPageSize(Integer.parseInt(getText("app.pageSize")));
+			page.setPageSize(Integer.parseInt(getText("app.grid.pageSize")));
 
 		// 构建查询条件并执行查询
 		page = findPage();

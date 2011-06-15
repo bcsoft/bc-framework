@@ -1,4 +1,4 @@
-package cn.bc.test;
+package cn.bc.test.md5;
 
 import java.io.UnsupportedEncodingException;
 

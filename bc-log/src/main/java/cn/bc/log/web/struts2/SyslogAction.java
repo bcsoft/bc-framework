@@ -26,6 +26,7 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.log.domain.Syslog;
 import cn.bc.log.service.SyslogService;
 import cn.bc.web.formater.CalendarFormater;
@@ -52,7 +53,6 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 	private static Log logger = LogFactory.getLog(SyslogAction.class);
 	private static final long serialVersionUID = 1L;
 	public boolean my = false;
-	private Map<String, Object> session;
 
 	// private SyslogService syslogService;
 
@@ -60,10 +60,6 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 	public void setSyslogService(SyslogService syslogService) {
 		// this.syslogService = syslogService;
 		this.setCrudService(syslogService);
-	}
-
-	public void setSession(Map<String, Object> session) {
-		this.session = session;
 	}
 
 	@Override
@@ -81,7 +77,8 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 		if (!my) {// 查看所有用户的日志信息
 			return null;
 		} else {// 仅查看自己的日志信息
-			Actor curUser = (Actor) this.session.get("user");
+			Actor curUser = (Actor) ((SystemContext) this.getContext())
+					.getUser();
 			return new EqualsCondition("creater.id", curUser.getId());
 		}
 	}
