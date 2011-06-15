@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["bc平台标签库"]]></description>
+  <display-name>"BC Tags"</display-name>
+  <tlib-version>0.2</tlib-version>
+  <short-name>bc</short-name>
+  <uri>/bc-tags</uri>
+  <tag>
+    <description><![CDATA[上传下载文档的ui]]></description>
+    <name>docs</name>
+    <tag-class>cn.bc.docs.jsp.DocsTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>id</description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>容器的样式类名</description>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>容器的样式</description>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+</taglib>
