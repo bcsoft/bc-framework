@@ -114,6 +114,9 @@
 				<fileset dir="${src.dir}/bc-bulletin/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
+				<fileset dir="${src.dir}/bc-docs/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
 			</concat>
 		</sequential>
 	</macrodef>
@@ -129,6 +132,9 @@
 					<include name="**/@{file}" />
 				</fileset>
 				<fileset dir="${src.dir}/bc-bulletin/src/@{fromDir}/resources">
+					<include name="**/@{file}" />
+				</fileset>
+				<fileset dir="${src.dir}/bc-docs/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
 				<fileset dir="${src.dir}/bc-log/src/@{fromDir}/resources">

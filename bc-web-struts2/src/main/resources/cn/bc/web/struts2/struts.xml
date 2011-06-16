@@ -21,6 +21,8 @@
 		<global-results>
 			<result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
 			</result>
+			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl
+			</result>
 			<result name="container" type="freemarker">/cn/bc/web/struts2/container.ftl
 			</result>
 			<result name="commonSuccess" type="freemarker">/cn/bc/web/struts2/success.ftl

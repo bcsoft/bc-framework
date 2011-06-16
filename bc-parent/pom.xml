@@ -159,6 +159,10 @@
 			<artifactId>commons-logging</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 		</dependency>
@@ -194,6 +198,11 @@
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
 				<version>1.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.1</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-beanutils</groupId>
@@ -539,7 +548,7 @@
 				<artifactId>axis2</artifactId>
 				<version>1.6.0</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.apache.axis</groupId>
 				<artifactId>axis</artifactId>
@@ -550,7 +559,7 @@
 				<artifactId>jaxrpc-api</artifactId>
 				<version>1.1</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework.ws</groupId>
 				<artifactId>spring-ws</artifactId>

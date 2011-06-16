@@ -28,6 +28,7 @@
 		<module>bc-message</module>
 		<module>bc-work</module>
 		<module>bc-log</module>
+		<module>bc-docs</module>
 		<module>bc-bulletin</module>
 	</modules>
 
