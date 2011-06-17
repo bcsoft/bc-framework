@@ -8,7 +8,6 @@
 		<action name="edit" class="attachAction" method="edit">
 			<result name="form">/bc/docs/attach/form.jsp</result>
 		</action>
-		<action name="save" class="attachAction" method="save" />
 		<action name="delete" class="attachAction" method="delete" />
 		<action name="paging" class="attachAction" method="paging" />
 		<action name="data" class="attachAction" method="data" />

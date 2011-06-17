@@ -97,9 +97,11 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 		response.setDateHeader("Expires", 0);
 
 		if ("application/octet-stream".equals(request.getContentType())) {
+			logger.debug("doPost4Html5");
 			// HTML5上传
 			doPost4Html5(request, response);
 		} else {
+			logger.debug("doPost4Html4");
 			// HTML4普通文件上传
 			doPost4Html4(request, response);
 		}

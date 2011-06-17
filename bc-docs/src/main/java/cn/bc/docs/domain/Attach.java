@@ -30,7 +30,7 @@ public class Attach extends FileEntity {
 	private String extend;// 附件扩展名：如png、doc、mp3等
 	private String path;// 物理文件保存的相对路径（相对于全局配置的附件根目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private long size;// 文件的大小(单位为byte)
-	private boolean appPath = false;//指定path的值是相对于应用部署目录下路径还是相对于全局配置的app.data目录下的路径
+	private boolean appPath = false;//path的值是相对于应用部署目录下路径还是相对于全局配置的app.data目录下的路径
 	private static NumberFormat format = new DecimalFormat("#.#");
 
 	/**
@@ -43,10 +43,10 @@ public class Attach extends FileEntity {
 		if (size < 1024)// 字节
 			return size + "Bytes";
 		else if (size < 1024 * 1024)// KB
-			return format.format(size) + "KB";
+			return format.format(((float)size)/1024f) + "KB";
 		else
 			// MB
-			return format.format(size) + "MB";
+			return format.format(((float)size)/1024f/1024f) + "MB";
 	}
 
 	public boolean isAppPath() {

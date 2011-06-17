@@ -16,7 +16,9 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.CrudAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
@@ -59,13 +61,13 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 	@Override
 	protected GridData buildGridData(List<Column> columns) {
-		return super.buildGridData(columns).setRowLabelExpression("name");
+		return super.buildGridData(columns).setRowLabelExpression("subject");
 	}
 
 	// 设置页面的尺寸
 	@Override
 	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(800).setMinWidth(300)
+		return super.buildListPageOption().setWidth(900).setMinWidth(300)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -73,21 +75,14 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		// 是否公告管理员
+		// 是否附件管理员
 		boolean isManager = ((SystemContext) this.getContext())
 				.hasAnyPriviledge("attach.manager");
 
 		if (isManager) {
-			// 新建按钮
-			tb.addButton(getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(getDefaultEditToolbarButton());
-
 			// 删除按钮
 			tb.addButton(getDefaultDeleteToolbarButton());
 		} else {// 普通用户
-			// 查看按钮
 			tb.addButton(getDefaultOpenToolbarButton());
 		}
 
@@ -99,32 +94,34 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "name", "path", "extend", "classify", "size",
+		return new String[] { "subject", "path", "extend", "ptype", "puid",
 				"authorName" };
 	}
 
 	@Override
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
-		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 150)
+		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 130)
 				.setSortable(true).setDir(Direction.Desc)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn("authorName", getText("attach.authorName"),
 				80).setSortable(true));
-		columns.add(new TextColumn("name", getText("attach.name")).setSortable(
-				true).setUseTitleFromLabel(true));
-
-		columns.add(new TextColumn("extend", getText("attach.extend"), 80)
+		columns.add(new TextColumn("size", getText("attach.size"), 80)
+				.setSortable(true).setValueFormater(new FileSizeFormater()));
+		columns.add(new TextColumn("extend", getText("attach.extend"), 50)
 				.setSortable(true));
-		columns.add(new TextColumn("classify", getText("attach.classify"), 80)
-				.setSortable(true));
-		columns.add(new TextColumn("size", getText("attach.size"), 90)
-				.setSortable(true));
+		columns.add(new TextColumn("subject", getText("attach.subject"))
+				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn("path", getText("attach.path"), 120)
+				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn("ptype", getText("attach.ptype"), 100)
+				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn("puid", getText("attach.puid"), 100)
+				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn("appPath", getText("attach.appPath"), 100)
+				.setSortable(true).setValueFormater(
+						new BooleanFormater(getText("label.yes"),
+								getText("label.no"))));
 		return columns;
-	}
-
-	@Override
-	protected String getJs() {
-		return contextPath + "/bc/docs/attach/list.js";
 	}
 }

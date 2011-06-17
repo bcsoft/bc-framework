@@ -25,12 +25,14 @@ insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCL
 	values(1, 0, 2, null, '91','个性化设置', '/bc/personal/edit', 'i0504');
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	values(1, 0, 2, null, '92','我的桌面', '/bc/shortcut/list', 'ixxxx');
-insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS)
 	values(1, 0, 2, null, '93','我的日志', '/bc/mysyslog/paging', 'ixxxx');
+insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS)
+	select 1, 0, 2, m.id, '90-07','附件管理', '/bc/attach/paging', 'ixxxx' from BC_SECURITY_MODULE m where m.code='90';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	values(1, 0, 2, null, '94','系统日志', '/bc/syslog/paging', 'ixxxx');
+	select 1, 0, 2, m.id, '90-08','系统日志', '/bc/syslog/paging', 'ixxxx' from BC_SECURITY_MODULE m where m.code='90';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
-	select 1, 0, 2, m.id, '90-09','消息记录', '/bc/message/paging', 'i0603' from BC_SECURITY_MODULE m where m.code='90';
+	select 1, 0, 2, m.id, '90-09','消息记录', '/bc/message/paging', 'ixxxx' from BC_SECURITY_MODULE m where m.code='90';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '90-01-01','职务配置', '/bc/duty/paging', 'i0603' from BC_SECURITY_MODULE m where m.code='90-01';
 insert into BC_SECURITY_MODULE (STATUS_,INNER_,TYPE_,BELONG,CODE,NAME,URL,ICONCLASS) 

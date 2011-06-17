@@ -201,7 +201,7 @@ public class HibernateJpaQuery<T extends Object> implements
 			}else{
 				if (expression != null && expression.startsWith("order by")){
 					hql += " " + expression;
-				}else{
+				}else if(expression != null && expression.length() > 0){
 					hql += " where " + expression;
 				}
 			}

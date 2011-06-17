@@ -181,7 +181,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		columns.add(new TextColumn("issueDate", getText("bulletin.issueDate"),
 				90).setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new TextColumn("issueName", getText("bulletin.issuerName"),
+		columns.add(new TextColumn("issuerName", getText("bulletin.issuerName"),
 				90).setSortable(true));
 		columns.add(new TextColumn("subject", getText("bulletin.subject"))
 				.setSortable(true).setUseTitleFromLabel(true));
