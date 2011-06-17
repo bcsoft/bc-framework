@@ -39,7 +39,7 @@ public class SyslogSessionListener implements HttpSessionListener {
 			Calendar now = Calendar.getInstance();
 			Syslog log = SyslogAction.buildSyslog(now, Syslog.TYPE_LOGOUT2,
 					user, belong, unit, user.getName() + "超时注销", false, null);
-			WebUtils.getSpringBean(SyslogService.class).save(log);
+			WebUtils.getBean(SyslogService.class).save(log);
 		}
 	}
 }

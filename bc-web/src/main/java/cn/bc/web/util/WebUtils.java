@@ -228,7 +228,7 @@ public class WebUtils implements ServletContextAware, InitializingBean {
 		return instance.getWac().getBean(name, requiredType);
 	}
 
-	public static <T> T getSpringBean(Class<T> requiredType) {
+	public static <T> T getBean(Class<T> requiredType) {
 		return instance.getWac().getBean(requiredType);
 	}
 }

@@ -8,14 +8,13 @@ import java.util.List;
 
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.service.CrudService;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.CrudAction;
@@ -39,9 +38,8 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	public void setAttachService(
-			@Qualifier(value = "attachService") CrudService<Attach> crudService) {
-		this.setCrudService(crudService);
+	public void setAttachService(AttachService attachService) {
+		this.setCrudService(attachService);
 	}
 
 	@Override

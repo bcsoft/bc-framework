@@ -18,6 +18,6 @@
 	<bean id="attachDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
 		p:entityClass="cn.bc.docs.domain.Attach"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="attachService" class="cn.bc.core.service.DefaultCrudService"
+	<bean id="attachService" class="cn.bc.docs.service.AttachServiceImpl"
 		p:entityClass="cn.bc.docs.domain.Attach" p:crudDao-ref="attachDao" />
 </beans>
