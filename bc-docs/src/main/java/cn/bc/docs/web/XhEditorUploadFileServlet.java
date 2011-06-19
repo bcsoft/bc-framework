@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -128,7 +129,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 			// 获取上传文件名
 			// ref: Content-Disposition:attachment; name="filedata";
 			// filename="xxxx.jpg"
-			localFile = getHtml5FileName(request);
+			localFile = URLDecoder.decode(getHtml5FileName(request),"UTF-8");
 
 			// 获取扩展名
 			String extend = getExtend(localFile);
@@ -143,6 +144,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 
 			// 获取上传文件流
 			int i = request.getContentLength();
+			logger.debug("contentLength=" + i);
 			byte buffer[] = new byte[i];
 			int j = 0;
 			while (j < i) {

@@ -65,6 +65,8 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONC
     select 1, 0, '9007', 1, 'xheditor', '/ui-libs-demo/xheditor/1.1.7/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
     select 1, 0, '9008', 1, 'zTree', '/ui-libs-demo/zTree/2.6/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
+    select 1, 0, '9009', 0, 'ATM', '/bc-test/attach/tag.jsp', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
 
 -- 插入全局配置信息
 insert into BC_DESKTOP_PERSONAL (STATUS_,INNER_,FONT,THEME,AID) 
