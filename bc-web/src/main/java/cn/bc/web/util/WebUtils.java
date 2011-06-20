@@ -158,20 +158,26 @@ public class WebUtils implements ServletContextAware, InitializingBean {
 					+ fnName + "'].apply(this,arguments);}";
 	}
 
+	public static String encodeFileName(HttpServletRequest request,
+			String srcFileName) {
+		boolean isIE = request.getHeader("User-Agent").toUpperCase()
+				.indexOf("MSIE") != -1;
+		return encodeFileName(isIE, srcFileName);
+	}
+
 	/**
 	 * 重新编码下载文件的文件名，保证中文不乱码
 	 * 
-	 * @param request
+	 * @param isIE
 	 * @param srcFileName
 	 *            原文件名
 	 * @return 编码后的文件名
 	 */
-	public static String encodeFileName(HttpServletRequest request,
-			String srcFileName) {
+	public static String encodeFileName(boolean isIE, String srcFileName) {
 		String _fileName;
 		// 解决中文文件名乱码问题
-		boolean isIE = request.getHeader("User-Agent").toUpperCase()
-				.indexOf("MSIE") != -1;
+		// boolean isIE = request.getHeader("User-Agent").toUpperCase()
+		// .indexOf("MSIE") != -1;
 		try {
 			if (isIE) {// IE核心的浏览器
 				_fileName = URLEncoder.encode(srcFileName, "UTF-8");
