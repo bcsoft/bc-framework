@@ -62,6 +62,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
+	private String MANAGER_KEY = "R_MANAGER_ATTACH";//附件管理角色的编码
 
 	@Autowired
 	public void setAttachService(AttachService attachService) {
@@ -101,7 +102,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 		// 是否附件管理员
 		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyPriviledge("attach.manager");
+				.hasAnyRole(MANAGER_KEY);
 
 		if (isManager) {
 			// 删除按钮
@@ -118,7 +119,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "path", "extend", "ptype", "puid",
+		return new String[] { "subject", "path", "extension", "ptype", "puid",
 				"authorName" };
 	}
 
@@ -132,7 +133,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 				80).setSortable(true));
 		columns.add(new TextColumn("size", getText("attach.size"), 80)
 				.setSortable(true).setValueFormater(new FileSizeFormater()));
-		columns.add(new TextColumn("extend", getText("attach.extend"), 50)
+		columns.add(new TextColumn("extension", getText("attach.extension"), 50)
 				.setSortable(true));
 		columns.add(new TextColumn("subject", getText("attach.subject"))
 				.setSortable(true).setUseTitleFromLabel(true));
@@ -156,7 +157,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	// 下载附件
 	public String download() throws Exception {
 		Attach attach = this.getCrudService().load(this.getId());
-		contentType = AttachUtils.getContentType(attach.getExtend());
+		contentType = AttachUtils.getContentType(attach.getExtension());
 		filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
 				attach.getSubject());
 		String path;
@@ -330,7 +331,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		else
 			path = getText("app.data") + File.separator + attach.getPath();
 
-		if (isConvertFile(attach.getExtend())) {
+		if (isConvertFile(attach.getExtension())) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
 			FileInputStream inputStream = new FileInputStream(new File(path));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
@@ -347,7 +348,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			// convert
 			DocumentConverter converter = new OpenOfficeDocumentConverter(
 					connection);
-			String from = attach.getExtend();
+			String from = attach.getExtension();
 //			if("docx".equalsIgnoreCase(from))
 //				from = "doc";
 //			else if("xlsx".equalsIgnoreCase(from))
@@ -374,7 +375,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 							+ "." + this.to);
 		} else {
 			// 设置下载文件的参数
-			contentType = AttachUtils.getContentType(attach.getExtend());
+			contentType = AttachUtils.getContentType(attach.getExtension());
 			filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), attach.getSubject());
 

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import cn.bc.core.DefaultEntity;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
+import cn.bc.identity.domain.Resource;
 
 /**
  * 桌面快捷方式
@@ -28,7 +28,7 @@ public class Shortcut extends DefaultEntity {
 	private String order;//排序号
 	private String name;//名称,为空则使用模块的名称
 	private String url;//地址,为空则使用模块的地址
-	private Module module;//对应的模块
+	private Resource resource;//对应的模块
 	private Actor actor;//所属的参与者(如果为上级参与者,如单位部门,则其下的所有参与者都拥有该快捷方式)
 	private String iconClass;//图标样式
 	
@@ -66,12 +66,12 @@ public class Shortcut extends DefaultEntity {
 	}
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="MID", nullable=true, updatable=false)
-	public Module getModule() {
-		return module;
+	@JoinColumn(name="SID", nullable=true, updatable=false)
+	public Resource getResource() {
+		return resource;
 	}
-	public void setModule(Module module) {
-		this.module = module;
+	public void setResource(Resource resource) {
+		this.resource = resource;
 	}
 	
 	@ManyToOne(targetEntity=Actor.class,fetch=FetchType.LAZY)

@@ -22,7 +22,6 @@
 		<module>bc-web-struts2</module>
 
 		<module>bc-identity</module>
-		<module>bc-security</module>
 		<module>bc-desktop</module>
 		<module>bc-report</module>
 		<module>bc-message</module>

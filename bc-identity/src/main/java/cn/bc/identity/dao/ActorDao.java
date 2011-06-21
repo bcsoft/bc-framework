@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.bc.core.dao.CrudDao;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
+import cn.bc.identity.domain.Resource;
 
 /**
  * 参与者Dao接口
@@ -103,7 +103,7 @@ public interface ActorDao extends CrudDao<Actor>{
 	 * @param actorId
 	 * @return
 	 */
-	List<Module> findCanUseModules(Long actorId);
+	List<Resource> findCanUseModules(Long actorId);
 
 	/**
 	 * 获取所有单位信息

@@ -20,7 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import cn.bc.security.domain.Role;
+import cn.bc.core.util.PinYinUtils;
+
 
 /**
  * 参与者
@@ -62,14 +63,24 @@ public class Actor implements cn.bc.core.Entity<Long> {
 	
 	private Set<Role> roles;//拥有的角色列表
 
+	//姓名的中文拼音
+	@Column(name = "PY")
+	public String getPinYin() {
+		return PinYinUtils.getPinYin(this.getName());
+	}
+
+	public void setPinYin(String pinYin) {
+		//do nothing
+	}
+
 	@ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="BC_SECURITY_ROLE_ACTOR",
+    @JoinTable(name="BC_IDENTITY_ROLE_ACTOR",
         joinColumns=
             @JoinColumn(name="AID", referencedColumnName="ID"),
         inverseJoinColumns=
             @JoinColumn(name="RID", referencedColumnName="ID")
         )
-    @OrderBy("code asc")
+    @OrderBy("order asc")
 	public Set<Role> getRoles() {
 		return roles;
 	}

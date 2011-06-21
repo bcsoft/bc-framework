@@ -59,12 +59,6 @@ public class SystemContextImpl implements SystemContext {
 				groups);
 	}
 
-	@SuppressWarnings("unchecked")
-	public boolean hasAnyPriviledge(String... modules) {
-		return hasAny((List<String>) this.getAttr(SystemContext.KEY_MODULES),
-				modules);
-	}
-
 	private boolean hasAny(List<String> _roles, String[] roles) {
 		if (_roles != null && !_roles.isEmpty() && roles != null
 				&& roles.length > 0) {

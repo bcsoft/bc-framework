@@ -6,7 +6,7 @@ create table BC_DOCS_ATTACH (
    
     SIZE int NOT NULL COMMENT '文件的大小(单位为字节)',
     COUNT_ int NOT NULL default 0 COMMENT '文件的下载次数',
-    EXTEND varchar(10) COMMENT '文件扩展名：如png、doc、mp3等',
+    EXT varchar(10) COMMENT '文件扩展名：如png、doc、mp3等',
     APPPATH int(1) NOT NULL COMMENT '指定path的值是相对于应用部署目录下路径还是相对于全局配置的app.data目录下的路径',
     SUBJECT varchar(500) NOT NULL COMMENT '文件名称(不带路径的部分)',
     PATH varchar(500) NOT NULL COMMENT '物理文件保存的相对路径(相对于全局配置的附件根目录下的子路径，如"2011/bulletin/xxxx.doc")',

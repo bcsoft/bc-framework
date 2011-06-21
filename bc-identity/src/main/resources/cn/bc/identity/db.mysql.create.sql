@@ -1,4 +1,45 @@
 -- 系统标识相关模块
+-- 系统安全相关模块
+-- 系统资源
+create table BC_IDENTITY_RESOURCE (
+    ID int NOT NULL auto_increment,
+    UID_ varchar(36) COMMENT '全局标识',
+    TYPE_ int(1) NOT NULL COMMENT '类型：1-文件夹,2-内部链接,3-外部链接,4-html',
+    STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
+    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
+    BELONG int COMMENT '所隶属的资源',
+    ORDER_ varchar(100) NOT NULL COMMENT '排序号',
+    NAME varchar(255) NOT NULL COMMENT '名称',
+    URL varchar(255) COMMENT '地址',
+    ICONCLASS varchar(255) COMMENT '图标样式',
+    OPTION_ text COMMENT '扩展参数',
+    primary key (ID)
+) COMMENT='系统资源';
+
+-- 角色
+create table BC_IDENTITY_ROLE (
+    ID int NOT NULL auto_increment,
+    CODE varchar(100) NOT NULL COMMENT '编码',
+    ORDER_ varchar(100) NOT NULL COMMENT '排序号',
+    NAME varchar(255) NOT NULL COMMENT '名称',
+    
+    UID_ varchar(36) COMMENT '全局标识',
+   	TYPE_ int(1) NOT NULL COMMENT '类型',
+    STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
+    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
+    primary key (ID)
+) COMMENT='角色';
+
+-- 角色与模块的关联
+create table BC_IDENTITY_ROLE_RESOURCE (
+    RID int NOT NULL COMMENT '角色ID',
+    SID int NOT NULL COMMENT '资源ID',
+    primary key (RID,SID)
+) COMMENT='角色与资源的关联：角色可以访问哪些资源';
+ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT FK_RS_ROLE FOREIGN KEY (RID) 
+	REFERENCES BC_IDENTITY_ROLE (ID);
+ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT FK_RS_RESOURCE FOREIGN KEY (SID) 
+	REFERENCES BC_IDENTITY_RESOURCE (ID);
 
 -- 职务
 create table BC_IDENTITY_DUTY (
@@ -34,6 +75,7 @@ create table BC_IDENTITY_ACTOR (
     INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     CODE varchar(100) NOT NULL COMMENT '编码',
     NAME varchar(255) NOT NULL COMMENT '名称',
+    PY varchar(255) COMMENT '名称的拼音',
     ORDER_ varchar(100) COMMENT '同类参与者之间的排序号',
     EMAIL varchar(255) COMMENT '邮箱',
     PHONE varchar(255) COMMENT '联系电话',
@@ -76,12 +118,12 @@ CREATE TABLE BC_IDENTITY_IDGENERATOR (
 ) COMMENT = '标识生成器,用于生成主键或唯一编码用';
 
 -- 参与者与角色的关联
-create table BC_SECURITY_ROLE_ACTOR (
+create table BC_IDENTITY_ROLE_ACTOR (
     AID int NOT NULL COMMENT '参与者ID',
     RID int NOT NULL COMMENT '角色ID',
     primary key (AID,RID)
 ) COMMENT='参与者与角色的关联：参与者拥有哪些角色';
-ALTER TABLE BC_SECURITY_ROLE_ACTOR ADD CONSTRAINT FK_RA_ACTOR FOREIGN KEY (AID) 
+ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT FK_RA_ACTOR FOREIGN KEY (AID) 
 	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_SECURITY_ROLE_ACTOR ADD CONSTRAINT FK_RA_ROLE FOREIGN KEY (RID) 
-	REFERENCES BC_SECURITY_ROLE (ID);
+ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT FK_RA_ROLE FOREIGN KEY (RID) 
+	REFERENCES BC_IDENTITY_ROLE (ID);

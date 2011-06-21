@@ -25,6 +25,8 @@ import cn.bc.core.query.condition.impl.NotEqualsCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
+import cn.bc.docs.service.AttachService;
+import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
@@ -50,11 +52,18 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
+	private AttachService attachService;
+	private String MANAGER_KEY = "R_MANAGER_BULLETIN";// 公告管理角色的编码
 
 	@Autowired
 	public void setBulletinService(
 			@Qualifier(value = "bulletinService") CrudService<Bulletin> crudService) {
 		this.setCrudService(crudService);
+	}
+
+	@Autowired
+	public void setAttachService(AttachService attachService) {
+		this.attachService = attachService;
 	}
 
 	@Autowired
@@ -78,6 +87,10 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
 		this.setE(e);
+		
+		// 构建附件控件
+		attachsUI = buildAttachsUI(true);
+		
 		return "form";
 	}
 
@@ -90,6 +103,32 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		return "saveSuccess";
 	}
 
+	public AttachWidget attachsUI;
+
+	@Override
+	public String edit() throws Exception {
+		// 构建附件控件
+		attachsUI = buildAttachsUI(false);
+
+		return super.edit();
+	}
+
+	private AttachWidget buildAttachsUI(boolean isNew) {
+		// 构建附件控件
+		String ptype = "bulletin.main";
+		AttachWidget attachsUI = new AttachWidget();
+		attachsUI.addClazz("formAttachs");
+		if (!isNew)
+			attachsUI.addAttach(this.attachService.findByPtype(ptype));
+		attachsUI.setPuid(this.getE().getUid()).setPtype(ptype);
+
+		// 上传附件的限制
+		attachsUI.addExtension(getText("app.attachs.extensions"))
+				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		return attachsUI;
+	}
+
 	@Override
 	protected GridData buildGridData(List<Column> columns) {
 		return super.buildGridData(columns).setRowLabelExpression("subject");
@@ -99,7 +138,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	protected Condition getSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
 		// 是否公告管理员
-		boolean isManager = context.hasAnyPriviledge("bulletin.manager");
+		boolean isManager = context.hasAnyRole(MANAGER_KEY);
 		Actor unit = context.getUnit();
 
 		// 其他单位且已发布的全系统公告
@@ -140,7 +179,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 		// 是否公告管理员
 		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyPriviledge("bulletin.manager");
+				.hasAnyRole(MANAGER_KEY);
 
 		if (isManager) {
 			// 新建按钮
@@ -171,7 +210,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	protected List<Column> buildGridColumns() {
 		// 是否公告管理员
 		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyPriviledge("bulletin.manager");
+				.hasAnyRole(MANAGER_KEY);
 
 		List<Column> columns = super.buildGridColumns();
 		if (isManager)
@@ -181,8 +220,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		columns.add(new TextColumn("issueDate", getText("bulletin.issueDate"),
 				90).setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new TextColumn("issuerName", getText("bulletin.issuerName"),
-				90).setSortable(true));
+		columns.add(new TextColumn("issuerName",
+				getText("bulletin.issuerName"), 90).setSortable(true));
 		columns.add(new TextColumn("subject", getText("bulletin.subject"))
 				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)

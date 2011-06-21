@@ -1,9 +1,15 @@
 package cn.bc.docs.web;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class AttachUtils {
 	/**
 	 * 获取指定扩展名的文件对应的ContentType
-	 * <p>http://www.w3.org/TR/html4/types.html</p>
+	 * <p>
+	 * http://www.w3.org/TR/html4/types.html
+	 * </p>
+	 * 
 	 * @param extend
 	 *            文件的扩展名
 	 * @return
@@ -47,5 +53,23 @@ public class AttachUtils {
 		} else {
 			return "application/" + extend;
 		}
+	}
+
+	private static NumberFormat sizeFormater = new DecimalFormat("#.#");
+
+	/**
+	 * 将文件大小的数值转化为友好的显示字符串
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public static String getSizeInfo(long size) {
+		if (size < 1024)// 字节
+			return size + "Bytes";
+		else if (size < 1024 * 1024)// KB
+			return sizeFormater.format(((float) size) / 1024f) + "KB";
+		else
+			// MB
+			return sizeFormater.format(((float) size) / 1024f / 1024f) + "MB";
 	}
 }

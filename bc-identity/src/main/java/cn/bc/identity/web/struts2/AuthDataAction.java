@@ -14,8 +14,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 
-import cn.bc.identity.domain.Actor;
+import cn.bc.Context;
 import cn.bc.identity.service.UserService;
+import cn.bc.identity.web.SystemContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -56,8 +57,8 @@ public class AuthDataAction extends ActionSupport implements SessionAware {
 	public String updatePassword() throws Exception {
 		try {
 			if (this.ids == null || this.ids.length() == 0) {// 更新当前用户
-				this.ids = ((Actor) this.session.get("user")).getId()
-						.toString();
+				this.ids = ((SystemContext) this.session.get(Context.KEY))
+						.getUser().getId().toString();
 				logger.debug("update current user. id=" + this.ids);
 			}
 			if (logger.isDebugEnabled()) {

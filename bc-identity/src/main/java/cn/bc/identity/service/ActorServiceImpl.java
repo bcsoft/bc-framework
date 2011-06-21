@@ -5,7 +5,7 @@ import java.util.List;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
+import cn.bc.identity.domain.Resource;
 
 /**
  * 参与者Service接口的实现
@@ -87,7 +87,7 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 				descendantOrganizationTypes);
 	}
 
-	public List<Module> findCanUseModules(Long actorId) {
+	public List<Resource> findCanUseModules(Long actorId) {
 		return this.actorDao.findCanUseModules(actorId);
 	}
 

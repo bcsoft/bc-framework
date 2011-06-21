@@ -59,7 +59,8 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 		this.getE().setStatus(Entity.STATUS_ENABLED);
 		this.getE().setStandalone(true);
 		// 设置属于当前用户
-		this.getE().setActor((Actor) this.session.get("user"));
+		this.getE().setActor(
+				((SystemContext) this.session.get(Context.KEY)).getUser());
 		return "form";
 	}
 
@@ -112,7 +113,7 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 		return columns;
 	}
 
-	public String name = "模块名称";
+	public String name = "资源名称";
 
 	// 选择图标对话框
 	public String selectIconClass() throws Exception {

@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.ActorRelationService;
 import cn.bc.identity.service.ActorService;
-import cn.bc.security.domain.Role;
 import cn.bc.web.struts2.CrudAction;
 
 /**
@@ -70,7 +70,7 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 
 	// 查询条件中要匹配的域
 	protected String[] getSearchFields() {
-		return new String[] { "code", "order", "name", "phone", "email" };
+		return new String[] { "code", "order", "name", "pinYin", "phone", "email" };
 	}
 
 	@Override

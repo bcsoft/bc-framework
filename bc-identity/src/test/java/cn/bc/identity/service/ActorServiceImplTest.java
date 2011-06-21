@@ -18,12 +18,10 @@ import cn.bc.core.Entity;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorDetail;
 import cn.bc.identity.domain.ActorRelation;
+import cn.bc.identity.domain.Resource;
+import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.ActorRelationService;
 import cn.bc.identity.service.ActorService;
-import cn.bc.security.domain.Module;
-import cn.bc.security.domain.Role;
-import cn.bc.security.service.ModuleService;
-import cn.bc.security.service.RoleService;
 import cn.bc.test.AbstractEntityCrudTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,10 +44,10 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.roleService = roleService;
 	}
 
-	ModuleService moduleService;
+	ResourceService moduleService;
 
 	@Autowired
-	public void setModuleService(ModuleService moduleService) {
+	public void setModuleService(ResourceService moduleService) {
 		this.moduleService = moduleService;
 	}
 
@@ -223,16 +221,16 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		roles.add(role);
 		Assert.assertNotNull(role.getId());
 		// 为角色添加1个模块
-		Module module = createModule();
+		Resource module = createModule();
 		this.moduleService.save(module);
 		Assert.assertNotNull(module.getId());
-		Set<Module> ms = new LinkedHashSet<Module>();// 使用有序的Set
+		Set<Resource> ms = new LinkedHashSet<Resource>();// 使用有序的Set
 		ms.add(module);
 		Long mid = module.getId();
 		ms.add(module);
 		Assert.assertNotNull(module.getId());
 
-		role.setModules(ms);
+		role.setResources(ms);
 		actor.setRoles(roles);
 		this.actorService.save(actor);
 
@@ -242,20 +240,20 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Assert.assertEquals(1, actor.getRoles().size());
 		Assert.assertEquals(rid, role.getId());
 
-		Assert.assertNotNull(role.getModules());
-		Assert.assertEquals(1, role.getModules().size());
-		Assert.assertEquals(mid, role.getModules().iterator().next().getId());
+		Assert.assertNotNull(role.getResources());
+		Assert.assertEquals(1, role.getResources().size());
+		Assert.assertEquals(mid, role.getResources().iterator().next().getId());
 
 		return actor;
 	}
 
-	private Module createModule() {
-		Module module = new Module();
-		module.setType(Module.TYPE_INNER_LINK);
+	private Resource createModule() {
+		Resource module = new Resource();
+		module.setType(Resource.TYPE_INNER_LINK);
 		module.setStatus(Entity.STATUS_ENABLED);
 		module.setInner(false);
-		module.setCode("test");
-		module.setName(module.getCode());
+		module.setOrder("test");
+		module.setName(module.getOrder());
 		return module;
 	}
 

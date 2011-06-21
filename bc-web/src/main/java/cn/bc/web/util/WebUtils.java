@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.WebApplicationContext;
@@ -37,25 +36,19 @@ import cn.bc.core.exception.CoreException;
  * @author dragon
  * @since 1.0.0
  */
-public class WebUtils implements ServletContextAware, InitializingBean {
+public class WebUtils implements ServletContextAware {
 	static Log logger = LogFactory.getLog(WebUtils.class);
-	private ServletContext servletContext = null;
-	private WebApplicationContext wac = null;
-	private static WebUtils instance = null;
+	private static ServletContext servletContext = null;
+	private static WebApplicationContext wac = null;
 
 	private WebUtils() {
 	}
 
-	public void afterPropertiesSet() throws Exception {
-		instance = new WebUtils();
-		instance.setServletContext(servletContext);
-	}
-
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
+	public void setServletContext(ServletContext _servletContext) {
+		servletContext = _servletContext;
 
 		// 获取web应用访问的上下文路径:部署到根目录为"",否则为"/[appName]"
-		rootPath = this.servletContext.getRealPath("/");
+		rootPath = servletContext.getRealPath("/");
 		if (null == rootPath)
 			throw new CoreException("Error occured when getting context path.");
 		logger.fatal("rootPath=" + rootPath);
@@ -216,10 +209,10 @@ public class WebUtils implements ServletContextAware, InitializingBean {
 	 * 
 	 * @return
 	 */
-	public synchronized WebApplicationContext getWac() {
+	public static synchronized WebApplicationContext getWac() {
 		if (null == wac)
 			wac = WebApplicationContextUtils
-					.getRequiredWebApplicationContext(this.servletContext);
+					.getRequiredWebApplicationContext(servletContext);
 		return wac;
 	}
 
@@ -231,10 +224,10 @@ public class WebUtils implements ServletContextAware, InitializingBean {
 	 * @return bean对象
 	 */
 	public static <T> T getBean(String name, Class<T> requiredType) {
-		return instance.getWac().getBean(name, requiredType);
+		return getWac().getBean(name, requiredType);
 	}
 
 	public static <T> T getBean(Class<T> requiredType) {
-		return instance.getWac().getBean(requiredType);
+		return getWac().getBean(requiredType);
 	}
 }

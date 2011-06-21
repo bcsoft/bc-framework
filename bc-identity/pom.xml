@@ -38,11 +38,6 @@
 			<artifactId>bc-orm-hibernate</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-security</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<!-- for test -->
 		<dependency>

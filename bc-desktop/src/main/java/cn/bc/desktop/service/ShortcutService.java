@@ -6,8 +6,8 @@ import java.util.Set;
 import cn.bc.core.service.CrudService;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
-import cn.bc.security.domain.Role;
+import cn.bc.identity.domain.Resource;
+import cn.bc.identity.domain.Role;
 
 /**
  * 桌面快捷方式Service接口
@@ -56,5 +56,5 @@ public interface ShortcutService extends CrudService<Shortcut> {
 	 * @return
 	 */
 	List<Shortcut> findByActor(Long actorId, Set<Actor> ancestorOrganizations,
-			Set<Role> roles, Set<Module> modules);
+			Set<Role> roles, Set<Resource> modules);
 }

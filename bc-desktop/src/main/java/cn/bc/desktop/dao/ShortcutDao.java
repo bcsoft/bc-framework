@@ -6,8 +6,8 @@ import java.util.Set;
 import cn.bc.core.dao.CrudDao;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
-import cn.bc.security.domain.Role;
+import cn.bc.identity.domain.Resource;
+import cn.bc.identity.domain.Role;
 
 /**
  * ShortcutDao接口
@@ -35,7 +35,7 @@ public interface ShortcutDao extends CrudDao<Shortcut> {
 	 */
 	List<Shortcut> findByActor(Long actorId, boolean includeAncestor,
 			boolean includeCommon, Set<Actor> ancestorOrganizations,
-			Set<Role> roles, Set<Module> modules);
+			Set<Role> roles, Set<Resource> modules);
 
 	List<Shortcut> findByActor(Long actorId, boolean includeAncestor,
 			boolean includeCommon);

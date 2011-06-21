@@ -3,6 +3,49 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<package name="resource" extends="bc-default" namespace="/bc/resource">
+		<action name="create" class="resourceAction" method="create">
+			<result name="form">/bc/identity/resource/form.jsp</result>
+		</action>
+		<action name="edit" class="resourceAction" method="edit">
+			<result name="form">/bc/identity/resource/form.jsp</result>
+		</action>
+				
+		<action name="save" class="resourceAction" method="save"/>
+		<action name="delete" class="resourceAction" method="delete"/>
+		<action name="list" class="resourceAction" method="list"/>
+		<action name="paging" class="resourceAction" method="paging"/>
+		<action name="data" class="resourceAction" method="data"/>
+		<action name="export" class="resourceAction" method="export"/>
+	</package>
+	<package name="role" extends="bc-default" namespace="/bc/role">
+		<action name="create" class="roleAction" method="create">
+			<result name="form">/bc/identity/role/form.jsp</result>
+		</action>
+		<action name="edit" class="roleAction" method="edit">
+			<result name="form">/bc/identity/role/form.jsp</result>
+		</action>
+				
+		<action name="save" class="roleAction" method="save"/>
+		<action name="delete" class="roleAction" method="delete"/>
+		<action name="list" class="roleAction" method="list"/>
+		<action name="paging" class="roleAction" method="paging"/>
+		<action name="data" class="roleAction" method="data"/>
+		<action name="export" class="roleAction" method="export"/>
+	</package>
+	
+	<package name="selectResource" extends="bc-default" namespace="/bc">
+		<action name="selectResource" class="selectResourceAction">
+			<result>/bc/identity/resource/select.jsp</result>
+		</action>
+	</package>
+	
+	<package name="selectRole" extends="bc-default" namespace="/bc">
+		<action name="selectRole" class="selectRoleAction">
+			<result>/bc/identity/role/select.jsp</result>
+		</action>
+	</package>
+
 	<package name="duty" extends="bc-default" namespace="/bc/duty">
 		<action name="create" class="dutyAction" method="create">
 <!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->

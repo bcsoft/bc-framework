@@ -12,9 +12,9 @@ import cn.bc.desktop.dao.ShortcutDao;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.Resource;
+import cn.bc.identity.domain.Role;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
-import cn.bc.security.domain.Module;
-import cn.bc.security.domain.Role;
 
 /**
  * ShortcutDao接口的实现
@@ -40,7 +40,7 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 	@SuppressWarnings("unchecked")
 	public List<Shortcut> findByActor(Long actorId, boolean includeAncestor,
 			boolean includeCommon, Set<Actor> ancestorOrganizations,
-			Set<Role> roles, Set<Module> modules) {
+			Set<Role> roles, Set<Resource> resources) {
 		ArrayList<Object> args = new ArrayList<Object>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select s from Shortcut s");
@@ -61,8 +61,8 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 					ancestorOrganizations.addAll(parents);
 
 				// 汇总所有可以访问的角色、模块列表
-				if (modules == null)
-					modules = new LinkedHashSet<Module>();
+				if (resources == null)
+					resources = new LinkedHashSet<Resource>();
 				if (roles == null)
 					roles = new LinkedHashSet<Role>();
 				
@@ -78,12 +78,12 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 				
 				// --角色中包含的模块
 				for (Role r : roles) {
-					if (r.getModules() != null)
-						modules.addAll(r.getModules());
+					if (r.getResources() != null)
+						resources.addAll(r.getResources());
 				}
 				
 				// --模块的id列表
-				for (Module m : modules) {
+				for (Resource m : resources) {
 					mids.add(m.getId());
 				}
 				
@@ -96,7 +96,7 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 				//hql
 				hql.append(" left join s.actor sa");
 				if (mids != null && !mids.isEmpty())
-					hql.append(" left join s.module sm");
+					hql.append(" left join s.resource sm");
 
 				// actorIds -- 自己或上级组织定义的快捷方式
 				if (aids.size() == 1) {
@@ -112,7 +112,7 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 					hql.append(")");
 				}
 
-				// moduleIds--有权限访问的资源对应的快捷方式
+				// resourceIds--有权限访问的资源对应的快捷方式
 				if (mids != null && !mids.isEmpty()) {
 					if (mids.size() == 1) {
 						hql.append(" or sm.id=?");
@@ -135,7 +135,7 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 			if (includeCommon){
 				// 不要使用sa is null：a.id is null
 				// 全系统通用的快捷方式
-				 hql.append(" or (s.actor is null and s.module is null)");
+				 hql.append(" or (s.actor is null and s.resource is null)");
 			}
 			hql.append(" order by s.order");
 		}

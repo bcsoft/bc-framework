@@ -3,13 +3,9 @@
  */
 package cn.bc.docs.domain;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import cn.bc.identity.domain.FileEntity;
 
@@ -28,28 +24,11 @@ public class Attach extends FileEntity {
 
 	private String puid;// 所关联文档的UID
 	private String ptype;// 所关联文档的分类
-	private String extend;// 附件扩展名：如png、doc、mp3等
+	private String extension;// 附件扩展名：如png、doc、mp3等
 	private String path;// 物理文件保存的相对路径（相对于全局配置的附件根目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private long size;// 文件的大小(单位为byte)
 	private long count;// 文件的下载次数
-	private boolean appPath = false;//path的值是相对于应用部署目录下路径还是相对于全局配置的app.data目录下的路径
-	private static NumberFormat format = new DecimalFormat("#.#");
-
-	/**
-	 * 将数值转化为友好的显示字符串
-	 * 
-	 * @return
-	 */
-	@Transient
-	public String getSizeInfo() {
-		if (size < 1024)// 字节
-			return size + "Bytes";
-		else if (size < 1024 * 1024)// KB
-			return format.format(((float)size)/1024f) + "KB";
-		else
-			// MB
-			return format.format(((float)size)/1024f/1024f) + "MB";
-	}
+	private boolean appPath = false;// path的值是相对于应用部署目录下路径还是相对于全局配置的app.data目录下的路径
 
 	@Column(name = "COUNT_")
 	public long getCount() {
@@ -92,12 +71,13 @@ public class Attach extends FileEntity {
 		this.puid = euid;
 	}
 
-	public String getExtend() {
-		return extend;
+	@Column(name = "EXT")
+	public String getExtension() {
+		return extension;
 	}
 
-	public void setExtend(String extend) {
-		this.extend = extend;
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 	public String getPath() {

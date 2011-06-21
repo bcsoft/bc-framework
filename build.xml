@@ -93,9 +93,6 @@
 				<fileset dir="${src.dir}/bc-test/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
-				<fileset dir="${src.dir}/bc-security/src/@{fromDir}/resources">
-					<include name="**/@{file}" />
-				</fileset>
 				<fileset dir="${src.dir}/bc-identity/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
@@ -150,9 +147,6 @@
 					<include name="**/@{file}" />
 				</fileset>
 				<fileset dir="${src.dir}/bc-identity/src/@{fromDir}/resources">
-					<include name="**/@{file}" />
-				</fileset>
-				<fileset dir="${src.dir}/bc-security/src/@{fromDir}/resources">
 					<include name="**/@{file}" />
 				</fileset>
 				<fileset dir="${resources.dir}">

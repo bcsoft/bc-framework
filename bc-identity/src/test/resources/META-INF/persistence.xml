@@ -5,6 +5,11 @@
 	<persistence-unit name="persistenceUnit"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+		<!-- security -->
+		<class>cn.bc.identity.domain.Resource</class>
+		<class>cn.bc.identity.domain.Role</class>
+		
 		<!-- 标识生成器 -->
 		<class>cn.bc.identity.domain.IdGenerator</class>
 

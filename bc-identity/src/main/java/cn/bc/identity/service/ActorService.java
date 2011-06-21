@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.bc.core.service.CrudService;
 import cn.bc.identity.domain.Actor;
-import cn.bc.security.domain.Module;
+import cn.bc.identity.domain.Resource;
 
 /**
  * 参与者Service接口
@@ -110,7 +110,7 @@ public interface ActorService extends CrudService<Actor>{
 	 * @param actorId
 	 * @return
 	 */
-	List<Module> findCanUseModules(Long actorId);
+	List<Resource> findCanUseModules(Long actorId);
 
 	/**
 	 * @param follower

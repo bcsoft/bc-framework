@@ -16,10 +16,10 @@ import cn.bc.core.Entity;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
+import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ActorRelationService;
 import cn.bc.identity.service.ActorService;
-import cn.bc.security.domain.Module;
-import cn.bc.security.service.ModuleService;
+import cn.bc.identity.service.ResourceService;
 import cn.bc.test.AbstractEntityCrudTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,13 +29,13 @@ public class ShortcutServiceImplTest extends
 		AbstractEntityCrudTest<Long, Shortcut> {
 	ShortcutService shortcutService;
 	ActorService actorService;
-	ModuleService moduleService;
+	ResourceService resourceService;
 	ActorRelationService actorRelationService;
 
 	@Autowired
-	public void setShortcutService(ShortcutService moduleService) {
-		this.shortcutService = moduleService;
-		this.crudOperations = moduleService;// 赋值基类的crud操作对象
+	public void setShortcutService(ShortcutService resourceService) {
+		this.shortcutService = resourceService;
+		this.crudOperations = resourceService;// 赋值基类的crud操作对象
 	}
 
 	@Autowired
@@ -45,8 +45,8 @@ public class ShortcutServiceImplTest extends
 	}
 
 	@Autowired
-	public void setModuleService(ModuleService moduleService) {
-		this.moduleService = moduleService;
+	public void setResourceService(ResourceService resourceService) {
+		this.resourceService = resourceService;
 	}
 
 	@Autowired
@@ -62,11 +62,11 @@ public class ShortcutServiceImplTest extends
 		return shortcut;
 	}
 
-	protected Shortcut createShortcut(Actor actor, Module module, String order) {
+	protected Shortcut createShortcut(Actor actor, Resource resource, String order) {
 		Shortcut shortcut = super.createInstance(this.getDefaultConfig());
 		shortcut.setOrder(order);
 		shortcut.setActor((Actor)actor);
-		shortcut.setModule(module);
+		shortcut.setResource(resource);
 		return shortcut;
 	}
 

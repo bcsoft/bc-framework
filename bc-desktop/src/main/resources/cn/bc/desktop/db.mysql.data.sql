@@ -1,37 +1,37 @@
 -- 系统桌面相关模块的初始化数据
 
 -- 插入桌面快捷方式数据
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '0001', 0, null, null, id, null from BC_SECURITY_MODULE where name='待办事务';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '0002', 0, null, null, id, null from BC_SECURITY_MODULE where name='已办事务';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '0001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='待办事务';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '0002', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='已办事务';
 	
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '1001', 0, null, null, id, null from BC_SECURITY_MODULE where name='电子公告';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '1001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='电子公告';
 	
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '5001', 0, null, null, id, null from BC_SECURITY_MODULE where name='个性化设置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '5002', 0, null, null, id, null from BC_SECURITY_MODULE where name='我的桌面';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '5003', 0, null, null, id, null from BC_SECURITY_MODULE where name='我的日志';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '5001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='个性化设置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '5002', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的桌面';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '5003', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的日志';
 	
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7001', 0, null, null, id, null from BC_SECURITY_MODULE where name='单位配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7002', 0, null, null, id, null from BC_SECURITY_MODULE where name='部门配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7003', 0, null, null, id, null from BC_SECURITY_MODULE where name='岗位配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7004', 0, null, null, id, null from BC_SECURITY_MODULE where name='用户配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7005', 0, null, null, id, null from BC_SECURITY_MODULE where name='资源配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7006', 0, null, null, id, null from BC_SECURITY_MODULE where name='角色配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7007', 0, null, null, id, null from BC_SECURITY_MODULE where name='职务配置';
-insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,MID,AID) 
-	select 1, 0, '7008', 0, null, null, id, null from BC_SECURITY_MODULE where name='系统日志';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='单位配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7002', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='部门配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7003', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='岗位配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7004', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='用户配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7005', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='资源配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7006', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='角色配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7007', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='职务配置';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7008', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='系统日志';
 
 -- 报表
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 
@@ -66,7 +66,7 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONC
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
     select 1, 0, '9008', 1, 'zTree', '/ui-libs-demo/zTree/2.6/index.html', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS,AID) 
-    select 1, 0, '9009', 0, 'ATM', '/bc-test/attach/tag.jsp', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
+    select 1, 0, '9009', 0, '附件设计', '/bc-test/attach/tag.jsp', 'i0604', a.id from BC_IDENTITY_ACTOR a where a.code = 'huangrongji';
 
 -- 插入全局配置信息
 insert into BC_DESKTOP_PERSONAL (STATUS_,INNER_,FONT,THEME,AID) 

@@ -22,8 +22,8 @@ public interface SystemContext extends Context{
 	public static final String KEY_ROLES = "roles";
 	/** 系统上下文内保存用户所拥有的岗位信息的键值 */
 	public static final String KEY_GROUPS = "groups";
-	/** 系统上下文内保存用户可访问的资源信息的键值 */
-	public static final String KEY_MODULES = "modules";
+//	/** 系统上下文内保存用户可访问的资源信息的键值 */
+//	public static final String KEY_RESOURCES = "resources";
 	
 	/**
 	 * 获取当前登录的用户
@@ -56,11 +56,4 @@ public interface SystemContext extends Context{
 	 * @return
 	 */
 	boolean hasAnyGroup(String... groups);
-	
-	/**
-	 * 判断用户是否有指定的任一权限
-	 * @param codes 资源的标识符，通常为资源的编码
-	 * @return
-	 */
-	boolean hasAnyPriviledge(String... codes);
 }
