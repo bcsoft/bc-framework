@@ -5,6 +5,9 @@
 <struts>
 	<!-- attach -->
 	<package name="attach" extends="bc-default" namespace="/bc/attach">
+		<action name="design" class="attachAction" method="design">
+			<result>/bc-test/attach/design.jsp</result>
+		</action>
 		<action name="edit" class="attachAction" method="edit">
 			<result name="form">/bc/docs/attach/form.jsp</result>
 		</action>

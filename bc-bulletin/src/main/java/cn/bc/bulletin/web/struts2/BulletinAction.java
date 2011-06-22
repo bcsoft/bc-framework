@@ -36,6 +36,7 @@ import cn.bc.web.struts2.CrudAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 
@@ -54,6 +55,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	private String MANAGER_KEY = "R_MANAGER_BULLETIN";// 公告管理角色的编码
+	public boolean isManager;
 
 	@Autowired
 	public void setBulletinService(
@@ -87,11 +89,26 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
 		this.setE(e);
-		
+
 		// 构建附件控件
 		attachsUI = buildAttachsUI(true);
-		
+
+		// 构建对话框参数
+		this.formPageOption = buildFormPageOption();
+
 		return "form";
+	}
+
+	@Override
+	protected PageOption buildFormPageOption() {
+		PageOption option = new PageOption().setWidth(680).setMinWidth(250)
+				.setMinHeight(200).setModal(false);
+		if (isManager()) {
+			option.addButton(new ButtonOption(getText("label.preview"),
+					"preview"));
+			option.addButton(new ButtonOption(getText("label.save"), "save"));
+		}
+		return option;
 	}
 
 	@Override
@@ -114,9 +131,11 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	}
 
 	private AttachWidget buildAttachsUI(boolean isNew) {
+		isManager = isManager();
 		// 构建附件控件
 		String ptype = "bulletin.main";
 		AttachWidget attachsUI = new AttachWidget();
+		attachsUI.setFlashUpload(this.isFlashUpload());
 		attachsUI.addClazz("formAttachs");
 		if (!isNew)
 			attachsUI.addAttach(this.attachService.findByPtype(ptype));
@@ -126,6 +145,9 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		if (!isManager) {
+			attachsUI.setReadOnly(true);
+		}
 		return attachsUI;
 	}
 
@@ -138,7 +160,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	protected Condition getSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
 		// 是否公告管理员
-		boolean isManager = context.hasAnyRole(MANAGER_KEY);
+		isManager = isManager();
 		Actor unit = context.getUnit();
 
 		// 其他单位且已发布的全系统公告
@@ -177,9 +199,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		// 是否公告管理员
-		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyRole(MANAGER_KEY);
+		isManager = isManager();
 
 		if (isManager) {
 			// 新建按钮
@@ -209,8 +229,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	@Override
 	protected List<Column> buildGridColumns() {
 		// 是否公告管理员
-		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyRole(MANAGER_KEY);
+		isManager = isManager();
 
 		List<Column> columns = super.buildGridColumns();
 		if (isManager)
@@ -240,6 +259,11 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 					getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;
+	}
+
+	// 判断当前用户是否是公告管理员
+	private boolean isManager() {
+		return ((SystemContext) this.getContext()).hasAnyRole(MANAGER_KEY);
 	}
 
 	@Override

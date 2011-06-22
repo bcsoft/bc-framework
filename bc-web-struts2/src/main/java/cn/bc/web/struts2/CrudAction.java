@@ -84,6 +84,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 	protected Map<String, Object> session;
 	protected Map<String, Object> request;
+	public PageOption formPageOption;// 表单页面的Option配置
 
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -200,16 +201,61 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		return "success";
 	}
 
-	// 新建
+	// 新建表单
 	public String create() throws Exception {
 		e = this.getCrudService().create();
+		this.formPageOption = buildFormPageOption();
 		return "form";
 	}
 
-	// 编辑
+	// 编辑表单
 	public String edit() throws Exception {
 		e = this.getCrudService().load(this.getId());
+		this.formPageOption = buildFormPageOption();
 		return "form";
+	}
+
+	// 表单：自动判断权限
+	public String form() throws Exception {
+		e = this.getCrudService().load(this.getId());
+		this.formPageOption = buildFormPageOption();
+		if (isReadOnlyForm())
+			return "readonlyForm";
+		else
+			return "editableForm";
+	}
+
+	protected boolean isReadOnlyForm() {
+		return false;
+	}
+
+	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
+	protected boolean isFlashUpload() {
+		// TODO Opera;
+		return isIE();
+	}
+
+	/**
+	 * 判断客户端的浏览器是否是IE浏览器
+	 * 
+	 * @return
+	 */
+	protected boolean isIE() {
+		return ServletActionContext.getRequest().getHeader("User-Agent")
+				.toUpperCase().indexOf("MSIE") != -1;
+	}
+
+	// X-Requested-With:
+
+	/**
+	 * 判断当前请求是否是ajax请求
+	 * 
+	 * @return
+	 */
+	protected boolean isAjaxRequest() {
+		//TODO IE
+		return "XMLHttpRequest".equalsIgnoreCase(ServletActionContext
+				.getRequest().getHeader("X-Requested-With"));
 	}
 
 	// 保存
@@ -528,6 +574,11 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	protected PageOption buildListPageOption() {
 		return new PageOption().setMinWidth(250).setMinHeight(200)
 				.setModal(false);
+	}
+
+	/** 构建表单页面的对话框初始化配置 */
+	protected PageOption buildFormPageOption() {
+		return null;
 	}
 
 	/** 构建视图页面的工具条 */

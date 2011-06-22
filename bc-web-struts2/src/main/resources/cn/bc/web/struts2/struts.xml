@@ -7,7 +7,8 @@
 	<package name="bc-default" extends="struts-default" abstract="true">
 		<interceptors>
 			<!-- 禁用缓存控制的过滤器 -->
-			<interceptor name="noCacheInterceptor" class="cn.bc.web.struts2.interceptor.CacheInterceptor">
+			<interceptor name="noCacheInterceptor"
+				class="cn.bc.web.struts2.interceptor.CacheInterceptor">
 				<!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
 				<param name="expires">0</param>
 			</interceptor>
@@ -16,8 +17,8 @@
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>
 		</interceptors>
-		<default-interceptor-ref name="noCacheStack"/>
-		
+		<default-interceptor-ref name="noCacheStack" />
+
 		<global-results>
 			<result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
 			</result>
@@ -32,10 +33,29 @@
 			<result name="deleteSuccess" type="freemarker">/cn/bc/web/struts2/form.delete.success.ftl
 			</result>
 			<!-- 导出视图数据为Excel文件 -->
-			<result name="export" type="stream"/>
+			<result name="export" type="stream" />
 		</global-results>
 
-			<!-- <global-exception-mappings> <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping> 
-				</global-exception-mappings> -->
+		<!-- <global-exception-mappings> <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping> 
+			</global-exception-mappings> -->
+	</package>
+	
+	<!-- 使用通配符的默认配置 -->
+	<package name="bc" extends="bc-default" namespace="/bc">
+		<action name="/*/form/create" class="{1}Action" method="create">
+			<result name="editableForm">/bc/{1}/form.jsp</result>
+		</action>
+		<action name="/*/form/edit" class="{1}Action" method="edit">
+			<result name="editableForm">/bc/{1}/form.jsp</result>
+		</action>
+		<action name="/*/form/read" class="{1}Action" method="edit">
+			<result name="readonlyForm">/bc/{1}/formr.jsp</result>
+		</action>
+		<action name="/*/save" class="{1}Action" method="save" />
+		<action name="/*/delete" class="{1}Action" method="delete" />
+		<action name="/*/list" class="{1}Action" method="list" />
+		<action name="/*/paging" class="{1}Action" method="paging" />
+		<action name="/*/data" class="{1}Action" method="data" />
+		<action name="/*/export" class="{1}Action" method="export" />
 	</package>
 </struts>

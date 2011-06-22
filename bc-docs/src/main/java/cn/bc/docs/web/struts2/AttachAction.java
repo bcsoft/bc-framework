@@ -30,6 +30,7 @@ import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.AttachUtils;
+import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
@@ -62,11 +63,50 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
-	private String MANAGER_KEY = "R_MANAGER_ATTACH";//附件管理角色的编码
+	private String MANAGER_KEY = "R_MANAGER_ATTACH";// 附件管理角色的编码
+
+	private AttachService attachService;
 
 	@Autowired
 	public void setAttachService(AttachService attachService) {
+		this.attachService = attachService;
 		this.setCrudService(attachService);
+	}
+
+	public String editableAttachsUI;
+	public String readonlyAttachsUI;
+	//用于附件控件的设计
+	public String design() throws Exception {
+		String ptype = "test.main";
+		String puid = "test.uid.1";
+		
+		// 构建可编辑附件控件
+		AttachWidget attachsUI = new AttachWidget();
+		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.addClazz("formAttachs ui-widget-content");
+		attachsUI.addAttach(this.attachService.findByPtype(ptype));
+		attachsUI.setPuid(puid).setPtype(ptype);
+		// 上传附件的限制
+		attachsUI.addExtension(getText("app.attachs.extensions"))
+				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		
+		editableAttachsUI = attachsUI.toString();
+		
+		// 构建不可编辑附件控件
+		attachsUI = new AttachWidget();
+		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.addClazz("formAttachs ui-widget-content");
+		attachsUI.addAttach(this.attachService.findByPtype(ptype));
+		attachsUI.setPuid(puid).setPtype(ptype);
+		// 上传附件的限制
+		attachsUI.addExtension(getText("app.attachs.extensions"))
+				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		attachsUI.setReadOnly(true);
+		readonlyAttachsUI = attachsUI.toString();
+
+		return SUCCESS;
 	}
 
 	@Override
@@ -349,23 +389,23 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			DocumentConverter converter = new OpenOfficeDocumentConverter(
 					connection);
 			String from = attach.getExtension();
-//			if("docx".equalsIgnoreCase(from))
-//				from = "doc";
-//			else if("xlsx".equalsIgnoreCase(from))
-//				from = "xls";
-//			else if("pptx".equalsIgnoreCase(from))
-//				from = "ppt";
+			// if("docx".equalsIgnoreCase(from))
+			// from = "doc";
+			// else if("xlsx".equalsIgnoreCase(from))
+			// from = "xls";
+			// else if("pptx".equalsIgnoreCase(from))
+			// from = "ppt";
 			if (this.to == null || this.to.length() == 0)
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
 			converter.convert(inputStream,
-					formaters.getFormatByFileExtension(from),
-					outputStream, formaters.getFormatByFileExtension(this.to));
+					formaters.getFormatByFileExtension(from), outputStream,
+					formaters.getFormatByFileExtension(this.to));
 
 			// close the connection
 			connection.disconnect();
 			this.inputStream = new ByteArrayInputStream(
 					outputStream.toByteArray());
-			
+
 			inputStream.close();
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）

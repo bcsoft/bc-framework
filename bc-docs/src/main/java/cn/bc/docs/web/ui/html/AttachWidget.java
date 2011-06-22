@@ -2,6 +2,7 @@ package cn.bc.docs.web.ui.html;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -29,6 +30,7 @@ public class AttachWidget extends Div {
 	protected Log logger = LogFactory.getLog(getClass());
 
 	private boolean readOnly;// 只读还是编辑状态
+	private boolean flashUpload;// 是否使用Flash上传附件的标记
 	private String summary = "&nbsp;个附件共&nbsp;";// 附件汇总信息的不变部分的字符串
 	private List<String> extensions;// 上传文件的扩展名限制
 	private List<Attach> attachs;// 包含的附件
@@ -64,6 +66,9 @@ public class AttachWidget extends Div {
 					StringUtils.collectionToCommaDelimitedString(extensions));
 		}
 
+		if (this.isFlashUpload())
+			this.addClazz("flashUpload");
+
 		if (this.getChildren() != null)
 			this.getChildren().clear();
 
@@ -82,37 +87,49 @@ public class AttachWidget extends Div {
 	}
 
 	protected Component buildHeadUI() {
-		Div head = new Div();
-		head.addClazz("header");
+		Table headUI = new Table();
+		headUI.addClazz("header").setAttr("cellpadding", "0")
+				.setAttr("cellspacing", "0");
+		Tr tr = new Tr();
+		headUI.addChild(tr);
 
 		// 汇总信息
-		Component summary = new Span().addClazz("summary");
-		head.addChild(summary);
+		Td td = new Td();
+		tr.addChild(td);
+		td.addClazz("summary");
 		int totalCount = this.attachs != null ? this.attachs.size() : 0;
-		summary.addChild(new Span().setId("totalCount").addChild(
+		td.addChild(new Span().setId("totalCount").addChild(
 				new Text(String.valueOf(totalCount))));
-		summary.addChild(new Text(this.getSummary()));
+		td.addChild(new Text(this.getSummary()));
 		long totalSize = 0;
 		if (this.attachs != null) {
 			for (Attach a : attachs)
 				totalSize += a.getSize();
 		}
-		summary.addChild(new Span().setId("totalSize")
+		td.addChild(new Span().setId("totalSize")
 				.setAttr("data-size", String.valueOf(totalSize))
 				.addChild(new Text(AttachUtils.getSizeInfo(totalSize))));
 
+		// 添加附件按钮
+		if (!this.isReadOnly()) {
+			tr.addChild(defaultHeadButton4UploadFile(null, this.isFlashUpload()));
+		}
+
 		// 如果没有自定义设置，创建默认的操作按钮
 		if (this.headButtons == null || this.headButtons.isEmpty()) {
-			if (!this.isReadOnly())
-				this.addHeadButton(defaultHeadButton4UploadFile(null));
 			this.addHeadButton(defaultHeadButton4DownloadAll(null));
 			if (!this.isReadOnly())
 				this.addHeadButton(defaultHeadButton4DeleteAll(null));
 		}
-		for (Component button : this.headButtons)
-			head.addChild(button);
 
-		return head;
+		// 将额外的按钮添加到td
+		td = new Td();
+		tr.addChild(td);
+		for (Component button : this.headButtons) {
+			td.addChild(button);
+		}
+
+		return headUI;
 	}
 
 	protected Component buildAttachUI(Attach attach) {
@@ -167,6 +184,14 @@ public class AttachWidget extends Div {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public boolean isFlashUpload() {
+		return flashUpload;
+	}
+
+	public void setFlashUpload(boolean flashUpload) {
+		this.flashUpload = flashUpload;
 	}
 
 	/**
@@ -337,14 +362,23 @@ public class AttachWidget extends Div {
 	 * 
 	 * @return
 	 */
-	public static Component defaultHeadButton4UploadFile(String label) {
-		Component c = new Span();
+	public static Component defaultHeadButton4UploadFile(String label,
+			boolean flashUpload) {
+		Component c = new Td();
 		c.addClazz("uploadFile");
-		c.addChild(new Text((label == null || label.length() == 0) ? "添加附件"
-				: label));
+		if (!flashUpload)
+			c.addChild(new Text((label == null || label.length() == 0) ? "添加附件"
+					: label));
+		String id = new Date().getTime() + "";
 		c.addChild(new Text(
-				"<input type=\"file\" class=\"uploadFile\" name=\"uploadFile\" multiple/>"));
+				"<input type=\"file\" class=\"uploadFile\" id=\"fid" + id
+						+ "\" name=\"uploadFile\" multiple/>"));
 		return c;
+	}
+
+	public static Component createButton(String label, String action,
+			String click, String callback) {
+		return createButton(label, action, click, callback, null);
 	}
 
 	/**
@@ -357,7 +391,7 @@ public class AttachWidget extends Div {
 	 * @return
 	 */
 	public static Component createButton(String label, String action,
-			String click, String callback) {
+			String click, String callback, String title) {
 		Component c = new A();
 		c.addClazz("operation").setAttr("data-action", action)
 				.setAttr("data-click", click)
@@ -365,6 +399,8 @@ public class AttachWidget extends Div {
 		if (label == null)
 			label = "label";
 		c.addChild(new Text(label));
+		if (title != null)
+			c.setTitle(title);
 		return c;
 	}
 
@@ -395,7 +431,8 @@ public class AttachWidget extends Div {
 	 */
 	public static Component defaultAttachButton4Inline(String label) {
 		return createButton(label == null ? "在线查看" : label, "inline", null,
-				null);
+				null,
+				"在线查看需要浏览器的支持，如果是xls、xlsx、doc、docx、ppt、pptx等Office文档，会自动转换为pdf文件查看。");
 	}
 
 	/**
