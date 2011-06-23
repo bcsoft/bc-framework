@@ -252,8 +252,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		module.setType(Resource.TYPE_INNER_LINK);
 		module.setStatus(Entity.STATUS_ENABLED);
 		module.setInner(false);
-		module.setOrder("test");
-		module.setName(module.getOrder());
+		module.setOrderNo("test");
+		module.setName(module.getOrderNo());
 		return module;
 	}
 
@@ -698,7 +698,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		ar.setMaster(master);
 		ar.setFollower(follower);
 		ar.setType(type);
-		ar.setOrder(order);
+		ar.setOrderNo(order);
 		return ar;
 	}
 }

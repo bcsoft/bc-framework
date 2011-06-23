@@ -52,7 +52,7 @@ public class ActorRelationServiceImplTest {
 		Long mid = ar.getMaster().getId();
 		Long fid = ar.getFollower().getId();
 		Integer type = ar.getType();
-		String order = ar.getOrder();
+		String order = ar.getOrderNo();
 
 		ActorRelationPK id = new ActorRelationPK(ar.getMaster(),
 				ar.getFollower(), ar.getType());
@@ -61,7 +61,7 @@ public class ActorRelationServiceImplTest {
 		Assert.assertEquals(mid, ar.getMaster().getId());
 		Assert.assertEquals(fid, ar.getFollower().getId());
 		Assert.assertEquals(type, ar.getType());
-		Assert.assertEquals(order, ar.getOrder());
+		Assert.assertEquals(order, ar.getOrderNo());
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -127,7 +127,7 @@ public class ActorRelationServiceImplTest {
 		ar.setMaster(master);
 		ar.setFollower(follower);
 		ar.setType(type);
-		ar.setOrder(order);
+		ar.setOrderNo(order);
 		return ar;
 	}
 

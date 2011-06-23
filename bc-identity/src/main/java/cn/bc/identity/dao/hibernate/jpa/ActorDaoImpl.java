@@ -169,7 +169,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 
 		// 排序
-		hql.append(" order by ar.type,ar.order,f.type,f.code");
+		hql.append(" order by ar.type,ar.orderNo,f.type,f.code");
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql.toString());
 			logger.debug("args="
@@ -226,7 +226,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 	public List<Actor> findAllUnit(Integer... statues) {
 		AndCondition c = new AndCondition();
 		c.add(new EqualsCondition("type", new Integer(Actor.TYPE_UNIT))).add(
-				new OrderCondition("order", Direction.Asc).add("code",
+				new OrderCondition("orderNo", Direction.Asc).add("code",
 						Direction.Asc));
 		if (statues != null && statues.length > 0) {
 			if (statues.length == 1) {
@@ -423,7 +423,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 
 		// 排序
-		hql.append(" order by a.order");
+		hql.append(" order by a.orderNo");
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql.toString());
 			logger.debug("args="

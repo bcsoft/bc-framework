@@ -32,7 +32,7 @@ public class Resource extends DefaultEntity {
 	public static final int TYPE_HTML = 4;
 
 	private String name;// 名称
-	private String order;// 排序号
+	private String orderNo;// 排序号
 	private int type;// 资源类型，TYPE_*定义的相关常数
 	private String url;// 资源地址
 	private Resource belong;// 所隶属的模块
@@ -65,12 +65,12 @@ public class Resource extends DefaultEntity {
 	}
 
 	@Column(name = "ORDER_")
-	public String getOrder() {
-		return order;
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNo(String order) {
+		this.orderNo = order;
 	}
 
 	@Column(name = "TYPE_")
@@ -101,7 +101,7 @@ public class Resource extends DefaultEntity {
 	}
 
 	public String toString() {
-		return "{id:" + getId() + ",type:" + type + ",code:" + order + ",name:"
+		return "{id:" + getId() + ",type:" + type + ",code:" + orderNo + ",name:"
 				+ name + ",url:" + url + "}";
 	}
 }

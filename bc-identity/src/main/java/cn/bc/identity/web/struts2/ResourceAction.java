@@ -65,7 +65,7 @@ public class ResourceAction extends CrudAction<Long, Resource> {
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("order", Direction.Asc);
+		return new OrderCondition("orderNo", Direction.Asc);
 	}
 
 	// 设置表格的列
@@ -74,26 +74,26 @@ public class ResourceAction extends CrudAction<Long, Resource> {
 
 		// columns.add(new TextColumn("status", getText("actor.status"), 40));
 		if (this.useColumn("type"))
-			columns.add(new TextColumn("type", getText("module.type"), 80)
+			columns.add(new TextColumn("type", getText("resource.type"), 80)
 					.setSortable(true).setValueFormater(
 							new ResourceTypeFormater(getModuleTypes())));
 		if (this.useColumn("belong.name"))
-			columns.add(new TextColumn("belong.name", getText("module.belong"),
+			columns.add(new TextColumn("belong.name", getText("resource.belong"),
 					80));
-		if (this.useColumn("order"))
-			columns.add(new TextColumn("order", getText("label.order"), 100)
+		if (this.useColumn("orderNo"))
+			columns.add(new TextColumn("orderNo", getText("label.order"), 100)
 					.setSortable(true).setDir(Direction.Asc));
 		if (this.useColumn("name"))
 			columns.add(new TextColumn("name", getText("label.name"), 100)
 					.setSortable(true));
 		if (this.useColumn("url"))
-			columns.add(new TextColumn("url", getText("module.url"))
+			columns.add(new TextColumn("url", getText("resource.url"))
 					.setSortable(true));
 		if (this.useColumn("iconClass"))
 			columns.add(new TextColumn("iconClass",
-					getText("module.iconClass"), 100).setSortable(true));
+					getText("resource.iconClass"), 100).setSortable(true));
 		if (this.useColumn("option"))
-			columns.add(new TextColumn("option", getText("module.option"), 100));
+			columns.add(new TextColumn("option", getText("resource.option"), 100));
 
 		return columns;
 	}
@@ -107,17 +107,17 @@ public class ResourceAction extends CrudAction<Long, Resource> {
 		Map<String, String> types = new HashMap<String, String>();
 		types = new LinkedHashMap<String, String>();
 		types.put(String.valueOf(Resource.TYPE_FOLDER),
-				getText("module.type.folder"));
+				getText("resource.type.folder"));
 		types.put(String.valueOf(Resource.TYPE_INNER_LINK),
-				getText("module.type.innerLink"));
+				getText("resource.type.innerLink"));
 		types.put(String.valueOf(Resource.TYPE_OUTER_LINK),
-				getText("module.type.outerLink"));
+				getText("resource.type.outerLink"));
 		return types;
 	}
 
 	// 查询条件中要匹配的域
 	protected String[] getSearchFields() {
-		return new String[] { "order", "name", "url", "iconClass", "option" };
+		return new String[] { "orderNo", "name", "url", "iconClass", "option" };
 	}
 
 	@Override

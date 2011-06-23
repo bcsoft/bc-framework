@@ -26,8 +26,8 @@ public class ResourceServiceImplTest extends AbstractEntityCrudTest<Long,Resourc
 		Resource entity = super.createInstance(config);
 		
 		//补充一些额外的设置
-		entity.setOrder("order");
-		entity.setName(entity.getOrder());
+		entity.setOrderNo("order");
+		entity.setName(entity.getOrderNo());
 		
 		return entity;
 	}

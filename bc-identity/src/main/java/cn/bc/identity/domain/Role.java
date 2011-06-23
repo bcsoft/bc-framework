@@ -31,7 +31,7 @@ public class Role extends DefaultEntity {
 
 	private String name;// 名称
 	private String code;// 编码
-	private String order;// 排序号
+	private String orderNo;// 排序号
 	private int type;// 类型，保留未用的字段
 	private Set<Resource> resources;// 可访问的模块列表
 
@@ -52,12 +52,12 @@ public class Role extends DefaultEntity {
 	}
 
 	@Column(name = "ORDER_")
-	public String getOrder() {
-		return order;
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	@Column(name = "TYPE_")
@@ -71,7 +71,7 @@ public class Role extends DefaultEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "BC_IDENTITY_ROLE_RESOURCE", joinColumns = @JoinColumn(name = "RID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "SID", referencedColumnName = "ID"))
-	@OrderBy("order asc")
+	@OrderBy("orderNo asc")
 	public Set<Resource> getResources() {
 		return resources;
 	}

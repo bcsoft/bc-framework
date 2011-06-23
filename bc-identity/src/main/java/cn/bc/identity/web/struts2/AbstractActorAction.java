@@ -70,7 +70,7 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 
 	// 查询条件中要匹配的域
 	protected String[] getSearchFields() {
-		return new String[] { "code", "order", "name", "pinYin", "phone", "email" };
+		return new String[] { "code", "orderNo", "name", "pinYin", "phone", "email" };
 	}
 
 	@Override
@@ -149,6 +149,6 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("order", Direction.Asc);
+		return new OrderCondition("orderNo", Direction.Asc);
 	};
 }

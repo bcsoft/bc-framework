@@ -55,7 +55,7 @@ public class RoleServiceImplTest extends AbstractEntityCrudTest<Long,Role> {
 		Role role = this.createInstance(this.getDefaultConfig());
 		
 		Resource module = createResource();
-		module.setOrder("test1");
+		module.setOrderNo("test1");
 		this.resourceService.save(module);
 		Assert.assertNotNull(module.getId());
 		Set<Resource> ms = new LinkedHashSet<Resource>();//使用有序的Set
@@ -63,7 +63,7 @@ public class RoleServiceImplTest extends AbstractEntityCrudTest<Long,Role> {
 		Long mid = module.getId();
 		
 		module = createResource();
-		module.setOrder("test2");
+		module.setOrderNo("test2");
 		this.resourceService.save(module);
 		ms.add(module);
 		Assert.assertNotNull(module.getId());
@@ -83,8 +83,8 @@ public class RoleServiceImplTest extends AbstractEntityCrudTest<Long,Role> {
 		module.setType(Resource.TYPE_INNER_LINK);
 		module.setStatus(Entity.STATUS_ENABLED);
 		module.setInner(false);
-		module.setOrder("test"); 
-		module.setName(module.getOrder());
+		module.setOrderNo("test"); 
+		module.setName(module.getOrderNo());
 		return module;
 	}
 

@@ -220,7 +220,7 @@ public class ShortcutServiceImplTest extends
 		ar.setMaster(master);
 		ar.setFollower(follower);
 		ar.setType(type);
-		ar.setOrder(order);
+		ar.setOrderNo(order);
 		return ar;
 	}
 
@@ -232,7 +232,7 @@ public class ShortcutServiceImplTest extends
 		actor.setStatus(Entity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
-		actor.setOrder(order);
+		actor.setOrderNo(order);
 		actor.setName("测试" + code);
 
 		return actor;

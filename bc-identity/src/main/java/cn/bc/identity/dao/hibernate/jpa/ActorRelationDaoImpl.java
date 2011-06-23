@@ -31,7 +31,7 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 		AndCondition condition = new AndCondition();
 		condition.add(new EqualsCondition("type", type));
 		condition.add(new EqualsCondition("master.id", masterId));
-		condition.add(new OrderCondition("order", Direction.Asc));
+		condition.add(new OrderCondition("orderNo", Direction.Asc));
 		return this.createQuery().condition(condition).list();
 	}
 
@@ -67,8 +67,8 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 			}
 		}
 
-		OrderCondition oc = new OrderCondition("master.order", Direction.Asc);
-		oc.add("order", Direction.Asc);
+		OrderCondition oc = new OrderCondition("master.orderNo", Direction.Asc);
+		oc.add("orderNo", Direction.Asc);
 		condition.add(oc);
 
 		return this.createQuery().condition(condition).list();

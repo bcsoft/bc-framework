@@ -46,7 +46,7 @@ public class RoleAction extends CrudAction<Long, Role> {
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("order", Direction.Asc);
+		return new OrderCondition("orderNo", Direction.Asc);
 	}
 
 	// 设置页面的尺寸
@@ -59,12 +59,12 @@ public class RoleAction extends CrudAction<Long, Role> {
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
 
-		if (this.useColumn("order"))
-			columns.add(new TextColumn("order", getText("label.order"), 80)
+		if (this.useColumn("orderNo"))
+			columns.add(new TextColumn("orderNo", getText("label.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));
 		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("label.order"), 200)
-					.setSortable(true).setDir(Direction.Asc));
+			columns.add(new TextColumn("code", getText("label.code"), 200)
+					.setSortable(true));
 		if (this.useColumn("name"))
 			columns.add(new TextColumn("name", getText("label.name"))
 					.setSortable(true));
@@ -74,7 +74,7 @@ public class RoleAction extends CrudAction<Long, Role> {
 
 	// 查询条件中要匹配的域
 	protected String[] getSearchFields() {
-		return new String[] { "code", "order", "name" };
+		return new String[] { "code", "orderNo", "name" };
 	}
 
 	public String assignResourceIds;// 分派的模块id，多个id用逗号连接

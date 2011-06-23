@@ -5,22 +5,32 @@
 #
 #######################################################################
 
-release v0.2 (2011-6-?)
+release v0.2 (2011-6-23)
 新功能
 1) 整合xheditor富文本编辑器，并可自行上传图片、flash、音乐、视频等
-2) 新增附件控件，支持附件批量上传、打包下载、在线查看(如Office文档、图片等)
-        强劲的html5异步批量上传文件功能(需要Chrome、Firefox、Safari浏览器支持)；
-        低B的浏览器自动使用SWFUpload实现批量文件上传；
-        在线查看文档功能需服务器安装OpenOffice3服务，且浏览器需支持查看pdf文件
-   (Chrome原生支持pdf查看，无须插件，Firefox、Safari需安装插件)
-3) 增加电子公告模块：演示富文本编辑器和附件控件的使用
-4) 增加附件管理模块：查看已上传到服务器的附件文件信息
+2) 新增附件控件
+3) 附件控件可跨浏览器批量上传附件
+   * Chrome、Firefox、Safari浏览器使用html5上传文件；
+   * IE浏览器使用SWFUpload组件上传文件；
+4) 附件控件可以zip压缩方式打包下载所有上传的附件
+5) 在线查看附件文档(如Office文档、图片等)
+        此功能需服务器安装OpenOffice3服务，方法：
+        到http://www.openoffice.org/下载，并安装到服务器，如果是Windows版的服务器操作系统，
+        安装完毕后先行打开openoffice一次并关闭，然后杀掉soffice.bin和soffice.exe两个进程，
+        再打开命令行，进入openoffice安装目录下的program目录，输入如下命令启动openoffice的文档服务：
+   >soffice -headless -accept="socket,port=8100;urp;"
+        
+        如果附件文档为xls、xlsx、doc、docx格式，系统自动将其转换为pdf格式在线查看，客户端不需要安装Office软件了，
+        但需要浏览器支持直接查看pdf文件的功能；
+   Chrome原生支持pdf查看，无须插件；Firefox、Safari需安装Adobe Reader插件。
+6) 新增电子公告模块：演示富文本编辑器和附件控件的使用
+7) 新增附件管理模块：查看已上传到服务器的附件文件信息
 
 TODO:
 主页主题
 带树视图
 改变表格列宽
-拖拉方式上传附件(Chrome、Firefoxz原生支持,其他浏览器不支持)
+拖拉方式上传附件(Chrome、Firefox原生支持,其他浏览器不支持)
 
 #######################################################################
 release v0.1 (2011-6-14)

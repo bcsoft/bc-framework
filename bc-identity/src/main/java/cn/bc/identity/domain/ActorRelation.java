@@ -51,7 +51,7 @@ public class ActorRelation implements Serializable{
 	private Actor master;
 	private Actor follower;
 	private Integer type;
-	private String order;
+	private String orderNo;
 	
 	@Id
 	@ManyToOne(targetEntity = Actor.class)
@@ -80,10 +80,10 @@ public class ActorRelation implements Serializable{
 		this.type = type;
 	}
 	@Column(name = "ORDER_")
-	public String getOrder() {
-		return order;
+	public String getOrderNo() {
+		return orderNo;
 	}
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

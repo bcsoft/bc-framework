@@ -92,7 +92,7 @@ public class SelectResourceAction extends ActionSupport {
 			condition.add(new EqualsCondition("type", new Integer(
 					Resource.TYPE_FOLDER)));
 		}
-		condition.add(new OrderCondition("code", Direction.Asc));
+		condition.add(new OrderCondition("orderNo", Direction.Asc));
 		this.es = this.resourceService.createQuery().condition(condition).list();
 
 		// 排除不能选择的

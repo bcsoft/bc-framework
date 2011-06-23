@@ -57,7 +57,7 @@ public class Actor implements cn.bc.core.Entity<Long> {
 	private int type = Actor.TYPE_UNDEFINED;
 	private String email;
 	private String phone;
-	private String order;
+	private String orderNo;
 
 	private ActorDetail detail;
 	
@@ -80,7 +80,7 @@ public class Actor implements cn.bc.core.Entity<Long> {
         inverseJoinColumns=
             @JoinColumn(name="RID", referencedColumnName="ID")
         )
-    @OrderBy("order asc")
+    @OrderBy("orderNo asc")
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -165,12 +165,12 @@ public class Actor implements cn.bc.core.Entity<Long> {
 	}
 
 	@Column(name = "ORDER_")
-	public String getOrder() {
-		return order;
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	public void setDetail(ActorDetail detail) {

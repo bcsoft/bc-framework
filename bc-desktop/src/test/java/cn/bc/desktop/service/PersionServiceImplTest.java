@@ -114,7 +114,7 @@ public class PersionServiceImplTest extends
 		actor.setStatus(Entity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
-		actor.setOrder(order);
+		actor.setOrderNo(order);
 		actor.setName("����" + code);
 
 		return actor;
