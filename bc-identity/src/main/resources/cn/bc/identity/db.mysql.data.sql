@@ -6,6 +6,8 @@ insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,IC
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	values(1, 0, 1, null, '020000','系统公告', null, 'ixxxx');
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	values(1, 0, 1, null, '030000','营运管理', null, 'ixxxx');
+insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	values(1, 0, 1, null, '700000','我的配置', null, 'ixxxx');
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	values(1, 0, 1, null, '800000','系统配置', null, 'ixxxx');
@@ -24,11 +26,18 @@ insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,IC
 	select 1, 0, 2, m.id, '020100','电子公告', '/bc/bulletin/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='020000';
 
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select 1, 0, 2, m.id, '030100','车辆信息', '/bc/car/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='030000';
+insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select 1, 0, 2, m.id, '030200','司机信息', '/bc/driver/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='030000';
+
+insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '700100','个性化设置', '/bc/personal/edit', 'i0504' from BC_IDENTITY_RESOURCE m where m.order_='700000';
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '700200','我的桌面', '/bc/shortcut/list', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='700000';
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS)
 	select 1, 0, 2, m.id, '700300','我的日志', '/bc/mysyslog/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='700000';
+insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS)
+	select 1, 0, 2, m.id, '700400','我的反馈', '/bc/feedback/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='700000';
 	
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
 	select 1, 0, 2, m.id, '800101','职务配置', '/bc/duty/paging', 'i0603' from BC_IDENTITY_RESOURCE m where m.order_='800100';
@@ -46,11 +55,13 @@ insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,IC
 	select 1, 0, 2, m.id, '800107','角色配置', '/bc/role/paging', 'i0509' from BC_IDENTITY_RESOURCE m where m.order_='800200';
 
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS)
-	select 1, 0, 2, m.id, '800300','附件管理', '/bc/attach/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
+	select 1, 0, 2, m.id, '800300','反馈管理', '/bc/feedback/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
+insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS)
+	select 1, 0, 2, m.id, '800400','附件管理', '/bc/attach/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select 1, 0, 2, m.id, '800400','系统日志', '/bc/syslog/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
+	select 1, 0, 2, m.id, '800500','系统日志', '/bc/syslog/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
 insert into BC_IDENTITY_RESOURCE (STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select 1, 0, 2, m.id, '800500','消息记录', '/bc/message/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
+	select 1, 0, 2, m.id, '800600','消息记录', '/bc/message/paging', 'ixxxx' from BC_IDENTITY_RESOURCE m where m.order_='800000';
     
 
 -- 插入超级管理员角色数据（可访问所有资源）
@@ -64,7 +75,7 @@ insert into BC_IDENTITY_ROLE (STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME)
 	values(1, 0, 0,'0000', 'R_COMMON','通用角色');
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='R_COMMON' 
-	and m.order_ in ('010100','010200','020100','700100','700200','700300')
+	and m.order_ in ('010100','010200','020100','700100','700200','700300','700400','030100','030200')
 	order by m.order_;
 
 -- 插入公告管理员角色数据
@@ -75,12 +86,28 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 	and m.order_ in ('020000','020100')
 	order by m.order_;
 
--- 插入附件管理员角色数据
+-- 插入用户反馈管理角色数据
 insert into BC_IDENTITY_ROLE (STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
-	values(1, 0, 0,'0003', 'R_MANAGER_ATTACH','附件管理');
+	values(1, 0, 0,'0003', 'R_MANAGER_FEEDBACK','用户反馈管理');
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='R_MANAGER_FEEDBACK' 
+	and m.order_ in ('700400','800300')
+	order by m.order_;
+
+-- 插入附件管理角色数据
+insert into BC_IDENTITY_ROLE (STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(1, 0, 0,'0004', 'R_MANAGER_ATTACH','附件管理');
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='R_MANAGER_ATTACH' 
-	and m.order_ in ('800300')
+	and m.order_ in ('800400')
+	order by m.order_;
+
+-- 插入营运管理角色数据
+insert into BC_IDENTITY_ROLE (STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(1, 0, 0,'0005', 'R_MANAGER_SERVICE','营运管理');
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='R_MANAGER_SERVICE' 
+	and m.order_ in ('030100','030200')
 	order by m.order_;
 
 

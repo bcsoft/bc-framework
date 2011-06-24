@@ -124,10 +124,14 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 	@Override
 	public String edit() throws Exception {
+		this.readonly = false;
+		this.setE(this.getCrudService().load(this.getId()));
+		this.formPageOption = buildFormPageOption();
+
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false);
 
-		return super.edit();
+		return "form";
 	}
 
 	private AttachWidget buildAttachsUI(boolean isNew) {
@@ -138,7 +142,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		attachsUI.setFlashUpload(this.isFlashUpload());
 		attachsUI.addClazz("formAttachs");
 		if (!isNew)
-			attachsUI.addAttach(this.attachService.findByPtype(ptype));
+			attachsUI.addAttach(this.attachService.findByPtype(ptype, this
+					.getE().getUid()));
 		attachsUI.setPuid(this.getE().getUid()).setPtype(ptype);
 
 		// 上传附件的限制

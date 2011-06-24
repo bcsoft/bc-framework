@@ -85,7 +85,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		AttachWidget attachsUI = new AttachWidget();
 		attachsUI.setFlashUpload(this.isFlashUpload());
 		attachsUI.addClazz("formAttachs ui-widget-content");
-		attachsUI.addAttach(this.attachService.findByPtype(ptype));
+		attachsUI.addAttach(this.attachService.findByPtype(ptype, puid));
 		attachsUI.setPuid(puid).setPtype(ptype);
 		// 上传附件的限制
 		attachsUI.addExtension(getText("app.attachs.extensions"))
@@ -98,7 +98,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		attachsUI = new AttachWidget();
 		attachsUI.setFlashUpload(this.isFlashUpload());
 		attachsUI.addClazz("formAttachs ui-widget-content");
-		attachsUI.addAttach(this.attachService.findByPtype(ptype));
+		attachsUI.addAttach(this.attachService.findByPtype(ptype, puid));
 		attachsUI.setPuid(puid).setPtype(ptype);
 		// 上传附件的限制
 		attachsUI.addExtension(getText("app.attachs.extensions"))

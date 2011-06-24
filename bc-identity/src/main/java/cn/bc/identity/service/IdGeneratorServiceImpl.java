@@ -11,8 +11,9 @@ import cn.bc.identity.service.IdGeneratorService;
 
 /**
  * 标识生成器Service接口的实现
+ * 
  * @author dragon
- *
+ * 
  */
 public class IdGeneratorServiceImpl implements IdGeneratorService {
 	private static Log logger = LogFactory.getLog(IdGeneratorServiceImpl.class);
@@ -34,8 +35,15 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 
 	public String next(String type) {
 		IdGenerator entity = idGeneratorDao.load(type);
-		if (entity == null)
-			throw new CoreException("type is not exist. type=" + type);
+		if (entity == null) {
+			// throw new CoreException("type is not exist. type=" + type);
+			// 没有的自动创建一个
+			entity = new IdGenerator();
+			entity.setType(type);
+			entity.setFormat("${T}.${V}");
+			entity.setValue(new Long(0));
+			entity = idGeneratorDao.save(entity);
+		}
 		entity.setValue(entity.getValue() + 1);
 		idGeneratorDao.save(entity);
 		return this.formatValue(type, entity.getValue(), entity.getFormat());

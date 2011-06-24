@@ -43,16 +43,16 @@
 	<!-- 使用通配符的默认配置 -->
 	<package name="bc" extends="bc-default" namespace="/bc">
 		<!-- 新建表单 -->
-		<action name="/*/form/create" class="{1}Action" method="create">
-			<result name="editableForm">/bc/{1}/form.jsp</result>
+		<action name="/*/create" class="{1}Action" method="create">
+			<result name="form">/bc/{1}/form.jsp</result>
 		</action>
 		<!-- 可编辑表单 -->
-		<action name="/*/form/edit" class="{1}Action" method="edit">
-			<result name="editableForm">/bc/{1}/form.jsp</result>
+		<action name="/*/edit" class="{1}Action" method="edit">
+			<result name="form">/bc/{1}/form.jsp</result>
 		</action>
 		<!-- 只读表单 -->
-		<action name="/*/form/read" class="{1}Action" method="edit">
-			<result name="readonlyForm">/bc/{1}/formr.jsp</result>
+		<action name="/*/read" class="{1}Action" method="edit">
+			<result name="form">/bc/{1}/formr.jsp</result>
 		</action>
 		<!-- 保存 -->
 		<action name="/*/save" class="{1}Action" method="save" />

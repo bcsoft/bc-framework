@@ -29,6 +29,7 @@
 		<module>bc-log</module>
 		<module>bc-docs</module>
 		<module>bc-bulletin</module>
+		<module>bc-feedback</module>
 	</modules>
 
 	<build>

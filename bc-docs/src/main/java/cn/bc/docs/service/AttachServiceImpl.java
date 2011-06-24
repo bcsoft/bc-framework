@@ -18,13 +18,14 @@ import cn.bc.docs.domain.Attach;
 public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		AttachService {
 
-	public List<Attach> findByPtype(String ptype) {
+	public List<Attach> findByPtype(String ptype, String puid) {
 		return this
 				.createQuery()
 				.condition(
-						new AndCondition().add(
-								new EqualsCondition("ptype", ptype)).add(
-								new OrderCondition("fileDate", Direction.Desc)))
-				.list();
+						new AndCondition()
+								.add(new EqualsCondition("ptype", ptype))
+								.add(new EqualsCondition("puid", puid))
+								.add(new OrderCondition("fileDate",
+										Direction.Desc))).list();
 	}
 }

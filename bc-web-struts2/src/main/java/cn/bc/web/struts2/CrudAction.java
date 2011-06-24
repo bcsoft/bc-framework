@@ -85,6 +85,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	protected Map<String, Object> session;
 	protected Map<String, Object> request;
 	public PageOption formPageOption;// 表单页面的Option配置
+	public boolean readonly;
 
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -203,6 +204,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 新建表单
 	public String create() throws Exception {
+		this.readonly = false;
 		e = this.getCrudService().create();
 		this.formPageOption = buildFormPageOption();
 		return "form";
@@ -210,23 +212,18 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 编辑表单
 	public String edit() throws Exception {
+		this.readonly = false;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
 		return "form";
 	}
 
 	// 表单：自动判断权限
-	public String form() throws Exception {
+	public String read() throws Exception {
+		this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
-		if (isReadOnlyForm())
-			return "readonlyForm";
-		else
-			return "editableForm";
-	}
-
-	protected boolean isReadOnlyForm() {
-		return false;
+		return "form";
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
@@ -253,7 +250,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * @return
 	 */
 	protected boolean isAjaxRequest() {
-		//TODO IE
+		// TODO IE
 		return "XMLHttpRequest".equalsIgnoreCase(ServletActionContext
 				.getRequest().getHeader("X-Requested-With"));
 	}

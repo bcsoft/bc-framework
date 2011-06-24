@@ -7,14 +7,21 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,A
 	select 1, 0, '0002', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='已办事务';
 	
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
-	select 1, 0, '1001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='电子公告';
+	select 1, 0, '0101', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='电子公告';
+	
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '0201', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='车辆信息';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '0202', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='司机信息';
 	
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
 	select 1, 0, '5001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='个性化设置';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
 	select 1, 0, '5002', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的桌面';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
-	select 1, 0, '5003', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的日志';
+	select 1, 0, '5003', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的反馈';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '5004', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='我的日志';
 	
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
 	select 1, 0, '7001', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='单位配置';
@@ -31,7 +38,9 @@ insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,A
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
 	select 1, 0, '7007', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='职务配置';
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
-	select 1, 0, '7008', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='系统日志';
+	select 1, 0, '7008', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='反馈管理';
+insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,SID,AID) 
+	select 1, 0, '7009', 0, null, null, id, null from BC_IDENTITY_RESOURCE where name='系统日志';
 
 -- 报表
 insert into BC_DESKTOP_SHORTCUT (STATUS_,INNER_,ORDER_,STANDALONE,NAME,URL,ICONCLASS) 
