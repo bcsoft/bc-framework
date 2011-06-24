@@ -75,11 +75,12 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 	public String editableAttachsUI;
 	public String readonlyAttachsUI;
-	//用于附件控件的设计
+
+	// 用于附件控件的设计
 	public String design() throws Exception {
 		String ptype = "test.main";
 		String puid = "test.uid.1";
-		
+
 		// 构建可编辑附件控件
 		AttachWidget attachsUI = new AttachWidget();
 		attachsUI.setFlashUpload(this.isFlashUpload());
@@ -90,9 +91,9 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-		
+
 		editableAttachsUI = attachsUI.toString();
-		
+
 		// 构建不可编辑附件控件
 		attachsUI = new AttachWidget();
 		attachsUI.setFlashUpload(this.isFlashUpload());
@@ -202,9 +203,12 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 				attach.getSubject());
 		String path;
 		if (attach.isAppPath())
-			path = WebUtils.rootPath + File.separator + attach.getPath();
+			path = WebUtils.rootPath + File.separator
+					+ getText("app.data.subPath") + File.separator
+					+ attach.getPath();
 		else
-			path = getText("app.data") + File.separator + attach.getPath();
+			path = getText("app.data.realPath") + File.separator
+					+ attach.getPath();
 
 		inputStream = new FileInputStream(new File(path));
 
@@ -246,9 +250,10 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 				// 获取文件路径
 				if (attach.isAppPath())
 					path = WebUtils.rootPath + File.separator
+							+ getText("app.data.subPath") + File.separator
 							+ attach.getPath();
 				else
-					path = getText("app.data") + File.separator
+					path = getText("app.data.realPath") + File.separator
 							+ attach.getPath();
 
 				File file = new File(path);
@@ -296,9 +301,12 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			this.getCrudService().delete(this.getId());
 			String path;
 			if (attach.isAppPath())
-				path = WebUtils.rootPath + File.separator + attach.getPath();
+				path = WebUtils.rootPath + File.separator
+						+ getText("app.data.subPath") + File.separator
+						+ attach.getPath();
 			else
-				path = getText("app.data") + File.separator + attach.getPath();
+				path = getText("app.data.realPath") + File.separator
+						+ attach.getPath();
 
 			File file = new File(path);
 			if (file.exists())
@@ -335,9 +343,10 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 				ids[i] = attach.getId();
 				if (attach.isAppPath())
 					path = WebUtils.rootPath + File.separator
+							+ getText("app.data.subPath") + File.separator
 							+ attach.getPath();
 				else
-					path = getText("app.data") + File.separator
+					path = getText("app.data.realPath") + File.separator
 							+ attach.getPath();
 
 				File file = new File(path);
@@ -367,9 +376,12 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		Attach attach = this.getCrudService().load(this.getId());
 		String path;
 		if (attach.isAppPath())
-			path = WebUtils.rootPath + File.separator + attach.getPath();
+			path = WebUtils.rootPath + File.separator
+					+ getText("app.data.subPath") + File.separator
+					+ attach.getPath();
 		else
-			path = getText("app.data") + File.separator + attach.getPath();
+			path = getText("app.data.realPath") + File.separator
+					+ attach.getPath();
 
 		if (isConvertFile(attach.getExtension())) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
