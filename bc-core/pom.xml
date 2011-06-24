@@ -7,6 +7,7 @@
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-core</artifactId>
+	<description>平台核心</description>
 	<name>bc-core</name>
 	<dependencies>
 		<dependency>

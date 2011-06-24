@@ -5,15 +5,15 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.core.DefaultEntity;
+import cn.bc.core.EntityImpl;
 import cn.bc.core.Entity;
 
 public class TypeReferenceTest {
 	@Test
 	public void testAbstractClass() {
-		TypeReference<DefaultEntity> tr = new TypeReference<DefaultEntity>() {};
-		Assert.assertSame(DefaultEntity.class, tr.getRawType());
-		Assert.assertSame(DefaultEntity.class, tr.getType());
+		TypeReference<EntityImpl> tr = new TypeReference<EntityImpl>() {};
+		Assert.assertSame(EntityImpl.class, tr.getRawType());
+		Assert.assertSame(EntityImpl.class, tr.getType());
 	}
 	
 	@Test
@@ -25,7 +25,7 @@ public class TypeReferenceTest {
 	
 	@Test
 	public void testMap() {
-		TypeReference<Map<String, DefaultEntity>> tr = new TypeReference<Map<String, DefaultEntity>>() {};
+		TypeReference<Map<String, EntityImpl>> tr = new TypeReference<Map<String, EntityImpl>>() {};
 		Assert.assertSame(Map.class, tr.getRawType());
 		Assert.assertNotSame(Map.class, tr.getType());
 		

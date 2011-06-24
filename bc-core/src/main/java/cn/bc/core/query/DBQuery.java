@@ -12,12 +12,12 @@ package cn.bc.core.query;
 public interface DBQuery<T extends Object> extends
 		Query<T> {
 	/** 模糊匹配类型 */
-	public enum LikeType {
+	public enum LikeType1 {
 		Left, Right, Both
 	}
 
 	/** 比较符 */
-	public enum CompareType {
+	public enum CompareType1 {
 		/** 大于> */
 		GreaterThan,
 		/** 大于等于>= */
@@ -44,7 +44,7 @@ public interface DBQuery<T extends Object> extends
 	}
 
 	/** 范围比较符 */
-	public enum RangeType {
+	public enum RangeType1 {
 		/** >[value1],<[value2] */
 		GreaterThan_LessThan,
 		/** >[value1],<=[value2] */
@@ -71,7 +71,7 @@ public interface DBQuery<T extends Object> extends
 	}
 
 	/** 排序方式 */
-	public enum Direction {
+	public enum Direction1 {
 		Asc, Desc;
 
 		public String toSymbol() {
@@ -101,7 +101,7 @@ public interface DBQuery<T extends Object> extends
 	/**在条件后添加右括号*/
 	DBQuery addRightParenthesis();
 
-	DBQuery addOrderBy(String name, Direction direction);
+	DBQuery addOrderBy(String name, Direction1 direction);
 
 	DBQuery addEqual(String name, Object value);
 
@@ -117,10 +117,10 @@ public interface DBQuery<T extends Object> extends
 
 	DBQuery addNotIn(String name, Object... values);
 
-	DBQuery addLike(String name, Object value, LikeType like);
+	DBQuery addLike(String name, Object value, LikeType1 like);
 
-	DBQuery addRange(String name, Object value, CompareType range);
+	DBQuery addRange(String name, Object value, CompareType1 range);
 
 	DBQuery addRange(String name, Object firstValue, Object secondValue,
-			RangeType range);
+			RangeType1 range);
 }

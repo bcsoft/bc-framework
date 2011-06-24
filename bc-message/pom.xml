@@ -7,6 +7,7 @@
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-message</artifactId>
+	<description>消息管理</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>

@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import cn.bc.core.DefaultEntity;
+import cn.bc.core.EntityImpl;
 import cn.bc.identity.domain.Actor;
 
 /**
@@ -19,7 +19,7 @@ import cn.bc.identity.domain.Actor;
  */
 @Entity
 @Table(name = "BC_DESKTOP_PERSONAL")
-public class Personal extends DefaultEntity {
+public class Personal extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	private String font;// 字体大小

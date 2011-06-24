@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import cn.bc.core.DefaultEntity;
+import cn.bc.core.EntityImpl;
 
 /**
  * 默认的带文档创建信息的实体基类
@@ -20,7 +20,7 @@ import cn.bc.core.DefaultEntity;
  * @author dragon
  */
 @MappedSuperclass
-public abstract class FileEntity extends DefaultEntity {
+public abstract class FileEntity extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 	private Calendar fileDate;// 文档创建时间
 	private Actor author;// 创建人

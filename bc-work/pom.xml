@@ -7,6 +7,7 @@
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-work</artifactId>
+	<description>工作事务</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>

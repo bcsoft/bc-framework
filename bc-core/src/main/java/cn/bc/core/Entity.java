@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author dragon
  * 
  */
-public interface Entity<ID extends Serializable> extends Serializable {
+public interface Entity<ID extends Serializable> extends MiniEntity<ID> {
 	/**状态：已禁用*/
 	public static final int STATUS_DISABLED = 0;
 	/**状态：启用中*/
@@ -19,27 +19,12 @@ public interface Entity<ID extends Serializable> extends Serializable {
 	public static final int STATUS_DELETED = 2;
 	
 	/**
-	 * @return 主键
-	 */
-	ID getId();
-	
-	/**
-	 * @param id 设置主键
-	 */
-	void setId(ID id);
-	
-	/**
-	 * @return 主键是否已被设置
-	 */
-	boolean isNew();
-	
-	/**
-	 * @return 全局唯一标识
+	 * @return 全局标识号
 	 */
 	String getUid();
 	
 	/**
-	 * @param uid 设置全局唯一标识
+	 * @param uid 设置全局标识号
 	 */
 	void setUid(String uid);
 	

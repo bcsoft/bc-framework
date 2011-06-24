@@ -42,6 +42,33 @@
 	
 	<!-- 使用通配符的默认配置 -->
 	<package name="bc" extends="bc-default" namespace="/bc">
+		<!-- 新建表单 -->
+		<action name="/*/form/create" class="{1}Action" method="create">
+			<result name="editableForm">/bc/{1}/form.jsp</result>
+		</action>
+		<!-- 可编辑表单 -->
+		<action name="/*/form/edit" class="{1}Action" method="edit">
+			<result name="editableForm">/bc/{1}/form.jsp</result>
+		</action>
+		<!-- 只读表单 -->
+		<action name="/*/form/read" class="{1}Action" method="edit">
+			<result name="readonlyForm">/bc/{1}/formr.jsp</result>
+		</action>
+		<!-- 保存 -->
+		<action name="/*/save" class="{1}Action" method="save" />
+		<!-- 删除 -->
+		<action name="/*/delete" class="{1}Action" method="delete" />
+		<!-- 非分页视图 -->
+		<action name="/*/list" class="{1}Action" method="list" />
+		<!-- 分页视图 -->
+		<action name="/*/paging" class="{1}Action" method="paging" />
+		<!-- 分页数据 -->
+		<action name="/*/data" class="{1}Action" method="data" />
+		<!-- 导出 视图数据-->
+		<action name="/*/export" class="{1}Action" method="export" />
+	</package>
+	<!-- 用于测试通配符配置 -->
+	<package name="bct" extends="bc-default" namespace="/bct">
 		<action name="/*/form/create" class="{1}Action" method="create">
 			<result name="editableForm">/bc/{1}/form.jsp</result>
 		</action>
