@@ -19,13 +19,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
 import cn.bc.Context;
 import cn.bc.core.Entity;
+import cn.bc.core.MiniEntity;
 import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
@@ -64,9 +62,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author dragon
  * 
  */
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-@Controller
-public class CrudAction<K extends Serializable, E extends Entity<K>> extends
+public class CrudAction<K extends Serializable, E extends MiniEntity<K>> extends
 		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(getClass());
@@ -782,7 +778,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getScopes() {
+	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new HashMap<String, String>();
 		statuses.put(String.valueOf(Entity.STATUS_DISABLED),
 				getText("entity.status.disabled"));

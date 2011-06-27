@@ -51,7 +51,7 @@ public class UnitAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getScopes())));
+					.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));

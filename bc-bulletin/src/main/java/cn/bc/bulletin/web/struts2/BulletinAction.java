@@ -250,7 +250,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)
 				.setSortable(true).setValueFormater(
-						new KeyValueFormater(getScopes())));
+						new KeyValueFormater(getEntityStatuses())));
 		if (isManager) {
 			columns.add(new TextColumn("fileDate",
 					getText("bulletin.fileDate"), 150)
@@ -281,7 +281,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getScopes() {
+	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> scopes = new HashMap<String, String>();
 		scopes = new HashMap<String, String>();
 		scopes.put(String.valueOf(Bulletin.SCOPE_LOCALUNIT),
