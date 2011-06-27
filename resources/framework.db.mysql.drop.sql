@@ -1,4 +1,4 @@
--- mysql删表脚本
+-- ##bc平台的mysql删表脚本##
 
 -- 测试用的表
 drop table if exists ZTEST_EXAMPLE;

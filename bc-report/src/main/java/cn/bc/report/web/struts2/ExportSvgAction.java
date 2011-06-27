@@ -43,7 +43,7 @@ public class ExportSvgAction extends ActionSupport {
 	// svg的html内容，格式为"<svg ...>...</svg>"
 	private String svg;
 	private InputStream inputStream;
-	public String dataPath;//导出的文件在服务器保存的路径
+	public String dataPath;// 导出的文件在服务器保存的路径
 
 	public String getFilename() {
 		return filename;
@@ -122,18 +122,25 @@ public class ExportSvgAction extends ActionSupport {
 			this.inputStream = new ByteArrayInputStream(this.getSvg().getBytes(
 					encode));
 		} else if (ext != null) {// 使用batik执行转换
-			if(this.dataPath == null || this.dataPath.length() == 0){
-				this.dataPath = getText("app.data.path");//该目录需要部署时手动生成好
+			if (this.dataPath == null || this.dataPath.length() == 0) {
+				this.dataPath = getText("app.data.realPath");
 			}
-			String tempPath = this.dataPath + File.separator + "temp"//该目录也需要部署时手动生成好
-					+ File.separator + "ExportSvg" + DateUtils.formatDateTime(new Date(),"yyyyMMddHHmmssSSSS");
-			logger.debug("tempFile=" + tempPath + ".svg");
+			String filePath = this.dataPath + File.separator + "temp";
+			String tempFile = filePath
+					+ File.separator
+					+ "ExportSvg"
+					+ DateUtils
+							.formatDateTime(new Date(), "yyyyMMddHHmmssSSSS");
+			File dir = new File(filePath);
+			if (!dir.exists())
+				dir.mkdirs();//自动创建临时目录
+			logger.debug("tempFile=" + tempFile + ".svg");
 
 			// 将svg文件保存到临时文件夹
-			File outF = new File(tempPath + ".svg");
+			File outF = new File(tempFile + ".svg");
 			FileOutputStream fops = new FileOutputStream(outF);
-			if(this.svg.indexOf("height=\"-1\"") != -1){
-				//处理highchart导出饼图的错误
+			if (this.svg.indexOf("height=\"-1\"") != -1) {
+				// 处理highchart导出饼图的错误
 				this.svg = this.svg.replace("height=\"-1\"", "height=\"0\"");
 			}
 			fops.write(this.getSvg().getBytes(encode));
@@ -146,7 +153,7 @@ public class ExportSvgAction extends ActionSupport {
 			}
 
 			// 添加输出文件参数
-			outfile = tempPath + "." + ext;
+			outfile = tempFile + "." + ext;
 			args.add("-d");
 			args.add(outfile);
 
@@ -154,7 +161,7 @@ public class ExportSvgAction extends ActionSupport {
 			args.add("-scriptSecurityOff");
 
 			// 添加要转换的文件
-			args.add(tempPath + ".svg");
+			args.add(tempFile + ".svg");
 
 			// 调用batik执行转换(将会生成转换好的文件outfile)
 			new org.apache.batik.apps.rasterizer.Main(

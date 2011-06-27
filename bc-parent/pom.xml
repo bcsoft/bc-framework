@@ -7,7 +7,7 @@
 	<name>bc-parent</name>
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<!-- 替换属性文件中的${...}标记的值 -->
+		<!-- 替换文件中的${...}标记的值 -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -16,6 +16,7 @@
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>**/*.properties</include>
+					<include>**/*.xml</include>
 				</includes>
 				<filtering>true</filtering>
 			</resource>
@@ -28,6 +29,7 @@
 				<directory>src/test/resources</directory>
 				<includes>
 					<include>**/*.properties</include>
+					<include>**/*.xml</include>
 					<include>**/log4j.xml</include>
 				</includes>
 				<filtering>true</filtering>

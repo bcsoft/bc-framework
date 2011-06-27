@@ -1,4 +1,4 @@
--- mysql建表脚本
+-- ##bc平台的mysql建表脚本##
 
 -- 测试用的表
 create table ZTEST_EXAMPLE (
