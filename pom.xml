@@ -31,15 +31,6 @@
 		<module>bc-bulletin</module>
 		<module>bc-feedback</module>
 	</modules>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 	<scm>
 		<connection>scm:git:git://github.com/rongjihuang/bc-framework.git</connection>
 		<developerConnection>scm:git:[fetch=]git://github.com/rongjihuang/bc-framework.git[push=]git@github.com:rongjihuang/bc-framework.git</developerConnection>
