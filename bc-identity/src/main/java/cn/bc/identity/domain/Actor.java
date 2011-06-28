@@ -30,7 +30,7 @@ import cn.bc.core.util.PinYinUtils;
  */
 @Entity
 @Table(name = "BC_IDENTITY_ACTOR")
-public class Actor implements cn.bc.core.Entity<Long> {
+public class Actor implements cn.bc.core.RichEntity<Long> {
 	private static final long serialVersionUID = 1L;
 	/** 类型:未定义 */
 	public static final int TYPE_UNDEFINED = 0;
@@ -49,7 +49,7 @@ public class Actor implements cn.bc.core.Entity<Long> {
 	
 	private Long id;
 	private String uid;
-	private int status = cn.bc.core.Entity.STATUS_ENABLED;
+	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
 	private boolean inner = false;
 
 	private String name;

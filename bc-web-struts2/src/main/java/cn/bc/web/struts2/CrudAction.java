@@ -22,8 +22,8 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.util.StringUtils;
 
 import cn.bc.Context;
+import cn.bc.core.RichEntity;
 import cn.bc.core.Entity;
-import cn.bc.core.MiniEntity;
 import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
@@ -62,7 +62,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author dragon
  * 
  */
-public class CrudAction<K extends Serializable, E extends MiniEntity<K>> extends
+public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(getClass());
@@ -780,11 +780,11 @@ public class CrudAction<K extends Serializable, E extends MiniEntity<K>> extends
 	 */
 	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(Entity.STATUS_DISABLED),
+		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
 				getText("entity.status.disabled"));
-		statuses.put(String.valueOf(Entity.STATUS_ENABLED),
+		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
 				getText("entity.status.enabled"));
-		statuses.put(String.valueOf(Entity.STATUS_DELETED),
+		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
 	}

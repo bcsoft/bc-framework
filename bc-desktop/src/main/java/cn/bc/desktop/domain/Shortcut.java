@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.Resource;
 
@@ -21,7 +21,7 @@ import cn.bc.identity.domain.Resource;
  */
 @Entity
 @Table(name = "BC_DESKTOP_SHORTCUT")
-public class Shortcut extends EntityImpl {
+public class Shortcut extends RichEntityImpl {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean standalone;//是否在独立的浏览器窗口中打开

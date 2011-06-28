@@ -5,27 +5,27 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.core.EntityImpl;
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntityImpl;
+import cn.bc.core.RichEntity;
 
 public class TypeReferenceTest {
 	@Test
 	public void testAbstractClass() {
-		TypeReference<EntityImpl> tr = new TypeReference<EntityImpl>() {};
-		Assert.assertSame(EntityImpl.class, tr.getRawType());
-		Assert.assertSame(EntityImpl.class, tr.getType());
+		TypeReference<RichEntityImpl> tr = new TypeReference<RichEntityImpl>() {};
+		Assert.assertSame(RichEntityImpl.class, tr.getRawType());
+		Assert.assertSame(RichEntityImpl.class, tr.getType());
 	}
 	
 	@Test
 	public void testInterface() {
-		TypeReference<Entity<Long>> tr = new TypeReference<Entity<Long>>() {};
-		Assert.assertSame(Entity.class, tr.getRawType());
-		Assert.assertNotSame(Entity.class, tr.getType());
+		TypeReference<RichEntity<Long>> tr = new TypeReference<RichEntity<Long>>() {};
+		Assert.assertSame(RichEntity.class, tr.getRawType());
+		Assert.assertNotSame(RichEntity.class, tr.getType());
 	}
 	
 	@Test
 	public void testMap() {
-		TypeReference<Map<String, EntityImpl>> tr = new TypeReference<Map<String, EntityImpl>>() {};
+		TypeReference<Map<String, RichEntityImpl>> tr = new TypeReference<Map<String, RichEntityImpl>>() {};
 		Assert.assertSame(Map.class, tr.getRawType());
 		Assert.assertNotSame(Map.class, tr.getType());
 		

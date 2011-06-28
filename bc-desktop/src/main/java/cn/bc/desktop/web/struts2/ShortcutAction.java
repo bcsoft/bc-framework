@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.Context;
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
@@ -56,7 +56,7 @@ public class ShortcutAction extends CrudAction<Long, Shortcut> implements
 	@Override
 	public String create() throws Exception {
 		this.setE(this.shortcutService.create());
-		this.getE().setStatus(Entity.STATUS_ENABLED);
+		this.getE().setStatus(RichEntity.STATUS_ENABLED);
 		this.getE().setStandalone(true);
 		// 设置属于当前用户
 		this.getE().setActor(

@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,14 +21,17 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.service.CrudService;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
@@ -41,6 +45,7 @@ import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
 
@@ -63,14 +68,21 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
-	private String MANAGER_KEY = "R_MANAGER_ATTACH";// 附件管理角色的编码
+	// private String MANAGER_KEY = "R_MANAGER_ATTACH";// 附件管理角色的编码
 
 	private AttachService attachService;
+	private CrudService<AttachHistory> attachHistoryService;
 
 	@Autowired
 	public void setAttachService(AttachService attachService) {
 		this.attachService = attachService;
 		this.setCrudService(attachService);
+	}
+
+	@Autowired
+	public void setAttachHistoryService(
+			@Qualifier(value = "attachHistoryService") CrudService<AttachHistory> attachHistoryService) {
+		this.attachHistoryService = attachHistoryService;
 	}
 
 	public String editableAttachsUI;
@@ -140,19 +152,30 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	@Override
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
+		// 查看
+		tb.addButton(getDefaultOpenToolbarButton());
 
-		// 是否附件管理员
-		boolean isManager = ((SystemContext) this.getContext())
-				.hasAnyRole(MANAGER_KEY);
+		// 在线预览
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
+				.setText(getText("label.preview.inline"))
+				.setClick("bc.attachList.inline"));
 
-		if (isManager) {
-			// 删除按钮
-			tb.addButton(getDefaultDeleteToolbarButton());
-		} else {// 普通用户
-			tb.addButton(getDefaultOpenToolbarButton());
-		}
+		// 下载
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthickstop-1-s")
+				.setText(getText("label.download"))
+				.setClick("bc.attachList.download"));
 
-		// 搜索按钮
+		// 打包下载
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-link")
+				.setText(getText("label.download.zip"))
+				.setClick("bc.attachList.downloadZip"));
+
+		// 访问日志
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")
+				.setText(getText("attach.visit.history"))
+				.setClick("bc.attachList.visitHistory"));
+
+		// 搜索
 		tb.addButton(getDefaultSearchToolbarButton());
 
 		return tb;
@@ -216,10 +239,46 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		attach.setCount(attach.getCount() + 1);
 		this.getCrudService().save(attach);
 
-		// TODO 记录一条下载痕迹
-		// SystemContext context = (SystemContext) this.getContext();
+		// 记录一条下载痕迹
+		this.attachHistoryService.save(buildHistory(
+				AttachHistory.TYPE_DOWNLOAD, attach));
 
 		return SUCCESS;
+	}
+
+	private AttachHistory buildHistory(int type, Attach attach) {
+		SystemContext context = (SystemContext) this.getContext();
+		AttachHistory ah = new AttachHistory();
+		ah.setFileDate(Calendar.getInstance());
+		ah.setFormat(attach.getExtension());
+		ah.setType(type);
+		ah.setAuthor(context.getUser());
+		ah.setAuthorName(context.getUser().getName());
+		ah.setDepartId(context.getBelong().getId());
+		ah.setDepartName(context.getBelong().getName());
+		ah.setUnitId(context.getUnit().getId());
+		ah.setUnitName(context.getUnit().getName());
+
+		String typeDesc;
+		if (AttachHistory.TYPE_DOWNLOAD == type)
+			typeDesc = getText("attachHistory.type.download");
+		else if (AttachHistory.TYPE_INLINE == type)
+			typeDesc = getText("attachHistory.type.inline");
+		else if (AttachHistory.TYPE_ZIP == type)
+			typeDesc = getText("attachHistory.type.zip");
+		else if (AttachHistory.TYPE_CONVERT == type)
+			typeDesc = getText("attachHistory.type.convert");
+		else if (AttachHistory.TYPE_DELETED == type)
+			typeDesc = getText("attachHistory.type.deleted");
+		else
+			typeDesc = "unknow";
+
+		ah.setSubject(getText(
+				"attachHistory.visit.tpl",
+				new String[] { ah.getAuthorName(), typeDesc,
+						attach.getSubject() }));
+		ah.setAttach(attach);
+		return ah;
 	}
 
 	static final int BUFFER = 4096;
@@ -242,6 +301,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			BufferedInputStream origin = null;
 			ByteArrayOutputStream dest = new ByteArrayOutputStream(BUFFER);
 			ZipOutputStream zip = new ZipOutputStream(dest);
+			List<AttachHistory> ahs = new ArrayList<AttachHistory>();
 			for (int i = 0; i < attachs.size(); i++) {
 				Attach attach = attachs.get(i);
 				// 累计下载次数
@@ -275,6 +335,8 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 					// j += k;
 					// }
 					origin.close();
+
+					ahs.add(buildHistory(AttachHistory.TYPE_ZIP, attach));
 				} else {
 					logger.error("丢失文件:" + path);
 				}
@@ -283,7 +345,8 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			inputStream = new ByteArrayInputStream(dest.toByteArray());
 			this.getCrudService().save(attachs);
 
-			// TODO 记录下载痕迹
+			// 记录下载痕迹
+			this.attachHistoryService.save(ahs);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -439,8 +502,9 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		attach.setCount(attach.getCount() + 1);
 		this.getCrudService().save(attach);
 
-		// TODO 记录一条下载痕迹
-		// SystemContext context = (SystemContext) this.getContext();
+		// 记录一条下载痕迹
+		this.attachHistoryService.save(buildHistory(AttachHistory.TYPE_INLINE,
+				attach));
 
 		return SUCCESS;
 	}
@@ -462,5 +526,11 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	protected String getJs() {
+		// TODO Auto-generated method stub
+		return this.getContextPath() + "/bc/attach/list.js";
 	}
 }

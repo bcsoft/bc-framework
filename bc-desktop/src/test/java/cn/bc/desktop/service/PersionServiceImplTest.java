@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.desktop.domain.Personal;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.ActorService;
@@ -111,7 +111,7 @@ public class PersionServiceImplTest extends
 		Actor actor = new Actor();
 		actor.setType(type);
 		actor.setInner(false);
-		actor.setStatus(Entity.STATUS_ENABLED);
+		actor.setStatus(RichEntity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
 		actor.setOrderNo(order);

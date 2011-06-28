@@ -14,10 +14,17 @@
 
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 
-	<!-- docs -->
+	<!-- attach -->
 	<bean id="attachDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
 		p:entityClass="cn.bc.docs.domain.Attach"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="attachService" class="cn.bc.docs.service.AttachServiceImpl"
 		p:entityClass="cn.bc.docs.domain.Attach" p:crudDao-ref="attachDao" />
+		
+	<!-- attachHistory -->
+	<bean id="attachHistoryDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+		p:entityClass="cn.bc.docs.domain.AttachHistory"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="attachHistoryService" class="cn.bc.core.service.DefaultCrudService"
+		p:entityClass="cn.bc.docs.domain.AttachHistory" p:crudDao-ref="attachHistoryDao" />
 </beans>

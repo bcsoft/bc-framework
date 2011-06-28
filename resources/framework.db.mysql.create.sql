@@ -333,6 +333,8 @@ ALTER TABLE BC_BULLETIN ADD INDEX IDX_BULLETIN_ARCHIVE (SCOPE,UNIT_ID,STATUS_,FI
 -- 文档附件
 create table BC_DOCS_ATTACH (
     ID int NOT NULL auto_increment,
+    FILE_DATE datetime NOT NULL COMMENT '创建时间',
+    STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
     PTYPE varchar(36) NOT NULL COMMENT '所关联文档的类型',
     PUID varchar(36) NOT NULL COMMENT '所关联文档的UID',
    
@@ -343,28 +345,42 @@ create table BC_DOCS_ATTACH (
     SUBJECT varchar(500) NOT NULL COMMENT '文件名称(不带路径的部分)',
     PATH varchar(500) NOT NULL COMMENT '物理文件保存的相对路径(相对于全局配置的附件根目录下的子路径，如"2011/bulletin/xxxx.doc")',
     
-    FILE_DATE datetime NOT NULL COMMENT '创建时间',
-    FILE_YEAR int(4) COMMENT '创建时间的年度yyyy',
-    FILE_MONTH int(2) COMMENT '创建时间的月份(1-12)',
-    FILE_DAY int(2) COMMENT '创建时间的日(1-31)',
-    
     AUTHOR_ID int NOT NULL COMMENT '创建人ID',
     AUTHOR_NAME varchar(100) NOT NULL COMMENT '创建人姓名',
     DEPART_ID int COMMENT '创建人所在部门ID，如果用户直接隶属于单位，则为null',
     DEPART_NAME varchar(255) COMMENT '创建人所在部门名称，如果用户直接隶属于单位，则为null',
     UNIT_ID int NOT NULL COMMENT '创建人所在单位ID',
     UNIT_NAME varchar(255) NOT NULL COMMENT '创建人所在单位名称',
-    
-    STATUS_ int(1) COMMENT '未用',
-    UID_ varchar(36) COMMENT '未用',
-    INNER_ int(1) COMMENT '未用',
     primary key (ID)
 ) COMMENT='文档附件,记录文档与其相关附件之间的关系';
 ALTER TABLE BC_DOCS_ATTACH ADD CONSTRAINT FK_ATTACH_AUTHOR FOREIGN KEY (AUTHOR_ID) 
 	REFERENCES BC_IDENTITY_ACTOR (ID);
 ALTER TABLE BC_DOCS_ATTACH ADD INDEX IDX_ATTACH_PUID (PUID);
 ALTER TABLE BC_DOCS_ATTACH ADD INDEX IDX_ATTACH_PTYPE (PTYPE);
-ALTER TABLE BC_DOCS_ATTACH ADD INDEX IDX_ATTACH_FILEDATE (UNIT_ID,FILE_YEAR,FILE_MONTH,FILE_DAY);
+
+-- 附件处理痕迹
+create table BC_DOCS_ATTACH_HISTORY (
+    ID int NOT NULL auto_increment,
+    FILE_DATE datetime NOT NULL COMMENT '处理时间',
+    AID int NOT NULL COMMENT '附件ID',
+    TYPE_ int NOT NULL COMMENT '处理类型：0-下载,1-在线查看,2-格式转换',
+    SUBJECT varchar(500) NOT NULL COMMENT '简单说明',
+    FORMAT varchar(10) COMMENT '下载的文件格式或转换后的文件格式：如pdf、doc、mp3等',
+    
+    AUTHOR_ID int NOT NULL COMMENT '处理人ID',
+    AUTHOR_NAME varchar(100) NOT NULL COMMENT '处理人姓名',
+    DEPART_ID int COMMENT '处理人所在部门ID，如果用户直接隶属于单位，则为null',
+    DEPART_NAME varchar(255) COMMENT '处理人所在部门名称，如果用户直接隶属于单位，则为null',
+    UNIT_ID int NOT NULL COMMENT '处理人所在单位ID',
+    UNIT_NAME varchar(255) NOT NULL COMMENT '处理人所在单位名称',
+    
+    MEMO varchar(2000) COMMENT '备注',
+    primary key (ID)
+) COMMENT='附件处理痕迹';
+ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT FK_ATTACHHISTORY_AUTHOR FOREIGN KEY (AUTHOR_ID) 
+	REFERENCES BC_IDENTITY_ACTOR (ID);
+ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT FK_ATTACHHISTORY_ATTACH FOREIGN KEY (AID) 
+	REFERENCES BC_DOCS_ATTACH (ID);
 
 -- 用户反馈
 create table BC_FEEDBACK (

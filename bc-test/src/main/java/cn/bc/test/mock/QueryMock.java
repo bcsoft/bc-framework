@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.core.Page;
 import cn.bc.core.query.condition.Condition;
 
@@ -19,7 +19,7 @@ import cn.bc.core.query.condition.Condition;
  * 
  * @param <T>
  */
-public class QueryMock<T extends Entity<Long>> implements
+public class QueryMock<T extends RichEntity<Long>> implements
 		cn.bc.core.query.Query<T> {
 	//private Condition condition;
 	private Class<T> entityClass;

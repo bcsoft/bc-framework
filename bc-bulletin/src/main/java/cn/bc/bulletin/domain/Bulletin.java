@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.FileEntity;
+import cn.bc.identity.domain.RichFileEntity;
 
 /**
  * 电子公告
@@ -23,7 +23,7 @@ import cn.bc.identity.domain.FileEntity;
  */
 @Entity
 @Table(name = "BC_BULLETIN")
-public class Bulletin extends FileEntity {
+public class Bulletin extends RichFileEntity {
 	private static final long serialVersionUID = 1L;
 	/**状态：草稿或待发布*/
 	public static final int STATUS_DRAFT = 0;

@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.domain.ActorRelationPK;
@@ -135,7 +135,7 @@ public class ActorRelationServiceImplTest {
 		Actor actor = new Actor();
 		actor.setType(type);
 		actor.setInner(false);
-		actor.setStatus(Entity.STATUS_ENABLED);
+		actor.setStatus(RichEntity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
 		actor.setName("测试" + code);

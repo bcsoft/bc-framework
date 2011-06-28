@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 
 /**
  * 仅用于测试时方便构建测试对象
@@ -18,7 +18,7 @@ import cn.bc.core.EntityImpl;
 @Entity
 @Table(name = "ZTEST_EXAMPLE")
 //@NamedQueries(value = { @NamedQuery(name = "Example.findAllUsers", query = "from Example") })
-public class Example extends EntityImpl {
+public class Example extends RichEntityImpl {
 	private static final long serialVersionUID = 1L;
 	
 	@Id

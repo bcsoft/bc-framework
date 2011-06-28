@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorDetail;
 import cn.bc.identity.domain.ActorRelation;
@@ -64,7 +64,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		// 补充一些必填域的设置
 		actor.setType(Actor.TYPE_USER);
 		actor.setInner(false);
-		actor.setStatus(Entity.STATUS_ENABLED);
+		actor.setStatus(RichEntity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode("test");
 		actor.setName("测试");
@@ -179,7 +179,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 	private Role createRole() {
 		Role role = new Role();
 		role.setType(Role.TYPE_DEFAULT);
-		role.setStatus(Entity.STATUS_ENABLED);
+		role.setStatus(RichEntity.STATUS_ENABLED);
 		role.setInner(false);
 		role.setCode("test");
 		role.setName(role.getCode());
@@ -250,7 +250,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 	private Resource createModule() {
 		Resource module = new Resource();
 		module.setType(Resource.TYPE_INNER_LINK);
-		module.setStatus(Entity.STATUS_ENABLED);
+		module.setStatus(RichEntity.STATUS_ENABLED);
 		module.setInner(false);
 		module.setOrderNo("test");
 		module.setName(module.getOrderNo());
@@ -684,7 +684,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Actor actor = new Actor();
 		actor.setType(type);
 		actor.setInner(false);
-		actor.setStatus(Entity.STATUS_ENABLED);
+		actor.setStatus(RichEntity.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
 		actor.setName("测试" + code);

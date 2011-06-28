@@ -12,7 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.ActorService;
 
@@ -105,6 +105,6 @@ public class SelectActorAction extends ActionSupport {
 
 	//默认仅查询可用状态
 	protected Integer[] getActorStatues() {
-		return new Integer[] { Entity.STATUS_ENABLED };
+		return new Integer[] { RichEntity.STATUS_ENABLED };
 	}
 }

@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.bc.core.CrudOperations;
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.core.Page;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 
@@ -27,7 +27,7 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
  */
 @Transactional
 // 基类也要声明这个
-public abstract class AbstractEntityCrudTest<K extends Serializable, E extends Entity<K>> {
+public abstract class AbstractEntityCrudTest<K extends Serializable, E extends RichEntity<K>> {
 	protected CrudOperations<E> crudOperations;
 
 	/**
@@ -42,7 +42,7 @@ public abstract class AbstractEntityCrudTest<K extends Serializable, E extends E
 		
 		//补充一些必填域的设置
 		entity.setInner(false);
-		entity.setStatus(Entity.STATUS_DISABLED);
+		entity.setStatus(RichEntity.STATUS_DISABLED);
 		entity.setUid(UUID.randomUUID().toString());
 		
 		return entity;

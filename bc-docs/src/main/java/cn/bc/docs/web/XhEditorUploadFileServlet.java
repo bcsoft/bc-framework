@@ -51,8 +51,8 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Log logger = LogFactory
 			.getLog(XhEditorUploadFileServlet.class);
-	private static String baseDir; // 上传文件存储的目录，相对于应用部署目录下的相对路径
-	private static String fileExt;// 上传类型限制，如 "jpg,jpeg,bmp,gif,png"，为空代表无限制
+	private static String appSubDir; // 上传文件存储的目录，相对于应用部署目录下的相对路径
+	private static String extensions;// 上传类型限制，如 "jpg,jpeg,bmp,gif,png"，为空代表无限制
 	private static Long maxSize;// 上传文件大小限制，单位为字节，默认10M
 
 	protected AttachService getAttachService() {
@@ -61,17 +61,17 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 
 	public void init() throws ServletException {
 		// 获取上传文件所保存到的根路径
-		baseDir = this.getInitParameter("baseDir");
-		if (StringUtils.isEmpty(baseDir))
-			baseDir = "uploads";
+		appSubDir = this.getInitParameter("appSubDir");
+		if (StringUtils.isEmpty(appSubDir))
+			appSubDir = "uploads";
 		File absoluteDir = new File(WebUtils.rootPath + File.separator
-				+ baseDir);
+				+ appSubDir);
 		if (!absoluteDir.exists()) {
 			absoluteDir.mkdir();
 		}
 
 		// 获取文件类型限制参数
-		fileExt = this.getInitParameter("fileExt");
+		extensions = this.getInitParameter("extensions");
 
 		// 获取文件大小限制参数
 		String maxSize_str = this.getInitParameter("maxSize");
@@ -135,8 +135,8 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 			String extend = getExtend(localFile);
 
 			// 检查文件类型
-			if (!StringUtils.isEmpty(fileExt)
-					&& ("," + fileExt.toLowerCase() + ",").indexOf(","
+			if (!StringUtils.isEmpty(extensions)
+					&& ("," + extensions.toLowerCase() + ",").indexOf(","
 							+ extend.toLowerCase() + ",") == -1) {
 				writeReturnJson(response, "不允许上传此类型的文件", "", localFile, null);
 				return;
@@ -171,7 +171,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 					.getTime());
 
 			// 构建文件要保存到的目录
-			File fileDir = new File(WebUtils.rootPath + "/" + baseDir + "/"
+			File fileDir = new File(WebUtils.rootPath + "/" + appSubDir + "/"
 					+ fileFolder);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
@@ -183,7 +183,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
 							.getTime());
 
-			String path = baseDir + "/" + fileFolder + "/" + filename + "."
+			String path = appSubDir + "/" + fileFolder + "/" + filename + "."
 					+ extend;
 			fileUrl = request.getContextPath() + "/" + path;
 
@@ -292,8 +292,8 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 			String extend = getExtend(localFile);
 
 			// 检查文件类型
-			if (!StringUtils.isEmpty(fileExt)
-					&& ("," + fileExt.toLowerCase() + ",").indexOf(","
+			if (!StringUtils.isEmpty(extensions)
+					&& ("," + extensions.toLowerCase() + ",").indexOf(","
 							+ extend.toLowerCase() + ",") == -1) {
 				writeReturnJson(response, "不允许上传此类型的文件", "");
 				return;
@@ -318,7 +318,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 					.getTime());
 
 			// 构建文件要保存到的目录
-			File fileDir = new File(WebUtils.rootPath + "/" + baseDir + "/"
+			File fileDir = new File(WebUtils.rootPath + "/" + appSubDir + "/"
 					+ fileFolder);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
@@ -330,7 +330,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
 							.getTime());
 
-			String path = baseDir + "/" + fileFolder + "/" + filename + "."
+			String path = appSubDir + "/" + fileFolder + "/" + filename + "."
 					+ extend;
 
 			fileUrl = request.getContextPath() + "/" + path;

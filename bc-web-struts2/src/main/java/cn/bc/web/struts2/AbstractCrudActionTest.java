@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsSpringTestCase;
 import org.springframework.util.StringUtils;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.core.service.CrudService;
 
 import com.opensymphony.xwork2.ActionProxy;
@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.ActionProxy;
  * @param <E>
  *            实体类型
  */
-public abstract class AbstractCrudActionTest<K extends Serializable, E extends Entity<K>>
+public abstract class AbstractCrudActionTest<K extends Serializable, E extends RichEntity<K>>
 		extends StrutsSpringTestCase {
 	private static Log logger = LogFactory.getLog(AbstractCrudActionTest.class);
 	private CrudService<E> crudService;

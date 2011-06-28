@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 import cn.bc.identity.domain.Actor;
 
 /**
@@ -20,7 +20,7 @@ import cn.bc.identity.domain.Actor;
  * @author dragon
  */
 @MappedSuperclass
-public class BaseLog extends EntityImpl {
+public class BaseLog extends RichEntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	private Calendar createDate;// 创建时间

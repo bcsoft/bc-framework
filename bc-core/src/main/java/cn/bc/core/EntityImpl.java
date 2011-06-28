@@ -3,45 +3,34 @@
  */
 package cn.bc.core;
 
-import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 /**
- * 默认的实体接口实现
+ * 默认的迷你实体接口实现
  * 
  * @author dragon
  */
 @MappedSuperclass
-public abstract class EntityImpl extends MiniEntityImpl implements cn.bc.core.Entity<Long> {
+public abstract class EntityImpl implements cn.bc.core.Entity<Long> {
 	private static final long serialVersionUID = 7826313222480961654L;
-	private String uid;
-	private int status = cn.bc.core.Entity.STATUS_DISABLED;
-	private boolean inner = false;
+	private Long id;
 
-	@Column(name = "UID_")
-	public String getUid() {
-		return uid;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getId() {
+		return id;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	@Column(name = "STATUS_")
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	@Column(name = "INNER_")
-	public boolean isInner() {
-		return inner;
-	}
-
-	public void setInner(boolean inner) {
-		this.inner = inner;
+	@Transient
+	public boolean isNew() {
+		return getId() == null || getId() <= 0;
 	}
 }

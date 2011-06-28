@@ -6,7 +6,7 @@ package cn.bc.feedback.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.FileEntity;
+import cn.bc.identity.domain.RichFileEntity;
 
 /**
  * 电子公告
@@ -15,7 +15,7 @@ import cn.bc.identity.domain.FileEntity;
  */
 @Entity
 @Table(name = "BC_FEEDBACK")
-public class Feedback extends FileEntity {
+public class Feedback extends RichFileEntity {
 	private static final long serialVersionUID = 1L;
 	/** 状态：草稿或待提交 */
 	public static final int STATUS_DRAFT = 0;

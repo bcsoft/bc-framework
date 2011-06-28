@@ -51,7 +51,7 @@
 			<result name="form">/bc/{1}/form.jsp</result>
 		</action>
 		<!-- 只读表单 -->
-		<action name="/*/read" class="{1}Action" method="edit">
+		<action name="/*/open" class="{1}Action" method="open">
 			<result name="form">/bc/{1}/formr.jsp</result>
 		</action>
 		<!-- 保存 -->

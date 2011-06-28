@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 
 /**
  * 工作事项信息
@@ -16,7 +16,7 @@ import cn.bc.core.EntityImpl;
  */
 @Entity
 @Table(name = "BC_WORK")
-public class Work extends EntityImpl {
+public class Work extends RichEntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	private String classifier; // 分类词,可多级分类,级间使用/连接,如"发文类/正式发文"

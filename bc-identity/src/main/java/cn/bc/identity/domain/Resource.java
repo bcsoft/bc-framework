@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 
 /**
  * 资源
@@ -19,7 +19,7 @@ import cn.bc.core.EntityImpl;
  */
 @Entity
 @Table(name = "BC_IDENTITY_RESOURCE")
-public class Resource extends EntityImpl {
+public class Resource extends RichEntityImpl {
 	private static final long serialVersionUID = 4623393538293916992L;
 
 	/** 资源类型为分类文件夹 */

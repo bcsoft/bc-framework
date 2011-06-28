@@ -14,7 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.RichEntityImpl;
 
 /**
  * 角色
@@ -23,7 +23,7 @@ import cn.bc.core.EntityImpl;
  */
 @Entity
 @Table(name = "BC_IDENTITY_ROLE")
-public class Role extends EntityImpl {
+public class Role extends RichEntityImpl {
 	private static final long serialVersionUID = 1273753941627332660L;
 
 	/** 类型：默认 */

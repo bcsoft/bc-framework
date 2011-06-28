@@ -12,7 +12,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.bc.core.Entity;
+import cn.bc.core.RichEntity;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.dao.CrudDao;
 import cn.bc.core.query.Query;
@@ -26,7 +26,7 @@ import cn.bc.core.service.CrudService;
  * @param <T>
  *            对象类型
  */
-public class CrudServiceMock<T extends Entity<Long>> implements CrudService<T>,
+public class CrudServiceMock<T extends RichEntity<Long>> implements CrudService<T>,
 		SetEntityClass<T> {
 	private static Log logger = LogFactory.getLog(CrudServiceMock.class);
 	private CrudDao<T> crudDao;

@@ -10,6 +10,7 @@ drop table if exists BC_FEEDBACK;
 drop table if exists BC_BULLETIN;
 
 -- 文档附件
+drop table if exists BC_DOCS_ATTACH_HISTORY;
 drop table if exists BC_DOCS_ATTACH;
 
 -- 系统日志

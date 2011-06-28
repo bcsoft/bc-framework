@@ -221,7 +221,7 @@ public class UploadFileServlet extends HttpServlet {
 				fileUrl = request.getContextPath() + "/bc/attach/download";
 			} else {
 				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/" + subFolder;
-				fileUrl = request.getContextPath() + "/" + relativeFilePath;
+				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + relativeFilePath;
 			}
 			realFilePath = realFileDir + "/" + fileName;
 
@@ -391,7 +391,7 @@ public class UploadFileServlet extends HttpServlet {
 				path = appSubDir + "/" + fileFolder + "/" + filename + "."
 						+ extension;
 				save2path = WebUtils.rootPath + "/" + path;
-				fileUrl = request.getContextPath() + "/" + path;
+				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + path;
 			}
 
 			// 保存一个附件记录
