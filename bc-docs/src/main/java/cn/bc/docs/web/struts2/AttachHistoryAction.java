@@ -75,7 +75,7 @@ public class AttachHistoryAction extends CrudAction<Long, AttachHistory> {
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("fileDate",Direction.Desc);
+		return new OrderCondition("fileDate", Direction.Desc);
 	}
 
 	@Override
@@ -85,12 +85,12 @@ public class AttachHistoryAction extends CrudAction<Long, AttachHistory> {
 				getText("attachHistory.fileDate"), 130).setSortable(true)
 				.setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn("subject", getText("attachHistory.subject"))
-		.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("type", getText("attachHistory.type"), 80)
-				.setValueFormater(new KeyValueFormater(getTypes())));
 		columns.add(new TextColumn("authorName",
 				getText("attachHistory.authorName"), 80).setSortable(true));
+		columns.add(new TextColumn("type", getText("attachHistory.type"), 80)
+				.setValueFormater(new KeyValueFormater(getTypes())));
+		columns.add(new TextColumn("subject", getText("attachHistory.subject"))
+				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("format", getText("attachHistory.format"),
 				50).setSortable(true));
 		return columns;

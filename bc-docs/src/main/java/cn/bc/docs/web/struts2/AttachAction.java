@@ -26,8 +26,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.RichEntity;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
@@ -38,6 +40,7 @@ import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.CrudAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -190,6 +193,8 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	@Override
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
+		columns.add(new TextColumn("status", getText("attach.status"), 60)
+				.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
 		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 130)
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
@@ -258,25 +263,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		ah.setDepartName(context.getBelong().getName());
 		ah.setUnitId(context.getUnit().getId());
 		ah.setUnitName(context.getUnit().getName());
-
-		String typeDesc;
-		if (AttachHistory.TYPE_DOWNLOAD == type)
-			typeDesc = getText("attachHistory.type.download");
-		else if (AttachHistory.TYPE_INLINE == type)
-			typeDesc = getText("attachHistory.type.inline");
-		else if (AttachHistory.TYPE_ZIP == type)
-			typeDesc = getText("attachHistory.type.zip");
-		else if (AttachHistory.TYPE_CONVERT == type)
-			typeDesc = getText("attachHistory.type.convert");
-		else if (AttachHistory.TYPE_DELETED == type)
-			typeDesc = getText("attachHistory.type.deleted");
-		else
-			typeDesc = "unknow";
-
-		ah.setSubject(getText(
-				"attachHistory.visit.tpl",
-				new String[] { ah.getAuthorName(), typeDesc,
-						attach.getSubject() }));
+		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
 		return ah;
 	}
@@ -289,12 +276,22 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			// 下载参数设置
 			contentType = AttachUtils.getContentType("zip");
 			filename = WebUtils.encodeFileName(
-					ServletActionContext.getRequest(), "package." + ptype + "."
-							+ DateUtils.formatDateTime(new Date()) + ".zip");
+					ServletActionContext.getRequest(),
+					DateUtils.formatDateTime(new Date(), "yyyyMMddHHmmss")
+							+ (ptype == null ? "" : ptype) + ".zip");
 
-			// 获取所有附件
-			List<Attach> attachs = this.getCrudService().createQuery()
-					.condition(new EqualsCondition("ptype", ptype)).list();
+			List<Attach> attachs;
+			if (this.getIds() != null && this.getIds().length() > 0) {// 指定的附件
+				String[] _ids = this.getIds().split(",");
+				Long[] ids = new Long[_ids.length];
+				for (int i = 0; i < _ids.length; i++)
+					ids[i] = new Long(_ids[i]);
+				attachs = this.getCrudService().createQuery()
+						.condition(new InCondition("id", ids)).list();
+			} else {// 所有附件
+				attachs = this.getCrudService().createQuery()
+						.condition(new EqualsCondition("ptype", ptype)).list();
+			}
 			String path;
 
 			// 开始打包
@@ -361,22 +358,27 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		Json _json = new Json();
 		try {
 			Attach attach = this.getCrudService().load(this.getId());
-			this.getCrudService().delete(this.getId());
-			String path;
-			if (attach.isAppPath())
-				path = WebUtils.rootPath + File.separator
-						+ getText("app.data.subPath") + File.separator
-						+ attach.getPath();
-			else
-				path = getText("app.data.realPath") + File.separator
-						+ attach.getPath();
+			// this.getCrudService().delete(this.getId());
+			// String path;
+			// if (attach.isAppPath())
+			// path = WebUtils.rootPath + File.separator
+			// + getText("app.data.subPath") + File.separator
+			// + attach.getPath();
+			// else
+			// path = getText("app.data.realPath") + File.separator
+			// + attach.getPath();
+			//
+			// File file = new File(path);
+			// if (file.exists())
+			// file.delete();
 
-			File file = new File(path);
-			if (file.exists())
-				file.delete();
+			// 将附件标记为删除状态
+			attach.setStatus(RichEntity.STATUS_DELETED);
+			this.getCrudService().save(attach);
 
-			// TODO 记录一条删除痕迹
-			// SystemContext context = (SystemContext) this.getContext();
+			// 记录一条删除痕迹
+			this.attachHistoryService.save(buildHistory(
+					AttachHistory.TYPE_DELETED, attach));
 
 			// 返回删除成功信息
 			_json.put("success", true);
@@ -398,27 +400,35 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		try {
 			List<Attach> attachs = this.getCrudService().createQuery()
 					.condition(new EqualsCondition("ptype", ptype)).list();
-			this.getCrudService().delete(this.getId());
-			String path;
-			Long[] ids = new Long[attachs.size()];
+			// String path;
+			// Long[] ids = new Long[attachs.size()];
+			List<AttachHistory> ahs = new ArrayList<AttachHistory>();
 			for (int i = 0; i < attachs.size(); i++) {
 				Attach attach = attachs.get(i);
-				ids[i] = attach.getId();
-				if (attach.isAppPath())
-					path = WebUtils.rootPath + File.separator
-							+ getText("app.data.subPath") + File.separator
-							+ attach.getPath();
-				else
-					path = getText("app.data.realPath") + File.separator
-							+ attach.getPath();
+				// ids[i] = attach.getId();
+				// if (attach.isAppPath())
+				// path = WebUtils.rootPath + File.separator
+				// + getText("app.data.subPath") + File.separator
+				// + attach.getPath();
+				// else
+				// path = getText("app.data.realPath") + File.separator
+				// + attach.getPath();
+				//
+				// File file = new File(path);
+				// if (file.exists())
+				// file.delete();
 
-				File file = new File(path);
-				if (file.exists())
-					file.delete();
+				// 将附件标记为删除状态
+				attach.setStatus(RichEntity.STATUS_DELETED);
+
+				// 记录一条删除痕迹
+				ahs.add(buildHistory(AttachHistory.TYPE_DELETED, attach));
 			}
-			this.getCrudService().delete(ids);
+			// this.getCrudService().delete(ids);
+			this.getCrudService().save(attachs);
 
-			// TODO 记录删除痕迹
+			// 记录删除痕迹
+			this.attachHistoryService.save(ahs);
 
 			// 返回删除成功信息
 			_json.put("success", true);
