@@ -373,6 +373,9 @@ create table BC_DOCS_ATTACH_HISTORY (
     DEPART_NAME varchar(255) COMMENT '处理人所在部门名称，如果用户直接隶属于单位，则为null',
     UNIT_ID int NOT NULL COMMENT '处理人所在单位ID',
     UNIT_NAME varchar(255) NOT NULL COMMENT '处理人所在单位名称',
+
+    C_IP varchar(100) COMMENT '客户端IP',
+    C_INFO varchar(1000) COMMENT '浏览器信息：User-Agent',
     
     MEMO varchar(2000) COMMENT '备注',
     primary key (ID)

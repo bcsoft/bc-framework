@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.RichEntity;
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
@@ -221,11 +223,27 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 	public String filename;
 	public String contentType;
+	public long contentLength;
 	public InputStream inputStream;
 
 	// 下载附件
 	public String download() throws Exception {
-		Attach attach = this.getCrudService().load(this.getId());
+		Attach attach;
+		if (this.puid == null || this.puid.length() == 0) {// 下载正常的附件
+			attach = this.attachService.load(this.getId());
+		} else {// 下载浏览器
+			List<Attach> attachs = this.attachService.findByPtype("browser",
+					this.puid);
+			if (attachs == null || attachs.isEmpty())
+				throw new CoreException("undefined browser:ptype=browser,puid="
+						+ this.puid);
+			attach = attachs.get(0);
+		}
+		downloadAttach(attach);
+		return SUCCESS;
+	}
+
+	private void downloadAttach(Attach attach) throws FileNotFoundException {
 		contentType = AttachUtils.getContentType(attach.getExtension());
 		filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
 				attach.getSubject());
@@ -238,7 +256,9 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 			path = getText("app.data.realPath") + File.separator
 					+ attach.getPath();
 
-		inputStream = new FileInputStream(new File(path));
+		File file = new File(path);
+		contentLength = file.length();
+		inputStream = new FileInputStream(file);
 
 		// 累计下载次数
 		attach.setCount(attach.getCount() + 1);
@@ -247,8 +267,6 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		// 记录一条下载痕迹
 		this.attachHistoryService.save(buildHistory(
 				AttachHistory.TYPE_DOWNLOAD, attach));
-
-		return SUCCESS;
 	}
 
 	private AttachHistory buildHistory(int type, Attach attach) {
@@ -265,6 +283,28 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		ah.setUnitName(context.getUnit().getName());
 		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
+
+		// 客户端信息
+		HttpServletRequest request = ServletActionContext.getRequest();
+		ah.setClientInfo(request.getHeader("User-Agent"));
+		String key = "X-Forwarded-For";// 如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串Ip值,其中第一个非unknown的有效IP字符串是真正的用户端的真实IP
+		String clientIp = request.getHeader(key);
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			key = "Proxy-Client-IP";
+			clientIp = request.getHeader(key);
+		}
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			key = "WL-Proxy-Client-IP"; // Weblogic集群获取客户端IP
+			clientIp = request.getHeader(key);
+		}
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getRemoteAddr();// 获得客户端电脑的名字，若失败则返回客户端电脑的ip地址
+		}
+		ah.setClientIp(clientIp);
+
 		return ah;
 	}
 
@@ -393,6 +433,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	}
 
 	public String ptype;
+	public String puid;
 
 	// 删除所有附件
 	public String deleteAll() {
@@ -488,13 +529,14 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 
 			// close the connection
 			connection.disconnect();
-			this.inputStream = new ByteArrayInputStream(
-					outputStream.toByteArray());
+			byte[] bs = outputStream.toByteArray();
+			this.inputStream = new ByteArrayInputStream(bs);
 
 			inputStream.close();
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
 			contentType = AttachUtils.getContentType(this.to);
+			contentLength = bs.length;
 			this.filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), attach.getSubject()
 							+ "." + this.to);
@@ -505,7 +547,9 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 					ServletActionContext.getRequest(), attach.getSubject());
 
 			// 无需转换的文档直接下载处理
-			inputStream = new FileInputStream(new File(path));
+			File file = new File(path);
+			contentLength = file.length();
+			inputStream = new FileInputStream(file);
 		}
 
 		// 累计下载次数
@@ -541,6 +585,11 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 	@Override
 	protected String getJs() {
 		// TODO Auto-generated method stub
-		return this.getContextPath() + "/bc/attach/list.js";
+		return this.getContextPath() + "/bc/docs/attach/list.js";
+	}
+
+	// 返回下载系统支持的浏览器列表的页面
+	public String browser() throws Exception {
+		return SUCCESS;
 	}
 }

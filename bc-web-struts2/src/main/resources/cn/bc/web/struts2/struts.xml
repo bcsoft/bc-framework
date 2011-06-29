@@ -11,6 +11,8 @@
 				class="cn.bc.web.struts2.interceptor.CacheInterceptor">
 				<!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
 				<param name="expires">0</param>
+				<!-- 排除下载文件的连接不作处理，否则ie<9时无法下载的 -->
+				<param name="excludePaths">/bc/attach/download*,/bc/attach/inline*</param>
 			</interceptor>
 			<interceptor-stack name="noCacheStack">
 				<interceptor-ref name="noCacheInterceptor" />

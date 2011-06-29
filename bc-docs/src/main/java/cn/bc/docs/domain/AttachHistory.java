@@ -39,6 +39,8 @@ public class AttachHistory extends FileEntity {
 	private Attach attach;// 对应的附件
 	private String format;// 下载的文件格式或转换后的文件格式
 	private String memo;// 备注
+	private String clientIp; // 用户机器的IP地址
+	private String clientInfo; // 用户浏览器的信息：User-Agent
 
 	public String getFormat() {
 		return format;
@@ -73,5 +75,23 @@ public class AttachHistory extends FileEntity {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	@Column(name = "C_IP")
+	public String getClientIp() {
+		return clientIp;
+	}
+
+	public void setClientIp(String clientIp) {
+		this.clientIp = clientIp;
+	}
+
+	@Column(name = "C_INFO")
+	public String getClientInfo() {
+		return clientInfo;
+	}
+
+	public void setClientInfo(String clientBrowser) {
+		this.clientInfo = clientBrowser;
 	}
 }

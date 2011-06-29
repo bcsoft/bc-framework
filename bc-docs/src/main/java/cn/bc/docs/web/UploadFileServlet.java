@@ -335,12 +335,44 @@ public class UploadFileServlet extends HttpServlet {
 
 			// 获取xheditor上传的文件
 			FileItem uploadFile = (FileItem) fields.get("filedata");
-
+			
 			// 获取上传文件名
 			localFile = uploadFile.getName();
 
 			// 获取扩展名
 			String extension = getExtension(localFile);
+
+			// 文件存储的相对路径（年月），避免超出目录内文件数的限制
+			Calendar now = Calendar.getInstance();
+			String subFolder = new SimpleDateFormat("yyyyMM").format(now
+					.getTime());
+
+			// 要保存的物理文件
+			String realFileDir;//所保存文件所在的目录的绝对路径名
+			String relativeFilePath;//所保存文件的相对路径名
+			String realFilePath;//所保存文件的绝对路径名
+			String fileName = ptype
+					+ (ptype.length() > 0 ? "_" : "")
+					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
+							.getTime()) + "." + extension;//不含路径的文件名
+			relativeFilePath = subFolder + "/" + fileName;
+			if (absolute) {
+				realFileDir = appRealDir + "/" + subFolder;
+				fileUrl = request.getContextPath() + "/bc/attach/download";
+			} else {
+				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/" + subFolder;
+				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + relativeFilePath;
+			}
+			realFilePath = realFileDir + "/" + fileName;
+
+			// 构建文件要保存到的目录
+			File _fileDir = new File(realFileDir);
+			if (!_fileDir.exists()) {
+				if (logger.isFatalEnabled()) {
+					logger.fatal("mkdir=" + realFileDir);
+				}
+				_fileDir.mkdirs();
+			}
 
 			// 检查文件类型
 			if (!StringUtils.isEmpty(extensions)
@@ -363,46 +395,15 @@ public class UploadFileServlet extends HttpServlet {
 				return;
 			}
 
-			// 文件存储的相对路径（年月），避免超出目录内文件数的限制
-			Calendar now = Calendar.getInstance();
-			String fileFolder = new SimpleDateFormat("yyyyMM").format(now
-					.getTime());
-
-			// 构建文件要保存到的目录
-			File fileDir = new File(WebUtils.rootPath + "/" + appSubDir + "/"
-					+ fileFolder);
-			if (!fileDir.exists()) {
-				fileDir.mkdirs();
-			}
-
-			// 要保存的物理文件名
-			String filename = ptype
-					+ (ptype.length() > 0 ? "_" : "")
-					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-							.getTime());
-
-			String path, save2path;
-			if (absolute) {
-				path = appRealDir + "/" + fileFolder + "/" + filename + "."
-						+ extension;
-				save2path = path;
-				fileUrl = request.getContextPath() + "/bc/attach/download";
-			} else {
-				path = appSubDir + "/" + fileFolder + "/" + filename + "."
-						+ extension;
-				save2path = WebUtils.rootPath + "/" + path;
-				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + path;
-			}
-
 			// 保存一个附件记录
 			id = saveAttachLog(localFile, ptype, puid, context, extension,
-					size, now, path, absolute).getId().toString();
+					size, now, relativeFilePath, absolute).getId().toString();
 			if (absolute) {
 				fileUrl += "?id=" + id;
 			}
 
 			// 保存到文件
-			File savefile = new File(save2path);
+			File savefile = new File(realFilePath);
 			uploadFile.write(savefile);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);

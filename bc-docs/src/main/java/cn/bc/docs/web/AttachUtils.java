@@ -15,6 +15,7 @@ public class AttachUtils {
 	 * @return
 	 */
 	public static String getContentType(String extend) {
+		//if(true) return "application/x-msdownload";
 		if ("pdf".equalsIgnoreCase(extend)) {
 			return "application/pdf";
 		} else if ("svg".equalsIgnoreCase(extend)) {
@@ -50,8 +51,10 @@ public class AttachUtils {
 			return "application/rtf";
 		} else if ("zip".equalsIgnoreCase(extend)) {
 			return "application/zip";
+		} else if ("exe".equalsIgnoreCase(extend)) {
+			return "application/x-msdownload";//application/x-msdos-program
 		} else {
-			return "application/" + extend;
+			return "application/octet-stream";
 		}
 	}
 
