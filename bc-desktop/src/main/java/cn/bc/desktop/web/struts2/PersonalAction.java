@@ -12,7 +12,7 @@ import cn.bc.core.RichEntity;
 import cn.bc.desktop.domain.Personal;
 import cn.bc.desktop.service.PersonalService;
 import cn.bc.identity.domain.Actor;
-import cn.bc.identity.service.ActorService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.CrudAction;
 
 /**
@@ -28,17 +28,11 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 	private String font;
 	private String theme;
 	private PersonalService personalService;
-	private ActorService actorService;
 
 	@Autowired
 	public void setPersonalService(PersonalService personalService) {
 		this.personalService = personalService;
 		this.setCrudService(personalService);
-	}
-
-	@Autowired
-	public void setActorService(ActorService actorService) {
-		this.actorService = actorService;
 	}
 
 	public String getFont() {
@@ -59,7 +53,8 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 
 	@Override
 	public String edit() throws Exception {
-		Actor actor = (Actor)getCurrentActor();
+		SystemContext context = (SystemContext) this.getContext();
+		Actor actor = context.getUser();
 		Personal personal = this.personalService.loadByActor(actor.getId());
 		if (personal == null) {// 没有就从全局配置复制一个
 			Personal common = this.personalService.loadGlobalConfig();
@@ -70,14 +65,15 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 			personal.setTheme(common.getTheme());
 			personal.setActor(actor);
 		}
-		
+
 		this.setE(personal);
 		return "form";
 	}
 
 	// 更新个人设置
 	public String update() throws Exception {
-		Actor actor = getCurrentActor();
+		SystemContext context = (SystemContext) this.getContext();
+		Actor actor = context.getUser();
 		Personal personal = this.personalService.loadByActor(actor.getId());
 		if (personal == null) {// 没有就从全局配置复制一个
 			Personal common = this.personalService.loadGlobalConfig();
@@ -86,7 +82,7 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 			personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
-			personal.setActor((Actor)actor);
+			personal.setActor((Actor) actor);
 			if (font != null && font.length() > 0)
 				personal.setFont(font);
 			if (theme != null && theme.length() > 0)
@@ -100,11 +96,5 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 		this.personalService.save(personal);
 
 		return "saveSuccess";
-	}
-
-	private Actor getCurrentActor() {
-		Long actorId = new Long(14);
-		Actor actor = this.actorService.load(actorId);
-		return actor;
 	}
 }
