@@ -169,28 +169,32 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Actor unit = context.getUnit();
 
 		// 其他单位且已发布的全系统公告
-		Condition commonCondition = new AndCondition()
+		Condition commonCondition = new AndCondition().setAddBracket(true)
 				.add(new EqualsCondition("status", Bulletin.STATUS_ISSUED))
 				.add(new EqualsCondition("scope", Bulletin.SCOPE_SYSTEM))
 				.add(new NotEqualsCondition("unitId", unit.getId()));
 
-		MixCondition c = new OrCondition();
+		MixCondition c = new OrCondition().setAddBracket(true);
 		if (isManager) {// 管理员看本单位的所有状态公告或全系统公告
 			c.add(new EqualsCondition("unitId", unit.getId()));// 本单位公告
 			c.add(commonCondition);
-
-			// 按状态再按发布时间排序
-			c.add(new OrderCondition("status").add("issueDate", Direction.Desc));
 		} else {// 普通用户仅看已发布的本单位或全系统公告
 			c.add(new AndCondition().add(
 					new EqualsCondition("unitId", unit.getId())).add(
 					new EqualsCondition("status", Bulletin.STATUS_ISSUED)));// 本单位已发布公告
 			c.add(commonCondition);
-
-			// 按发布时间排序
-			c.add(new OrderCondition("issueDate", Direction.Desc));
 		}
 		return c;
+	}
+
+	@Override
+	protected OrderCondition getDefaultOrderCondition() {
+		if (isManager()) {// 管理员看本单位的所有状态公告或全系统公告
+			return new OrderCondition("status")
+					.add("issueDate", Direction.Desc);
+		} else {// 普通用户仅看已发布的本单位或全系统公告
+			return new OrderCondition("issueDate", Direction.Desc);
+		}
 	}
 
 	// 设置页面的尺寸

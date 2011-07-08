@@ -86,6 +86,13 @@ public class HibernateJpaQuery<T extends Object> implements
 					+ HibernateUtils.removeSelect(queryTemp);
 		}
 		final String queryString = queryTemp;
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + queryString);
+			logger.debug("args="
+					+ (condition != null ? StringUtils
+							.collectionToCommaDelimitedString(condition
+									.getValues()) : "null"));
+		}
 		Long c = jpaTemplate.execute(new JpaCallback<Long>() {
 			public Long doInJpa(EntityManager em) throws PersistenceException {
 				Query queryObject = em.createQuery(queryString);
@@ -105,10 +112,17 @@ public class HibernateJpaQuery<T extends Object> implements
 
 	@SuppressWarnings("unchecked")
 	public List<T> list() {
+		final String hql = getHql();
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql);
+			logger.debug("args="
+					+ (condition != null ? StringUtils
+							.collectionToCommaDelimitedString(condition
+									.getValues()) : "null"));
+		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			public List<T> doInJpa(EntityManager em)
 					throws PersistenceException {
-				String hql = getHql();
 				Query queryObject = em.createQuery(hql);
 				jpaTemplate.prepareQuery(queryObject);
 				if (condition != null && condition.getValues() != null) {
@@ -118,13 +132,6 @@ public class HibernateJpaQuery<T extends Object> implements
 						i++;
 					}
 				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("hql=" + hql);
-					logger.debug("args="
-							+ (condition != null ? StringUtils
-									.collectionToCommaDelimitedString(condition
-											.getValues()) : "null"));
-				}
 				return (List<T>) queryObject.getResultList();
 			}
 		});
@@ -133,10 +140,19 @@ public class HibernateJpaQuery<T extends Object> implements
 	@SuppressWarnings("unchecked")
 	public List<T> list(final int pageNo, final int pageSize) {
 		final int _pageSize = pageSize < 1 ? 1 : pageSize;
+		final String hql = getHql();
+		if (logger.isDebugEnabled()) {
+			logger.debug("pageNo=" + pageNo);
+			logger.debug("pageSize=" + _pageSize);
+			logger.debug("hql=" + hql);
+			logger.debug("args="
+					+ (condition != null ? StringUtils
+							.collectionToCommaDelimitedString(condition
+									.getValues()) : "null"));
+		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			public List<T> doInJpa(EntityManager em)
 					throws PersistenceException {
-				String hql = getHql();
 				Query queryObject = em.createQuery(hql);
 				jpaTemplate.prepareQuery(queryObject);
 				if (condition != null && condition.getValues() != null) {
@@ -149,15 +165,6 @@ public class HibernateJpaQuery<T extends Object> implements
 				queryObject.setFirstResult(Page.getFirstResult(pageNo,
 						_pageSize));
 				queryObject.setMaxResults(_pageSize);
-				if (logger.isDebugEnabled()) {
-					logger.debug("pageNo=" + pageNo);
-					logger.debug("pageSize=" + _pageSize);
-					logger.debug("hql=" + hql);
-					logger.debug("args="
-							+ (condition != null ? StringUtils
-									.collectionToCommaDelimitedString(condition
-											.getValues()) : "null"));
-				}
 				return (List<T>) queryObject.getResultList();
 			}
 		});
@@ -194,14 +201,14 @@ public class HibernateJpaQuery<T extends Object> implements
 
 	protected String getHql() {
 		String hql = "from " + this.getEntityClass().getSimpleName();
-		if (condition != null){
+		if (condition != null) {
 			String expression = this.condition.getExpression();
-			if (condition instanceof OrderCondition){
+			if (condition instanceof OrderCondition) {
 				hql += " order by " + expression;
-			}else{
-				if (expression != null && expression.startsWith("order by")){
+			} else {
+				if (expression != null && expression.startsWith("order by")) {
 					hql += " " + expression;
-				}else if(expression != null && expression.length() > 0){
+				} else if (expression != null && expression.length() > 0) {
 					hql += " where " + expression;
 				}
 			}

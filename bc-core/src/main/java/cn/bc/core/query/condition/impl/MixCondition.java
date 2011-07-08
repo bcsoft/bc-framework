@@ -33,8 +33,9 @@ public abstract class MixCondition implements Condition {
 		return addBracket;
 	}
 
-	public void setAddBracket(boolean addBracket) {
+	public MixCondition setAddBracket(boolean addBracket) {
 		this.addBracket = addBracket;
+		return this;
 	}
 
 	/**
