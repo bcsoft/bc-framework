@@ -32,6 +32,7 @@ import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
@@ -219,6 +220,11 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 						new BooleanFormater(getText("label.yes"),
 								getText("label.no"))));
 		return columns;
+	}
+
+	@Override
+	protected OrderCondition getDefaultOrderCondition() {
+		return new OrderCondition("fileDate",Direction.Desc);
 	}
 
 	public String filename;

@@ -427,7 +427,7 @@ public class UploadFileServlet extends HttpServlet {
 	// 获取文件的扩展名，如"png"
 	private static String getExtension(String fileName) {
 		int pos = fileName.lastIndexOf(".");
-		return fileName.substring(pos + 1);
+		return fileName.substring(pos + 1).toLowerCase();
 	}
 
 	// 使用I/O流输出 json格式的数据
