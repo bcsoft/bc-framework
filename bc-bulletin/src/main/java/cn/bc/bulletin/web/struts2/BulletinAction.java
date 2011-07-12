@@ -242,30 +242,39 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 		List<Column> columns = super.buildGridColumns();
 		if (isManager)
-			columns.add(new TextColumn("status", getText("bulletin.status"), 80)
-					.setSortable(true).setValueFormater(
-							new KeyValueFormater(getStatuses())));
-		columns.add(new TextColumn("issueDate", getText("bulletin.issueDate"),
-				90).setSortable(true).setDir(Direction.Desc)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new TextColumn("issuerName",
-				getText("bulletin.issuerName"), 90).setSortable(true));
-		columns.add(new TextColumn("subject", getText("bulletin.subject"))
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)
-				.setSortable(true).setValueFormater(
-						new KeyValueFormater(getEntityStatuses())));
-		if (isManager) {
-			columns.add(new TextColumn("fileDate",
-					getText("bulletin.fileDate"), 150)
-					.setSortable(true)
+			if (this.useColumn("status"))
+				columns.add(new TextColumn("status",
+						getText("bulletin.status"), 80).setSortable(true)
+						.setValueFormater(new KeyValueFormater(getStatuses())));
+		if (this.useColumn("issueDate"))
+			columns.add(new TextColumn("issueDate",
+					getText("bulletin.issueDate"), 90).setSortable(true)
 					.setDir(Direction.Desc)
-					.setValueFormater(
-							new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-			columns.add(new TextColumn("authorName",
-					getText("bulletin.authorName"), 80).setSortable(true));
-			columns.add(new TextColumn("unitName",
-					getText("bulletin.unitName"), 80).setSortable(true));
+					.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+		if (this.useColumn("issuerName"))
+			columns.add(new TextColumn("issuerName",
+					getText("bulletin.issuerName"), 90).setSortable(true));
+		if (this.useColumn("subject"))
+			columns.add(new TextColumn("subject", getText("bulletin.subject"))
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("scope"))
+			columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)
+					.setSortable(true).setValueFormater(
+							new KeyValueFormater(getEntityStatuses())));
+		if (isManager) {
+			if (this.useColumn("fileDate"))
+				columns.add(new TextColumn("fileDate",
+						getText("bulletin.fileDate"), 150)
+						.setSortable(true)
+						.setDir(Direction.Desc)
+						.setValueFormater(
+								new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
+			if (this.useColumn("authorName"))
+				columns.add(new TextColumn("authorName",
+						getText("bulletin.authorName"), 80).setSortable(true));
+			if (this.useColumn("unitName"))
+				columns.add(new TextColumn("unitName",
+						getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;
 	}

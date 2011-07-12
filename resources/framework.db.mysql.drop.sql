@@ -39,3 +39,8 @@ drop table if exists BC_IDENTITY_IDGENERATOR;
 drop table if exists BC_IDENTITY_ROLE_RESOURCE;
 drop table if exists BC_IDENTITY_ROLE;
 drop table if exists BC_IDENTITY_RESOURCE;
+
+-- 选项模块
+drop table if exists BC_OPTION_ITEM;
+drop table if exists BC_OPTION_GROUP;
+

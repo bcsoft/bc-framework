@@ -157,8 +157,8 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 	@SuppressWarnings("rawtypes")
 	public T save(T entity) {
 		if (null != entity) {
-			if (entity instanceof cn.bc.core.RichEntity) {
-				if (((cn.bc.core.RichEntity) entity).isNew()) {
+			if (entity instanceof cn.bc.core.Entity) {
+				if (((cn.bc.core.Entity) entity).isNew()) {
 					this.jpaTemplate.persist(entity);
 				} else {
 					//执行完merge后entity还是detached, merge后返回的新对象才是Persistent
