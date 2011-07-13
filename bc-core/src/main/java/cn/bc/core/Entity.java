@@ -6,7 +6,7 @@ package cn.bc.core;
 import java.io.Serializable;
 
 /**
- * 迷你实体接口
+ * 基本实体接口：定义id字段
  * @author dragon
  * 
  */

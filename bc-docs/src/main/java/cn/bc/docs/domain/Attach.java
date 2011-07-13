@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.FileEntity;
+import cn.bc.identity.domain.FileEntityImpl;
 
 /**
  * 附件
@@ -19,7 +19,7 @@ import cn.bc.identity.domain.FileEntity;
  */
 @Entity
 @Table(name = "BC_DOCS_ATTACH")
-public class Attach extends FileEntity {
+public class Attach extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	private String puid;// 所关联文档的UID
@@ -29,6 +29,7 @@ public class Attach extends FileEntity {
 	private long size;// 文件的大小(单位为byte)
 	private long count;// 文件的下载次数
 	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;//详见RichEntity中的STATUS_常数
+	private String subject;// 标题
 	
 	/**
 	 * path的值是相对于app.data.realPath目录下的路径还是相对于app.data.subPath目录下的路径：
@@ -36,6 +37,14 @@ public class Attach extends FileEntity {
 	 * true：相对于app.data.subPath目录下的路径
 	 */
 	private boolean appPath = false;// 
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
 	@Column(name = "STATUS_")
 	public int getStatus() {

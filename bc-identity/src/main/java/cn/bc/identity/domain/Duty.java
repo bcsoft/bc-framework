@@ -39,6 +39,6 @@ public class Duty extends RichEntityImpl {
 
 	public String toString() {
 		return "id:" + getId() + ",code:" + getCode() + ",name:" + getName()
-				+ ",status:" + getStatus() + ",inner:" + isInner();
+				+ ",status:" + getStatus();
 	}
 }

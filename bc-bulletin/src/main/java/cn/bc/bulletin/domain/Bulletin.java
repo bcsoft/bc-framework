@@ -11,10 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.RichFileEntity;
+import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
  * 电子公告
@@ -23,7 +22,7 @@ import cn.bc.identity.domain.RichFileEntity;
  */
 @Entity
 @Table(name = "BC_BULLETIN")
-public class Bulletin extends RichFileEntity {
+public class Bulletin extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	/**状态：草稿或待发布*/
 	public static final int STATUS_DRAFT = 0;
@@ -40,7 +39,16 @@ public class Bulletin extends RichFileEntity {
 	private Calendar issueDate;// 发布时间
 	private Calendar overdueDate;// 过期日期：为空代表永不过期
 	private int scope;// 发布范围：0-本单位,1-全系统
+	private String subject;//标题
 	private String content;// 详细内容
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true, targetEntity = Actor.class)
 	@JoinColumn(name = "ISSUER_ID", referencedColumnName = "ID")
@@ -97,10 +105,10 @@ public class Bulletin extends RichFileEntity {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
-	@Override
-	@Transient
-	protected Calendar getSpecalDate() {
-		return this.getIssueDate();//使用发布日期最为文档的年月日信息
-	}
+//
+//	@Override
+//	@Transient
+//	protected Calendar getSpecalDate() {
+//		return this.getIssueDate();//使用发布日期作为文档的年月日信息
+//	}
 }

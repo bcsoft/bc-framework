@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.FileEntity;
+import cn.bc.identity.domain.FileEntityImpl;
 
 /**
  * 附件处理的痕迹记录
@@ -22,7 +22,7 @@ import cn.bc.identity.domain.FileEntity;
  */
 @Entity
 @Table(name = "BC_DOCS_ATTACH_HISTORY")
-public class AttachHistory extends FileEntity {
+public class AttachHistory extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	/** 操作类型：下载 */
 	public static final int TYPE_DOWNLOAD = 0;
@@ -41,6 +41,15 @@ public class AttachHistory extends FileEntity {
 	private String memo;// 备注
 	private String clientIp; // 用户机器的IP地址
 	private String clientInfo; // 用户浏览器的信息：User-Agent
+	private String subject;// 标题
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
 	public String getFormat() {
 		return format;

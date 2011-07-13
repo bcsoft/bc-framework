@@ -41,7 +41,7 @@ public abstract class AbstractEntityCrudTest<K extends Serializable, E extends R
 		E entity = this.crudOperations.create();
 		
 		//补充一些必填域的设置
-		entity.setInner(false);
+		//entity.setInner(false);
 		entity.setStatus(RichEntity.STATUS_DISABLED);
 		entity.setUid(UUID.randomUUID().toString());
 		

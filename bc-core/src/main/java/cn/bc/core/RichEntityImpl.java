@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- * 默认的详实实体接口实现
+ * 带UID和状态的基本实体接口的实现
  * 
  * @author dragon
  */
@@ -15,8 +15,8 @@ import javax.persistence.MappedSuperclass;
 public abstract class RichEntityImpl extends EntityImpl implements cn.bc.core.RichEntity<Long> {
 	private static final long serialVersionUID = 7826313222480961654L;
 	private String uid;
-	private int status = cn.bc.core.RichEntity.STATUS_DISABLED;
-	private boolean inner = false;
+	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
+//	private boolean inner = false;
 
 	@Column(name = "UID_")
 	public String getUid() {
@@ -35,13 +35,13 @@ public abstract class RichEntityImpl extends EntityImpl implements cn.bc.core.Ri
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
-	@Column(name = "INNER_")
-	public boolean isInner() {
-		return inner;
-	}
-
-	public void setInner(boolean inner) {
-		this.inner = inner;
-	}
+//
+//	@Column(name = "INNER_")
+//	public boolean isInner() {
+//		return inner;
+//	}
+//
+//	public void setInner(boolean inner) {
+//		this.inner = inner;
+//	}
 }

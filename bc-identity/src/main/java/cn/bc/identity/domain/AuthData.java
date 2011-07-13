@@ -3,6 +3,8 @@
  */
 package cn.bc.identity.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,7 +19,7 @@ import cn.bc.web.ui.json.Json;
  */
 @Entity
 @Table(name = "BC_IDENTITY_AUTH")
-public class AuthData {
+public class AuthData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;// 与Actor的id对应
 	private String password;// 登录密码的加密信息

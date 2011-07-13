@@ -113,6 +113,12 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 		Feedback e = this.getE();
 		if (e.getStatus() == Feedback.STATUS_DRAFT)
 			e.setStatus(Feedback.STATUS_SUMMIT);
+		
+		SystemContext context = (SystemContext) this.getContext();
+		e.setModifierId(context.getUser().getId());
+		e.setModifierName(context.getUser().getName());
+		e.setModifiedDate(Calendar.getInstance());
+		
 		this.getCrudService().save(e);
 		return "saveSuccess";
 	}

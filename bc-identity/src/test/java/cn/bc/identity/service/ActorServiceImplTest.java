@@ -180,7 +180,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Role role = new Role();
 		role.setType(Role.TYPE_DEFAULT);
 		role.setStatus(RichEntity.STATUS_ENABLED);
-		role.setInner(false);
+		//role.setInner(false);
 		role.setCode("test");
 		role.setName(role.getCode());
 		return role;
@@ -251,7 +251,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Resource module = new Resource();
 		module.setType(Resource.TYPE_INNER_LINK);
 		module.setStatus(RichEntity.STATUS_ENABLED);
-		module.setInner(false);
+		//module.setInner(false);
 		module.setOrderNo("test");
 		module.setName(module.getOrderNo());
 		return module;

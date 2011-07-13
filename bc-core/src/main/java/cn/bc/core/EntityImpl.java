@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 /**
- * 默认的迷你实体接口实现
+ * 基本实体接口的实现
  * 
  * @author dragon
  */

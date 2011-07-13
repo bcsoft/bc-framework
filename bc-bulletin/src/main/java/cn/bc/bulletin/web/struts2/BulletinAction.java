@@ -116,6 +116,12 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Bulletin e = this.getE();
 		if (e.getIssuer() != null && e.getIssuer().getId() == null)
 			e.setIssuer(null);
+		
+		SystemContext context = (SystemContext) this.getContext();
+		e.setModifierId(context.getUser().getId());
+		e.setModifierName(context.getUser().getName());
+		e.setModifiedDate(Calendar.getInstance());
+		
 		this.getCrudService().save(e);
 		return "saveSuccess";
 	}

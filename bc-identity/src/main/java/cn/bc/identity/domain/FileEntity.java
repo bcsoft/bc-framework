@@ -3,107 +3,154 @@
  */
 package cn.bc.identity.domain;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-
-import cn.bc.core.EntityImpl;
-
 /**
- * 默认的带文档创建信息的迷你实体基类
+ * 基本文档实体接口：定义id字段
  * 
  * @author dragon
+ * 
  */
-@MappedSuperclass
-public abstract class FileEntity extends EntityImpl {
-	private static final long serialVersionUID = 1L;
-	private Calendar fileDate;// 文档创建时间
-	private Actor author;// 创建人
-	private String subject;// 标题
+public interface FileEntity<ID extends Serializable> extends
+		cn.bc.core.Entity<ID> {
+	/**
+	 * 获取最后修改人的ID
+	 * 
+	 * @return
+	 */
+	Long getModifierId();
 
-	// 所属组织的冗余信息，用于提高统计效率用
-	private Long departId;// 所属部门id
-	private String departName;
-	private Long unitId;// 所属单位id
-	private String unitName;
+	/**
+	 * 设置最后修改人的ID
+	 * 
+	 * @param modifierId
+	 */
+	void setModifierId(Long modifierId);
 
-	@Column(name = "FILE_DATE")
-	public Calendar getFileDate() {
-		return fileDate;
-	}
+	/**
+	 * 获取最后修改人的名称
+	 * 
+	 * @return
+	 */
+	String getModifierName();
 
-	public void setFileDate(Calendar fileDate) {
-		this.fileDate = fileDate;
-	}
+	/**
+	 * 设置最后修改人的名称
+	 * 
+	 * @param modifierName
+	 */
+	void setModifierName(String modifierName);
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Actor.class)
-	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
-	public Actor getAuthor() {
-		return author;
-	}
+	/**
+	 * 获取最后修改时间
+	 * 
+	 * @return
+	 */
+	Calendar getModifiedDate();
 
-	public void setAuthor(Actor author) {
-		this.author = author;
-	}
+	/**
+	 * 设置最后修改时间
+	 * 
+	 * @param fileDate
+	 */
+	void setModifiedDate(Calendar modifiedDate);
 
-	public String getSubject() {
-		return subject;
-	}
+	/**
+	 * 获取创建时间
+	 * 
+	 * @return
+	 */
+	Calendar getFileDate();
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+	/**
+	 * 设置创建时间
+	 * 
+	 * @param fileDate
+	 */
+	void setFileDate(Calendar fileDate);
 
-	@Column(name = "AUTHOR_NAME")
-	public String getAuthorName() {
-		if (this.author != null) {
-			return this.author.getName();
-		} else {
-			return null;
-		}
-	}
+	/**
+	 * 获取文档的创建人
+	 * 
+	 * @return
+	 */
+	Actor getAuthor();
 
-	public void setAuthorName(String authorName) {
-		// do nothing
-	}
+	/**
+	 * 设置文档的创建人
+	 * 
+	 * @param author
+	 */
+	void setAuthor(Actor author);
 
-	@Column(name = "DEPART_ID")
-	public Long getDepartId() {
-		return departId;
-	}
+	/**
+	 * 获取文档创建人的名称
+	 * 
+	 * @return
+	 */
+	String getAuthorName();
 
-	public void setDepartId(Long departId) {
-		this.departId = departId;
-	}
+	/**
+	 * 设置文档创建人的名称
+	 * 
+	 * @param authorName
+	 */
+	void setAuthorName(String authorName);
 
-	@Column(name = "DEPART_NAME")
-	public String getDepartName() {
-		return departName;
-	}
+	/**
+	 * 获取创建人所在的部门的ID
+	 * 
+	 * @return
+	 */
+	Long getDepartId();
 
-	public void setDepartName(String departName) {
-		this.departName = departName;
-	}
+	/**
+	 * 设置创建人所在的部门的ID
+	 * 
+	 * @param departId
+	 */
+	void setDepartId(Long departId);
 
-	@Column(name = "UNIT_ID")
-	public Long getUnitId() {
-		return unitId;
-	}
+	/**
+	 * 获取创建人所在的部门的名称
+	 * 
+	 * @return
+	 */
+	String getDepartName();
 
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
-	}
+	/**
+	 * 设置创建人所在的部门的名称
+	 * 
+	 * @param departName
+	 */
+	void setDepartName(String departName);
 
-	@Column(name = "UNIT_NAME")
-	public String getUnitName() {
-		return unitName;
-	}
+	/**
+	 * 获取创建人所在的单位的ID
+	 * 
+	 * @return
+	 */
+	Long getUnitId();
 
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
+	/**
+	 * 设置创建人所在的单位的ID
+	 * 
+	 * @param unitId
+	 */
+	void setUnitId(Long unitId);
+
+	/**
+	 * 获取创建人所在的单位的名称
+	 * 
+	 * @return
+	 */
+	String getUnitName();
+
+	/**
+	 * 设置创建人所在的单位的名称
+	 * 
+	 * @param unitName
+	 */
+	void setUnitName(String unitName);
 }

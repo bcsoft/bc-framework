@@ -82,7 +82,7 @@ public class RoleServiceImplTest extends AbstractEntityCrudTest<Long,Role> {
 		Resource module = new Resource();
 		module.setType(Resource.TYPE_INNER_LINK);
 		module.setStatus(RichEntity.STATUS_ENABLED);
-		module.setInner(false);
+		//module.setInner(false);
 		module.setOrderNo("test"); 
 		module.setName(module.getOrderNo());
 		return module;

@@ -60,7 +60,7 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
 			personal.setStatus(RichEntity.STATUS_ENABLED);
-			personal.setInner(common.isInner());
+			//personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
 			personal.setActor(actor);
@@ -79,7 +79,7 @@ public class PersonalAction extends CrudAction<Long, Personal> {
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
 			personal.setStatus(RichEntity.STATUS_ENABLED);
-			personal.setInner(common.isInner());
+			//personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
 			personal.setActor((Actor) actor);
