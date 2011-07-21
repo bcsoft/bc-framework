@@ -37,8 +37,8 @@ public class GridData extends Div {
 	private String rowLabelExpression;
 	private ExpressionParser parser;
 
-	public String getValue(Object obj, String expression, Formater formater) {
-		return getValue(obj, expression, parser, formater);
+	public Object getValue(Object obj, String expression) {
+		return getValue(obj, expression, parser);
 	}
 
 	/**
@@ -49,24 +49,27 @@ public class GridData extends Div {
 	 * @param parser
 	 * @return
 	 */
-	public static String getValue(Object obj, String expression,
-			ExpressionParser parser, Formater formater) {
+	public static Object getValue(Object obj, String expression,
+			ExpressionParser parser) {
 		if (parser == null)
 			parser = new SpelExpressionParser();
 		Expression exp = parser.parseExpression(expression);
 		EvaluationContext context = new StandardEvaluationContext(obj);
 		try {
-			Object objValue = exp.getValue(context);
-			String value;
-			if (formater != null)
-				value = formater.format(objValue);
-			else
-				value = (objValue != null ? objValue.toString() : "");
-			return value != null ? value : "";
+			return exp.getValue(context);
 		} catch (EvaluationException e) {
 			logger.warn(e.getMessage());
 			return "";
 		}
+	}
+
+	public static String formatValue(Object objValue, Formater formater) {
+		String value;
+		if (formater != null)
+			value = formater.format(objValue);
+		else
+			value = (objValue != null ? objValue.toString() : "");
+		return value != null ? value : "";
 	}
 
 	public GridData() {
@@ -201,7 +204,7 @@ public class GridData extends Div {
 											: "id", null));// 行的标题
 			td.setAttr(
 					"data-id",
-					getValue(obj, column.getValueExpression(),
+					formatValue(getValue(obj, column.getValueExpression()),
 							column.getValueFormater()));// 行的id
 			td.addChild(new Span().addClazz("ui-icon"));// 勾选标记符
 			td.addChild(new Text(String.valueOf(rc + 1)));// 行号
@@ -253,9 +256,10 @@ public class GridData extends Div {
 				// td.addChild(wrapper);
 
 				// 单元格内容
-				value = getValue(obj, column.getValueExpression(),
-						column.getValueFormater());
-				td.addChild(new Text(value));
+				Object srcValue = getValue(obj, column.getValueExpression());
+				value = formatValue(srcValue, column.getValueFormater());
+				td.addChild(new Text(value)).setAttr("data-value",
+						srcValue != null ? srcValue.toString() : "");
 				if (column.isUseTitleFromLabel()) {
 					td.setTitle(value);
 				}
