@@ -16,7 +16,7 @@ import cn.bc.core.RichEntityImpl;
  * 
  */
 @Entity
-@Table(name = "ZTEST_EXAMPLE")
+@Table(name = "BC_EXAMPLE")
 //@NamedQueries(value = { @NamedQuery(name = "Example.findAllUsers", query = "from Example") })
 public class Example extends RichEntityImpl {
 	private static final long serialVersionUID = 1L;

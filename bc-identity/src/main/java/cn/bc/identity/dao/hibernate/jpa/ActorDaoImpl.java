@@ -2,7 +2,7 @@ package cn.bc.identity.dao.hibernate.jpa;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -113,7 +113,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 
 		// 排序
-		hql.append(" order by ar.type,m.type,m.code");
+		hql.append(" order by ar.type,m.type,m.orderNo");
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql.toString());
 			logger.debug("args="
@@ -169,7 +169,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 
 		// 排序
-		hql.append(" order by ar.type,ar.orderNo,f.type,f.code");
+		hql.append(" order by ar.type,ar.orderNo,f.type,f.orderNo");
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql.toString());
 			logger.debug("args="
@@ -214,7 +214,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		hql.append(")");
 
 		// 排序
-		hql.append(" order by m.code");
+		hql.append(" order by m.orderNo");
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql.toString());
 			logger.debug("args="
@@ -252,7 +252,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 					Actor.TYPE_DEPARTMENT, Actor.TYPE_GROUP };
 
 		// TODO 性能优化，以下只是使用了递归查找
-		Set<Actor> ancestors = new HashSet<Actor>();//使用Set避免重复
+		Set<Actor> ancestors = new LinkedHashSet<Actor>();//使用Set避免重复
 		this.recursiveFindHigherOrganization(ancestors, lowerOrganizationId,
 				ancestorOrganizationTypes);
 		return new ArrayList<Actor>(ancestors);

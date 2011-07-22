@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -45,7 +46,8 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 	}
 
 	@Autowired
-	public void setActorService(ActorService actorService) {
+	public void setActorService(
+			@Qualifier(value = "actorService") ActorService actorService) {
 		this.actorService = actorService;
 		this.setCrudService(actorService);
 	}
@@ -70,7 +72,8 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 
 	// 查询条件中要匹配的域
 	protected String[] getSearchFields() {
-		return new String[] { "code", "orderNo", "name", "pinYin", "phone", "email" };
+		return new String[] { "code", "orderNo", "name", "pinYin", "phone",
+				"email" };
 	}
 
 	@Override

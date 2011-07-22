@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="true" package="cn.bc.test">
-	<class name="Example" table="ZTEST_EXAMPLE">
+	<class name="Example" table="BC_EXAMPLE">
 		<id name="id" column="ID" unsaved-value="-1">
 			<generator class="native"/>
 		</id>

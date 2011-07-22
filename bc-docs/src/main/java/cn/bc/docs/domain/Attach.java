@@ -72,6 +72,7 @@ public class Attach extends FileEntityImpl {
 		this.appPath = appPath;
 	}
 
+	@Column(name = "SIZE_")
 	public long getSize() {
 		return size;
 	}

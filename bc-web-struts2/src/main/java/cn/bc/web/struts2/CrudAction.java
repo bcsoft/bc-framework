@@ -109,7 +109,8 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 			}
 		}
 
-		contextPath = ServletActionContext.getRequest().getContextPath();
+		if (ServletActionContext.getRequest() != null)
+			contextPath = ServletActionContext.getRequest().getContextPath();
 	}
 
 	public Page<E> getPage() {

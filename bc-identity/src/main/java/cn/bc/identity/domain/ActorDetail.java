@@ -77,6 +77,7 @@ public class ActorDetail implements Serializable {
 	/**
 	 * @return 备注
 	 */
+	@Column(name = "COMMENT_")
 	public String getComment() {
 		return getString("comment");
 	}

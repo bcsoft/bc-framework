@@ -16,7 +16,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "ZTEST_EXAMPLE")
+@Table(name = "BC_EXAMPLE")
 //@NamedQueries(value = { @NamedQuery(name = "Example.findAllUsers", query = "from Example") })
 public class Domain implements Serializable {
 	private static final long serialVersionUID = 1L;
