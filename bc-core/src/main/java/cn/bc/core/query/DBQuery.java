@@ -9,6 +9,7 @@ package cn.bc.core.query;
  * 
  */
 @Deprecated
+@SuppressWarnings("rawtypes")
 public interface DBQuery<T extends Object> extends
 		Query<T> {
 	/** 模糊匹配类型 */

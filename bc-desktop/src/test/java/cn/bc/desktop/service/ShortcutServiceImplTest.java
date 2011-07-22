@@ -191,7 +191,7 @@ public class ShortcutServiceImplTest extends
 		actorRelationService.save(ar);
 
 		// 仅属于user的Shortcut
-		Shortcut shortcut4user = this.createShortcut(user, null, "01");
+		Shortcut shortcut4user = this.createShortcut(user, null, "02");
 		this.shortcutService.save(shortcut4user);
 		Assert.assertNotNull(shortcut4user.getId());
 
@@ -201,7 +201,7 @@ public class ShortcutServiceImplTest extends
 		Assert.assertNotNull(shortcut4unit.getId());
 
 		// 通用的Shortcut
-		Shortcut shortcut4common = this.createShortcut(null, null, "01");
+		Shortcut shortcut4common = this.createShortcut(null, null, "00");
 		this.shortcutService.save(shortcut4common);
 		Assert.assertNotNull(shortcut4common.getId());
 

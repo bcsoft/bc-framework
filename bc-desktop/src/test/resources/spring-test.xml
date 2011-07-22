@@ -25,7 +25,6 @@
 
 	<!-- 所依赖模块的配置 -->
 	<import resource="classpath:cn/bc/identity/spring.xml"/>
-	<import resource="classpath:cn/bc/security/spring.xml"/>
 
 	<!-- 本模块的配置 -->
 	<import resource="classpath:cn/bc/desktop/spring.xml"/>

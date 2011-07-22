@@ -38,6 +38,16 @@ public class Resource extends RichEntityImpl {
 	private Resource belong;// 所隶属的模块
 	private String iconClass;// 图标样式
 	private String option;// 额外配置
+	private boolean inner = false;//是否为内置对象，内置对象不允许删除
+
+	@Column(name = "INNER_")
+	public boolean isInner() {
+		return inner;
+	}
+
+	public void setInner(boolean inner) {
+		this.inner = inner;
+	}
 
 	public String getIconClass() {
 		return iconClass;

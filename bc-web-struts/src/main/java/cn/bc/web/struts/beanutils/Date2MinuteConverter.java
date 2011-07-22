@@ -30,8 +30,7 @@ import cn.bc.core.exception.CoreException;
  * @see Date2Minute
  */
 public class Date2MinuteConverter implements Converter {
-	@SuppressWarnings("unchecked")
-	public Object convert(Class clazz, Object value) {
+	public Object convert(@SuppressWarnings("rawtypes") Class clazz, Object value) {
 		if (value == null)
 			return null;
 		if (value instanceof String) {// String-->Date2Minute

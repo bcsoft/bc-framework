@@ -34,6 +34,16 @@ public class Role extends RichEntityImpl {
 	private String orderNo;// 排序号
 	private int type;// 类型，保留未用的字段
 	private Set<Resource> resources;// 可访问的模块列表
+	private boolean inner = false;//是否为内置对象，内置对象不允许删除
+
+	@Column(name = "INNER_")
+	public boolean isInner() {
+		return inner;
+	}
+
+	public void setInner(boolean inner) {
+		this.inner = inner;
+	}
 
 	public String getName() {
 		return name;

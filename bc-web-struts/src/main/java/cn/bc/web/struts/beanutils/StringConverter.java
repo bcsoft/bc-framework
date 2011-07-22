@@ -15,8 +15,7 @@ public final class StringConverter implements Converter {
 	public StringConverter() {
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object convert(Class type, Object value) {
+	public Object convert(@SuppressWarnings("rawtypes") Class type, Object value) {
 		if (value == null || "".equals(value.toString())) {
 			return (String) null;
 		} else {

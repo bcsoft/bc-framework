@@ -15,13 +15,13 @@
 	<!-- 配置数据库连接及事务管理 -->
 	<context:property-placeholder location="classpath:db.properties" />
 	<bean class="cn.bc.test.TestUtils">
-		<constructor-arg value="${db.sequence}" />
+		<constructor-arg value="${db_sequence}" />
 	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-		p:driverClassName="${db.driverClassName}" p:url="${db.url}"
-		p:username="${db.username}" p:password="${db.password}" />
-		
+		p:driverClassName="${db_driverClassName}" p:url="${db_url}"
+		p:username="${db_username}" p:password="${db_password}" />
+
 	<!-- for hibernate without jpa -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -33,10 +33,9 @@
 		</property>
 		<property name="hibernateProperties">
 			<value>
-				hibernate.dialect = ${hibernate.dialect}
-				hibernate.show_sql =
-				${hibernate.show_sql}
-            </value>
+				hibernate.dialect = ${hibernate_dialect}
+				hibernate.show_sql =${hibernate_showSql}
+			</value>
 		</property>
 	</bean>
 	<bean id="transactionManager"

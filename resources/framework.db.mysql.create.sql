@@ -17,7 +17,7 @@ create table BC_IDENTITY_RESOURCE (
     STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
     INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     BELONG int COMMENT '所隶属的资源',
-    ORDER_ varchar(100) NOT NULL COMMENT '排序号',
+    ORDER_ varchar(100) COMMENT '排序号',
     NAME varchar(255) NOT NULL COMMENT '名称',
     URL varchar(255) COMMENT '地址',
     ICONCLASS varchar(255) COMMENT '图标样式',
@@ -29,7 +29,7 @@ create table BC_IDENTITY_RESOURCE (
 create table BC_IDENTITY_ROLE (
     ID int NOT NULL auto_increment,
     CODE varchar(100) NOT NULL COMMENT '编码',
-    ORDER_ varchar(100) NOT NULL COMMENT '排序号',
+    ORDER_ varchar(100) COMMENT '排序号',
     NAME varchar(255) NOT NULL COMMENT '名称',
     
     UID_ varchar(36) COMMENT '全局标识',
@@ -65,7 +65,7 @@ create table BC_IDENTITY_ACTOR_DETAIL (
     ID int NOT NULL auto_increment,
     CREATE_DATE datetime COMMENT '创建时间',
     WORK_DATE date COMMENT 'user-入职时间',
-    SEX int(1) NOT NULL default 0 COMMENT 'user-性别：0-未设置,1-男,2-女',
+    SEX int(1) default 0 COMMENT 'user-性别：0-未设置,1-男,2-女',
    	CARD varchar(20) COMMENT 'user-身份证',
     DUTY_ID int COMMENT 'user-职务ID',
    	COMMENT varchar(1000) COMMENT '备注',
@@ -80,7 +80,6 @@ create table BC_IDENTITY_ACTOR (
     UID_ varchar(36) NOT NULL COMMENT '全局标识',
     TYPE_ int(1) NOT NULL COMMENT '类型：1-用户,2-单位,3-部门,4-岗位',
     STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     CODE varchar(100) NOT NULL COMMENT '编码',
     NAME varchar(255) NOT NULL COMMENT '名称',
     PY varchar(255) COMMENT '名称的拼音',
@@ -88,6 +87,7 @@ create table BC_IDENTITY_ACTOR (
     EMAIL varchar(255) COMMENT '邮箱',
     PHONE varchar(255) COMMENT '联系电话',
     DETAIL_ID int COMMENT '扩展表的ID',
+    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     primary key (ID)
 ) COMMENT='参与者(代表一个人或组织，组织也可以是单位、部门、岗位、团队等)';
 ALTER TABLE BC_IDENTITY_ACTOR ADD CONSTRAINT FK_ACTOR_ACTORDETAIL FOREIGN KEY (DETAIL_ID) 
@@ -141,7 +141,6 @@ create table BC_DESKTOP_SHORTCUT (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '全局标识',
     STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     ORDER_ varchar(100) NOT NULL COMMENT '排序号',
     STANDALONE int(1) NOT NULL COMMENT '是否在独立的浏览器窗口中打开',
     NAME varchar(255) COMMENT '名称,为空则使用资源的名称',
@@ -149,6 +148,7 @@ create table BC_DESKTOP_SHORTCUT (
     ICONCLASS varchar(255) COMMENT '图标样式',
     SID int COMMENT '对应的资源ID',
     AID int COMMENT '所属的参与者(如果为上级参与者,如单位部门,则其下的所有参与者都拥有该快捷方式)',
+    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     primary key (ID)
 ) COMMENT='桌面快捷方式';
 ALTER TABLE BC_DESKTOP_SHORTCUT ADD CONSTRAINT FK_SHORTCUT_RESOURCE FOREIGN KEY (SID) 
@@ -161,10 +161,10 @@ create table BC_DESKTOP_PERSONAL (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '全局标识',
     STATUS_ int(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     FONT varchar(2) NOT NULL COMMENT '字体大小，如12、14、16',
     THEME varchar(255) NOT NULL COMMENT '主题名称,如base',
     AID int COMMENT '所属的参与者',
+    INNER_ int(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
     primary key (ID)
 ) COMMENT='个人设置';
 ALTER TABLE BC_DESKTOP_PERSONAL ADD CONSTRAINT FK_PERSONAL_ACTOR FOREIGN KEY (AID) 
@@ -175,7 +175,6 @@ create table BC_MESSAGE (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '全局标识',
     STATUS_ int(1) NOT NULL default 0 COMMENT '状态：0-发送中,1-已发送,2-已删除,3-发送失败',
-    INNER_ int(1) NOT NULL default 0 COMMENT '未用',
     TYPE_ int(1) NOT NULL default 0 COMMENT '消息类型',
     SENDER_ID int NOT NULL COMMENT '发送者',
     SEND_DATE datetime NOT NULL COMMENT '发送时间',
@@ -199,7 +198,6 @@ create table BC_WORK (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '全局标识',
     STATUS_ int(1) NOT NULL default 0 COMMENT '状态',
-    INNER_ int(1) NOT NULL default 0 COMMENT '未用',
     
     CLASSIFIER varchar(500) NOT NULL COMMENT '分类词,可多级分类,级间使用/连接,如“发文类/正式发文”',
     SUBJECT varchar(255) NOT NULL COMMENT '标题',
@@ -217,7 +215,6 @@ create table BC_WORK_TODO (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '未用',
     STATUS_ int(1) NOT NULL default 0 COMMENT '未用',
-    INNER_ int(1) NOT NULL default 0 COMMENT '未用',
     
     WORK_ID int NOT NULL COMMENT '工作事项ID',
     SENDER_ID int NOT NULL COMMENT '发送者',
@@ -238,7 +235,6 @@ create table BC_WORK_DONE (
     ID int NOT NULL auto_increment,
     UID_ varchar(36) COMMENT '未用',
     STATUS_ int(1) NOT NULL default 0 COMMENT '未用',
-    INNER_ int(1) NOT NULL default 0 COMMENT '未用',
     
     FINISH_DATE datetime NOT NULL COMMENT '完成时间',
     FINISH_YEAR int(4) NOT NULL COMMENT '完成时间的年度',
@@ -285,7 +281,6 @@ create table BC_LOG_SYSTEM (
     
     UID_ varchar(36) COMMENT '未用',
     STATUS_ int(1) default 0 COMMENT '未用',
-    INNER_ int(1) default 0 COMMENT '未用',
     primary key (ID)
 ) COMMENT='系统日志';
 ALTER TABLE BC_LOG_SYSTEM ADD CONSTRAINT FK_SYSLOG_USER FOREIGN KEY (CREATER_ID) 

@@ -31,6 +31,16 @@ public class Shortcut extends RichEntityImpl {
 	private Resource resource;//对应的模块
 	private Actor actor;//所属的参与者(如果为上级参与者,如单位部门,则其下的所有参与者都拥有该快捷方式)
 	private String iconClass;//图标样式
+	private boolean inner = false;//是否为内置对象，内置对象不允许删除
+
+	@Column(name = "INNER_")
+	public boolean isInner() {
+		return inner;
+	}
+
+	public void setInner(boolean inner) {
+		this.inner = inner;
+	}
 	
 	public String getIconClass() {
 		return iconClass;

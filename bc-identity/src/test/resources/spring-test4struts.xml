@@ -23,12 +23,9 @@
 	<!-- 标准的crud事务拦截配置：拦截所有实现CrudService接口的类 -->
 	<import resource="classpath:cn/bc/core/spring.xml" />
 
-	<!-- security模块的配置 -->
-	<import resource="classpath:cn/bc/security/spring.xml"/>
-	
 	<!-- 本模块的配置 -->
 	<import resource="classpath:cn/bc/identity/spring.xml"/>
 
 	<!-- 使用Mock来测试struts2的action -->
-	<bean id="actorService" class="cn.bc.test.mock.CrudServiceMock" p:entityClass="cn.bc.identity.domain.ActorImpl" />
+	<bean id="actorService" class="cn.bc.test.mock.CrudServiceMock" p:entityClass="cn.bc.identity.domain.Actor" />
 </beans>

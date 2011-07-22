@@ -3,7 +3,6 @@ package cn.bc.web.struts.beanutils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.apache.commons.beanutils.ContextClassLoaderLocal;
 import org.apache.commons.beanutils.DynaBean;
@@ -38,7 +37,6 @@ public class BeanUtilsBeanEx extends org.apache.commons.beanutils.BeanUtilsBean 
 		BEANS_BY_CLASSLOADER.set(newInstance);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void copyProperty(Object bean, String name, Object value)
 			throws IllegalAccessException, InvocationTargetException {
@@ -90,6 +88,7 @@ public class BeanUtilsBeanEx extends org.apache.commons.beanutils.BeanUtilsBean 
 		// Declare local variables we will require
 		String propName = resolver.getProperty(name); // Simple name of target
 		// property
+		@SuppressWarnings("rawtypes")
 		Class type = null; // Java type of target property
 		int index = resolver.getIndex(name); // Indexed subscript value (if any)
 		String key = resolver.getKey(name); // Mapped key value (if any)

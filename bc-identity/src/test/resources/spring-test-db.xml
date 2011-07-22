@@ -15,7 +15,7 @@
 	<!-- 配置数据库连接 -->
 	<context:property-placeholder location="classpath:db.properties" />
 	<bean class="cn.bc.test.TestUtils">
-		<constructor-arg value="${db.sequence}"/>
+		<constructor-arg value="${db_sequence}"/>
 	</bean>
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -23,9 +23,9 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaProperties">
 			<value>
-				hibernate.dialect=${hibernate.dialect}
-				hibernate.show_sql=${hibernate.show_sql}
-				hibernate.hbm2ddl.auto=${hibernate.hbm2ddl.auto}
+				hibernate.dialect=${hibernate_dialect}
+				hibernate.show_sql=${hibernate_showSql}
+				hibernate.hbm2ddl.auto=${hibernate_hbm2ddl_auto}
             </value>
 		</property>
 	</bean>
@@ -34,6 +34,6 @@
 	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-		p:driverClassName="${db.driverClassName}" p:url="${db.url}"
-		p:username="${db.username}" p:password="${db.password}" />
+		p:driverClassName="${db_driverClassName}" p:url="${db_url}"
+		p:username="${db_username}" p:password="${db_password}" />
 </beans>

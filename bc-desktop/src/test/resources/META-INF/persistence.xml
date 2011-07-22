@@ -6,14 +6,12 @@
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		
-		<!-- security -->
-		<class>cn.bc.security.domain.Module</class>
-		<class>cn.bc.security.domain.Role</class>
-		
-		<!-- actor -->
-		<class>cn.bc.identity.domain.ActorImpl</class>
-		<class>cn.bc.identity.domain.ActorDetailImpl</class>
-		<class>cn.bc.identity.domain.ActorRelationImpl</class>
+		<!-- identity -->
+		<class>cn.bc.identity.domain.Resource</class>
+		<class>cn.bc.identity.domain.Role</class>
+		<class>cn.bc.identity.domain.Actor</class>
+		<class>cn.bc.identity.domain.ActorDetail</class>
+		<class>cn.bc.identity.domain.ActorRelation</class>
 		<class>cn.bc.identity.domain.Duty</class>
 
 		<!-- desktop -->

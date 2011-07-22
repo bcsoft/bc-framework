@@ -13,8 +13,8 @@ public class GridTest {
 
 	@Test
 	public void test01() {
-		Grid grid = buildTestGrid();
-		grid.setBeautiful(true);
+//		Grid grid = buildTestGrid();
+//		grid.setBeautiful(true);
 
 		//StringBuffer main = new StringBuffer();
 		//System.out.println(grid.render(main));

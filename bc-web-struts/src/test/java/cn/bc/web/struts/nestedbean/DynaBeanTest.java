@@ -26,6 +26,7 @@ import cn.bc.web.struts.beanutils.ConverterUtils;
  * @author dragon
  *
  */
+@SuppressWarnings("deprecation")
 public class DynaBeanTest {
 	@Before
 	public void setUp() throws Exception {
@@ -198,7 +199,7 @@ public class DynaBeanTest {
 		Assert.assertEquals("oldValue1", ((List<LabelValueBean>)bean.get("myList")).get(1).getValue());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Test
 	//请求参数到LazyDynaBean的转换测试
 	public void request2form_nestedMappedProperties() throws IllegalAccessException,
@@ -231,7 +232,7 @@ public class DynaBeanTest {
 		Assert.assertNull(((Map)bean.get("myMap")).get("key2"));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	//请求参数到LazyDynaBean的转换测试
 	public void request2form_nestedMappedProperties2() throws IllegalAccessException,

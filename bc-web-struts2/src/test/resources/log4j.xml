@@ -17,45 +17,17 @@
 		<param name="MaxFileSize"  value="1024KB"/>
 		<param name="MaxBackupIndex" value="4"/> 
 
-		<param name="File" value="bc-test.log"/> 
+		<param name="File" value="bc-unit-test.log"/> 
 		
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %-5p [%-c{2} %l] - %m%n"/>
+			<param name="ConversionPattern" value="%d %5p %c{1} %m%n"/>
 	   </layout>
 	</appender>
-	
-	<!-- spring -->
-	<category name="org.springframework">
-	  <priority value="ERROR" />
-	</category>
-	<!-- spring：设为INFO，查看加载了哪些xml配置文件 -->
-	<category name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader">
-	  <priority value="ERROR" />
-	</category>
-    
-	<!-- hibernate -->
-	<category name="org.hibernate">
-	  <priority value="ERROR" />
-	</category>
-    
-	<!-- struts2 -->
-	<category name="com.opensymphony">
-	  <priority value="DEBUG" />
-	</category>
-	<category name="org.apache.struts2">
-	  <priority value="DEBUG" />
-	</category>
-	<category name="cn.bc.web.struts2">
-	  <priority value="DEBUG" />
-	</category>
-	<category name="cn.bc.orm.hibernate">
-	  <priority value="${logLevel-bc.orm.hibernate}" />
-	</category>
     	
   	<!-- 设置默认的日志级别(该设置必须放在最后,否则加载会解析出错) -->
 	<!-- 优先级别:OFF/FATAL/ERROR/WARN /INFO /DEBUG /ALL -->
 	<root>
-	   <priority value ="ERROR" />
+	   <priority value ="WARN" />
    	   <appender-ref ref="console" />
    	   <appender-ref ref="rollingFile" />
 	</root>
