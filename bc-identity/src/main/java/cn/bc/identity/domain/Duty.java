@@ -6,7 +6,7 @@ package cn.bc.identity.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.core.RichEntityImpl;
+import cn.bc.core.EntityImpl;
 
 /**
  * 职务
@@ -16,7 +16,7 @@ import cn.bc.core.RichEntityImpl;
  */
 @Entity
 @Table(name = "BC_IDENTITY_DUTY")
-public class Duty extends RichEntityImpl {
+public class Duty extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 	private String code;// 编码，兼排序号的作用
 	private String name;// 名称
@@ -38,7 +38,6 @@ public class Duty extends RichEntityImpl {
 	}
 
 	public String toString() {
-		return "id:" + getId() + ",code:" + getCode() + ",name:" + getName()
-				+ ",status:" + getStatus();
+		return "id:" + getId() + ",code:" + getCode() + ",name:" + getName();
 	}
 }

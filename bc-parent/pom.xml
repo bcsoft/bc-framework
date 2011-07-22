@@ -653,7 +653,7 @@
 				<db.driverClassName>oracle.jdbc.OracleDriver</db.driverClassName>
 				<db.url><![CDATA[jdbc:oracle:thin:@${db.ip}:1521:${db.name}]]></db.url>
 				<db.sequence>hibernate_sequence</db.sequence>
-				<hibernate.dialect>org.hibernate.dialect.Oracle9Dialect</hibernate.dialect>
+				<hibernate.dialect>org.hibernate.dialect.OracleDialect</hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
