@@ -1,11 +1,11 @@
--- åˆ›å»ºåºåˆ—
+-- ´´½¨ÐòÁÐ
 create sequence HIBERNATE_SEQUENCE
     minvalue 1
     start with 1
     increment by 1
     cache 20;
 
--- åˆ›å»ºè¡¨
+-- ´´½¨±í
 create table TBALE1 (
     ID NUMBER(19) not null,
     NAME varchar2(255) not null,
@@ -13,17 +13,41 @@ create table TBALE1 (
     primary key (ID)
 );
 
--- åˆ›å»ºè¡¨æ³¨é‡Š
-COMMENT ON TABLE TBALE1 IS 'å‚ä¸Žè€…çš„æ‰©å±•å±žæ€§';
+-- ´´½¨±í×¢ÊÍ
+COMMENT ON TABLE TBALE1 IS '²ÎÓëÕßµÄÀ©Õ¹ÊôÐÔ';
 
--- åˆ›å»ºåˆ—æ³¨é‡Š
-COMMENT ON COLUMN TBALE1.NAME IS 'åˆ›å»ºæ—¶é—´';
+-- ´´½¨ÁÐ×¢ÊÍ
+COMMENT ON COLUMN TBALE1.NAME IS '´´½¨Ê±¼ä';
 
--- åˆ›å»ºå¤–é”®
+-- ´´½¨Íâ¼ü
 ALTER TABLE TBALE1 ADD CONSTRAINT FK1 FOREIGN KEY (DETAIL_ID) REFERENCES TBALE2 (ID);
 ALTER TABLE TBALE1 ADD CONSTRAINT FK1 FOREIGN KEY (DETAIL_ID) REFERENCES TBALE2 (ID) ON DELETE CASCADE;
 
--- åˆ›å»ºç´¢å¼•
+-- ´´½¨Ë÷Òý
 CREATE INDEX IDX1 ON TBALE1 (NAME ASC);
 
 
+-- ÉèÖÃ½«ÐÅÏ¢Êä³öµ½¿ØÖÆÌ¨£¨Èç¹ûÊÇÔÚSQL PlusÃüÁîÐÐÔËÐÐÕâ¸ösqlÎÄ¼þ£¬ÐëÏÈÐÐÖ´ÐÐÕâ¸öÃüÁî²ÅÄÜ¿´µ½Êä³öÐÅÏ¢£©
+-- set serveroutput on;
+
+-- ´´½¨É¾³ýÖ¸¶¨ÓÃ»§±íµÄ´æ´¢¹ý³Ì
+CREATE OR REPLACE PROCEDURE dropUserTable
+(
+   --²ÎÊýIN±íÊ¾ÊäÈë²ÎÊý£¬
+   --OUT±íÊ¾ÊäÈë²ÎÊý£¬ÀàÐÍ¿ÉÒÔÊ¹ÓÃÈÎÒâOracleÖÐµÄºÏ·¨ÀàÐÍ¡£
+   i_table_name IN varchar2
+)
+AS
+--¶¨Òå±äÁ¿
+num number;
+BEGIN
+	select count(1) into num from user_tables where table_name = upper(i_table_name) or table_name = lower(i_table_name); 
+	if num > 0 then 
+		execute immediate 'drop table ' || i_table_name;
+		dbms_output.put_line('±í ' || i_table_name || ' ÒÑÉ¾³ý');
+	end if; 
+	if num <= 0 then 
+		dbms_output.put_line('±í ' || i_table_name || ' ²»´æÔÚ£¬ºöÂÔ');
+	end if; 
+END;
+/

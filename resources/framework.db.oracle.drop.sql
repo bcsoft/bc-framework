@@ -1,49 +1,101 @@
--- ##bcå¹³å°çš„ oracle åˆ è¡¨è„šæœ¬##
+-- ##bcÆ½Ì¨µÄ oracle É¾±í½Å±¾##
 
--- ç”¨äºŽç”Ÿæˆhibernate idçš„åºåˆ—
-drop sequence hibernate_sequence;
+-- ÉèÖÃ½«ÐÅÏ¢Êä³öµ½¿ØÖÆÌ¨£¨Èç¹ûÊÇÔÚSQL PlusÃüÁîÐÐÔËÐÐÕâ¸ösqlÎÄ¼þ£¬ÐëÏÈÐÐÖ´ÐÐÕâ¸öÃüÁî²ÅÄÜ¿´µ½Êä³öÐÅÏ¢£©
+-- set serveroutput on;
 
--- æµ‹è¯•ç”¨çš„è¡¨
-drop table BC_EXAMPLE;
+-- ´´½¨É¾³ýÖ¸¶¨ÓÃ»§±íµÄ´æ´¢¹ý³Ì
+CREATE OR REPLACE PROCEDURE DROP_USER_TABLE
+(
+   --²ÎÊýIN±íÊ¾ÊäÈë²ÎÊý£¬
+   --OUT±íÊ¾ÊäÈë²ÎÊý£¬ÀàÐÍ¿ÉÒÔÊ¹ÓÃÈÎÒâOracleÖÐµÄºÏ·¨ÀàÐÍ¡£
+   i_table_name IN varchar2
+)
+AS
+--¶¨Òå±äÁ¿
+num_ number;
+str1 varchar2(1000);
+BEGIN
+  select count(1) into num_ from user_tables where table_name = upper(i_table_name) or table_name = lower(i_table_name); 
+  if num_ > 0 then 
+    str1 := 'DROP TABLE ' || i_table_name;
+    execute immediate str1;
+    dbms_output.put_line('±í ' || i_table_name || ' ÒÑÉ¾³ý');
+  end if; 
+  if num_ <= 0 then 
+    dbms_output.put_line('±í ' || i_table_name || ' ²»´æÔÚ£¬ºöÂÔ');
+  end if; 
+END;
+/
 
--- ç”¨æˆ·åé¦ˆ
-drop table BC_FEEDBACK;
+-- ´´½¨É¾³ýÖ¸¶¨ÐòÁÐµÄ´æ´¢¹ý³Ì
+CREATE OR REPLACE PROCEDURE DROP_USER_SEQUENCE
+(
+   i_sequence_name IN varchar2
+)
+AS
+--¶¨Òå±äÁ¿
+num_ number;
+str1 varchar2(1000);
+BEGIN
+  select count(1) into num_ from user_sequences where sequence_name = upper(i_sequence_name) or sequence_name = lower(i_sequence_name); 
+  if num_ > 0 then 
+    str1 := 'DROP SEQUENCE ' || i_sequence_name;
+    execute immediate str1;
+    dbms_output.put_line('ÐòÁÐ ' || i_sequence_name || ' ÒÑÉ¾³ý');
+  end if; 
+  if num_ <= 0 then 
+    dbms_output.put_line('ÐòÁÐ ' || i_sequence_name || ' ²»´æÔÚ£¬ºöÂÔ');
+  end if; 
+END;
+/
 
--- ç”µå­å…¬å‘Š
-drop table BC_BULLETIN;
+-- ÓÃÓÚÉú³Éhibernate idµÄÐòÁÐ
+CALL DROP_USER_SEQUENCE('hibernate_sequence');
 
--- æ–‡æ¡£é™„ä»¶
-drop table BC_DOCS_ATTACH_HISTORY;
-drop table BC_DOCS_ATTACH;
+-- ²âÊÔÓÃµÄ±í
+CALL DROP_USER_TABLE('BC_EXAMPLE');
 
--- ç³»ç»Ÿæ—¥å¿—
-drop table BC_LOG_SYSTEM;
+-- ÓÃ»§·´À¡
+CALL DROP_USER_TABLE('BC_FEEDBACK');
 
--- å·¥ä½œäº‹åŠ¡
-drop table BC_WORK_TODO;
-drop table BC_WORK_DONE;
-drop table BC_WORK;
+-- µç×Ó¹«¸æ
+CALL DROP_USER_TABLE('BC_BULLETIN');
 
--- æ¶ˆæ¯ç®¡ç†
-drop table BC_MESSAGE;
+-- ÎÄµµ¸½¼þ
+CALL DROP_USER_TABLE('BC_DOCS_ATTACH_HISTORY');
+CALL DROP_USER_TABLE('BC_DOCS_ATTACH');
 
--- ä¸ªæ€§åŒ–è®¾ç½®
-drop table BC_DESKTOP_SHORTCUT;
-drop table BC_DESKTOP_PERSONAL;
+-- ÏµÍ³ÈÕÖ¾
+CALL DROP_USER_TABLE('BC_LOG_SYSTEM');
 
--- ç³»ç»Ÿæ ‡è¯†
-drop table BC_IDENTITY_ROLE_ACTOR;
-drop table BC_IDENTITY_AUTH;
-drop table BC_IDENTITY_ACTOR_RELATION;
-drop table BC_IDENTITY_ACTOR;
-drop table BC_IDENTITY_ACTOR_DETAIL;
-drop table BC_IDENTITY_DUTY;
-drop table BC_IDENTITY_IDGENERATOR;
-drop table BC_IDENTITY_ROLE_RESOURCE;
-drop table BC_IDENTITY_ROLE;
-drop table BC_IDENTITY_RESOURCE;
+-- ¹¤×÷ÊÂÎñ
+CALL DROP_USER_TABLE('BC_WORK_TODO');
+CALL DROP_USER_TABLE('BC_WORK_DONE');
+CALL DROP_USER_TABLE('BC_WORK');
 
--- é€‰é¡¹æ¨¡å—
-drop table BC_OPTION_ITEM;
-drop table BC_OPTION_GROUP;
+-- ÏûÏ¢¹ÜÀí
+CALL DROP_USER_TABLE('BC_MESSAGE');
 
+-- ¸öÐÔ»¯ÉèÖÃ
+CALL DROP_USER_TABLE('BC_DESKTOP_SHORTCUT');
+CALL DROP_USER_TABLE('BC_DESKTOP_PERSONAL');
+
+-- ÏµÍ³±êÊ¶
+CALL DROP_USER_TABLE('BC_IDENTITY_ROLE_ACTOR');
+CALL DROP_USER_TABLE('BC_IDENTITY_AUTH');
+CALL DROP_USER_TABLE('BC_IDENTITY_ACTOR_RELATION');
+CALL DROP_USER_TABLE('BC_IDENTITY_ACTOR');
+CALL DROP_USER_TABLE('BC_IDENTITY_ACTOR_DETAIL');
+CALL DROP_USER_TABLE('BC_IDENTITY_DUTY');
+CALL DROP_USER_TABLE('BC_IDENTITY_IDGENERATOR');
+CALL DROP_USER_TABLE('BC_IDENTITY_ROLE_RESOURCE');
+CALL DROP_USER_TABLE('BC_IDENTITY_ROLE');
+CALL DROP_USER_TABLE('BC_IDENTITY_RESOURCE');
+
+-- Ñ¡ÏîÄ£¿é
+CALL DROP_USER_TABLE('BC_OPTION_ITEM');
+CALL DROP_USER_TABLE('BC_OPTION_GROUP');
+
+-- É¾³ý×Ô½¨µÄ´æ´¢¹ý³Ì
+-- drop procedure DROP_USER_TABLE;
+-- drop procedure DROP_USER_SEQUENCE;

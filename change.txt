@@ -16,11 +16,18 @@ release v0.4 (2011-7-?)
 
 改进：
 1) Grid增加记录每个单元格原始值的功能(通过td的data-value属性记录)
+2) Grid的刷新方法增加可附加额外参数的功能(通过grid的data-extras属性控制，使用json格式)
+3) 表单域验证的配置格式改为可以使用非严格的json格式
 
 修正：
 1) 简化RichEntity、RichFileEntity接口，FileEntity接口添加最后修改人和修改时间信息
-2) 修正单元测试
+2) 修正单元测试：mysql及oracle测试通过
+   运行Mysql单元测试> mvn test -Pmysql -Ddb.ip=127.0.0.1 -Ddb.name=bcdemo
+   运行Oracle单元测试> mvn test -Poracle -Ddb.ip=127.0.0.1 -Ddb.name=orcl
 3) 删除基类的inner字段
+4) 修正Grid自定义的行双击事件失效的bug
+5) 修正整数验证
+6) 修正表单域验证的min、max、minLen、maxLen方法
 
 #######################################################################
 release v0.3 (2011-7-8)
