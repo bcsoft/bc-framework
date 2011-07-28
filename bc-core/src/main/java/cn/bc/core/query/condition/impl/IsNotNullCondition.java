@@ -22,7 +22,14 @@ public class IsNotNullCondition implements Condition {
 	}
 
 	public String getExpression() {
-		return this.name + " is not null";
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
+		String e = this.name;
+		if (alias != null && alias.length() > 0)
+			e = alias + "." + e;
+		return e + " is not null";
 	}
 
 	public List<Object> getValues() {

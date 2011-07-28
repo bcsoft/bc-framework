@@ -41,6 +41,10 @@ public class WebCondition implements Condition {
 	}
 
 	public String getExpression() {
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
 		return this.ql;
 	}
 

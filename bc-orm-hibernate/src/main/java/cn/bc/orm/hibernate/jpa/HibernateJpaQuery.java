@@ -198,11 +198,12 @@ public class HibernateJpaQuery<T extends Object> implements
 	}
 
 	// --private
+	private static final String ALIAS = "alias_";
 
 	protected String getHql() {
-		String hql = "from " + this.getEntityClass().getSimpleName();
+		String hql = "from " + this.getEntityClass().getSimpleName() + " " + ALIAS;
 		if (condition != null) {
-			String expression = this.condition.getExpression();
+			String expression = this.condition.getExpression(ALIAS);
 			if (condition instanceof OrderCondition) {
 				hql += " order by " + expression;
 			} else {

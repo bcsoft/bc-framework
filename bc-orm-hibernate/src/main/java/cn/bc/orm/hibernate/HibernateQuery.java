@@ -110,10 +110,11 @@ public class HibernateQuery<T extends Object> implements cn.bc.core.query.Query<
 	}
 
 	// --private
+	private static final String ALIAS = "alias_";
 
 	protected String getHql() {
-		String hql = "from " + this.getEntityClass().getSimpleName();
-		if (condition != null) hql += " where " + this.condition.getExpression();
+		String hql = "from " + this.getEntityClass().getSimpleName() + " " + ALIAS;
+		if (condition != null) hql += " where " + this.condition.getExpression(ALIAS);
 		return hql;
 	}
 	

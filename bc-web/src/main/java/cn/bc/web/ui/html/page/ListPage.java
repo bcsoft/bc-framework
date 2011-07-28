@@ -29,6 +29,13 @@ public class ListPage extends HtmlPage {
 		setAttr("data-editUrl", action);
 		return this;
 	}
+	public String getOpenUrl() {
+		return getAttr("data-openUrl");
+	}
+	public ListPage setOpenUrl(String action) {
+		setAttr("data-openUrl", action);
+		return this;
+	}
 	public String getCreateUrl() {
 		return getAttr("data-createUrl");
 	}

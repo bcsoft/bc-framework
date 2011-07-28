@@ -22,7 +22,14 @@ public class IsNullCondition implements Condition {
 	}
 
 	public String getExpression() {
-		return this.name + " is null";
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
+		String e = this.name;
+		if (alias != null && alias.length() > 0)
+			e = alias + "." + e;
+		return e + " is null";
 	}
 
 	public List<Object> getValues() {

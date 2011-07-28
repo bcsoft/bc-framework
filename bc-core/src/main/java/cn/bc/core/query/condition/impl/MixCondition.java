@@ -63,6 +63,10 @@ public abstract class MixCondition implements Condition {
 	}
 
 	public String getExpression() {
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
 		if (conditions.isEmpty() && orderCondition == null) {
 			return "";
 			// }else if(conditions.size() == 1){
@@ -77,7 +81,7 @@ public abstract class MixCondition implements Condition {
 				int i = 0;
 				for (Condition condition : conditions) {
 					mc.append((i == 0 ? "" : " " + this.misSymbol + " ")
-							+ condition.getExpression());
+							+ condition.getExpression(alias));
 					i++;
 				}
 				if (add)
@@ -86,7 +90,7 @@ public abstract class MixCondition implements Condition {
 
 			if ((!add && mc.length() > 0) || (add && mc.length() > 2)) {
 				if (this.orderCondition != null) {
-					String order = this.orderCondition.getExpression();
+					String order = this.orderCondition.getExpression(alias);
 					if (order != null && order.length() > 0)
 						mc.append(" order by " + order);
 				}
@@ -94,7 +98,7 @@ public abstract class MixCondition implements Condition {
 				return mc.toString();
 			} else {
 				if (this.orderCondition != null) {
-					String order = this.orderCondition.getExpression();
+					String order = this.orderCondition.getExpression(alias);
 					if (order != null && order.length() > 0) {
 						return "order by " + order;
 					} else {

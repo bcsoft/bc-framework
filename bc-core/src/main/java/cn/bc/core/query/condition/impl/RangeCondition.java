@@ -57,6 +57,13 @@ public class RangeCondition implements Condition {
 	}
 
 	public String getExpression() {
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
+		String name = this.name;
+		if(alias != null && alias.length() > 0)
+			name = alias + "." + name;
 		String[] symbol = this.rangeType.toSymbol();
 		return "(" + name + " " + symbol[0] + " ? and " + name + " "
 				+ symbol[1] + " ?)";

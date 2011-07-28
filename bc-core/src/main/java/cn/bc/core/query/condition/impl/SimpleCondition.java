@@ -52,6 +52,13 @@ public class SimpleCondition implements Condition {
 	}
 
 	public String getExpression() {
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
+		String name = this.getName();
+		if(alias != null && alias.length() > 0)
+			name = alias + "." + name;
 		StringBuilder e = new StringBuilder(name + " "
 				+ this.operator.toSymbol());
 		if (operator == QueryOperator.In || operator == QueryOperator.NotIn) {

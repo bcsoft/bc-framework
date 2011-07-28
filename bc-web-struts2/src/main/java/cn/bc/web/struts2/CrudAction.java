@@ -215,6 +215,14 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		return "form";
 	}
 
+	// 只读表单
+	public String open() throws Exception {
+		this.readonly = true;
+		e = this.getCrudService().load(this.getId());
+		this.formPageOption = buildFormPageOption();
+		return "form";
+	}
+
 	// 表单：自动判断权限
 	public String read() throws Exception {
 		this.readonly = true;
@@ -541,6 +549,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		listPage.setCreateUrl(getCreateUrl())
 				.setDeleteUrl(getDeleteUrl())
 				.setEditUrl(this.getEditUrl())
+				.setOpenUrl(this.getOpenUrl())
 				.setNamespace(getPageNamespace())
 				.addJs(getJs())
 				.addCss(getCss())
@@ -742,6 +751,11 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	/** 编辑的url */
 	protected String getEditUrl() {
 		return getPageNamespace() + "/edit";
+	}
+
+	/** 查看的url */
+	protected String getOpenUrl() {
+		return getPageNamespace() + "/open";
 	}
 
 	/** 删除的url */

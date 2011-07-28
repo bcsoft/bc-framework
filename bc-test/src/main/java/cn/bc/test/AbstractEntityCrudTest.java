@@ -52,7 +52,7 @@ public abstract class AbstractEntityCrudTest<K extends Serializable, E extends E
 	 * @return 实体对象对应的数据库表名
 	 */
 	protected String getTableIdName() {
-		return "ID";
+		return "id";
 	}
 
 	protected String getDefaultConfig() {

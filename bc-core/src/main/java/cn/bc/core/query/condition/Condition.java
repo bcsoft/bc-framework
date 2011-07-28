@@ -14,9 +14,17 @@ import java.util.List;
  */
 public interface Condition{
 	/**
-	 * @return 条件表达式,null用""代替
+	 * 条件表达式,null用""代替
+	 * @return
 	 */
 	String getExpression();
+	
+	/**
+	 * 带别名的条件表达式,null用""代替
+	 * @param alias 别名,为空代表不使用别名
+	 * @return
+	 */
+	String getExpression(String alias);
 	
 	/**
 	 * @return 条件参数

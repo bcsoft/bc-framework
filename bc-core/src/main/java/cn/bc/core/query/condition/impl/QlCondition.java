@@ -24,6 +24,11 @@ public class QlCondition implements Condition {
 	}
 
 	public String getExpression() {
+		return getExpression(null);
+	}
+
+	public String getExpression(String alias) {
+		//这里或略别名
 		return ql;
 	}
 
