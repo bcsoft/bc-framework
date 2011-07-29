@@ -26,6 +26,12 @@ public class ActorDetail implements Serializable {
 	private static final long serialVersionUID = 4863625345847183773L;
 
 	private static Log logger = LogFactory.getLog(ActorDetail.class);
+	/** 性别:未定义 */
+	public static final Integer SEX_NONE = 0;
+	/** 性别:男 */
+	public static final Integer SEX_MAN = 1;
+	/** 性别:女 */
+	public static final Integer SEX_WOMAN = 2;
 
 	private Long id;
 
@@ -85,9 +91,6 @@ public class ActorDetail implements Serializable {
 		set("comment", comment);
 	}
 
-	public static final Integer SEX_NONE = 0;
-	public static final Integer SEX_MEN = 1;
-	public static final Integer SEX_WOMEN = 2;
 	/**
 	 * @return 性别(0-未设置,1-男,2-女)
 	 */
@@ -100,7 +103,7 @@ public class ActorDetail implements Serializable {
 	}
 	
 	/**
-	 * @return 性别(0-未设置,1-男,2-女)
+	 * @return 职务
 	 */
 	@ManyToOne(fetch=FetchType.EAGER, optional = true)
 	@JoinColumn(name = "DUTY_ID", referencedColumnName = "ID")
