@@ -134,10 +134,10 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		Attach e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUser());
-		e.setDepartId(context.getBelong().getId());
-		e.setDepartName(context.getBelong().getName());
-		e.setUnitId(context.getUnit().getId());
-		e.setUnitName(context.getUnit().getName());
+		e.setAuthorDepartId(context.getBelong().getId());
+		e.setAuthorDepartName(context.getBelong().getName());
+		e.setAuthorUnitId(context.getUnit().getId());
+		e.setAuthorUnitName(context.getUnit().getName());
 
 		this.setE(e);
 		return "form";
@@ -283,10 +283,10 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		ah.setType(type);
 		ah.setAuthor(context.getUser());
 		ah.setAuthorName(context.getUser().getName());
-		ah.setDepartId(context.getBelong().getId());
-		ah.setDepartName(context.getBelong().getName());
-		ah.setUnitId(context.getUnit().getId());
-		ah.setUnitName(context.getUnit().getName());
+		ah.setAuthorDepartId(context.getBelong().getId());
+		ah.setAuthorDepartName(context.getBelong().getName());
+		ah.setAuthorUnitId(context.getUnit().getId());
+		ah.setAuthorUnitName(context.getUnit().getName());
 		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
 

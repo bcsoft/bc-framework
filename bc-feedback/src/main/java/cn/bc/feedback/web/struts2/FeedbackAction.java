@@ -76,10 +76,10 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 		Feedback e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUser());
-		e.setDepartId(context.getBelong().getId());
-		e.setDepartName(context.getBelong().getName());
-		e.setUnitId(context.getUnit().getId());
-		e.setUnitName(context.getUnit().getName());
+		e.setAuthorDepartId(context.getBelong().getId());
+		e.setAuthorDepartName(context.getBelong().getName());
+		e.setAuthorUnitId(context.getUnit().getId());
+		e.setAuthorUnitName(context.getUnit().getName());
 
 		e.setStatus(Feedback.STATUS_DRAFT);
 

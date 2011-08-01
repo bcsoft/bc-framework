@@ -221,11 +221,11 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 		attach.setPtype(ptype);
 		attach.setPuid(puid);
 		if (context.getBelong() != null) {
-			attach.setDepartId(context.getBelong().getId());
-			attach.setDepartName(context.getBelong().getName());
+			attach.setAuthorDepartId(context.getBelong().getId());
+			attach.setAuthorDepartName(context.getBelong().getName());
 		}
-		attach.setUnitId(context.getUnit().getId());
-		attach.setUnitName(context.getUnit().getName());
+		attach.setAuthorUnitId(context.getUnit().getId());
+		attach.setAuthorUnitName(context.getUnit().getName());
 		attach.setExtension(extend);
 		attach.setFileDate(now);
 		attach.setPath(path);

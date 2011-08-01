@@ -25,10 +25,10 @@ public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Lo
 	private Actor author;// 创建人
 
 	// 所属组织的冗余信息，用于提高统计效率用
-	private Long departId;// 所属部门id
-	private String departName;
-	private Long unitId;// 所属单位id
-	private String unitName;
+	private Long authorDepartId;// 所属部门id
+	private String authorDepartName;
+	private Long authorUnitId;// 所属单位id
+	private String authorUnitName;
 	
 	private Long modifierId;// 最后修改人的id
 	private String modifierName;// 最后修改人的名称
@@ -93,39 +93,39 @@ public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Lo
 		// do nothing
 	}
 
-	@Column(name = "DEPART_ID")
-	public Long getDepartId() {
-		return departId;
+	@Column(name = "AUTHOR_DEPART_ID")
+	public Long getAuthorDepartId() {
+		return authorDepartId;
 	}
 
-	public void setDepartId(Long departId) {
-		this.departId = departId;
+	public void setAuthorDepartId(Long departId) {
+		this.authorDepartId = departId;
 	}
 
-	@Column(name = "DEPART_NAME")
-	public String getDepartName() {
-		return departName;
+	@Column(name = "AUTHOR_DEPART_NAME")
+	public String getAuthorDepartName() {
+		return authorDepartName;
 	}
 
-	public void setDepartName(String departName) {
-		this.departName = departName;
+	public void setAuthorDepartName(String departName) {
+		this.authorDepartName = departName;
 	}
 
-	@Column(name = "UNIT_ID")
-	public Long getUnitId() {
-		return unitId;
+	@Column(name = "AUTHOR_UNIT_ID")
+	public Long getAuthorUnitId() {
+		return authorUnitId;
 	}
 
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
+	public void setAuthorUnitId(Long unitId) {
+		this.authorUnitId = unitId;
 	}
 
-	@Column(name = "UNIT_NAME")
-	public String getUnitName() {
-		return unitName;
+	@Column(name = "AUTHOR_UNIT_NAME")
+	public String getAuthorUnitName() {
+		return authorUnitName;
 	}
 
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
+	public void setAuthorUnitName(String unitName) {
+		this.authorUnitName = unitName;
 	}
 }

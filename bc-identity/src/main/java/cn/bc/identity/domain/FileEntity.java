@@ -103,54 +103,54 @@ public interface FileEntity<ID extends Serializable> extends
 	 * 
 	 * @return
 	 */
-	Long getDepartId();
+	Long getAuthorDepartId();
 
 	/**
 	 * 设置创建人所在的部门的ID
 	 * 
 	 * @param departId
 	 */
-	void setDepartId(Long departId);
+	void setAuthorDepartId(Long departId);
 
 	/**
 	 * 获取创建人所在的部门的名称
 	 * 
 	 * @return
 	 */
-	String getDepartName();
+	String getAuthorDepartName();
 
 	/**
 	 * 设置创建人所在的部门的名称
 	 * 
 	 * @param departName
 	 */
-	void setDepartName(String departName);
+	void setAuthorDepartName(String departName);
 
 	/**
 	 * 获取创建人所在的单位的ID
 	 * 
 	 * @return
 	 */
-	Long getUnitId();
+	Long getAuthorUnitId();
 
 	/**
 	 * 设置创建人所在的单位的ID
 	 * 
 	 * @param unitId
 	 */
-	void setUnitId(Long unitId);
+	void setAuthorUnitId(Long unitId);
 
 	/**
 	 * 获取创建人所在的单位的名称
 	 * 
 	 * @return
 	 */
-	String getUnitName();
+	String getAuthorUnitName();
 
 	/**
 	 * 设置创建人所在的单位的名称
 	 * 
 	 * @param unitName
 	 */
-	void setUnitName(String unitName);
+	void setAuthorUnitName(String unitName);
 }
