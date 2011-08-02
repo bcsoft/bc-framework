@@ -238,7 +238,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 		if (isManager) {
 			columns.add(new TextColumn("authorName",
 					getText("label.submitterName"), 80).setSortable(true));
-			columns.add(new TextColumn("unitName", getText("label.unitName"),
+			columns.add(new TextColumn("authorUnitName", getText("label.unitName"),
 					80).setSortable(true));
 		}
 		return columns;

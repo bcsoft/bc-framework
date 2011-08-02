@@ -178,15 +178,15 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Condition commonCondition = new AndCondition().setAddBracket(true)
 				.add(new EqualsCondition("status", Bulletin.STATUS_ISSUED))
 				.add(new EqualsCondition("scope", Bulletin.SCOPE_SYSTEM))
-				.add(new NotEqualsCondition("unitId", unit.getId()));
+				.add(new NotEqualsCondition("authorUnitId", unit.getId()));
 
 		MixCondition c = new OrCondition().setAddBracket(true);
 		if (isManager) {// 管理员看本单位的所有状态公告或全系统公告
-			c.add(new EqualsCondition("unitId", unit.getId()));// 本单位公告
+			c.add(new EqualsCondition("authorUnitId", unit.getId()));// 本单位公告
 			c.add(commonCondition);
 		} else {// 普通用户仅看已发布的本单位或全系统公告
 			c.add(new AndCondition().add(
-					new EqualsCondition("unitId", unit.getId())).add(
+					new EqualsCondition("authorUnitId", unit.getId())).add(
 					new EqualsCondition("status", Bulletin.STATUS_ISSUED)));// 本单位已发布公告
 			c.add(commonCondition);
 		}
@@ -278,8 +278,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 			if (this.useColumn("authorName"))
 				columns.add(new TextColumn("authorName",
 						getText("bulletin.authorName"), 80).setSortable(true));
-			if (this.useColumn("unitName"))
-				columns.add(new TextColumn("unitName",
+			if (this.useColumn("authorUnitName"))
+				columns.add(new TextColumn("authorUnitName",
 						getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;
