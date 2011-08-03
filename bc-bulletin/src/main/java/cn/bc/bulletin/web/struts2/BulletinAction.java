@@ -79,6 +79,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Bulletin e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUserHistory());
+		e.setUnit(context.getUnit());
 
 		e.setScope(Bulletin.SCOPE_LOCALUNIT);
 		e.setStatus(Bulletin.STATUS_DRAFT);
@@ -173,15 +174,15 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Condition commonCondition = new AndCondition().setAddBracket(true)
 				.add(new EqualsCondition("status", Bulletin.STATUS_ISSUED))
 				.add(new EqualsCondition("scope", Bulletin.SCOPE_SYSTEM))
-				.add(new NotEqualsCondition("authorUnitId", unit.getId()));
+				.add(new NotEqualsCondition("author.unitId", unit.getId()));
 
 		MixCondition c = new OrCondition().setAddBracket(true);
 		if (isManager) {// 管理员看本单位的所有状态公告或全系统公告
-			c.add(new EqualsCondition("authorUnitId", unit.getId()));// 本单位公告
+			c.add(new EqualsCondition("author.unitId", unit.getId()));// 本单位公告
 			c.add(commonCondition);
 		} else {// 普通用户仅看已发布的本单位或全系统公告
 			c.add(new AndCondition().add(
-					new EqualsCondition("authorUnitId", unit.getId())).add(
+					new EqualsCondition("author.unitId", unit.getId())).add(
 					new EqualsCondition("status", Bulletin.STATUS_ISSUED)));// 本单位已发布公告
 			c.add(commonCondition);
 		}
@@ -275,7 +276,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 						getText("bulletin.authorName"), 80).setSortable(true));
 			if (this.useColumn("unit.name"))
 				columns.add(new TextColumn("unit.name",
-						getText("bulletin.authorUnitName"), 80).setSortable(true));
+						getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;
 	}
