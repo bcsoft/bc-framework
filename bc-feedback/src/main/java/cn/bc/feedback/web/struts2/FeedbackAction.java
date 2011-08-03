@@ -213,7 +213,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "content", "authorName" };
+		return new String[] { "subject", "content", "author.name" };
 	}
 
 	@Override
@@ -231,9 +231,9 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		if (isManager) {
-			columns.add(new TextColumn("authorName",
+			columns.add(new TextColumn("author.name",
 					getText("label.submitterName"), 80).setSortable(true));
-			columns.add(new TextColumn("authorUnitName", getText("label.unitName"),
+			columns.add(new TextColumn("author.unitName", getText("label.unitName"),
 					80).setSortable(true));
 		}
 		return columns;
