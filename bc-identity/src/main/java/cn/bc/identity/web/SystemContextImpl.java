@@ -9,6 +9,7 @@ import java.util.Map;
 
 import cn.bc.Context;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 系统上下文的默认实现
@@ -37,6 +38,10 @@ public class SystemContextImpl implements SystemContext {
 
 	public Actor getUser() {
 		return this.getAttr(SystemContext.KEY_USER);
+	}
+
+	public ActorHistory getUserHistory() {
+		return this.getAttr(SystemContext.KEY_USER_HISTORY);
 	}
 
 	public Actor getBelong() {

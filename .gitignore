@@ -4,6 +4,7 @@
 .project
 target
 Thumbs.db
+*.pdb
 *.log
 *.log.*
 build

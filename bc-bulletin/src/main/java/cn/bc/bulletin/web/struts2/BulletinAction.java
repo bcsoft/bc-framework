@@ -78,11 +78,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Bulletin e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
 
 		e.setScope(Bulletin.SCOPE_LOCALUNIT);
 		e.setStatus(Bulletin.STATUS_DRAFT);
@@ -118,8 +114,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 			e.setIssuer(null);
 		
 		SystemContext context = (SystemContext) this.getContext();
-		e.setModifierId(context.getUser().getId());
-		e.setModifierName(context.getUser().getName());
+		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
 		
 		this.getCrudService().save(e);
@@ -238,7 +233,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "content", "issuerName" };
+		return new String[] { "subject", "content", "issuer.name" };
 	}
 
 	@Override
@@ -257,8 +252,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 					getText("bulletin.issueDate"), 90).setSortable(true)
 					.setDir(Direction.Desc)
 					.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		if (this.useColumn("issuerName"))
-			columns.add(new TextColumn("issuerName",
+		if (this.useColumn("issuer.name"))
+			columns.add(new TextColumn("issuer.name",
 					getText("bulletin.issuerName"), 90).setSortable(true));
 		if (this.useColumn("subject"))
 			columns.add(new TextColumn("subject", getText("bulletin.subject"))
@@ -275,12 +270,12 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 						.setDir(Direction.Desc)
 						.setValueFormater(
 								new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-			if (this.useColumn("authorName"))
-				columns.add(new TextColumn("authorName",
+			if (this.useColumn("author.name"))
+				columns.add(new TextColumn("author.name",
 						getText("bulletin.authorName"), 80).setSortable(true));
-			if (this.useColumn("authorUnitName"))
-				columns.add(new TextColumn("authorUnitName",
-						getText("bulletin.unitName"), 80).setSortable(true));
+			if (this.useColumn("unit.name"))
+				columns.add(new TextColumn("unit.name",
+						getText("bulletin.authorUnitName"), 80).setSortable(true));
 		}
 		return columns;
 	}

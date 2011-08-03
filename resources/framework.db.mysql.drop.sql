@@ -32,6 +32,7 @@ drop table if exists BC_DESKTOP_PERSONAL;
 drop table if exists BC_IDENTITY_ROLE_ACTOR;
 drop table if exists BC_IDENTITY_AUTH;
 drop table if exists BC_IDENTITY_ACTOR_RELATION;
+drop table if exists BC_IDENTITY_ACTOR_HISTORY;
 drop table if exists BC_IDENTITY_ACTOR;
 drop table if exists BC_IDENTITY_ACTOR_DETAIL;
 drop table if exists BC_IDENTITY_DUTY;

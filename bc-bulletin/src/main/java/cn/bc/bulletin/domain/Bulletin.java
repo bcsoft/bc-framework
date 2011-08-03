@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
@@ -35,7 +36,8 @@ public class Bulletin extends RichFileEntityImpl {
 	/**发布范围：全系统*/
 	public static final int SCOPE_SYSTEM = 1;
 
-	private Actor issuer;// 发布者
+	private Actor unit;// 所属单位
+	private ActorHistory issuer;// 发布者
 	private Calendar issueDate;// 发布时间
 	private Calendar overdueDate;// 过期日期：为空代表永不过期
 	private int scope;// 发布范围：0-本单位,1-全系统
@@ -50,26 +52,24 @@ public class Bulletin extends RichFileEntityImpl {
 		this.subject = subject;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true, targetEntity = Actor.class)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "UNIT_ID", referencedColumnName = "ID")
+	public Actor getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Actor unit) {
+		this.unit = unit;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "ISSUER_ID", referencedColumnName = "ID")
-	public Actor getIssuer() {
+	public ActorHistory getIssuer() {
 		return issuer;
 	}
 
-	public void setIssuer(Actor issuer) {
+	public void setIssuer(ActorHistory issuer) {
 		this.issuer = issuer;
-	}
-
-	@Column(name = "ISSUER_NAME")
-	public String getIssuerName() {
-		if (this.issuer != null) {
-			return this.issuer.getName();
-		} else {
-			return null;
-		}
-	}
-	public void setIssuerName(String issuerName) {
-		//do nothing
 	}
 
 	@Column(name = "ISSUE_DATE")
@@ -105,10 +105,4 @@ public class Bulletin extends RichFileEntityImpl {
 	public void setContent(String content) {
 		this.content = content;
 	}
-//
-//	@Override
-//	@Transient
-//	protected Calendar getSpecalDate() {
-//		return this.getIssueDate();//使用发布日期作为文档的年月日信息
-//	}
 }

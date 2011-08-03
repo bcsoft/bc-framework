@@ -75,11 +75,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Feedback e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
 
 		e.setStatus(Feedback.STATUS_DRAFT);
 
@@ -115,8 +111,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 			e.setStatus(Feedback.STATUS_SUMMIT);
 		
 		SystemContext context = (SystemContext) this.getContext();
-		e.setModifierId(context.getUser().getId());
-		e.setModifierName(context.getUser().getName());
+		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
 		
 		this.getCrudService().save(e);

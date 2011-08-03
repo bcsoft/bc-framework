@@ -133,11 +133,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Attach e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
 
 		this.setE(e);
 		return "form";
@@ -281,12 +277,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		ah.setFileDate(Calendar.getInstance());
 		ah.setFormat(attach.getExtension());
 		ah.setType(type);
-		ah.setAuthor(context.getUser());
-		ah.setAuthorName(context.getUser().getName());
-		ah.setAuthorDepartId(context.getBelong().getId());
-		ah.setAuthorDepartName(context.getBelong().getName());
-		ah.setAuthorUnitId(context.getUnit().getId());
-		ah.setAuthorUnitName(context.getUnit().getName());
+		ah.setAuthor(context.getUserHistory());
 		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
 

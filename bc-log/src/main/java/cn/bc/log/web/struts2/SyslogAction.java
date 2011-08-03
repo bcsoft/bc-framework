@@ -25,7 +25,7 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.log.domain.Syslog;
 import cn.bc.log.service.SyslogService;
@@ -69,7 +69,7 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("createDate", Direction.Desc);
+		return new OrderCondition("fileDate", Direction.Desc);
 	}
 
 	@Override
@@ -77,9 +77,9 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 		if (!my) {// 查看所有用户的日志信息
 			return null;
 		} else {// 仅查看自己的日志信息
-			Actor curUser = (Actor) ((SystemContext) this.getContext())
-					.getUser();
-			return new EqualsCondition("creater.id", curUser.getId());
+			ActorHistory curUser = (ActorHistory) ((SystemContext) this.getContext())
+					.getUserHistory();
+			return new EqualsCondition("author.id", curUser.getId());
 		}
 	}
 
@@ -109,14 +109,14 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "userName", "departName", "unitName",
+		return new String[] { "subject", "author.name", "author.upperName", "author.unitName",
 				"clientIp", "clientInfo", "serverIp" };
 	}
 
 	@Override
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
-		columns.add(new TextColumn("createDate", getText("syslog.createDate"),
+		columns.add(new TextColumn("fileDate", getText("syslog.createDate"),
 				150).setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		columns.add(new TextColumn("type", getText("syslog.type"), 80)
@@ -124,11 +124,11 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 						new SyslogTypeFormater(getEntityStatuses())));
 		columns.add(new TextColumn("clientIp", getText("syslog.clientIp"), 120)
 				.setSortable(true));
-		columns.add(new TextColumn("userName", getText("syslog.userName"), 80)
+		columns.add(new TextColumn("author.name", getText("syslog.userName"), 80)
 				.setSortable(true));
-		columns.add(new TextColumn("unitName", getText("syslog.unitName"), 100)
+		columns.add(new TextColumn("author.unitName", getText("syslog.unitName"), 100)
 				.setSortable(true));
-		columns.add(new TextColumn("departName", getText("syslog.departName"),
+		columns.add(new TextColumn("author.upperName", getText("syslog.departName"),
 				100).setSortable(true));
 		if (!my)
 			columns.add(new TextColumn("serverIp", getText("syslog.serverIp"),
@@ -171,24 +171,14 @@ public class SyslogAction extends CrudAction<Long, Syslog> implements
 	}
 
 	// 记录登陆日志
-	public static Syslog buildSyslog(Calendar now, Integer type, Actor user,
-			Actor belong, Actor unit, String subject,
-			boolean traceClientMachine, HttpServletRequest request) {
+	public static Syslog buildSyslog(Calendar now, Integer type,
+			ActorHistory user, String subject, boolean traceClientMachine,
+			HttpServletRequest request) {
 		Syslog log = new Syslog();
 		log.setType(type);
-		log.setCreater(user);
-		log.setCreateDate(now);
-		log.setUserName(user.getName());
+		log.setAuthor(user);
+		log.setFileDate(now);
 		log.setSubject(subject);
-		if (belong.getType() == Actor.TYPE_DEPARTMENT) {
-			log.setDepartId(belong.getId());
-			log.setDepartName(belong.getName());
-			log.setUnitId(unit.getId());
-			log.setUnitName(unit.getName());
-		} else {
-			log.setUnitId(belong.getId());
-			log.setUnitName(belong.getName());
-		}
 
 		// 服务器信息
 		InetAddress localhost;
