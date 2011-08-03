@@ -197,7 +197,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 130)
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn("authorName", getText("attach.authorName"),
+		columns.add(new TextColumn("author.name", getText("attach.authorName"),
 				80).setSortable(true));
 		columns.add(new TextColumn("size", getText("attach.size"), 80)
 				.setSortable(true).setValueFormater(new FileSizeFormater()));
