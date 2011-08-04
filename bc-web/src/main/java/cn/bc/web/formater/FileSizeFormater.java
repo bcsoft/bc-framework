@@ -12,13 +12,13 @@ import java.text.NumberFormat;
  * @author dragon
  * 
  */
-public class FileSizeFormater implements Formater {
+public class FileSizeFormater extends AbstractFormater {
 	private static NumberFormat format = new DecimalFormat("#.#");
 
 	public FileSizeFormater() {
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (value instanceof Number) {

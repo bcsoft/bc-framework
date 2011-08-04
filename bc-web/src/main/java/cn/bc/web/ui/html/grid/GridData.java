@@ -63,12 +63,12 @@ public class GridData extends Div {
 		}
 	}
 
-	public static String formatValue(Object objValue, Formater formater) {
+	public static String formatValue(Object context, Object cellValue, Formater formater) {
 		String value;
 		if (formater != null)
-			value = formater.format(objValue);
+			value = formater.format(context, cellValue);
 		else
-			value = (objValue != null ? objValue.toString() : "");
+			value = (cellValue != null ? cellValue.toString() : "");
 		return value != null ? value : "";
 	}
 
@@ -164,7 +164,7 @@ public class GridData extends Div {
 		Component leftTable = new Table().addClazz("table")
 				.setAttr("cellspacing", "0").setAttr("cellpadding", "0");
 		left.addChild(leftTable);
-		for (Object obj : this.data) {
+		for (Object rowData : this.data) {
 			// 行设置
 			tr = new Tr().addClazz("ui-state-default row");
 			leftTable.addChild(tr);
@@ -199,12 +199,12 @@ public class GridData extends Div {
 					"data-name",
 					rowLabel
 							+ getValue(
-									obj,
+									rowData,
 									getRowLabelExpression() != null ? getRowLabelExpression()
 											: "id", null));// 行的标题
 			td.setAttr(
 					"data-id",
-					formatValue(getValue(obj, column.getValueExpression()),
+					formatValue(rowData,getValue(rowData, column.getValueExpression()),
 							column.getValueFormater()));// 行的id
 			td.addChild(new Span().addClazz("ui-icon"));// 勾选标记符
 			td.addChild(new Text(String.valueOf(rc + 1)));// 行号
@@ -220,8 +220,8 @@ public class GridData extends Div {
 		rightTable.addStyle("width", totalWidth + "px");
 		rightTable.setAttr("originWidth", totalWidth + "");
 		rc = 0;
-		String value;
-		for (Object obj : this.data) {
+		String cellValue;
+		for (Object rowData : this.data) {
 			// 行设置
 			tr = new Tr().addClazz("ui-state-default row");
 			rightTable.addChild(tr);
@@ -256,12 +256,12 @@ public class GridData extends Div {
 				// td.addChild(wrapper);
 
 				// 单元格内容
-				Object srcValue = getValue(obj, column.getValueExpression());
-				value = formatValue(srcValue, column.getValueFormater());
-				td.addChild(new Text(value)).setAttr("data-value",
-						srcValue != null ? srcValue.toString() : "");
+				Object srcCellValue = getValue(rowData, column.getValueExpression());
+				cellValue = formatValue(rowData, srcCellValue, column.getValueFormater());
+				td.addChild(new Text(cellValue)).setAttr("data-value",
+						srcCellValue != null ? srcCellValue.toString() : "");
 				if (column.isUseTitleFromLabel()) {
-					td.setTitle(value);
+					td.setTitle(cellValue);
 				}
 			}
 

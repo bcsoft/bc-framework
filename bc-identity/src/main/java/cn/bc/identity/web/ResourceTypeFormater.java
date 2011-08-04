@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.bc.identity.domain.Resource;
-import cn.bc.web.formater.Formater;
+import cn.bc.web.formater.AbstractFormater;
 
 /**
  * 资源类型值的格式化
@@ -15,7 +15,7 @@ import cn.bc.web.formater.Formater;
  * @author dragon
  * 
  */
-public class ResourceTypeFormater implements Formater {
+public class ResourceTypeFormater extends AbstractFormater {
 	private Map<String, String> types;
 
 	public ResourceTypeFormater() {
@@ -30,7 +30,7 @@ public class ResourceTypeFormater implements Formater {
 		this.types = types;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 

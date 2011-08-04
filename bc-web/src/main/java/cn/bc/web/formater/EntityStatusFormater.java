@@ -14,7 +14,7 @@ import cn.bc.core.RichEntity;
  * @author dragon
  * 
  */
-public class EntityStatusFormater implements Formater {
+public class EntityStatusFormater extends AbstractFormater {
 	private Map<String, String> statuses;
 
 	public EntityStatusFormater() {
@@ -28,7 +28,7 @@ public class EntityStatusFormater implements Formater {
 		this.statuses = statuses;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 

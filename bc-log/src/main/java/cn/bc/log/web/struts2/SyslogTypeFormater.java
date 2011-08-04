@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.bc.log.domain.Syslog;
-import cn.bc.web.formater.Formater;
+import cn.bc.web.formater.AbstractFormater;
 
 /**
  * 系统日志分类值的格式化
@@ -15,7 +15,7 @@ import cn.bc.web.formater.Formater;
  * @author dragon
  * 
  */
-public class SyslogTypeFormater implements Formater {
+public class SyslogTypeFormater extends AbstractFormater {
 	private Map<String, String> types;
 
 	public SyslogTypeFormater() {
@@ -29,7 +29,7 @@ public class SyslogTypeFormater implements Formater {
 		this.types = types;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 
