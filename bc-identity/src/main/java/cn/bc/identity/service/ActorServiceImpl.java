@@ -1,7 +1,11 @@
 package cn.bc.identity.service;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cn.bc.core.RichEntity;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.domain.Actor;
@@ -24,6 +28,22 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 
 	public ActorDao getActorDao() {
 		return actorDao;
+	}
+
+	@Override
+	public void delete(Serializable id) {
+		// 仅将状态标记为已删除
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("status", new Integer(RichEntity.STATUS_DELETED));
+		this.update(id, attrs);
+	}
+
+	@Override
+	public void delete(Serializable[] ids) {
+		// 仅将状态标记为已删除
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("status", new Integer(RichEntity.STATUS_DELETED));
+		this.update(ids, attrs);
 	}
 
 	public Actor loadByCode(String actorCode) {

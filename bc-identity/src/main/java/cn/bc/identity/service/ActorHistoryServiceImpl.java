@@ -32,8 +32,8 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 		ActorHistory current = actorHistoryDao.loadCurrent(actorId);
 		if (current == null) {
 			current = new ActorHistory();
-			
-			//加载Actor
+
+			// 加载Actor
 			Actor actor = this.actorDao.load(actorId);
 			if (actor == null)
 				return null;
@@ -44,22 +44,22 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 			current.setEndDate(null);
 			current.setCreateDate(Calendar.getInstance());
 
-			//加载直接上级
+			// 加载直接上级
 			Actor belong = this.actorDao.loadBelong(actorId, new Integer[] {
 					Actor.TYPE_DEPARTMENT, Actor.TYPE_UNIT });
-			if(belong != null){
+			if (belong != null) {
 				current.setUpperId(belong.getId());
 				current.setUpperName(belong.getName());
 
-				//加载所属单位
+				// 加载所属单位
 				Actor unit = this.loadUnit(belong);
-				if(unit != null){
+				if (unit != null) {
 					current.setUnitId(unit.getId());
 					current.setUnitName(unit.getName());
 				}
 			}
-			
-			//保存一个新的历史
+
+			// 保存一个新的历史
 			current = this.actorHistoryDao.save(current);
 		}
 		return current;
@@ -69,9 +69,9 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 	private Actor loadUnit(Actor belong) {
 		if (belong.getType() == Actor.TYPE_UNIT)
 			return belong;
-			
-		belong = this.actorDao.loadBelong(belong.getId(),
-				new Integer[] { Actor.TYPE_DEPARTMENT, Actor.TYPE_UNIT });
+
+		belong = this.actorDao.loadBelong(belong.getId(), new Integer[] {
+				Actor.TYPE_DEPARTMENT, Actor.TYPE_UNIT });
 		if (belong.getType() != Actor.TYPE_UNIT) {
 			return loadUnit(belong);
 		} else {

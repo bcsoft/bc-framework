@@ -2,8 +2,11 @@ package cn.bc.identity.web.struts2;
 
 import java.util.UUID;
 
+import org.junit.Ignore;
+
 import cn.bc.identity.domain.Actor;
 
+@Ignore
 public class UnitActionTestTemp extends AbstractActorActionTest {
 	@Override
 	protected String getEntityConfigName() {

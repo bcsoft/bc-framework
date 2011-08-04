@@ -22,9 +22,9 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.util.StringUtils;
 
 import cn.bc.Context;
-import cn.bc.core.RichEntity;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
+import cn.bc.core.RichEntity;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
@@ -202,8 +202,13 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	// 新建表单
 	public String create() throws Exception {
 		this.readonly = false;
-		e = this.getCrudService().create();
+		
+		//初始化E
+		this.setE(this.getCrudService().create());
+		
+		//初始化表单的配置信息
 		this.formPageOption = buildFormPageOption();
+		
 		return "form";
 	}
 
