@@ -18,7 +18,7 @@ public class CrudActionTest extends StrutsSpringTestCase {
 
 	@Override
 	protected String getContextLocations() {
-		return "classpath:applicationContext-test.xml";
+		return "classpath:spring-test.xml";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,12 +57,14 @@ public class CrudActionTest extends StrutsSpringTestCase {
 		// 测试result的配置
 		assertTrue("No 'success' result defined for action 'example'",
 				results.containsKey("success"));
-		assertTrue("No 'open' result defined for action 'crud'",
-				results.containsKey("open"));
-		assertEquals("/crud/Open.jsp", results.get("open").getParams()
+		assertTrue("No 'form' result defined for action 'crud'",
+				results.containsKey("form"));
+		assertTrue("No 'formr' result defined for action 'crud'",
+				results.containsKey("formr"));
+		assertEquals("/crud/Open.jsp", results.get("formr").getParams()
 				.get("location"));
-		assertTrue("No 'edit' result defined for action 'crud'",
-				results.containsKey("edit"));
+		assertTrue("No 'form' result defined for action 'crud'",
+				results.containsKey("form"));
 		assertTrue("No 'save' result defined for action 'crud'",
 				results.containsKey("save"));
 		assertTrue("No 'delete' result defined for action 'crud'",
@@ -73,12 +75,12 @@ public class CrudActionTest extends StrutsSpringTestCase {
 		//测试配置文件的位置
 		assertTrue(
 				"Not config from '...classes/struts.xml'",
-				results.get("open").getLocation().getURI()
+				results.get("formr").getLocation().getURI()
 						.endsWith("classes/struts.xml"));
 
 		// 测试action中的service是否通过spring注入了
 		@SuppressWarnings("unchecked")
-		StrutsCRUDAction<Example> action = (StrutsCRUDAction<Example>) proxy
+		CrudAction<Long,Example> action = (CrudAction<Long,Example>) proxy
 				.getAction();
 		assertNotNull(action);
 		assertNotNull(action.getCrudService());
@@ -92,7 +94,7 @@ public class CrudActionTest extends StrutsSpringTestCase {
 		assertEquals(Action.SUCCESS, result);
 
 		//action执行后检验参数的值
-		assertEquals("1", action.getId());
+		assertEquals("1", action.getId().toString());
 	}
 	
 	// 测试Action的运行
@@ -113,17 +115,17 @@ public class CrudActionTest extends StrutsSpringTestCase {
 
 		// 测试action中的service是否通过spring注入了
 		@SuppressWarnings("unchecked")
-		StrutsCRUDAction<Example> action = (StrutsCRUDAction<Example>) proxy.getAction();
+		CrudAction<Long,Example> action = (CrudAction<Long,Example>) proxy.getAction();
 		assertNotNull(action);
 		assertNotNull(action.getCrudService());
 		
 		//运行action并检验返回值
 		String result = proxy.execute();
-		assertEquals("open", result);
+		assertEquals("formr", result);
 
 		//action执行后检验参数的值
-		assertEquals(id.toString(), action.getId());
-		assertNotNull(action.getEntity());
-		assertEquals(id,action.getEntity().getId());
+		assertEquals(id, action.getId());
+		assertNotNull(action.getE());
+		assertEquals(id,action.getE().getId());
 	}
 }

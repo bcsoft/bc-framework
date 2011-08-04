@@ -18,6 +18,6 @@
 	<!-- struts的配置 -->
 	<bean id="example" class="cn.bc.web.example.ExampleAction"
 		p:crudService-ref="crudService" scope="prototype" />
-	<bean id="crudAction" class="cn.bc.web.struts2.StrutsCRUDAction"
+	<bean id="crudAction" class="cn.bc.web.struts2.CrudAction"
 		p:entityClass="cn.bc.test.Example" p:crudService-ref="crudService" scope="prototype" />
 </beans>

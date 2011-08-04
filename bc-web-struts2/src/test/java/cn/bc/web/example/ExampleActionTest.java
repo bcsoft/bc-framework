@@ -19,7 +19,7 @@ public class ExampleActionTest extends StrutsSpringTestCase {
 
 	@Override
 	protected String getContextLocations() {
-		return "classpath:applicationContext-test.xml";
+		return "classpath:spring-test.xml";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -115,7 +115,7 @@ public class ExampleActionTest extends StrutsSpringTestCase {
 		assertEquals(Action.SUCCESS, result);
 
 		//action执行后检验参数的值
-		assertEquals("1", action.getId());
+		assertEquals("1", action.getId().toString());
 		assertEquals("1|dragon", action.getName());
 	}
 	
@@ -142,11 +142,11 @@ public class ExampleActionTest extends StrutsSpringTestCase {
 		
 		//运行action并检验返回值
 		String result = proxy.execute();
-		assertEquals("open", result);
+		assertEquals("formr", result);
 
 		//action执行后检验参数的值
-		assertEquals(id.toString(), action.getId());
-		assertNotNull(action.getEntity());
-		assertEquals(id,action.getEntity().getId());
+		assertEquals(id, action.getId());
+		assertNotNull(action.getE());
+		assertEquals(id,action.getE().getId());
 	}
 }

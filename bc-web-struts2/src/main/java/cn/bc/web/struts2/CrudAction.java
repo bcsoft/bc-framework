@@ -220,7 +220,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
-		return "form";
+		return "formr";
 	}
 
 	// 表单：自动判断权限
