@@ -37,6 +37,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 	protected String pkName = "id";// 主键名称
 	private JpaTemplate jpaTemplate;
+	private EntityManagerFactory entityManagerFactory;
 
 	protected JpaTemplate getJpaTemplate() {
 		return jpaTemplate;
@@ -67,6 +68,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 	public void setEntityManagerFactory(
 			EntityManagerFactory entityManagerFactory) {
+		this.entityManagerFactory = entityManagerFactory;
 		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
 	}
 
@@ -239,6 +241,44 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 		});
 		if (logger.isDebugEnabled())
 			logger.debug("executeUpdate count=" + o);
+	}
+
+	protected void executeSql(final String sql, final List<Object> args) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("sql=" + sql);
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
+		Object o = this.jpaTemplate.execute(new JpaCallback<Object>() {
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				javax.persistence.Query query = createSqlQuery(em, sql,
+						args.toArray());
+				jpaTemplate.prepareQuery(query);
+				return query.executeUpdate();
+			}
+		});
+		if (logger.isDebugEnabled())
+			logger.debug("executeUpdate count=" + o);
+	}
+
+	/**
+	 * 创建查询对象
+	 * 
+	 * @param sql
+	 *            查询语句
+	 * @param args
+	 *            查询语句中的参数
+	 * @return 构建好的查询对象
+	 */
+	public static javax.persistence.Query createSqlQuery(EntityManager em, String sql,
+			Object[] args) {
+		javax.persistence.Query queryObj = em.createNativeQuery(sql);
+		if (null != args && args.length > 0) {
+			for (int i = 0; i < args.length; i++) {
+				queryObj.setParameter(i + 1, args[i]);// jpa索引从1开始
+			}
+		}
+		return queryObj;
 	}
 
 	/**
