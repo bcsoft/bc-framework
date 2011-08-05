@@ -17,7 +17,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.RoleService;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.PageOption;
@@ -30,7 +30,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class RoleAction extends CrudAction<Long, Role> {
+public class RoleAction extends EntityAction<Long, Role> {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired

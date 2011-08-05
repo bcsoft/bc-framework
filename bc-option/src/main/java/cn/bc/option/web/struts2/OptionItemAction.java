@@ -16,7 +16,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.option.domain.OptionItem;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -30,7 +30,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class OptionItemAction extends CrudAction<Long, OptionItem> {
+public class OptionItemAction extends EntityAction<Long, OptionItem> {
 	// private static Log logger = LogFactory.getLog(OptionItemAction.class);
 	private static final long serialVersionUID = 1L;
 

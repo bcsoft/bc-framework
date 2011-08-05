@@ -30,7 +30,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.log.domain.Syslog;
 import cn.bc.log.service.SyslogService;
 import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -48,7 +48,7 @@ import cn.bc.web.util.WebUtils;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class SyslogAction extends CrudAction<Long, Syslog> implements
+public class SyslogAction extends EntityAction<Long, Syslog> implements
 		SessionAware {
 	private static Log logger = LogFactory.getLog(SyslogAction.class);
 	private static final long serialVersionUID = 1L;

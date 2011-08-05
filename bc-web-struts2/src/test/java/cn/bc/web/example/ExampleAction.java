@@ -4,13 +4,13 @@
 package cn.bc.web.example;
 
 import cn.bc.test.Example;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 
 /**
  * @author dragon
  * 
  */
-public class ExampleAction extends CrudAction<Long,Example> {
+public class ExampleAction extends EntityAction<Long,Example> {
 	private static final long serialVersionUID = 1L;
 	private String name;
 

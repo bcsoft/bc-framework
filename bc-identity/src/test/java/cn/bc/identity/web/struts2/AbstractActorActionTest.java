@@ -5,9 +5,9 @@ import java.util.UUID;
 import cn.bc.core.service.CrudService;
 import cn.bc.identity.domain.Actor;
 import cn.bc.test.mock.CrudServiceMock;
-import cn.bc.web.struts2.AbstractCrudActionTest;
+import cn.bc.web.struts2.AbstractEntityActionTest;
 
-public abstract class AbstractActorActionTest extends AbstractCrudActionTest<Long, Actor> {
+public abstract class AbstractActorActionTest extends AbstractEntityActionTest<Long, Actor> {
 	@Override
 	protected String getContextLocations() {
 		return "classpath:spring-test4struts.xml";

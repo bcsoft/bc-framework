@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.option.domain.OptionGroup;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -28,7 +28,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class OptionGroupAction extends CrudAction<Long, OptionGroup> {
+public class OptionGroupAction extends EntityAction<Long, OptionGroup> {
 	// private static Log logger = LogFactory.getLog(OptionGroupAction.class);
 	private static final long serialVersionUID = 1L;
 

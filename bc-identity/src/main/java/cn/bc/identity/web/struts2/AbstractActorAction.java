@@ -16,7 +16,8 @@ import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.ActorRelationService;
 import cn.bc.identity.service.ActorService;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.identity.service.IdGeneratorService;
+import cn.bc.web.struts2.EntityAction;
 
 /**
  * 通用的Actor Action
@@ -24,7 +25,7 @@ import cn.bc.web.struts2.CrudAction;
  * @author dragon
  * 
  */
-public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
+public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	private static final long serialVersionUID = 1L;
 	private ActorService actorService;
 	private ActorRelationService actorRelationService;
@@ -32,6 +33,16 @@ public abstract class AbstractActorAction extends CrudAction<Long, Actor> {
 	public Set<Role> ownedRoles;// 已拥有的角色
 	public Set<Role> inheritRolesFromOU;// 从上级组织继承的角色信息
 	public String assignRoleIds;// 分派的角色id，多个id用逗号连接
+	private IdGeneratorService idGeneratorService;//用于生成uid的服务
+
+	public IdGeneratorService getIdGeneratorService() {
+		return idGeneratorService;
+	}
+
+	@Autowired
+	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
+		this.idGeneratorService = idGeneratorService;
+	}
 
 	public Actor getBelong() {
 		return belong;

@@ -36,6 +36,7 @@ public class UnitAction extends AbstractActorAction {
 	public String create() throws Exception {
 		String r = super.create();
 		this.getE().setType(Actor.TYPE_UNIT);
+		this.getE().setUid(this.getIdGeneratorService().next("unit"));
 		return r;
 	}
 

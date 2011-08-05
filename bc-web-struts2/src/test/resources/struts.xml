@@ -26,13 +26,13 @@
 			<result name="delete">/example/Delete.jsp</result>
 		</action>
 
-		<action name="crud" class="crudAction">
+		<action name="entity" class="entityAction">
 			<result>/example/success.jsp</result>
-			<result name="formr">/crud/Open.jsp</result>
-			<result name="form">/crud/Edit.jsp</result>
-			<result name="view">/crud/View.jsp</result>
-			<result name="save">/crud/Save.jsp</result>
-			<result name="delete">/crud/Delete.jsp</result>
+			<result name="formr">/entity/Open.jsp</result>
+			<result name="form">/entity/Edit.jsp</result>
+			<result name="view">/entity/View.jsp</result>
+			<result name="save">/entity/Save.jsp</result>
+			<result name="delete">/entity/Delete.jsp</result>
 		</action>
 	</package>
 

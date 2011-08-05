@@ -57,12 +57,12 @@ import cn.bc.web.util.WebUtils;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * CRUD通用Action
+ * Entity的CRUD通用Action
  * 
  * @author dragon
  * 
  */
-public class CrudAction<K extends Serializable, E extends Entity<K>> extends
+public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(getClass());
@@ -96,7 +96,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	@SuppressWarnings("unchecked")
-	public CrudAction() {
+	public EntityAction() {
 		// 这个需要子类中指定T为实际的类才有效(指定接口也不行的)
 		Type type = this.getClass().getGenericSuperclass();
 		if (type instanceof ParameterizedType) {

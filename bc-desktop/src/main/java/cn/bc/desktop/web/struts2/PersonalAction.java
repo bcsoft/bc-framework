@@ -13,7 +13,7 @@ import cn.bc.desktop.domain.Personal;
 import cn.bc.desktop.service.PersonalService;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 
 /**
  * 个人设置Action
@@ -23,7 +23,7 @@ import cn.bc.web.struts2.CrudAction;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class PersonalAction extends CrudAction<Long, Personal> {
+public class PersonalAction extends EntityAction<Long, Personal> {
 	private static final long serialVersionUID = 1L;
 	private String font;
 	private String theme;

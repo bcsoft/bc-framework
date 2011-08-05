@@ -46,6 +46,7 @@ public class GroupAction extends AbstractActorAction {
 		String r = super.create();
 		this.getE().setStatus(Actor.STATUS_ENABLED);
 		this.getE().setType(Actor.TYPE_GROUP);
+		this.getE().setUid(this.getIdGeneratorService().next("group"));
 		return r;
 	}
 

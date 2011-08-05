@@ -16,7 +16,7 @@ import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -35,7 +35,7 @@ import cn.bc.work.service.TodoWorkService;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class TodoWorkAction extends CrudAction<Long, TodoWork> {
+public class TodoWorkAction extends EntityAction<Long, TodoWork> {
 	private static final long serialVersionUID = 1L;
 	//private TodoWorkService todoWorkService;
 
