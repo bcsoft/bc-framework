@@ -19,20 +19,20 @@
 			<result>/example/success.jsp</result>
 			<result name="input">/example/input.jsp</result>
 			
-			<result name="open">/example/Open.jsp</result>
-			<result name="edit">/example/Edit.jsp</result>
+			<result name="formr">/example/Open.jsp</result>
+			<result name="form">/example/Edit.jsp</result>
 			<result name="view">/example/View.jsp</result>
 			<result name="save">/example/Save.jsp</result>
 			<result name="delete">/example/Delete.jsp</result>
 		</action>
 
-		<action name="crud" class="crudAction">
+		<action name="entity" class="entityAction">
 			<result>/example/success.jsp</result>
-			<result name="open">/crud/Open.jsp</result>
-			<result name="edit">/crud/Edit.jsp</result>
-			<result name="view">/crud/View.jsp</result>
-			<result name="save">/crud/Save.jsp</result>
-			<result name="delete">/crud/Delete.jsp</result>
+			<result name="formr">/entity/Open.jsp</result>
+			<result name="form">/entity/Edit.jsp</result>
+			<result name="view">/entity/View.jsp</result>
+			<result name="save">/entity/Save.jsp</result>
+			<result name="delete">/entity/Delete.jsp</result>
 		</action>
 	</package>
 

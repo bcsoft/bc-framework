@@ -15,6 +15,7 @@
 
 		<!-- Actor -->
 		<class>cn.bc.identity.domain.Actor</class>
+		<class>cn.bc.identity.domain.ActorHistory</class>
 		<class>cn.bc.identity.domain.ActorDetail</class>
 		<class>cn.bc.identity.domain.ActorRelation</class>
 		<class>cn.bc.identity.domain.Duty</class>

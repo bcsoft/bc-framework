@@ -13,7 +13,7 @@ import java.util.Date;
  * @author dragon
  * 
  */
-public class CalendarFormater implements Formater {
+public class CalendarFormater extends AbstractFormater {
 	private SimpleDateFormat format;
 
 	public CalendarFormater() {
@@ -24,7 +24,7 @@ public class CalendarFormater implements Formater {
 		format = new SimpleDateFormat(pattern);
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (value instanceof Calendar)

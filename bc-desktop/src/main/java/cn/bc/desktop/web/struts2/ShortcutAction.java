@@ -23,7 +23,7 @@ import cn.bc.desktop.service.ShortcutService;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -37,7 +37,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ShortcutAction extends CrudAction<Long, Shortcut> implements
+public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		SessionAware {
 	private static final long serialVersionUID = 1L;
 	private ShortcutService shortcutService;

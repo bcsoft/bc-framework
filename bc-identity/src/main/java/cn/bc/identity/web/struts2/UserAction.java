@@ -73,7 +73,7 @@ public class UserAction extends AbstractActorAction {
 		String r = super.create();
 		this.getE().setType(Actor.TYPE_USER);
 		this.getE().setStatus(Actor.STATUS_ENABLED);
-		this.getE().setUid(this.idGeneratorService.next("user.uid"));
+		this.getE().setUid(this.idGeneratorService.next("user"));
 
 		// 初始化用户的扩展信息
 		ActorDetail detail = new ActorDetail();

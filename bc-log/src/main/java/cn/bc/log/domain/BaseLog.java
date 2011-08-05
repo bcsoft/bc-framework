@@ -11,8 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import cn.bc.core.RichEntityImpl;
-import cn.bc.identity.domain.Actor;
+import cn.bc.core.EntityImpl;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 日志信息基类
@@ -20,32 +20,32 @@ import cn.bc.identity.domain.Actor;
  * @author dragon
  */
 @MappedSuperclass
-public class BaseLog extends RichEntityImpl {
+public class BaseLog extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 
-	private Calendar createDate;// 创建时间
-	private Actor creater;// 创建人
+	private Calendar fileDate;// 创建时间
+	private ActorHistory author;// 创建人
 	private Integer type;// 类别
 	private String subject;// 摘要
 	private String content;// 详细内容
 
-	@Column(name = "CREATE_DATE")
-	public Calendar getCreateDate() {
-		return createDate;
+	@Column(name = "FILE_DATE")
+	public Calendar getFileDate() {
+		return fileDate;
 	}
 
-	public void setCreateDate(Calendar createDate) {
-		this.createDate = createDate;
+	public void setFileDate(Calendar fileDate) {
+		this.fileDate = fileDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Actor.class)
-	@JoinColumn(name = "CREATER_ID", referencedColumnName = "ID")
-	public Actor getCreater() {
-		return creater;
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+	public ActorHistory getAuthor() {
+		return author;
 	}
 
-	public void setCreater(Actor creater) {
-		this.creater = creater;
+	public void setAuthor(ActorHistory creater) {
+		this.author = creater;
 	}
 
 	@Column(name="TYPE_")

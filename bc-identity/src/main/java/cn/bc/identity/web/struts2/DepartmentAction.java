@@ -36,6 +36,7 @@ public class DepartmentAction extends AbstractActorAction {
 	public String create() throws Exception {
 		String r = super.create();
 		this.getE().setType(Actor.TYPE_DEPARTMENT);
+		this.getE().setUid(this.getIdGeneratorService().next("department"));
 		return r;
 	}
 

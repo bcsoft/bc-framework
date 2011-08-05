@@ -11,7 +11,7 @@ import java.util.Map;
  * @author dragon
  * 
  */
-public class KeyValueFormater implements Formater {
+public class KeyValueFormater extends AbstractFormater {
 	private Map<String, String> kvs;
 
 	public KeyValueFormater() {
@@ -21,7 +21,7 @@ public class KeyValueFormater implements Formater {
 		this.kvs = kvs;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (kvs == null)

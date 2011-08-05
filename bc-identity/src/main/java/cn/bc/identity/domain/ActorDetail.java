@@ -27,11 +27,11 @@ public class ActorDetail implements Serializable {
 
 	private static Log logger = LogFactory.getLog(ActorDetail.class);
 	/** 性别:未定义 */
-	public static final Integer SEX_NONE = 0;
+	public static final int SEX_NONE = 0;
 	/** 性别:男 */
-	public static final Integer SEX_MAN = 1;
+	public static final int SEX_MAN = 1;
 	/** 性别:女 */
-	public static final Integer SEX_WOMAN = 2;
+	public static final int SEX_WOMAN = 2;
 
 	private Long id;
 
@@ -76,6 +76,7 @@ public class ActorDetail implements Serializable {
 	public String getCard() {
 		return getString("card");
 	}
+
 	public void setCard(String card) {
 		set("card", card);
 	}
@@ -87,6 +88,7 @@ public class ActorDetail implements Serializable {
 	public String getComment() {
 		return getString("comment");
 	}
+
 	public void setComment(String comment) {
 		set("comment", comment);
 	}
@@ -95,21 +97,27 @@ public class ActorDetail implements Serializable {
 	 * @return 性别(0-未设置,1-男,2-女)
 	 */
 	@Column
-	public Integer getSex() {
-		return getInteger("sex");
+	public int getSex() {
+		Integer i = getInteger("sex");
+		if (i == null)
+			return 0;
+		else
+			return i.intValue();
 	}
-	public void setSex(Integer sex) {
-		set("sex", sex);
+
+	public void setSex(int sex) {
+		set("sex", new Integer(sex));
 	}
-	
+
 	/**
 	 * @return 职务
 	 */
-	@ManyToOne(fetch=FetchType.EAGER, optional = true)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "DUTY_ID", referencedColumnName = "ID")
 	public Duty getDuty() {
-		return (Duty)get("duty");
+		return (Duty) get("duty");
 	}
+
 	public void setDuty(Duty duty) {
 		set("duty", duty);
 	}
@@ -118,7 +126,8 @@ public class ActorDetail implements Serializable {
 	private Map<String, Object> attrs;
 
 	/**
-	 * @param key 键
+	 * @param key
+	 *            键
 	 * @return 指定键的属性值
 	 */
 	@Transient

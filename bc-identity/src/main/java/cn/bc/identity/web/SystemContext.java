@@ -5,6 +5,7 @@ package cn.bc.identity.web;
 
 import cn.bc.Context;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 系统上下文
@@ -14,6 +15,8 @@ import cn.bc.identity.domain.Actor;
 public interface SystemContext extends Context{
 	/** 系统上下文内保存用户信息的键值 */
 	public static final String KEY_USER = "user";
+	/** 系统上下文内保存用户隶属的最新历史信息的键值 */
+	public static final String KEY_USER_HISTORY = "userHistory";
 	/** 系统上下文内保存用户的直接上级信息的键值 */
 	public static final String KEY_BELONG = "belong";
 	/** 系统上下文内保存用户所在单位信息的键值 */
@@ -30,6 +33,12 @@ public interface SystemContext extends Context{
 	 * @return
 	 */
 	Actor getUser();
+	
+	/**
+	 * 获取当前登录的用户
+	 * @return
+	 */
+	ActorHistory getUserHistory();
 	
 	/**
 	 * 获取登录用户所属的部门或单位信息

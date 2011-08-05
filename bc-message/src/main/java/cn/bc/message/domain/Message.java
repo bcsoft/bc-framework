@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.core.RichEntityImpl;
-import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 消息
@@ -29,8 +29,8 @@ public class Message extends RichEntityImpl {
 	private String content;// 内容
 	private Integer type;// 类型
 	private Calendar sendDate;// 发送时间
-	private Actor sender;// 发送人
-	private Actor receiver;// 接收人
+	private ActorHistory sender;// 发送人
+	private ActorHistory receiver;// 接收人
 	private boolean read; // 阅读标志
 	private Long fromId; // 来源标识
 	private Integer fromType; // 来源类型
@@ -44,23 +44,23 @@ public class Message extends RichEntityImpl {
 		this.sendDate = sendDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Actor.class)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "SENDER_ID", referencedColumnName = "ID")
-	public Actor getSender() {
+	public ActorHistory getSender() {
 		return sender;
 	}
 
-	public void setSender(Actor sender) {
+	public void setSender(ActorHistory sender) {
 		this.sender = sender;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Actor.class)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "RECEIVER_ID", referencedColumnName = "ID")
-	public Actor getReceiver() {
+	public ActorHistory getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(Actor receiver) {
+	public void setReceiver(ActorHistory receiver) {
 		this.receiver = receiver;
 	}
 

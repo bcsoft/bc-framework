@@ -78,6 +78,15 @@
 		p:entityClass="cn.bc.identity.domain.Actor"
 		p:actorDao-ref="actorDao" />
 
+	<!-- ActorHistory -->
+	<bean id="actorHistoryDao" class="cn.bc.identity.dao.hibernate.jpa.ActorHistoryDaoImpl"
+		p:entityClass="cn.bc.identity.domain.ActorHistory"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="actorHistoryService" class="cn.bc.identity.service.ActorHistoryServiceImpl"
+		p:entityClass="cn.bc.identity.domain.ActorHistory"
+		p:actorHistoryDao-ref="actorHistoryDao" 
+		p:actorDao-ref="actorDao" />
+
 	<!-- User -->
 	<bean id="userService" class="cn.bc.identity.service.UserServiceImpl" 
 		p:entityClass="cn.bc.identity.domain.Actor"

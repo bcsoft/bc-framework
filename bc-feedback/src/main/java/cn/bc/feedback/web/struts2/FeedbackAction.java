@@ -27,7 +27,7 @@ import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -44,7 +44,7 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class FeedbackAction extends CrudAction<Long, Feedback> implements
+public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
@@ -75,11 +75,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Feedback e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
 
 		e.setStatus(Feedback.STATUS_DRAFT);
 
@@ -115,8 +111,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 			e.setStatus(Feedback.STATUS_SUMMIT);
 		
 		SystemContext context = (SystemContext) this.getContext();
-		e.setModifierId(context.getUser().getId());
-		e.setModifierName(context.getUser().getName());
+		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
 		
 		this.getCrudService().save(e);
@@ -218,7 +213,7 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "content", "authorName" };
+		return new String[] { "subject", "content", "author.name" };
 	}
 
 	@Override
@@ -236,9 +231,9 @@ public class FeedbackAction extends CrudAction<Long, Feedback> implements
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		if (isManager) {
-			columns.add(new TextColumn("authorName",
+			columns.add(new TextColumn("author.name",
 					getText("label.submitterName"), 80).setSortable(true));
-			columns.add(new TextColumn("unitName", getText("label.unitName"),
+			columns.add(new TextColumn("author.unitName", getText("label.unitName"),
 					80).setSortable(true));
 		}
 		return columns;

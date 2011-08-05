@@ -21,7 +21,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ResourceService;
 import cn.bc.identity.web.ResourceTypeFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.PageOption;
@@ -34,7 +34,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ResourceAction extends CrudAction<Long, Resource> {
+public class ResourceAction extends EntityAction<Long, Resource> {
 	private static final long serialVersionUID = 1L;
 	public List<KeyValue> types;// 可选的模块类型
 

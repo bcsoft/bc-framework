@@ -21,16 +21,10 @@ public class Syslog extends BaseLog {
 	private static final long serialVersionUID = 1L;
 	/** 登录 */
 	public static final Integer TYPE_LOGIN = 0;
-	/** 主动注销 */
+	/** 注销 */
 	public static final Integer TYPE_LOGOUT = 1;
-	/** 超时注销 */
+	/** 超时 */
 	public static final Integer TYPE_LOGOUT2 = 2;
-
-	private String userName;
-	private Long departId;// 用户所在部门id
-	private String departName;
-	private Long unitId;// 用户所在单位id
-	private String unitName;
 
 	private String clientIp; // 用户机器的IP地址
 	private String clientName; // 用户机器的名称
@@ -38,51 +32,6 @@ public class Syslog extends BaseLog {
 	private String serverIp; // 服务器IP
 	private String serverName; // 服务器机器名称
 	private String serverInfo; // 服务器的信息
-
-	@Column(name = "CREATER_NAME")
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	@Column(name = "DEPART_ID")
-	public Long getDepartId() {
-		return departId;
-	}
-
-	public void setDepartId(Long departId) {
-		this.departId = departId;
-	}
-
-	@Column(name = "DEPART_NAME")
-	public String getDepartName() {
-		return departName;
-	}
-
-	public void setDepartName(String departName) {
-		this.departName = departName;
-	}
-
-	@Column(name = "UNIT_ID")
-	public Long getUnitId() {
-		return unitId;
-	}
-
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
-	}
-
-	@Column(name = "UNIT_NAME")
-	public String getUnitName() {
-		return unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
 
 	@Column(name = "C_IP")
 	public String getClientIp() {

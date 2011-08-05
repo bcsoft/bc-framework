@@ -3,7 +3,7 @@
  */
 package cn.bc.desktop.web;
 
-import cn.bc.web.formater.Formater;
+import cn.bc.web.formater.AbstractFormater;
 
 /**
  * 快捷方式类型值的格式化
@@ -11,7 +11,7 @@ import cn.bc.web.formater.Formater;
  * @author dragon
  * 
  */
-public class StandaloneFormater implements Formater {
+public class StandaloneFormater extends AbstractFormater {
 	private String yes = "外部链接";
 	private String no = "内部链接";
 
@@ -25,7 +25,7 @@ public class StandaloneFormater implements Formater {
 		this.no = no;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (value instanceof Boolean)

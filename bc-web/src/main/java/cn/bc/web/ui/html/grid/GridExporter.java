@@ -149,16 +149,18 @@ public class GridExporter implements Exporter {
 		Collection<String> row;
 		String value;
 		int i = 1;
-		for (Object obj : data) {
+		for (Object rowData : data) {
 			row = new ArrayList<String>();
 			for (Column column : columns) {
 				if (column instanceof IdColumn) {
 					value = i + "";
 					row.add(value);
 				} else {
-					value = GridData.formatValue(GridData.getValue(obj,
-							column.getValueExpression(), parser), column
-							.getValueFormater());
+					value = GridData.formatValue(
+							rowData,
+							GridData.getValue(rowData,
+									column.getValueExpression(), parser),
+							column.getValueFormater());
 					row.add(value == null || value.length() == 0 ? "" : value);
 				}
 			}

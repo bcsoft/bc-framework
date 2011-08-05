@@ -32,7 +32,7 @@ import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -48,7 +48,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class BulletinAction extends CrudAction<Long, Bulletin> implements
+public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
@@ -78,11 +78,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Bulletin e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
+		e.setUnit(context.getUnit());
 
 		e.setScope(Bulletin.SCOPE_LOCALUNIT);
 		e.setStatus(Bulletin.STATUS_DRAFT);
@@ -118,8 +115,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 			e.setIssuer(null);
 		
 		SystemContext context = (SystemContext) this.getContext();
-		e.setModifierId(context.getUser().getId());
-		e.setModifierName(context.getUser().getName());
+		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
 		
 		this.getCrudService().save(e);
@@ -178,15 +174,15 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 		Condition commonCondition = new AndCondition().setAddBracket(true)
 				.add(new EqualsCondition("status", Bulletin.STATUS_ISSUED))
 				.add(new EqualsCondition("scope", Bulletin.SCOPE_SYSTEM))
-				.add(new NotEqualsCondition("unitId", unit.getId()));
+				.add(new NotEqualsCondition("author.unitId", unit.getId()));
 
 		MixCondition c = new OrCondition().setAddBracket(true);
 		if (isManager) {// 管理员看本单位的所有状态公告或全系统公告
-			c.add(new EqualsCondition("unitId", unit.getId()));// 本单位公告
+			c.add(new EqualsCondition("author.unitId", unit.getId()));// 本单位公告
 			c.add(commonCondition);
 		} else {// 普通用户仅看已发布的本单位或全系统公告
 			c.add(new AndCondition().add(
-					new EqualsCondition("unitId", unit.getId())).add(
+					new EqualsCondition("author.unitId", unit.getId())).add(
 					new EqualsCondition("status", Bulletin.STATUS_ISSUED)));// 本单位已发布公告
 			c.add(commonCondition);
 		}
@@ -238,7 +234,7 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "subject", "content", "issuerName" };
+		return new String[] { "subject", "content", "issuer.name" };
 	}
 
 	@Override
@@ -257,8 +253,8 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 					getText("bulletin.issueDate"), 90).setSortable(true)
 					.setDir(Direction.Desc)
 					.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		if (this.useColumn("issuerName"))
-			columns.add(new TextColumn("issuerName",
+		if (this.useColumn("issuer.name"))
+			columns.add(new TextColumn("issuer.name",
 					getText("bulletin.issuerName"), 90).setSortable(true));
 		if (this.useColumn("subject"))
 			columns.add(new TextColumn("subject", getText("bulletin.subject"))
@@ -275,11 +271,11 @@ public class BulletinAction extends CrudAction<Long, Bulletin> implements
 						.setDir(Direction.Desc)
 						.setValueFormater(
 								new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-			if (this.useColumn("authorName"))
-				columns.add(new TextColumn("authorName",
+			if (this.useColumn("author.name"))
+				columns.add(new TextColumn("author.name",
 						getText("bulletin.authorName"), 80).setSortable(true));
-			if (this.useColumn("unitName"))
-				columns.add(new TextColumn("unitName",
+			if (this.useColumn("unit.name"))
+				columns.add(new TextColumn("unit.name",
 						getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;

@@ -18,7 +18,7 @@ import cn.bc.message.domain.Message;
 import cn.bc.message.service.MessageService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -35,7 +35,7 @@ import cn.bc.web.ui.html.toolbar.ToolbarSearchButton;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class MessageAction extends CrudAction<Long, Message> {
+public class MessageAction extends EntityAction<Long, Message> {
 	private static final long serialVersionUID = 1L;
 	//private MessageService messageService;
 

@@ -266,16 +266,9 @@ public class UploadFileServlet extends HttpServlet {
 			localFile = localFile.substring(li + 1);
 
 		Attach attach = new Attach();
-		attach.setAuthor(context.getUser());
-		attach.setAuthorName(context.getUser().getName());
+		attach.setAuthor(context.getUserHistory());
 		attach.setPtype(ptype);
 		attach.setPuid(puid);
-		if (context.getBelong() != null) {
-			attach.setAuthorDepartId(context.getBelong().getId());
-			attach.setAuthorDepartName(context.getBelong().getName());
-		}
-		attach.setAuthorUnitId(context.getUnit().getId());
-		attach.setAuthorUnitName(context.getUnit().getName());
 		attach.setExtension(extend);
 		attach.setFileDate(now);
 		attach.setPath(path);

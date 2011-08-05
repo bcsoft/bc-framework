@@ -1,5 +1,6 @@
 package cn.bc.identity.service;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -375,7 +376,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		actorRelationService.save(ar22);
 
 		// 部门1下的子部门1
-		Actor cdep1 = this.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
+		Actor cdep1 = this
+				.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
@@ -533,7 +535,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		actorRelationService.save(ar2);
 
 		// 部门1下的子部门1
-		Actor cdep1 = this.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
+		Actor cdep1 = this
+				.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
@@ -707,5 +710,35 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		ar.setType(type);
 		ar.setOrderNo(order);
 		return ar;
+	}
+
+	@Override
+	@Test
+	public void testDeleteOne() {
+		Actor entity = this.saveOneEntity(this
+				.createInstance(getDefaultConfig()));
+		Long id = entity.getId();
+		crudOperations.delete(id);
+		Actor entity1 = crudOperations.forceLoad(id);
+		Assert.assertNotNull(entity1);
+		Assert.assertEquals(entity1.getStatus(), Actor.STATUS_DELETED);
+	}
+
+	@Override
+	@Test
+	public void testDeleteMultiple() {
+		Actor entity = this.saveOneEntity(this.createInstance(getDefaultConfig()));
+		Long id1 = entity.getId();
+		entity = this.saveOneEntity(this.createInstance(getDefaultConfig()));
+		Long id2 = entity.getId();
+
+		crudOperations.delete(new Serializable[] { id1, id2 });
+
+		entity = crudOperations.forceLoad(id1);
+		Assert.assertNotNull(entity);
+		Assert.assertEquals(entity.getStatus(), Actor.STATUS_DELETED);
+		entity = crudOperations.forceLoad(id2);
+		Assert.assertNotNull(entity);
+		Assert.assertEquals(entity.getStatus(), Actor.STATUS_DELETED);
 	}
 }

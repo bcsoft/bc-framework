@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsSpringTestCase;
 import org.springframework.util.StringUtils;
 
-import cn.bc.core.RichEntity;
+import cn.bc.core.Entity;
 import cn.bc.core.service.CrudService;
 
 import com.opensymphony.xwork2.ActionProxy;
@@ -27,9 +27,9 @@ import com.opensymphony.xwork2.ActionProxy;
  * @param <E>
  *            实体类型
  */
-public abstract class AbstractCrudActionTest<K extends Serializable, E extends RichEntity<K>>
+public abstract class AbstractEntityActionTest<K extends Serializable, E extends Entity<K>>
 		extends StrutsSpringTestCase {
-	private static Log logger = LogFactory.getLog(AbstractCrudActionTest.class);
+	private static Log logger = LogFactory.getLog(AbstractEntityActionTest.class);
 	private CrudService<E> crudService;
 	private Class<E> entityClass;
 
@@ -38,7 +38,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 	public abstract E createEntity();
 
 	@SuppressWarnings("unchecked")
-	public AbstractCrudActionTest() {
+	public AbstractEntityActionTest() {
 		// 这个需要子类中指定T为实际的类才有效(指定接口也不行的)
 		Type type = this.getClass().getGenericSuperclass();
 		if (type instanceof ParameterizedType) {
@@ -85,9 +85,9 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		return this.entityClass;
 	}
 
-	protected CrudAction<K, E> getProxyAction(ActionProxy proxy) {
+	protected EntityAction<K, E> getProxyAction(ActionProxy proxy) {
 		@SuppressWarnings("unchecked")
-		CrudAction<K, E> action = (CrudAction<K, E>) proxy.getAction();
+		EntityAction<K, E> action = (EntityAction<K, E>) proxy.getAction();
 		action.setCrudService(this.getCrudService());// 将Action注入的实际Action修改为内存型的
 		return action;
 	}
@@ -116,7 +116,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		Assert.assertEquals("edit", proxy.getMethod());
 
 		// 测试action中的service是否通过spring注入了
-		CrudAction<K, E> action = this.getProxyAction(proxy);
+		EntityAction<K, E> action = this.getProxyAction(proxy);
 		Assert.assertNotNull(action);
 
 		// 运行action并检验返回值
@@ -143,7 +143,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		Assert.assertEquals("save", proxy.getMethod());
 
 		// 测试action中的service是否通过spring注入了
-		CrudAction<K, E> action = this.getProxyAction(proxy);
+		EntityAction<K, E> action = this.getProxyAction(proxy);
 		Assert.assertNotNull(action);
 		//Assert.assertNull(action.getEntity());//TODO
 		
@@ -159,7 +159,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		// action执行后检验参数的值
 		Assert.assertNotNull(action.getE());
 		Assert.assertNotNull(action.getE().getId());
-		Assert.assertEquals(uid,action.getE().getUid());
+//		Assert.assertEquals(uid,action.getE().getUid());
 	}
 
 	// create
@@ -170,7 +170,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		Assert.assertEquals("create", proxy.getMethod());
 
 		// 测试action中的service是否通过spring注入了
-		CrudAction<K, E> action = this.getProxyAction(proxy);
+		EntityAction<K, E> action = this.getProxyAction(proxy);
 		Assert.assertNotNull(action);
 
 		// 运行action并检验返回值
@@ -198,7 +198,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		Assert.assertEquals("delete", proxy.getMethod());
 
 		// 测试action中的service是否通过spring注入了
-		CrudAction<K, E> action = this.getProxyAction(proxy);
+		EntityAction<K, E> action = this.getProxyAction(proxy);
 		Assert.assertNotNull(action);
 
 		// 运行action并检验返回值
@@ -222,7 +222,7 @@ public abstract class AbstractCrudActionTest<K extends Serializable, E extends R
 		Assert.assertEquals("list", proxy.getMethod());
 
 		// 取得action
-		CrudAction<K, E> action = this.getProxyAction(proxy);
+		EntityAction<K, E> action = this.getProxyAction(proxy);
 		Assert.assertNotNull(action);
 
 		// 运行action

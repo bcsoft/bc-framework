@@ -19,33 +19,31 @@ import cn.bc.core.EntityImpl;
  * @author dragon
  */
 @MappedSuperclass
-public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Long>{
+public abstract class FileEntityImpl extends EntityImpl implements
+		FileEntity<Long> {
 	private static final long serialVersionUID = 1L;
-	private Calendar fileDate;// 文档创建时间
-	private Actor author;// 创建人
-
-	// 所属组织的冗余信息，用于提高统计效率用
-	private Long authorDepartId;// 所属部门id
-	private String authorDepartName;
-	private Long authorUnitId;// 所属单位id
-	private String authorUnitName;
-	
-	private Long modifierId;// 最后修改人的id
-	private String modifierName;// 最后修改人的名称
+	private Calendar fileDate;// 创建时间
+	private ActorHistory author;// 创建人
 	private Calendar modifiedDate;// 最后修改时间
+	private ActorHistory modifier;// 最后修改人
 
-	@Column(name = "MODIFIER_ID")
-	public Long getModifierId() {
-		return modifierId;
+	@Column(name = "FILE_DATE")
+	public Calendar getFileDate() {
+		return fileDate;
 	}
 
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
+	public void setFileDate(Calendar fileDate) {
+		this.fileDate = fileDate;
 	}
 
-	@Column(name = "MODIFIER_NAME")
-	public String getModifierName() {
-		return modifierName;
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+	public ActorHistory getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(ActorHistory author) {
+		this.author = author;
 	}
 
 	@Column(name = "MODIFIED_DATE")
@@ -57,75 +55,13 @@ public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Lo
 		this.modifiedDate = modifiedDate;
 	}
 
-	public void setModifierName(String modifierName) {
-		this.modifierName = modifierName;
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "MODIFIER_ID", referencedColumnName = "ID")
+	public ActorHistory getModifier() {
+		return modifier;
 	}
 
-	@Column(name = "FILE_DATE")
-	public Calendar getFileDate() {
-		return fileDate;
-	}
-
-	public void setFileDate(Calendar fileDate) {
-		this.fileDate = fileDate;
-	}
-
-	@ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Actor.class)
-	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
-	public Actor getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(Actor author) {
-		this.author = author;
-	}
-
-	@Column(name = "AUTHOR_NAME")
-	public String getAuthorName() {
-		if (this.author != null) {
-			return this.author.getName();
-		} else {
-			return null;
-		}
-	}
-
-	public void setAuthorName(String authorName) {
-		// do nothing
-	}
-
-	@Column(name = "AUTHOR_DEPART_ID")
-	public Long getAuthorDepartId() {
-		return authorDepartId;
-	}
-
-	public void setAuthorDepartId(Long departId) {
-		this.authorDepartId = departId;
-	}
-
-	@Column(name = "AUTHOR_DEPART_NAME")
-	public String getAuthorDepartName() {
-		return authorDepartName;
-	}
-
-	public void setAuthorDepartName(String departName) {
-		this.authorDepartName = departName;
-	}
-
-	@Column(name = "AUTHOR_UNIT_ID")
-	public Long getAuthorUnitId() {
-		return authorUnitId;
-	}
-
-	public void setAuthorUnitId(Long unitId) {
-		this.authorUnitId = unitId;
-	}
-
-	@Column(name = "AUTHOR_UNIT_NAME")
-	public String getAuthorUnitName() {
-		return authorUnitName;
-	}
-
-	public void setAuthorUnitName(String unitName) {
-		this.authorUnitName = unitName;
+	public void setModifier(ActorHistory modifier) {
+		this.modifier = modifier;
 	}
 }

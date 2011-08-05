@@ -23,6 +23,10 @@
 			<param name="ConversionPattern" value="%d %5p %c{1} %m%n"/>
 	   </layout>
 	</appender>
+	
+	<category name="cn.bc.identity.dao.hibernate.jpa.ActorHistoryDaoImpl">
+	  <priority value="WARN" />
+	</category>
     	
   	<!-- 设置默认的日志级别(该设置必须放在最后,否则加载会解析出错) -->
 	<!-- 优先级别:OFF/FATAL/ERROR/WARN /INFO /DEBUG /ALL -->

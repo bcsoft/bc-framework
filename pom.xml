@@ -21,6 +21,7 @@
 		<module>bc-web-struts</module>
 		<module>bc-web-struts2</module>
 
+		<module>bc-option</module>
 		<module>bc-identity</module>
 		<module>bc-desktop</module>
 		<module>bc-report</module>

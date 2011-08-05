@@ -45,7 +45,7 @@ import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.formater.FileSizeFormater;
-import cn.bc.web.struts2.CrudAction;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
@@ -70,7 +70,7 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class AttachAction extends CrudAction<Long, Attach> implements
+public class AttachAction extends EntityAction<Long, Attach> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
@@ -133,11 +133,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		SystemContext context = (SystemContext) this.getContext();
 		Attach e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUser());
-		e.setAuthorDepartId(context.getBelong().getId());
-		e.setAuthorDepartName(context.getBelong().getName());
-		e.setAuthorUnitId(context.getUnit().getId());
-		e.setAuthorUnitName(context.getUnit().getName());
+		e.setAuthor(context.getUserHistory());
 
 		this.setE(e);
 		return "form";
@@ -201,7 +197,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 130)
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn("authorName", getText("attach.authorName"),
+		columns.add(new TextColumn("author.name", getText("attach.authorName"),
 				80).setSortable(true));
 		columns.add(new TextColumn("size", getText("attach.size"), 80)
 				.setSortable(true).setValueFormater(new FileSizeFormater()));
@@ -281,12 +277,7 @@ public class AttachAction extends CrudAction<Long, Attach> implements
 		ah.setFileDate(Calendar.getInstance());
 		ah.setFormat(attach.getExtension());
 		ah.setType(type);
-		ah.setAuthor(context.getUser());
-		ah.setAuthorName(context.getUser().getName());
-		ah.setAuthorDepartId(context.getBelong().getId());
-		ah.setAuthorDepartName(context.getBelong().getName());
-		ah.setAuthorUnitId(context.getUnit().getId());
-		ah.setAuthorUnitName(context.getUnit().getName());
+		ah.setAuthor(context.getUserHistory());
 		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
 

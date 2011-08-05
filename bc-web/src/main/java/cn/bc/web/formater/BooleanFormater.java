@@ -9,7 +9,7 @@ package cn.bc.web.formater;
  * @author dragon
  * 
  */
-public class BooleanFormater implements Formater {
+public class BooleanFormater extends AbstractFormater {
 	private String yes = "是";
 	private String no = "否";
 
@@ -23,7 +23,7 @@ public class BooleanFormater implements Formater {
 		this.no = no;
 	}
 
-	public String format(Object value) {
+	public String format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (value instanceof Boolean)

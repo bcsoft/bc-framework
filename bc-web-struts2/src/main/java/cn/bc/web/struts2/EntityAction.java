@@ -22,9 +22,9 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.util.StringUtils;
 
 import cn.bc.Context;
-import cn.bc.core.RichEntity;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
+import cn.bc.core.RichEntity;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
@@ -57,12 +57,12 @@ import cn.bc.web.util.WebUtils;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * CRUD通用Action
+ * Entity的CRUD通用Action
  * 
  * @author dragon
  * 
  */
-public class CrudAction<K extends Serializable, E extends Entity<K>> extends
+public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(getClass());
@@ -96,7 +96,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	@SuppressWarnings("unchecked")
-	public CrudAction() {
+	public EntityAction() {
 		// 这个需要子类中指定T为实际的类才有效(指定接口也不行的)
 		Type type = this.getClass().getGenericSuperclass();
 		if (type instanceof ParameterizedType) {
@@ -202,8 +202,13 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 	// 新建表单
 	public String create() throws Exception {
 		this.readonly = false;
-		e = this.getCrudService().create();
+		
+		//初始化E
+		this.setE(this.getCrudService().create());
+		
+		//初始化表单的配置信息
 		this.formPageOption = buildFormPageOption();
+		
 		return "form";
 	}
 
@@ -220,7 +225,7 @@ public class CrudAction<K extends Serializable, E extends Entity<K>> extends
 		this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
-		return "form";
+		return "formr";
 	}
 
 	// 表单：自动判断权限
