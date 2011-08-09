@@ -69,6 +69,12 @@
 		<!-- 导出 视图数据-->
 		<action name="/*/export" class="{1}Action" method="export" />
 	</package>
+	<!-- 用于显示功能待开发的配置 -->
+	<package name="error" extends="bc-default" namespace="/bc/error">
+		<action name="todo" class="errorAction" method="todo">
+			<result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
+		</action>
+	</package>
 	<!-- 用于测试通配符配置 -->
 	<package name="bct" extends="bc-default" namespace="/bct">
 		<action name="/*/form/create" class="{1}Action" method="create">
