@@ -16,7 +16,7 @@ public abstract class RichFileEntityImpl extends FileEntityImpl implements
 		RichFileEntity<Long> {
 	private static final long serialVersionUID = 1L;
 	private String uid;
-	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
+	private int status = RichFileEntity.STATUS_ENABLED;
 
 	@Column(name = "UID_")
 	public String getUid() {
