@@ -1,6 +1,7 @@
 package cn.bc.option.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.bc.option.dao.OptionDao;
 import cn.bc.option.domain.OptionGroup;
@@ -19,21 +20,37 @@ public class OptionServiceImpl implements OptionService {
 		this.optionDao = optionDao;
 	}
 
-	public List<OptionItem> findOptionItemByGroupValue(String optionGroupValue) {
-		return optionDao.findOptionItemByGroupValue(optionGroupValue);
+	public List<OptionGroup> findOptionGroup() {
+		return optionDao.findOptionGroup();
 	}
 
-	public List<OptionItem> findOptionItemByGroupValue(String optionGroupValue,
-			boolean insertEmptyOption) {
-		List<OptionItem> list = optionDao.findOptionItemByGroupValue(optionGroupValue);
-		if(insertEmptyOption){
-			OptionItem oi = new OptionItem(); 
-			list.add(0, oi);
+	public List<OptionItem> findOptionItemByGroupKey(String optionGroupKey) {
+		return optionDao.findOptionItemByGroupKey(optionGroupKey);
+	}
+
+	public List<OptionItem> findOptionItemByGroupKeyWithCurrent(
+			String optionGroupKey, String currentItemKey,
+			String currentItemValue) {
+		List<OptionItem> list = optionDao
+				.findOptionItemByGroupValue(optionGroupKey);
+		if (currentItemKey != null) {
+			if (currentItemValue == null)
+				currentItemValue = currentItemKey;
+			boolean exist = false;
+			for (OptionItem oi : list) {
+				if (oi.getKey().equals(currentItemKey)) {
+					exist = true;
+					break;
+				}
+			}
+			if (!exist)
+				list.add(new OptionItem(currentItemKey, currentItemValue));
 		}
 		return list;
 	}
 
-	public List<OptionGroup> findOptionGroup() {
-		return optionDao.findOptionGroup();
+	public Map<String, List<OptionItem>> findOptionItemByGroupKeys(
+			String[] optionGroupKeys) {
+		return optionDao.findOptionItemByGroupKeys(optionGroupKeys);
 	}
 }

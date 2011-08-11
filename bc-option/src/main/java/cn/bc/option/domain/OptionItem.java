@@ -29,6 +29,15 @@ public class OptionItem extends EntityImpl {
 	private String icon; // 图标样式
 	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
 
+	public OptionItem() {
+
+	}
+
+	public OptionItem(String key, String value) {
+		this.key = key;
+		this.value = value;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
 	public OptionGroup getOptionGroup() {
