@@ -1,5 +1,13 @@
 -- ##bc平台的 oracle 建表脚本##
 
+-- md5函数：select md5('888888') from dual --> 21218cca77804d2ba1922c33e0151105
+CREATE OR REPLACE FUNCTION md5(passwd IN VARCHAR2)
+RETURN VARCHAR2 IS retval varchar2(32);
+BEGIN
+  retval := lower(utl_raw.cast_to_raw(DBMS_OBFUSCATION_TOOLKIT.MD5(INPUT_STRING => passwd)));
+  RETURN retval;
+END;
+
 -- 创建序列，开始于1千万，方便历史数据的转换
 CREATE sequence HIBERNATE_SEQUENCE
     minvalue 1

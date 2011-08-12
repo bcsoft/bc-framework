@@ -154,7 +154,13 @@ public class ActorDetail implements Serializable {
 
 	@Transient
 	public Boolean getBoolean(String key) {
-		return Boolean.valueOf(String.valueOf(get(key)));
+		Object v = get(key);
+		if (v != null) {
+			return "true".equalsIgnoreCase(v.toString())
+					|| "yes".equalsIgnoreCase(v.toString())
+					|| "1".equalsIgnoreCase(v.toString());
+		}
+		return new Boolean(false);
 	}
 
 	@Transient
@@ -180,5 +186,20 @@ public class ActorDetail implements Serializable {
 	@Transient
 	public Date getDate(String key) {
 		return (Date) get(key);
+	}
+	
+	
+	// extends for bc-business
+
+	/**
+	 * @return iso
+	 */
+	@Column
+	public boolean isIso() {
+		return getBoolean("iso").booleanValue();
+	}
+
+	public void setIso(boolean iso) {
+		set("iso", new Boolean(iso));
 	}
 }
