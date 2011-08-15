@@ -70,11 +70,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	private CrudService<E> crudService;
 	private Long id;
 	private E e; // entity的简写
-	private List<E> es; // entities的简写,非分页页面用
+	private List<Object> es; // entities的简写,非分页页面用
 	private String ids; // 批量删除的id，多个id间用逗号连接
 	private Component html; // 后台生成的html页面
 	private Class<E> entityClass;
-	private Page<E> page; // 分页页面用
+	private Page<Object> page; // 分页页面用
 	public String search; // 搜索框输入的文本
 	public String contextPath; // 系统部署的路径，如"/bc"
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
@@ -113,11 +113,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 			contextPath = ServletActionContext.getRequest().getContextPath();
 	}
 
-	public Page<E> getPage() {
+	public Page<Object> getPage() {
 		return page;
 	}
 
-	public void setPage(Page<E> page) {
+	public void setPage(Page<Object> page) {
 		this.page = page;
 	}
 
@@ -178,11 +178,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.id = id;
 	}
 
-	public List<E> getEs() {
+	public List<Object> getEs() {
 		return es;
 	}
 
-	public void setEs(List<E> entities) {
+	public void setEs(List<Object> entities) {
 		this.es = entities;
 	}
 
@@ -202,13 +202,13 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 新建表单
 	public String create() throws Exception {
 		this.readonly = false;
-		
-		//初始化E
+
+		// 初始化E
 		this.setE(this.getCrudService().create());
-		
-		//初始化表单的配置信息
+
+		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption();
-		
+
 		return "form";
 	}
 
@@ -303,7 +303,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String paging() throws Exception {
 		// 首次请求时page对象为空，需要初始化一下
 		if (this.page == null)
-			this.page = new Page<E>();
+			this.page = new Page<Object>();
 		if (this.page.getPageSize() < 1)
 			this.page.setPageSize(Integer
 					.parseInt(getText("app.grid.pageSize")));
@@ -427,8 +427,9 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected List<E> findList() {
-		return this.getCrudService().createQuery()
+	@SuppressWarnings("unchecked")
+	protected List<Object> findList() {
+		return (List<Object>) this.getCrudService().createQuery()
 				.condition(this.getCondition()).list();
 	}
 
@@ -437,8 +438,9 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected Page<E> findPage() {
-		return this.getCrudService().createQuery()
+	@SuppressWarnings("unchecked")
+	protected Page<Object> findPage() {
+		return (Page<Object>) this.getCrudService().createQuery()
 				.condition(this.getCondition())
 				.page(page.getPageNo(), page.getPageSize());
 	}

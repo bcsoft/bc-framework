@@ -7,6 +7,7 @@ BEGIN
   retval := lower(utl_raw.cast_to_raw(DBMS_OBFUSCATION_TOOLKIT.MD5(INPUT_STRING => passwd)));
   RETURN retval;
 END;
+/
 
 -- 创建序列，开始于1千万，方便历史数据的转换
 CREATE sequence HIBERNATE_SEQUENCE
@@ -100,6 +101,7 @@ CREATE TABLE BC_IDENTITY_ACTOR_DETAIL (
     ID number(19) NOT NULL,
     CREATE_DATE date,
     WORK_DATE date,
+    ISO number(1)  default 0,
     SEX number(1)  default 0,
    	CARD varchar2(20),
     DUTY_ID number(19),
