@@ -70,11 +70,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	private CrudService<E> crudService;
 	private Long id;
 	private E e; // entity的简写
-	private List<Object> es; // entities的简写,非分页页面用
+	private List<? extends Object> es; // entities的简写,非分页页面用
 	private String ids; // 批量删除的id，多个id间用逗号连接
 	private Component html; // 后台生成的html页面
 	private Class<E> entityClass;
-	private Page<Object> page; // 分页页面用
+	private Page<? extends Object> page; // 分页页面用
 	public String search; // 搜索框输入的文本
 	public String contextPath; // 系统部署的路径，如"/bc"
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
@@ -113,11 +113,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 			contextPath = ServletActionContext.getRequest().getContextPath();
 	}
 
-	public Page<Object> getPage() {
+	public Page<? extends Object> getPage() {
 		return page;
 	}
 
-	public void setPage(Page<Object> page) {
+	public void setPage(Page<? extends Object> page) {
 		this.page = page;
 	}
 
@@ -178,11 +178,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.id = id;
 	}
 
-	public List<Object> getEs() {
+	public List<? extends Object> getEs() {
 		return es;
 	}
 
-	public void setEs(List<Object> entities) {
+	public void setEs(List<? extends Object> entities) {
 		this.es = entities;
 	}
 
@@ -427,9 +427,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	protected List<Object> findList() {
-		return (List<Object>) this.getCrudService().createQuery()
+	protected List<? extends Object> findList() {
+		return this.getCrudService().createQuery()
 				.condition(this.getCondition()).list();
 	}
 
@@ -438,9 +437,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	protected Page<Object> findPage() {
-		return (Page<Object>) this.getCrudService().createQuery()
+	protected Page<? extends Object> findPage() {
+		return this.getCrudService().createQuery()
 				.condition(this.getCondition())
 				.page(page.getPageNo(), page.getPageSize());
 	}
