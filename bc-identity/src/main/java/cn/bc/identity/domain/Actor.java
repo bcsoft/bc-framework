@@ -35,13 +35,13 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 	/** 类型:未定义 */
 	public static final int TYPE_UNDEFINED = 0;
 	/** 类型:用户 */
-	public static final int TYPE_USER = 1;
+	public static final int TYPE_USER = 4;
 	/** 类型:单位 */
-	public static final int TYPE_UNIT = 2;
+	public static final int TYPE_UNIT = 1;
 	/** 类型:部门 */
-	public static final int TYPE_DEPARTMENT = 3;
+	public static final int TYPE_DEPARTMENT = 2;
 	/** 类型:岗位或团队 */
-	public static final int TYPE_GROUP = 4;
+	public static final int TYPE_GROUP = 3;
 
 	public Actor(){
 		
