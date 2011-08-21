@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.Entity;
 import cn.bc.core.RichEntity;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.ActorService;
@@ -28,43 +29,64 @@ import com.opensymphony.xwork2.ActionSupport;
 @Controller
 public class SelectActorAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
-	private List<Actor> es;
+	private List<? extends Entity<Long>> es;
 	private ActorService actorService;
-	public long[] selected;// 当前选中项的id值，多个用逗号连接
-	private long[] exclude;// 要排除可选择的项的id，多个用逗号连接
+	public String selecteds;// 当前选中项的id值，多个用逗号连接
+	public String excludes;// 当前选中项的id值，多个用逗号连接
 	private boolean multiple;// 是否可以多选
+	private boolean history;// 是否选择ActorHistory信息
+
+	public long[] getSelected() {
+		if (selecteds != null && selecteds.length() > 0) {
+			String[] ss = selecteds.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
+	}
+
+	public long[] getExclude() {
+		if (excludes != null && excludes.length() > 0) {
+			String[] ss = excludes.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
+	}
 
 	public ActorService getActorService() {
 		return actorService;
 	}
 
 	@Autowired()
-	public void setActorService(@Qualifier(value="actorService") ActorService actorService) {
+	public void setActorService(
+			@Qualifier(value = "actorService") ActorService actorService) {
 		this.actorService = actorService;
 	}
 
 	/**
 	 * 对话框的标题
+	 * 
 	 * @return
 	 */
 	public String getTitle() {
 		return getText("actor.title.select");
 	}
 
-	public List<Actor> getEs() {
+	public List<? extends Entity<Long>> getEs() {
 		return es;
 	}
 
-	public void setEs(List<Actor> es) {
+	public void setEs(List<? extends Entity<Long>> es) {
 		this.es = es;
-	}
-
-	public long[] getExclude() {
-		return exclude;
-	}
-
-	public void setExclude(long[] exclude) {
-		this.exclude = exclude;
 	}
 
 	public boolean isMultiple() {
@@ -75,35 +97,49 @@ public class SelectActorAction extends ActionSupport {
 		this.multiple = multiple;
 	}
 
-	public String execute() throws Exception {
-		// 获取所有可用的单位信息
-		// this.es = this.actorService.findAllUnit(getActorTypes());
-		this.es = this.actorService.find(getActorTypes(),getActorStatues());
+	public boolean isHistory() {
+		return history;
+	}
 
-		// 排除要不能选择的单位
-		if (this.exclude != null && this.exclude.length > 0) {
-			List<Actor> ex = new ArrayList<Actor>();
-			for (Actor actor : this.es) {
-				for (int i = 0; i < this.exclude.length; i++) {
-					if (actor.getId().longValue() == this.exclude[i]) {
+	public void setHistory(boolean history) {
+		this.history = history;
+	}
+
+	public String execute() throws Exception {
+		// 获取指定类型和状态的的actor信息
+		if (this.isHistory()) {
+			this.es = this.actorService.findHistory(getActorTypes(),
+					getActorStatues());
+		} else {
+			this.es = this.actorService
+					.find(getActorTypes(), getActorStatues());
+		}
+
+		// 排除不能选择的actor
+		long[] exclude = this.getExclude();
+		if (exclude != null && exclude.length > 0) {
+			List<Entity<Long>> ex = new ArrayList<Entity<Long>>();
+			for (Entity<Long> actor : this.getEs()) {
+				for (int i = 0; i < exclude.length; i++) {
+					if (actor.getId().longValue() == exclude[i]) {
 						ex.add(actor);
 						break;
 					}
 				}
 			}
-			this.es.removeAll(ex);
+			this.getEs().removeAll(ex);
 		}
 
 		return SUCCESS;
 	}
 
-	//默认查询所有类型
+	// 默认查询所有类型
 	protected Integer[] getActorTypes() {
 		return new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT,
 				Actor.TYPE_GROUP, Actor.TYPE_USER };
 	}
 
-	//默认仅查询可用状态
+	// 默认仅查询可用状态
 	protected Integer[] getActorStatues() {
 		return new Integer[] { RichEntity.STATUS_ENABLED };
 	}

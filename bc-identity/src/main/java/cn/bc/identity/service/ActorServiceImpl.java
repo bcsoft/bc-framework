@@ -9,6 +9,7 @@ import cn.bc.core.RichEntity;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.Resource;
 
 /**
@@ -117,5 +118,9 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 
 	public List<Actor> find(Integer[] actorTypes, Integer[] actorStatues) {
 		return this.actorDao.find(actorTypes, actorStatues);
+	}
+
+	public List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues) {
+		return this.actorDao.findHistory(actorTypes, actorStatues);
 	}
 }

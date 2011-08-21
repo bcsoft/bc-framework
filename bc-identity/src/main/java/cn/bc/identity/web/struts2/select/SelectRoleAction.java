@@ -30,8 +30,8 @@ public class SelectRoleAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	public List<Role> es;
 	private RoleService roleService;
-	public long[] selected;// 当前选中项的id值，多个用逗号连接
-	public long[] exclude;// 要排除可选择的项的id，多个用逗号连接
+	public String selecteds;// 当前选中项的id值，多个用逗号连接
+	public String excludes;// 当前选中项的id值，多个用逗号连接
 	public boolean multiple;// 是否可以多选
 
 	@Autowired
@@ -39,16 +39,43 @@ public class SelectRoleAction extends ActionSupport {
 		this.roleService = roleService;
 	}
 
+	public long[] getSelected() {
+		if (selecteds != null && selecteds.length() > 0) {
+			String[] ss = selecteds.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
+	}
+
+	public long[] getExclude() {
+		if (excludes != null && excludes.length() > 0) {
+			String[] ss = excludes.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
+	}
+
 	public String execute() throws Exception {
 		this.es = this.roleService.createQuery()
 				.condition(new OrderCondition("code", Direction.Asc)).list();
 
 		// 排除不能选择的
-		if (this.exclude != null && this.exclude.length > 0) {
+		long[] exclude = this.getExclude();
+		if (exclude != null && exclude.length > 0) {
 			List<Role> ex = new ArrayList<Role>();
 			for (Role m : this.es) {
-				for (int i = 0; i < this.exclude.length; i++) {
-					if (m.getId().longValue() == this.exclude[i]) {
+				for (int i = 0; i < exclude.length; i++) {
+					if (m.getId().longValue() == exclude[i]) {
 						ex.add(m);
 						break;
 					}
