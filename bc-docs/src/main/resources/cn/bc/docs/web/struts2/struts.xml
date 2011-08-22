@@ -81,4 +81,11 @@
 			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
 		</action>
 	</package>
+
+	<!-- 图片剪切处理 -->
+	<package name="imageAction" extends="struts-default" namespace="/bc/image">
+		<action name="crop" class="imageAction" method="crop">
+			<result>/bc/docs/image/crop.jsp</result>
+		</action>
+	</package>
 </struts>
