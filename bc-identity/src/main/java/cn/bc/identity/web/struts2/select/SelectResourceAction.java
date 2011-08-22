@@ -34,9 +34,9 @@ public class SelectResourceAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	private List<Resource> es;
 	private ResourceService resourceService;
-	private long[] selected;// 当前选中项的id值
-	private long[] exclude;// 要排除可选择的项的id
-	private Integer[] types;// 资源类型
+	public String selecteds;// 当前选中项的id值，多个用逗号连接
+	public String excludes;// 当前选中项的id值，多个用逗号连接
+	public String types;// 资源类型，多个用逗号连接
 	private boolean multiple;// 是否可以多选
 
 	@Autowired
@@ -44,12 +44,43 @@ public class SelectResourceAction extends ActionSupport {
 		this.resourceService = resourceService;
 	}
 
-	public Integer[] getTypes() {
-		return types;
+	public long[] getSelected() {
+		if (selecteds != null && selecteds.length() > 0) {
+			String[] ss = selecteds.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
 	}
 
-	public void setTypes(Integer[] types) {
-		this.types = types;
+	public long[] getExclude() {
+		if (excludes != null && excludes.length() > 0) {
+			String[] ss = excludes.split(",");
+			long[] ids = new long[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = Long.parseLong(ss[i]);
+			}
+			return ids;
+		} else {
+			return new long[0];
+		}
+	}
+
+	public Integer[] getType() {
+		if (types != null && types.length() > 0) {
+			String[] ss = types.split(",");
+			Integer[] ids = new Integer[ss.length];
+			for (int i = 0; i < ss.length; i++) {
+				ids[i] = new Integer(ss[i]);
+			}
+			return ids;
+		} else {
+			return Resource.getAllTypes();
+		}
 	}
 
 	public List<Resource> getEs() {
@@ -58,22 +89,6 @@ public class SelectResourceAction extends ActionSupport {
 
 	public void setEs(List<Resource> es) {
 		this.es = es;
-	}
-
-	public long[] getSelected() {
-		return selected;
-	}
-
-	public void setSelected(long[] selected) {
-		this.selected = selected;
-	}
-
-	public long[] getExclude() {
-		return exclude;
-	}
-
-	public void setExclude(long[] exclude) {
-		this.exclude = exclude;
 	}
 
 	public boolean isMultiple() {
@@ -86,6 +101,7 @@ public class SelectResourceAction extends ActionSupport {
 
 	public String execute() throws Exception {
 		MixCondition condition = new AndCondition();
+		Integer[] types = getType();
 		if (types != null && types.length > 0) {
 			condition.add(new InCondition("type", types));
 		} else {// 默认为选择模块
@@ -96,11 +112,12 @@ public class SelectResourceAction extends ActionSupport {
 		this.es = this.resourceService.createQuery().condition(condition).list();
 
 		// 排除不能选择的
-		if (this.exclude != null && this.exclude.length > 0) {
+		long[] exclude = this.getExclude();
+		if (exclude != null && exclude.length > 0) {
 			List<Resource> ex = new ArrayList<Resource>();
 			for (Resource m : this.es) {
-				for (int i = 0; i < this.exclude.length; i++) {
-					if (m.getId().longValue() == this.exclude[i]) {
+				for (int i = 0; i < exclude.length; i++) {
+					if (m.getId().longValue() == exclude[i]) {
 						ex.add(m);
 						break;
 					}

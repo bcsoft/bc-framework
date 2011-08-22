@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.bc.core.dao.CrudDao;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.Resource;
 
 /**
@@ -124,4 +125,11 @@ public interface ActorDao extends CrudDao<Actor>{
 	 * @return
 	 */
 	List<Actor> find(Integer[] actorTypes, Integer[] actorStatues);
+
+	/**获取指定类型和状态的Actor
+	 * @param actorTypes 类型列表
+	 * @param actorStatues 状态列表
+	 * @return
+	 */
+	List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues);
 }

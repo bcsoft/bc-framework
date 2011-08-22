@@ -18,6 +18,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.dao.ActorRelationDao;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.domain.Resource;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
@@ -413,6 +414,54 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			} else {
 				hql.append(" " + (isWhere ? "where" : "and")
 						+ " a.status in (?");
+				args.add(actorStatues[0]);
+				for (int i = 1; i < actorStatues.length; i++) {
+					hql.append(",?");
+					args.add(actorStatues[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 排序
+		hql.append(" order by a.orderNo");
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql.toString());
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
+		return this.getJpaTemplate().find(hql.toString(), args.toArray());
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues) {
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select ah from ActorHistory ah,Actor a where ah.actorId = a.id");
+
+		// 类型
+		if (actorTypes != null && actorTypes.length > 0) {
+			if (actorTypes.length == 1) {
+				hql.append(" and a.type=?");
+				args.add(actorTypes[0]);
+			} else {
+				hql.append(" and a.type in (?");
+				args.add(actorTypes[0]);
+				for (int i = 1; i < actorTypes.length; i++) {
+					hql.append(",?");
+					args.add(actorTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 状态
+		if (actorStatues != null && actorStatues.length > 0) {
+			if (actorStatues.length == 1) {
+				hql.append(" and a.status=?");
+				args.add(actorStatues[0]);
+			} else {
+				hql.append(" and a.status in (?");
 				args.add(actorStatues[0]);
 				for (int i = 1; i < actorStatues.length; i++) {
 					hql.append(",?");

@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import cn.bc.core.RichEntityImpl;
 
@@ -39,6 +40,16 @@ public class Resource extends RichEntityImpl {
 	private String iconClass;// 图标样式
 	private String option;// 额外配置
 	private boolean inner = false;//是否为内置对象，内置对象不允许删除
+	
+	@Transient
+	public static Integer[] getAllTypes() {
+		Integer[] types = new Integer[4];
+		types[0] = TYPE_FOLDER;
+		types[1] = TYPE_INNER_LINK;
+		types[2] = TYPE_OUTER_LINK;
+		types[3] = TYPE_HTML;
+		return types;
+	}
 
 	@Column(name = "INNER_")
 	public boolean isInner() {
