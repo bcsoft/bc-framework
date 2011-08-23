@@ -83,9 +83,24 @@
 	</package>
 
 	<!-- 图片剪切处理 -->
-	<package name="imageAction" extends="struts-default" namespace="/bc/image">
-		<action name="crop" class="imageAction" method="crop">
-			<result>/bc/docs/image/crop.jsp</result>
+	<package name="imageAction" extends="bc-default" namespace="/bc/image">
+		<action name="showCrop" class="imageAction" method="showCrop">
+			<result>/bc/docs/image/showCrop.jsp</result>
+		</action>
+		<action name="doCrop" class="imageAction" method="doCrop">
+			<result>/bc/docs/image/doCrop.jsp</result>
+		</action>
+		<action name="download" class="imageAction" method="download">
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${contentType}</param>
+				<param name="contentLength">${contentLength}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">inline</param>
+			</result>
 		</action>
 	</package>
 </struts>

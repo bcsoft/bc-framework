@@ -10,7 +10,7 @@ public class AttachWidgetTest {
 		AttachWidget attachsUI = new AttachWidget();
 		attachsUI.setBeautiful(true);
 		System.out.println(attachsUI.toString());
-		
+
 		Attach attach = new Attach();
 		attach.setSize(1024);
 		attach.setSubject("测试文档.doc");
@@ -22,4 +22,11 @@ public class AttachWidgetTest {
 		attachsUI.addAttach(attach);
 		System.out.println(attachsUI.toString());
 	}
+//
+//	@Test
+//	public void test02() {
+//		String path = "images/2011/08/test.jpg";
+//		path = path.substring(0, path.lastIndexOf("/") + 1);
+//		System.out.println(path);
+//	}
 }
