@@ -31,4 +31,22 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 								.add(new OrderCondition("fileDate",
 										Direction.Desc))).list();
 	}
+
+	public Attach loadByPtype(String ptype, String puid) {
+		List<Attach> list = this
+				.createQuery()
+				.condition(
+						new AndCondition()
+								.add(new EqualsCondition("ptype", ptype))
+								.add(new EqualsCondition("puid", puid))
+								.add(new EqualsCondition("status",
+										RichEntity.STATUS_ENABLED))
+								.add(new OrderCondition("fileDate",
+										Direction.Desc))).list(1, 1);
+		if(list != null && !list.isEmpty()){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
 }

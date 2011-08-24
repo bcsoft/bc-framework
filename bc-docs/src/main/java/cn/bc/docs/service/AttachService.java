@@ -23,4 +23,15 @@ public interface AttachService extends CrudService<Attach> {
 	 * @return
 	 */
 	List<Attach> findByPtype(String ptype, String puid);
+
+	/**
+	 * 查找指定文档的单一附件
+	 * 
+	 * @param ptype
+	 *            附件所属文档的类型
+	 * @param puid
+	 *            附件所属文档的uid
+	 * @return
+	 */
+	Attach loadByPtype(String ptype, String puid);
 }

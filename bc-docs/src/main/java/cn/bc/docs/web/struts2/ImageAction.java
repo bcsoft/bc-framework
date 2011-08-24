@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -25,6 +24,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.Context;
+import cn.bc.core.RichEntity;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
@@ -104,14 +104,14 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		}
 
 		// 加载图片附件
-		List<Attach> list = this.attachService.findByPtype(ptype, puid);
-		if (list != null && !list.isEmpty()) {
+		Attach attach = this.attachService.loadByPtype(ptype, puid);
+		if (attach != null) {
 			// 附件存在
-			id = list.get(0).getId();
+			id = attach.getId();
 		}
 
 		// 构建附件控件
-		attachsUI = buildAttachsUI();
+		// attachsUI = buildAttachsUI();
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("id=" + id);
@@ -130,7 +130,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 
 		// 上传附件的限制
 		attachsUI.addExtension(getText("app.attachs.images")).setMaxCount(1);
-		
+
 		return attachsUI;
 	}
 
@@ -142,6 +142,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 
 	// 裁剪图片
 	public String doCrop() throws Exception {
+		Calendar now = Calendar.getInstance();
 		if (logger.isDebugEnabled()) {
 			logger.debug("puid=" + puid);
 			logger.debug("ptype=" + ptype);
@@ -153,26 +154,49 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			logger.debug("cy=" + cy);
 			logger.debug("preWidth=" + preWidth);
 			logger.debug("preHeight=" + preHeight);
-			logger.debug("absolute=" + absolute);
+			// logger.debug("absolute=" + absolute);
 		}
 		String appRealDir = getText("app.data.realPath");
 		String appSubDir = getText("app.data.subPath");
 
+		// 新路径
+		String subFolder = new SimpleDateFormat("yyyyMM").format(now.getTime());
+
 		// 加载附件
-		if (id == null)
-			throw new CoreException("没有指定附件id的值！");
-		Attach attach = this.attachService.load(id);
-		if (attach == null)
-			throw new CoreException("附件不存在！id=" + id);
+		Attach attach;
+		String srcPath;
+		String newImgPath;
+		if (id == null) {
+			attach = new Attach();
+			attach.setFileDate(now);
+			attach.setAppPath(false);
+			attach.setAuthor(this.getContext().getUserHistory());
+			attach.setExtension("jpg");
+			attach.setPuid(puid);
+			attach.setPtype(ptype);
+			attach.setStatus(RichEntity.STATUS_ENABLED);
+			// attach.setPath(empty.substring(1));
+			attach.setSubject("empty");
+			// attach.setSize(0);
+			srcPath = WebUtils.rootPath + empty;
+			newImgPath = appRealDir + "/" + subFolder;
+		} else {
+			attach = this.attachService.load(id);
+			if (attach == null)
+				throw new CoreException("attach is null:id=" + id);
+			if (attach.isAppPath()) {
+				srcPath = WebUtils.rootPath + "/" + appSubDir + "/"
+						+ attach.getPath();
+				newImgPath = WebUtils.rootPath + "/" + appSubDir + "/"
+						+ subFolder;
+			} else {
+				srcPath = appRealDir + "/" + attach.getPath();
+				newImgPath = appRealDir + "/" + subFolder;
+			}
+		}
 
 		// 获取原图
 		String extension = attach.getExtension();
-		String srcPath;
-		if (attach.isAppPath())
-			srcPath = WebUtils.rootPath + "/" + appSubDir + "/"
-					+ attach.getPath();
-		else
-			srcPath = appRealDir + "/" + attach.getPath();
 
 		logger.debug("srcPath=" + srcPath);
 		File srcFile = new File(srcPath);
@@ -182,30 +206,40 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		BufferedImage newImg = ImageUtils.cropAndZoom(srcImg, cx, cy, cw, ch,
 				preWidth, preHeight, extension);
 
+		// 构建文件要保存到的目录
+		File _fileDir = new File(newImgPath);
+		if (!_fileDir.exists()) {
+			if (logger.isFatalEnabled()) {
+				logger.fatal("mkdir=" + newImgPath);
+			}
+			_fileDir.mkdirs();
+		}
+
 		// 保存裁剪后的图片(路径与原图相同，经文件名改为当前时间)
-		Calendar now = Calendar.getInstance();
 		String newImgName = new SimpleDateFormat("yyyyMMddHHmmssSSSS")
 				.format(now.getTime()) + "." + extension;// 不含路径的文件名
-		String newImgPath = srcFile.getParent();
-		logger.debug("newImgPath=" + newImgPath);
-		logger.debug("newImgName=" + newImgName);
-		File newFile = new File(newImgPath + "/" + newImgName);
+		String newSavePath = newImgPath + "/" + newImgName;
+		logger.debug("newSavePath=" + newSavePath);
+		// logger.debug("newImgPath=" + newImgPath);
+		// logger.debug("newImgName=" + newImgName);
+		File newFile = new File(newSavePath);
 		ImageIO.write(newImg, extension, newFile);
 
 		// 更新原图对应的附件记录为裁剪后的图片
 		attach.setSize(newFile.length());
-		String newSavePath = attach.getPath().substring(0,
-				attach.getPath().lastIndexOf("/") + 1)
-				+ newImgName;
-		logger.debug("newSavePath=" + newSavePath);
-		attach.setPath(newSavePath);
+		attach.setPath(subFolder + "/" + newImgName);
 		attach.setModifiedDate(now);
 		attach.setModifier(this.getContext().getUserHistory());
 		this.attachService.save(attach);
 
 		json = new Json();
 		json.put("success", true);
+		json.put("appPath", attach.isAppPath());
 		json.put("path", attach.getPath());
+		json.put("id", attach.getId());
+		json.put("puid", attach.getPuid());
+		json.put("ptype", attach.getPtype());
+		json.put("size", attach.getSize());
 
 		return "json";
 	}
@@ -217,11 +251,19 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	// 裁剪图片
 	public String download() throws Exception {
 		// 加载附件
-		if (id == null)
-			throw new CoreException("没有指定附件id的值！");
-		Attach attach = this.attachService.load(id);
+		Attach attach;
+		if (id != null) {
+			attach = this.attachService.load(id);
+		} else {
+			if (puid == null) {
+				throw new CoreException("puid is null.");
+			} else {
+				attach = this.attachService.loadByPtype(ptype, puid);
+			}
+		}
 		if (attach == null)
-			throw new CoreException("附件不存在！id=" + id);
+			throw new CoreException("attach is null:id=" + id + ",puid=" + puid
+					+ ",ptype=" + ptype);
 
 		downloadAttach(attach);
 		return SUCCESS;
