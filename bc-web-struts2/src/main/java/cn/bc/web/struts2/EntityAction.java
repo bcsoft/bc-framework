@@ -237,7 +237,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
-	protected boolean isFlashUpload() {
+	public static boolean isFlashUpload() {
 		// TODO Opera;
 		return isIE();
 	}
@@ -247,7 +247,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
-	protected boolean isIE() {
+	public static boolean isIE() {
 		return ServletActionContext.getRequest().getHeader("User-Agent")
 				.toUpperCase().indexOf("MSIE") != -1;
 	}

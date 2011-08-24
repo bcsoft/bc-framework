@@ -6,10 +6,10 @@ package cn.bc.docs.web.struts2;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +30,9 @@ import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.util.ImageUtils;
 import cn.bc.docs.web.AttachUtils;
+import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
@@ -70,12 +72,16 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		this.attachService = attachService;
 	}
 
+	public AttachWidget attachsUI;
+
 	// 返回到裁剪上传图片的页面
 	public String showCrop() throws Exception {
+		// 时间戳
+		ts = new Date().getTime();
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("puid=" + puid);
 			logger.debug("ptype=" + ptype);
-			logger.debug("id=" + id);
 			logger.debug("empty=" + empty);
 			logger.debug("preWidth=" + preWidth);
 			logger.debug("preHeight=" + preHeight);
@@ -104,7 +110,28 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			id = list.get(0).getId();
 		}
 
+		// 构建附件控件
+		attachsUI = buildAttachsUI();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("id=" + id);
+		}
 		return SUCCESS;
+	}
+
+	private AttachWidget buildAttachsUI() {
+		// 构建附件控件
+		AttachWidget attachsUI = new AttachWidget();
+		attachsUI.setFlashUpload(EntityAction.isFlashUpload());
+		attachsUI.addClazz("formAttachs");
+		attachsUI.addAttach(this.attachService.findByPtype(this.ptype,
+				this.puid));
+		attachsUI.setPuid(this.puid).setPtype(this.ptype);
+
+		// 上传附件的限制
+		attachsUI.addExtension(getText("app.attachs.images")).setMaxCount(1);
+		
+		return attachsUI;
 	}
 
 	public int cw;
@@ -204,25 +231,31 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public String contentType;
 	public long contentLength;
 	public InputStream inputStream;
-//	public long lastModified;
-//	public long expires;
+	public long ts;// 时间戳
 
-	private void downloadAttach(Attach attach) throws FileNotFoundException {
-		contentType = AttachUtils.getContentType(attach.getExtension());
-		filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
-				attach.getSubject());
-		String path;
-		if (attach.isAppPath())
-			path = WebUtils.rootPath + "/" + getText("app.data.subPath") + "/"
-					+ attach.getPath();
-		else
-			path = getText("app.data.realPath") + "/" + attach.getPath();
+	// public long lastModified;
+	// public long expires;
 
-		File file = new File(path);
-		contentLength = file.length();
-		inputStream = new FileInputStream(file);
+	private void downloadAttach(Attach attach) {
+		try {
+			contentType = AttachUtils.getContentType(attach.getExtension());
+			filename = WebUtils.encodeFileName(
+					ServletActionContext.getRequest(), attach.getSubject());
+			String path;
+			if (attach.isAppPath())
+				path = WebUtils.rootPath + "/" + getText("app.data.subPath")
+						+ "/" + attach.getPath();
+			else
+				path = getText("app.data.realPath") + "/" + attach.getPath();
 
-//		lastModified = file.lastModified();
-//		expires = new Date().getTime() + (30 * 1000);// 缓存30秒
+			File file = new File(path);
+			contentLength = file.length();
+			inputStream = new FileInputStream(file);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		// lastModified = file.lastModified();
+		// expires = new Date().getTime() + (30 * 1000);// 缓存30秒
 	}
 }
