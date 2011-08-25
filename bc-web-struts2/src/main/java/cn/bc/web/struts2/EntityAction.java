@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected Map<String, Object> request;
 	public PageOption formPageOption;// 表单页面的Option配置
 	public boolean readonly;
-
+	public long ts = new Date().getTime();// 时间戳
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
 	}

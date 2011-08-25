@@ -101,7 +101,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 		// 构建可编辑附件控件
 		AttachWidget attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.setFlashUpload(isFlashUpload());
 		attachsUI.addClazz("formAttachs ui-widget-content");
 		attachsUI.addAttach(this.attachService.findByPtype(ptype, puid));
 		attachsUI.setPuid(puid).setPtype(ptype);
@@ -114,7 +114,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 		// 构建不可编辑附件控件
 		attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.setFlashUpload(isFlashUpload());
 		attachsUI.addClazz("formAttachs ui-widget-content");
 		attachsUI.addAttach(this.attachService.findByPtype(ptype, puid));
 		attachsUI.setPuid(puid).setPtype(ptype);
@@ -581,7 +581,6 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 	@Override
 	protected String getJs() {
-		// TODO Auto-generated method stub
 		return this.getContextPath() + "/bc/docs/attach/list.js";
 	}
 

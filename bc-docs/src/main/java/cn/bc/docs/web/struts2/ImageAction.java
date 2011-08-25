@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -32,7 +31,6 @@ import cn.bc.docs.util.ImageUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
@@ -53,6 +51,8 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	private static final long serialVersionUID = 1L;
 	private AttachService attachService;
 	public PageOption pageOption;// 页面的data-optio属性配置
+	public int cropSize = 400;// 图片操作区的宽度和高度
+	public int pageWidth = 545;// 对话框宽度
 	public int preWidth = 110;// 图片预览区的宽度
 	public int preHeight = 140;// 图片预览区的高度
 	public String puid;// 图片所属文档的uid
@@ -62,6 +62,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public String subpath = "images";// 图片附件处理后保存到的相对路径(相对于${app.data.realPath}目录下的路径)
 	public boolean absolute;
 	protected Map<String, Object> session;
+	public String extensions = getText("app.attachs.images");//图片扩展名的限制，用逗号连接多个
 
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -88,10 +89,10 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		}
 
 		// 设置页面的配置参数
-		pageOption = new PageOption().setWidth(545).setMinWidth(250)
+		pageOption = new PageOption().setWidth(pageWidth).setMinWidth(250)
 				.setMinHeight(200).setModal(true);
 		pageOption.addButton(new ButtonOption(getText("label.ok"), null,
-				"bc.cropImage.onOk"));// 确认按钮
+				"bc.showCrop.onOk"));// 确认按钮
 		pageOption.put("srcWidth", 400);// 原始图片的宽度
 		pageOption.put("srcHeight", 296);// 原始图片的高度
 		pageOption.put("preWidth", preWidth);// 转换后图片的宽度
@@ -117,21 +118,6 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			logger.debug("id=" + id);
 		}
 		return SUCCESS;
-	}
-
-	private AttachWidget buildAttachsUI() {
-		// 构建附件控件
-		AttachWidget attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(EntityAction.isFlashUpload());
-		attachsUI.addClazz("formAttachs");
-		attachsUI.addAttach(this.attachService.findByPtype(this.ptype,
-				this.puid));
-		attachsUI.setPuid(this.puid).setPtype(this.ptype);
-
-		// 上传附件的限制
-		attachsUI.addExtension(getText("app.attachs.images")).setMaxCount(1);
-
-		return attachsUI;
 	}
 
 	public int cw;
@@ -261,11 +247,21 @@ public class ImageAction extends ActionSupport implements SessionAware {
 				attach = this.attachService.loadByPtype(ptype, puid);
 			}
 		}
-		if (attach == null)
-			throw new CoreException("attach is null:id=" + id + ",puid=" + puid
-					+ ",ptype=" + ptype);
+		String filepath,extension;
+		if (attach == null){
+			//使用空白图片代替
+			extension = "jpg";
+			filepath = WebUtils.rootPath + empty;
+		}else{
+			extension = attach.getExtension();
+			if (attach.isAppPath())
+				filepath = WebUtils.rootPath + "/" + getText("app.data.subPath")
+						+ "/" + attach.getPath();
+			else
+				filepath = getText("app.data.realPath") + "/" + attach.getPath();
+		}
 
-		downloadAttach(attach);
+		downloadAttach(filepath,extension);
 		return SUCCESS;
 	}
 
@@ -275,29 +271,16 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public InputStream inputStream;
 	public long ts;// 时间戳
 
-	// public long lastModified;
-	// public long expires;
-
-	private void downloadAttach(Attach attach) {
+	private void downloadAttach(String filepath,String extension) {
 		try {
-			contentType = AttachUtils.getContentType(attach.getExtension());
-			filename = WebUtils.encodeFileName(
-					ServletActionContext.getRequest(), attach.getSubject());
-			String path;
-			if (attach.isAppPath())
-				path = WebUtils.rootPath + "/" + getText("app.data.subPath")
-						+ "/" + attach.getPath();
-			else
-				path = getText("app.data.realPath") + "/" + attach.getPath();
-
-			File file = new File(path);
+			contentType = AttachUtils.getContentType(extension);
+//			filename = WebUtils.encodeFileName(
+//					ServletActionContext.getRequest(), attach.getSubject());
+			File file = new File(filepath);
 			contentLength = file.length();
 			inputStream = new FileInputStream(file);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-
-		// lastModified = file.lastModified();
-		// expires = new Date().getTime() + (30 * 1000);// 缓存30秒
 	}
 }
