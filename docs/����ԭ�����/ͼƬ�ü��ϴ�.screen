@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="10" y="480" width="583" height="457" text="图片处理" measuredWidth="583" measuredHeight="457"/>
+  <widgets xsi:type="model:Image" x="443" y="401"/>
+  <widgets xsi:type="model:VLine" x="464" y="501" height="390" measuredWidth="6" measuredHeight="390"/>
+  <widgets xsi:type="model:Button" x="541" y="900" text="确定" measuredWidth="44" measuredHeight="27">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="10" y="888" width="583" measuredWidth="583" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="475" y="504" text="预览 (110x140)" measuredWidth="89" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Image" x="475" y="528" measuredWidth="110" measuredHeight="140" src="assets/image110x140.png"/>
+  <widgets xsi:type="model:Image" x="20" y="528" height="350" measuredWidth="439" measuredHeight="350" src="assets/image.png"/>
+  <widgets xsi:type="model:Window" x="10" y="10" width="583" height="439" text="图片处理" measuredWidth="583" measuredHeight="439"/>
+  <widgets xsi:type="model:VLine" x="464" y="29" height="382" measuredWidth="6" measuredHeight="382"/>
+  <widgets xsi:type="model:Button" x="539" y="417" text="确定" measuredWidth="44" measuredHeight="27">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="12" y="406" width="581" measuredWidth="581" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="475" y="39" text="预览：110x140" measuredWidth="89" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="20" y="504" text="原图缩放 (500x370 --> 400x296)" measuredWidth="188" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Link" x="216" y="504" text="更换图片" measuredWidth="51" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="475" y="784" width="102" height="94" text="在左边的图片上通过用鼠标框选的方式来裁剪图片" measuredWidth="102" measuredHeight="94" dummyText="true">
+    <font size="12" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Link" x="207" y="202" text="上传图片" measuredWidth="51" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="475" y="307" width="108" height="94" text="在左边的图片上通过用鼠标框选的方式来裁剪图片" measuredWidth="108" measuredHeight="94" dummyText="true">
+    <font size="12" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Image" x="475" y="63" measuredWidth="110" measuredHeight="140" src="assets/image110x140.png"/>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

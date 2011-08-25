@@ -141,7 +141,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		// 构建附件控件
 		String ptype = "bulletin.main";
 		AttachWidget attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.setFlashUpload(isFlashUpload());
 		attachsUI.addClazz("formAttachs");
 		if (!isNew)
 			attachsUI.addAttach(this.attachService.findByPtype(ptype, this

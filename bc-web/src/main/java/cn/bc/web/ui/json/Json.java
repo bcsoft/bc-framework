@@ -78,27 +78,36 @@ public class Json implements Render {
 	 *            属性值
 	 */
 	public Json put(String key, Render value) {
-		attrs.put(key, value);
+		if (value != null)
+			attrs.put(key, value);
+		else
+			attrs.remove(key);
 		return this;
 	}
 
 	public Json put(String key, String value) {
-		attrs.put(key, new Text(wrapQuota(value)));
+		if (value != null)
+			this.put(key, new Text(wrapQuota(value)));
+		else
+			attrs.remove(key);
 		return this;
 	}
 
 	public Json put(String key, int value) {
-		attrs.put(key, new Text(String.valueOf(value)));
+		this.put(key, new Text(String.valueOf(value)));
 		return this;
 	}
 
-	public Json put(String key, Long value) {
-		attrs.put(key, new Text(String.valueOf(value)));
+	public Json put(String key, Number value) {
+		if (value != null)
+			this.put(key, new Text(value.toString()));
+		else
+			attrs.remove(key);
 		return this;
 	}
 
 	public Json put(String key, boolean value) {
-		attrs.put(key, new Text(String.valueOf(value)));
+		this.put(key, new Text(String.valueOf(value)));
 		return this;
 	}
 }
