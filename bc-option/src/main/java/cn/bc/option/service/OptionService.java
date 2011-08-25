@@ -32,10 +32,16 @@ public interface OptionService {
 	/**
 	 * 查找指定分类的选项条目列表,如果返回的结果中不存在对应currentItemKey的OptionItem项，会自动添加该项到列表的最后
 	 * <p>
-	 * 如果currentItemKey为null，将被忽略不作处理
+	 * 如果currentItemKey和currentItemValue均为空(null或长度为零的字符串)，将被忽略不作处理
 	 * </p>
 	 * <p>
-	 * 如果currentItemValue为null，将设置为等于currentItemKey的值
+	 * 如果currentItemKey为空、currentItemValue不为空，将设置currentItemKey为等于currentItemValue的值
+	 * </p>
+	 * <p>
+	 * 如果currentItemKey不为空、currentItemValue为空，将设置currentItemValue为等于currentItemKey的值
+	 * </p>
+	 * <p>
+	 * 如果currentItemKey不为空，优先使用currentItemKey的值来判断选项是否存在，否则使用currentItemValue的值来判断选项是否存在
 	 * </p>
 	 * 
 	 * @param optionGroupKey

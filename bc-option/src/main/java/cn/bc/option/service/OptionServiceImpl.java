@@ -34,17 +34,30 @@ public class OptionServiceImpl implements OptionService {
 		List<OptionItem> list = optionDao
 				.findOptionItemByGroupValue(optionGroupKey);
 		if (currentItemKey != null) {
-			if (currentItemValue == null)
+			if (currentItemValue == null) {
 				currentItemValue = currentItemKey;
+			}
 			boolean exist = false;
 			for (OptionItem oi : list) {
-				if (oi.getKey().equals(currentItemKey)) {
+				if (currentItemKey.equals(oi.getKey())) {
 					exist = true;
 					break;
 				}
 			}
 			if (!exist)
 				list.add(new OptionItem(currentItemKey, currentItemValue));
+		} else {
+			if (currentItemValue != null) {
+				boolean exist = false;
+				for (OptionItem oi : list) {
+					if (currentItemValue.equals(oi.getKey())) {
+						exist = true;
+						break;
+					}
+				}
+				if (!exist)
+					list.add(new OptionItem(currentItemValue, currentItemValue));
+			}
 		}
 		return list;
 	}
