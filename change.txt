@@ -24,6 +24,7 @@ release v0.4 (2011-8-25)
 3) 增加头像上传、裁剪、缩放功能(如用户表单的头像配置，现仅支持Chrome、Firefox、Safari)
 4) 添加Oracle数据库支持(pdm据库设计文件、Oracle11gr2测试)
 5) 添加ActorHistory，记录用户隶属组织的变迁历史，为历史数据的正确统计提供支持
+6) 初步整理可视化流程编辑器activiti-modeler，部分界面汉化(详见https://github.com/rongjihuang/signavio-core-components)
 
 改进：
 1) Grid增加记录每个单元格原始值的功能(通过td的data-value属性记录)
