@@ -20,7 +20,7 @@ public abstract class AbstractColumn implements Column {
 	private String valueExpression;
 	private boolean sortable;
 	private Direction dir = Direction.None;
-	private Formater valueFormater;
+	private Formater<String> valueFormater;
 	private boolean useTitleFromLabel;
 	
 	public boolean isUseTitleFromLabel() {
@@ -72,10 +72,10 @@ public abstract class AbstractColumn implements Column {
 		this.valueExpression = valueExpression;
 		return this;
 	}
-	public Formater getValueFormater() {
+	public Formater<String> getValueFormater() {
 		return valueFormater;
 	}
-	public Column setValueFormater(Formater formater) {
+	public Column setValueFormater(Formater<String> formater) {
 		this.valueFormater = formater;
 		return this;
 	}

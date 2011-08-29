@@ -9,7 +9,7 @@ package cn.bc.web.formater;
  * @author dragon
  * 
  */
-public class BooleanFormater extends AbstractFormater {
+public class BooleanFormater extends AbstractFormater<String> {
 	private String yes = "是";
 	private String no = "否";
 

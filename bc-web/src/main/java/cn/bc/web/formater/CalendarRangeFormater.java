@@ -15,7 +15,7 @@ import java.util.Calendar;
  * @author dragon
  * 
  */
-public abstract class CalendarRangeFormater extends AbstractFormater {
+public abstract class CalendarRangeFormater extends AbstractFormater<String> {
 	private SimpleDateFormat format;
 
 	public CalendarRangeFormater() {

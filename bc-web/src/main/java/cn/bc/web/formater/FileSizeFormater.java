@@ -12,7 +12,7 @@ import java.text.NumberFormat;
  * @author dragon
  * 
  */
-public class FileSizeFormater extends AbstractFormater {
+public class FileSizeFormater extends AbstractFormater<String> {
 	private static NumberFormat format = new DecimalFormat("#.#");
 
 	public FileSizeFormater() {

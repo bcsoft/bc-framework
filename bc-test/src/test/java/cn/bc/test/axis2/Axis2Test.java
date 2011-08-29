@@ -9,7 +9,7 @@ import org.apache.axis2.rpc.client.RPCServiceClient;
 import org.junit.Test;
 
 public class Axis2Test {
-	//@Test
+	@Test
 	public void test01() throws Exception {
 		// .net webService 地址
 		String url = "http://61.144.39.126/middle/WSMiddle.asmx";
@@ -27,7 +27,7 @@ public class Axis2Test {
 		options.setAction(soapActionURI);
 
 		// 参数
-		String strQYID = "GZBC";// 企业ID
+		String strQYID = "17E0FFF7-7816-46A5-83A7-23D5C9F762AB";// 企业ID
 		String strDriverNO = null;
 		String strCarNO = null;
 		String strMsg = "";

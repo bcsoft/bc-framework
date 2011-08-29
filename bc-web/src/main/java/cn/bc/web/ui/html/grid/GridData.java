@@ -63,7 +63,7 @@ public class GridData extends Div {
 		}
 	}
 
-	public static String formatValue(Object context, Object cellValue, Formater formater) {
+	public static String formatValue(Object context, Object cellValue, Formater<String> formater) {
 		String value;
 		if (formater != null)
 			value = formater.format(context, cellValue);
