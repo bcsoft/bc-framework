@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- 基本 -->
+	<bean id="bcCronTrigger" class="cn.bc.scheduler.spring.CronTriggerBeanEx"
+		scope="prototype">
+	</bean>
+	<bean id="bcSchedulerFactoryBean" class="cn.bc.scheduler.spring.SchedulerFactoryBeanEx"
+		p:schedulerService-ref="schedulerService" />
+
+	<!-- scheduler配置 -->
+	<bean id="triggerCfgDao" class="cn.bc.scheduler.dao.hibernate.jpa.TriggerCfgDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
+		p:triggerCfgDao-ref="triggerCfgDao" p:scheduleLogDao-ref="scheduleLogDao" />
+		
+	<!-- scheduler事务 -->
+	<aop:config>
+		<!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+			包或实现类使用within关键字，接口实现使用this关键字
+		 -->
+		<aop:pointcut id="schedulerServiceMethod"
+			expression="this(cn.bc.scheduler.service.SchedulerService)" />
+		<aop:advisor pointcut-ref="schedulerServiceMethod" advice-ref="schedulerServiceTxAdvice" />
+	</aop:config>
+	<tx:advice id="schedulerServiceTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="stop*" propagation="REQUIRED" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 测试Mock -->
+	<bean id="schedulerTestMock" class="cn.bc.scheduler.service.SchedulerTestMock">
+	</bean>
+</beans>
