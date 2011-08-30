@@ -2,10 +2,8 @@ package cn.bc.scheduler.service;
 
 import java.util.List;
 
-import org.quartz.Scheduler;
-
+import cn.bc.scheduler.domain.ScheduleJob;
 import cn.bc.scheduler.domain.ScheduleLog;
-import cn.bc.scheduler.domain.TriggerCfg;
 
 /**
  * 任务调度Service的接口定义
@@ -15,35 +13,37 @@ import cn.bc.scheduler.domain.TriggerCfg;
  */
 public interface SchedulerService {
 	/**
-	 * 获取所有可用的触发器配置
+	 * 获取所有调度任务配置
 	 * 
 	 * @return
 	 */
-	public List<TriggerCfg> findAllEnabledTriggerCfg();
+	List<ScheduleJob> findAllScheduleJob();
+	
+	/**
+	 * 获取所有可用的调度任务配置
+	 * 
+	 * @return
+	 */
+	List<ScheduleJob> findAllEnabledScheduleJob();
 
 	/**
-	 * 保存任务调度日志信息
+	 * 保存调度任务
+	 * 
+	 * @param scheduleJob
+	 */
+	void saveScheduleJob(ScheduleJob scheduleJob);
+
+	/**
+	 * 保存调度日志
 	 * 
 	 * @param scheduleLog
 	 */
-	public void saveScheduleLog(ScheduleLog scheduleLog);
+	void saveScheduleLog(ScheduleLog scheduleLog);
 
 	/**
-	 * 终止所有调度
+	 * 加载调度任务配置
+	 * @param scheduleJobId
+	 * @return
 	 */
-	public void stop();
-
-	/**
-	 * 设置调度者
-	 * 
-	 * @param scheduler
-	 */
-	public void setScheduler(Scheduler scheduler);
-
-	/**
-	 * 停止指定的触发器
-	 * 
-	 * @param triggerCfgId
-	 */
-	public void stopTrigger(long triggerCfgId);
+	ScheduleJob loadScheduleJob(Long scheduleJobId);
 }

@@ -11,13 +11,6 @@ import java.io.Serializable;
  * 
  */
 public interface RichEntity<ID extends Serializable> extends Entity<ID> {
-	/**状态：启用中*/
-	public static final int STATUS_ENABLED = 0;
-	/**状态：已禁用*/
-	public static final int STATUS_DISABLED = 1;
-	/**状态：已删除*/
-	public static final int STATUS_DELETED = 2;
-	
 	/**
 	 * @return 全局标识号
 	 */

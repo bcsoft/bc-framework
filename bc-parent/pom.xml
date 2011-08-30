@@ -482,7 +482,7 @@
 			<dependency>
 				<groupId>org.json</groupId>
 				<artifactId>json</artifactId>
-				<version>20090211</version>
+				<version>20080701</version>
 			</dependency>
 			<dependency>
 				<groupId>org.commontemplate</groupId>
@@ -490,6 +490,11 @@
 				<version>0.8.7</version>
 			</dependency>
 
+			<dependency>
+			  <groupId>opensymphony</groupId>
+			  <artifactId>quartz</artifactId>
+			  <version>1.6.3</version>
+			</dependency>
 			<dependency>
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz</artifactId>

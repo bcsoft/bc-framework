@@ -11,21 +11,6 @@
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
-
-	<!-- 基本 -->
-	<bean id="bcCronTrigger" class="cn.bc.scheduler.spring.CronTriggerBeanEx"
-		scope="prototype">
-	</bean>
-	<bean id="bcSchedulerFactoryBean" class="cn.bc.scheduler.spring.SchedulerFactoryBeanEx"
-		p:schedulerService-ref="schedulerService" />
-
-	<!-- scheduler配置 -->
-	<bean id="triggerCfgDao" class="cn.bc.scheduler.dao.hibernate.jpa.TriggerCfgDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
-		p:triggerCfgDao-ref="triggerCfgDao" p:scheduleLogDao-ref="scheduleLogDao" />
 		
 	<!-- scheduler事务 -->
 	<aop:config>
@@ -38,11 +23,40 @@
 	</aop:config>
 	<tx:advice id="schedulerServiceTxAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
 			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="stop*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" />
 		</tx:attributes>
 	</tx:advice>
+	
+	<!-- scheduler服务配置 -->
+	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="scheduleJobDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleJobDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
+		p:scheduleJobDao-ref="scheduleJobDao" p:scheduleLogDao-ref="scheduleLogDao" />
+		
+	<!-- scheduler调度管理器：不能配置事务 -->
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+	<bean id="schedulerManage" class="cn.bc.scheduler.service.SchedulerManageImpl"
+		p:schedulerService-ref="schedulerService" p:scheduler-ref="scheduler" />
+
+	<!-- 旧scheduler配置
+	<bean id="bcCronTrigger" class="cn.bc.scheduler.spring.CronTriggerBeanEx"
+		scope="prototype">
+	</bean>
+	<bean id="bcSchedulerFactoryBean" class="cn.bc.scheduler.spring.SchedulerFactoryBeanEx"
+		p:schedulerService-ref="schedulerService" />
+
+	<bean id="triggerCfgDao" class="cn.bc.scheduler.dao.hibernate.jpa.TriggerCfgDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
+		p:triggerCfgDao-ref="triggerCfgDao" p:scheduleLogDao-ref="scheduleLogDao" />
+	-->
 
 	<!-- 测试Mock -->
 	<bean id="schedulerTestMock" class="cn.bc.scheduler.service.SchedulerTestMock">
