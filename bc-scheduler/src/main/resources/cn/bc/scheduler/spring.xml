@@ -37,6 +37,8 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
 		p:scheduleJobDao-ref="scheduleJobDao" p:scheduleLogDao-ref="scheduleLogDao" />
+	<bean id="scheduleJobService" class="cn.bc.core.service.DefaultCrudService"
+		p:entityClass="cn.bc.scheduler.domain.ScheduleJob" p:crudDao-ref="scheduleJobDao"/>
 		
 	<!-- scheduler调度管理器：不能配置事务 -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
