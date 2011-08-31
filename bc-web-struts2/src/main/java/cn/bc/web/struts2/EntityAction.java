@@ -618,7 +618,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 创建默认的查看按钮
 	protected Button getDefaultOpenToolbarButton() {
 		return new ToolbarButton().setIcon("ui-icon-check")
-				.setText(getText("label.check")).setClick("open");
+				.setText(getText("label.check")).setAction("open");
 	}
 
 	// 创建默认的编辑按钮
