@@ -24,7 +24,7 @@ public abstract class CalendarRangeFormater extends AbstractFormater<String> {
 	}
 
 	/**
-	 * @param pattern 日期格式，如yyy-MM-dd HH:ss:mm
+	 * @param pattern 日期格式，如yyy-MM-dd HH:mm:ss
 	 */
 	public CalendarRangeFormater(String pattern) {
 		format = new SimpleDateFormat(pattern);
