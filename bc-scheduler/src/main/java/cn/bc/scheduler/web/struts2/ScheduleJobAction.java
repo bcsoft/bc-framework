@@ -12,20 +12,23 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.scheduler.domain.ScheduleJob;
+import cn.bc.scheduler.service.SchedulerManage;
 import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 任务调度配置Action
@@ -39,13 +42,23 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 		implements SessionAware {
 	// private static Log logger = LogFactory.getLog(ScheduleJobAction.class);
 	private static final long serialVersionUID = 1L;
-	//private CrudService<ScheduleJob> scheduleJobService;
+
+	private SchedulerManage schedulerManage;
 
 	@Autowired
 	public void setScheduleJobService(
 			@Qualifier(value = "scheduleJobService") CrudService<ScheduleJob> scheduleJobService) {
-		//this.scheduleJobService = scheduleJobService;
 		this.setCrudService(scheduleJobService);
+	}
+
+	@Autowired
+	public void setSchedulerManage(SchedulerManage schedulerManage) {
+		this.schedulerManage = schedulerManage;
+	}
+
+	@Override
+	protected Grid buildGrid() {
+		return super.buildGrid().setSingleSelect(true);
 	}
 
 	@Override
@@ -61,6 +74,11 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	}
 
 	@Override
+	protected String getPageNamespace() {
+		return getContextPath() + this.getActionPathPrefix() + "/schedule/job";
+	}
+
+	@Override
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
@@ -72,7 +90,7 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 				.setText(getText("scheduleJob.button.start"))
 				.setClick("bc.scheduleJobList.start"));
 
-		// 停止
+		// 停止/禁用
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")
 				.setText(getText("scheduleJob.button.stop"))
 				.setClick("bc.scheduleJobList.stop"));
@@ -102,9 +120,10 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("cron", getText("scheduleJob.cron"), 150)
 				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("nextDate", getText("scheduleJob.nextDate"),
-				110).setValueFormater(new CalendarFormater(
-				"yyyy-MM-dd HH:mm:ss")));
+		// columns.add(new TextColumn("nextDate",
+		// getText("scheduleJob.nextDate"),
+		// 110).setValueFormater(new CalendarFormater(
+		// "yyyy-MM-dd HH:mm:ss")));
 		columns.add(new TextColumn("ignoreError",
 				getText("scheduleJob.ignoreError"), 65).setSortable(true)
 				.setValueFormater(new BooleanFormater()));
@@ -112,18 +131,66 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("method", getText("scheduleJob.method"), 80)
 				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("orderNo", getText("scheduleJob.orderNo"),
-				65).setSortable(true));
+		columns.add(new TextColumn("orderNo", getText("label.order"), 65)
+				.setSortable(true));
 		return columns;
 	}
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("orderNo", Direction.Asc);
+		return new OrderCondition("status", Direction.Asc).add("orderNo", Direction.Asc);
 	}
 
 	@Override
 	protected String getJs() {
-		return this.getContextPath() + "/bc/schedule/job/list.js";
+		return getPageNamespace() + "/list.js";
+	}
+
+	// 帮助
+	public String help() throws Exception {
+		return "help";
+	}
+
+	@Override
+	public String create() throws Exception {
+		String r = super.create();
+		this.getE().setStatus(ScheduleJob.STATUS_DISABLED);// 初始化为禁用状态
+		return r;
+	}
+
+	public Json json;
+
+	// 启动/重置
+	public String start() throws Exception {
+		if (this.getIds() == null || this.getIds().length() == 0) {
+			throw new CoreException("must set property ids");
+		}
+
+		Long[] ids = cn.bc.core.util.StringUtils.stringArray2LongArray(this
+				.getIds().split(","));
+		for (Long id : ids) {
+			this.schedulerManage.scheduleJob(id);
+		}
+
+		this.json = new Json();
+		this.json.put("msg", "任务启动/重置成功！");
+		return "json";
+	}
+
+	// 停止/禁用
+	public String stop() throws Exception {
+		if (this.getIds() == null || this.getIds().length() == 0) {
+			throw new CoreException("must set property ids");
+		}
+
+		Long[] ids = cn.bc.core.util.StringUtils.stringArray2LongArray(this
+				.getIds().split(","));
+		for (Long id : ids) {
+			this.schedulerManage.stopJob(id);
+		}
+
+		this.json = new Json();
+		this.json.put("msg", "任务停止/禁用成功！");
+		return "json";
 	}
 }

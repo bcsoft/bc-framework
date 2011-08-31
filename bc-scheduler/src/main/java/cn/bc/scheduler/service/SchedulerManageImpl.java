@@ -20,7 +20,9 @@ import cn.bc.scheduler.spring.MethodInvokingJobEx;
 
 /**
  * 调度任务管理器的实现，注意该类不要配置事务管理
- * <p>该类在初始化时就会自动将可用的调度任务推送到调度计划中执行</p>
+ * <p>
+ * 该类在初始化时就会自动将可用的调度任务推送到调度计划中执行
+ * </p>
  * 
  * @author dragon
  * @since 2011-08-30
@@ -48,7 +50,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 
 	public void afterPropertiesSet() throws Exception {
 		// 立即计划所有可用的调度任务
-		List<ScheduleJob> jobs = this.schedulerService.findAllEnabledScheduleJob();
+		List<ScheduleJob> jobs = this.schedulerService
+				.findAllEnabledScheduleJob();
 		logger.warn("scheduling " + jobs.size() + " jobs");
 		for (ScheduleJob job : jobs) {
 			this.scheduleJob(job.getId());
@@ -56,13 +59,15 @@ public class SchedulerManageImpl implements SchedulerManage,
 	}
 
 	public Date scheduleJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return null;
 		}
 		logger.warn("scheduling job:" + scheduleJob.toString());
 
+		Date nextDate;
 		// 检测是否已经调度
 		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
 				scheduleJob.getTriggerName(), scheduleJob.getGroupn());
@@ -80,26 +85,37 @@ public class SchedulerManageImpl implements SchedulerManage,
 			// 记录状态数据
 			jobDetail.getJobDataMap().put("methodInvoker", methodInvoker);// 记录方法调用器
 			jobDetail.getJobDataMap().put("scheduleJob", scheduleJob);// 记录配置信息
-			jobDetail.getJobDataMap().put("schedulerService", this.schedulerService);
+			jobDetail.getJobDataMap().put("schedulerService",
+					this.schedulerService);
 
 			trigger = new CronTrigger(scheduleJob.getTriggerName(),
 					scheduleJob.getGroupn(), scheduleJob.getCron());
-			return this.scheduler.scheduleJob(jobDetail, trigger);
+			nextDate = this.scheduler.scheduleJob(jobDetail, trigger);
 		} else {
 			// Trigger已存在，更新相应的调度设置
 			trigger.setCronExpression(scheduleJob.getCron());
-			return this.scheduler.rescheduleJob(trigger.getName(),
+			nextDate = this.scheduler.rescheduleJob(trigger.getName(),
 					trigger.getGroup(), trigger);
 		}
+
+		// 将任务的状态设置为正常
+		if (scheduleJob.getStatus() != ScheduleJob.STATUS_ENABLED) {
+			scheduleJob.setStatus(ScheduleJob.STATUS_ENABLED);
+			this.schedulerService.saveScheduleJob(scheduleJob);
+		}
+
+		return nextDate;
 	}
 
 	public Date rescheduleJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return null;
 		}
 
+		Date nextDate;
 		// 检测是否已经调度
 		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
 				scheduleJob.getTriggerName(), scheduleJob.getGroupn());
@@ -109,13 +125,22 @@ public class SchedulerManageImpl implements SchedulerManage,
 		} else {
 			// Trigger已存在，更新相应的调度设置
 			trigger.setCronExpression(scheduleJob.getCron());
-			return this.scheduler.rescheduleJob(trigger.getName(),
+			nextDate = this.scheduler.rescheduleJob(trigger.getName(),
 					trigger.getGroup(), trigger);
 		}
+
+		// 将任务的状态设置为正常
+		if (scheduleJob.getStatus() != ScheduleJob.STATUS_ENABLED) {
+			scheduleJob.setStatus(ScheduleJob.STATUS_ENABLED);
+			this.schedulerService.saveScheduleJob(scheduleJob);
+		}
+
+		return nextDate;
 	}
 
 	public void stopJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return;
@@ -128,10 +153,17 @@ public class SchedulerManageImpl implements SchedulerManage,
 			this.scheduler.deleteJob(scheduleJob.getName(),
 					scheduleJob.getGroupn());
 		}
+
+		// 将任务的状态设置为禁用
+		if (scheduleJob.getStatus() != ScheduleJob.STATUS_DISABLED) {
+			scheduleJob.setStatus(ScheduleJob.STATUS_DISABLED);
+			this.schedulerService.saveScheduleJob(scheduleJob);
+		}
 	}
 
 	public void deleteJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return;
@@ -151,7 +183,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 	}
 
 	public void pauseJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return;
@@ -167,7 +200,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 	}
 
 	public void resumeJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+		ScheduleJob scheduleJob = this.schedulerService
+				.loadScheduleJob(scheduleJobId);
 		if (scheduleJob == null) {
 			logger.warn("ignore unknowed scheduleJobId:" + scheduleJob);
 			return;

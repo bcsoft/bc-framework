@@ -6,7 +6,7 @@
 	<!-- 定时任务管理 -->
 	<package name="scheduleJob" extends="bc-default" namespace="/bc/schedule/job">
 		<action name="create" class="scheduleJobAction" method="create">
-			<result>/bc/schedule/job/form.jsp</result>
+			<result name="form">/bc/schedule/job/form.jsp</result>
 		</action>
 		<!-- 可编辑表单 -->
 		<action name="edit" class="scheduleJobAction" method="edit">
@@ -28,8 +28,11 @@
 		<action name="data" class="scheduleJobAction" method="data" />
 		<!-- 导出 视图数据-->
 		<action name="export" class="scheduleJobAction" method="export" />
+		
+		<!-- 帮助-->
+		<action name="help" class="scheduleJobAction" method="help" />
 
-		<action name="start" class="scheduleAction" method="start"/>
-		<action name="stop" class="scheduleAction" method="stop"/>
+		<action name="start" class="scheduleJobAction" method="start"/>
+		<action name="stop" class="scheduleJobAction" method="stop"/>
 	</package>
 </struts>
