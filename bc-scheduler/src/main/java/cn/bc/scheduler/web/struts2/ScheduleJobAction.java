@@ -85,13 +85,16 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 		// 新建
 		tb.addButton(getDefaultCreateToolbarButton());
 
+		// 编辑
+		tb.addButton(getDefaultEditToolbarButton());
+
 		// 启动/重置
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")
+		tb.addButton(new ToolbarButton().setIcon("ui-icon ui-icon-lightbulb")
 				.setText(getText("scheduleJob.button.start"))
 				.setClick("bc.scheduleJobList.start"));
 
 		// 停止/禁用
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
 				.setText(getText("scheduleJob.button.stop"))
 				.setClick("bc.scheduleJobList.stop"));
 

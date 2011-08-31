@@ -24,6 +24,7 @@ public class ScheduleLog extends EntityImpl {
 	private String errorType; // 异常分类
 	private String msg; // 任务信息：如果任务运行异常则为异常信息
 	private String cfgName;// 对应JobCfg的name
+	private String cfgGroup;// 对应JobCfg的groupn
 	private String cfgCron;// 对应TriggerCfg的cron
 	private String cfgBean;// 对应JobCfg的bean
 	private String cfgMethod;// 对应JobCfg的method
@@ -78,6 +79,15 @@ public class ScheduleLog extends EntityImpl {
 
 	public void setCfgName(String cfg_name) {
 		this.cfgName = cfg_name;
+	}
+
+	@Column(name = "CFG_GROUP")
+	public String getCfgGroup() {
+		return cfgGroup;
+	}
+
+	public void setCfgGroup(String cfgGroup) {
+		this.cfgGroup = cfgGroup;
 	}
 
 	@Column(name = "CFG_CRON")

@@ -8,6 +8,12 @@ BEGIN
   RETURN retval;
 END;
 /
+-- 创建Identity用的序列，开始于1000
+CREATE sequence CORE_SEQUENCE
+    minvalue 1
+    start with 1000
+    increment by 1
+    cache 20;
 
 -- 创建序列，开始于1千万，方便历史数据的转换
 CREATE sequence HIBERNATE_SEQUENCE
@@ -658,6 +664,7 @@ CREATE TABLE BC_SD_LOG (
     END_DATE DATE NOT NULL,
     CFG_CRON varchar2(255) NOT NULL,
     CFG_NAME varchar2(255),
+    CFG_GROUP varchar2(255),
     CFG_BEAN varchar2(255),
     CFG_METHOD varchar2(255),
     ERROR_TYPE varchar2(255),
@@ -672,5 +679,6 @@ COMMENT ON COLUMN BC_SD_LOG.ERROR_TYPE IS '异常分类';
 COMMENT ON COLUMN BC_SD_LOG.MSG IS '任务信息：如果任务运行异常则为异常信息';
 COMMENT ON COLUMN BC_SD_LOG.CFG_CRON IS '对应TriggerCfg的cron';
 COMMENT ON COLUMN BC_SD_LOG.CFG_NAME IS '对应JobCfg的name';
+COMMENT ON COLUMN BC_SD_LOG.CFG_GROUP IS '对应JobCfg的groupn';
 COMMENT ON COLUMN BC_SD_LOG.CFG_BEAN IS '对应JobCfg的bean';
 COMMENT ON COLUMN BC_SD_LOG.CFG_METHOD IS '对应JobCfg的method';

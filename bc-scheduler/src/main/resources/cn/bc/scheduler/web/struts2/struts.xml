@@ -3,7 +3,7 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 定时任务管理 -->
+	<!-- 定时任务 -->
 	<package name="scheduleJob" extends="bc-default" namespace="/bc/schedule/job">
 		<action name="create" class="scheduleJobAction" method="create">
 			<result name="form">/bc/schedule/job/form.jsp</result>
@@ -34,5 +34,32 @@
 
 		<action name="start" class="scheduleJobAction" method="start"/>
 		<action name="stop" class="scheduleJobAction" method="stop"/>
+	</package>
+	
+	<!-- 定时任务调度日志 -->
+	<package name="scheduleLog" extends="bc-default" namespace="/bc/schedule/log">
+		<action name="create" class="scheduleLogAction" method="create">
+			<result name="form">/bc/schedule/log/form.jsp</result>
+		</action>
+		<!-- 可编辑表单 -->
+		<action name="edit" class="scheduleLogAction" method="edit">
+			<result name="form">/bc/schedule/log/form.jsp</result>
+		</action>
+		<!-- 只读表单 -->
+		<action name="open" class="scheduleLogAction" method="open">
+			<result name="formr">/bc/schedule/log/formr.jsp</result>
+		</action>
+		<!-- 保存 -->
+		<action name="save" class="scheduleLogAction" method="save" />
+		<!-- 删除 -->
+		<action name="delete" class="scheduleLogAction" method="delete" />
+		<!-- 非分页视图 -->
+		<action name="list" class="scheduleLogAction" method="list" />
+		<!-- 分页视图 -->
+		<action name="paging" class="scheduleLogAction" method="paging" />
+		<!-- 分页数据 -->
+		<action name="data" class="scheduleLogAction" method="data" />
+		<!-- 导出 视图数据-->
+		<action name="export" class="scheduleLogAction" method="export" />
 	</package>
 </struts>

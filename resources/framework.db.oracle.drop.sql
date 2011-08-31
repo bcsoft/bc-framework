@@ -50,6 +50,7 @@ END;
 /
 
 -- 用于生成hibernate id的序列
+CALL DROP_USER_SEQUENCE('CORE_SEQUENCE');
 CALL DROP_USER_SEQUENCE('hibernate_sequence');
 
 -- 测试用的表

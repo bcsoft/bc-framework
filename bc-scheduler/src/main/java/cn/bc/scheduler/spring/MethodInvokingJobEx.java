@@ -102,6 +102,7 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 		scheduleLog = new ScheduleLog();
 		scheduleLog.setStartDate(Calendar.getInstance());
 		scheduleLog.setCfgName(scheduleJob.getName());
+		scheduleLog.setCfgGroup(scheduleJob.getGroupn());
 		scheduleLog.setCfgBean(scheduleJob.getBean());
 		scheduleLog.setCfgMethod(scheduleJob.getMethod());
 		scheduleLog.setCfgCron(scheduleJob.getCron());
@@ -113,7 +114,7 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 			scheduleLog.setSuccess(true);
 			scheduleLog.setEndDate(Calendar.getInstance());
 			scheduleLog.setErrorType(null);
-			scheduleLog.setMsg("成功");
+			scheduleLog.setMsg(null);
 			this.schedulerService.saveScheduleLog(scheduleLog);
 		} catch (InvocationTargetException ex) {
 			// 记录异常日志
