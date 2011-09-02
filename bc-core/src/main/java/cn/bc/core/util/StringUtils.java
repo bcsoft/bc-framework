@@ -152,6 +152,25 @@ public class StringUtils {
         return longArray;
     }
     
+    /**
+     * 将字符串数组转换成Integer数组
+     * @param sArray
+     * @return
+     */
+    public static Integer[] stringArray2IntegerArray(String[] sArray){
+        if(null == sArray || sArray.length == 0)
+            return null;
+        Integer[] longArray = new Integer[sArray.length];
+        for(int i = 0; i < sArray.length; i++){
+            try {
+                longArray[i] = new Integer(sArray[i]);
+            } catch (NumberFormatException e) {
+                longArray[i] = new Integer(0);
+            } 
+        }
+        return longArray;
+    }
+    
 	/**
 	 * 在字符串两边添加双引号
 	 * 

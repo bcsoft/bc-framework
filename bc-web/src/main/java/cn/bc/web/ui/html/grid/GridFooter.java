@@ -5,8 +5,9 @@ import cn.bc.web.ui.html.Ul;
 
 /**
  * Grid 底部的工具条
+ * 
  * @author dragon
- *
+ * 
  */
 public class GridFooter extends Ul {
 	protected void init() {
@@ -16,5 +17,43 @@ public class GridFooter extends Ul {
 	public GridFooter addButton(Component button) {
 		this.addChild(button);
 		return this;
+	}
+
+	/** 刷新按钮 */
+	public static FooterButton getDefaultRefreshButton(String text) {
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-refresh").setAction("refresh").setTitle(text);
+		return fb;
+	}
+
+	/** 排序方式切换按钮 */
+	public static FooterButton getDefaultSortButton(boolean remoteSort,
+			String remoteSortText, String localSortText) {
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-transferthick-e-w");
+		fb.setAction("changeSortType");
+		fb.setAttr("title4clickToRemoteSort", remoteSortText);
+		fb.setAttr("title4clickToLocalSort", localSortText);
+		if (remoteSort) {// 远程排序
+			fb.setTitle(remoteSortText).addClazz("ui-state-active");
+		} else {// 本地排序
+			fb.setTitle(localSortText);
+		}
+		return fb;
+	}
+
+	/** 导出按钮 */
+	public static FooterButton getDefaultExportButton(String text) {
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-arrowthickstop-1-s").setAction("export")
+				.setTitle(text);
+		return fb;
+	}
+
+	/** 打印按钮 */
+	public static FooterButton getDefaultPrintButton(String text) {
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-print").setAction("print").setTitle(text);
+		return fb;
 	}
 }

@@ -38,7 +38,6 @@ import cn.bc.core.service.CrudService;
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.GridExporter;
@@ -51,8 +50,6 @@ import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
-import cn.bc.web.ui.html.toolbar.ToolbarSearchButton;
 import cn.bc.web.util.WebUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -611,33 +608,27 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 创建默认的新建按钮
 	protected Button getDefaultCreateToolbarButton() {
-		return new ToolbarButton().setIcon("ui-icon-document")
-				.setText(getText("label.create")).setAction("create");
+		return Toolbar.getDefaultCreateToolbarButton(getText("label.create"));
 	}
 
 	// 创建默认的查看按钮
 	protected Button getDefaultOpenToolbarButton() {
-		return new ToolbarButton().setIcon("ui-icon-check")
-				.setText(getText("label.check")).setAction("open");
+		return Toolbar.getDefaultEditToolbarButton(getText("label.open"));
 	}
 
 	// 创建默认的编辑按钮
 	protected Button getDefaultEditToolbarButton() {
-		return new ToolbarButton().setIcon("ui-icon-pencil")
-				.setText(getText("label.edit")).setAction("edit");
+		return Toolbar.getDefaultEditToolbarButton(getText("label.edit"));
 	}
 
 	// 创建默认的删除按钮
 	protected Button getDefaultDeleteToolbarButton() {
-		return new ToolbarButton().setIcon("ui-icon-trash")
-				.setText(getText("label.delete")).setAction("delete");
+		return Toolbar.getDefaultDeleteToolbarButton(getText("label.delete"));
 	}
 
-	// 创建默认的删除按钮
+	// 创建默认的搜索按钮
 	protected Button getDefaultSearchToolbarButton() {
-		ToolbarSearchButton sb = new ToolbarSearchButton();
-		sb.setAction("search").setTitle(getText("title.click2search"));
-		return sb;
+		return Toolbar.getDefaultSearchToolbarButton(getText("title.click2search"));
 	}
 
 	/** 构建视图页面的表格 */
@@ -695,21 +686,13 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		GridFooter footer = new GridFooter();
 
 		// 刷新按钮
-		footer.addButton(new FooterButton().setIcon("ui-icon-refresh")
-				.setAction("refresh").setTitle(getText("label.refresh")));
+		footer.addButton(GridFooter
+				.getDefaultRefreshButton(getText("label.refresh")));
 
 		// 本地或远程排序方式切换按钮
-		FooterButton fb = new FooterButton();
-		fb.setIcon("ui-icon-transferthick-e-w");
-		fb.setAction("changeSortType");
-		fb.setAttr("title4clickToRemoteSort", getText("title.click2remoteSort"));
-		fb.setAttr("title4clickToLocalSort", getText("title.click2localSort"));
-		if (grid.isRemoteSort()) {// 远程排序
-			footer.addButton(fb.setTitle(getText("title.click2localSort"))
-					.addClazz("ui-state-active"));
-		} else {// 本地排序
-			footer.addButton(fb.setTitle(getText("title.click2remoteSort")));
-		}
+		footer.addButton(GridFooter.getDefaultSortButton(grid.isRemoteSort(),
+				getText("title.click2remoteSort"),
+				getText("title.click2localSort")));
 
 		// 分页按钮
 		if (this.page != null) {
@@ -721,13 +704,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		}
 
 		// 导出按钮
-		footer.addButton(new FooterButton()
-				.setIcon("ui-icon-arrowthickstop-1-s").setAction("export")
-				.setTitle(getText("label.export")));
+		footer.addButton(GridFooter
+				.getDefaultExportButton(getText("label.export")));
 
 		// 打印按钮
-		// footer.addButton(new FooterButton().setIcon("ui-icon-print")
-		// .setAction("print").setTitle(getText("label.print")));
+		// footer.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));
 
 		return footer;
 	}
