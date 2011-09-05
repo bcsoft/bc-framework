@@ -50,6 +50,7 @@ END;
 /
 
 -- 用于生成hibernate id的序列
+CALL DROP_USER_SEQUENCE('CORE_SEQUENCE');
 CALL DROP_USER_SEQUENCE('hibernate_sequence');
 
 -- 测试用的表
@@ -96,6 +97,10 @@ CALL DROP_USER_TABLE('BC_IDENTITY_RESOURCE');
 -- 选项模块
 CALL DROP_USER_TABLE('BC_OPTION_ITEM');
 CALL DROP_USER_TABLE('BC_OPTION_GROUP');
+
+-- 任务调度
+CALL DROP_USER_TABLE('BC_SD_LOG');
+CALL DROP_USER_TABLE('BC_SD_JOB');
 
 -- 删除自建的存储过程
 -- drop procedure DROP_USER_TABLE;

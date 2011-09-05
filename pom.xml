@@ -16,6 +16,7 @@
 		<module>bc-test</module>
 		<module>bc-db-jdbc</module>
 		<module>bc-orm-hibernate</module>
+		<module>bc-scheduler</module>
 
 		<module>bc-web</module>
 		<module>bc-web-struts</module>

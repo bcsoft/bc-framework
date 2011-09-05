@@ -15,7 +15,7 @@ import java.util.Calendar;
  * @author dragon
  * 
  */
-public abstract class CalendarRangeFormater extends AbstractFormater {
+public abstract class CalendarRangeFormater extends AbstractFormater<String> {
 	private SimpleDateFormat format;
 
 	public CalendarRangeFormater() {
@@ -24,7 +24,7 @@ public abstract class CalendarRangeFormater extends AbstractFormater {
 	}
 
 	/**
-	 * @param pattern 日期格式，如yyy-MM-dd HH:ss:mm
+	 * @param pattern 日期格式，如yyy-MM-dd HH:mm:ss
 	 */
 	public CalendarRangeFormater(String pattern) {
 		format = new SimpleDateFormat(pattern);

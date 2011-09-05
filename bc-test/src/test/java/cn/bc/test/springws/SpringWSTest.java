@@ -21,7 +21,7 @@ public class SpringWSTest {
 		String soapActionURI = "http://tempuri.org/GetDriverTaxiQY";
 
 		// 参数
-		String strQYID = "GZBC";// 企业ID
+		String strQYID = "17E0FFF7-7816-46A5-83A7-23D5C9F762AB";// 企业ID
 		String strDriverNO = null;
 		String strCarNO = null;
 		String strMsg = "";

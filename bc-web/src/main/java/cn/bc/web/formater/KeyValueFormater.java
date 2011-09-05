@@ -11,7 +11,7 @@ import java.util.Map;
  * @author dragon
  * 
  */
-public class KeyValueFormater extends AbstractFormater {
+public class KeyValueFormater extends AbstractFormater<String> {
 	private Map<String, String> kvs;
 
 	public KeyValueFormater() {

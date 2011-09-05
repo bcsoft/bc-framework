@@ -14,7 +14,7 @@ import cn.bc.core.RichEntity;
  * @author dragon
  * 
  */
-public class EntityStatusFormater extends AbstractFormater {
+public class EntityStatusFormater extends AbstractFormater<String> {
 	private Map<String, String> statuses;
 
 	public EntityStatusFormater() {

@@ -48,6 +48,22 @@ public class PageOption extends Json {
 		return this;
 	}
 
+	public PageOption setMaxWidth(int maxWidth) {
+		if (maxWidth > 0)
+			put("maxWidth", maxWidth);
+		else
+			attrs.remove("maxWidth");
+		return this;
+	}
+
+	public PageOption setMaxHeight(int maxHeight) {
+		if (maxHeight > 0)
+			put("maxHeight", maxHeight);
+		else
+			attrs.remove("maxHeight");
+		return this;
+	}
+
 	public PageOption setHeight(int height) {
 		put("height", height);
 		return this;

@@ -9,10 +9,10 @@ package cn.bc.web.formater;
  * @author dragon
  * 
  */
-public abstract class AbstractFormater implements Formater {
-	public abstract String format(Object context, Object value);
+public abstract class AbstractFormater<T> implements Formater<T> {
+	public abstract T format(Object context, Object value);
 
-	public String format(Object value) {
+	public T format(Object value) {
 		return format(null, value);
 	}
 }

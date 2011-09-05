@@ -6,10 +6,12 @@ import java.net.URL;
 import java.util.Iterator;
 
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -35,22 +37,32 @@ public class HelloWebServiceClient {
 		this.url = new URL(url);
 	}
 
-	private SOAPMessage createHelloRequest() throws SOAPException {
+	private SOAPMessage createHelloRequest() throws SOAPException, IOException {
+		//
+//		MimeHeaders headers = new MimeHeaders();
+//        headers.setHeader("POST", "/middle/WSMiddle.asmx HTTP/1.1");
+//        headers.setHeader("Content-Type", "text/xml; charset=utf-8");
+//        headers.setHeader("SOAPAction", "http://tempuri.org/GetMasterWZ");
+		
 		SOAPMessage message = messageFactory.createMessage();
+		//message.setProperty("SOAPAction", "http://tempuri.org/GetMasterWZ");
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-		Name helloRequestName = envelope.createName("GetDriverTaxiQY", PREFIX,
+		Name helloRequestName = envelope.createName("GetMasterWZ", PREFIX,
 				NAMESPACE_URI);
 		SOAPBodyElement helloRequestElement = message.getSOAPBody()
 				.addBodyElement(helloRequestName);
 		// helloRequestElement.setValue("Rondy.F");
 
 		// 参数
-		Name n = envelope.createName("strQYID");
-		helloRequestElement.addChildElement(n).setValue("广州宝城");
-		helloRequestElement.addChildElement("strDriverNO").setValue("0");
-		SOAPElement e = helloRequestElement.addChildElement("strCarNO");
-		e.setValue("0");
+		Name n = envelope.createName("strMasterID");
+		helloRequestElement.addChildElement(n).setValue(
+				"17E0FFF7-7816-46A5-83A7-23D5C9F762AB");
+		helloRequestElement.addChildElement("dWeiZhangKSRQ").setValue(
+				"2011-08-01");
+		SOAPElement e = helloRequestElement.addChildElement("dWeiZhangJZRQ");
+		e.setValue("2011-08-31");
 		helloRequestElement.addChildElement("strMsg").setValue("");
+		
 		System.out.println(helloRequestElement.toString());
 		System.out.println(e.toString());
 
@@ -74,7 +86,7 @@ public class HelloWebServiceClient {
 	private void writeHelloResponse(SOAPMessage message) throws SOAPException {
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
 		Name helloResponseName = envelope.createName(
-				"GetDriverTaxiQYResponse ", PREFIX, NAMESPACE_URI);
+				"GetMasterWZResponse", PREFIX, NAMESPACE_URI);
 		Iterator<?> childElements = message.getSOAPBody().getChildElements(
 				helloResponseName);
 		while (childElements.hasNext()) {
