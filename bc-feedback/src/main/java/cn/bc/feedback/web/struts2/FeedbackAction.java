@@ -173,7 +173,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		if (isManager) {// 本模块管理员看全部
 			return null;
 		} else {// 普通用户仅看自己提交的
-			return new EqualsCondition("author.id", context.getUser().getId());
+			return new EqualsCondition("author.id", context.getUserHistory().getId());
 		}
 	}
 
