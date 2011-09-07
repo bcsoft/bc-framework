@@ -7,8 +7,12 @@ import java.io.StringReader;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.params.HttpClientParams;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.http.CommonsHttpMessageSender;
 import org.springframework.xml.transform.StringResult;
 
 import cn.bc.web.ws.converter.WSConverter;
@@ -24,7 +28,7 @@ public class WSUtils {
 			msgTpl = java.text.MessageFormat.format(msgTpl, msgArgs);
 		StreamSource source = new StreamSource(new StringReader(msgTpl));
 		StringResult xmlResult = new StringResult();
-		WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+		WebServiceTemplate webServiceTemplate = buildWebServiceTemplate();
 		webServiceTemplate.sendSourceAndReceiveToResult(soapUrl, source,
 				new SoapActionCallback(soapAction), xmlResult);
 
@@ -37,10 +41,36 @@ public class WSUtils {
 			msgTpl = java.text.MessageFormat.format(msgTpl, msgArgs);
 		StreamSource source = new StreamSource(new StringReader(msgTpl));
 		StringResult xmlResult = new StringResult();
-		WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+		WebServiceTemplate webServiceTemplate = buildWebServiceTemplate();
 		webServiceTemplate.sendSourceAndReceiveToResult(soapUrl, source,
 				new SoapActionCallback(soapAction), xmlResult);
 
 		return xmlResult.toString();
+	}
+
+	protected static WebServiceTemplate buildWebServiceTemplate() {
+		WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+
+		HttpClientParams params = new HttpClientParams();
+		// 超时控制:milliseconds
+		params.setSoTimeout(30000);
+
+		HttpClient httpClient = new HttpClient();
+		httpClient.setParams(params);
+
+		WebServiceMessageSender messageSender = new CommonsHttpMessageSender(
+				httpClient);
+
+		webServiceTemplate.setMessageSender(messageSender);
+
+		return webServiceTemplate;
+	}
+
+	public static String makeXMLNode(String key, String value) {
+		return wrapXMLMark(key) + value + wrapXMLMark("/" + key);
+	}
+
+	public static String wrapXMLMark(String value) {
+		return "<" + value + ">";
 	}
 }
