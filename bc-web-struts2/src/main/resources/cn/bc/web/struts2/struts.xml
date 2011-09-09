@@ -93,4 +93,14 @@
 		<action name="/*/data" class="{1}Action" method="data" />
 		<action name="/*/export" class="{1}Action" method="export" />
 	</package>
+	
+	<!-- for test-->
+	<package name="bctest" extends="bc-default" namespace="/bc-test">
+		<action name="selectIdentity" class="selectIdentityAction" method="selectIdentity">
+			<result>/bc-test/identity/select.jsp</result>
+		</action>
+		<action name="datepicker" class="testAction" method="datepicker">
+			<result>/bc-test/libs/datepicker.jsp</result>
+		</action>
+	</package>
 </struts>
