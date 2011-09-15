@@ -71,11 +71,18 @@ public class DataSet {
 	public String toString() {
 		StringBuffer t = new StringBuffer();
 
-		// 消息
-		if (this.getMsg() != null) {
-			t.append("msg:\"" + this.getMsg() + "\"\r\n");
+		// 行
+		t.append("\r\n");
+		if (this.rows != null) {
+			int i = 0;
+			t.append("rows(" + this.rows.size() + "):\r\n");
+			for (Row row : rows) {
+				t.append((i > 0 ? "\r\n  " : "  ") + i + " " + row.toString());
+				i++;
+			}
+			t.append("\r\n<--rows(" + this.rows.size() + ")\r\n");
 		} else {
-			t.append("msg:null\r\n");
+			t.append("rows:(null)\r\n");
 		}
 
 		// 列
@@ -86,22 +93,18 @@ public class DataSet {
 				t.append((i > 0 ? "\r\n  " : "  ") + column.toString());
 				i++;
 			}
+			t.append("\r\n");
 		} else {
 			t.append("columns:(null)\r\n");
 		}
 
-		// 行
-		t.append("\r\n");
-		if (this.rows != null) {
-			int i = 0;
-			t.append("rows(" + this.rows.size() + "):\r\n");
-			for (Row row : rows) {
-				t.append((i > 0 ? "\r\n  " : "  ") + row.toString());
-				i++;
-			}
+		// 消息
+		if (this.getMsg() != null) {
+			t.append("msg:\"" + this.getMsg() + "\"\r\n");
 		} else {
-			t.append("rows:(null)\r\n");
+			t.append("msg:null\r\n");
 		}
+		
 		return t.toString();
 	}
 }

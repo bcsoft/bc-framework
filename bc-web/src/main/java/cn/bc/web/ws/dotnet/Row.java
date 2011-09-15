@@ -40,7 +40,7 @@ public class Row {
 
 		if (this.cells != null) {
 			int i = 0;
-			t.append("cells(" + this.cells.size() + "){");
+			t.append("cells(" + this.cells.size() + "col){");
 			for (Cell cell : cells) {
 				t.append((i > 0 ? ", " : "") + cell.getKey() + ":\""
 						+ convert(cell.getValue()) + "\"");
