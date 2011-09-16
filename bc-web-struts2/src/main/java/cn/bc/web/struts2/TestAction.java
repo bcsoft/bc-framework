@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -25,6 +26,20 @@ public class TestAction extends ActionSupport {
 
 	// 选择日期的测试页面
 	public String datepicker() {
+		return SUCCESS;
+	}
+
+	public String tpl;
+	// 显示指定的jsp页面
+	public String show() {
+		Assert.hasText(tpl);
+		logger.warn("tpl=" + tpl);
+		return SUCCESS;
+	}
+	// 显示指定的freemarker页面
+	public String showfm() {
+		Assert.hasText(tpl);
+		logger.warn("tpl=" + tpl);
 		return SUCCESS;
 	}
 }

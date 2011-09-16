@@ -102,5 +102,11 @@
 		<action name="datepicker" class="testAction" method="datepicker">
 			<result>/bc-test/libs/datepicker.jsp</result>
 		</action>
+		<action name="show" class="testAction" method="show">
+			<result>${tpl}</result>
+		</action>
+		<action name="showfm" class="testAction" method="showfm">
+			<result type="freemarker">${tpl}</result>
+		</action>
 	</package>
 </struts>
