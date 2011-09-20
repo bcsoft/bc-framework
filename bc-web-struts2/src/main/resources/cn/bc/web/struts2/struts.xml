@@ -74,6 +74,9 @@
 		<action name="todo" class="errorAction" method="todo">
 			<result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
 		</action>
+		<action name="waiting" class="errorAction" method="waiting">
+			<result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
+		</action>
 	</package>
 	<!-- 用于测试通配符配置 -->
 	<package name="bct" extends="bc-default" namespace="/bct">
