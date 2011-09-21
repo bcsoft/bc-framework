@@ -14,14 +14,26 @@
 				<!-- 排除下载文件的连接不作处理，否则ie<9时无法下载的 -->
 				<param name="excludePaths">/bc/attach/download*,/bc/attach/inline*</param>
 			</interceptor>
+			<!-- session超时 -->
+			<interceptor name="authInterceptor"
+				class="cn.bc.web.struts2.interceptor.AuthIterceptor">
+				<!-- 登录验证信息保存到session的key -->
+				<param name="authKey">bc-context</param>
+				<!-- 排除下载文件的连接不作处理 -->
+				<param name="excludePaths">/bc/login*,/bc/attach/download*,/bc/attach/inline*</param>
+			</interceptor>
 			<interceptor-stack name="noCacheStack">
 				<interceptor-ref name="noCacheInterceptor" />
+				<interceptor-ref name="authInterceptor" />
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="noCacheStack" />
 
 		<global-results>
+			<!-- 当返回login视图名时，转入登录页面 --> 
+			<result name="login">/bc/login/login.jsp</result>
+			
 			<result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
 			</result>
 			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl

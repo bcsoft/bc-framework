@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  */
 public abstract class CanExcludeInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = 1L;
-	static Log logger = LogFactory.getLog(CanExcludeFilter.class);
+	private static Log logger = LogFactory.getLog(CanExcludeFilter.class);
 
 	/** 要排除处理的文件夹配置 */
 	protected List<String> excludeDirs = new ArrayList<String>();
