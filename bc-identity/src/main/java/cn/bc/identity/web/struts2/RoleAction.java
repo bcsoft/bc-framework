@@ -17,9 +17,11 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.RoleService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
@@ -32,6 +34,13 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class RoleAction extends EntityAction<Long, Role> {
 	private static final long serialVersionUID = 1L;
+	public String MANAGER_KEY = getText("key.role.actorManager");// 管理角色的编码
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(MANAGER_KEY);// 超级管理员
+	}
 
 	@Autowired
 	public void setRoleService(RoleService roleService) {
@@ -49,10 +58,22 @@ public class RoleAction extends EntityAction<Long, Role> {
 		return new OrderCondition("orderNo", Direction.Asc);
 	}
 
-	// 设置页面的尺寸
+	// 设置视图页面的尺寸
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(500).setHeight(400)
 				.setMinWidth(300).setMinHeight(200);
+	}
+
+	// 设置表单页面的尺寸
+	@Override
+	protected PageOption buildFormPageOption() {
+		PageOption pageOption = super.buildFormPageOption().setWidth(618);
+
+		if (!this.isReadonly())
+			pageOption.addButton(new ButtonOption(getText("label.save"), null,
+					"bc.roleForm.save"));
+
+		return pageOption;
 	}
 
 	// 设置表格的列

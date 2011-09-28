@@ -40,7 +40,7 @@ public class FileEntityAction<K extends Serializable, E extends FileEntity<K>>
 	@Override
 	public String create() throws Exception {
 		SystemContext context = this.getSystyemContext();
-		this.readonly = false;
+//		this.readonly = false;
 		
 		//初始化E
 		this.setE(this.getCrudService().create());

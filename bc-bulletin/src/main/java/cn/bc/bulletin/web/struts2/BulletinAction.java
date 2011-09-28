@@ -126,7 +126,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 
 	@Override
 	public String edit() throws Exception {
-		this.readonly = false;
+//		this.readonly = false;
 		this.setE(this.getCrudService().load(this.getId()));
 		this.formPageOption = buildFormPageOption();
 

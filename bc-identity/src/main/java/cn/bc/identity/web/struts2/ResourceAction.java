@@ -21,9 +21,11 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ResourceService;
 import cn.bc.identity.web.ResourceTypeFormater;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
@@ -36,6 +38,7 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class ResourceAction extends EntityAction<Long, Resource> {
 	private static final long serialVersionUID = 1L;
+	public String MANAGER_KEY = getText("key.role.actorManager");// 管理角色的编码
 	public List<KeyValue> types;// 可选的模块类型
 
 	// 模块类型列表
@@ -44,6 +47,12 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 		for (Entry<String, String> e : getModuleTypes().entrySet()) {
 			types.add(new KeyValue(e.getKey(), e.getValue()));
 		}
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(MANAGER_KEY);// 超级管理员
 	}
 
 	@Autowired
@@ -57,10 +66,22 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 		return r;
 	}
 
-	// 设置页面的尺寸
+	// 设置视图页面的尺寸
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(800).setHeight(400)
 				.setMinWidth(450).setMinHeight(200);
+	}
+
+	// 设置表单页面的尺寸
+	@Override
+	protected PageOption buildFormPageOption() {
+		PageOption pageOption = super.buildFormPageOption().setWidth(618);
+
+		if (!this.isReadonly())
+			pageOption
+					.addButton(new ButtonOption(getText("label.save"), "save"));
+
+		return pageOption;
 	}
 
 	@Override
@@ -78,8 +99,8 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 					.setSortable(true).setValueFormater(
 							new ResourceTypeFormater(getModuleTypes())));
 		if (this.useColumn("belong.name"))
-			columns.add(new TextColumn("belong.name", getText("resource.belong"),
-					80));
+			columns.add(new TextColumn("belong.name",
+					getText("resource.belong"), 80));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("label.order"), 100)
 					.setSortable(true).setDir(Direction.Asc));
@@ -93,7 +114,8 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 			columns.add(new TextColumn("iconClass",
 					getText("resource.iconClass"), 100).setSortable(true));
 		if (this.useColumn("option"))
-			columns.add(new TextColumn("option", getText("resource.option"), 100));
+			columns.add(new TextColumn("option", getText("resource.option"),
+					100));
 
 		return columns;
 	}

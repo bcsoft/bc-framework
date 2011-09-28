@@ -16,6 +16,7 @@ import cn.bc.identity.domain.Actor;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
@@ -40,10 +41,22 @@ public class UnitAction extends AbstractActorAction {
 		return r;
 	}
 
-	// 设置页面的尺寸
+	// 设置视图页面的尺寸
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(650).setMinWidth(450)
 				.setHeight(400).setMinHeight(200);
+	}
+
+	// 设置表单页面的尺寸
+	@Override
+	protected PageOption buildFormPageOption() {
+		PageOption pageOption = super.buildFormPageOption().setWidth(618);
+
+		if (!this.isReadonly())
+			pageOption.addButton(new ButtonOption(getText("label.save"), null,
+					"bc.unitForm.save"));
+
+		return pageOption;
 	}
 
 	// 设置表格的列
@@ -52,7 +65,8 @@ public class UnitAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
+					.setValueFormater(new EntityStatusFormater(
+							getEntityStatuses())));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));
