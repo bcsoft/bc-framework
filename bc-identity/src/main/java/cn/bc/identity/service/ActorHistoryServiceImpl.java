@@ -78,4 +78,8 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 			return belong;
 		}
 	}
+
+	public ActorHistory loadByCode(String actorCode) {
+		return actorHistoryDao.loadByCode(actorCode);
+	}
 }

@@ -71,7 +71,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 
 	@Override
 	public String create() throws Exception {
-		this.readonly = false;
+//		this.readonly = false;
 		SystemContext context = (SystemContext) this.getContext();
 		Feedback e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
@@ -122,7 +122,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 
 	@Override
 	public String edit() throws Exception {
-		this.readonly = false;
+//		this.readonly = false;
 		this.setE(this.getCrudService().load(this.getId()));
 		this.formPageOption = buildFormPageOption();
 
@@ -139,7 +139,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		// 构建附件控件
 		String ptype = "feedback.main";
 		AttachWidget attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(this.isFlashUpload());
+		attachsUI.setFlashUpload(isFlashUpload());
 		attachsUI.addClazz("formAttachs");
 		if (!isNew)
 			attachsUI.addAttach(this.attachService.findByPtype(ptype, this

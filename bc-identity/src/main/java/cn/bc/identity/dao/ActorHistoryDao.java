@@ -16,4 +16,12 @@ public interface ActorHistoryDao extends CrudDao<ActorHistory>{
 	 * @return
 	 */
 	ActorHistory loadCurrent(Long actorId);
+
+	/**
+	 * 根据编码获取，如用户历史
+	 * 
+	 * @param actorCode
+	 * @return
+	 */
+	ActorHistory loadByCode(String actorCode);
 }

@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.springframework.orm.jpa.JpaCallback;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.identity.dao.ActorHistoryDao;
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
@@ -46,5 +47,18 @@ public class ActorHistoryDaoImpl extends HibernateCrudJpaDao<ActorHistory>
 		} else {
 			return null;
 		}
+	}
+
+	public ActorHistory loadByCode(String actorCode) {
+		String hql = "select ah from ActorHistory ah, Actor a where a.id=ah.actorId and a.code=?";
+		@SuppressWarnings("rawtypes")
+		List all = this.getJpaTemplate().find(hql, actorCode);
+		if (all == null || all.isEmpty())
+			return null;
+		else if (all.size() == 1)
+			return (ActorHistory) all.get(0);
+		else
+			throw new CoreException("return more than one result! actorCode="
+					+ actorCode);
 	}
 }

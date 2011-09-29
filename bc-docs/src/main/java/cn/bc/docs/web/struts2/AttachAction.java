@@ -40,6 +40,7 @@ import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
+import cn.bc.identity.service.ActorHistoryService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
@@ -76,6 +77,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	private static final long serialVersionUID = 1L;
 	// private String MANAGER_KEY = "R_MANAGER_ATTACH";// 附件管理角色的编码
 
+	private ActorHistoryService actorHistoryService;
 	private AttachService attachService;
 	private CrudService<AttachHistory> attachHistoryService;
 
@@ -89,6 +91,11 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	public void setAttachHistoryService(
 			@Qualifier(value = "attachHistoryService") CrudService<AttachHistory> attachHistoryService) {
 		this.attachHistoryService = attachHistoryService;
+	}
+
+	@Autowired
+	public void setActorHistoryService(ActorHistoryService actorHistoryService) {
+		this.actorHistoryService = actorHistoryService;
 	}
 
 	public String editableAttachsUI;
@@ -220,7 +227,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("fileDate",Direction.Desc);
+		return new OrderCondition("fileDate", Direction.Desc);
 	}
 
 	public String filename;
@@ -277,7 +284,13 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		ah.setFileDate(Calendar.getInstance());
 		ah.setFormat(attach.getExtension());
 		ah.setType(type);
-		ah.setAuthor(context.getUserHistory());
+		if (context == null){
+			ah.setAuthor(this.actorHistoryService.loadByCode("admin"));
+			ah.setMemo("[unauth]");
+		}else{
+			ah.setAuthor(context.getUserHistory());
+		}
+
 		ah.setSubject(attach.getSubject());
 		ah.setAttach(attach);
 

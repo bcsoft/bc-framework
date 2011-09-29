@@ -30,6 +30,7 @@ import cn.bc.identity.service.UserService;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
@@ -88,18 +89,33 @@ public class UserAction extends AbstractActorAction {
 		return r;
 	}
 
-	// 设置页面的尺寸
+	// 设置视图页面的尺寸
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(700).setMinWidth(450)
 				.setHeight(500).setMinHeight(200);
 	}
 
+	// 设置表单页面的尺寸
+	@Override
+	protected PageOption buildFormPageOption() {
+		PageOption pageOption = super.buildFormPageOption().setWidth(665);
+
+		if (!this.isReadonly())
+			pageOption.addButton(new ButtonOption(getText("label.save"), null,
+					"bc.userForm.save"));
+
+		return pageOption;
+	}
+
 	@Override
 	protected Toolbar buildToolbar() {
-		return super.buildToolbar().addButton(
-				new ToolbarButton().setIcon("ui-icon-document")
-						.setText(getText("user.password.reset"))
-						.setClick("bc.userList.setPassword"));
+		Toolbar tb = super.buildToolbar();
+		if (!this.isReadonly())
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
+					.setText(getText("user.password.reset"))
+					.setClick("bc.userList.setPassword"));
+
+		return tb;
 	}
 
 	@Override
@@ -114,7 +130,8 @@ public class UserAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
+					.setValueFormater(new EntityStatusFormater(
+							getEntityStatuses())));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));
@@ -169,6 +186,7 @@ public class UserAction extends AbstractActorAction {
 
 	@Override
 	public String edit() throws Exception {
+		String r = super.edit();
 		this.setE(this.getCrudService().load(this.getId()));
 
 		// 加载上级组织信息
@@ -192,7 +210,7 @@ public class UserAction extends AbstractActorAction {
 			inheritRolesFromGroup.addAll(g.getRoles());
 		}
 
-		return "form";
+		return r;
 	}
 
 	// 表单可选项的加载

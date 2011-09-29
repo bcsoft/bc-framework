@@ -79,8 +79,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected Map<String, Object> session;
 	protected Map<String, Object> request;
 	public PageOption formPageOption;// 表单页面的Option配置
-	public boolean readonly;
 	public long ts = new Date().getTime();// 时间戳
+
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
 	}
@@ -109,6 +109,15 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 		if (ServletActionContext.getRequest() != null)
 			contextPath = ServletActionContext.getRequest().getContextPath();
+	}
+
+	/**
+	 * 判断表单是否只读的方法，需要权限控制时由基类复写
+	 * 
+	 * @return
+	 */
+	public boolean isReadonly() {
+		return false;
 	}
 
 	public Page<? extends Object> getPage() {
@@ -199,7 +208,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 新建表单
 	public String create() throws Exception {
-		this.readonly = false;
+		// this.readonly = false;
 
 		// 初始化E
 		this.setE(this.getCrudService().create());
@@ -212,7 +221,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 编辑表单
 	public String edit() throws Exception {
-		this.readonly = false;
+		// this.readonly = false;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
 		return "form";
@@ -220,7 +229,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 只读表单
 	public String open() throws Exception {
-		this.readonly = true;
+		// this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
 		return "formr";
@@ -228,7 +237,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 表单：自动判断权限
 	public String read() throws Exception {
-		this.readonly = true;
+		// this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
 		return "form";
@@ -584,21 +593,29 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/** 构建表单页面的对话框初始化配置 */
 	protected PageOption buildFormPageOption() {
-		return null;
+		PageOption pageOption = new PageOption().setMinWidth(250)
+				.setMinHeight(200).setModal(false);
+		pageOption.put("readonly",this.isReadonly());
+		return pageOption;
 	}
 
 	/** 构建视图页面的工具条 */
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		// 新建按钮
-		tb.addButton(getDefaultCreateToolbarButton());
+		if (this.isReadonly()) {
+			// 查看按钮
+			tb.addButton(getDefaultOpenToolbarButton());
+		} else {
+			// 新建按钮
+			tb.addButton(getDefaultCreateToolbarButton());
 
-		// 编辑按钮
-		tb.addButton(getDefaultEditToolbarButton());
+			// 编辑按钮
+			tb.addButton(getDefaultEditToolbarButton());
 
-		// 删除按钮
-		tb.addButton(getDefaultDeleteToolbarButton());
+			// 删除按钮
+			tb.addButton(getDefaultDeleteToolbarButton());
+		}
 
 		// 搜索按钮
 		tb.addButton(getDefaultSearchToolbarButton());
@@ -613,7 +630,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 创建默认的查看按钮
 	protected Button getDefaultOpenToolbarButton() {
-		return Toolbar.getDefaultEditToolbarButton(getText("label.open"));
+		return Toolbar.getDefaultEditToolbarButton(getText("label.read"));
 	}
 
 	// 创建默认的编辑按钮
@@ -628,7 +645,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 创建默认的搜索按钮
 	protected Button getDefaultSearchToolbarButton() {
-		return Toolbar.getDefaultSearchToolbarButton(getText("title.click2search"));
+		return Toolbar
+				.getDefaultSearchToolbarButton(getText("title.click2search"));
 	}
 
 	/** 构建视图页面的表格 */

@@ -15,7 +15,7 @@ import cn.bc.web.formater.AbstractFormater;
  * @author dragon
  * 
  */
-public class ResourceTypeFormater extends AbstractFormater {
+public class ResourceTypeFormater extends AbstractFormater<String> {
 	private Map<String, String> types;
 
 	public ResourceTypeFormater() {
