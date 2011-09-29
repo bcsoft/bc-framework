@@ -52,9 +52,12 @@ public class UnitAction extends AbstractActorAction {
 	protected PageOption buildFormPageOption() {
 		PageOption pageOption = super.buildFormPageOption().setWidth(618);
 
-		if (!this.isReadonly())
-			pageOption.addButton(new ButtonOption(getText("label.save"), null,
-					"bc.unitForm.save"));
+		if (!this.isReadonly()) {
+			ButtonOption buttonOption = new ButtonOption(getText("label.save"),
+					null, "bc.unitForm.save");
+			buttonOption.put("id", "bcSaveDlgButton");
+			pageOption.addButton(buttonOption);
+		}
 
 		return pageOption;
 	}
