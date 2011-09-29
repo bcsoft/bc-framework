@@ -26,7 +26,7 @@ public class ToolbarSearchButton extends Button {
 	public void renderButton(StringBuffer main) {
 		this.addChild(new A().setId("searchBtn")
 				.addClazz("ui-icon ui-icon-search").setTitle(this.getTitle()));
-		this.addChild(new TextInput().setId("searchText"));
+		this.addChild(new TextInput().setId("searchText").addClazz("ui-widget-content"));
 		this.setTitle(null);
 	}
 }
