@@ -32,7 +32,7 @@ public class OptionServiceImpl implements OptionService {
 			String optionGroupKey, String currentItemKey,
 			String currentItemValue) {
 		List<OptionItem> list = optionDao
-				.findOptionItemByGroupValue(optionGroupKey);
+				.findOptionItemByGroupKey(optionGroupKey);
 		if (currentItemKey != null) {
 			if (currentItemValue == null) {
 				currentItemValue = currentItemKey;
