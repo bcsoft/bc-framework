@@ -26,5 +26,8 @@
 		<action name="selectIconClass" class="shortcutAction" method="selectIconClass">
 			<result>/bc/desktop/shortcut/selectIconClass.jsp</result>
 		</action>
+		<action name="save4drag" class="shortcutAction" method="save4drag">
+			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
+		</action>
 	</package>
 </struts>
