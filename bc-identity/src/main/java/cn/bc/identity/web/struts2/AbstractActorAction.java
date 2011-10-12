@@ -86,7 +86,7 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(MANAGER_KEY);// 超级管理员
+		return !context.hasAnyRole(MANAGER_KEY,getText("key.role.admin"));// 组织架构管理或超级管理角色
 	}
 
 	// 查询条件中要匹配的域
