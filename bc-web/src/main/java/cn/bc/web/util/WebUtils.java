@@ -201,6 +201,9 @@ public class WebUtils implements ServletContextAware {
 	 * @throws Exception
 	 */
 	public static String getMac(String ip) throws Exception {
+		if ("127.0.0.1".equals(ip)
+				|| "localhost".equals(ip)) 
+			return "untrace because localhost";
 		return new UdpGetClientMacAddr(ip).GetRemoteMacAddr();
 	}
 
