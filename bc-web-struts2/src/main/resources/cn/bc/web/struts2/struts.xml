@@ -123,5 +123,6 @@
 		<action name="showfm" class="testAction" method="showfm">
 			<result type="freemarker">${tpl}</result>
 		</action>
+		<action name="showHeader" class="testAction" method="showHeader"/>
 	</package>
 </struts>
