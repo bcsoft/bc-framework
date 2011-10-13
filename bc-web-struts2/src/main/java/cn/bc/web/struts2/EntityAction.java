@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.StringUtils;
 
 import cn.bc.Context;
@@ -278,18 +279,24 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		return "saveSuccess";
 	}
 
+	public String json;
 	// 删除
 	public String delete() throws Exception {
-		if (this.getId() != null) {// 删除一条
-			this.getCrudService().delete(this.getId());
-		} else {// 删除一批
-			if (this.getIds() != null && this.getIds().length() > 0) {
-				Long[] ids = cn.bc.core.util.StringUtils
-						.stringArray2LongArray(this.getIds().split(","));
-				this.getCrudService().delete(ids);
-			} else {
-				throw new CoreException("must set property id or ids");
+		try {
+			if (this.getId() != null) {// 删除一条
+				this.getCrudService().delete(this.getId());
+			} else {// 删除一批
+				if (this.getIds() != null && this.getIds().length() > 0) {
+					Long[] ids = cn.bc.core.util.StringUtils
+							.stringArray2LongArray(this.getIds().split(","));
+					this.getCrudService().delete(ids);
+				} else {
+					throw new CoreException("must set property id or ids");
+				}
 			}
+		} catch (JpaSystemException e) {
+			//处理违反外键约束导致的删除异常，提示用户因关联而无法删除
+			throw new CoreException("JpaSystemException");
 		}
 		return "deleteSuccess";
 	}
