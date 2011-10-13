@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 
  */
 public interface Entity<ID extends Serializable> extends Serializable {
-	/**状态：启用中*/
+	/**状态：正常*/
 	public static final int STATUS_ENABLED = 0;
 	/**状态：已禁用*/
 	public static final int STATUS_DISABLED = 1;
