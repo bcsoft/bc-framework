@@ -7,21 +7,20 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.web.ui.html.grid.Grid;
-import cn.bc.web.ui.html.grid.GridFooter;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 
 /**
- * 选择司机、责任人Action
+ * 选择对话框的抽象Action
  * 
  * @author dragon
  * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public abstract class AbstractSelectPageAction extends AbstractGridPageAction {
+public abstract class AbstractSelectPageAction<T extends Object> extends
+		AbstractGridPageAction<T> {
 	private static final long serialVersionUID = 1L;
 
 	/** 获取点击确认按钮的回调函数名 */
@@ -30,11 +29,6 @@ public abstract class AbstractSelectPageAction extends AbstractGridPageAction {
 	@Override
 	protected String getGridDblRowMethod() {
 		return this.getClickOkMethod();
-	}
-
-	@Override
-	protected GridFooter getGridFooter(Grid grid) {
-		return null;
 	}
 
 	@Override
