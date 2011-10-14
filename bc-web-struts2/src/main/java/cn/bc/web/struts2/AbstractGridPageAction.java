@@ -9,8 +9,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.bc.core.CrudOperations;
 import cn.bc.core.Page;
+import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -29,24 +29,33 @@ import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.json.Json;
 
 /**
- * 带grid的Action
+ * 带grid页的抽象Action
  * 
  * @author dragon
  * 
  */
-public abstract class AbstractGridPageAction extends AbstractHtmlPageAction {
+public abstract class AbstractGridPageAction<T extends Object> extends
+		AbstractHtmlPageAction {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(this.getClass());
 	public boolean multiple;// 是否允许多选
-	public List<? extends Object> es; // grid的数据
-	public Page<? extends Object> page; // 分页对象
+	public List<T> es; // grid的数据
+	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
+	
+	public Page<T> getPage() {
+		return page;
+	}
+	
+	public void setPage(Page<T> page) {
+		this.page = page;
+	}
 
 	// == 子类必须复写的方法
 
 	/** grid数据的查询服务 */
-	protected abstract CrudOperations<? extends Object> getGridDataService();
+	protected abstract Query<T> getQuery();
 
 	/** 计算grid数据行标签信息的表达式 */
 	protected abstract String getGridRowLabelExpression();
@@ -77,7 +86,7 @@ public abstract class AbstractGridPageAction extends AbstractHtmlPageAction {
 	public String paging() throws Exception {
 		// 首次请求时page对象为空，需要初始化一下
 		if (this.page == null)
-			this.page = new Page<Object>();
+			this.page = new Page<T>();
 		if (this.page.getPageSize() < 1)
 			this.page.setPageSize(Integer
 					.parseInt(getText("app.grid.pageSize")));
@@ -121,9 +130,8 @@ public abstract class AbstractGridPageAction extends AbstractHtmlPageAction {
 	 * 
 	 * @return
 	 */
-	protected List<? extends Object> findList() {
-		return this.getGridDataService().createQuery()
-				.condition(this.getGridCondition()).list();
+	protected List<T> findList() {
+		return this.getQuery().condition(this.getGridCondition()).list();
 	}
 
 	/**
@@ -131,9 +139,8 @@ public abstract class AbstractGridPageAction extends AbstractHtmlPageAction {
 	 * 
 	 * @return
 	 */
-	protected Page<? extends Object> findPage() {
-		return this.getGridDataService().createQuery()
-				.condition(this.getGridCondition())
+	protected Page<T> findPage() {
+		return this.getQuery().condition(this.getGridCondition())
 				.page(page.getPageNo(), page.getPageSize());
 	}
 
@@ -248,8 +255,8 @@ public abstract class AbstractGridPageAction extends AbstractHtmlPageAction {
 		}
 
 		// 导出按钮
-		footer.addButton(GridFooter
-				.getDefaultExportButton(getText("label.export")));
+//		footer.addButton(GridFooter
+//				.getDefaultExportButton(getText("label.export")));
 
 		// 打印按钮
 		// footer.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));

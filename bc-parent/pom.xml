@@ -629,7 +629,7 @@
 		<spring-ws.version>2.0.2.RELEASE</spring-ws.version>
 
 		<!-- 数据库连接配置 -->
-		<db>mysql</db>
+		<db.type>mysql</db.type>
 		<db.name>bcdemo</db.name>
 		<db.ip>localhost</db.ip>
 		<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
@@ -652,7 +652,7 @@
 		<profile>
 			<id>mysql</id>
 			<properties>
-				<db>mysql</db>
+				<db.type>mysql</db.type>
 				<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
 				<db.url><![CDATA[jdbc:mysql://${db.ip}:3306/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
 				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
@@ -668,7 +668,7 @@
 		<profile>
 			<id>oracle</id>
 			<properties>
-				<db>oracle</db>
+				<db.type>oracle</db.type>
 				<db.driverClassName>oracle.jdbc.OracleDriver</db.driverClassName>
 				<db.url><![CDATA[jdbc:oracle:thin:@${db.ip}:1521:${db.name}]]></db.url>
 				<db.sequence>hibernate_sequence</db.sequence>
@@ -684,7 +684,7 @@
 		<profile>
 			<id>mssql</id>
 			<properties>
-				<db>mssql</db>
+				<db.type>mssql</db.type>
 				<db.driverClassName>net.sourceforge.jtds.jdbc.Driver</db.driverClassName>
 				<db.url><![CDATA[jdbc:jtds:sqlserver://${db.ip}:1433;DatabaseName=${db.name}]]></db.url>
 				<hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
@@ -697,5 +697,4 @@
 			</dependencies>
 		</profile>
 	</profiles>
-
 </project>
