@@ -1,8 +1,8 @@
--- »ñÈ¡ËùÓÐ¶¥²ãµ¥Î»ÐÅÏ¢
+-- èŽ·å–æ‰€æœ‰é¡¶å±‚å•ä½ä¿¡æ¯
 explain select m.* from BC_IDENTITY_ACTOR m where m.type_ =2 and m.id not in 
 (select f.id from BC_IDENTITY_ACTOR f inner join BC_IDENTITY_ACTOR_RELATION ar on f.id=ar.follower_id where f.type_=2 and ar.type_=0);
 
--- »ñÈ¡µ¥Î»µÄÏÂÊôµ¥Î»»ò²¿ÃÅÐÅÏ¢
+-- èŽ·å–å•ä½çš„ä¸‹å±žå•ä½æˆ–éƒ¨é—¨ä¿¡æ¯
 explain select m1.name,f1.* from BC_IDENTITY_ACTOR f1
 inner join BC_IDENTITY_ACTOR_RELATION ar1 on ar1.follower_id=f1.id
 inner join BC_IDENTITY_ACTOR m1 on m1.id=ar1.master_id
@@ -11,7 +11,7 @@ where (f1.type_ =2) and ar1.type_=0 and m1.id in (
     (select f.id from BC_IDENTITY_ACTOR f inner join BC_IDENTITY_ACTOR_RELATION ar on f.id=ar.follower_id where f.type_=2 and ar.type_=0)
 ) order by f1.code;
 
--- »ñÈ¡µ¥Î»µÄÏÂÊô²¿ÃÅÐÅÏ¢
+-- èŽ·å–å•ä½çš„ä¸‹å±žéƒ¨é—¨ä¿¡æ¯
 explain select m1.name,f1.* from BC_IDENTITY_ACTOR f1
 inner join BC_IDENTITY_ACTOR_RELATION ar1 on ar1.follower_id=f1.id
 inner join BC_IDENTITY_ACTOR m1 on m1.id=ar1.master_id
@@ -20,25 +20,25 @@ where f1.type_ =3 and ar1.type_=0 and m1.id in (
     (select f.id from BC_IDENTITY_ACTOR f inner join BC_IDENTITY_ACTOR_RELATION ar on f.id=ar.follower_id where f.type_=2 and ar.type_=0)
 ) order by f1.code;
 
--- »ñÈ¡µ¥Î»µÄÉÏ¼¶µ¥Î»
+-- èŽ·å–å•ä½çš„ä¸Šçº§å•ä½
 explain select f1.name,m1.* from BC_IDENTITY_ACTOR m1
 inner join BC_IDENTITY_ACTOR_RELATION ar1 on ar1.master_id=m1.id
 inner join BC_IDENTITY_ACTOR f1 on f1.id=ar1.follower_id
-where m1.type_ =2 and ar1.type_=0 and f1.id = (select f.id from BC_IDENTITY_ACTOR f where f.name='ÐÞÀí³§') order by m1.code;
+where m1.type_ =2 and ar1.type_=0 and f1.id = (select f.id from BC_IDENTITY_ACTOR f where f.name='ä¿®ç†åŽ‚') order by m1.code;
 
--- »ñÈ¡²¿ÃÅµÄÉÏ¼¶µ¥Î»
+-- èŽ·å–éƒ¨é—¨çš„ä¸Šçº§å•ä½
 explain select f1.name,m1.* from BC_IDENTITY_ACTOR m1
 inner join BC_IDENTITY_ACTOR_RELATION ar1 on ar1.master_id=m1.id
 inner join BC_IDENTITY_ACTOR f1 on f1.id=ar1.follower_id
-where m1.type_ =2 and ar1.type_=0 and f1.id = (select f.id from BC_IDENTITY_ACTOR f where f.name='ÐÅÏ¢»¯ÏîÄ¿Ð¡×é') order by m1.code;
+where m1.type_ =2 and ar1.type_=0 and f1.id = (select f.id from BC_IDENTITY_ACTOR f where f.name='ä¿¡æ¯åŒ–é¡¹ç›®å°ç»„') order by m1.code;
 
--- Ê¹ÓÃinÔÚmysqlÖÐ»áµ¼ÖÂÈ«±í²éÑ¯
+-- ä½¿ç”¨inåœ¨mysqlä¸­ä¼šå¯¼è‡´å…¨è¡¨æŸ¥è¯¢
 explain select f.* from BC_IDENTITY_ACTOR f where f.type_ in(2,3);
 explain (select f1.* from BC_IDENTITY_ACTOR f1 where f1.type_ =2) union all (select f1.* from BC_IDENTITY_ACTOR f1 where f1.type_ =3);
 
 select * from BC_IDENTITY_ACTOR;
 
--- ´´½¨´æ´¢¹ý³Ì£ºloop_timeÎªÑ­»·µÄ´ÎÊý
+-- åˆ›å»ºå­˜å‚¨è¿‡ç¨‹ï¼šloop_timeä¸ºå¾ªçŽ¯çš„æ¬¡æ•°
 DELIMITER $$ 
     DROP PROCEDURE IF EXISTS test $$ 
     CREATE PROCEDURE test (loop_time int) 
@@ -50,5 +50,71 @@ DELIMITER $$
         END WHILE; 
     END $$ 
 DELIMITER ; 
--- µ÷ÓÃ´æ´¢¹ý³Ì
+-- è°ƒç”¨å­˜å‚¨è¿‡ç¨‹
 -- CALL test(250); 
+
+
+-- ====ç±»oracle connect by å¤„ç†å‡½æ•°æŠ€æœ¯===
+-- åˆ›å»ºæµ‹è¯•æ•°æ®
+drop table if exists T1;
+CREATE TABLE T1 (  
+  id bigint NOT NULL auto_increment,  
+  pid bigint,  
+  code varchar(255),  
+  PRIMARY KEY (id)  
+);
+insert into t1(id,pid,code) values(1,null,'1');
+insert into t1(id,pid,code) values(2,null,'2');
+insert into t1(id,pid,code) values(3,1,'1.1');
+insert into t1(id,pid,code) values(4,1,'1.2');
+insert into t1(id,pid,code) values(5,2,'2.1');
+insert into t1(id,pid,code) values(6,3,'1.1.1');
+select * from t1 order by code;
+
+-- å®šä¹‰é€’å½’å¤„ç†å‡½æ•°:èŽ·å–ç¥–å…ˆçš„idå’Œcodeï¼Œå¹¶ç”¨ç¬¦å·'/'æŒ‰åºè¿žæŽ¥ï¼Œidå’Œcodeé—´ç”¨';'è¿žæŽ¥
+DELIMITER $$ 
+     DROP FUNCTION IF EXISTS getAncestors $$ 
+	CREATE FUNCTION getAncestors(id bigint) RETURNS VARCHAR(1000)
+	BEGIN
+            DECLARE done INT DEFAULT 0;
+            DECLARE r VARCHAR(1000);
+            DECLARE ri VARCHAR(1000);
+            DECLARE rc VARCHAR(1000);
+            DECLARE lev int;
+            DECLARE cid bigint;
+            DECLARE pid bigint;
+            DECLARE pcode VARCHAR(255);
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1; 
+            
+            SET cid = id;
+            SET lev = 0;
+            SET ri = '';
+            SET rc = '';
+            REPEAT  
+                SELECT p.id,p.code into pid,pcode FROM T1 c inner join  T1 p on p.id=c.pid where c.id=cid;
+                IF NOT done THEN
+                    SET cid = pid;
+                    if length(ri) > 0 then
+                        SET ri = concat(cast(pid as char),'/',ri);
+                        SET rc = concat(cast(pid as char),'/',rc);
+                    else 
+                        SET ri= cast(pid as char);
+                        SET rc= pcode;
+                    end if;
+                END IF;
+            UNTIL done END REPEAT;
+            if length(ri) > 0 then
+                SET r = concat(ri,';',rc);
+            else 
+                SET r = null;
+            end if;
+           RETURN r;
+    END $$ 
+DELIMITER ; 
+-- è¿”å›žï¼šnull;
+select getAncestors(1);
+-- è¿”å›žï¼š'1;1';
+select getAncestors(3);
+-- è¿”å›žï¼š'1/3;1/1.1';
+select getAncestors(6);
+-- =======================================

@@ -11,7 +11,7 @@ import cn.bc.web.formater.AbstractFormater;
  * @author dragon
  * 
  */
-public class StandaloneFormater extends AbstractFormater {
+public class StandaloneFormater extends AbstractFormater<String> {
 	private String yes = "外部链接";
 	private String no = "内部链接";
 
