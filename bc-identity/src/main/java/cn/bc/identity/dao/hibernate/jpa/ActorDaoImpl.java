@@ -372,11 +372,22 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				curAr.setMaster(belong);
 				curAr.setType(ActorRelation.TYPE_BELONG);
 				this.actorRelationDao.save(curAr);
+				
+				// 根据新的隶属关系重新设置pcode、pname
+				follower.setPcode(belong.getFullCode());
+				follower.setPname(belong.getFullName());
+				follower = this.save(follower);
 			}
 		} else {
-			// 删除存在的隶属关系
-			if (curAr != null)
+			if (curAr != null){
+				// 删除存在的隶属关系
 				this.actorRelationDao.delete(curAr);
+				
+				// 没有隶属关系就设置pcode、pname为空
+				follower.setPcode(null);
+				follower.setPname(null);
+				follower = this.save(follower);
+			}
 		}
 
 		return follower;

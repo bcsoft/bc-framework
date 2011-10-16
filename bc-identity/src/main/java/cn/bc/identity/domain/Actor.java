@@ -22,7 +22,6 @@ import javax.persistence.Transient;
 
 import cn.bc.core.util.PinYinUtils;
 
-
 /**
  * 参与者
  * 
@@ -32,6 +31,8 @@ import cn.bc.core.util.PinYinUtils;
 @Table(name = "BC_IDENTITY_ACTOR")
 public class Actor implements cn.bc.core.RichEntity<Long> {
 	private static final long serialVersionUID = 1L;
+	/** 全路径分隔符 */
+	public static final String PS = "/";
 	/** 类型:未定义 */
 	public static final int TYPE_UNDEFINED = 0;
 	/** 类型:用户 */
@@ -43,10 +44,10 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 	/** 类型:岗位或团队 */
 	public static final int TYPE_GROUP = 3;
 
-	public Actor(){
-		
+	public Actor() {
+
 	}
-	
+
 	private Long id;
 	private String uid;
 	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
@@ -54,33 +55,30 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 
 	private String name;
 	private String code;
+	private String pname;// 隶属机构的全名:如'unitName1/departmentName1,unitName2/departmentName2'
+	private String pcode;// 隶属机构的全编码:如'[1]unitCode1/[2]departmentCode1,[1]unitCode2/[2]departmentCode2'
 	private int type = Actor.TYPE_UNDEFINED;
 	private String email;
 	private String phone;
 	private String orderNo;
 
 	private ActorDetail detail;
-	
-	private Set<Role> roles;//拥有的角色列表
 
-	//姓名的中文拼音
+	private Set<Role> roles;// 拥有的角色列表
+
+	// 姓名的中文拼音
 	@Column(name = "PY")
 	public String getPinYin() {
 		return PinYinUtils.getPinYin(this.getName());
 	}
 
 	public void setPinYin(String pinYin) {
-		//do nothing
+		// do nothing
 	}
 
-	@ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="BC_IDENTITY_ROLE_ACTOR",
-        joinColumns=
-            @JoinColumn(name="AID", referencedColumnName="ID"),
-        inverseJoinColumns=
-            @JoinColumn(name="RID", referencedColumnName="ID")
-        )
-    @OrderBy("orderNo asc")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "BC_IDENTITY_ROLE_ACTOR", joinColumns = @JoinColumn(name = "AID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "RID", referencedColumnName = "ID"))
+	@OrderBy("orderNo asc")
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -122,6 +120,22 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+
+	public String getPcode() {
+		return pcode;
+	}
+
+	public void setPcode(String pcode) {
+		this.pcode = pcode;
 	}
 
 	@Column(name = "TYPE_")
@@ -189,5 +203,24 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 
 	public void setInner(boolean inner) {
 		this.inner = inner;
+	}
+
+	@Transient
+	public String getFullCode() {
+		if (this.getPcode() != null && this.getPcode().length() > 0) {
+			return this.getPcode() + PS + "[" + this.getType() + "]"
+					+ this.getCode();
+		} else {
+			return "[" + this.getType() + "]" + this.getCode();
+		}
+	}
+
+	@Transient
+	public String getFullName() {
+		if (this.getPname() != null && this.getPname().length() > 0) {
+			return this.getPname() + PS + this.getName();
+		} else {
+			return this.getName();
+		}
 	}
 }

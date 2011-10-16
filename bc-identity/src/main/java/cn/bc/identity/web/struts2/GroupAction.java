@@ -75,16 +75,20 @@ public class GroupAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
+					.setValueFormater(new EntityStatusFormater(
+							getEntityStatuses())));
+		if (this.useColumn("pname"))
+			columns.add(new TextColumn("pname", getText("actor.pname"))
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("name"))
+			columns.add(new TextColumn("name", getText("actor.name"), 100)
+					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
 					.setSortable(true).setDir(Direction.Asc));
 		if (this.useColumn("code"))
 			columns.add(new TextColumn("code", getText("actor.code"), 80)
-					.setSortable(true));
-		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("actor.name"))
-					.setSortable(true));
+					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("phone"))
 			columns.add(new TextColumn("phone", getText("actor.phone"), 120));
 		// columns.add(new TextColumn("email", getText("actor.email"), 150));
