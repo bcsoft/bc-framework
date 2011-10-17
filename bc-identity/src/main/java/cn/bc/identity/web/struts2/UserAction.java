@@ -136,15 +136,15 @@ public class UserAction extends AbstractActorAction {
 			columns.add(new TextColumn("pname", getText("actor.pname"))
 					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("user.name"), 100)
+			columns.add(new TextColumn("name", getText("user.name"), 120)
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("code"))
+			columns.add(new TextColumn("code", getText("user.code"), 120)
 					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
-					.setSortable(true).setDir(Direction.Asc)
-					.setUseTitleFromLabel(true));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("user.code"), 80)
-					.setSortable(true).setUseTitleFromLabel(true));
+			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
+			.setSortable(true).setDir(Direction.Asc)
+			.setUseTitleFromLabel(true));
 		if (this.useColumn("phone"))
 			columns.add(new TextColumn("phone", getText("user.phone"), 100));
 		if (this.useColumn("email"))
