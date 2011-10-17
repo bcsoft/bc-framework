@@ -116,12 +116,12 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 		return this.actorDao.findCanUseModules(actorId);
 	}
 
-	public Actor save4belong(Actor follower, Actor belong) {
-		return this.actorDao.save4belong(follower, belong);
+	public Actor save4belong(Actor follower, Long belongId) {
+		return this.actorDao.save4belong(follower, belongId);
 	}
 
-	public Actor save4belong(Actor follower, Actor[] belongs) {
-		return this.actorDao.save4belong(follower, belongs);
+	public Actor save4belong(Actor follower, Long[] belongIds) {
+		return this.actorDao.save4belong(follower, belongIds);
 	}
 
 	public List<Actor> find(Integer[] actorTypes, Integer[] actorStatues) {

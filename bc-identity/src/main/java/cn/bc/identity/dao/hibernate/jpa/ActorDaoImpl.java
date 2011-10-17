@@ -356,12 +356,12 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		super.delete(pks);
 	}
 
-	public Actor save4belong(Actor follower, Actor belong) {
-		Actor[] belongs = (belong == null ? null : new Actor[] { belong });
+	public Actor save4belong(Actor follower, Long belongId) {
+		Long[] belongs = (belongId == null ? null : new Long[] { belongId });
 		return this.save4belong(follower, belongs);
 	}
 
-	public Actor save4belong(Actor follower, Actor[] belongs) {
+	public Actor save4belong(Actor follower, Long[] belongIds) {
 		// 调用基类的保存，获取id值
 		follower = this.save(follower);
 
@@ -369,16 +369,17 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		List<ActorRelation> oldArs = this.actorRelationDao.findByFollower(
 				ActorRelation.TYPE_BELONG, follower.getId(), new Integer[] {
 						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
-		if (belongs != null && belongs.length > 0) {
+		if (belongIds != null && belongIds.length > 0) {
 			List<Actor> sameBelongs = new ArrayList<Actor>();// 没有改变的belong
 			List<Actor> newBelongs = new ArrayList<Actor>();// 新加的belong
 
 			// 重新加载belongs
+			Actor[] belongs = new Actor[belongIds.length];
 			boolean same = false;
-			for (int i = 0; i < belongs.length; i++) {
-				belongs[i] = this.load(belongs[i].getId());
+			for (int i = 0; i < belongIds.length; i++) {
+				belongs[i] = this.load(belongIds[i]);
 				for (ActorRelation oldAr : oldArs) {
-					if (oldAr.getMaster().getId().equals(belongs[i].getId())) {
+					if (oldAr.getMaster().getId().equals(belongIds[i])) {
 						same = true;
 						break;
 					}
@@ -415,20 +416,28 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			if (!newBelongs.isEmpty()) {
 				List<ActorRelation> newArs = new ArrayList<ActorRelation>();
 				ActorRelation newAr;
-				List<String> pcodes = new ArrayList<String>();
-				List<String> pnames = new ArrayList<String>();
 				for (Actor belong : newBelongs) {
 					newAr = new ActorRelation();
 					newAr.setFollower(follower);
 					newAr.setMaster(belong);
 					newAr.setType(ActorRelation.TYPE_BELONG);
 					newArs.add(newAr);
+				}
+				this.actorRelationDao.save(newArs);
+			}
+
+			// 根据新的隶属关系重新设置pcode、pname
+			if (sameBelongs.size() != oldArs.size()) {
+				List<String> pcodes = new ArrayList<String>();
+				List<String> pnames = new ArrayList<String>();
+				for (Actor belong : sameBelongs) {
 					pcodes.add(belong.getFullCode());
 					pnames.add(belong.getFullName());
 				}
-				this.actorRelationDao.save(newArs);
-
-				// 根据新的隶属关系重新设置pcode、pname
+				for (Actor belong : newBelongs) {
+					pcodes.add(belong.getFullCode());
+					pnames.add(belong.getFullName());
+				}
 				follower.setPcode(StringUtils
 						.collectionToCommaDelimitedString(pcodes));
 				follower.setPname(StringUtils

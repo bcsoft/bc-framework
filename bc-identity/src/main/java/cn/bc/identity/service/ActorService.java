@@ -123,15 +123,15 @@ public interface ActorService extends CrudService<Actor>{
 
 	/**
 	 * @param follower
-	 * @param belong 隶属上级
+	 * @param belongId 隶属上级
 	 */
-	Actor save4belong(Actor follower, Actor belong);
+	Actor save4belong(Actor follower, Long belongId);
 
 	/**
 	 * @param follower
-	 * @param belongs 隶属上级
+	 * @param belongIds 隶属上级
 	 */
-	Actor save4belong(Actor follower, Actor[] belongs);
+	Actor save4belong(Actor follower, Long[] belongIds);
 
 	/**获取指定类型和状态的Actor
 	 * @param actorTypes 类型列表
