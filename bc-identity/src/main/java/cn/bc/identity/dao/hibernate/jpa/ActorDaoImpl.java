@@ -68,6 +68,11 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 	}
 
+	public List<Actor> findBelong(Long followerId, Integer[] masterTypes) {
+		return this.findMaster(followerId,
+				new Integer[] { ActorRelation.TYPE_BELONG }, masterTypes);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Actor> findMaster(Long followerId, Integer[] relationTypes,
 			Integer[] masterTypes) {
@@ -248,12 +253,13 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 	public List<Actor> findAncestorOrganization(Long lowerOrganizationId,
 			Integer... ancestorOrganizationTypes) {
 		// 默认为单位+部门+岗位
-		if (ancestorOrganizationTypes == null || ancestorOrganizationTypes.length == 0)
+		if (ancestorOrganizationTypes == null
+				|| ancestorOrganizationTypes.length == 0)
 			ancestorOrganizationTypes = new Integer[] { Actor.TYPE_UNIT,
 					Actor.TYPE_DEPARTMENT, Actor.TYPE_GROUP };
 
 		// TODO 性能优化，以下只是使用了递归查找
-		Set<Actor> ancestors = new LinkedHashSet<Actor>();//使用Set避免重复
+		Set<Actor> ancestors = new LinkedHashSet<Actor>();// 使用Set避免重复
 		this.recursiveFindHigherOrganization(ancestors, lowerOrganizationId,
 				ancestorOrganizationTypes);
 		return new ArrayList<Actor>(ancestors);
@@ -351,43 +357,92 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 	}
 
 	public Actor save4belong(Actor follower, Actor belong) {
+		Actor[] belongs = (belong == null ? null : new Actor[] { belong });
+		return this.save4belong(follower, belongs);
+	}
+
+	public Actor save4belong(Actor follower, Actor[] belongs) {
+		// 调用基类的保存，获取id值
 		follower = this.save(follower);
 
-		// 处理与上级的隶属
-		ActorRelation curAr;
-		curAr = this.actorRelationDao.load4Belong(follower.getId(),
-				new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
-		if (belong != null && !belong.isNew()) {
-			belong = this.load(belong.getId());// 重新加载一下belong
-			if (curAr != null
-					&& !curAr.getMaster().getId().equals(belong.getId())) {
-				// 删除原来的隶属关系（因为使用的是联合主键）
-				this.actorRelationDao.delete(curAr);
+		// 获取原来隶属的上级
+		List<ActorRelation> oldArs = this.actorRelationDao.findByFollower(
+				ActorRelation.TYPE_BELONG, follower.getId(), new Integer[] {
+						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
+		if (belongs != null && belongs.length > 0) {
+			List<Actor> sameBelongs = new ArrayList<Actor>();// 没有改变的belong
+			List<Actor> newBelongs = new ArrayList<Actor>();// 新加的belong
+
+			// 重新加载belongs
+			boolean same = false;
+			for (int i = 0; i < belongs.length; i++) {
+				belongs[i] = this.load(belongs[i].getId());
+				for (ActorRelation oldAr : oldArs) {
+					if (oldAr.getMaster().getId().equals(belongs[i].getId())) {
+						same = true;
+						break;
+					}
+				}
+				if (same) {
+					sameBelongs.add(belongs[i]);
+				} else {
+					newBelongs.add(belongs[i]);
+				}
 			}
-			if (curAr == null
-					|| !curAr.getMaster().getId().equals(belong.getId())) {
-				// 创建新的隶属关系
-				curAr = new ActorRelation();
-				curAr.setFollower(follower);
-				curAr.setMaster(belong);
-				curAr.setType(ActorRelation.TYPE_BELONG);
-				this.actorRelationDao.save(curAr);
-				
+
+			// 删除不再存在的隶属关系
+			if (!oldArs.isEmpty() && sameBelongs.size() != oldArs.size()) {
+				List<ActorRelation> toDeleteArs = new ArrayList<ActorRelation>();
+				Long mid;
+				for (ActorRelation oldAr : oldArs) {
+					mid = oldAr.getMaster().getId();
+					for (Actor belong : sameBelongs) {
+						same = false;
+						if (mid.equals(belong.getId())) {
+							same = true;
+							break;
+						}
+					}
+					if (!same) {
+						toDeleteArs.add(oldAr);
+					}
+				}
+				if (!toDeleteArs.isEmpty())
+					this.actorRelationDao.delete(toDeleteArs);
+			}
+
+			// 创建新的隶属关系
+			if (!newBelongs.isEmpty()) {
+				List<ActorRelation> newArs = new ArrayList<ActorRelation>();
+				ActorRelation newAr;
+				List<String> pcodes = new ArrayList<String>();
+				List<String> pnames = new ArrayList<String>();
+				for (Actor belong : newBelongs) {
+					newAr = new ActorRelation();
+					newAr.setFollower(follower);
+					newAr.setMaster(belong);
+					newAr.setType(ActorRelation.TYPE_BELONG);
+					newArs.add(newAr);
+					pcodes.add(belong.getFullCode());
+					pnames.add(belong.getFullName());
+				}
+				this.actorRelationDao.save(newArs);
+
 				// 根据新的隶属关系重新设置pcode、pname
-				follower.setPcode(belong.getFullCode());
-				follower.setPname(belong.getFullName());
+				follower.setPcode(StringUtils
+						.collectionToCommaDelimitedString(pcodes));
+				follower.setPname(StringUtils
+						.collectionToCommaDelimitedString(pnames));
 				follower = this.save(follower);
 			}
-		} else {
-			if (curAr != null){
-				// 删除存在的隶属关系
-				this.actorRelationDao.delete(curAr);
-				
-				// 没有隶属关系就设置pcode、pname为空
-				follower.setPcode(null);
-				follower.setPname(null);
-				follower = this.save(follower);
-			}
+		} else {// 删除所有现存的隶属关系
+			if (!oldArs.isEmpty())
+				this.actorRelationDao.delete(oldArs);
+
+			// 没有隶属关系了就设置pcode、pname为空
+			follower.setPcode(null);
+			follower.setPname(null);
+			follower = this.save(follower);
 		}
 
 		return follower;
@@ -445,7 +500,8 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues) {
+	public List<ActorHistory> findHistory(Integer[] actorTypes,
+			Integer[] actorStatues) {
 		ArrayList<Object> args = new ArrayList<Object>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select ah from ActorHistory ah,Actor a where ah.actorId = a.id");

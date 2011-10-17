@@ -20,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.springframework.util.StringUtils;
+
 import cn.bc.core.util.PinYinUtils;
 
 /**
@@ -208,8 +210,17 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 	@Transient
 	public String getFullCode() {
 		if (this.getPcode() != null && this.getPcode().length() > 0) {
-			return this.getPcode() + PS + "[" + this.getType() + "]"
-					+ this.getCode();
+			if (this.getPcode().indexOf(",") != -1) {// 隶属多个上级的情况
+				String[] pcodes = this.getPcode().split(",");
+				for (int i = 0; i < pcodes.length; i++) {
+					pcodes[i] = pcodes[i] + PS + "[" + this.getType() + "]"
+							+ this.getCode();
+				}
+				return StringUtils.arrayToCommaDelimitedString(pcodes);
+			} else {
+				return this.getPcode() + PS + "[" + this.getType() + "]"
+						+ this.getCode();
+			}
 		} else {
 			return "[" + this.getType() + "]" + this.getCode();
 		}
@@ -218,7 +229,15 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 	@Transient
 	public String getFullName() {
 		if (this.getPname() != null && this.getPname().length() > 0) {
-			return this.getPname() + PS + this.getName();
+			if (this.getPname().indexOf(",") != -1) {// 隶属多个上级的情况
+				String[] pnames = this.getPname().split(",");
+				for (int i = 0; i < pnames.length; i++) {
+					pnames[i] = pnames[i] + PS + this.getName();
+				}
+				return StringUtils.arrayToCommaDelimitedString(pnames);
+			} else {
+				return this.getPname() + PS + this.getName();
+			}
 		} else {
 			return this.getName();
 		}

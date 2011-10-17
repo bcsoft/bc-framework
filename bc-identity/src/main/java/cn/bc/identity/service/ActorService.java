@@ -29,6 +29,14 @@ public interface ActorService extends CrudService<Actor>{
 	Actor loadBelong(Long followerId, Integer[] masterTypes);
 
 	/**
+	 * 获取从属方的所有上级
+	 * @param followerId 从属方id
+	 * @param masterTypes 主控方的类型，对应Actor的type属性
+	 * @return
+	 */
+	List<Actor> findBelong(Long followerId, Integer[] masterTypes);
+
+	/**
 	 * 获取从属方指定关联关系的主控方
 	 * @param followerId 从属方id
 	 * @param relationTypes 关联的类型，对应ActorRelation的type属性
@@ -115,9 +123,15 @@ public interface ActorService extends CrudService<Actor>{
 
 	/**
 	 * @param follower
-	 * @param belong 单一隶属上级
+	 * @param belong 隶属上级
 	 */
 	Actor save4belong(Actor follower, Actor belong);
+
+	/**
+	 * @param follower
+	 * @param belongs 隶属上级
+	 */
+	Actor save4belong(Actor follower, Actor[] belongs);
 
 	/**获取指定类型和状态的Actor
 	 * @param actorTypes 类型列表

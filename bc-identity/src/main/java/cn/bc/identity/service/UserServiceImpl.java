@@ -41,9 +41,14 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 	}
 
 	public Actor save(Actor user, Actor belong, Long[] groupIds) {
+		Actor[] belongs = belong == null ? null : new Actor[]{belong};
+		return this.save(user, belongs, groupIds);
+	}
+
+	public Actor save(Actor user, Actor[] belongs, Long[] groupIds) {
 		boolean isNew = user.isNew();
 		// 先保存获取id值
-		user = super.save4belong(user, belong);// 这里已经处理了上级关系的保存
+		user = super.save4belong(user, belongs);// 这里已经处理了上级关系的保存
 
 		// 如果是新建用户，须新建AuthData对象
 		if (isNew) {
