@@ -28,8 +28,8 @@ public interface UserService extends ActorService {
 	/**
 	 * 保存用户信息
 	 * @param user 用户
-	 * @param belong 用户隶属的上级
+	 * @param belongIds 用户隶属的上级id
 	 * @param groupIds 用户所分派的岗位id
 	 */
-	Actor save(Actor user, Actor belong, Long[] groupIds);
+	Actor save(Actor user, Long[] belongIds, Long[] groupIds);
 }

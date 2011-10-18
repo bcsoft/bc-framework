@@ -37,7 +37,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 	protected String pkName = "id";// 主键名称
 	private JpaTemplate jpaTemplate;
-	private EntityManagerFactory entityManagerFactory;
+	//private EntityManagerFactory entityManagerFactory;
 
 	protected JpaTemplate getJpaTemplate() {
 		return jpaTemplate;
@@ -68,7 +68,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 	public void setEntityManagerFactory(
 			EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
+		//this.entityManagerFactory = entityManagerFactory;
 		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
 	}
 

@@ -71,15 +71,15 @@ public class DepartmentAction extends AbstractActorAction {
 			columns.add(new TextColumn("pname", getText("actor.pname"))
 					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("actor.name"), 100)
+			columns.add(new TextColumn("name", getText("actor.name"), 120)
 					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("code"))
+			columns.add(new TextColumn("code", getText("actor.code"), 120)
+			.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
+			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
 					.setSortable(true).setDir(Direction.Asc)
 					.setUseTitleFromLabel(true));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("actor.code"), 80)
-					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("phone"))
 			columns.add(new TextColumn("phone", getText("actor.phone"), 120));
 		// columns.add(new TextColumn("email", getText("actor.email"), 150));

@@ -135,16 +135,17 @@ public class UserAction extends AbstractActorAction {
 		if (this.useColumn("pname"))
 			columns.add(new TextColumn("pname", getText("actor.pname"))
 					.setSortable(true).setUseTitleFromLabel(true));
+		// .setValueFormater(new BrFormater()));
 		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("user.name"), 100)
+			columns.add(new TextColumn("name", getText("user.name"), 120)
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("code"))
+			columns.add(new TextColumn("code", getText("user.code"), 120)
 					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
+			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
 					.setSortable(true).setDir(Direction.Asc)
 					.setUseTitleFromLabel(true));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("user.code"), 80)
-					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("phone"))
 			columns.add(new TextColumn("phone", getText("user.phone"), 100));
 		if (this.useColumn("email"))
@@ -179,7 +180,7 @@ public class UserAction extends AbstractActorAction {
 		}
 
 		// 保存
-		this.userService.save(this.getE(), this.belong, groupIds);
+		this.userService.save(this.getE(), this.buildBelongIds(), groupIds);
 		return "saveSuccess";
 	}
 
@@ -191,11 +192,6 @@ public class UserAction extends AbstractActorAction {
 	@Override
 	public String edit() throws Exception {
 		String r = super.edit();
-		this.setE(this.getCrudService().load(this.getId()));
-
-		// 加载上级组织信息
-		this.belong = (Actor) this.getActorService().loadBelong(this.getId(),
-				getBelongTypes());
 
 		// 表单可选项的加载
 		initSelects();
@@ -204,9 +200,6 @@ public class UserAction extends AbstractActorAction {
 		this.ownedGroups = this.userService.findMaster(this.getId(),
 				new Integer[] { ActorRelation.TYPE_BELONG },
 				new Integer[] { Actor.TYPE_GROUP });
-
-		// 加载直接分配的角色和从上级继承的角色
-		dealRoles4Edit();
 
 		// 加载从岗位间接获取的角色信息
 		this.inheritRolesFromGroup = new HashSet<Role>();

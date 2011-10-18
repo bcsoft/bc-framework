@@ -1,6 +1,10 @@
 package cn.bc.identity.service;
 
 import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.ActorDao;
@@ -16,6 +20,8 @@ import cn.bc.identity.domain.ActorHistory;
  */
 public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 		implements ActorHistoryService {
+	private static Log logger = LogFactory
+			.getLog(ActorHistoryServiceImpl.class);
 	private ActorDao actorDao;
 	private ActorHistoryDao actorHistoryDao;
 
@@ -43,11 +49,18 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 			current.setStartDate(null);
 			current.setEndDate(null);
 			current.setCreateDate(Calendar.getInstance());
+			current.setPcode(actor.getPcode());
+			current.setPname(actor.getPname());
 
 			// 加载直接上级
-			Actor belong = this.actorDao.loadBelong(actorId, new Integer[] {
-					Actor.TYPE_DEPARTMENT, Actor.TYPE_UNIT });
-			if (belong != null) {
+			List<Actor> belongs = this.actorDao.findBelong(actorId,
+					new Integer[] { Actor.TYPE_DEPARTMENT, Actor.TYPE_UNIT });
+			if (belongs != null && !belongs.isEmpty()) {
+				// TODO: 多个隶属关系的处理
+				if (belongs.size() > 1)
+					logger.warn("this actor has more than one belong.just use the first one! size="
+							+ belongs.size());
+				Actor belong = belongs.get(0);
 				current.setUpperId(belong.getId());
 				current.setUpperName(belong.getName());
 
