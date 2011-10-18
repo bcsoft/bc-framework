@@ -40,10 +40,15 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 		return this.authDataDao.updatePassword(ids, password);
 	}
 
-	public Actor save(Actor user, Actor belong, Long[] groupIds) {
+	public Actor save(Actor user, Long belongId, Long[] groupIds) {
+		Long[] belongIds = belongId == null ? null : new Long[]{belongId};
+		return this.save(user, belongIds, groupIds);
+	}
+
+	public Actor save(Actor user, Long[] belongIds, Long[] groupIds) {
 		boolean isNew = user.isNew();
 		// 先保存获取id值
-		user = super.save4belong(user, belong);// 这里已经处理了上级关系的保存
+		user = super.save4belong(user, belongIds);// 这里已经处理了上级关系的保存
 
 		// 如果是新建用户，须新建AuthData对象
 		if (isNew) {

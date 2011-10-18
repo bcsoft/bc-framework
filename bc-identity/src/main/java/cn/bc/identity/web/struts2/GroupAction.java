@@ -75,16 +75,21 @@ public class GroupAction extends AbstractActorAction {
 
 		if (this.useColumn("status"))
 			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
-		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 80)
-					.setSortable(true).setDir(Direction.Asc));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("actor.code"), 80)
-					.setSortable(true));
+					.setValueFormater(new EntityStatusFormater(
+							getEntityStatuses())));
+		if (this.useColumn("pname"))
+			columns.add(new TextColumn("pname", getText("actor.pname"))
+					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("actor.name"))
-					.setSortable(true));
+			columns.add(new TextColumn("name", getText("actor.name"), 120)
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("code"))
+			columns.add(new TextColumn("code", getText("actor.code"), 120)
+					.setSortable(true).setUseTitleFromLabel(true));
+		if (this.useColumn("orderNo"))
+			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
+					.setSortable(true).setDir(Direction.Asc)
+					.setUseTitleFromLabel(true));
 		if (this.useColumn("phone"))
 			columns.add(new TextColumn("phone", getText("actor.phone"), 120));
 		// columns.add(new TextColumn("email", getText("actor.email"), 150));
@@ -119,28 +124,20 @@ public class GroupAction extends AbstractActorAction {
 				userIds[i] = new Long(uIds[i]);
 			}
 		}
-
+		
 		// 保存
-		this.groupService.save(this.getE(), this.belong, userIds);
+		this.groupService.save(this.getE(), this.buildBelongIds(), userIds);
 		return "saveSuccess";
 	}
 
 	@Override
 	public String edit() throws Exception {
 		String r = super.edit();
-		this.setE(this.getCrudService().load(this.getId()));
-
-		// 加载上级组织信息
-		this.belong = (Actor) this.getActorService().loadBelong(this.getId(),
-				getBelongTypes());
 
 		// 加载已分配的用户
 		this.ownedUsers = this.groupService.findFollower(this.getId(),
 				new Integer[] { ActorRelation.TYPE_BELONG },
 				new Integer[] { Actor.TYPE_USER });
-
-		// 加载直接分配的角色和从上级继承的角色
-		dealRoles4Edit();
 
 		return r;
 	}

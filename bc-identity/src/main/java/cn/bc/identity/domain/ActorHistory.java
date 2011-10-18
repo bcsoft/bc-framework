@@ -25,9 +25,27 @@ public class ActorHistory extends cn.bc.core.EntityImpl {
 	private String upperName;
 	private Long unitId;// 所属单位
 	private String unitName;
+	private String pcode;//上级的全编码
+	private String pname;//上级的全名
 	private Calendar startDate;//开始时间
 	private Calendar endDate;//结束时间
 	private Calendar createDate;//创建时间
+
+	public String getPcode() {
+		return pcode;
+	}
+
+	public void setPcode(String pcode) {
+		this.pcode = pcode;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
 
 	@Column(name = "ACTOR_TYPE")
 	public int getActorType() {

@@ -22,9 +22,9 @@ public class GroupServiceImpl extends ActorServiceImpl implements GroupService {
 		this.actorRelationDao = actorRelationDao;
 	}
 
-	public Actor save(Actor group, Actor belong, Long[] userIds) {
+	public Actor save(Actor group, Long[] belongIds, Long[] userIds) {
 		// 先保存获取id值
-		group = super.save4belong(group, belong);// 这里已经处理了上级关系的保存
+		group = super.save4belong(group, belongIds);// 这里已经处理了上级关系的保存
 
 		// 处理分配的用户信息
 		List<ActorRelation> curArs;

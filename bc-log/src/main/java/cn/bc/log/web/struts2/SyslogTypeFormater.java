@@ -15,7 +15,7 @@ import cn.bc.web.formater.AbstractFormater;
  * @author dragon
  * 
  */
-public class SyslogTypeFormater extends AbstractFormater {
+public class SyslogTypeFormater extends AbstractFormater<String> {
 	private Map<String, String> types;
 
 	public SyslogTypeFormater() {

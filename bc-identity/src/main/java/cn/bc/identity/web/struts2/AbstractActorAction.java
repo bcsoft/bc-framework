@@ -3,6 +3,7 @@
  */
 package cn.bc.identity.web.struts2;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.StringUtils;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.ActorRelationService;
@@ -30,7 +32,8 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	private static final long serialVersionUID = 1L;
 	private ActorService actorService;
 	private ActorRelationService actorRelationService;
-	protected Actor belong;// 隶属的上级单位或部门
+	public String belongIds;// 隶属的上级单位或部门id,多个id用逗号连接
+	public String belongNames;// 隶属的上级单位或部门name,多个name用逗号连接
 	public Set<Role> ownedRoles;// 已拥有的角色
 	public Set<Role> inheritRolesFromOU;// 从上级组织继承的角色信息
 	public String assignRoleIds;// 分派的角色id，多个id用逗号连接
@@ -44,14 +47,6 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Autowired
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
 		this.idGeneratorService = idGeneratorService;
-	}
-
-	public Actor getBelong() {
-		return belong;
-	}
-
-	public void setBelong(Actor belong) {
-		this.belong = belong;
 	}
 
 	public ActorService getActorService() {
@@ -86,7 +81,7 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(MANAGER_KEY,getText("key.role.admin"));// 组织架构管理或超级管理角色
+		return !context.hasAnyRole(MANAGER_KEY, getText("key.role.admin"));// 组织架构管理或超级管理角色
 	}
 
 	// 查询条件中要匹配的域
@@ -100,8 +95,18 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 		// 处理分配的角色
 		dealRoles4Save();
 
-		this.getActorService().save4belong(this.getE(), belong);
+		this.getActorService().save4belong(this.getE(), this.buildBelongIds());
 		return "saveSuccess";
+	}
+
+	protected Long[] buildBelongIds() {
+		Long[] _belongIds;
+		if (belongIds != null && belongIds.length() > 0)
+			_belongIds = StringUtils
+					.stringArray2LongArray(belongIds.split(","));
+		else
+			_belongIds = null;
+		return _belongIds;
 	}
 
 	/**
@@ -135,18 +140,24 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 		this.ownedRoles = this.getActorService().load(this.getId()).getRoles();
 
 		this.inheritRolesFromOU = new HashSet<Role>();
-		if (this.belong != null) {
+		if (belongIds != null && belongIds.length() > 0) {
 			// 加载从上级组织继承的角色信息
-			inheritRolesFromOU.addAll(this.belong.getRoles());
+			List<Actor> belongs = this.getActorService().findBelong(
+					this.getId(), getBelongTypes());
+			for (Actor belong : belongs) {
+				inheritRolesFromOU.addAll(belong.getRoles());
+			}
 
 			// 加载从上级的上级继承的角色信息
-			List<Actor> ancestorOU = this.getActorService()
-					.findAncestorOrganization(
-							this.belong.getId(),
-							new Integer[] { Actor.TYPE_UNIT,
-									Actor.TYPE_DEPARTMENT });
-			for (Actor ou : ancestorOU) {
-				inheritRolesFromOU.addAll(ou.getRoles());
+			for (Actor belong : belongs) {
+				List<Actor> ancestorOU = this.getActorService()
+						.findAncestorOrganization(
+								belong.getId(),
+								new Integer[] { Actor.TYPE_UNIT,
+										Actor.TYPE_DEPARTMENT });
+				for (Actor ou : ancestorOU) {
+					inheritRolesFromOU.addAll(ou.getRoles());
+				}
 			}
 		}
 	}
@@ -154,16 +165,30 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	public String edit() throws Exception {
 		String r = super.edit();
-		// this.setE(this.getCrudService().load(this.getId()));
 
 		// 加载上级信息
-		this.belong = (Actor) this.getActorService().loadBelong(this.getId(),
-				getBelongTypes());
+		initBelongs();
 
 		// 加载直接分配的角色和从上级继承的角色
 		dealRoles4Edit();
 
 		return r;
+	}
+
+	// 加载上级信息
+	protected void initBelongs() {
+		List<Actor> belongs = this.getActorService().findBelong(this.getId(),
+				getBelongTypes());
+		List<String> ids = new ArrayList<String>();
+		List<String> names = new ArrayList<String>();
+		for (Actor belong : belongs) {
+			ids.add(belong.getId().toString());
+			names.add(belong.getName());
+		}
+		this.belongIds = org.springframework.util.StringUtils
+				.collectionToCommaDelimitedString(ids);
+		this.belongNames = org.springframework.util.StringUtils
+				.collectionToCommaDelimitedString(names);
 	}
 
 	protected Integer[] getBelongTypes() {
@@ -173,5 +198,5 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
 		return new OrderCondition("orderNo", Direction.Asc);
-	};
+	}
 }
