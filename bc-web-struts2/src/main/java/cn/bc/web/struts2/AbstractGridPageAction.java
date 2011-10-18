@@ -4,13 +4,17 @@
 package cn.bc.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 import cn.bc.core.Page;
+import cn.bc.core.RichEntity;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
@@ -18,6 +22,7 @@ import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.DateUtils;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
@@ -28,6 +33,7 @@ import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
+import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -39,7 +45,8 @@ import cn.bc.web.ui.json.Json;
 public abstract class AbstractGridPageAction<T extends Object> extends
 		AbstractHtmlPageAction {
 	private static final long serialVersionUID = 1L;
-	protected Log logger = LogFactory.getLog(this.getClass());
+	private final static Log logger = LogFactory
+			.getLog("cn.bc.web.struts2.AbstractGridPageAction");
 	public boolean multiple;// 是否允许多选
 	public List<T> es; // grid的数据
 	private Page<T> page; // 分页对象
@@ -74,18 +81,21 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	// Action：无分页Grid
 	public String list() throws Exception {
+		Date startTime = new Date();
 		// 根据请求的条件查找信息
 		this.es = this.findList();
 
 		// 构建页面的html
 		this.html = buildHtmlPage();
 
+		logger.info("list耗时：" + DateUtils.getWasteTime(startTime, new Date()));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}
 
 	// Action：分页
 	public String paging() throws Exception {
+		Date startTime = new Date();
 		// 首次请求时page对象为空，需要初始化一下
 		if (this.page == null)
 			this.page = new Page<T>();
@@ -100,12 +110,14 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		// 构建页面的html
 		this.html = buildHtmlPage();
 
+		logger.info("paging耗时：" + DateUtils.getWasteTime(startTime, new Date()));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}
 
 	// Action：仅获取表格的数据信息部分
 	public String data() throws Exception {
+		Date startTime = new Date();
 		if (this.page != null) {// 分页的处理
 			// 根据请求的条件查找分页信息
 			this.page = this.findPage();
@@ -121,6 +133,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			this.html = getGridData(this.getGridColumns());
 		}
 
+		logger.info("list耗时：" + DateUtils.getWasteTime(startTime, new Date()));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}
@@ -392,5 +405,55 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		or.setAddBracket(true);
 
 		return or;
+	}
+
+	@Override
+	protected String getHtmlPageTitle() {
+		return this.getText(this.getFormActionName() + ".title");
+	}
+
+	@Override
+	protected Toolbar getHtmlPageToolbar() {
+		Toolbar tb = new Toolbar();
+
+		if (this.isReadonly()) {
+			// 查看按钮
+			tb.addButton(Toolbar
+					.getDefaultEditToolbarButton(getText("label.read")));
+		} else {
+			// 新建按钮
+			tb.addButton(Toolbar
+					.getDefaultCreateToolbarButton(getText("label.create")));
+
+			// 编辑按钮
+			tb.addButton(Toolbar
+					.getDefaultEditToolbarButton(getText("label.edit")));
+
+			// 删除按钮
+			tb.addButton(Toolbar
+					.getDefaultDeleteToolbarButton(getText("label.delete")));
+		}
+
+		// 搜索按钮
+		tb.addButton(Toolbar
+				.getDefaultSearchToolbarButton(getText("title.click2search")));
+
+		return tb;
+	}
+
+	/**
+	 * 获取Entity的状态值转换列表
+	 * 
+	 * @return
+	 */
+	protected Map<String, String> getEntityStatuses() {
+		Map<String, String> statuses = new HashMap<String, String>();
+		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+				getText("entity.status.disabled"));
+		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
+				getText("entity.status.enabled"));
+		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
+				getText("entity.status.deleted"));
+		return statuses;
 	}
 }

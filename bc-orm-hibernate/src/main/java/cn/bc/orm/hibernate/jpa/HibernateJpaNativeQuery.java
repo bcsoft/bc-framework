@@ -18,6 +18,8 @@ import org.springframework.util.StringUtils;
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.db.jdbc.SqlObject;
 import cn.bc.orm.hibernate.HibernateUtils;
 
 /**
@@ -33,36 +35,7 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 			.getLog("cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery");
 	private JpaTemplate jpaTemplate;
 	private Condition condition;
-	private String sql;
-	private RowMapper<T> rowMapper;
-	private List<Object> sqlArgs = new ArrayList<Object>();
-
-	public RowMapper<T> getRowMapper() {
-		return rowMapper;
-	}
-
-	public void setRowMapper(RowMapper<T> rowMapper) {
-		this.rowMapper = rowMapper;
-	}
-
-	public void setSqlArgs(List<Object> sqlArgs) {
-		this.sqlArgs = sqlArgs;
-	}
-
-	public HibernateJpaNativeQuery<T> setSql(String sql) {
-		this.sql = sql;
-		return this;
-	}
-
-	private String getSql() {
-		String sql_ = sql;
-		if (condition != null) {
-			String e = this.condition.getExpression();
-			if (e != null && e.trim().length() > 0)
-				sql_ += " where " + e;
-		}
-		return sql_;
-	}
+	private SqlObject<T> sqlObject;
 
 	private HibernateJpaNativeQuery() {
 	}
@@ -72,10 +45,31 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	 * 
 	 * @param jpaTemplate
 	 */
-	public HibernateJpaNativeQuery(JpaTemplate jpaTemplate) {
+	public HibernateJpaNativeQuery(JpaTemplate jpaTemplate,
+			SqlObject<T> sqlObject) {
 		this();
 		this.jpaTemplate = jpaTemplate;
+		this.sqlObject = sqlObject;
 		Assert.notNull(jpaTemplate, "jpaTemplate is required");
+		Assert.notNull(sqlObject, "sqlObject is required");
+		Assert.notNull(sqlObject.getSql(), "sqlObject.getSql() is required");
+	}
+
+	private String getSql() {
+		String sql_ = sqlObject.getSql();
+		if (condition != null) {
+			String expression = this.condition.getExpression();
+			if (condition instanceof OrderCondition) {
+				sql_ += " order by " + expression;
+			} else {
+				if (expression != null && expression.startsWith("order by")) {
+					sql_ += " " + expression;
+				} else if (expression != null && expression.length() > 0) {
+					sql_ += " where " + expression;
+				}
+			}
+		}
+		return sql_;
 	}
 
 	// --implements Query
@@ -96,7 +90,8 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 		// 合并参数
 		final List<Object> args = new ArrayList<Object>();
-		args.addAll(sqlArgs);
+		if (sqlObject.getArgs() != null)
+			args.addAll(sqlObject.getArgs());
 		if (condition != null) {
 			List<Object> values = condition.getValues();
 			if (values != null)
@@ -134,7 +129,8 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 		// 合并参数
 		final List<Object> args = new ArrayList<Object>();
-		args.addAll(sqlArgs);
+		if (sqlObject.getArgs() != null)
+			args.addAll(sqlObject.getArgs());
 		if (condition != null) {
 			List<Object> values = condition.getValues();
 			if (values != null)
@@ -171,7 +167,8 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 		// 合并参数
 		final List<Object> args = new ArrayList<Object>();
-		args.addAll(sqlArgs);
+		if (sqlObject.getArgs() != null)
+			args.addAll(sqlObject.getArgs());
 		if (condition != null) {
 			List<Object> values = condition.getValues();
 			if (values != null)
@@ -190,7 +187,7 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 					throws PersistenceException {
 				Query queryObject = em.createNativeQuery(hql);
 				// jpaTemplate.prepareQuery(queryObject);
-				
+
 				// 注入参数
 				int i = 0;
 				for (Object value : args) {
@@ -210,10 +207,10 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	@SuppressWarnings("unchecked")
 	protected List<T> mapRows(List<Object[]> rs) {
 		if (rs != null) {
-			if (rowMapper != null) {
+			if (this.sqlObject.getRowMapper() != null) {
 				List<T> mr = new ArrayList<T>();
 				for (int j = 0; j < rs.size(); j++) {
-					mr.add(rowMapper.mapRow(rs.get(j), j));
+					mr.add(this.sqlObject.getRowMapper().mapRow(rs.get(j), j));
 				}
 				return mr;
 			} else {
@@ -231,21 +228,31 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 	@SuppressWarnings("unchecked")
 	public T singleResult() {
+		// 合并参数
+		final List<Object> args = new ArrayList<Object>();
+		if (sqlObject.getArgs() != null)
+			args.addAll(sqlObject.getArgs());
+		if (condition != null) {
+			List<Object> values = condition.getValues();
+			if (values != null)
+				args.addAll(values);
+		}
+
 		try {
 			return jpaTemplate.execute(new JpaCallback<T>() {
 				public T doInJpa(EntityManager em) throws PersistenceException {
 					Query queryObject = em.createNativeQuery(getSql());
 					// jpaTemplate.prepareQuery(queryObject);
 					int i = 0;
-					for (Object value : sqlArgs) {
+					for (Object value : args) {
 						queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 						i++;
 					}
 					Object[] r = (Object[]) queryObject.getSingleResult();
 
 					if (r != null) {
-						return rowMapper != null ? rowMapper.mapRow(r, 0)
-								: (T) r;
+						return sqlObject.getRowMapper() != null ? sqlObject
+								.getRowMapper().mapRow(r, 0) : (T) r;
 					} else {
 						return null;
 					}
