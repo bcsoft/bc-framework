@@ -157,6 +157,7 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		this.shortcutService.save(shortcut);
 
 		json = new Json();
+		json.put("id", shortcut.getId());
 		json.put("msg", "快捷方式“" + resource.getName() + "”已保存！");
 		return "json";
 	}
