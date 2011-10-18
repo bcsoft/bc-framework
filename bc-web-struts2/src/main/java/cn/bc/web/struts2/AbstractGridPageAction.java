@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 
 import cn.bc.core.Page;
 import cn.bc.core.query.Query;
@@ -26,6 +27,7 @@ import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.page.HtmlPage;
+import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -43,11 +45,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
-	
+
 	public Page<T> getPage() {
 		return page;
 	}
-	
+
 	public void setPage(Page<T> page) {
 		this.page = page;
 	}
@@ -146,12 +148,56 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	@Override
 	protected HtmlPage buildHtmlPage() {
-		HtmlPage htmlPage = super.buildHtmlPage().setType("list");
+		ListPage listPage = new ListPage();
+
+		// 设置页面参数
+		listPage.setNamespace(
+				getHtmlPageNamespace() + "/" + getFormActionName() + "View")
+				.addJs(getHtmlPageJs()).setTitle(this.getHtmlPageTitle())
+				.setInitMethod(getHtmlPageInitMethod()).setType("list")
+				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
+				.addClazz("bc-page");
+		listPage.setCreateUrl(getCreateUrl())
+				.setDeleteUrl(getDeleteUrl())
+				.setEditUrl(this.getEditUrl())
+				.setOpenUrl(this.getOpenUrl())
+				.setAttr("data-name",
+						getText(StringUtils.uncapitalize(getFormActionName())));
+
+		// 附件工具条
+		listPage.addChild(getHtmlPageToolbar());
 
 		// 附加Grid
-		htmlPage.addChild(getHtmlPageGrid());
+		listPage.addChild(getHtmlPageGrid());
 
-		return htmlPage;
+		return listPage;
+	}
+
+	/** 编辑的url */
+	protected String getEditUrl() {
+		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+				+ "/edit";
+	}
+
+	/** 获取表单action的简易名称 */
+	protected abstract String getFormActionName();
+
+	/** 查看的url */
+	protected String getOpenUrl() {
+		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+				+ "/open";
+	}
+
+	/** 删除的url */
+	protected String getDeleteUrl() {
+		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+				+ "/delete";
+	}
+
+	/** 新建的url */
+	protected String getCreateUrl() {
+		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+				+ "/create";
 	}
 
 	protected Grid getHtmlPageGrid() {
@@ -255,8 +301,8 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		}
 
 		// 导出按钮
-//		footer.addButton(GridFooter
-//				.getDefaultExportButton(getText("label.export")));
+		// footer.addButton(GridFooter
+		// .getDefaultExportButton(getText("label.export")));
 
 		// 打印按钮
 		// footer.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));

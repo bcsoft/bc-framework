@@ -29,11 +29,21 @@ import cn.bc.orm.hibernate.HibernateUtils;
  */
 public class HibernateJpaNativeQuery<T extends Object> implements
 		cn.bc.core.query.Query<T> {
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected static final Log logger = LogFactory
+			.getLog("cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery");
 	private JpaTemplate jpaTemplate;
 	private Condition condition;
 	private String sql;
+	private RowMapper<T> rowMapper;
 	private List<Object> sqlArgs = new ArrayList<Object>();
+
+	public RowMapper<T> getRowMapper() {
+		return rowMapper;
+	}
+
+	public void setRowMapper(RowMapper<T> rowMapper) {
+		this.rowMapper = rowMapper;
+	}
 
 	public void setSqlArgs(List<Object> sqlArgs) {
 		this.sqlArgs = sqlArgs;
@@ -46,8 +56,11 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 	private String getSql() {
 		String sql_ = sql;
-		if (condition != null)
-			sql_ += " where " + this.condition.getExpression();
+		if (condition != null) {
+			String e = this.condition.getExpression();
+			if (e != null && e.trim().length() > 0)
+				sql_ += " where " + e;
+		}
 		return sql_;
 	}
 
@@ -80,23 +93,34 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 			queryTemp = "select count(*) "
 					+ HibernateUtils.removeSelect(queryTemp);
 		}
+
+		// 合并参数
+		final List<Object> args = new ArrayList<Object>();
+		args.addAll(sqlArgs);
+		if (condition != null) {
+			List<Object> values = condition.getValues();
+			if (values != null)
+				args.addAll(values);
+		}
+
 		final String queryString = queryTemp;
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + queryString);
 			logger.debug("args="
-					+ (condition != null ? StringUtils
-							.collectionToCommaDelimitedString(condition
-									.getValues()) : "null"));
+					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
 		Number c = jpaTemplate.execute(new JpaCallback<Number>() {
 			public Number doInJpa(EntityManager em) throws PersistenceException {
 				Query queryObject = em.createNativeQuery(queryString);
-				//jpaTemplate.prepareQuery(queryObject);
+				// jpaTemplate.prepareQuery(queryObject);
+
+				// 注入参数
 				int i = 0;
-				for (Object value : sqlArgs) {
+				for (Object value : args) {
 					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 					i++;
 				}
+
 				// mysql返回java.math.BigInteger
 				return (Number) queryObject.getSingleResult();
 			}
@@ -107,24 +131,35 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	@SuppressWarnings("unchecked")
 	public List<T> list() {
 		final String hql = getSql();
+
+		// 合并参数
+		final List<Object> args = new ArrayList<Object>();
+		args.addAll(sqlArgs);
+		if (condition != null) {
+			List<Object> values = condition.getValues();
+			if (values != null)
+				args.addAll(values);
+		}
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ (condition != null ? StringUtils
-							.collectionToCommaDelimitedString(condition
-									.getValues()) : "null"));
+					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
+
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			public List<T> doInJpa(EntityManager em)
 					throws PersistenceException {
 				Query queryObject = em.createNativeQuery(hql);
-				//jpaTemplate.prepareQuery(queryObject);
+				// jpaTemplate.prepareQuery(queryObject);
+
+				// 注入参数
 				int i = 0;
-				for (Object value : sqlArgs) {
+				for (Object value : args) {
 					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 					i++;
 				}
-				return (List<T>) queryObject.getResultList();
+				return mapRows((List<Object[]>) queryObject.getResultList());
 			}
 		});
 	}
@@ -133,31 +168,60 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	public List<T> list(final int pageNo, final int pageSize) {
 		final int _pageSize = pageSize < 1 ? 1 : pageSize;
 		final String hql = getSql();
+
+		// 合并参数
+		final List<Object> args = new ArrayList<Object>();
+		args.addAll(sqlArgs);
+		if (condition != null) {
+			List<Object> values = condition.getValues();
+			if (values != null)
+				args.addAll(values);
+		}
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("pageNo=" + pageNo);
 			logger.debug("pageSize=" + _pageSize);
 			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ (condition != null ? StringUtils
-							.collectionToCommaDelimitedString(condition
-									.getValues()) : "null"));
+					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			public List<T> doInJpa(EntityManager em)
 					throws PersistenceException {
 				Query queryObject = em.createNativeQuery(hql);
-				//jpaTemplate.prepareQuery(queryObject);
+				// jpaTemplate.prepareQuery(queryObject);
+				
+				// 注入参数
 				int i = 0;
-				for (Object value : sqlArgs) {
+				for (Object value : args) {
 					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 					i++;
 				}
 				queryObject.setFirstResult(Page.getFirstResult(pageNo,
 						_pageSize));
 				queryObject.setMaxResults(_pageSize);
-				return (List<T>) queryObject.getResultList();
+
+				return mapRows((List<Object[]>) queryObject.getResultList());
 			}
+
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<T> mapRows(List<Object[]> rs) {
+		if (rs != null) {
+			if (rowMapper != null) {
+				List<T> mr = new ArrayList<T>();
+				for (int j = 0; j < rs.size(); j++) {
+					mr.add(rowMapper.mapRow(rs.get(j), j));
+				}
+				return mr;
+			} else {
+				return (List<T>) rs;
+			}
+		} else {
+			return null;
+		}
 	}
 
 	public Page<T> page(int pageNo, int pageSize) {
@@ -171,13 +235,20 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 			return jpaTemplate.execute(new JpaCallback<T>() {
 				public T doInJpa(EntityManager em) throws PersistenceException {
 					Query queryObject = em.createNativeQuery(getSql());
-					//jpaTemplate.prepareQuery(queryObject);
+					// jpaTemplate.prepareQuery(queryObject);
 					int i = 0;
 					for (Object value : sqlArgs) {
 						queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 						i++;
 					}
-					return (T) queryObject.getSingleResult();
+					Object[] r = (Object[]) queryObject.getSingleResult();
+
+					if (r != null) {
+						return rowMapper != null ? rowMapper.mapRow(r, 0)
+								: (T) r;
+					} else {
+						return null;
+					}
 				}
 			});
 		} catch (EmptyResultDataAccessException e) {
