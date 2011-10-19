@@ -1,6 +1,7 @@
 package cn.bc.option.dao.hibernate.jpa;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +114,12 @@ public class OptionDaoImpl implements OptionDao {
 		return (List<OptionItem>) this.jpaTemplate.find(hql, optionGroupKey);
 	}
 
-	public Map<String, List<OptionItem>> findOptionItemByGroupKeys(
+	public Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
 			String[] optionGroupKeys) {
 		if (optionGroupKeys == null || optionGroupKeys.length == 0)
 			return null;
 
-		String hql = "select i.id,g.key_,i.key_,i.value_ from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
+		String hql = "select g.key_,i.key_,i.value_,i.id from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
 		hql += " where g.key_";
 		Object[] args;
 		if (optionGroupKeys.length == 1) {
@@ -141,28 +142,28 @@ public class OptionDaoImpl implements OptionDao {
 			logger.debug("args="
 					+ StringUtils.arrayToCommaDelimitedString(args));
 		}
-		List<OptionItem> all = (List<OptionItem>) HibernateJpaNativeQuery
+		List<Map<String, String>> all = HibernateJpaNativeQuery
 				.executeNativeSql(jpaTemplate, hql, args,
-						new RowMapper<OptionItem>() {
-							public OptionItem mapRow(Object[] rs, int rowNum) {
-								OptionItem oi = new OptionItem();
+						new RowMapper<Map<String, String>>() {
+							public Map<String, String> mapRow(Object[] rs,
+									int rowNum) {
+								Map<String, String> oi = new HashMap<String, String>();
 								int i = 0;
-								oi.setId(new Long(rs[i++].toString()));
-								oi.setOrderNo(rs[i++].toString());// 保存group的key用于下面的判断
-								oi.setKey(rs[i++].toString());
-								oi.setValue(rs[i++].toString());
+								oi.put("gkey", rs[i++].toString());// 保存group的key用于下面的判断
+								oi.put("key", rs[i++].toString());
+								oi.put("value", rs[i++].toString());
 								return oi;
 							}
 						});
 
 		// 生成列表
-		Map<String, List<OptionItem>> map = new LinkedHashMap<String, List<OptionItem>>();
-		List<OptionItem> sub = null;
+		Map<String, List<Map<String, String>>> map = new LinkedHashMap<String, List<Map<String, String>>>();
+		List<Map<String, String>> sub = null;
 		String key = null;
-		for (OptionItem oi : all) {
-			if (!oi.getOrderNo().equals(key)) {
-				key = oi.getOrderNo();
-				sub = new ArrayList<OptionItem>();
+		for (Map<String, String> oi : all) {
+			if (!oi.get("gkey").equals(key)) {
+				key = oi.get("gkey");
+				sub = new ArrayList<Map<String, String>>();
 				map.put(key, sub);
 				sub.add(oi);
 			} else {
@@ -185,17 +186,18 @@ public class OptionDaoImpl implements OptionDao {
 			}
 		}
 		for (String key1 : empty) {
-			map.put(key1, new ArrayList<OptionItem>());
+			map.put(key1, new ArrayList<Map<String, String>>());
 		}
 
 		if (logger.isDebugEnabled()) {
-			List<OptionItem> list;
+			List<Map<String, String>> list;
 			StringBuffer t = new StringBuffer();
 			for (String k : optionGroupKeys) {
 				list = map.get(k);
 				t.append(k + "(" + list.size() + "):\r\n");
-				for (OptionItem oi : list) {
-					t.append("  " + oi.getKey() + "=" + oi.getValue() + "\r\n");
+				for (Map<String, String> oi : list) {
+					t.append("  " + oi.get("key") + "=" + oi.get("value")
+							+ "\r\n");
 				}
 			}
 			logger.debug(t.toString());
@@ -204,6 +206,7 @@ public class OptionDaoImpl implements OptionDao {
 		return map;
 	}
 
+	// 旧方法的备份，请不要使用
 	@Deprecated
 	public Map<String, List<OptionItem>> findOptionItemByGroupKeys2(
 			String[] optionGroupKeys) {
