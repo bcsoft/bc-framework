@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +27,8 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  */
 public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 		implements ActorRelationDao {
+	private static Log logger = LogFactory.getLog(ActorRelationDaoImpl.class);
+
 	public List<ActorRelation> findByMaster(Integer type, Long masterId) {
 		Assert.notNull(type);
 		Assert.notNull(masterId);

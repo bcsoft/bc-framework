@@ -32,7 +32,7 @@ import cn.bc.core.exception.CoreException;
  */
 public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 		SetEntityClass<T> {
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static Log logger = LogFactory.getLog("cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao");
 	protected Class<T> entityClass;
 
 	protected String pkName = "id";// 主键名称
