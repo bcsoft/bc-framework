@@ -37,6 +37,16 @@ public abstract class AbstractHtmlPageAction extends ActionSupport {
 
 	// == 子类必须复写的方法
 
+	/**
+	 * 判断表单是否只读的方法，需要权限控制时由基类复写
+	 * 
+	 * @return
+	 */
+	public boolean isReadonly() {
+		return false;
+	}
+
+
 	/** 页面的标题 */
 	protected abstract String getHtmlPageTitle();
 

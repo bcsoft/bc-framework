@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.bc.core.Page;
 import cn.bc.core.query.Query;
+import cn.bc.db.jdbc.SqlObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -47,14 +48,14 @@ public class HibernateJpaNativeQueryTest {
 		deleteAll();
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// count
 		int c = q.count();
 		Assert.assertEquals(0, c);
 
 		// list
-		List<Object> list = q.list();
+		List<Object[]> list = q.list();
 		Assert.assertNotNull(list);
 		Assert.assertEquals(0, list.size());
 
@@ -76,7 +77,7 @@ public class HibernateJpaNativeQueryTest {
 		insertOne(1);
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// count
 		int c = q.count();
@@ -93,10 +94,10 @@ public class HibernateJpaNativeQueryTest {
 		insertOne(2);
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// list
-		List<Object> list = q.list();
+		List<Object[]> list = q.list();
 		Assert.assertNotNull(list);
 		Assert.assertEquals(2, list.size());
 
@@ -119,7 +120,7 @@ public class HibernateJpaNativeQueryTest {
 		insertOne(1);
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// singleResult
 		Object obj = q.singleResult();
@@ -141,10 +142,10 @@ public class HibernateJpaNativeQueryTest {
 		}
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// page
-		List<Object> list = q.list(1, 5);
+		List<Object[]> list = q.list(1, 5);
 		Assert.assertNotNull(list);
 		Assert.assertEquals(5, list.size());
 
@@ -172,17 +173,17 @@ public class HibernateJpaNativeQueryTest {
 		}
 
 		// 构建查询器
-		Query<Object> q = createTestQuery();
+		Query<Object[]> q = createTestQuery();
 
 		// page
-		Page<Object> page = q.page(1, 5);
+		Page<Object[]> page = q.page(1, 5);
 		Assert.assertNotNull(page);
 		Assert.assertEquals(0, page.getFirstResult());
 		Assert.assertEquals(2, page.getPageCount());
 		Assert.assertEquals(5, page.getPageSize());
 		Assert.assertEquals(10, page.getTotalCount());
 
-		List<Object> list = page.getData();
+		List<Object[]> list = page.getData();
 		Assert.assertNotNull(list);
 		Assert.assertEquals(5, list.size());
 
@@ -199,10 +200,12 @@ public class HibernateJpaNativeQueryTest {
 		Assert.assertEquals("5", d[0].toString());
 	}
 
-	private Query<Object> createTestQuery() {
-		Query<Object> q = new HibernateJpaNativeQuery<Object>(this.jpaTemplate)
-				.setSql("select id,code,name from " + getTable()
-						+ " order by id");
+	private Query<Object[]> createTestQuery() {
+		SqlObject<Object[]> sqlObject = new SqlObject<Object[]>();
+		sqlObject.setSql("select id,code,name from " + getTable()
+				+ " order by id");
+		Query<Object[]> q = new HibernateJpaNativeQuery<Object[]>(this.jpaTemplate,
+				sqlObject);
 		return q;
 	}
 

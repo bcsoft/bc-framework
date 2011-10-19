@@ -1,6 +1,8 @@
 package cn.bc.core.util;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -145,5 +147,32 @@ public class DateUtils {
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
 		return calendar.getTime();
+	}
+
+	private static NumberFormat nf4wasteTime = new DecimalFormat("#.#");
+
+	/**
+	 * 计算指定时间范围内的耗时描述信息
+	 * 
+	 * @param startDate
+	 *            开始时间
+	 * @param endDate
+	 *            结束时间
+	 * @return
+	 */
+	public static String getWasteTime(Date startDate, Date endDate) {
+		long wt = endDate.getTime() - startDate.getTime();
+		if (wt < 1000) {
+			return wt + "毫秒";
+		} else if (wt < 1000 * 60) {
+			return nf4wasteTime.format(((float) wt) / 1000f) + "秒";
+		} else {
+			long m = wt / (1000 * 60);
+			return m
+					+ "分"
+					+ nf4wasteTime
+							.format(((float) (wt - m * 1000 * 60)) / 1000f)
+					+ "秒";
+		}
 	}
 }

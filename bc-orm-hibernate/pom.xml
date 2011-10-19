@@ -14,6 +14,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-db-jdbc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
@@ -43,12 +48,6 @@
 		</dependency>
 
 		<!-- for test -->
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-db-jdbc</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>
