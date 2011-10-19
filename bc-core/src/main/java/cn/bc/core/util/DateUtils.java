@@ -152,6 +152,17 @@ public class DateUtils {
 	private static NumberFormat nf4wasteTime = new DecimalFormat("#.#");
 
 	/**
+	 * 计算指定时间到当前时间之间的耗时描述信息
+	 * 
+	 * @param fromDate
+	 *            开始时间
+	 * @return
+	 */
+	public static String getWasteTime(Date fromDate) {
+		return getWasteTime(fromDate, new Date());
+	}
+
+	/**
 	 * 计算指定时间范围内的耗时描述信息
 	 * 
 	 * @param startDate
