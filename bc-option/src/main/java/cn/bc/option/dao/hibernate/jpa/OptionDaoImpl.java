@@ -12,9 +12,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.util.StringUtils;
 
+import cn.bc.db.jdbc.RowMapper;
 import cn.bc.option.dao.OptionDao;
 import cn.bc.option.domain.OptionGroup;
 import cn.bc.option.domain.OptionItem;
+import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
 
 /**
  * 选项Dao接口的实现
@@ -100,7 +102,7 @@ public class OptionDaoImpl implements OptionDao {
 		}
 		return map;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<OptionItem> findOptionItemByGroupKey(String optionGroupKey) {
 		String hql = "from OptionItem _alias where _alias.optionGroup.key = ? order by _alias.orderNo";
@@ -112,6 +114,98 @@ public class OptionDaoImpl implements OptionDao {
 	}
 
 	public Map<String, List<OptionItem>> findOptionItemByGroupKeys(
+			String[] optionGroupKeys) {
+		if (optionGroupKeys == null || optionGroupKeys.length == 0)
+			return null;
+
+		String hql = "select i.id,g.key_,i.key_,i.value_ from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
+		hql += " where g.key_";
+		Object[] args;
+		if (optionGroupKeys.length == 1) {
+			hql += " = ?";
+			args = new Object[1];
+			args[0] = optionGroupKeys[0];
+		} else {
+			args = new Object[optionGroupKeys.length];
+			args[0] = optionGroupKeys[0];
+			hql += " in (?";
+			for (int i = 1; i < optionGroupKeys.length; i++) {
+				hql += ",?";
+				args[i] = optionGroupKeys[i];
+			}
+			hql += ")";
+		}
+		hql += " order by g.order_,i.order_";
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql);
+			logger.debug("args="
+					+ StringUtils.arrayToCommaDelimitedString(args));
+		}
+		List<OptionItem> all = (List<OptionItem>) HibernateJpaNativeQuery
+				.executeNativeSql(jpaTemplate, hql, args,
+						new RowMapper<OptionItem>() {
+							public OptionItem mapRow(Object[] rs, int rowNum) {
+								OptionItem oi = new OptionItem();
+								int i = 0;
+								oi.setId(new Long(rs[i++].toString()));
+								oi.setOrderNo(rs[i++].toString());// 保存group的key用于下面的判断
+								oi.setKey(rs[i++].toString());
+								oi.setValue(rs[i++].toString());
+								return oi;
+							}
+						});
+
+		// 生成列表
+		Map<String, List<OptionItem>> map = new LinkedHashMap<String, List<OptionItem>>();
+		List<OptionItem> sub = null;
+		String key = null;
+		for (OptionItem oi : all) {
+			if (!oi.getOrderNo().equals(key)) {
+				key = oi.getOrderNo();
+				sub = new ArrayList<OptionItem>();
+				map.put(key, sub);
+				sub.add(oi);
+			} else {
+				sub.add(oi);
+			}
+		}
+
+		// 对没有的groupKey,生成一个空的list
+		List<String> empty = new ArrayList<String>();
+		for (String key1 : optionGroupKeys) {
+			key = null;
+			for (String key2 : map.keySet()) {
+				if (key1.equals(key2)) {
+					key = key2;
+					break;
+				}
+			}
+			if (key == null) {
+				empty.add(key1);
+			}
+		}
+		for (String key1 : empty) {
+			map.put(key1, new ArrayList<OptionItem>());
+		}
+
+		if (logger.isDebugEnabled()) {
+			List<OptionItem> list;
+			StringBuffer t = new StringBuffer();
+			for (String k : optionGroupKeys) {
+				list = map.get(k);
+				t.append(k + "(" + list.size() + "):\r\n");
+				for (OptionItem oi : list) {
+					t.append("  " + oi.getKey() + "=" + oi.getValue() + "\r\n");
+				}
+			}
+			logger.debug(t.toString());
+		}
+
+		return map;
+	}
+
+	@Deprecated
+	public Map<String, List<OptionItem>> findOptionItemByGroupKeys2(
 			String[] optionGroupKeys) {
 		if (optionGroupKeys == null || optionGroupKeys.length == 0)
 			return null;

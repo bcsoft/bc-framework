@@ -19,6 +19,8 @@ import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.db.JdbcUtils;
+import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.orm.hibernate.HibernateUtils;
 
@@ -123,7 +125,6 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 		return c.intValue();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> list() {
 		final String hql = getSql();
 
@@ -143,7 +144,14 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
 
+		return executeNativeSql(jpaTemplate, hql, args.toArray(),
+				sqlObject.getRowMapper());
+	}
+
+	public static <T> List<T> executeNativeSql(JpaTemplate jpaTemplate,
+			final String hql, final Object[] args, final RowMapper<T> rowMapper) {
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
+			@SuppressWarnings("unchecked")
 			public List<T> doInJpa(EntityManager em)
 					throws PersistenceException {
 				Query queryObject = em.createNativeQuery(hql);
@@ -155,7 +163,8 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
 					i++;
 				}
-				return mapRows((List<Object[]>) queryObject.getResultList());
+				return JdbcUtils.mapRows(
+						(List<Object[]>) queryObject.getResultList(), rowMapper);
 			}
 		});
 	}
@@ -198,27 +207,12 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 						_pageSize));
 				queryObject.setMaxResults(_pageSize);
 
-				return mapRows((List<Object[]>) queryObject.getResultList());
+				return JdbcUtils.mapRows(
+						(List<Object[]>) queryObject.getResultList(),
+						sqlObject.getRowMapper());
 			}
 
 		});
-	}
-
-	@SuppressWarnings("unchecked")
-	protected List<T> mapRows(List<Object[]> rs) {
-		if (rs != null) {
-			if (this.sqlObject.getRowMapper() != null) {
-				List<T> mr = new ArrayList<T>();
-				for (int j = 0; j < rs.size(); j++) {
-					mr.add(this.sqlObject.getRowMapper().mapRow(rs.get(j), j));
-				}
-				return mr;
-			} else {
-				return (List<T>) rs;
-			}
-		} else {
-			return null;
-		}
 	}
 
 	public Page<T> page(int pageNo, int pageSize) {

@@ -15,8 +15,13 @@
  */
 package cn.bc.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import cn.bc.db.jdbc.RowMapper;
 
 /**
  * JDBC的辅助函数库
@@ -43,5 +48,31 @@ public class JdbcUtils {
 	public void setDbtype(String dbtype) {
 		JdbcUtils.dbtype = dbtype;
 		logger.fatal("dbtype=" + dbtype);
+	}
+
+	/**
+	 * 对Object数据执行映射转换
+	 * 
+	 * @param rs
+	 *            要转换的数据
+	 * @param rowMapper
+	 *            数据行的映射转换器
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> mapRows(List<Object[]> rs, RowMapper<T> rowMapper) {
+		if (rs != null) {
+			if (rowMapper != null) {
+				List<T> mr = new ArrayList<T>();
+				for (int j = 0; j < rs.size(); j++) {
+					mr.add(rowMapper.mapRow(rs.get(j), j));
+				}
+				return mr;
+			} else {
+				return (List<T>) rs;
+			}
+		} else {
+			return null;
+		}
 	}
 }
