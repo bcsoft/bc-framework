@@ -5,18 +5,14 @@ package cn.bc.identity.web.struts2.select;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.InCondition;
-import cn.bc.core.query.condition.impl.MixCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.Entity;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ResourceService;
 
@@ -32,7 +28,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Controller
 public class SelectResourceAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
-	private List<Resource> es;
+	private List<Map<String, String>> es;
 	private ResourceService resourceService;
 	public String selecteds;// 当前选中项的id值，多个用逗号连接
 	public String excludes;// 当前选中项的id值，多个用逗号连接
@@ -83,11 +79,11 @@ public class SelectResourceAction extends ActionSupport {
 		}
 	}
 
-	public List<Resource> getEs() {
+	public List<Map<String, String>> getEs() {
 		return es;
 	}
 
-	public void setEs(List<Resource> es) {
+	public void setEs(List<Map<String, String>> es) {
 		this.es = es;
 	}
 
@@ -100,24 +96,16 @@ public class SelectResourceAction extends ActionSupport {
 	}
 
 	public String execute() throws Exception {
-		MixCondition condition = new AndCondition();
-		Integer[] types = getType();
-		if (types != null && types.length > 0) {
-			condition.add(new InCondition("type", types));
-		} else {// 默认为选择模块
-			condition.add(new EqualsCondition("type", new Integer(
-					Resource.TYPE_FOLDER)));
-		}
-		condition.add(new OrderCondition("orderNo", Direction.Asc));
-		this.es = this.resourceService.createQuery().condition(condition).list();
+		this.es = this.resourceService.find4option(getType(),
+				new Integer[] { Entity.STATUS_ENABLED });
 
 		// 排除不能选择的
 		long[] exclude = this.getExclude();
 		if (exclude != null && exclude.length > 0) {
-			List<Resource> ex = new ArrayList<Resource>();
-			for (Resource m : this.es) {
+			List<Map<String, String>> ex = new ArrayList<Map<String, String>>();
+			for (Map<String, String> m : this.es) {
 				for (int i = 0; i < exclude.length; i++) {
-					if (m.getId().longValue() == exclude[i]) {
+					if (m.get("id").equals(exclude[i])) {
 						ex.add(m);
 						break;
 					}

@@ -15,20 +15,20 @@
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 
 	<!-- resource -->
-	<bean id="resourceDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="resourceDao" class="cn.bc.identity.dao.hibernate.jpa.ResourceDaoImpl"
 		p:entityClass="cn.bc.identity.domain.Resource"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
 		p:entityClass="cn.bc.identity.domain.Resource"
-		p:crudDao-ref="resourceDao" />
+		p:resourceDao-ref="resourceDao" />
 		
 	<!-- Role -->
-	<bean id="roleDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="roleDao" class="cn.bc.identity.dao.hibernate.jpa.RoleDaoImpl"
 		p:entityClass="cn.bc.identity.domain.Role"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
 		p:entityClass="cn.bc.identity.domain.Role"
-		p:crudDao-ref="roleDao" />
+		p:roleDao-ref="roleDao" />
 
 	<!-- IdGenerator -->
 	<bean id="idGeneratorDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"

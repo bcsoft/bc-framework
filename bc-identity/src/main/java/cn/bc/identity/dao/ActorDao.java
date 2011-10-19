@@ -202,7 +202,7 @@ public interface ActorDao extends CrudDao<Actor> {
 	List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues);
 
 	/**
-	 * 获取指定类型和状态的Actor的ActorHistory信息
+	 * 获取指定类型和状态的Actor信息
 	 * 
 	 * @param actorTypes
 	 *            类型列表

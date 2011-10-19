@@ -30,7 +30,7 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
 
 /**
- * 参与者Service接口的实现
+ * 参与者Dao接口的实现
  * 
  * @author dragon
  * 

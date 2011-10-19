@@ -5,15 +5,14 @@ package cn.bc.identity.web.struts2.select;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.identity.domain.Role;
+import cn.bc.core.Entity;
 import cn.bc.identity.service.RoleService;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -28,7 +27,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Controller
 public class SelectRoleAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
-	public List<Role> es;
+	public List<Map<String, String>> es;
 	private RoleService roleService;
 	public String selecteds;// 当前选中项的id值，多个用逗号连接
 	public String excludes;// 当前选中项的id值，多个用逗号连接
@@ -66,16 +65,16 @@ public class SelectRoleAction extends ActionSupport {
 	}
 
 	public String execute() throws Exception {
-		this.es = this.roleService.createQuery()
-				.condition(new OrderCondition("code", Direction.Asc)).list();
+		this.es = this.roleService.find4option(null,
+				new Integer[] { Entity.STATUS_ENABLED });
 
 		// 排除不能选择的
 		long[] exclude = this.getExclude();
 		if (exclude != null && exclude.length > 0) {
-			List<Role> ex = new ArrayList<Role>();
-			for (Role m : this.es) {
+			List<Map<String, String>> ex = new ArrayList<Map<String, String>>();
+			for (Map<String, String> m : this.es) {
 				for (int i = 0; i < exclude.length; i++) {
-					if (m.getId().longValue() == exclude[i]) {
+					if (m.get("id").equals(exclude[i])) {
 						ex.add(m);
 						break;
 					}
