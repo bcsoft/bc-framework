@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +33,7 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  */
 public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		ActorDao {
+	private static Log logger = LogFactory.getLog(ActorDaoImpl.class);
 	private ActorRelationDao actorRelationDao;
 
 	@Autowired

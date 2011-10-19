@@ -158,10 +158,12 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 				// jpaTemplate.prepareQuery(queryObject);
 
 				// 注入参数
-				int i = 0;
-				for (Object value : args) {
-					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
-					i++;
+				if (args != null) {
+					int i = 0;
+					for (Object value : args) {
+						queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
+						i++;
+					}
 				}
 				return JdbcUtils.mapRows(
 						(List<Object[]>) queryObject.getResultList(), rowMapper);

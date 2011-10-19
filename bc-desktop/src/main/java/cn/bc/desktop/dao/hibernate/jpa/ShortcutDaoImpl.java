@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +26,7 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  */
 public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 		ShortcutDao {
+	private static Log logger = LogFactory.getLog(ShortcutDaoImpl.class);
 	private ActorDao actorDao;
 
 	@Autowired

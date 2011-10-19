@@ -88,7 +88,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		// 构建页面的html
 		this.html = buildHtmlPage();
 
-		logger.info("list耗时：" + DateUtils.getWasteTime(startTime, new Date()));
+		logger.info("list耗时：" + DateUtils.getWasteTime(startTime));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}
@@ -110,7 +110,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		// 构建页面的html
 		this.html = buildHtmlPage();
 
-		logger.info("paging耗时：" + DateUtils.getWasteTime(startTime, new Date()));
+		logger.info("paging耗时：" + DateUtils.getWasteTime(startTime));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}
@@ -133,7 +133,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			this.html = getGridData(this.getGridColumns());
 		}
 
-		logger.info("list耗时：" + DateUtils.getWasteTime(startTime, new Date()));
+		logger.info("data耗时：" + DateUtils.getWasteTime(startTime));
 		// 返回全局的global-results：在cn/bc/web/struts2/struts.xml中定义的
 		return "page";
 	}

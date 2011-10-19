@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.jpa.JpaCallback;
 
 import cn.bc.core.exception.CoreException;
@@ -21,6 +23,7 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  */
 public class ActorHistoryDaoImpl extends HibernateCrudJpaDao<ActorHistory>
 		implements ActorHistoryDao {
+	private static Log logger = LogFactory.getLog(ActorHistoryDaoImpl.class);
 
 	public ActorHistory loadCurrent(final Long actorId) {
 		final String hql = "from ActorHistory a where a.actorId=? order by a.createDate desc";
