@@ -16,7 +16,6 @@ public abstract class RichEntityImpl extends EntityImpl implements cn.bc.core.Ri
 	private static final long serialVersionUID = 7826313222480961654L;
 	private String uid;
 	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
-//	private boolean inner = false;
 
 	@Column(name = "UID_")
 	public String getUid() {
@@ -35,13 +34,4 @@ public abstract class RichEntityImpl extends EntityImpl implements cn.bc.core.Ri
 	public void setStatus(int status) {
 		this.status = status;
 	}
-//
-//	@Column(name = "INNER_")
-//	public boolean isInner() {
-//		return inner;
-//	}
-//
-//	public void setInner(boolean inner) {
-//		this.inner = inner;
-//	}
 }

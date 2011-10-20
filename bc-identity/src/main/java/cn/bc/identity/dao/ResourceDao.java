@@ -1,20 +1,20 @@
-package cn.bc.identity.service;
+package cn.bc.identity.dao;
 
 import java.util.List;
 import java.util.Map;
 
-import cn.bc.core.service.CrudService;
+import cn.bc.core.dao.CrudDao;
 import cn.bc.identity.domain.Resource;
 
 /**
- * 资源Service接口
+ * 资源Dao接口
  * 
  * @author dragon
  * 
  */
-public interface ResourceService extends CrudService<Resource> {
+public interface ResourceDao extends CrudDao<Resource> {
 	/**
-	 * 获取指定类型和状态的Resource信息
+	 * 获取指定类型和状态的Role信息
 	 * 
 	 * @param types
 	 *            类型列表
@@ -26,7 +26,7 @@ public interface ResourceService extends CrudService<Resource> {
 	 *         <li>type -- Resource的type</li>
 	 *         <li>name -- Resource的name</li>
 	 *         <li>pname -- Resource的pname</li>
-	 *         </ul>
+	 *         </ul>o 
 	 */
 	List<Map<String, String>> find4option(Integer[] types, Integer[] statues);
 }

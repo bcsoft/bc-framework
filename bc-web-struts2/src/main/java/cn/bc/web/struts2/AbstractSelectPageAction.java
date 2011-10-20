@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.web.struts2.jpa.ViewActionWithJpa;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
@@ -20,7 +21,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public abstract class AbstractSelectPageAction<T extends Object> extends
-		AbstractGridPageAction<T> {
+		ViewActionWithJpa<T> {
 	private static final long serialVersionUID = 1L;
 
 	/** 获取点击确认按钮的回调函数名 */
@@ -57,5 +58,11 @@ public abstract class AbstractSelectPageAction<T extends Object> extends
 				.getDefaultSearchToolbarButton(getText("title.click2search")));
 
 		return tb;
+	}
+
+	@Override
+	protected String getFormActionName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

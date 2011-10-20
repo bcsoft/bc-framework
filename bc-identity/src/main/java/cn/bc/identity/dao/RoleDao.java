@@ -1,18 +1,18 @@
-package cn.bc.identity.service;
+package cn.bc.identity.dao;
 
 import java.util.List;
 import java.util.Map;
 
-import cn.bc.core.service.CrudService;
+import cn.bc.core.dao.CrudDao;
 import cn.bc.identity.domain.Role;
 
 /**
- * 角色Service接口
+ * 角色Dao接口
  * 
  * @author dragon
  * 
  */
-public interface RoleService extends CrudService<Role> {
+public interface RoleDao extends CrudDao<Role> {
 	/**
 	 * 获取指定类型和状态的Role信息
 	 * 
