@@ -39,8 +39,9 @@ public class Resource extends RichEntityImpl {
 	private Resource belong;// 所隶属的模块
 	private String iconClass;// 图标样式
 	private String option;// 额外配置
-	private boolean inner = false;//是否为内置对象，内置对象不允许删除
-	
+	private boolean inner = false;// 是否为内置对象，内置对象不允许删除
+	private String pname;// 所隶属模块的全名:如'系统维护/组织架构/单位配置'
+
 	@Transient
 	public static Integer[] getAllTypes() {
 		Integer[] types = new Integer[4];
@@ -49,6 +50,14 @@ public class Resource extends RichEntityImpl {
 		types[2] = TYPE_OUTER_LINK;
 		types[3] = TYPE_HTML;
 		return types;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	@Column(name = "INNER_")
@@ -122,7 +131,19 @@ public class Resource extends RichEntityImpl {
 	}
 
 	public String toString() {
-		return "{id:" + getId() + ",type:" + type + ",code:" + orderNo + ",name:"
-				+ name + ",url:" + url + "}";
+		return "{id:" + getId() + ",type:" + type + ",code:" + orderNo
+				+ ",name:" + name + ",url:" + url + "}";
+	}
+
+	/** 全路径分隔符 */
+	public static final String PS = "/";
+
+	@Transient
+	public String getFullName() {
+		if (this.getPname() != null && this.getPname().length() > 0) {
+			return this.getPname() + PS + this.getName();
+		} else {
+			return this.getName();
+		}
 	}
 }
