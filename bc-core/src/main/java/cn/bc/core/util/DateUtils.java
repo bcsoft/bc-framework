@@ -174,16 +174,15 @@ public class DateUtils {
 	public static String getWasteTime(Date startDate, Date endDate) {
 		long wt = endDate.getTime() - startDate.getTime();
 		if (wt < 1000) {
-			return wt + "毫秒";
-		} else if (wt < 1000 * 60) {
-			return nf4wasteTime.format(((float) wt) / 1000f) + "秒";
+			return wt + "ms";
+		} else if (wt < 60000) {
+			long ms = wt % 1000;
+			return ((wt - ms) / 1000) + "s " + ms + "ms";
 		} else {
-			long m = wt / (1000 * 60);
-			return m
-					+ "分"
-					+ nf4wasteTime
-							.format(((float) (wt - m * 1000 * 60)) / 1000f)
-					+ "秒";
+			long ms = wt % 1000;
+			long s = (wt - ms) % 60;
+			long m = (wt - s - ms) / 60000;
+			return ((wt - s - ms) / 60000) + "m " + s + "s " + ms + "ms";
 		}
 	}
 }

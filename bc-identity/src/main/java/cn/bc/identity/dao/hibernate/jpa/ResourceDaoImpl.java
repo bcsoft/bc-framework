@@ -29,7 +29,7 @@ public class ResourceDaoImpl extends HibernateCrudJpaDao<Resource> implements
 			Integer[] actorStatues) {
 		ArrayList<Object> args = new ArrayList<Object>();
 		StringBuffer hql = new StringBuffer();
-		hql.append("select a.id,a.type_,a.name");
+		hql.append("select a.id,a.type_,a.name,a.pname");
 		hql.append(" from BC_IDENTITY_RESOURCE a");
 
 		boolean isWhere = true;
@@ -83,9 +83,20 @@ public class ResourceDaoImpl extends HibernateCrudJpaDao<Resource> implements
 						map.put("id", rs[i++].toString());
 						map.put("type", rs[i++].toString());
 						map.put("name", rs[i++].toString());
-						//map.put("pname", rs[i++].toString());
+						map.put("pname", rs[i] != null ? rs[i].toString() : null);
 						return map;
 					}
 				});
+	}
+
+	@Override
+	public Resource save(Resource entity) {
+		// 重新设置pname的值
+		if (entity.getBelong() != null) {
+			entity.setPname(this.load(entity.getBelong().getId()).getFullName());
+		} else {
+			entity.setPname(null);
+		}
+		return super.save(entity);
 	}
 }
