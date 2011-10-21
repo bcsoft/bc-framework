@@ -165,7 +165,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 		// 设置页面参数
 		listPage.setNamespace(
-				getHtmlPageNamespace() + "/" + getFormActionName() + "View")
+				getHtmlPageNamespace() + "/" + getViewActionName())
 				.addJs(getHtmlPageJs()).setTitle(this.getHtmlPageTitle())
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
@@ -186,14 +186,19 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		return listPage;
 	}
 
+	/** 获取视图action的简易名称 */
+	protected String getViewActionName() {
+		return getFormActionName() + "s";
+	}
+	
+	/** 获取表单action的简易名称 */
+	protected abstract String getFormActionName();
+
 	/** 编辑的url */
 	protected String getEditUrl() {
 		return getHtmlPageNamespace() + "/" + this.getFormActionName()
 				+ "/edit";
 	}
-
-	/** 获取表单action的简易名称 */
-	protected abstract String getFormActionName();
 
 	/** 查看的url */
 	protected String getOpenUrl() {
