@@ -1,4 +1,4 @@
-package cn.bc.identity.service;
+package cn.bc.desktop.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import cn.bc.db.JdbcUtils;
 import cn.bc.db.jdbc.RowMapper;
+import cn.bc.desktop.domain.Personal;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.AuthData;
@@ -142,19 +143,19 @@ public class LoginServiceImpl implements LoginService {
 		return null;
 	}
 
-	public List<String> findActorRoles(List<Long> actorIds) {
-		if (actorIds == null || actorIds.isEmpty())
+	public List<String> findActorRoles(Long[] actorIds) {
+		if (actorIds == null || actorIds.length == 0)
 			return new ArrayList<String>();
 
 		final StringBuffer hql = new StringBuffer();
 		hql.append("select distinct r.id id,r.code code,r.name name,r.order_ orderNo from BC_IDENTITY_ROLE r");
 		hql.append(" inner join BC_IDENTITY_ROLE_ACTOR ra on ra.rid=r.id");
 		hql.append(" where r.status_ = 0 and ra.aid");
-		if (actorIds.size() == 1) {
+		if (actorIds.length == 1) {
 			hql.append(" = ?");
 		} else {
 			hql.append(" in (?");
-			for (int i = 1; i < actorIds.size(); i++) {
+			for (int i = 1; i < actorIds.length; i++) {
 				hql.append(",?");
 			}
 			hql.append(")");
@@ -162,14 +163,72 @@ public class LoginServiceImpl implements LoginService {
 		hql.append(" order by r.order_");
 		if (logger.isDebugEnabled()) {
 			logger.debug("actorIds="
-					+ StringUtils.collectionToCommaDelimitedString(actorIds));
+					+ StringUtils.arrayToCommaDelimitedString(actorIds));
 			logger.debug("hql=" + hql);
 		}
 		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
-				hql.toString(), actorIds.toArray(), new RowMapper<String>() {
+				hql.toString(), actorIds, new RowMapper<String>() {
 					public String mapRow(Object[] rs, int rowNum) {
 						return rs[1].toString();
 					}
 				});
+	}
+
+	public Personal loadPersonal(final Long actorId) {
+		final StringBuffer hql = new StringBuffer(
+				"select p.id,p.uid_,p.status_,p.font,p.theme,p.aid,p.inner_");
+		hql.append(" from BC_DESKTOP_PERSONAL p where p.aid=0 or p.aid=? order by p.id desc");
+		if (logger.isDebugEnabled()) {
+			logger.debug("actorId=" + actorId + ",hql=" + hql);
+		}
+		try {
+			return jpaTemplate.execute(new JpaCallback<Personal>() {
+				public Personal doInJpa(EntityManager em)
+						throws PersistenceException {
+					Query queryObject = em.createNativeQuery(hql.toString());
+					// jpaTemplate.prepareQuery(queryObject);
+
+					// 注入参数
+					queryObject.setParameter(1, actorId);// jpa的索引号从1开始
+					queryObject.setFirstResult(0);
+					queryObject.setMaxResults(1);// 仅获取1条
+
+					Personal p = new RowMapper<Personal>() {
+						public Personal mapRow(Object[] rs, int rowNum) {
+							Personal map = new Personal();
+							int i = 0;
+							map.setId(new Long(rs[i++].toString()));
+							map.setUid(rs[i++].toString());
+							map.setStatus(Integer.parseInt(rs[i++].toString()));
+							map.setFont(rs[i++].toString());
+							map.setTheme(rs[i++].toString());
+							map.setActorId(new Long(rs[i++].toString()));
+							map.setInner("1".equals(rs[i++].toString()));
+
+							return map;
+						}
+					}.mapRow((Object[]) queryObject.getSingleResult(), 0);
+
+					// 如果是全局配置就将其改为当前用户的配置
+					if (p.getActorId().equals(0)) {
+						p.setActorId(actorId);
+
+					}
+					return p;
+				}
+			});
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public List<Map<String, Object>> findShortcuts(Long[] actorIds) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Map<String, Object>> findResources(Long[] actorIds) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

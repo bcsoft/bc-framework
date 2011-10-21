@@ -5,13 +5,9 @@ package cn.bc.desktop.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.core.RichEntityImpl;
-import cn.bc.identity.domain.Actor;
 
 /**
  * 个性化设置
@@ -25,8 +21,8 @@ public class Personal extends RichEntityImpl {
 
 	private String font;// 字体大小
 	private String theme;// 主题名称
-	private Actor actor;// 所属参与者
-	private boolean inner = false;//是否为内置对象，内置对象不允许删除
+	private Long actorId;// 所属参与者
+	private boolean inner = false;// 是否为内置对象，内置对象不允许删除
 
 	@Column(name = "INNER_")
 	public boolean isInner() {
@@ -53,13 +49,12 @@ public class Personal extends RichEntityImpl {
 		this.theme = theme;
 	}
 
-	@ManyToOne(targetEntity = Actor.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "AID", nullable = true, updatable = false)
-	public Actor getActor() {
-		return actor;
+	@Column(name = "AID")
+	public Long getActorId() {
+		return actorId;
 	}
 
-	public void setActor(Actor actor) {
-		this.actor = actor;
+	public void setActorId(Long actorId) {
+		this.actorId = actorId;
 	}
 }

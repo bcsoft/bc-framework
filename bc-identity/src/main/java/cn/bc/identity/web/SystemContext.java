@@ -29,8 +29,8 @@ public interface SystemContext extends Context{
 	public static final String KEY_ROLES = "roles";
 	/** 系统上下文内保存用户所拥有的岗位信息的键值 */
 	public static final String KEY_GROUPS = "groups";
-//	/** 系统上下文内保存用户可访问的资源信息的键值 */
-//	public static final String KEY_RESOURCES = "resources";
+	/** 系统上下文内保存用户的祖先信息的键值 */
+	public static final String KEY_ANCESTORS = "ancestors";
 	
 	/**
 	 * 获取当前登录的用户

@@ -26,5 +26,9 @@
 		p:entityClass="cn.bc.desktop.domain.Personal"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="personalService" class="cn.bc.desktop.service.PersonalServiceImpl"
-		p:entityClass="cn.bc.desktop.domain.Personal"/>
+		p:entityClass="cn.bc.desktop.domain.Personal" />
+
+	<!-- Login -->
+	<bean id="loginService" class="cn.bc.desktop.service.LoginServiceImpl"
+		p:jpaTemplate-ref="jpaTemplate" />
 </beans>

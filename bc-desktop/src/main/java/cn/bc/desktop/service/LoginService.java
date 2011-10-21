@@ -1,7 +1,9 @@
-package cn.bc.identity.service;
+package cn.bc.desktop.service;
 
 import java.util.List;
 import java.util.Map;
+
+import cn.bc.desktop.domain.Personal;
 
 /**
  * 专为登录设置的Service接口，目的是不使用事务直接加载相关信息
@@ -42,5 +44,29 @@ public interface LoginService {
 	 * @param actorIds
 	 * @return
 	 */
-	List<String> findActorRoles(List<Long> actorIds);
+	List<String> findActorRoles(Long[] actorIds);
+
+	/**
+	 * 获取指定用户的个性化配置信息
+	 * 
+	 * @param actorId
+	 * @return
+	 */
+	Personal loadPersonal(Long actorId);
+
+	/**
+	 * 获取指定用户的桌面快捷方式
+	 * 
+	 * @param actorIds
+	 * @return
+	 */
+	List<Map<String, Object>> findShortcuts(Long[] actorIds);
+
+	/**
+	 * 获取指定用户的可访问资源
+	 * 
+	 * @param actorIds
+	 * @return
+	 */
+	List<Map<String, Object>> findResources(Long[] actorIds);
 }

@@ -60,10 +60,10 @@ public class PersonalAction extends EntityAction<Long, Personal> {
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
 			personal.setStatus(RichEntity.STATUS_ENABLED);
-			//personal.setInner(common.isInner());
+			// personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
-			personal.setActor(actor);
+			personal.setActorId(actor.getId());
 		}
 
 		this.setE(personal);
@@ -79,10 +79,10 @@ public class PersonalAction extends EntityAction<Long, Personal> {
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
 			personal.setStatus(RichEntity.STATUS_ENABLED);
-			//personal.setInner(common.isInner());
+			// personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
-			personal.setActor((Actor) actor);
+			personal.setActorId(actor.getId());
 			if (font != null && font.length() > 0)
 				personal.setFont(font);
 			if (theme != null && theme.length() > 0)

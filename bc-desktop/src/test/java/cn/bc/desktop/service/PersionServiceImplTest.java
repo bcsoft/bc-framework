@@ -47,7 +47,7 @@ public class PersionServiceImplTest extends
 
 	protected Personal createPersonal(Actor actor) {
 		Personal c = this.createInstance(this.getDefaultConfig());
-		c.setActor((Actor)actor);
+		c.setActorId(actor.getId());
 		return c;
 	}
 
