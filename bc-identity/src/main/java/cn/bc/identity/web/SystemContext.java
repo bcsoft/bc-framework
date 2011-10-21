@@ -19,8 +19,12 @@ public interface SystemContext extends Context{
 	public static final String KEY_USER_HISTORY = "userHistory";
 	/** 系统上下文内保存用户的直接上级信息的键值 */
 	public static final String KEY_BELONG = "belong";
+	/** 系统上下文内保存用户的直接上级信息的键值 */
+	public static final String KEY_BELONGS = "belongs";
 	/** 系统上下文内保存用户所在单位信息的键值 */
 	public static final String KEY_UNIT = "unit";
+	/** 系统上下文内保存用户所在单位信息的键值 */
+	public static final String KEY_UNITS = "units";
 	/** 系统上下文内保存用户所拥有的角色信息的键值 */
 	public static final String KEY_ROLES = "roles";
 	/** 系统上下文内保存用户所拥有的岗位信息的键值 */

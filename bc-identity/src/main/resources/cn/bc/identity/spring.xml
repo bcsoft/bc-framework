@@ -19,16 +19,13 @@
 		p:entityClass="cn.bc.identity.domain.Resource"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
-		p:entityClass="cn.bc.identity.domain.Resource"
-		p:resourceDao-ref="resourceDao" />
-		
+		p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao" />
+
 	<!-- Role -->
 	<bean id="roleDao" class="cn.bc.identity.dao.hibernate.jpa.RoleDaoImpl"
-		p:entityClass="cn.bc.identity.domain.Role"
-		p:entityManagerFactory-ref="entityManagerFactory" />
+		p:entityClass="cn.bc.identity.domain.Role" p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
-		p:entityClass="cn.bc.identity.domain.Role"
-		p:roleDao-ref="roleDao" />
+		p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" />
 
 	<!-- IdGenerator -->
 	<bean id="idGeneratorDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
@@ -56,15 +53,15 @@
 	<!-- Duty -->
 	<bean id="dutyDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao" />
+	<bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl"
+		p:crudDao-ref="dutyDao" />
 
 	<!-- ActorRelation -->
 	<bean id="actorRelationDao" class="cn.bc.identity.dao.hibernate.jpa.ActorRelationDaoImpl"
 		p:entityClass="cn.bc.identity.domain.ActorRelation"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="actorRelationService" class="cn.bc.identity.service.ActorRelationServiceImpl"
-		p:entityClass="cn.bc.identity.domain.ActorRelation"
-		p:crudDao-ref="actorRelationDao" />
+		p:entityClass="cn.bc.identity.domain.ActorRelation" p:crudDao-ref="actorRelationDao" />
 
 	<!-- AuthData -->
 	<bean id="authDataDao" class="cn.bc.identity.dao.hibernate.jpa.AuthDataDaoImpl"
@@ -75,8 +72,7 @@
 		p:entityClass="cn.bc.identity.domain.Actor"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="actorService" class="cn.bc.identity.service.ActorServiceImpl"
-		p:entityClass="cn.bc.identity.domain.Actor"
-		p:actorDao-ref="actorDao" />
+		p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao" />
 
 	<!-- ActorHistory -->
 	<bean id="actorHistoryDao" class="cn.bc.identity.dao.hibernate.jpa.ActorHistoryDaoImpl"
@@ -84,16 +80,19 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="actorHistoryService" class="cn.bc.identity.service.ActorHistoryServiceImpl"
 		p:entityClass="cn.bc.identity.domain.ActorHistory"
-		p:actorHistoryDao-ref="actorHistoryDao" 
-		p:actorDao-ref="actorDao" />
+		p:actorHistoryDao-ref="actorHistoryDao" p:actorDao-ref="actorDao" />
 
 	<!-- User -->
-	<bean id="userService" class="cn.bc.identity.service.UserServiceImpl" 
-		p:entityClass="cn.bc.identity.domain.Actor"
-		p:actorDao-ref="actorDao" p:authDataDao-ref="authDataDao" p:actorRelationDao-ref="actorRelationDao"/>
+	<bean id="userService" class="cn.bc.identity.service.UserServiceImpl"
+		p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
+		p:authDataDao-ref="authDataDao" p:actorRelationDao-ref="actorRelationDao" />
 
 	<!-- Group -->
-	<bean id="groupService" class="cn.bc.identity.service.GroupServiceImpl" 
-		p:entityClass="cn.bc.identity.domain.Actor"
-		p:actorDao-ref="actorDao" p:actorRelationDao-ref="actorRelationDao" />
+	<bean id="groupService" class="cn.bc.identity.service.GroupServiceImpl"
+		p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
+		p:actorRelationDao-ref="actorRelationDao" />
+
+	<!-- Login -->
+	<bean id="loginService" class="cn.bc.identity.service.LoginServiceImpl"
+		p:jpaTemplate-ref="jpaTemplate" />
 </beans>
