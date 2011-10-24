@@ -34,5 +34,5 @@ public interface ResourceService extends CrudService<Resource> {
 	 * 
 	 * @return
 	 */
-	List<Resource> findAll();
+	Map<Long, Resource> findAll();
 }

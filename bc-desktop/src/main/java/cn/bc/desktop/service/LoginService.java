@@ -2,8 +2,10 @@ package cn.bc.desktop.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cn.bc.desktop.domain.Personal;
+import cn.bc.identity.domain.Resource;
 
 /**
  * 专为登录设置的Service接口，目的是不使用事务直接加载相关信息
@@ -44,7 +46,7 @@ public interface LoginService {
 	 * @param actorIds
 	 * @return
 	 */
-	List<Map<String,String>> findActorRoles(Long[] actorIds);
+	List<Map<String, String>> findActorRoles(Long[] actorIds);
 
 	/**
 	 * 获取指定用户的个性化配置信息
@@ -68,5 +70,5 @@ public interface LoginService {
 	 * @param roleIds
 	 * @return
 	 */
-	List<Map<String, String>> findResources(Long[] roleIds);
+	Set<Resource> findResources(Long[] roleIds);
 }

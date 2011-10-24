@@ -2,8 +2,10 @@ package cn.bc.desktop.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +14,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.util.StringUtils;
@@ -22,6 +25,8 @@ import cn.bc.desktop.domain.Personal;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.AuthData;
+import cn.bc.identity.domain.Resource;
+import cn.bc.identity.service.ResourceService;
 import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
 
 /**
@@ -33,6 +38,12 @@ import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
 public class LoginServiceImpl implements LoginService {
 	private static Log logger = LogFactory.getLog(LoginServiceImpl.class);
 	private JpaTemplate jpaTemplate;
+	private ResourceService resourceService;
+
+	@Autowired
+	public void setResourceService(ResourceService resourceService) {
+		this.resourceService = resourceService;
+	}
 
 	public void setJpaTemplate(JpaTemplate jpaTemplate) {
 		this.jpaTemplate = jpaTemplate;
@@ -273,7 +284,7 @@ public class LoginServiceImpl implements LoginService {
 						i++;
 						s.put("url", rs[i] != null ? rs[i].toString() : null);
 						i++;
-						s.put("iconclass", rs[i] != null ? rs[i].toString()
+						s.put("iconClass", rs[i] != null ? rs[i].toString()
 								: null);
 						i++;
 						s.put("orderNo", rs[i] != null ? rs[i].toString()
@@ -283,9 +294,9 @@ public class LoginServiceImpl implements LoginService {
 				});
 	}
 
-	public List<Map<String, String>> findResources(Long[] roleIds) {
+	public Set<Resource> findResources(Long[] roleIds) {
 		if (roleIds == null || roleIds.length == 0)
-			return new ArrayList<Map<String, String>>();
+			return new HashSet<Resource>();
 
 		StringBuffer hql = new StringBuffer();
 		hql.append("select distinct s.belong,s.id,s.type_,s.name,s.url,s.iconclass,s.order_,s.pname,s.option_");
@@ -307,30 +318,45 @@ public class LoginServiceImpl implements LoginService {
 					+ StringUtils.arrayToCommaDelimitedString(roleIds));
 			logger.debug("hql=" + hql);
 		}
-		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
-				hql.toString(), roleIds, new RowMapper<Map<String, String>>() {
-					public Map<String, String> mapRow(Object[] rs, int rowNum) {
-						Map<String, String> s = new HashMap<String, String>();
-						int i = 0;
-						s.put("pid", rs[i] != null ? rs[i].toString() : null);
-						i++;
-						s.put("id", rs[i++].toString());
-						s.put("type", rs[i++].toString());
-						s.put("name", rs[i] != null ? rs[i].toString() : null);
-						i++;
-						s.put("url", rs[i] != null ? rs[i].toString() : null);
-						i++;
-						s.put("iconclass", rs[i] != null ? rs[i].toString()
-								: null);
-						i++;
-						s.put("orderNo", rs[i] != null ? rs[i].toString()
-								: null);
-						i++;
-						s.put("pname", rs[i] != null ? rs[i].toString() : null);
-						i++;
-						s.put("option", rs[i] != null ? rs[i].toString() : null);
-						return s;
+		List<Long> sIds = HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
+				hql.toString(), roleIds, new RowMapper<Long>() {
+					public Long mapRow(Object[] rs, int rowNum) {
+						// Map<String, String> s = new HashMap<String,
+						// String>();
+						// int i = 0;
+						// s.put("pid", rs[i] != null ? rs[i].toString() :
+						// null);
+						// i++;
+						// s.put("id", rs[i++].toString());
+						// s.put("type", rs[i++].toString());
+						// s.put("name", rs[i] != null ? rs[i].toString() :
+						// null);
+						// i++;
+						// s.put("url", rs[i] != null ? rs[i].toString() :
+						// null);
+						// i++;
+						// s.put("iconClass", rs[i] != null ? rs[i].toString()
+						// : null);
+						// i++;
+						// s.put("orderNo", rs[i] != null ? rs[i].toString()
+						// : null);
+						// i++;
+						// s.put("pname", rs[i] != null ? rs[i].toString() :
+						// null);
+						// i++;
+						// s.put("option", rs[i] != null ? rs[i].toString() :
+						// null);
+						return new Long(rs[1].toString());
 					}
 				});
+
+		Set<Resource> ss = new HashSet<Resource>();
+		Map<Long, Resource> allResources = this.resourceService.findAll();
+		for (Long sid : sIds) {
+			if (allResources.containsKey(sid))
+				ss.add(allResources.get(sid));
+		}
+
+		return ss;
 	}
 }
