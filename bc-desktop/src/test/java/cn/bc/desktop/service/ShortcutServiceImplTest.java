@@ -62,11 +62,12 @@ public class ShortcutServiceImplTest extends
 		return shortcut;
 	}
 
-	protected Shortcut createShortcut(Actor actor, Resource resource, String order) {
+	protected Shortcut createShortcut(Actor actor, Resource resource,
+			String order) {
 		Shortcut shortcut = super.createInstance(this.getDefaultConfig());
 		shortcut.setOrder(order);
-		shortcut.setActor((Actor)actor);
-		shortcut.setResource(resource);
+		shortcut.setActorId(actor.getId());
+		shortcut.setResourceId(resource.getId());
 		return shortcut;
 	}
 
@@ -81,7 +82,7 @@ public class ShortcutServiceImplTest extends
 
 		// 仅属于user的Shortcut
 		Shortcut shortcut4user = this.createInstance(this.getDefaultConfig());
-		shortcut4user.setActor((Actor)user);
+		shortcut4user.setActorId(user.getId());
 		this.shortcutService.save(shortcut4user);
 		Assert.assertNotNull(shortcut4user.getId());
 
@@ -105,7 +106,7 @@ public class ShortcutServiceImplTest extends
 
 		// 仅属于user的Shortcut
 		Shortcut shortcut4user = this.createShortcut(user, null, "01");
-		shortcut4user.setActor((Actor)user);
+		shortcut4user.setActorId(user.getId());
 		this.shortcutService.save(shortcut4user);
 		Assert.assertNotNull(shortcut4user.getId());
 
@@ -130,7 +131,7 @@ public class ShortcutServiceImplTest extends
 
 		// 通用的Shortcut
 		Shortcut shortcut4common = this.createInstance(this.getDefaultConfig());
-		shortcut4common.setActor(null);
+		shortcut4common.setActorId(new Long(0));
 		this.shortcutService.save(shortcut4common);
 		Assert.assertNotNull(shortcut4common.getId());
 
@@ -148,7 +149,7 @@ public class ShortcutServiceImplTest extends
 
 		// 通用的Shortcut
 		Shortcut shortcut4common = this.createInstance(this.getDefaultConfig());
-		shortcut4common.setActor(null);
+		shortcut4common.setActorId(new Long(0));
 		this.shortcutService.save(shortcut4common);
 		Assert.assertNotNull(shortcut4common.getId());
 
@@ -223,7 +224,6 @@ public class ShortcutServiceImplTest extends
 		ar.setOrderNo(order);
 		return ar;
 	}
-
 
 	private Actor createActor(int type, String code, String order) {
 		Actor actor = new Actor();
