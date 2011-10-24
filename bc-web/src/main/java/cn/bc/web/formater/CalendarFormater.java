@@ -14,7 +14,7 @@ import java.util.Date;
  * 
  */
 public class CalendarFormater extends AbstractFormater<String> {
-	private SimpleDateFormat format;
+	protected SimpleDateFormat format;
 
 	public CalendarFormater() {
 		format = new SimpleDateFormat("yyyy-MM-dd");
