@@ -3,15 +3,19 @@
  */
 package cn.bc.web.struts2;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.RequestAware;
+import org.apache.struts2.interceptor.SessionAware;
 
+import cn.bc.Context;
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.json.Json;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -21,7 +25,8 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author dragon
  * 
  */
-public abstract class AbstractHtmlPageAction extends ActionSupport {
+public abstract class AbstractHtmlPageAction extends ActionSupport implements
+		SessionAware, RequestAware {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(this.getClass());
 
@@ -31,9 +36,22 @@ public abstract class AbstractHtmlPageAction extends ActionSupport {
 	/** Ajax成功处理后返回Json信息对应的视图名 */
 	public static final String JSON = "json";
 
-	public Json json; // json页面
+	public String json; // json页面
 	public Component html; // html页面
-	public boolean readonly; // 是否只读
+	protected Map<String, Object> session;
+	protected Map<String, Object> request;
+
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+	}
+
+	public void setRequest(Map<String, Object> request) {
+		this.request = request;
+	}
+
+	public Context getContext() {
+		return (Context) this.session.get(Context.KEY);
+	}
 
 	// == 子类必须复写的方法
 
@@ -45,7 +63,6 @@ public abstract class AbstractHtmlPageAction extends ActionSupport {
 	public boolean isReadonly() {
 		return false;
 	}
-
 
 	/** 页面的标题 */
 	protected abstract String getHtmlPageTitle();

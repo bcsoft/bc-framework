@@ -38,7 +38,6 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	public Set<Role> inheritRolesFromOU;// 从上级组织继承的角色信息
 	public String assignRoleIds;// 分派的角色id，多个id用逗号连接
 	private IdGeneratorService idGeneratorService;// 用于生成uid的服务
-	public String MANAGER_KEY = getText("key.role.actorManager");// 管理角色的编码
 
 	public IdGeneratorService getIdGeneratorService() {
 		return idGeneratorService;
@@ -81,7 +80,8 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(MANAGER_KEY, getText("key.role.admin"));// 组织架构管理或超级管理角色
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 组织架构管理或超级管理角色
 	}
 
 	// 查询条件中要匹配的域

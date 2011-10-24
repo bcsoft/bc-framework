@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.option.domain.OptionItem;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.EntityAction;
@@ -38,6 +39,13 @@ public class OptionItemAction extends EntityAction<Long, OptionItem> {
 	public void setOptionItemService(
 			@Qualifier(value = "optionItemService") CrudService<OptionItem> crudService) {
 		this.setCrudService(crudService);
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.option"),
+				getText("key.role.bc.admin"));// 选项管理或超级管理角色
 	}
 
 	@Override

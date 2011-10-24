@@ -17,6 +17,7 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.docs.domain.AttachHistory;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.EntityAction;
@@ -42,6 +43,13 @@ public class AttachHistoryAction extends EntityAction<Long, AttachHistory> {
 	public void setAttachHistoryService(
 			@Qualifier(value = "attachHistoryService") CrudService<AttachHistory> crudService) {
 		this.setCrudService(crudService);
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 组织架构管理或超级管理角色
 	}
 
 	@Override

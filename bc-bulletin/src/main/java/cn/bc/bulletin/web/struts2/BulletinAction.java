@@ -54,8 +54,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
-	private String MANAGER_KEY = "R_MANAGER_BULLETIN";// 公告管理角色的编码
-	public boolean isManager;
 
 	@Autowired
 	public void setBulletinService(
@@ -71,6 +69,13 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	@Autowired
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
 		this.idGeneratorService = idGeneratorService;
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.bulletin"),
+				getText("key.role.bc.admin"));// 电子公告管理或超级管理角色
 	}
 
 	@Override
@@ -100,7 +105,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	protected PageOption buildFormPageOption() {
 		PageOption option = new PageOption().setWidth(680).setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		if (isManager()) {
+		if (!this.isReadonly()) {
 			option.addButton(new ButtonOption(getText("label.preview"),
 					"preview"));
 			option.addButton(new ButtonOption(getText("label.save"), "save"));
@@ -137,7 +142,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	}
 
 	private AttachWidget buildAttachsUI(boolean isNew) {
-		isManager = isManager();
 		// 构建附件控件
 		String ptype = "bulletin.main";
 		AttachWidget attachsUI = new AttachWidget();
@@ -152,7 +156,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-		if (!isManager) {
+		if (this.isReadonly()) {
 			attachsUI.setReadOnly(true);
 		}
 		return attachsUI;
@@ -166,8 +170,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	@Override
 	protected Condition getSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
-		// 是否公告管理员
-		isManager = isManager();
 		Actor unit = context.getUnit();
 
 		// 其他单位且已发布的全系统公告
@@ -177,7 +179,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 				.add(new NotEqualsCondition("author.unitId", unit.getId()));
 
 		MixCondition c = new OrCondition().setAddBracket(true);
-		if (isManager) {// 管理员看本单位的所有状态公告或全系统公告
+		if (this.isReadonly()) {// 管理员看本单位的所有状态公告或全系统公告
 			c.add(new EqualsCondition("author.unitId", unit.getId()));// 本单位公告
 			c.add(commonCondition);
 		} else {// 普通用户仅看已发布的本单位或全系统公告
@@ -191,7 +193,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		if (isManager()) {// 管理员看本单位的所有状态公告或全系统公告
+		if (!this.isReadonly()) {// 管理员看本单位的所有状态公告或全系统公告
 			return new OrderCondition("status")
 					.add("issueDate", Direction.Desc);
 		} else {// 普通用户仅看已发布的本单位或全系统公告
@@ -210,9 +212,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		isManager = isManager();
-
-		if (isManager) {
+		if (!this.isReadonly()) {
 			// 新建按钮
 			tb.addButton(getDefaultCreateToolbarButton());
 
@@ -239,11 +239,8 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 
 	@Override
 	protected List<Column> buildGridColumns() {
-		// 是否公告管理员
-		isManager = isManager();
-
 		List<Column> columns = super.buildGridColumns();
-		if (isManager)
+		if (!this.isReadonly())
 			if (this.useColumn("status"))
 				columns.add(new TextColumn("status",
 						getText("bulletin.status"), 80).setSortable(true)
@@ -263,7 +260,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 			columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)
 					.setSortable(true).setValueFormater(
 							new KeyValueFormater(getEntityStatuses())));
-		if (isManager) {
+		if (!this.isReadonly()) {
 			if (this.useColumn("fileDate"))
 				columns.add(new TextColumn("fileDate",
 						getText("bulletin.fileDate"), 150)
@@ -279,11 +276,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 						getText("bulletin.unitName"), 80).setSortable(true));
 		}
 		return columns;
-	}
-
-	// 判断当前用户是否是公告管理员
-	private boolean isManager() {
-		return ((SystemContext) this.getContext()).hasAnyRole(MANAGER_KEY);
 	}
 
 	@Override

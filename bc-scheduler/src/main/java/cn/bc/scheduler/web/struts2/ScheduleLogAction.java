@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.scheduler.domain.ScheduleLog;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarRangeFormaterEx;
@@ -42,6 +43,12 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 	public void setScheduleLogService(
 			@Qualifier(value = "scheduleLogService") CrudService<ScheduleLog> crudService) {
 		this.setCrudService(crudService);
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.admin"));// 超级管理角色
 	}
 
 	@Override
