@@ -198,7 +198,8 @@ public class LoginServiceImpl implements LoginService {
 							Personal map = new Personal();
 							int i = 0;
 							map.setId(new Long(rs[i++].toString()));
-							map.setUid(rs[i++].toString());
+							map.setUid(rs[i] != null ? rs[i].toString() : null);
+							i++;
 							map.setStatus(Integer.parseInt(rs[i++].toString()));
 							map.setFont(rs[i++].toString());
 							map.setTheme(rs[i++].toString());
