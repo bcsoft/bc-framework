@@ -44,7 +44,7 @@ public interface LoginService {
 	 * @param actorIds
 	 * @return
 	 */
-	List<String> findActorRoles(Long[] actorIds);
+	List<Map<String,String>> findActorRoles(Long[] actorIds);
 
 	/**
 	 * 获取指定用户的个性化配置信息
@@ -60,13 +60,13 @@ public interface LoginService {
 	 * @param actorIds
 	 * @return
 	 */
-	List<Map<String, Object>> findShortcuts(Long[] actorIds);
+	List<Map<String, String>> findShortcuts(Long[] actorIds, Long[] resourceIds);
 
 	/**
-	 * 获取指定用户的可访问资源
+	 * 获取指定角色配置的资源
 	 * 
-	 * @param actorIds
+	 * @param roleIds
 	 * @return
 	 */
-	List<Map<String, Object>> findResources(Long[] actorIds);
+	List<Map<String, String>> findResources(Long[] roleIds);
 }

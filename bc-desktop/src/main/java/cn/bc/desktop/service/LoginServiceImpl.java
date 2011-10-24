@@ -103,7 +103,7 @@ public class LoginServiceImpl implements LoginService {
 
 	public List<Map<String, String>> findActorAncestors(Long actorId) {
 		if ("oracle".equals(JdbcUtils.dbtype)) {
-			final StringBuffer hql = new StringBuffer();
+			StringBuffer hql = new StringBuffer();
 			hql.append("select distinct ar.follower_id fid,ar.master_id id,m.type_ type,m.code code,m.name name,m.pcode pcode,m.pname pname");
 			hql.append(" from BC_IDENTITY_ACTOR_RELATION ar");
 			hql.append(" inner join BC_IDENTITY_ACTOR m on m.id = ar.master_id");
@@ -143,11 +143,11 @@ public class LoginServiceImpl implements LoginService {
 		return null;
 	}
 
-	public List<String> findActorRoles(Long[] actorIds) {
+	public List<Map<String, String>> findActorRoles(Long[] actorIds) {
 		if (actorIds == null || actorIds.length == 0)
-			return new ArrayList<String>();
+			return new ArrayList<Map<String, String>>();
 
-		final StringBuffer hql = new StringBuffer();
+		StringBuffer hql = new StringBuffer();
 		hql.append("select distinct r.id id,r.code code,r.name name,r.order_ orderNo from BC_IDENTITY_ROLE r");
 		hql.append(" inner join BC_IDENTITY_ROLE_ACTOR ra on ra.rid=r.id");
 		hql.append(" where r.status_ = 0 and ra.aid");
@@ -167,9 +167,13 @@ public class LoginServiceImpl implements LoginService {
 			logger.debug("hql=" + hql);
 		}
 		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
-				hql.toString(), actorIds, new RowMapper<String>() {
-					public String mapRow(Object[] rs, int rowNum) {
-						return rs[1].toString();
+				hql.toString(), actorIds, new RowMapper<Map<String, String>>() {
+					public Map<String, String> mapRow(Object[] rs, int rowNum) {
+						Map<String, String> role = new HashMap<String, String>();
+						int i = 0;
+						role.put("id", rs[i++].toString());
+						role.put("code", rs[i++].toString());
+						return role;
 					}
 				});
 	}
@@ -223,13 +227,110 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
-	public List<Map<String, Object>> findShortcuts(Long[] actorIds) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Map<String, String>> findShortcuts(Long[] actorIds,
+			Long[] resourceIds) {
+		StringBuffer hql = new StringBuffer();
+		hql.append("select s.aid,s.sid,s.id,s.standalone,s.name,s.url,s.iconclass,s.order_");
+		hql.append(" from bc_desktop_shortcut s");
+		hql.append(" where s.aid in (?");
+		List<Object> args = new ArrayList<Object>();
+		args.add(new Long(0));
+		if (actorIds != null) {
+			for (Long id : actorIds) {
+				hql.append(",?");
+				args.add(id);
+			}
+		}
+		hql.append(") and s.sid in (?");
+		args.add(new Long(0));
+		if (resourceIds != null) {
+			for (Long id : resourceIds) {
+				hql.append(",?");
+				args.add(id);
+			}
+		}
+		hql.append(") order by s.order_");
+		if (logger.isDebugEnabled()) {
+			logger.debug("actorIds="
+					+ StringUtils.arrayToCommaDelimitedString(actorIds));
+			logger.debug("resourceIds="
+					+ StringUtils.arrayToCommaDelimitedString(resourceIds));
+			logger.debug("hql=" + hql);
+		}
+		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
+				hql.toString(), args.toArray(),
+				new RowMapper<Map<String, String>>() {
+					public Map<String, String> mapRow(Object[] rs, int rowNum) {
+						Map<String, String> s = new HashMap<String, String>();
+						int i = 0;
+						s.put("aid", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("sid", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("id", rs[i++].toString());
+						s.put("standalone", rs[i++].toString());
+						s.put("name", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("url", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("iconclass", rs[i] != null ? rs[i].toString()
+								: null);
+						i++;
+						s.put("orderNo", rs[i] != null ? rs[i].toString()
+								: null);
+						return s;
+					}
+				});
 	}
 
-	public List<Map<String, Object>> findResources(Long[] actorIds) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Map<String, String>> findResources(Long[] roleIds) {
+		if (roleIds == null || roleIds.length == 0)
+			return new ArrayList<Map<String, String>>();
+
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct s.belong,s.id,s.type_,s.name,s.url,s.iconclass,s.order_,s.pname,s.option_");
+		hql.append(" from bc_identity_resource s");
+		hql.append(" inner join bc_identity_role_resource rs on rs.sid=s.id");
+		hql.append(" where rs.rid");
+		if (roleIds.length == 1) {
+			hql.append(" = ?");
+		} else {
+			hql.append(" in (?");
+			for (int i = 1; i < roleIds.length; i++) {
+				hql.append(",?");
+			}
+			hql.append(")");
+		}
+		hql.append(" order by s.order_");
+		if (logger.isDebugEnabled()) {
+			logger.debug("roleIds="
+					+ StringUtils.arrayToCommaDelimitedString(roleIds));
+			logger.debug("hql=" + hql);
+		}
+		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
+				hql.toString(), roleIds, new RowMapper<Map<String, String>>() {
+					public Map<String, String> mapRow(Object[] rs, int rowNum) {
+						Map<String, String> s = new HashMap<String, String>();
+						int i = 0;
+						s.put("pid", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("id", rs[i++].toString());
+						s.put("type", rs[i++].toString());
+						s.put("name", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("url", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("iconclass", rs[i] != null ? rs[i].toString()
+								: null);
+						i++;
+						s.put("orderNo", rs[i] != null ? rs[i].toString()
+								: null);
+						i++;
+						s.put("pname", rs[i] != null ? rs[i].toString() : null);
+						i++;
+						s.put("option", rs[i] != null ? rs[i].toString() : null);
+						return s;
+					}
+				});
 	}
 }
