@@ -680,7 +680,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(IdColumn.DEFAULT());
+		columns.add(new IdColumn());
 		return columns;
 	}
 

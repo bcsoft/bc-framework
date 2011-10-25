@@ -321,7 +321,7 @@ public class DutyAction extends ActionSupport {
 
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(IdColumn.DEFAULT());
+		columns.add(new IdColumn());
 		if (this.useColumn("code"))
 			columns.add(new TextColumn("code", getText("duty.code"))
 					.setSortable(true));

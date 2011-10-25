@@ -3,7 +3,6 @@
  */
 package cn.bc.web.struts2;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.GridFooter;
 import cn.bc.web.ui.html.grid.GridHeader;
-import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.page.HtmlPage;
@@ -69,8 +67,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	/** 计算grid数据行标签信息的表达式 */
 	protected abstract String getGridRowLabelExpression();
 
-	/** 查询条件中要匹配的域，通常用于子类复写 */
+	/** 查询条件中要匹配的域 */
 	protected abstract String[] getGridSearchFields();
+
+	/** 表格的列配置 */
+	protected abstract List<Column> getGridColumns();
 
 	// == Action方法
 
@@ -258,12 +259,6 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	/** 获取表格双击行的js处理函数名 */
 	protected String getGridDblRowMethod() {
 		return this.isReadonly() ? "bc.page.open" : "bc.page.edit";
-	}
-
-	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
-		columns.add(IdColumn.DEFAULT());
-		return columns;
 	}
 
 	/**
