@@ -62,6 +62,7 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		this.setE(this.shortcutService.create());
 		this.getE().setStatus(RichEntity.STATUS_ENABLED);
 		this.getE().setStandalone(true);
+		this.getE().setResourceId(new Long(0));
 		// 设置属于当前用户
 		this.getE().setActorId(
 				((SystemContext) this.session.get(Context.KEY)).getUser()
