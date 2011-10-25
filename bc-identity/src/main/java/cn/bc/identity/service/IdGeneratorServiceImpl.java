@@ -1,13 +1,15 @@
 package cn.bc.identity.service;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.bc.core.dao.CrudDao;
-import cn.bc.core.exception.CoreException;
+import cn.bc.identity.dao.IdGeneratorDao;
 import cn.bc.identity.domain.IdGenerator;
-import cn.bc.identity.service.IdGeneratorService;
 
 /**
  * 标识生成器Service接口的实现
@@ -17,50 +19,69 @@ import cn.bc.identity.service.IdGeneratorService;
  */
 public class IdGeneratorServiceImpl implements IdGeneratorService {
 	private static Log logger = LogFactory.getLog(IdGeneratorServiceImpl.class);
-	protected CrudDao<IdGenerator> idGeneratorDao;
+	protected IdGeneratorDao idGeneratorDao;
 
 	@Autowired
-	public void setIdGeneratorDao(CrudDao<IdGenerator> idGeneratorDao) {
+	public void setIdGeneratorDao(IdGeneratorDao idGeneratorDao) {
 		this.idGeneratorDao = idGeneratorDao;
 	}
 
 	public Long nextValue(String type) {
-		IdGenerator entity = idGeneratorDao.load(type);
-		if (entity == null)
-			throw new CoreException("type is not exist. type=" + type);
-		entity.setValue(entity.getValue() + 1);
-		idGeneratorDao.save(entity);
-		return entity.getValue();
+		Long value = idGeneratorDao.currentValue(type);
+		if (value == null) {
+			// 没有的自动创建一个
+			value = new Long(1);
+			idGeneratorDao.save(type, value, "${T}.${V}");
+			return value;
+		}
+
+		// 累加1
+		value++;
+
+		// 保存新的值
+		idGeneratorDao.updateValue(type, value);
+
+		return value;
 	}
 
 	public String next(String type) {
+		Long value;
 		IdGenerator entity = idGeneratorDao.load(type);
 		if (entity == null) {
-			// throw new CoreException("type is not exist. type=" + type);
 			// 没有的自动创建一个
-			entity = new IdGenerator();
-			entity.setType(type);
-			entity.setFormat("${T}.${V}");
-			entity.setValue(new Long(0));
-			entity = idGeneratorDao.save(entity);
+			value = new Long(1);
+			idGeneratorDao.save(type, value, "${T}.${V}");
+			return this.formatValue(type, value, "${T}.${V}");
+		} else {
+			value = entity.getValue() + 1;
+			idGeneratorDao.updateValue(type, value);
+			return this.formatValue(type, value, entity.getFormat());
 		}
-		entity.setValue(entity.getValue() + 1);
-		idGeneratorDao.save(entity);
-		return this.formatValue(type, entity.getValue(), entity.getFormat());
 	}
 
 	public Long currentValue(String type) {
-		IdGenerator entity = idGeneratorDao.load(type);
-		if (entity == null)
-			throw new CoreException("type is not exist. type=" + type);
-		return entity.getValue();
+		Long value = idGeneratorDao.currentValue(type);
+		if (value == null) {
+			// 没有的自动创建一个
+			value = new Long(0);
+			idGeneratorDao.save(type, value, "${T}.${V}");
+			return value;
+		}
+		return value;
 	}
 
 	public String current(String type) {
+		Long value;
 		IdGenerator entity = idGeneratorDao.load(type);
-		if (entity == null)
-			throw new CoreException("type is not exist. type=" + type);
-		return this.formatValue(type, entity.getValue(), entity.getFormat());
+		if (entity == null) {
+			// 没有的自动创建一个
+			value = new Long(0);
+			idGeneratorDao.save(type, value, "${T}.${V}");
+			return this.formatValue(type, value, "${T}.${V}");
+		} else {
+			value = entity.getValue();
+			return this.formatValue(type, value, entity.getFormat());
+		}
 	}
 
 	// 格式化
@@ -77,7 +98,39 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 		}
 	}
 
-	public void save(IdGenerator generator) {
-		idGeneratorDao.save(generator);
+	private final static SimpleDateFormat format4month = new SimpleDateFormat(
+			"yyyyMM");
+
+	public String nextSN4Month(String type, String pattern) {
+		// 获取当前月份信息yyyyMMdd
+		String yyyyMM = format4month.format(new Date());
+
+		// 格式化流水后
+		Long num = this.nextValue(type + "." + yyyyMM);
+
+		// 合并返回
+		return yyyyMM + new DecimalFormat(pattern).format(num);
+	}
+
+	public String nextSN4Month(String type) {
+		return nextSN4Month(type, "0000");
+	}
+
+	private final static SimpleDateFormat format4day = new SimpleDateFormat(
+			"yyyyMMdd");
+
+	public String nextSN4Day(String type) {
+		return nextSN4Day(type, "0000");
+	}
+
+	public String nextSN4Day(String type, String pattern) {
+		// 获取当前月份信息yyyyMMdd
+		String yyyyMMdd = format4day.format(new Date());
+
+		// 格式化流水后
+		Long num = this.nextValue(type + "." + yyyyMMdd);
+
+		// 合并返回
+		return yyyyMMdd + new DecimalFormat(pattern).format(num);
 	}
 }

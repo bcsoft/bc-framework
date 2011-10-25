@@ -28,8 +28,7 @@
 		p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" />
 
 	<!-- IdGenerator -->
-	<bean id="idGeneratorDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
-		p:entityClass="cn.bc.identity.domain.IdGenerator"
+	<bean id="idGeneratorDao" class="cn.bc.identity.dao.IdGeneratorDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="idGeneratorService" class="cn.bc.identity.service.IdGeneratorServiceImpl" />
 	<aop:config>
@@ -41,12 +40,8 @@
 	<tx:advice id="idGeneratorServiceTxAdvice"
 		transaction-manager="transactionManager">
 		<tx:attributes>
-			<tx:method name="next" propagation="REQUIRED" read-only="false" />
-			<tx:method name="nextValue" propagation="REQUIRED"
-				read-only="false" />
-			<tx:method name="current" propagation="REQUIRED" read-only="true" />
-			<tx:method name="currentValue" propagation="REQUIRED"
-				read-only="true" />
+			<tx:method name="next*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="current*" propagation="REQUIRED" read-only="true" />
 		</tx:attributes>
 	</tx:advice>
 
