@@ -47,7 +47,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	private static final long serialVersionUID = 1L;
 	private final static Log logger = LogFactory
 			.getLog("cn.bc.web.struts2.AbstractGridPageAction");
-	public boolean multiple;// 是否允许多选
+	public boolean multiple = true;// 是否允许多选
 	public List<T> es; // grid的数据
 	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
