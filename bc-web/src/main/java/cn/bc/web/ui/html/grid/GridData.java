@@ -13,6 +13,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import cn.bc.web.formater.Formater;
+import cn.bc.web.formater.LinkFormater;
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.Div;
 import cn.bc.web.ui.html.Span;
@@ -261,7 +262,12 @@ public class GridData extends Div {
 				td.addChild(new Text(cellValue)).setAttr("data-value",
 						srcCellValue != null ? srcCellValue.toString() : "");
 				if (column.isUseTitleFromLabel()) {
-					td.setTitle(cellValue);
+					if(column.getValueFormater() instanceof LinkFormater){
+						if(srcCellValue != null)
+							td.setTitle(srcCellValue.toString());
+					}else{
+						td.setTitle(cellValue);
+					}
 				}
 			}
 

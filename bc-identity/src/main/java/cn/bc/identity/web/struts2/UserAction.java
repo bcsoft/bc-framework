@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
@@ -160,8 +161,14 @@ public class UserAction extends AbstractActorAction {
 
 	@Override
 	protected Condition getSpecalCondition() {
-		// 附加用户查询条件
-		return new EqualsCondition("type", new Integer(Actor.TYPE_USER));
+		Condition sc = super.getSpecalCondition();
+		// 附加用户的查询条件
+		Condition uc = new EqualsCondition("type", new Integer(Actor.TYPE_USER));
+		if (sc != null) {
+			return new AndCondition().add(sc).add(uc);
+		} else {
+			return uc;
+		}
 	}
 
 	@Override

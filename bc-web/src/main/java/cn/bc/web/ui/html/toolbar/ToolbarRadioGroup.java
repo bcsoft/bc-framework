@@ -13,7 +13,7 @@ import cn.bc.web.ui.html.Text;
  * @author dragon
  * 
  */
-public class ToolbarRadios extends Button {
+public class ToolbarRadioGroup extends Button {
 	private List<String> labels = new ArrayList<String>();
 	private List<String> values = new ArrayList<String>();
 	private int activeIndex = -1;
@@ -23,20 +23,51 @@ public class ToolbarRadios extends Button {
 	}
 
 	protected void init() {
-		this.addClazz("bc-radios ui-buttonset");
+		this.addClazz("bc-radioGroup ui-buttonset");
 	}
 
-	public ToolbarRadios() {
+	public ToolbarRadioGroup() {
 		super();
 	}
 
-	public ToolbarRadios addRadio(String label, String value) {
+	public Button setChange(String change) {
+		this.setAttr("data-change", change);
+		return this;
+	}
+
+	public Button setKey(String key) {
+		this.setAttr("data-key", key);
+		return this;
+	}
+
+	public ToolbarRadioGroup addRadio(String mix) {
+		if (mix.indexOf(";") != -1) {
+			String[] lvs = mix.split(";");
+			String[] _lv;
+			for (String lv : lvs) {
+				if (lv.indexOf(",") != -1) {
+					_lv = lv.split(",");
+					labels.add(_lv[0].trim());
+					values.add(_lv[1].trim());
+				} else {
+					labels.add(lv.trim());
+					values.add(lv.trim());
+				}
+			}
+		} else {
+			labels.add(mix.trim());
+			values.add(mix.trim());
+		}
+		return this;
+	}
+
+	public ToolbarRadioGroup addRadio(String label, String value) {
 		labels.add(label);
 		values.add(value);
 		return this;
 	}
 
-	public ToolbarRadios setActive(int index) {
+	public ToolbarRadioGroup setActive(int index) {
 		this.activeIndex = index;
 		return this;
 	}

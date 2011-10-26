@@ -11,7 +11,10 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.identity.domain.Actor;
@@ -21,6 +24,7 @@ import cn.bc.identity.service.ActorService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
+import cn.bc.web.ui.html.toolbar.Toolbar;
 
 /**
  * 通用的Actor Action
@@ -38,6 +42,7 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	public Set<Role> inheritRolesFromOU;// 从上级组织继承的角色信息
 	public String assignRoleIds;// 分派的角色id，多个id用逗号连接
 	private IdGeneratorService idGeneratorService;// 用于生成uid的服务
+	public String status; // Actor的状态，多个用逗号连接
 
 	public IdGeneratorService getIdGeneratorService() {
 		return idGeneratorService;
@@ -198,5 +203,32 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
 		return new OrderCondition("orderNo", Direction.Asc);
+	}
+
+	@Override
+	protected Condition getSpecalCondition() {
+		// 状态条件
+		Condition statusCondition = null;
+		if (status != null && status.length() > 0) {
+			String[] ss = status.split(",");
+			if (ss.length == 1) {
+				statusCondition = new EqualsCondition("status", new Integer(
+						ss[0]));
+			} else {
+				statusCondition = new InCondition("status",
+						StringUtils.stringArray2IntegerArray(ss));
+			}
+		}
+
+		return statusCondition;
+	}
+
+	@Override
+	protected Toolbar buildToolbar() {
+		return super.buildToolbar()
+				.addButton(
+						Toolbar.getDefaultToolbarRadioGroup(
+								this.getEntityStatuses(), "status", -1,
+								getText("title.click2changeSearchStatus")));
 	}
 }

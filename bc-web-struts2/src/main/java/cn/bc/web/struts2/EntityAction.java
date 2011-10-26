@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -806,11 +806,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * @return
 	 */
 	protected Map<String, String> getEntityStatuses() {
-		Map<String, String> statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
-				getText("entity.status.disabled"));
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
 		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
 				getText("entity.status.enabled"));
+		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+				getText("entity.status.disabled"));
 		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
