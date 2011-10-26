@@ -48,6 +48,15 @@ public class Json implements Render {
 		return attrs.get(key);
 	}
 
+	/**
+	 * 判断json是否为空
+	 * 
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return attrs.isEmpty();
+	}
+
 	public StringBuffer render(StringBuffer main) {
 		main.append(PREFIX);
 		int i = 0;

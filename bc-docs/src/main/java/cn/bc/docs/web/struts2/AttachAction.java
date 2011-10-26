@@ -75,7 +75,6 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		SessionAware {
 	// private static Log logger = LogFactory.getLog(BulletinAction.class);
 	private static final long serialVersionUID = 1L;
-	// private String MANAGER_KEY = "R_MANAGER_ATTACH";// 附件管理角色的编码
 
 	private ActorHistoryService actorHistoryService;
 	private AttachService attachService;
@@ -96,6 +95,13 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	@Autowired
 	public void setActorHistoryService(ActorHistoryService actorHistoryService) {
 		this.actorHistoryService = actorHistoryService;
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 组织架构管理或超级管理角色
 	}
 
 	public String editableAttachsUI;

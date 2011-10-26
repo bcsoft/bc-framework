@@ -62,9 +62,11 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		this.setE(this.shortcutService.create());
 		this.getE().setStatus(RichEntity.STATUS_ENABLED);
 		this.getE().setStandalone(true);
+		this.getE().setResourceId(new Long(0));
 		// 设置属于当前用户
-		this.getE().setActor(
-				((SystemContext) this.session.get(Context.KEY)).getUser());
+		this.getE().setActorId(
+				((SystemContext) this.session.get(Context.KEY)).getUser()
+						.getId());
 		return "form";
 	}
 
@@ -83,7 +85,7 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		SystemContext context = (SystemContext) this.session.get(Context.KEY);
 		// 当前用户的桌面快捷方式
 		Actor curUser = context.getUser();
-		return new EqualsCondition("actor.id", curUser.getId());
+		return new EqualsCondition("actorId", curUser.getId());
 	}
 
 	@Override
@@ -148,11 +150,12 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		shortcut.setUrl(resource.getUrl());
 
 		// 设置关联的资源
-		shortcut.setResource(resource);
+		shortcut.setResourceId(resource.getId());
 
 		// 设置属于当前用户
-		shortcut.setActor(((SystemContext) this.getContext()).getUser());
-		
+		shortcut.setActorId(((SystemContext) this.getContext()).getUser()
+				.getId());
+
 		// 保存
 		this.shortcutService.save(shortcut);
 

@@ -50,7 +50,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
-	private String MANAGER_KEY = "R_MANAGER_FEEDBACK";// 管理角色的编码
 	public boolean isManager;
 
 	@Autowired
@@ -67,6 +66,13 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 	@Autowired
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
 		this.idGeneratorService = idGeneratorService;
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.feedback"),
+				getText("key.role.bc.admin"));// 反馈管理或超级管理角色
 	}
 
 	@Override
@@ -135,7 +141,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 	}
 
 	private AttachWidget buildAttachsUI(boolean isNew) {
-		isManager = isManager();
 		// 构建附件控件
 		String ptype = "feedback.main";
 		AttachWidget attachsUI = new AttachWidget();
@@ -167,10 +172,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 	@Override
 	protected Condition getSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
-		// 是否本模块管理员
-		isManager = isManager();
-
-		if (isManager) {// 本模块管理员看全部
+		if (!this.isReadonly()) {// 本模块管理员看全部
 			return null;
 		} else {// 普通用户仅看自己提交的
 			return new EqualsCondition("author.id", context.getUserHistory().getId());
@@ -188,15 +190,13 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		isManager = isManager();
-
 		// 新建按钮
 		tb.addButton(getDefaultCreateToolbarButton());
 
 		// 查看按钮
 		tb.addButton(getDefaultOpenToolbarButton());
 
-		if (isManager) {
+		if (!this.isReadonly()) {
 			// 彻底删除按钮
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
 					.setText(getText("label.delete.clean")).setAction("delete"));
@@ -218,9 +218,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 
 	@Override
 	protected List<Column> buildGridColumns() {
-		// 是否本模块管理员
-		isManager = isManager();
-
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("status", getText("label.status"), 80)
 				.setSortable(true).setValueFormater(
@@ -230,7 +227,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		columns.add(new TextColumn("fileDate", getText("label.submitDate"), 150)
 				.setSortable(true).setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-		if (isManager) {
+		if (!this.isReadonly()) {
 			columns.add(new TextColumn("author.name",
 					getText("label.submitterName"), 80).setSortable(true));
 			columns.add(new TextColumn("author.unitName", getText("label.unitName"),
@@ -239,10 +236,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		return columns;
 	}
 
-	// 判断当前用户是否是本模块管理员
-	private boolean isManager() {
-		return ((SystemContext) this.getContext()).hasAnyRole(MANAGER_KEY);
-	}
 //
 //	@Override
 //	protected String getJs() {

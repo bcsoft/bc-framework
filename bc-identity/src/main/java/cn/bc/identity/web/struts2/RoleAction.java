@@ -34,12 +34,12 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class RoleAction extends EntityAction<Long, Role> {
 	private static final long serialVersionUID = 1L;
-	public String MANAGER_KEY = getText("key.role.actorManager");// 管理角色的编码
 
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(MANAGER_KEY);// 超级管理员
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 超级管理员
 	}
 
 	@Autowired

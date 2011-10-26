@@ -3,7 +3,6 @@
  */
 package cn.bc.web.struts2;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.GridFooter;
 import cn.bc.web.ui.html.grid.GridHeader;
-import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.page.HtmlPage;
@@ -47,7 +45,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	private static final long serialVersionUID = 1L;
 	private final static Log logger = LogFactory
 			.getLog("cn.bc.web.struts2.AbstractGridPageAction");
-	public boolean multiple;// 是否允许多选
+	public boolean multiple = true;// 是否允许多选
 	public List<T> es; // grid的数据
 	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
@@ -69,8 +67,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	/** 计算grid数据行标签信息的表达式 */
 	protected abstract String getGridRowLabelExpression();
 
-	/** 查询条件中要匹配的域，通常用于子类复写 */
+	/** 查询条件中要匹配的域 */
 	protected abstract String[] getGridSearchFields();
+
+	/** 表格的列配置 */
+	protected abstract List<Column> getGridColumns();
 
 	// == Action方法
 
@@ -165,7 +166,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 		// 设置页面参数
 		listPage.setNamespace(
-				getHtmlPageNamespace() + "/" + getFormActionName() + "View")
+				getHtmlPageNamespace() + "/" + getViewActionName())
 				.addJs(getHtmlPageJs()).setTitle(this.getHtmlPageTitle())
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
@@ -186,14 +187,19 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		return listPage;
 	}
 
+	/** 获取视图action的简易名称 */
+	protected String getViewActionName() {
+		return getFormActionName() + "s";
+	}
+	
+	/** 获取表单action的简易名称 */
+	protected abstract String getFormActionName();
+
 	/** 编辑的url */
 	protected String getEditUrl() {
 		return getHtmlPageNamespace() + "/" + this.getFormActionName()
 				+ "/edit";
 	}
-
-	/** 获取表单action的简易名称 */
-	protected abstract String getFormActionName();
 
 	/** 查看的url */
 	protected String getOpenUrl() {
@@ -252,13 +258,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	/** 获取表格双击行的js处理函数名 */
 	protected String getGridDblRowMethod() {
-		return readonly ? "bc.page.open" : "bc.page.edit";
-	}
-
-	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
-		columns.add(IdColumn.DEFAULT());
-		return columns;
+		return "bc.page.edit";
 	}
 
 	/**

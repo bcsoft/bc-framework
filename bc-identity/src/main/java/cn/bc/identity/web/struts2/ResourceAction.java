@@ -38,7 +38,6 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class ResourceAction extends EntityAction<Long, Resource> {
 	private static final long serialVersionUID = 1L;
-	public String MANAGER_KEY = getText("key.role.actorManager");// 管理角色的编码
 	public List<KeyValue> types;// 可选的模块类型
 
 	// 模块类型列表
@@ -52,7 +51,7 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(MANAGER_KEY);// 超级管理员
+		return !context.hasAnyRole(getText("key.role.bc.actor"), getText("key.role.bc.admin"));// 超级管理员
 	}
 
 	@Autowired

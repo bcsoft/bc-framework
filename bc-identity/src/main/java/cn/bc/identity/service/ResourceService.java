@@ -29,4 +29,10 @@ public interface ResourceService extends CrudService<Resource> {
 	 *         </ul>
 	 */
 	List<Map<String, String>> find4option(Integer[] types, Integer[] statues);
+
+	/**
+	 * 
+	 * @return
+	 */
+	Map<Long, Resource> findAll();
 }

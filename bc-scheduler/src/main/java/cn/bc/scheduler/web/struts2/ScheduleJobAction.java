@@ -16,6 +16,7 @@ import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.scheduler.domain.ScheduleJob;
 import cn.bc.scheduler.service.SchedulerManage;
 import cn.bc.web.formater.BooleanFormater;
@@ -49,6 +50,12 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	public void setScheduleJobService(
 			@Qualifier(value = "scheduleJobService") CrudService<ScheduleJob> scheduleJobService) {
 		this.setCrudService(scheduleJobService);
+	}
+
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		return !context.hasAnyRole(getText("key.role.bc.admin"));// 超级管理角色
 	}
 
 	@Autowired
