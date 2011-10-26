@@ -184,6 +184,12 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		// 附加Grid
 		listPage.addChild(getHtmlPageGrid());
 
+		// 额外参数配置
+		Json json = this.getGridExtrasData();
+		if (json == null)
+			json = new Json();
+		listPage.setAttr("data-extras", json.toString());
+
 		return listPage;
 	}
 
@@ -191,7 +197,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	protected String getViewActionName() {
 		return getFormActionName() + "s";
 	}
-	
+
 	/** 获取表单action的简易名称 */
 	protected abstract String getFormActionName();
 
@@ -243,17 +249,12 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		// 分页条
 		grid.setFooter(getGridFooter(grid));
 
-		// 额外参数配置
-		Json json = this.getGridExtrasData();
-		if (json != null)
-			grid.setAttr("data-extras", this.getGridExtrasData().toString());
-
 		return grid;
 	}
 
 	/** 获取表格数据的额外请求参数 */
 	protected Json getGridExtrasData() {
-		return null;
+		return new Json();
 	}
 
 	/** 获取表格双击行的js处理函数名 */
