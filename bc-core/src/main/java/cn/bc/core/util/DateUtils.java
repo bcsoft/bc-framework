@@ -1,8 +1,6 @@
 package cn.bc.core.util;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -149,8 +147,6 @@ public class DateUtils {
 		return calendar.getTime();
 	}
 
-	private static NumberFormat nf4wasteTime = new DecimalFormat("#.#");
-
 	/**
 	 * 计算指定时间到当前时间之间的耗时描述信息
 	 * 
@@ -181,7 +177,6 @@ public class DateUtils {
 		} else {
 			long ms = wt % 1000;
 			long s = (wt - ms) % 60;
-			long m = (wt - s - ms) / 60000;
 			return ((wt - s - ms) / 60000) + "m " + s + "s " + ms + "ms";
 		}
 	}

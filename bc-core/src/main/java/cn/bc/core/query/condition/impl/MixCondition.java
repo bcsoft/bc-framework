@@ -29,6 +29,16 @@ public abstract class MixCondition implements Condition {
 		this.add(conditions);
 	}
 
+	/**
+	 * 判断条件是否为空
+	 * 
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return conditions.isEmpty()
+				&& (orderCondition == null || orderCondition.isEmpty());
+	}
+
 	public boolean isAddBracket() {
 		return addBracket;
 	}
@@ -56,8 +66,9 @@ public abstract class MixCondition implements Condition {
 		}
 		return this;
 	}
-	private void addOrder(OrderCondition condition){
-		if(orderCondition == null)
+
+	private void addOrder(OrderCondition condition) {
+		if (orderCondition == null)
 			this.orderCondition = new OrderCondition();
 		this.orderCondition.add(condition);
 	}
@@ -67,10 +78,9 @@ public abstract class MixCondition implements Condition {
 	}
 
 	public String getExpression(String alias) {
-		if (conditions.isEmpty() && orderCondition == null) {
+		if (conditions.isEmpty()
+				&& (orderCondition == null || orderCondition.isEmpty())) {
 			return "";
-			// }else if(conditions.size() == 1){
-			// return conditions.get(0).getExpression();
 		} else {
 			StringBuffer mc = new StringBuffer();
 			boolean add = false;

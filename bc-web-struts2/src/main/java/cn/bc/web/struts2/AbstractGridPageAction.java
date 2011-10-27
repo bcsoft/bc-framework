@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
 
 import cn.bc.core.Page;
 import cn.bc.core.RichEntity;
@@ -35,10 +34,20 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.json.Json;
 
 /**
- * 带grid页的抽象Action
+ * 视图抽象Action
  * 
  * @author dragon
  * 
+ */
+/**
+ * @author dragon
+ *
+ * @param <T>
+ */
+/**
+ * @author dragon
+ * 
+ * @param <T>
  */
 public abstract class AbstractGridPageAction<T extends Object> extends
 		AbstractHtmlPageAction {
@@ -171,12 +180,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
 				.addClazz("bc-page");
-		listPage.setCreateUrl(getCreateUrl())
-				.setDeleteUrl(getDeleteUrl())
-				.setEditUrl(this.getEditUrl())
-				.setOpenUrl(this.getOpenUrl())
-				.setAttr("data-name",
-						getText(StringUtils.uncapitalize(getFormActionName())));
+		listPage.setCreateUrl(getCreateUrl()).setDeleteUrl(getDeleteUrl())
+				.setEditUrl(this.getEditUrl()).setOpenUrl(this.getOpenUrl())
+				.setAttr("data-name", getText(getFormActionName()));
 
 		// 附件工具条
 		listPage.addChild(getHtmlPageToolbar());
@@ -253,7 +259,19 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	/** 获取表格数据的额外请求参数 */
 	protected Json getGridExtrasData() {
-		return null;
+		Json json = new Json();
+		this.extendGridExtrasData(json);
+		return json.isEmpty() ? null : json;
+	}
+
+	/**
+	 * 扩展表格数据的额外请求参数
+	 * 
+	 * @param json
+	 *            已经初始化好的Json对象
+	 */
+	protected void extendGridExtrasData(Json json) {
+		// 注意put入到json的key要与action的字段名一致
 	}
 
 	/** 获取表格双击行的js处理函数名 */
@@ -315,14 +333,20 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 					.setTitle(getText("label.pageSize")));
 		}
 
-		// 导出按钮
-		// footer.addButton(GridFooter
-		// .getDefaultExportButton(getText("label.export")));
-
-		// 打印按钮
-		// footer.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));
+		// 添加自定义的按钮
+		this.extendGridFooterButton(footer);
 
 		return footer;
+	}
+
+	/**
+	 * 添加自定义的Grid底部工具条按钮
+	 * 
+	 * @param gridFooter
+	 *            已初始化好的GridFooter
+	 */
+	protected void extendGridFooterButton(GridFooter gridFooter) {
+
 	}
 
 	/** grid数据的查询条件 */

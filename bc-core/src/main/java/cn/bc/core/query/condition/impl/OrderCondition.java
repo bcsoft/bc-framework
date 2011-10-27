@@ -38,6 +38,15 @@ public class OrderCondition implements Condition {
 		this.direction = direction;
 	}
 
+	/**
+	 * 判断条件是否为空
+	 * 
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return adds == null || adds.isEmpty();
+	}
+
 	public OrderCondition add(OrderCondition orderCondition) {
 		if (orderCondition == null)
 			return this;// throw new
@@ -83,14 +92,14 @@ public class OrderCondition implements Condition {
 			if (this.direction == Direction.Asc
 					|| this.direction == Direction.Desc)
 				orderBy += " " + direction.toSymbol();
-		}else{
+		} else {
 			orderBy = "";
 		}
-		
+
 		if (adds != null) {
-			int i=0;
+			int i = 0;
 			for (OrderCondition o : adds) {
-				if(i > 0 || orderBy.length() > 0)
+				if (i > 0 || orderBy.length() > 0)
 					orderBy += "," + o.getExpression(alias);
 				else
 					orderBy += o.getExpression(alias);

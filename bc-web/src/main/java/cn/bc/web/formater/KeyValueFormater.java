@@ -14,6 +14,11 @@ import java.util.Map;
 public class KeyValueFormater extends AbstractFormater<String> {
 	private Map<String, String> kvs;
 
+	public KeyValueFormater setKvs(Map<String, String> kvs) {
+		this.kvs = kvs;
+		return this;
+	}
+
 	public KeyValueFormater() {
 	}
 
