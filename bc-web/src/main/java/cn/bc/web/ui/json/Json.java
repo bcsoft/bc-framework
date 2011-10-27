@@ -94,6 +94,14 @@ public class Json implements Render {
 		return this;
 	}
 
+	public Json put(String key, Object value) {
+		if (value != null)
+			this.put(key, new Text(wrapQuota(value.toString())));
+		else
+			attrs.remove(key);
+		return this;
+	}
+
 	public Json put(String key, String value) {
 		if (value != null)
 			this.put(key, new Text(wrapQuota(value)));
