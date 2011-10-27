@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.web.formater.EntityStatusFormater;
@@ -78,7 +79,7 @@ public class UnitAction extends AbstractActorAction {
 					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("code"))
 			columns.add(new TextColumn("code", getText("actor.code"), 120)
-			.setSortable(true).setUseTitleFromLabel(true));
+					.setSortable(true).setUseTitleFromLabel(true));
 		if (this.useColumn("orderNo"))
 			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
 					.setSortable(true).setDir(Direction.Asc)
@@ -96,7 +97,13 @@ public class UnitAction extends AbstractActorAction {
 
 	@Override
 	protected Condition getSpecalCondition() {
+		Condition sc = super.getSpecalCondition();
 		// 附加单位的查询条件
-		return new EqualsCondition("type", new Integer(Actor.TYPE_UNIT));
+		Condition uc = new EqualsCondition("type", new Integer(Actor.TYPE_UNIT));
+		if (sc != null) {
+			return new AndCondition().add(sc).add(uc);
+		} else {
+			return uc;
+		}
 	}
 }

@@ -1,5 +1,8 @@
 package cn.bc.web.ui.html.toolbar;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.Div;
@@ -26,7 +29,7 @@ public class Toolbar extends Div {
 	}
 
 	/** 默认的按钮分隔符 */
-	public static Button getDefaultEmptyToolbarButton(){
+	public static Button getDefaultEmptyToolbarButton() {
 		return new ToolbarEmptyButton();
 	}
 
@@ -59,5 +62,16 @@ public class Toolbar extends Div {
 		ToolbarSearchButton sb = new ToolbarSearchButton();
 		sb.setAction("search").setTitle(text);
 		return sb;
+	}
+
+	/** 默认的单选按钮组 */
+	public static Button getDefaultToolbarRadioGroup(
+			Map<String, String> labelValues, String key, int activeIndex, String tip) {
+		ToolbarRadioGroup rg = new ToolbarRadioGroup();
+		rg.setActive(activeIndex).setKey(key).setAction("reloadGrid").setTitle(tip);
+		for (Entry<String, String> e : labelValues.entrySet()) {
+			rg.addRadio(e.getValue(), e.getKey());
+		}
+		return rg;
 	}
 }
