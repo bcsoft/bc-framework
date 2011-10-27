@@ -100,7 +100,7 @@ public class ToolbarRadioGroup extends Button {
 		if (active)
 			tpl += " ui-state-active";
 		tpl += "'";
-		if (value != null && value.length() > 0)
+		if (value != null)
 			tpl += " data-value='" + value + "'";
 		tpl += "><span class='ui-button-text'>" + label + "</span>";
 		tpl += "</div>";
