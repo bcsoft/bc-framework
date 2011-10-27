@@ -34,6 +34,7 @@ public class GridData extends Div {
 	private List<Column> columns = new ArrayList<Column>();
 	private int pageNo;
 	private int pageCount;
+	private int totalCount;
 	// 行的显示信息表达式
 	private String rowLabelExpression;
 	private ExpressionParser parser;
@@ -138,6 +139,15 @@ public class GridData extends Div {
 		return this;
 	}
 
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public GridData setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+		return this;
+	}
+
 	public StringBuffer render(StringBuffer main) {
 		buildData();
 
@@ -150,6 +160,8 @@ public class GridData extends Div {
 			this.setAttr("data-pageNo", this.pageNo + "");
 		if (this.pageCount > 0)
 			this.setAttr("data-pageCount", this.pageCount + "");
+		if (this.totalCount > 0)
+			this.setAttr("data-totalCount", this.totalCount + "");
 
 		// 总体结构
 		Component left = new Div().addClazz("left");
