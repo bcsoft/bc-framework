@@ -18,29 +18,31 @@ public class ConditionUtils {
 	/**
 	 * 生成通过逗号连接的多个值转换为的查询条件的简易方法
 	 * 
-	 * @param actionField
-	 *            action属性或字段的名称
-	 * @param dbColumn
+	 * @param actionFieldValue
+	 *            action属性或字段对应的值
+	 * @param dbColumnName
 	 *            查询数据库时使用的名称，如"select a.id,..."的id列对应为"a.id"
 	 * @return
 	 */
-	public static Condition toConditionByComma4IntegerValue(String actionField,
-			String dbColumn) {
+	public static Condition toConditionByComma4IntegerValue(
+			String actionFieldValue, String dbColumnName) {
 		Condition actionFieldCondition = null;
-		if (actionField != null && actionField.trim().length() > 0) {
-			String[] ss = actionField.split(",");
+		if (actionFieldValue != null && actionFieldValue.trim().length() > 0) {
+			String[] ss = actionFieldValue.split(",");
 			if (ss.length == 1) {
-				actionFieldCondition = new EqualsCondition(dbColumn,
+				actionFieldCondition = new EqualsCondition(dbColumnName,
 						new Integer(ss[0]));
 			} else {
-				actionFieldCondition = new InCondition(dbColumn,
+				actionFieldCondition = new InCondition(dbColumnName,
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
 		return actionFieldCondition;
 	}
 
-	/**合并多个条件为And条件
+	/**
+	 * 合并多个条件为And条件
+	 * 
 	 * @param conditions
 	 * @return
 	 */
