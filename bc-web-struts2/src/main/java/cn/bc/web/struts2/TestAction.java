@@ -36,6 +36,15 @@ public class TestAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	public String url;
+
+	// 显示指定的jsp页面
+	public String redirect() {
+		Assert.hasText(url);
+		logger.warn("url=" + url);
+		return SUCCESS;
+	}
+
 	public String tpl;
 
 	// 显示指定的jsp页面

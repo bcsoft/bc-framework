@@ -117,8 +117,11 @@
 		<action name="datepicker" class="testAction" method="datepicker">
 			<result>/bc-test/libs/datepicker.jsp</result>
 		</action>
+		<action name="redirect" class="testAction" method="redirect">
+			<result type="redirect">${url}</result>
+		</action>
 		<action name="show" class="testAction" method="show">
-			<result>${tpl}</result>
+			<result type="">${tpl}</result>
 		</action>
 		<action name="showfm" class="testAction" method="showfm">
 			<result type="freemarker">${tpl}</result>
