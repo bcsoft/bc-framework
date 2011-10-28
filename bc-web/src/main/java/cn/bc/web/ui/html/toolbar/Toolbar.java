@@ -57,6 +57,12 @@ public class Toolbar extends Div {
 				.setAction("delete");
 	}
 
+	/** 默认的禁用按钮 */
+	public static Button getDefaultDisabledToolbarButton(String text) {
+		return new ToolbarButton().setIcon("ui-icon-cancel").setText(text)
+				.setAction("disabled");
+	}
+
 	/** 默认的搜索按钮 */
 	public static Button getDefaultSearchToolbarButton(String text) {
 		ToolbarSearchButton sb = new ToolbarSearchButton();

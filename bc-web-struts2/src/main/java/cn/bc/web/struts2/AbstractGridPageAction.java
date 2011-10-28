@@ -440,6 +440,14 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
+		return getHtmlPageToolbar(false);
+	}
+
+	/**
+	 * @param useDisabledReplaceDelete 控制是使用删除按钮还是禁用按钮
+	 * @return
+	 */
+	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
 		Toolbar tb = new Toolbar();
 
 		if (this.isReadonly()) {
@@ -455,9 +463,15 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			tb.addButton(Toolbar
 					.getDefaultEditToolbarButton(getText("label.edit")));
 
-			// 删除按钮
-			tb.addButton(Toolbar
-					.getDefaultDeleteToolbarButton(getText("label.delete")));
+			if (useDisabledReplaceDelete) {
+				// 禁用按钮
+				tb.addButton(Toolbar
+						.getDefaultDisabledToolbarButton(getText("label.disabled")));
+			} else {
+				// 删除按钮
+				tb.addButton(Toolbar
+						.getDefaultDeleteToolbarButton(getText("label.delete")));
+			}
 		}
 
 		// 搜索按钮
