@@ -20,7 +20,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * Html页面Action
+ * Html页面抽象Action
  * 
  * @author dragon
  * 

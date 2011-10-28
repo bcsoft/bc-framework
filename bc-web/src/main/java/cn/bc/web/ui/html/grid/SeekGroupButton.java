@@ -14,6 +14,7 @@ import cn.bc.web.ui.html.Text;
 public class SeekGroupButton extends Button {
 	private int pageNo;
 	private int pageCount;
+	private int totalCount;
 
 	public String getTag() {
 		return "li";
@@ -40,6 +41,15 @@ public class SeekGroupButton extends Button {
 		return pageCount;
 	}
 
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public SeekGroupButton setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+		return this;
+	}
+
 	public SeekGroupButton setPageCount(int pageCount) {
 		this.pageCount = pageCount;
 		return this;
@@ -62,14 +72,19 @@ public class SeekGroupButton extends Button {
 
 		this.addChild(new Span()
 				.addClazz("pageNo")
-				.setTitle("点击选择页码")
+				// .setTitle("点击选择页码")
 				.addChild(
 						new Span().setId("pageNo").addChild(
 								new Text(this.pageNo + "")))
 				.addChild(new Text("/"))
 				.addChild(
 						new Span().setId("pageCount").addChild(
-								new Text(this.pageCount + ""))));
+								new Text(this.pageCount + "")))
+				.addChild(new Text("("))
+				.addChild(
+						new Span().setId("totalCount").addChild(
+								new Text(this.totalCount + "")))
+				.addChild(new Text(")")));
 
 		this.addChild(new A()
 				.setId("toNextPage")

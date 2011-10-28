@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.query.Query;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
-import cn.bc.web.struts2.AbstractGridPageAction;
+import cn.bc.web.struts2.AbstractGridPageWithExportAction;
 
 /**
  * 基于JPA原生查询的视图Action封装
@@ -23,7 +23,7 @@ import cn.bc.web.struts2.AbstractGridPageAction;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public abstract class ViewActionWithJpa<T extends Object> extends
-		AbstractGridPageAction<T> {
+		AbstractGridPageWithExportAction<T> {
 	private static final long serialVersionUID = 1L;
 	protected JpaTemplate jpaTemplate;
 

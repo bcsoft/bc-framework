@@ -428,6 +428,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		if (this.page != null) {
 			data.setPageNo(page.getPageNo());
 			data.setPageCount(page.getPageCount());
+			data.setTotalCount(page.getTotalCount());
 		}
 		data.setData(this.es);
 		data.setColumns(columns);
@@ -722,7 +723,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		// 分页按钮
 		if (this.page != null) {
 			footer.addButton(new SeekGroupButton().setPageNo(page.getPageNo())
-					.setPageCount(page.getPageCount()));
+					.setPageCount(page.getPageCount())
+					.setTotalCount(page.getTotalCount()));
 			footer.addButton(new PageSizeGroupButton().setActiveValue(25)
 					.setValues(new int[] { 25, 50, 100 })
 					.setTitle(getText("label.pageSize")));
