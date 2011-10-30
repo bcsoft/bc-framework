@@ -156,7 +156,7 @@ public class GridExporter implements Exporter {
 					value = i + "";
 					row.add(value);
 				} else {
-					value = GridData.formatValue(
+					value = GridData.formatValue2Label(
 							rowData,
 							GridData.getValue(rowData,
 									column.getValueExpression(), parser),
