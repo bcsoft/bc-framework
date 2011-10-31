@@ -65,12 +65,29 @@ public class GridData extends Div {
 		}
 	}
 
-	public static String formatValue(Object context, Object cellValue, Formater<String> formater) {
+	public static String formatValue(Object context, Object cellValue,
+			Formater<String> formater) {
 		String value;
 		if (formater != null)
 			value = formater.format(context, cellValue);
 		else
 			value = (cellValue != null ? cellValue.toString() : "");
+		return value != null ? value : "";
+	}
+
+	public static String formatValue2Label(Object context, Object cellValue,
+			Formater<String> formater) {
+		String value;
+		if (formater != null) {
+			if (formater instanceof LinkFormater) {
+				value = ((LinkFormater) formater).getLinkText(context,
+						cellValue);// 背面显示的是超链接的html
+			} else {
+				value = formater.format(context, cellValue);
+			}
+		} else {
+			value = (cellValue != null ? cellValue.toString() : "");
+		}
 		return value != null ? value : "";
 	}
 
@@ -217,7 +234,8 @@ public class GridData extends Div {
 											: "id", null));// 行的标题
 			td.setAttr(
 					"data-id",
-					formatValue(rowData,getValue(rowData, column.getValueExpression()),
+					formatValue(rowData,
+							getValue(rowData, column.getValueExpression()),
 							column.getValueFormater()));// 行的id
 			td.addChild(new Span().addClazz("ui-icon"));// 勾选标记符
 			td.addChild(new Text(String.valueOf(rc + 1)));// 行号
@@ -269,15 +287,17 @@ public class GridData extends Div {
 				// td.addChild(wrapper);
 
 				// 单元格内容
-				Object srcCellValue = getValue(rowData, column.getValueExpression());
-				cellValue = formatValue(rowData, srcCellValue, column.getValueFormater());
+				Object srcCellValue = getValue(rowData,
+						column.getValueExpression());
+				cellValue = formatValue(rowData, srcCellValue,
+						column.getValueFormater());
 				td.addChild(new Text(cellValue)).setAttr("data-value",
 						srcCellValue != null ? srcCellValue.toString() : "");
 				if (column.isUseTitleFromLabel()) {
-					if(column.getValueFormater() instanceof LinkFormater){
-						if(srcCellValue != null)
+					if (column.getValueFormater() instanceof LinkFormater) {
+						if (srcCellValue != null)
 							td.setTitle(srcCellValue.toString());
-					}else{
+					} else {
 						td.setTitle(cellValue);
 					}
 				}
