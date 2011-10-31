@@ -83,7 +83,7 @@ BEGIN
             update bc_identity_resource r set r.pname=pfname where r.id=cid;
   			if ct = 1 then 
              	dbms_output.put_line('--');
-           		-- 单位或部门执行递归处理
+           		-- 分类型资源执行递归处理
                 update_resource_pname(cid);
 			end if;
             -- 将游标指向下条记录, 否则为死循环
