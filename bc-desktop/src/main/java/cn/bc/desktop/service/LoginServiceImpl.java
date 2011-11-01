@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.util.StringUtils;
@@ -107,7 +108,7 @@ public class LoginServiceImpl implements LoginService {
 					}.mapRow((Object[]) queryObject.getSingleResult(), 0);
 				}
 			});
-		} catch (NoResultException e) {
+		} catch (EmptyResultDataAccessException e) {
 			return new HashMap<String, Object>(0);
 		}
 	}
