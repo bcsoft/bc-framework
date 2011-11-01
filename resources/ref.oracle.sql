@@ -51,3 +51,10 @@ BEGIN
 	end if; 
 END;
 /
+
+-- 获取用户所隶属的祖先组织（单位、部门）
+select f.name,m.name from BC_IDENTITY_ACTOR m,BC_IDENTITY_ACTOR f
+	where f.type_=4 --f.code='qiong'
+    and f.pcode like (case when m.pcode is null then '' else m.pcode || '/' end) || '[' || m.type_ || ']' || m.code || '%'
+    order by m.order_;
+    

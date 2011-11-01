@@ -126,32 +126,90 @@ public class LoginServiceImpl implements LoginService {
 			}
 			return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
 					hql.toString(), new Object[] { actorId },
-					new RowMapper<Map<String, String>>() {
-						public Map<String, String> mapRow(Object[] rs,
-								int rowNum) {
-							Map<String, String> actor = new HashMap<String, String>();
-							int i = 0;
-							actor.put("fid", rs[i++].toString());
-							actor.put("id", rs[i++].toString());
-							actor.put("type", rs[i++].toString());
-							actor.put("code", rs[i++].toString());
-							actor.put("name", rs[i++].toString());
-							actor.put("pcode", rs[i] != null ? rs[i].toString()
-									: null);
-							i++;
-							actor.put("pname", rs[i] != null ? rs[i].toString()
-									: null);
-							return actor;
-						}
-					});
+					new Follower2MasterMapper());
 		} else {
+			//使用原始的递归方式获取祖先组织信息
 			return this.findActorAncestorsDefault(actorId);
 		}
 	}
 
 	private List<Map<String, String>> findActorAncestorsDefault(Long actorId) {
-		logger.fatal("TODO: loadActorUpperDefault");
-		return null;
+		if (actorId == null)
+			return null;
+
+		if (logger.isInfoEnabled()) {
+			logger.info("findActorAncestorsDefault.actorId=" + actorId);
+		}
+
+		List<Map<String, String>> all = new ArrayList<Map<String, String>>();
+		Set<Long> followerIds = new HashSet<Long>();
+		followerIds.add(actorId);
+
+		// 递归获取祖先组织信息
+		recurseFindActorMasters(all, followerIds);
+
+		return all;
+	}
+
+	private void recurseFindActorMasters(List<Map<String, String>> all,
+			Set<Long> followerIds) {
+		List<Map<String, String>> ms = findActorMasters(followerIds
+				.toArray(new Long[0]));
+		if (ms != null && !ms.isEmpty()) {
+			all.addAll(ms);
+
+			// 对所有masterId执行递归查询
+			Set<Long> masterIds = new HashSet<Long>();
+			for (Map<String, String> m : ms) {
+				masterIds.add(new Long(m.get("id")));
+			}
+			recurseFindActorMasters(all, masterIds);
+		}
+	}
+
+	private List<Map<String, String>> findActorMasters(Long[] followerIds) {
+		if (followerIds == null || followerIds.length == 0)
+			return null;
+
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct ar.follower_id fid,ar.master_id id,m.type_ type,m.code code,m.name name,m.pcode pcode,m.pname pname");
+		hql.append(" from BC_IDENTITY_ACTOR_RELATION ar");
+		hql.append(" inner join BC_IDENTITY_ACTOR m on m.id = ar.master_id");
+		hql.append(" where ar.type_=0");
+		hql.append(" and ar.follower_id");
+		if (logger.isDebugEnabled()) {
+			logger.debug("findActorMasters.hql=" + hql);
+			logger.debug("findActorMasters.args="
+					+ StringUtils.arrayToCommaDelimitedString(followerIds));
+		}
+		if (followerIds.length == 1) {
+			hql.append(" = ?");
+		} else {
+			hql.append(" in (?");
+			for (int i = 1; i < followerIds.length; i++) {
+				hql.append(",?");
+			}
+			hql.append(")");
+		}
+		hql.append(" order by m.order_");
+		return HibernateJpaNativeQuery.executeNativeSql(jpaTemplate,
+				hql.toString(), followerIds, new Follower2MasterMapper());
+	}
+
+	class Follower2MasterMapper implements RowMapper<Map<String, String>> {
+		public Map<String, String> mapRow(Object[] rs, int rowNum) {
+			Map<String, String> actor = new HashMap<String, String>();
+			int i = 0;
+			actor.put("fid", rs[i++].toString());
+			actor.put("id", rs[i++].toString());
+			actor.put("type", rs[i++].toString());
+			actor.put("code", rs[i++].toString());
+			actor.put("name", rs[i++].toString());
+			actor.put("pcode", rs[i] != null ? rs[i].toString() : null);
+			i++;
+			actor.put("pname", rs[i] != null ? rs[i].toString() : null);
+			return actor;
+		}
 	}
 
 	public List<Map<String, String>> findActorRoles(Long[] actorIds) {
