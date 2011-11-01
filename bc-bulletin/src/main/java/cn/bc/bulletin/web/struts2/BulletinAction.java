@@ -39,6 +39,7 @@ import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 电子公告Action
@@ -54,6 +55,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
+	public String statusDesc;
 
 	@Autowired
 	public void setBulletinService(
@@ -73,9 +75,15 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 
 	@Override
 	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.bulletin"),
-				getText("key.role.bc.admin"));// 电子公告管理或超级管理角色
+		if (this.getE() != null) {// 表单
+			return this.getE().getStatus() != Bulletin.STATUS_DRAFT;
+		} else {// 视图
+			SystemContext context = (SystemContext) this.getContext();
+			boolean readonly = !context.hasAnyRole(
+					getText("key.role.bc.bulletin"),
+					getText("key.role.bc.admin"));// 电子公告管理或超级管理角色
+			return readonly;
+		}
 	}
 
 	@Override
@@ -86,7 +94,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		e.setAuthor(context.getUserHistory());
 		e.setUnit(context.getUnit());
 
-		e.setScope(Bulletin.SCOPE_LOCALUNIT);
+		e.setScope(Bulletin.SCOPE_SYSTEM);
 		e.setStatus(Bulletin.STATUS_DRAFT);
 
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
@@ -98,17 +106,26 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		// 构建对话框参数
 		this.formPageOption = buildFormPageOption();
 
+		// 状态描述
+		statusDesc = this.getStatuses().get(String.valueOf(e.getStatus()));
+
 		return "form";
 	}
 
 	@Override
 	protected PageOption buildFormPageOption() {
-		PageOption option = new PageOption().setWidth(680).setMinWidth(250)
-				.setMinHeight(200).setModal(false);
+		PageOption option = super.buildFormPageOption().setWidth(680)
+				.setMaxHeight(700);
 		if (!this.isReadonly()) {
 			option.addButton(new ButtonOption(getText("label.preview"),
 					"preview"));
+			if (this.getE().getStatus() == Bulletin.STATUS_DRAFT)
+				option.addButton(new ButtonOption(getText("bulletin.issue"),
+						null, "bc.bulletinForm.issue"));
 			option.addButton(new ButtonOption(getText("label.save"), "save"));
+		}else{
+			option.addButton(new ButtonOption(getText("bulletin.seeByNewWin"),
+					"preview"));
 		}
 		return option;
 	}
@@ -118,25 +135,52 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		Bulletin e = this.getE();
 		if (e.getIssuer() != null && e.getIssuer().getId() == null)
 			e.setIssuer(null);
-		
+
 		SystemContext context = (SystemContext) this.getContext();
 		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
-		
+
 		this.getCrudService().save(e);
 		return "saveSuccess";
+	}
+
+	public Json json;
+
+	// 发布
+	public String issue() throws Exception {
+		SystemContext context = (SystemContext) this.getContext();
+		Bulletin e = this.getE();
+
+		// 最后修改人
+		e.setModifier(context.getUserHistory());
+		e.setModifiedDate(Calendar.getInstance());
+
+		// 发布人
+		e.setIssuer(context.getUser());
+		e.setIssueDate(Calendar.getInstance());
+		e.setStatus(Bulletin.STATUS_ISSUED);
+
+		this.getCrudService().save(e);
+
+		json = new Json();
+		json.put("id", e.getId());
+		json.put("msg", getText("bulletin.issueSuccess"));
+		return "json";
 	}
 
 	public AttachWidget attachsUI;
 
 	@Override
 	public String edit() throws Exception {
-//		this.readonly = false;
 		this.setE(this.getCrudService().load(this.getId()));
 		this.formPageOption = buildFormPageOption();
 
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false);
+
+		// 状态描述
+		statusDesc = this.getStatuses().get(
+				String.valueOf(this.getE().getStatus()));
 
 		return "form";
 	}

@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
@@ -37,7 +36,7 @@ public class Bulletin extends RichFileEntityImpl {
 	public static final int SCOPE_SYSTEM = 1;
 
 	private Actor unit;// 所属单位
-	private ActorHistory issuer;// 发布者
+	private Actor issuer;// 发布者
 	private Calendar issueDate;// 发布时间
 	private Calendar overdueDate;// 过期日期：为空代表永不过期
 	private int scope;// 发布范围：0-本单位,1-全系统
@@ -64,11 +63,11 @@ public class Bulletin extends RichFileEntityImpl {
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "ISSUER_ID", referencedColumnName = "ID")
-	public ActorHistory getIssuer() {
+	public Actor getIssuer() {
 		return issuer;
 	}
 
-	public void setIssuer(ActorHistory issuer) {
+	public void setIssuer(Actor issuer) {
 		this.issuer = issuer;
 	}
 

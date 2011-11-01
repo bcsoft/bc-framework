@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -44,9 +43,8 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class FeedbackAction extends EntityAction<Long, Feedback> implements
-		SessionAware {
-	// private static Log logger = LogFactory.getLog(BulletinAction.class);
+public class FeedbackAction extends EntityAction<Long, Feedback> {
+	// private static Log logger = LogFactory.getLog(FeedbackAction.class);
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
@@ -77,7 +75,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 
 	@Override
 	public String create() throws Exception {
-//		this.readonly = false;
 		SystemContext context = (SystemContext) this.getContext();
 		Feedback e = this.getCrudService().create();
 		e.setFileDate(Calendar.getInstance());
@@ -128,7 +125,6 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 
 	@Override
 	public String edit() throws Exception {
-//		this.readonly = false;
 		this.setE(this.getCrudService().load(this.getId()));
 		this.formPageOption = buildFormPageOption();
 
@@ -261,5 +257,9 @@ public class FeedbackAction extends EntityAction<Long, Feedback> implements
 		statuses.put(String.valueOf(Feedback.STATUS_DELETED),
 				getText("feedback.status.deleted"));
 		return statuses;
+	}
+	
+	public String doa(String a){
+		return "abc";
 	}
 }
