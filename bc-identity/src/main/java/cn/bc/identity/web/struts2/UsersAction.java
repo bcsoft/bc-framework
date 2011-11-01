@@ -22,6 +22,8 @@ import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
  * 用户Action
@@ -43,6 +45,19 @@ public class UsersAction extends AbstractActorsAction {
 	protected String getActorType() {
 		// 用户条件
 		return String.valueOf(Actor.TYPE_USER);
+	}
+
+	@Override
+	protected Toolbar getHtmlPageToolbar() {
+		Toolbar tb = getHtmlPageToolbar(false);
+		if (!this.isReadonly())
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
+					.setText(getText("user.password.reset"))
+					.setClick("bc.userList.setPassword"));
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getBCStatuses(),
+				"status", 0, getText("title.click2changeSearchStatus")));
+
+		return tb;
 	}
 
 	@Override
