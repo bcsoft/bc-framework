@@ -50,7 +50,7 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 		// 先保存获取id值
 		user = super.save4belong(user, belongIds);// 这里已经处理了上级关系的保存
 
-		// 如果是新建用户，须新建AuthData对象
+		// 如果是新建用户，须新建AuthData和ActorHistory对象
 		if (isNew) {
 			AuthData authData = new AuthData();
 			authData.setId(user.getId());

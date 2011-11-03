@@ -434,7 +434,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			}
 
 			// 根据新的隶属关系重新设置pcode、pname
-			if (sameBelongs.size() != oldArs.size()) {
+			//if (sameBelongs.size() != oldArs.size() || !newBelongs.isEmpty()) {
 				List<String> pcodes = new ArrayList<String>();
 				List<String> pnames = new ArrayList<String>();
 				for (Actor belong : sameBelongs) {
@@ -450,7 +450,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				follower.setPname(StringUtils
 						.collectionToCommaDelimitedString(pnames));
 				follower = this.save(follower);
-			}
+			//}
 		} else {// 删除所有现存的隶属关系
 			if (!oldArs.isEmpty())
 				this.actorRelationDao.delete(oldArs);

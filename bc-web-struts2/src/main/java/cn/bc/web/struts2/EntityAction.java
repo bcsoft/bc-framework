@@ -209,10 +209,10 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 新建表单
 	public String create() throws Exception {
-		// this.readonly = false;
-
 		// 初始化E
 		this.setE(this.getCrudService().create());
+		
+		this.afterCreate(this.getE());
 
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption();
@@ -220,25 +220,49 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		return "form";
 	}
 
+	/**
+	 * 在调用create初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
+	 */
+	protected void afterCreate(E entity) {
+		
+	}
+
 	// 编辑表单
 	public String edit() throws Exception {
-		// this.readonly = false;
 		e = this.getCrudService().load(this.getId());
+		
+		this.afterEdit(e);
+		
 		this.formPageOption = buildFormPageOption();
 		return "form";
 	}
 
+	/**
+	 * 在调用edit初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
+	 */
+	protected void afterEdit(E entity) {
+		
+	}
+
 	// 只读表单
 	public String open() throws Exception {
-		// this.readonly = true;
 		e = this.getCrudService().load(this.getId());
+		
+		this.afterOpen(e);
+		
 		this.formPageOption = buildFormPageOption();
 		return "formr";
 	}
 
+	/**
+	 * 在调用open初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
+	 */
+	protected void afterOpen(E entity) {
+		
+	}
+
 	// 表单：自动判断权限
 	public String read() throws Exception {
-		// this.readonly = true;
 		e = this.getCrudService().load(this.getId());
 		this.formPageOption = buildFormPageOption();
 		return "form";
@@ -275,9 +299,24 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 保存
 	public String save() throws Exception {
+		this.beforeSave(e);
 		this.getCrudService().save(e);
+		this.afterSave(e);
 		return "saveSuccess";
 	}
+	
+	/**
+	 * 在调用save之前调用的方法，给基类一个扩展的处理
+	 */
+	protected void beforeSave(E entity) {
+	}
+
+	/**
+	 * 在调用save之后调用的方法，给基类一个扩展的处理
+	 */
+	protected void afterSave(E entity) {
+	}
+
 
 	public String json;
 	// 删除
