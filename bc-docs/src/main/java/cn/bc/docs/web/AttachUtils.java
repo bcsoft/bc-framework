@@ -51,6 +51,8 @@ public class AttachUtils {
 			return "application/rtf";
 		} else if ("zip".equalsIgnoreCase(extend)) {
 			return "application/zip";
+		} else if ("apk".equalsIgnoreCase(extend)) {
+			return "application/vnd.android.package-archive";
 		} else if ("exe".equalsIgnoreCase(extend)) {
 			return "application/x-msdownload";//application/x-msdos-program
 		} else {
