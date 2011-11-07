@@ -140,6 +140,11 @@
 			<result>/bc/identity/department/select2.jsp</result>
 		</action>
 	</package>
+	<package name="selectDepartment" extends="bc-default" namespace="/bc">
+		<action name="selectDepartment" class="selectDepartmentAction">
+			<result>/bc/identity/department/select.jsp</result>
+		</action>
+	</package>
 	<package name="selectGroup" extends="bc-default" namespace="/bc">
 		<action name="selectGroup" class="selectGroupAction">
 			<result>/bc/identity/group/select.jsp</result>
