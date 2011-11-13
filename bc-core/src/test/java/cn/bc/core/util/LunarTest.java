@@ -29,4 +29,27 @@ public class LunarTest {
 				chineseDateFormat.format(date.getTime()));
 		Assert.assertEquals("2010年十一月廿七", lunar.toString());
 	}
+
+	@Test
+	public void testA() throws ParseException {
+		String n = "叶燕明[252315]";
+		Assert.assertEquals("叶燕明", removeCert4DriverName(n));
+	}
+
+	/**
+	 * 将类似“叶燕明[252315]”的格式转换为“叶燕明”
+	 * 
+	 * @param DRIVER_NAME
+	 * @return
+	 */
+	protected String removeCert4DriverName(Object DRIVER_NAME) {
+		if (DRIVER_NAME == null)
+			return null;
+		String n = DRIVER_NAME.toString().trim();
+		if (n.indexOf("[") != -1) {
+			return n.substring(0, n.indexOf("["));
+		} else {
+			return n;
+		}
+	}
 }
