@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>cn.bc</groupId>
-			<artifactId>bc-web</artifactId>
+			<artifactId>bc-identity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -25,6 +25,10 @@
 			<artifactId>jetty-websocket</artifactId>
 			<!-- <version>7.0.1.v20091125</version> -->
 			<version>8.0.4.v20111024</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
 		</dependency>
 	</dependencies>
 </project>
