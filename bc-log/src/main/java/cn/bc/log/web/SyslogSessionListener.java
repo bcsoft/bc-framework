@@ -37,7 +37,9 @@ public class SyslogSessionListener implements HttpSessionListener {
 		ActorHistory user = (ActorHistory) session
 				.getAttribute(SystemContext.KEY_USER_HISTORY);
 		if (user != null) {// 表明之前用户已经处于登录状态
-			logger.info("session out with user:" + user.getName());
+			if (logger.isInfoEnabled())
+				logger.info("session out with user=" + user.getName()
+						+ ",session=" + session.getId());
 			// 记录超时日志
 			Calendar now = Calendar.getInstance();
 			Syslog log = SyslogAction.buildSyslog(now, Syslog.TYPE_LOGOUT2,
@@ -45,7 +47,11 @@ public class SyslogSessionListener implements HttpSessionListener {
 			WebUtils.getBean(SyslogService.class).save(log);
 
 			// 移除下线用户
-			WebUtils.getBean(OnlineUserService.class).remove(user.getId());
+			WebUtils.getBean(OnlineUserService.class).remove(session.getId());
+		} else {
+			if (logger.isInfoEnabled())
+				logger.info("session out without user.session="
+						+ session.getId());
 		}
 	}
 }

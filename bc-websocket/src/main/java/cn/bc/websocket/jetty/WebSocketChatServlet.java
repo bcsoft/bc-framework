@@ -27,31 +27,36 @@ public class WebSocketChatServlet extends WebSocketServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws javax.servlet.ServletException, IOException {
-		logger.info("--doGet--");
+		if (logger.isDebugEnabled())
+			logger.debug("--doGet--");
 		getServletContext().getNamedDispatcher("default").forward(request,
 				response);
 	};
 
 	public WebSocket doWebSocketConnect(HttpServletRequest request,
 			String protocol) {
-		logger.info("--doWebSocketConnect--protocol=" + protocol);
+		if (logger.isDebugEnabled())
+			logger.debug("--doWebSocketConnect--protocol=" + protocol);
 
 		// 当前用户信息
 		SystemContext context = (SystemContext) request.getSession()
 				.getAttribute(Context.KEY);
-		if (context == null) {
+		String sid = request.getParameter("sid");
+		if (context == null) {// jetty8.0.4实际测试证明：context == null
 			// throw new CoreException("用户未登录！");
-			Long id = new Long(request.getParameter("id"));
-			String name = null;
+			Long userId = new Long(request.getParameter("userId"));
+			String name;
 			try {
-				name = URLDecoder.decode(request.getParameter("name"), "UTF-8");
+				name = URLDecoder.decode(request.getParameter("userName"), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				logger.error(e.getMessage(), e);
+				name = "UnsupportedEncodingException";
 			}
-			return new ChatWebSocket(id, name, members);
+			return new ChatWebSocket(userId, name, sid, members);
 		} else {
+			logger.fatal("--doWebSocketConnect--session is good!");
 			return new ChatWebSocket(context.getUser().getId(), context
-					.getUser().getName(), members);
+					.getUser().getName(), sid, members);
 		}
 	}
 }

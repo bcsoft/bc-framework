@@ -29,7 +29,7 @@ public interface OnlineUserService {
 	/**
 	 * 移除在线用户
 	 * 
-	 * @param id
+	 * @param sid
 	 */
-	public void remove(Long id);
+	public void remove(String sid);
 }

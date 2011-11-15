@@ -32,13 +32,13 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 		this.onlineUsers.add(onlineUser);
 	}
 
-	public void remove(Long id) {
-		if (id == null)
+	public void remove(String sid) {
+		if (sid == null || sid.length() == 0)
 			return;
 
 		List<OnlineUser> toRemoves = new ArrayList<OnlineUser>();
 		for (OnlineUser onlineUser : onlineUsers) {
-			if (id.equals(onlineUser.getId())) {
+			if (sid.equals(onlineUser.getSession())) {
 				toRemoves.add(onlineUser);
 			}
 		}

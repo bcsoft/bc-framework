@@ -12,10 +12,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.Context;
 import cn.bc.chat.OnlineUser;
 import cn.bc.chat.service.OnlineUserService;
-import cn.bc.identity.web.SystemContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -45,11 +43,10 @@ public class OnlineUserAction extends ActionSupport {
 		users.addAll(this.onlineService.getAll());
 
 		// 剔除自己
-		Long myId = ((SystemContext) ServletActionContext.getRequest()
-				.getSession().getAttribute(Context.KEY)).getUser().getId();
+		String sid = ServletActionContext.getRequest().getSession().getId();
 		OnlineUser onlineUser = null;
 		for (OnlineUser u : users) {
-			if (u.getId().equals(myId)) {
+			if (u.getSession().equals(sid)) {
 				onlineUser = u;
 				break;
 			}
