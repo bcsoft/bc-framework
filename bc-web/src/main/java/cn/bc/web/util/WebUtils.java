@@ -194,6 +194,23 @@ public class WebUtils implements ServletContextAware {
 	}
 
 	/**
+	 * 获取产生请求的客户端IP地址信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static String getClientIP(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");// apache转发
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
+			ip = request.getHeader("Proxy-Client-IP");
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
+			ip = request.getRemoteAddr();
+		return ip;
+	}
+
+	/**
 	 * 获取指定ip的mac地址
 	 * 
 	 * @param ip
@@ -201,8 +218,7 @@ public class WebUtils implements ServletContextAware {
 	 * @throws Exception
 	 */
 	public static String getMac(String ip) throws Exception {
-		if ("127.0.0.1".equals(ip)
-				|| "localhost".equals(ip)) 
+		if ("127.0.0.1".equals(ip) || "localhost".equals(ip))
 			return "untrace because localhost";
 		return new UdpGetClientMacAddr(ip).GetRemoteMacAddr();
 	}
@@ -232,5 +248,15 @@ public class WebUtils implements ServletContextAware {
 
 	public static <T> T getBean(Class<T> requiredType) {
 		return getWac().getBean(requiredType);
+	}
+
+	/**
+	 * 获取客户端浏览器的标识信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static String getBrowser(HttpServletRequest request) {
+		return request.getHeader("User-Agent");
 	}
 }

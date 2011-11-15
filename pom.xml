@@ -18,6 +18,7 @@
 		<module>bc-orm-hibernate</module>
 		<module>bc-scheduler</module>
 		<module>bc-websocket</module>
+		<module>bc-chat</module>
 
 		<module>bc-web</module>
 		<module>bc-web-struts</module>

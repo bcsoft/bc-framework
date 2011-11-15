@@ -121,18 +121,20 @@ public class TestAction extends ActionSupport {
 		html += "</fieldSet>";
 
 		// -- trace
-		html += "\r\n<fieldSet class='ui-corner-all ui-widget-content'><legend>trace=" + trace + "</legend>";
+		html += "\r\n<fieldSet class='ui-corner-all ui-widget-content'><legend>trace="
+				+ trace + "</legend>";
 		html += "\r\n<table>";
-		String remoteAddress = getRemoteAddress(r);
-		html += oneMethodString("remoteAddress", remoteAddress);
+		String clientIP = WebUtils.getClientIP(r);
+		html += oneMethodString("clientIP", clientIP);
 		if (trace)
 			try {
 				logger.warn("start trace mac...");
-				html += oneMethodString("remoteMAC", WebUtils.getMac(remoteAddress));
+				html += oneMethodString("clientMAC",
+						WebUtils.getMac(clientIP));
 				logger.warn("end trace mac.");
 			} catch (Exception e1) {
-				logger.error(e1.getMessage(),e1);
-				
+				logger.error(e1.getMessage(), e1);
+
 				html += e1.getMessage();
 			}
 
@@ -149,16 +151,5 @@ public class TestAction extends ActionSupport {
 		html += "\r\n<td style='margin-left:;'>" + value + "</td>";
 		html += "\r\n</tr>";
 		return html;
-	}
-
-	private String getRemoteAddress(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getHeader("Proxy-Client-IP");
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getRemoteAddr();
-		return ip;
 	}
 }

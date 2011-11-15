@@ -9,18 +9,19 @@ import org.eclipse.jetty.websocket.WebSocket;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.bc.identity.web.SystemContext;
+import cn.bc.web.ui.json.Json;
 
 public class ChatWebSocket implements WebSocket.OnTextMessage {
 	private final Log logger = LogFactory.getLog(ChatWebSocket.class);
 	private Long userId;
-	private SystemContext context;
+	private String userName;
 	private Connection connection;
 	private final Set<ChatWebSocket> members;
 
-	public ChatWebSocket(SystemContext context, Set<ChatWebSocket> members) {
-		this.context = context;
-		this.userId = context.getUser().getId();
+	public ChatWebSocket(Long userId, String userName,
+			Set<ChatWebSocket> members) {
+		this.userId = userId;
+		this.userName = userName;
 		this.members = members;
 	}
 
@@ -29,7 +30,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		members.add(this);
 
 		// 向所有用户发送上线信息
-		String msg = this.context.getUser().getName() + "上线了！";
+		String msg = this.userName + "上线了！";
 		logger.info(msg);
 		sendMessageToAllUser(msg);
 	}
@@ -38,7 +39,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		members.remove(this);
 
 		// 向所有用户发送下线信息
-		String msg = this.context.getUser().getName() + "下线了！";
+		String msg = this.userName + "下线了！";
 		logger.info(msg);
 		sendMessageToAllUser(msg);
 	}
@@ -84,37 +85,49 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	/**
 	 * @param to
 	 *            接收人的id，0代表所有用户
-	 * @param msg
+	 * @param buildJson
+	 *            (msg)
 	 */
 	private void sendMessage(long to, String msg) {
 		if (to > 0) {// 发给指定用户
-			logger.debug("to=" + to + ",msg=" + msg);
+			if (logger.isDebugEnabled())
+				logger.debug("to=" + to + ",msg=" + buildJson(msg));
 			for (ChatWebSocket member : members) {
 				try {
 					if (member.userId == to)
-						member.connection.sendMessage(msg);
+						member.connection.sendMessage(buildJson(msg));
 				} catch (IOException e) {
 					logger.warn(e);
 				}
 			}
 		} else {// 发给所有在线用户
-			sendMessageToAllUser(msg);
+			sendMessageToAllUser(buildJson(msg));
 		}
 	}
 
 	/**
 	 * 向所有在线用户发送信息
 	 * 
-	 * @param msg
+	 * @param buildJson
+	 *            (msg)
 	 */
 	private void sendMessageToAllUser(String msg) {
-		logger.debug("sendMessageToAllUser:msg=" + msg);
+		if (logger.isDebugEnabled())
+			logger.debug("sendMessageToAllUser:msg=" + buildJson(msg));
 		for (ChatWebSocket member : members) {
 			try {
-				member.connection.sendMessage(msg);
+				member.connection.sendMessage(buildJson(msg));
 			} catch (IOException e) {
 				logger.warn(e);
 			}
 		}
+	}
+
+	private String buildJson(String msg) {
+		Json json = new Json();
+		json.put("fromId", this.userId);
+		json.put("fromName", this.userName);
+		json.put("msg", msg);
+		return json.toString();
 	}
 }
