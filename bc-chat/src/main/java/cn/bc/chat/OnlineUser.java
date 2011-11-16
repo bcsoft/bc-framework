@@ -1,5 +1,8 @@
 package cn.bc.chat;
 
+import java.util.Calendar;
+
+import cn.bc.core.util.DateUtils;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -9,15 +12,25 @@ import cn.bc.web.ui.json.Json;
  * 
  */
 public class OnlineUser {
+	private Calendar loginTime;
 	private Long id;
 	private String name;
 	private String uid;
+	private String pname;
 	private String fullName;
 	private String code;
 	private String ip;
 	private String mac;
-	private String session;
+	private String sid;
 	private String browser;
+
+	public Calendar getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(Calendar loginTime) {
+		this.loginTime = loginTime;
+	}
 
 	public Long getId() {
 		return id;
@@ -41,6 +54,14 @@ public class OnlineUser {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	public String getFullName() {
@@ -83,12 +104,12 @@ public class OnlineUser {
 		this.browser = browser;
 	}
 
-	public String getSession() {
-		return session;
+	public String getSid() {
+		return sid;
 	}
 
-	public void setSession(String session) {
-		this.session = session;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 
 	@Override
@@ -98,14 +119,17 @@ public class OnlineUser {
 
 	public String getJson() {
 		Json json = new Json();
+		json.put("loginTime",
+				DateUtils.formatDateTime(this.getLoginTime().getTime()));
 		json.put("id", this.getId());
 		json.put("uid", this.getUid());
 		json.put("code", this.getCode());
 		json.put("name", this.getName());
+		json.put("pname", this.getPname());
 		json.put("fullName", this.getFullName());
 		json.put("ip", this.getIp());
 		json.put("mac", this.getMac());
-		json.put("session", this.getSession());
+		json.put("sid", this.getSid());
 		json.put("browser", this.getBrowser());
 		return json.toString();
 	}

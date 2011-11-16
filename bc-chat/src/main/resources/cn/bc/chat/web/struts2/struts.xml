@@ -9,4 +9,9 @@
 			<result>/bc/chat/online.jsp</result>
 		</action>
 	</package>
+	<package name="onlineMessage" extends="bc-default" namespace="/bc/chat">
+		<action name="message" class="onlineMessageAction">
+			<result>/bc/chat/message.jsp</result>
+		</action>
+	</package>
 </struts>

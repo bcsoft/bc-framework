@@ -1,7 +1,10 @@
 package cn.bc.chat.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,10 +19,12 @@ import cn.bc.chat.OnlineUser;
  */
 public class OnlineUserServiceImpl implements OnlineUserService {
 	private static Log logger = LogFactory.getLog(OnlineUserServiceImpl.class);
-	private List<OnlineUser> onlineUsers = new ArrayList<OnlineUser>();
+	private Map<String, OnlineUser> onlineUsers = new LinkedHashMap<String, OnlineUser>();
 
 	public List<OnlineUser> getAll() {
-		return onlineUsers;
+		List<OnlineUser> all = new ArrayList<OnlineUser>(onlineUsers.values());
+		Collections.reverse(all);// 按时间逆序排序
+		return all;
 	}
 
 	public void add(OnlineUser onlineUser) {
@@ -29,25 +34,20 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 		if (logger.isInfoEnabled()) {
 			logger.info(onlineUser.getName() + "上线了：" + onlineUser.toString());
 		}
-		this.onlineUsers.add(onlineUser);
+		this.onlineUsers.put(onlineUser.getSid(), onlineUser);
 	}
 
 	public void remove(String sid) {
 		if (sid == null || sid.length() == 0)
 			return;
 
-		List<OnlineUser> toRemoves = new ArrayList<OnlineUser>();
-		for (OnlineUser onlineUser : onlineUsers) {
-			if (sid.equals(onlineUser.getSession())) {
-				toRemoves.add(onlineUser);
-			}
+		OnlineUser onlineUser = onlineUsers.remove(sid);
+		if (logger.isInfoEnabled() && onlineUser != null) {
+			logger.info(onlineUser.getName() + "下线了：" + onlineUser.toString());
 		}
-		for (OnlineUser onlineUser : toRemoves) {
-			if (logger.isInfoEnabled()) {
-				logger.info(onlineUser.getName() + "下线了："
-						+ onlineUser.toString());
-			}
-			onlineUsers.remove(onlineUser);
-		}
+	}
+
+	public OnlineUser get(String sid) {
+		return onlineUsers.get(sid);
 	}
 }

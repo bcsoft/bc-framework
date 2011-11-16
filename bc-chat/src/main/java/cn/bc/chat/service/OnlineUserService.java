@@ -27,6 +27,13 @@ public interface OnlineUserService {
 	void add(OnlineUser onlineUser);
 
 	/**
+	 * 获取一个在线用户
+	 * 
+	 * @param sid 用户会话id
+	 */
+	OnlineUser get(String sid);
+
+	/**
 	 * 移除在线用户
 	 * 
 	 * @param sid

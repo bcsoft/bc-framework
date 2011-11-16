@@ -1,6 +1,8 @@
 package cn.bc.websocket.jetty;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -13,18 +15,25 @@ import cn.bc.web.ui.json.Json;
 
 public class ChatWebSocket implements WebSocket.OnTextMessage {
 	private final Log logger = LogFactory.getLog(ChatWebSocket.class);
-	public final int TYPE_UPDOWN = 0;// 用户上线下线信息
-	public final int TYPE_BROADCAST = 1;// 全局广播的信息
+	public final int TYPE_ONLINE = 0;// 用户上线信息
+	public final int TYPE_OFFLINE = 1;// 用户下线信息
 	public final int TYPE_USER = 2;// 用户发到用户的信息
-	private Long userId;
+	public final int TYPE_BROADCAST = 3;// 全局广播的信息
+	public final int TYPE_SYSTIP = 4;// 用户发到用户出现异常时系统返回信息
+	private String userUid;
 	private String userName;
+	private String userIp;
 	private String sid;
 	private Connection connection;
 	private final Set<ChatWebSocket> members;
 
-	public ChatWebSocket(Long userId, String userName, String sid,
-			Set<ChatWebSocket> members) {
-		this.userId = userId;
+	// private OnlineUserService onlineService =
+	// WebUtils.getBean(OnlineUserService.class);
+
+	public ChatWebSocket(String userIp, String userUid, String userName,
+			String sid, Set<ChatWebSocket> members) {
+		this.userIp = userIp;
+		this.userUid = userUid;
 		this.userName = userName;
 		this.sid = sid;
 		this.members = members;
@@ -37,7 +46,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		// 向所有用户发送上线信息
 		String msg = this.userName + "上线了！";
 		logger.info(msg);
-		sendMessageToAllUser(TYPE_UPDOWN, msg);
+		sendMessageToOtherUser(TYPE_ONLINE, msg);
 	}
 
 	public void onClose(int code, String message) {
@@ -46,11 +55,11 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		// 向所有用户发送下线信息
 		String msg = this.userName + "下线了！";
 		logger.info(msg);
-		sendMessageToAllUser(TYPE_UPDOWN, msg);
+		sendMessageToOtherUser(TYPE_OFFLINE, msg);
 	}
 
 	public void onMessage(String data) {
-		// data的格式：{type:"send|close,to:[actorId],msg:[message]}
+		// data的格式：{type:[TYPE_XXXX],toSid:[toSid],msg:[message]}
 		try {
 			JSONObject json = new JSONObject(data);
 			int type = json.getInt("type");
@@ -58,15 +67,15 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 			if (type == -1) {// 关闭连接
 				connection.disconnect();
 			} else {// 发送信息
-				String to_sid = json.getString("to_sid");
-				if (to_sid != null && to_sid.length() > 0) {
-					if (!isActiveUser(to_sid)) {
+				String toSid = json.getString("toSid");
+				if (toSid != null && toSid.length() > 0) {
+					if (!isActiveUser(toSid)) {
 						// 提示用户不在线
-						sendMessage(TYPE_USER, this.sid, "用户不在线，无法收到你发送的消息！");
+						sendMessageBack(toSid, "用户不在线，无法收到你发送的消息！");
 						return;
 					}
 				}
-				this.sendMessage(type, to_sid, json.getString("msg"));
+				this.sendMessage(type, toSid, json.getString("msg"));
 			}
 		} catch (JSONException e) {
 			logger.error(e.getMessage(), e);
@@ -76,35 +85,56 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	/**
 	 * 检测用户是否在线
 	 * 
-	 * @param to_sid
+	 * @param toSid
 	 *            用户的会话id
 	 * @return
 	 */
-	private boolean isActiveUser(String to_sid) {
+	private boolean isActiveUser(String toSid) {
 		for (ChatWebSocket member : members) {
-			if (member.sid.equals(to_sid))
+			if (member.sid.equals(toSid))
 				return true;
 		}
 		return false;
 	}
 
 	/**
+	 * 系统回发信息
+	 * 
+	 * @param toSid
+	 *            原接收人的会话id
+	 * @param msg
+	 *            要发送的信息内容
+	 */
+	private void sendMessageBack(String toSid, String msg) {
+		for (ChatWebSocket member : members) {
+			try {
+				if (member.sid.equals(this.sid))
+					member.connection.sendMessage(buildJson(TYPE_SYSTIP, msg,
+							toSid));
+			} catch (IOException e) {
+				logger.warn(e);
+			}
+		}
+	}
+
+	/**
 	 * @param type
 	 *            信息类型，见TYPE_XXX常数的定义
-	 * @param to_sid
+	 * @param toSid
 	 *            接收人的所在会话的id
 	 * @param msg
 	 *            要发送的信息内容
 	 */
-	private void sendMessage(int type, String to_sid, String msg) {
-		if (to_sid != null && to_sid.length() > 0) {// 发给指定用户
+	private void sendMessage(int type, String toSid, String msg) {
+		if (toSid != null && toSid.length() > 0) {// 发给指定用户
 			if (logger.isDebugEnabled())
-				logger.debug("to_sid=" + to_sid + ",msg="
-						+ buildJson(type, msg));
+				logger.debug("toSid=" + toSid + ",msg="
+						+ buildJson(type, msg, null));
 			for (ChatWebSocket member : members) {
 				try {
-					if (member.sid.equals(to_sid))
-						member.connection.sendMessage(buildJson(type, msg));
+					if (member.sid.equals(toSid))
+						member.connection
+								.sendMessage(buildJson(type, msg, null));
 				} catch (IOException e) {
 					logger.warn(e);
 				}
@@ -122,23 +152,50 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	private void sendMessageToAllUser(int type, String msg) {
 		if (logger.isDebugEnabled())
 			logger.debug("sendMessageToAllUser:msg="
-					+ buildJson(TYPE_UPDOWN, msg));
+					+ buildJson(type, msg, null));
 		for (ChatWebSocket member : members) {
 			try {
-				member.connection.sendMessage(buildJson(type, msg));
+				member.connection.sendMessage(buildJson(type, msg, null));
 			} catch (IOException e) {
 				logger.warn(e);
 			}
 		}
 	}
 
-	private String buildJson(int type, String msg) {
+	/**
+	 * 向其他在线用户发送信息
+	 * 
+	 * @param msg
+	 */
+	private void sendMessageToOtherUser(int type, String msg) {
+		if (logger.isDebugEnabled())
+			logger.debug("sendMessageToOtherUser:msg="
+					+ buildJson(type, msg, null));
+		for (ChatWebSocket member : members) {
+			if (!member.sid.equals(this.sid)) {
+				try {
+					member.connection.sendMessage(buildJson(type, msg, null));
+				} catch (IOException e) {
+					logger.warn(e);
+				}
+			}
+		}
+	}
+
+	SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss");
+
+	private String buildJson(int type, String msg, String originSid) {
 		Json json = new Json();
+		json.put("time", formatter.format(new Date()));// 发送的服务器时间
 		json.put("type", type);
-		json.put("from_sid", this.sid);
-		json.put("from_userName", this.userName);
-		json.put("from_userId", this.userId);
+		json.put("sid", this.sid);
+		json.put("name", this.userName);
+		json.put("uid", this.userUid);
+		json.put("ip", this.userIp);
 		json.put("msg", msg);
+
+		if (originSid != null)
+			json.put("origin", originSid);
 		return json.toString();
 	}
 }

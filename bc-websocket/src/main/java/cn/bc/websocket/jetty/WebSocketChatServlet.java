@@ -16,6 +16,7 @@ import org.eclipse.jetty.websocket.WebSocketServlet;
 
 import cn.bc.Context;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.util.WebUtils;
 
 public class WebSocketChatServlet extends WebSocketServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,19 +45,22 @@ public class WebSocketChatServlet extends WebSocketServlet {
 		String sid = request.getParameter("sid");
 		if (context == null) {// jetty8.0.4实际测试证明：context == null
 			// throw new CoreException("用户未登录！");
-			Long userId = new Long(request.getParameter("userId"));
-			String name;
+			String userUid = request.getParameter("userUid");
+			String userName;
 			try {
-				name = URLDecoder.decode(request.getParameter("userName"), "UTF-8");
+				userName = URLDecoder.decode(request.getParameter("userName"),
+						"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				logger.error(e.getMessage(), e);
-				name = "UnsupportedEncodingException";
+				userName = "UnsupportedEncodingException";
 			}
-			return new ChatWebSocket(userId, name, sid, members);
+			return new ChatWebSocket(WebUtils.getClientIP(request), userUid,
+					userName, sid, members);
 		} else {
 			logger.fatal("--doWebSocketConnect--session is good!");
-			return new ChatWebSocket(context.getUser().getId(), context
-					.getUser().getName(), sid, members);
+			return new ChatWebSocket(WebUtils.getClientIP(request), context
+					.getUser().getUid(), context.getUser().getName(), sid,
+					members);
 		}
 	}
 }

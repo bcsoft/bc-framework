@@ -3,7 +3,6 @@
  */
 package cn.bc.chat.web.struts2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
@@ -39,14 +38,13 @@ public class OnlineUserAction extends ActionSupport {
 
 	public String execute() throws Exception {
 		// 获取在线用户列表
-		users = new ArrayList<OnlineUser>();
-		users.addAll(this.onlineService.getAll());
+		users = this.onlineService.getAll();
 
 		// 剔除自己
 		String sid = ServletActionContext.getRequest().getSession().getId();
 		OnlineUser onlineUser = null;
 		for (OnlineUser u : users) {
-			if (u.getSession().equals(sid)) {
+			if (u.getSid().equals(sid)) {
 				onlineUser = u;
 				break;
 			}
