@@ -37,13 +37,15 @@ public class WebSocketChatServlet extends WebSocketServlet {
 	public WebSocket doWebSocketConnect(HttpServletRequest request,
 			String protocol) {
 		if (logger.isDebugEnabled())
-			logger.debug("--doWebSocketConnect--protocol=" + protocol);
+			logger.debug("--doWebSocketConnect--protocol=" + protocol + ",sid="
+					+ request.getSession().getId());
 
 		// 当前用户信息
 		SystemContext context = (SystemContext) request.getSession()
 				.getAttribute(Context.KEY);
 		String sid = request.getParameter("sid");
 		if (context == null) {// jetty8.0.4实际测试证明：context == null
+			logger.fatal("--doWebSocketConnect--session is changed!");
 			// throw new CoreException("用户未登录！");
 			String userUid = request.getParameter("userUid");
 			String userName;
@@ -57,7 +59,7 @@ public class WebSocketChatServlet extends WebSocketServlet {
 			return new ChatWebSocket(WebUtils.getClientIP(request), userUid,
 					userName, sid, members);
 		} else {
-			logger.fatal("--doWebSocketConnect--session is good!");
+			logger.debug("--doWebSocketConnect--session is good!");
 			return new ChatWebSocket(WebUtils.getClientIP(request), context
 					.getUser().getUid(), context.getUser().getName(), sid,
 					members);
