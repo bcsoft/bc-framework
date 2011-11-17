@@ -52,7 +52,7 @@ public class LoginServiceImpl implements LoginService {
 
 	public Map<String, Object> loadActorByCode(final String actorCode) {
 		final StringBuffer hql = new StringBuffer(
-				"select a.id id,a.type_ type_,a.code code,a.name name,a.pcode pcode,a.pname pname,t.password password,h.id hid from bc_identity_actor a");
+				"select a.id id,a.uid_ uid_,a.type_ type_,a.code code,a.name name,a.pcode pcode,a.pname pname,t.password password,h.id hid from bc_identity_actor a");
 		hql.append(" inner join bc_identity_auth t on t.id=a.id");
 		hql.append(" inner join bc_identity_actor_history h on h.actor_id=a.id");
 		hql.append(" where a.code = ? order by h.create_date desc");
@@ -80,6 +80,7 @@ public class LoginServiceImpl implements LoginService {
 							// actor
 							Actor actor = new Actor();
 							actor.setId(new Long(rs[i++].toString()));
+							actor.setUid(rs[i++].toString());
 							actor.setType(Integer.parseInt(rs[i++].toString()));
 							actor.setCode(rs[i++].toString());
 							actor.setName(rs[i++].toString());
