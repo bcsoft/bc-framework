@@ -6,6 +6,7 @@ package cn.bc.core.query.condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.util.StringUtils;
 
 /**
@@ -48,6 +49,24 @@ public class ConditionUtils {
 	 */
 	public static AndCondition mix2AndCondition(Condition... conditions) {
 		AndCondition and = new AndCondition();
+		if (conditions != null) {
+			for (Condition c : conditions) {
+				if (c != null) {
+					and.add(c);
+				}
+			}
+		}
+		return and.isEmpty() ? null : and;
+	}
+
+	/**
+	 * 合并多个条件为Or条件
+	 * 
+	 * @param conditions
+	 * @return
+	 */
+	public static OrCondition mix2OrCondition(Condition... conditions) {
+		OrCondition and = new OrCondition();
 		if (conditions != null) {
 			for (Condition c : conditions) {
 				if (c != null) {
