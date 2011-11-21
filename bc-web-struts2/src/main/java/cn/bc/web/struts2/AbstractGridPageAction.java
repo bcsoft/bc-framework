@@ -18,6 +18,7 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
+import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.DateUtils;
@@ -406,12 +407,17 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * 
 	 * @return
 	 */
-	protected OrCondition getGridSearchCondition() {
+	protected MixCondition getGridSearchCondition() {
 		if (this.search == null || this.search.length() == 0)
 			return null;
 
-		// 用空格分隔多个查询条件的值的处理
-		String[] values = this.search.split(" ");
+		// 用空格分隔多个查询条件值的处理
+		String[] values;
+		boolean isOr = this.search.indexOf("+") == -1;
+		if (isOr)
+			values = this.search.split(" ");// “A空格B”查询
+		else
+			values = this.search.split("\\+");// “A+B”查询
 
 		// 用空格分隔多个查询条件的值的处理
 		String[] likeFields = this.getGridSearchFields();
@@ -420,17 +426,40 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 		// 添加模糊查询条件
 		// TODO 添加更复杂的查询处理，参考google的搜索格式
-		OrCondition or = new OrCondition();
-		for (String field : likeFields) {
-			for (String value : values) {
-				or.add(new LikeCondition(field, value));
+		if (isOr) {// “A空格B”查询
+			// ----(f1 like v1 or f1 like v2 or ..) or (f2 like v1 or f2 like v2
+			// or ..) or ..
+			OrCondition or = new OrCondition();
+			for (String field : likeFields) {
+				for (String value : values) {
+					or.add(new LikeCondition(field, value));
+				}
 			}
+
+			// 用括号将多个or条件括住
+			or.setAddBracket(true);
+			return or;
+		} else {// “A+B”查询
+			// ----(f1 like v1 or f1 like v2 or ..) and (f2 like v1 or f2 like
+			// v2 or ..) and ..
+			AndCondition and = new AndCondition();
+			// 用括号将多个and条件括住
+			and.setAddBracket(true);
+
+			OrCondition or;
+			for (String field : likeFields) {
+				or = new OrCondition();
+				for (String value : values) {
+					or.add(new LikeCondition(field, value));
+				}
+				// 用括号将多个or条件括住
+				or.setAddBracket(true);
+
+				and.add(or);
+			}
+
+			return and;
 		}
-
-		// 用括号将多个or条件括住
-		or.setAddBracket(true);
-
-		return or;
 	}
 
 	@Override
@@ -444,7 +473,8 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	}
 
 	/**
-	 * @param useDisabledReplaceDelete 控制是使用删除按钮还是禁用按钮
+	 * @param useDisabledReplaceDelete
+	 *            控制是使用删除按钮还是禁用按钮
 	 * @return
 	 */
 	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
