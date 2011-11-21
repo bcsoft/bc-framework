@@ -22,7 +22,7 @@ public class ToolbarMenuButton extends ToolbarButton {
 		super.init();
 		this.addClazz("bc-menuButton");
 		this.setSecondaryIcon("ui-icon-triangle-1-s");
-		// this.setMenuSelector(".bc-page");
+		this.setMenuContainer(".bc-page");
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class ToolbarMenuButton extends ToolbarButton {
 	}
 
 	/**
-	 * 设置用户选中菜单项的回调函数名，上下文为按钮所在窗口，第一个参数为选中的项({value:[value],label:[label]})
+	 * 设置用户选中菜单项的回调函数名，上下文为按钮所在窗口，第一个参数为选中的项({value:[value],text:[text]})
 	 * 
 	 * @param change
 	 * @return
@@ -48,18 +48,18 @@ public class ToolbarMenuButton extends ToolbarButton {
 		return this;
 	}
 
-	public String getMenuSelector() {
-		return this.getAttr("data-menuSelector");
+	public String getMenuContainer() {
+		return this.getAttr("data-menucontainer");
 	}
 
 	/**
 	 * 下拉菜单所在容器的选择表达式，js将使用this.closest([menuSelector])来获取,如果没有设置就放到父容器
 	 * 
-	 * @param menuSelector
+	 * @param menuContainer
 	 * @return
 	 */
-	public ToolbarMenuButton setMenuSelector(String menuSelector) {
-		this.setAttr("data-menuSelector", menuSelector);
+	public ToolbarMenuButton setMenuContainer(String menuContainer) {
+		this.setAttr("data-menucontainer", menuContainer);
 		return this;
 	}
 
