@@ -20,4 +20,11 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="syslogService" class="cn.bc.log.service.SyslogServiceImpl"
 		p:entityClass="cn.bc.log.domain.Syslog" />
+		
+	<!-- worklog -->
+	<bean id="worklogDao" class="cn.bc.log.dao.hibernate.jpa.WorklogDaoImpl"
+		p:entityClass="cn.bc.log.domain.Worklog"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="worklogService" class="cn.bc.log.service.WorklogServiceImpl"
+		p:entityClass="cn.bc.log.domain.Worklog" />
 </beans>
