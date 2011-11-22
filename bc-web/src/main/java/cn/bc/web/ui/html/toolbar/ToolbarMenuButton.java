@@ -1,6 +1,5 @@
 package cn.bc.web.ui.html.toolbar;
 
-import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.menu.Menu;
 import cn.bc.web.ui.html.menu.MenuItem;
 
@@ -43,7 +42,7 @@ public class ToolbarMenuButton extends ToolbarButton {
 	 * @param change
 	 * @return
 	 */
-	public Button setChange(String change) {
+	public ToolbarMenuButton setChange(String change) {
 		this.setAttr("data-change", change);
 		return this;
 	}

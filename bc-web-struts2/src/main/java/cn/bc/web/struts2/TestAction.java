@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 
+import cn.bc.web.ui.html.page.ButtonOption;
+import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 import cn.bc.web.util.WebUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -46,11 +50,25 @@ public class TestAction extends ActionSupport {
 	}
 
 	public String tpl;
+	public ButtonOption buttonOption1;
+	public ButtonOption buttonOption2;
 
 	// 显示指定的jsp页面
 	public String show() {
 		Assert.hasText(tpl);
 		logger.warn("tpl=" + tpl);
+
+		ToolbarButton button = new ToolbarMenuButton("操作")
+				.addMenuItem("操作1", "v1").addMenuItem("操作2", "v2")
+				.addMenuItem("操作3", "v3")
+				.setChange("bc.buttonsDesign.selectMenuButtonItem");
+		buttonOption1 = PageOption.convert2ButtonOption(button);
+
+		button = new ToolbarButton();
+		button.setIcon("ui-icon-pencil").setText("测试")
+				.setClick("bc.buttonsDesign.clickTestButton");
+		buttonOption2 = PageOption.convert2ButtonOption(button);
+
 		return SUCCESS;
 	}
 
@@ -129,8 +147,7 @@ public class TestAction extends ActionSupport {
 		if (trace)
 			try {
 				logger.warn("start trace mac...");
-				html += oneMethodString("clientMAC",
-						WebUtils.getMac(clientIP));
+				html += oneMethodString("clientMAC", WebUtils.getMac(clientIP));
 				logger.warn("end trace mac.");
 			} catch (Exception e1) {
 				logger.error(e1.getMessage(), e1);
