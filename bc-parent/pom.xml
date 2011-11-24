@@ -644,6 +644,18 @@
 				<artifactId>transactions-jdbc</artifactId>
 				<version>3.7.0</version>
 			</dependency>
+
+			<!-- 网络连接包 -->
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.0.3</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

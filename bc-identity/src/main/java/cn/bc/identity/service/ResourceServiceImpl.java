@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import cn.bc.core.cache.Cache;
 import cn.bc.core.query.condition.Direction;
@@ -31,7 +32,7 @@ public class ResourceServiceImpl extends DefaultCrudService<Resource> implements
 	private Cache cache;
 
 	@Autowired
-	public void setCache(Cache cache) {
+	public void setCache(@Qualifier("bcCache") Cache cache) {
 		this.cache = cache;
 	}
 

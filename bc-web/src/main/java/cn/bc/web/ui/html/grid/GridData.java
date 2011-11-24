@@ -291,8 +291,12 @@ public class GridData extends Div {
 						column.getValueExpression());
 				cellValue = formatValue(rowData, srcCellValue,
 						column.getValueFormater());
-				td.addChild(new Text(cellValue)).setAttr("data-value",
-						srcCellValue != null ? srcCellValue.toString() : "");
+				td.addChild(new Text(cellValue))
+						.setAttr(
+								"data-value",
+								srcCellValue != null ? srcCellValue.toString()
+										: "")//原始值
+						.setAttr("data-column", column.getId());//列标识
 				if (column.isUseTitleFromLabel()) {
 					if (column.getValueFormater() instanceof LinkFormater) {
 						if (srcCellValue != null)
