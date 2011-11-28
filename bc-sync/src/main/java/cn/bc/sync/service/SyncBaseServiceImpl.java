@@ -30,4 +30,12 @@ public class SyncBaseServiceImpl extends DefaultCrudService<SyncBase> implements
 	public SyncBase load(String syncType, String syncCode) {
 		return this.syncBaseDao.load(syncType, syncCode);
 	}
+
+	public boolean hadGenerate(String syncTo, Long id) {
+		return this.syncBaseDao.hadGenerate(syncTo, id);
+	}
+
+	public int updateStatus(Long[] _ids, int toStatus) {
+		return this.syncBaseDao.updateStatus(_ids, toStatus);
+	}
 }

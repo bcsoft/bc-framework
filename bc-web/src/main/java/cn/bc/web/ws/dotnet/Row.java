@@ -18,6 +18,56 @@ import java.util.List;
 public class Row {
 	private List<Cell> cells;
 
+	/**
+	 * 获取指定的单元格
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Cell getCell(String key) {
+		for (Cell cell : cells) {
+			if (cell.getKey().equals(key))
+				return cell;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取指定的单元格的值
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Object getCellValue(String key) {
+		for (Cell cell : cells) {
+			if (cell.getKey().equals(key))
+				return cell.getValue();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取指定的单元格的字符串值
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getCellStringValue(String key) {
+		Object value = this.getCellValue(key);
+		return value == null ? null : value.toString();
+	}
+
+	/**
+	 * 获取指定的单元格的字符串值
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Calendar getCellCalendarValue(String key) {
+		Object value = this.getCellValue(key);
+		return value == null ? null : (Calendar) value;
+	}
+
 	public List<Cell> getCells() {
 		return cells;
 	}

@@ -31,4 +31,26 @@ public interface SyncBaseService extends CrudService<SyncBase> {
 	 * @return
 	 */
 	SyncBase load(String syncType, String syncCode);
+
+	/**
+	 * 判断该同步记录是否已生成过相应的事件单
+	 * 
+	 * @param syncTo
+	 *            判断事件单是否存在的表名
+	 * @param id
+	 *            同步记录的id
+	 * @return
+	 */
+	boolean hadGenerate(String syncTo, Long id);
+
+	/**
+	 * 更新记录的状态值为新的值
+	 * 
+	 * @param _ids
+	 *            记录的id列表
+	 * @param toStatus
+	 *            新的状态值
+	 * @return 实际更新的条目数
+	 */
+	int updateStatus(Long[] _ids, int toStatus);
 }
