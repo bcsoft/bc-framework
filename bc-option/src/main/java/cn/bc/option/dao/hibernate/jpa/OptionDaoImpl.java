@@ -6,10 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +36,37 @@ public class OptionDaoImpl implements OptionDao {
 	public void setEntityManagerFactory(
 			EntityManagerFactory entityManagerFactory) {
 		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
+	}
+
+	public String getItemValue(final String groupKey, final String itemKey) {
+		if (groupKey == null || itemKey == null)
+			return null;
+
+		// 构建sql
+		final StringBuffer hql = new StringBuffer(
+				"select i.value_ from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id = i.pid where g.key_=? and i.key_=?");
+
+		// 执行查询
+		return this.jpaTemplate.execute(new JpaCallback<String>() {
+			public String doInJpa(EntityManager em) throws PersistenceException {
+				Query queryObject = em.createNativeQuery(hql.toString());
+
+				// 注入参数:jpa的索引号从1开始
+				queryObject.setParameter(1, groupKey);
+				queryObject.setParameter(2, itemKey);
+				@SuppressWarnings("unchecked")
+				List<Object> list = queryObject.getResultList();
+				if (list == null || list.isEmpty()) {
+					return null;
+				} else {
+					if (list.size() > 1) {
+						logger.warn("查询到多个值,仅返回第一个:groupKey" + groupKey
+								+ ",itemKey=" + itemKey);
+					}
+					return list.get(0).toString();
+				}
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")

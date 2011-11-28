@@ -31,6 +31,7 @@ public class OptionItem extends EntityImpl {
 	private String key; // 键
 	private String orderNo; // 排序号
 	private String icon; // 图标样式
+	private String description; // 说明
 	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
 
 	public OptionItem() {
@@ -50,6 +51,15 @@ public class OptionItem extends EntityImpl {
 
 	public void setOptionGroup(OptionGroup optionGroup) {
 		this.optionGroup = optionGroup;
+	}
+
+	@Column(name = "DESC_")
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Column(name = "STATUS_")
