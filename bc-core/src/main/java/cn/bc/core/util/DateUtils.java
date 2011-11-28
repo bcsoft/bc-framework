@@ -89,6 +89,19 @@ public class DateUtils {
 	}
 
 	/**
+	 * 指定的字符串时间转换成Calendar
+	 * 
+	 * @param dateTime
+	 *            所要转换的时间
+	 */
+	public static Calendar getCalendar(String dateTime) {
+		Date date = getDate(dateTime);
+		Calendar to = Calendar.getInstance();
+		to.setTime(date);
+		return to;
+	}
+
+	/**
 	 * 指定的字符串时间转换成Date
 	 * 
 	 * @param dateTime
@@ -116,13 +129,100 @@ public class DateUtils {
 	}
 
 	/**
+	 * 获取月份的第一天(类似yyyy-MM-01 00:00:00)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getFirstDayOfMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to = Calendar.getInstance();
+		to.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0,
+				0, 0);
+		to.set(Calendar.MILLISECOND, 0);
+		return to;
+	}
+
+	/**
+	 * 获取月份的最后一天(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getLastDayOfMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to = getFirstDayOfMonth(calendar);// 本月第一天
+		to.add(Calendar.MONTH, 1);// 下月第一天
+		to.add(Calendar.SECOND, -1);// 缩减1秒变为上月最后一天
+		return to;
+	}
+
+	/**
+	 * 将日期设为其所在月份的第一天(类似yyyy-MM-01 00:00:00)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static void setToFirstDayOfMonth(Calendar calendar) {
+		if (calendar == null)
+			return;
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+				1, 0, 0, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+	}
+
+	/**
+	 * 将日期设为其所在月份的最后一天(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static void setToLastDayOfMonth(Calendar calendar) {
+		if (calendar == null)
+			return;
+		setToFirstDayOfMonth(calendar);
+		calendar.add(Calendar.MONTH, 1);// 下月第一天
+		calendar.add(Calendar.SECOND, -1);// 缩减1秒变为上月最后一天
+	}
+
+	/**
+	 * 将日期时分秒设为0(类似yyyy-MM-dd 00:00:00)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static void setToZeroTime(Calendar calendar) {
+		if (calendar == null)
+			return;
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+	}
+
+	/**
+	 * 将日期时分秒设为最大值(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static void setToMaxTime(Calendar calendar) {
+		if (calendar == null)
+			return;
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+	}
+
+	/**
 	 * 获取指定日期的起始时间(类似yyyy-MM-dd 00:00:00)
 	 * 
 	 * @param date
-	 *            指定日期
+	 *            指定的日期
 	 * @return 转换后的日期
 	 */
-	public static Date getStartDate(Date date) {
+	public static Date getZeroTimeDate(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -138,7 +238,7 @@ public class DateUtils {
 	 *            指定日期
 	 * @return 转换后的日期
 	 */
-	public static Date getEndDate(Date date) {
+	public static Date getMaxTimeDate(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
