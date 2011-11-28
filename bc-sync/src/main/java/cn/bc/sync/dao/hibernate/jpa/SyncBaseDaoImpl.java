@@ -16,17 +16,17 @@ import cn.bc.sync.domain.SyncBase;
 public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 		SyncBaseDao {
 
-	public boolean hadSync(String syncType, String syncId) {
+	public boolean hadSync(String syncType, String syncCode) {
 		Condition condition = new AndCondition().add(
 				new EqualsCondition("syncType", syncType)).add(
-				new EqualsCondition("syncId", syncId));
+				new EqualsCondition("syncId", syncCode));
 		return this.createQuery().condition(condition).count() > 0;
 	}
 
-	public SyncBase load(String syncType, String syncId) {
+	public SyncBase load(String syncType, String syncCode) {
 		Condition condition = new AndCondition().add(
 				new EqualsCondition("syncType", syncType)).add(
-				new EqualsCondition("syncId", syncId));
+				new EqualsCondition("syncId", syncCode));
 		return this.createQuery().condition(condition).singleResult();
 	}
 }

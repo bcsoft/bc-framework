@@ -23,11 +23,11 @@ public class SyncBaseServiceImpl extends DefaultCrudService<SyncBase> implements
 		this.setCrudDao(syncBaseDao);
 	}
 
-	public boolean hadSync(String syncType, String syncId) {
-		return this.syncBaseDao.hadSync(syncType, syncId);
+	public boolean hadSync(String syncType, String syncCode) {
+		return this.syncBaseDao.hadSync(syncType, syncCode);
 	}
 
-	public SyncBase load(String syncType, String syncId) {
-		return this.syncBaseDao.load(syncType, syncId);
+	public SyncBase load(String syncType, String syncCode) {
+		return this.syncBaseDao.load(syncType, syncCode);
 	}
 }

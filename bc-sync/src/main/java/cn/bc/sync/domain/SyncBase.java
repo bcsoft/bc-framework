@@ -35,7 +35,7 @@ public class SyncBase extends EntityImpl {
 
 	private int status = STATUS_NEW;// 处理状态，见本类STATUS_XXX的定义
 	private String syncType;// 同步信息的类型，syncType与syncId一起应该是唯一的
-	private String syncId;// 同步信息的标识符,该数据应来源于源数据,用于表示数据曾经的同步记录,与syncType一起用于避免重复记录的出现
+	private String syncCode;// 同步信息的标识符,该数据应来源于源数据,用于表示数据曾经的同步记录,与syncType一起用于避免重复记录的出现
 	private String syncFrom;// 同步信息的来源：如WebService的连接地址和方法
 	private Calendar syncDate;// 同步时间
 	private ActorHistory author;// 执行同步操作的人
@@ -76,13 +76,13 @@ public class SyncBase extends EntityImpl {
 		this.syncDate = syncDate;
 	}
 
-	@Column(name = "SYNC_ID")
-	public String getSyncId() {
-		return syncId;
+	@Column(name = "SYNC_CODE")
+	public String getSyncCode() {
+		return syncCode;
 	}
 
-	public void setSyncId(String syncId) {
-		this.syncId = syncId;
+	public void setSyncCode(String syncCode) {
+		this.syncCode = syncCode;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)

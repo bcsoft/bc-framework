@@ -42,7 +42,7 @@ public class SyncBaseServiceImplTest extends
 		syncBase.setAuthor(getAdminHistory());
 		syncBase.setSyncDate(Calendar.getInstance());
 		syncBase.setSyncType("syncType");
-		syncBase.setSyncId(UUID.randomUUID().toString());
+		syncBase.setSyncCode(UUID.randomUUID().toString());
 		syncBase.setSyncFrom("syncFrom");
 		syncBase.setStatus(SyncBase.STATUS_NEW);
 		return syncBase;
@@ -56,7 +56,7 @@ public class SyncBaseServiceImplTest extends
 	public void testLoadBySyncTypeAndId() {
 		SyncBase syncBase = createInstance(null);
 		String syncId = UUID.randomUUID().toString();
-		syncBase.setSyncId(syncId);
+		syncBase.setSyncCode(syncId);
 		Assert.assertNull(syncBase.getId());
 		this.syncBaseService.save(syncBase);
 		Assert.assertNotNull(syncBase.getId());
@@ -72,7 +72,7 @@ public class SyncBaseServiceImplTest extends
 
 		SyncBase syncBase = createInstance(null);
 		String syncId = UUID.randomUUID().toString();
-		syncBase.setSyncId(syncId);
+		syncBase.setSyncCode(syncId);
 		Assert.assertNull(syncBase.getId());
 		this.syncBaseService.save(syncBase);
 		Assert.assertNotNull(syncBase.getId());
