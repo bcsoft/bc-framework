@@ -1,5 +1,6 @@
 package cn.bc.web.ui.html.page;
 
+import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.ui.json.JsonArray;
 
@@ -30,6 +31,26 @@ public class PageOption extends Json {
 		jsons.add(button);
 		put("buttons", jsons);
 		return this;
+	}
+
+	public PageOption addButton(Button button) {
+		return this.addButton(convert2ButtonOption(button));
+	}
+
+	/**
+	 * 将html按钮转换为对话框按钮
+	 * 
+	 * @param button
+	 *            工具条按钮
+	 * @return
+	 */
+	public static ButtonOption convert2ButtonOption(Button button) {
+		ButtonOption json = new ButtonOption();
+
+		// 将'和"字符替换为\'和\"
+		json.put("html", button.toString().replaceAll("'|\"", "\\\\\""));
+
+		return json;
 	}
 
 	public PageOption setMinWidth(int minWidth) {

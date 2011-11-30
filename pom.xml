@@ -23,6 +23,7 @@
 		<module>bc-web</module>
 		<module>bc-web-struts</module>
 		<module>bc-web-struts2</module>
+		<module>bc-sync</module>
 
 		<module>bc-option</module>
 		<module>bc-identity</module>

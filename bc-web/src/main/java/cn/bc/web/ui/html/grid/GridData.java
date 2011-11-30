@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
@@ -244,14 +246,17 @@ public class GridData extends Div {
 		}
 
 		// 右table
+		List<Column> visibleColumns = this.getVisibleColumns(this.columns);
+		List<HiddenColumn> hiddenColumns = this.getHiddenColumns(this.columns);
 		Component rightTable = new Table().addClazz("table")
 				.setAttr("cellspacing", "0").setAttr("cellpadding", "0");
 		right.addChild(rightTable);
-		int totalWidth = Grid.getDataTableWidth(this.columns);
+		int totalWidth = Grid.getDataTableWidth(visibleColumns);
 		rightTable.addStyle("width", totalWidth + "px");
 		rightTable.setAttr("originWidth", totalWidth + "");
 		rc = 0;
 		String cellValue;
+		JSONObject hiddenValues;
 		for (Object rowData : this.data) {
 			// 行设置
 			tr = new Tr().addClazz("ui-state-default row");
@@ -262,16 +267,28 @@ public class GridData extends Div {
 				tr.addClazz("even");// 偶数行
 			}
 
+			// 计算隐藏域的值
+			hiddenValues = new JSONObject();
+			for (HiddenColumn c : hiddenColumns) {
+				try {
+					hiddenValues.put(c.getId(),
+							getValue(rowData, c.getValueExpression()));
+				} catch (JSONException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+			tr.setAttr("data-hidden", hiddenValues.toString());
+
 			// 循环添加行的单元格（第一列为id列忽略）
-			for (int i = 1; i < columns.size(); i++) {
-				column = columns.get(i);
+			for (int i = 1; i < visibleColumns.size(); i++) {
+				column = visibleColumns.get(i);
 				td = new Td();
 				tr.addChild(td);
 
 				// 单元格样式
 				if (i == 1) {
 					td.addClazz("first");// 首列样式
-				} else if (i == columns.size() - 1) {
+				} else if (i == visibleColumns.size() - 1) {
 					td.addClazz("last");// 最后列样式
 				} else {
 					td.addClazz("middle");// 中间列样式
@@ -291,8 +308,12 @@ public class GridData extends Div {
 						column.getValueExpression());
 				cellValue = formatValue(rowData, srcCellValue,
 						column.getValueFormater());
-				td.addChild(new Text(cellValue)).setAttr("data-value",
-						srcCellValue != null ? srcCellValue.toString() : "");
+				td.addChild(new Text(cellValue))
+						.setAttr(
+								"data-value",
+								srcCellValue != null ? srcCellValue.toString()
+										: "")// 原始值
+						.setAttr("data-column", column.getId());// 列标识
 				if (column.isUseTitleFromLabel()) {
 					if (column.getValueFormater() instanceof LinkFormater) {
 						if (srcCellValue != null)
@@ -308,5 +329,35 @@ public class GridData extends Div {
 
 			rc++;
 		}
+	}
+
+	/**
+	 * 获取隐藏列
+	 * 
+	 * @param columns
+	 * @return
+	 */
+	private List<HiddenColumn> getHiddenColumns(List<Column> columns) {
+		List<HiddenColumn> list = new ArrayList<HiddenColumn>();
+		for (Column c : columns) {
+			if (c instanceof HiddenColumn)
+				list.add((HiddenColumn) c);
+		}
+		return list;
+	}
+
+	/**
+	 * 获取非隐藏列
+	 * 
+	 * @param columns
+	 * @return
+	 */
+	private List<Column> getVisibleColumns(List<Column> columns) {
+		List<Column> list = new ArrayList<Column>();
+		for (Column c : columns) {
+			if (!(c instanceof HiddenColumn))
+				list.add(c);
+		}
+		return list;
 	}
 }

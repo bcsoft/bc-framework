@@ -1,8 +1,6 @@
 package cn.bc.websocket.jetty;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -45,17 +43,10 @@ public class WebSocketChatServlet extends WebSocketServlet {
 				.getAttribute(Context.KEY);
 		String sid = request.getParameter("sid");
 		if (context == null) {// jetty8.0.4实际测试证明：context == null
-			logger.fatal("--doWebSocketConnect--session is changed!");
 			// throw new CoreException("用户未登录！");
+			logger.fatal("--doWebSocketConnect--session is changed!");
 			String userUid = request.getParameter("userUid");
-			String userName;
-			try {
-				userName = URLDecoder.decode(request.getParameter("userName"),
-						"UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				logger.error(e.getMessage(), e);
-				userName = "UnsupportedEncodingException";
-			}
+			String userName = request.getParameter("userName");
 			return new ChatWebSocket(WebUtils.getClientIP(request), userUid,
 					userName, sid, members);
 		} else {

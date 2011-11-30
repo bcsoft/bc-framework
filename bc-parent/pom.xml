@@ -644,6 +644,18 @@
 				<artifactId>transactions-jdbc</artifactId>
 				<version>3.7.0</version>
 			</dependency>
+
+			<!-- 网络连接包 -->
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.0.3</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -672,8 +684,9 @@
 		<db.type>mysql</db.type>
 		<db.name>bcdemo</db.name>
 		<db.ip>localhost</db.ip>
+		<db.port>3306</db.port>
 		<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
-		<db.url><![CDATA[jdbc:mysql://${db.ip}:3306/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
+		<db.url><![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
 		<db.username>bcdemo</db.username>
 		<db.password>bcdemo</db.password>
 		<jndi.name>${db.name}</jndi.name>
@@ -693,8 +706,9 @@
 			<id>mysql</id>
 			<properties>
 				<db.type>mysql</db.type>
+				<db.port>3306</db.port>
 				<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
-				<db.url><![CDATA[jdbc:mysql://${db.ip}:3306/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
+				<db.url><![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
 				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
 			</properties>
 			<dependencies>
@@ -709,8 +723,9 @@
 			<id>oracle</id>
 			<properties>
 				<db.type>oracle</db.type>
+				<db.port>1521</db.port>
 				<db.driverClassName>oracle.jdbc.OracleDriver</db.driverClassName>
-				<db.url><![CDATA[jdbc:oracle:thin:@${db.ip}:1521:${db.name}]]></db.url>
+				<db.url><![CDATA[jdbc:oracle:thin:@${db.ip}:${db.port}:${db.name}]]></db.url>
 				<db.sequence>hibernate_sequence</db.sequence>
 				<hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
 			</properties>
@@ -725,8 +740,9 @@
 			<id>mssql</id>
 			<properties>
 				<db.type>mssql</db.type>
+				<db.port>1433</db.port>
 				<db.driverClassName>net.sourceforge.jtds.jdbc.Driver</db.driverClassName>
-				<db.url><![CDATA[jdbc:jtds:sqlserver://${db.ip}:1433;DatabaseName=${db.name}]]></db.url>
+				<db.url><![CDATA[jdbc:jtds:sqlserver://${db.ip}:${db.port};DatabaseName=${db.name}]]></db.url>
 				<hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
 			</properties>
 			<dependencies>

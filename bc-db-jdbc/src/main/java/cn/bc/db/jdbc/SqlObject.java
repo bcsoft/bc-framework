@@ -12,7 +12,7 @@ import java.util.List;
  * 
  */
 public class SqlObject<T extends Object> {
-	private String sql;// sql查询语句
+	private String sql;// sql查询语句,不能带where和order by语句
 	private List<Object> args;// 查询参数
 	private RowMapper<T> rowMapper;// 数据映射器
 

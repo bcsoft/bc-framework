@@ -20,6 +20,10 @@ public class OptionServiceImpl implements OptionService {
 		this.optionDao = optionDao;
 	}
 
+	public String getItemValue(String groupKey, String itemKey) {
+		return optionDao.getItemValue(groupKey, itemKey);
+	}
+
 	public List<OptionGroup> findOptionGroup() {
 		return optionDao.findOptionGroup();
 	}

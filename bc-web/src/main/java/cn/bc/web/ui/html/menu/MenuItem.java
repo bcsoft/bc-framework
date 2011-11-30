@@ -6,10 +6,24 @@ import cn.bc.web.ui.html.Span;
 import cn.bc.web.ui.html.Text;
 
 public class MenuItem extends Li {
-	private String label;
 	private String url;
 	private String iconClass;
 	private Menu childMenu;
+
+	public MenuItem() {
+
+	}
+
+	/**
+	 * @param label
+	 *            显示的名称
+	 * @param value
+	 *            对应的值
+	 */
+	public MenuItem(String label, String value) {
+		this.setLabel(label);
+		this.setValue(value);
+	}
 
 	public String getType() {
 		return getAttr("data-type");
@@ -30,11 +44,11 @@ public class MenuItem extends Li {
 	}
 
 	public String getLabel() {
-		return label;
+		return getAttr("data-text");
 	}
 
 	public MenuItem setLabel(String label) {
-		this.label = label;
+		setAttr("data-text", label);
 		return this;
 	}
 
@@ -75,14 +89,16 @@ public class MenuItem extends Li {
 		this.addChild(a);
 		a.setAttr("href",
 				(this.url != null && this.url.length() > 0) ? this.url : "#");
-		if (this.label != null && this.label.length() > 0)//显示的名称
-			a.addChild(new Text(this.label));
-		if (this.iconClass != null && this.iconClass.length() > 0){//TODO 显示的图标
+		String label = getLabel();
+		if (label != null && label.length() > 0)// 显示的名称
+			a.addChild(new Text(label));
+		if (this.iconClass != null && this.iconClass.length() > 0) {// TODO
+																	// 显示的图标
 			Span span = new Span();
 			span.addClazz("ui-icon menuItem-icon " + this.iconClass);
 			a.addChild(span);
 		}
-		
+
 		// 创建子菜单
 		if (childMenu != null)
 			this.addChild(this.childMenu);

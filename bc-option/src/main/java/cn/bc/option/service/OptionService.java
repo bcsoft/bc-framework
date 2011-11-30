@@ -14,6 +14,17 @@ import cn.bc.option.domain.OptionItem;
  */
 public interface OptionService {
 	/**
+	 * 获取选项条目的值
+	 * 
+	 * @param groupKey
+	 *            选项分组的Key
+	 * @param itemKey
+	 *            选项条目的Key
+	 * @return 如果选项不存在就返回null
+	 */
+	String getItemValue(String groupKey, String itemKey);
+
+	/**
 	 * 获取已配置的分类列表
 	 * 
 	 * @return
@@ -63,11 +74,11 @@ public interface OptionService {
 	 * 
 	 * @param optionGroupKeys
 	 *            所属分类，对应OptionGroup属性Key的值
-	 * @return 返回结果的key为对应的OptionGroup的Key值，value为对应该key的OptionItem的Map列表，Map格式为：
-	 * <p>
-	 * key -- optionItem的key
-	 * value -- optionItem的value
-	 * </p>
+	 * @return 
+	 *         返回结果的key为对应的OptionGroup的Key值，value为对应该key的OptionItem的Map列表，Map格式为：
+	 *         <p>
+	 *         key -- optionItem的key value -- optionItem的value
+	 *         </p>
 	 */
 	Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
 			String[] optionGroupKeys);

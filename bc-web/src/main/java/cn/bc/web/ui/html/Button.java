@@ -9,8 +9,8 @@ import cn.bc.web.ui.AbstractComponent;
  * 
  */
 public class Button extends AbstractComponent {
-	private String icon;
-	private String text;
+	private String icon;// 首选图标样式
+	private String text;// 显示的文字
 
 	public String getTag() {
 		return "button";
@@ -76,7 +76,7 @@ public class Button extends AbstractComponent {
 		if (icon != null) {
 			this.addClazz(this.getIcon());
 		}
-		
+
 		// 文字
 		if (text != null) {
 			this.addChild(new Text(text));
