@@ -1,5 +1,7 @@
 package cn.bc.sync.service;
 
+import java.util.List;
+
 import cn.bc.core.service.CrudService;
 import cn.bc.sync.domain.SyncBase;
 
@@ -53,4 +55,24 @@ public interface SyncBaseService extends CrudService<SyncBase> {
 	 * @return 实际更新的条目数
 	 */
 	int updateStatus(Long[] _ids, int toStatus);
+
+	/**
+	 * 将旧记录的状态更新为未处理
+	 * 
+	 * @param syncType
+	 * @param syncCodes
+	 * @param statusNew
+	 * @return 实际更新的条目数
+	 */
+	int updateStatus2New(String syncType, List<String> syncCodes);
+
+	/**
+	 * 将其他未处理记录设置为已处理
+	 * 
+	 * @param syncType
+	 * @param excludeSyncCodes
+	 * @return 实际更新的条目数
+	 */
+	int updateNewStatus2Done4ExcludeCode(String syncType,
+			List<String> excludeSyncCodes);
 }

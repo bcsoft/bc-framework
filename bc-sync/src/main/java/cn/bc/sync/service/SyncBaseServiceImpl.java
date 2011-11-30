@@ -1,5 +1,7 @@
 package cn.bc.sync.service;
 
+import java.util.List;
+
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.sync.dao.SyncBaseDao;
 import cn.bc.sync.domain.SyncBase;
@@ -37,5 +39,15 @@ public class SyncBaseServiceImpl extends DefaultCrudService<SyncBase> implements
 
 	public int updateStatus(Long[] _ids, int toStatus) {
 		return this.syncBaseDao.updateStatus(_ids, toStatus);
+	}
+
+	public int updateStatus2New(String syncType, List<String> syncCodes) {
+		return this.syncBaseDao.updateStatus2New(syncType, syncCodes);
+	}
+
+	public int updateNewStatus2Done4ExcludeCode(String syncType,
+			List<String> excludeSyncCodes) {
+		return this.syncBaseDao.updateNewStatus2Done4ExcludeCode(syncType,
+				excludeSyncCodes);
 	}
 }

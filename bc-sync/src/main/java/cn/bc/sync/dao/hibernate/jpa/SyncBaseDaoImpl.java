@@ -103,4 +103,45 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 			}
 		});
 	}
+
+	public int updateStatus2New(String syncType, List<String> syncCodes) {
+		final String sql = "";
+		final List<Object> args = new ArrayList<Object>();
+		return this.getJpaTemplate().execute(new JpaCallback<Integer>() {
+			public Integer doInJpa(EntityManager em)
+					throws PersistenceException {
+				Query queryObject = em.createNativeQuery(sql);
+
+				// 注入参数
+				int i = 0;
+				for (Object value : args) {
+					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
+					i++;
+				}
+
+				return queryObject.executeUpdate();
+			}
+		});
+	}
+
+	public int updateNewStatus2Done4ExcludeCode(String syncType,
+			List<String> excludeSyncCodes) {
+		final String sql = "";
+		final List<Object> args = new ArrayList<Object>();
+		return this.getJpaTemplate().execute(new JpaCallback<Integer>() {
+			public Integer doInJpa(EntityManager em)
+					throws PersistenceException {
+				Query queryObject = em.createNativeQuery(sql);
+
+				// 注入参数
+				int i = 0;
+				for (Object value : args) {
+					queryObject.setParameter(i + 1, value);// jpa的索引号从1开始
+					i++;
+				}
+
+				return queryObject.executeUpdate();
+			}
+		});
+	}
 }
