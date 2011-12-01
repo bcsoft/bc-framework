@@ -131,12 +131,44 @@ public class Grid extends Div {
 		int totalWidth = 20;
 		// 循环添加其余列（忽略第一列的id列）
 		for (int i = 1; i < columns.size(); i++) {
-			if (columns.get(i).getWidth() > 0) {
-				totalWidth += columns.get(i).getWidth();
-			} else {
-				totalWidth += 150;// 默认按100的占位宽度
+			if (!(columns.get(i) instanceof HiddenColumn)) {
+				if (columns.get(i).getWidth() > 0) {
+					totalWidth += columns.get(i).getWidth();
+				} else {
+					totalWidth += 150;// 默认按100的占位宽度
+				}
 			}
 		}
 		return totalWidth;
+	}
+	
+	/**
+	 * 获取非隐藏列
+	 * 
+	 * @param columns
+	 * @return
+	 */
+	public static List<Column> getVisibleColumns(List<Column> columns) {
+		List<Column> list = new ArrayList<Column>();
+		for (Column c : columns) {
+			if (!(c instanceof HiddenColumn))
+				list.add(c);
+		}
+		return list;
+	}
+
+	/**
+	 * 获取隐藏列
+	 * 
+	 * @param columns
+	 * @return
+	 */
+	public static List<HiddenColumn> getHiddenColumns(List<Column> columns) {
+		List<HiddenColumn> list = new ArrayList<HiddenColumn>();
+		for (Column c : columns) {
+			if (c instanceof HiddenColumn)
+				list.add((HiddenColumn) c);
+		}
+		return list;
 	}
 }

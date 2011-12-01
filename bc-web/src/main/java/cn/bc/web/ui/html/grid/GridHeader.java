@@ -76,13 +76,14 @@ public class GridHeader extends Div {
 		rightTable.addChild(tr);
 		Component td;
 		Column column;
+		List<Column> visibleColumns = Grid.getVisibleColumns(this.columns);
 		// table的总宽度
-		int totalWidth = Grid.getDataTableWidth(this.columns);
+		int totalWidth = Grid.getDataTableWidth(visibleColumns);
 		rightTable.addStyle("width", totalWidth + "px");
 
 		// 循环添加其余列（第一列为id列忽略）
-		for (int i = 1; i < columns.size(); i++) {
-			column = columns.get(i);
+		for (int i = 1; i < visibleColumns.size(); i++) {
+			column = visibleColumns.get(i);
 			td = new Td();
 			tr.addChild(td);
 			td.setAttr("data-id", column.getId());
@@ -90,7 +91,7 @@ public class GridHeader extends Div {
 
 			if (i == 1) {
 				td.addClazz("first");// 首列样式
-			} else if (i == columns.size() - 1) {
+			} else if (i == visibleColumns.size() - 1) {
 				td.addClazz("last");// 最后列样式
 			} else {
 				td.addClazz("middle");// 中间列样式

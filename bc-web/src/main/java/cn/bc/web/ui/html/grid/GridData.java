@@ -246,8 +246,8 @@ public class GridData extends Div {
 		}
 
 		// 右table
-		List<Column> visibleColumns = this.getVisibleColumns(this.columns);
-		List<HiddenColumn> hiddenColumns = this.getHiddenColumns(this.columns);
+		List<Column> visibleColumns = Grid.getVisibleColumns(this.columns);
+		List<HiddenColumn> hiddenColumns = Grid.getHiddenColumns(this.columns);
 		Component rightTable = new Table().addClazz("table")
 				.setAttr("cellspacing", "0").setAttr("cellpadding", "0");
 		right.addChild(rightTable);
@@ -329,35 +329,5 @@ public class GridData extends Div {
 
 			rc++;
 		}
-	}
-
-	/**
-	 * 获取隐藏列
-	 * 
-	 * @param columns
-	 * @return
-	 */
-	private List<HiddenColumn> getHiddenColumns(List<Column> columns) {
-		List<HiddenColumn> list = new ArrayList<HiddenColumn>();
-		for (Column c : columns) {
-			if (c instanceof HiddenColumn)
-				list.add((HiddenColumn) c);
-		}
-		return list;
-	}
-
-	/**
-	 * 获取非隐藏列
-	 * 
-	 * @param columns
-	 * @return
-	 */
-	private List<Column> getVisibleColumns(List<Column> columns) {
-		List<Column> list = new ArrayList<Column>();
-		for (Column c : columns) {
-			if (!(c instanceof HiddenColumn))
-				list.add(c);
-		}
-		return list;
 	}
 }
