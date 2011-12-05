@@ -5,6 +5,18 @@
 	<version>0.6</version>
 	<packaging>pom</packaging>
 	<name>bc-parent</name>
+	<distributionManagement>  
+	  <repository> 
+		  <id>nexus-releases</id> 
+		  <name>Local Nexus Repository</name> 
+		  <url>http://192.168.0.222:8081/nexus/content/repositories/releases/</url> 
+	  </repository> 
+	  <snapshotRepository> 
+		  <id>nexus-snapshots</id> 
+		  <name>Local Nexus Repository</name> 
+		  <url>http://192.168.0.222:8081/nexus/content/repositories/snapshots</url> 
+	  </snapshotRepository> 
+	</distributionManagement>  
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<!-- 替换文件中的${...}标记的值 -->
