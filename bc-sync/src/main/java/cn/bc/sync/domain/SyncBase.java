@@ -32,6 +32,8 @@ public class SyncBase extends EntityImpl {
 	public static final int STATUS_NEW = 0;
 	/** 状态：已处理 */
 	public static final int STATUS_DONE = 1;
+	/** 状态：已生成，即已根据该同步信息生成相应的内部处理单 */
+	public static final int STATUS_GEN = 2;
 
 	private int status = STATUS_NEW;// 处理状态，见本类STATUS_XXX的定义
 	private String syncType;// 同步信息的类型，syncType与syncId一起应该是唯一的

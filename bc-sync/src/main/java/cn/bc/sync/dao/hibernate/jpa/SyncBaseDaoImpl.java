@@ -62,14 +62,14 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 
 		// 构建sql
 		final StringBuffer hql = new StringBuffer(
-				"update BC_SYNC_BASE s set s.status_ = ? where");
+				"update BC_SYNC_BASE set status_ = ? where");
 		final List<Object> args = new ArrayList<Object>();
 		args.add(new Integer(toStatus));
 		if (ids.length == 1) {
-			hql.append(" s.id = ?");
+			hql.append(" id = ?");
 			args.add(ids[0]);
 		} else {
-			hql.append(" s.id in (?");
+			hql.append(" id in (?");
 			args.add(ids[0]);
 			for (int i = 1; i < ids.length; i++) {
 				hql.append(",?");
@@ -77,7 +77,7 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 			}
 			hql.append(")");
 		}
-		hql.append(" and s.status_ != ?");
+		hql.append(" and status_ != ?");
 		args.add(new Integer(toStatus));
 
 		if (logger.isDebugEnabled()) {

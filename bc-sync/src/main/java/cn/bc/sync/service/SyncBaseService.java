@@ -48,13 +48,24 @@ public interface SyncBaseService extends CrudService<SyncBase> {
 	/**
 	 * 更新记录的状态值为新的值
 	 * 
-	 * @param _ids
+	 * @param id
+	 *            记录的id
+	 * @param toStatus
+	 *            新的状态值
+	 * @return 实际更新的条目数
+	 */
+	int updateStatus(Long id, int toStatus);
+
+	/**
+	 * 更新记录的状态值为新的值
+	 * 
+	 * @param ids
 	 *            记录的id列表
 	 * @param toStatus
 	 *            新的状态值
 	 * @return 实际更新的条目数
 	 */
-	int updateStatus(Long[] _ids, int toStatus);
+	int updateStatus(Long[] ids, int toStatus);
 
 	/**
 	 * 将旧记录的状态更新为未处理
