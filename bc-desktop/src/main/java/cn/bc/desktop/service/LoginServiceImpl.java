@@ -52,10 +52,12 @@ public class LoginServiceImpl implements LoginService {
 
 	public Map<String, Object> loadActorByCode(final String actorCode) {
 		final StringBuffer hql = new StringBuffer(
-				"select a.id id,a.uid_ uid_,a.type_ type_,a.code code,a.name name,a.pcode pcode,a.pname pname,t.password password,h.id hid from bc_identity_actor a");
+				"select a.id id,a.uid_ uid_,a.type_ type_,a.code code,a.name name,a.pcode pcode,a.pname pname,t.password password");
+		hql.append(",h.id hid");
+		hql.append(" from bc_identity_actor a");
 		hql.append(" inner join bc_identity_auth t on t.id=a.id");
 		hql.append(" inner join bc_identity_actor_history h on h.actor_id=a.id");
-		hql.append(" where a.code = ? order by h.create_date desc");
+		hql.append(" where a.code = ? and h.current=1 order by h.create_date desc");
 		if (logger.isDebugEnabled()) {
 			logger.debug("actorCode=" + actorCode + ",hql=" + hql);
 		}
@@ -95,6 +97,7 @@ public class LoginServiceImpl implements LoginService {
 							// history
 							ActorHistory history = new ActorHistory();
 							history.setId(new Long(rs[i++].toString()));
+							//history.setId(getActorHistoryId(actor.getId()));
 							history.setActorId(actor.getId());
 							history.setActorType(actor.getType());
 							history.setName(actor.getName());
@@ -130,7 +133,7 @@ public class LoginServiceImpl implements LoginService {
 					hql.toString(), new Object[] { actorId },
 					new Follower2MasterMapper());
 		} else {
-			//使用原始的递归方式获取祖先组织信息
+			// 使用原始的递归方式获取祖先组织信息
 			return this.findActorAncestorsDefault(actorId);
 		}
 	}

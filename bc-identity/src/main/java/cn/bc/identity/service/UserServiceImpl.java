@@ -27,7 +27,7 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 	private static final Log logger = LogFactory.getLog(UserServiceImpl.class);
 	private AuthDataDao authDataDao;
 	private ActorRelationDao actorRelationDao;
-
+	
 	public void setActorRelationDao(ActorRelationDao actorRelationDao) {
 		this.actorRelationDao = actorRelationDao;
 	}
@@ -41,17 +41,18 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 	}
 
 	public Actor save(Actor user, Long belongId, Long[] groupIds) {
-		Long[] belongIds = belongId == null ? null : new Long[]{belongId};
+		Long[] belongIds = belongId == null ? null : new Long[] { belongId };
 		return this.save(user, belongIds, groupIds);
 	}
 
 	public Actor save(Actor user, Long[] belongIds, Long[] groupIds) {
 		boolean isNew = user.isNew();
-		// 先保存获取id值
-		user = super.save4belong(user, belongIds);// 这里已经处理了上级关系的保存
+		// 先保存获取id值,并处理与上级组织的隶属关系和隶属变动历史信息
+		user = super.save4belong(user, belongIds);
 
 		// 如果是新建用户，须新建AuthData和ActorHistory对象
 		if (isNew) {
+			// 新建AuthData
 			AuthData authData = new AuthData();
 			authData.setId(user.getId());
 			try {
@@ -77,22 +78,22 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 			List<ActorRelation> newArs = new ArrayList<ActorRelation>();
 			for (Long gId : groupIds) {
 				ar = gmap.get(gId.toString());
-				if(ar == null){
-					//创建新的关系保存
+				if (ar == null) {
+					// 创建新的关系保存
 					ar = new ActorRelation();
 					ar.setFollower(user);
 					ar.setMaster(this.load(gId));
 					ar.setType(ActorRelation.TYPE_BELONG);
 					newArs.add(ar);
-				}else{
-					//已存在的排除不处理
+				} else {
+					// 已存在的排除不处理
 					curArs.remove(ar);
 				}
 			}
-			//保存新增加的关系
+			// 保存新增加的关系
 			this.actorRelationDao.save(newArs);
-			
-			//删除不再关联的关系
+
+			// 删除不再关联的关系
 			this.actorRelationDao.delete(curArs);
 		} else {
 			// 删除现有的岗位关联
