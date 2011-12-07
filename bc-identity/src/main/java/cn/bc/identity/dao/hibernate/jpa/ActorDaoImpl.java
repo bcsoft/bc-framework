@@ -2,6 +2,7 @@ package cn.bc.identity.dao.hibernate.jpa;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.identity.dao.ActorDao;
+import cn.bc.identity.dao.ActorHistoryDao;
 import cn.bc.identity.dao.ActorRelationDao;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
@@ -39,6 +41,12 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		ActorDao {
 	private static Log logger = LogFactory.getLog(ActorDaoImpl.class);
 	private ActorRelationDao actorRelationDao;
+	private ActorHistoryDao actorHistoryDao;
+
+	@Autowired
+	public void setActorHistoryDao(ActorHistoryDao actorHistoryDao) {
+		this.actorHistoryDao = actorHistoryDao;
+	}
 
 	@Autowired
 	public void setActorRelationDao(ActorRelationDao actorRelationDao) {
@@ -369,10 +377,11 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 	}
 
 	public Actor save4belong(Actor follower, Long[] belongIds) {
+		Calendar now = Calendar.getInstance();
 		// 调用基类的保存，获取id值
 		follower = this.save(follower);
 
-		// 获取原来隶属的上级
+		// 获取原来隶属的上级（单位或部门）
 		List<ActorRelation> oldArs = this.actorRelationDao.findByFollower(
 				ActorRelation.TYPE_BELONG, follower.getId(), new Integer[] {
 						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
@@ -415,8 +424,13 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 						toDeleteArs.add(oldAr);
 					}
 				}
-				if (!toDeleteArs.isEmpty())
+				if (!toDeleteArs.isEmpty()) {
+					// 删除隶属关系
 					this.actorRelationDao.delete(toDeleteArs);
+
+					// 处理隶属关系的历史信息：current设为false，endDate设为当前时间
+					this.updateActorHistory4delete(follower, toDeleteArs, now);
+				}
 			}
 
 			// 创建新的隶属关系
@@ -431,26 +445,30 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 					newArs.add(newAr);
 				}
 				this.actorRelationDao.save(newArs);
+
+				// 创建隶属关系历史信息
+				this.createActorHistory(follower, newBelongs, now);
 			}
 
 			// 根据新的隶属关系重新设置pcode、pname
-			//if (sameBelongs.size() != oldArs.size() || !newBelongs.isEmpty()) {
-				List<String> pcodes = new ArrayList<String>();
-				List<String> pnames = new ArrayList<String>();
-				for (Actor belong : sameBelongs) {
-					pcodes.add(belong.getFullCode());
-					pnames.add(belong.getFullName());
-				}
-				for (Actor belong : newBelongs) {
-					pcodes.add(belong.getFullCode());
-					pnames.add(belong.getFullName());
-				}
-				follower.setPcode(StringUtils
-						.collectionToCommaDelimitedString(pcodes));
-				follower.setPname(StringUtils
-						.collectionToCommaDelimitedString(pnames));
-				follower = this.save(follower);
-			//}
+			// if (sameBelongs.size() != oldArs.size() || !newBelongs.isEmpty())
+			// {
+			List<String> pcodes = new ArrayList<String>();
+			List<String> pnames = new ArrayList<String>();
+			for (Actor belong : sameBelongs) {
+				pcodes.add(belong.getFullCode());
+				pnames.add(belong.getFullName());
+			}
+			for (Actor belong : newBelongs) {
+				pcodes.add(belong.getFullCode());
+				pnames.add(belong.getFullName());
+			}
+			follower.setPcode(StringUtils
+					.collectionToCommaDelimitedString(pcodes));
+			follower.setPname(StringUtils
+					.collectionToCommaDelimitedString(pnames));
+			follower = this.save(follower);
+			// }
 		} else {// 删除所有现存的隶属关系
 			if (!oldArs.isEmpty())
 				this.actorRelationDao.delete(oldArs);
@@ -462,6 +480,87 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 
 		return follower;
+	}
+
+	// 创建隶属关系历史信息
+	private void createActorHistory(Actor follower, List<Actor> newBelongs,
+			Calendar now) {
+		ActorHistory history;
+		List<ActorHistory> histories = new ArrayList<ActorHistory>();
+		Long oldId;
+		for (Actor belong : newBelongs) {
+			history = new ActorHistory();
+
+			// TODO 多个隶属关系的处理
+			oldId = this.updateActorHistory4new(follower, now);
+			if (oldId != null) {
+				history.setStartDate(now);
+				history.setPid(oldId);
+			} else {
+				history.setStartDate(null);
+				history.setPid(null);
+			}
+
+			histories.add(history);
+			history.setActorId(follower.getId());
+			history.setActorType(follower.getType());
+			history.setName(follower.getName());
+			history.setCreateDate(now);
+			history.setCurrent(true);
+			history.setRank(0);
+
+			// 设置直属上级信息
+			history.setUpperId(belong.getId());
+			history.setUpperName(belong.getName());
+			history.setPcode(belong.getFullCode());
+			history.setPname(belong.getFullName());
+
+			// TODO 设置所属单位信息
+			if (belong.getType() != Actor.TYPE_UNIT) {
+				Actor unit = this.loadBelong(belong.getId(), new Integer[] {
+						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
+				if (unit != null) {
+					history.setUnitId(unit.getId());
+					history.setUnitName(unit.getName());
+				} else {
+					throw new CoreException("没有找到隶属的组织信息：follower="
+							+ belong.getId() + "|" + follower.getName());
+				}
+			} else {
+				history.setUnitId(belong.getId());
+				history.setUnitName(belong.getName());
+			}
+		}
+
+		if (!histories.isEmpty()) {
+			this.actorHistoryDao.save(histories);
+		}
+	}
+
+	// 处理隶属关系的历史信息：current设为false，endDate设为当前时间，返回旧记录的id
+	private Long updateActorHistory4new(Actor follower, Calendar endDate) {
+		// TODO 多个隶属关系的处理
+		ActorHistory actorHistory = this.actorHistoryDao.loadCurrent(follower
+				.getId());
+		if (actorHistory != null) {
+			actorHistory.setCurrent(false);
+			actorHistory.setEndDate(endDate);
+			this.actorHistoryDao.save(actorHistory);
+			return actorHistory.getId();
+		} else {
+			return null;
+		}
+	}
+
+	// 处理隶属关系的历史信息：current设为false，endDate设为当前时间
+	private void updateActorHistory4delete(Actor follower,
+			List<ActorRelation> toDeleteArs, Calendar endDate) {
+		// TODO 多个隶属关系的处理
+		ActorHistory actorHistory = this.actorHistoryDao.loadCurrent(follower
+				.getId());
+		actorHistory.setCurrent(false);
+		actorHistory.setEndDate(endDate);
+		this.actorHistoryDao.save(actorHistory);
 	}
 
 	@SuppressWarnings("unchecked")

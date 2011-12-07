@@ -168,12 +168,16 @@ public interface ActorDao extends CrudDao<Actor> {
 	List<Actor> findAllUnit(Integer... statues);
 
 	/**
+	 * 处理组织间的隶属关系，这里只处理隶属的组织是部门或单位的情况
+	 * 
 	 * @param follower
 	 * @param belongId
 	 */
 	Actor save4belong(Actor follower, Long belongId);
 
 	/**
+	 * 处理组织间的隶属关系，这里只处理隶属的组织是部门或单位的情况
+	 * 
 	 * @param follower
 	 * @param belongIds
 	 */

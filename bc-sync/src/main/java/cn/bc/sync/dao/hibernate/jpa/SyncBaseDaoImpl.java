@@ -62,14 +62,14 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 
 		// 构建sql
 		final StringBuffer hql = new StringBuffer(
-				"update BC_SYNC_BASE s set s.status_ = ? where");
+				"update BC_SYNC_BASE set status_ = ? where");
 		final List<Object> args = new ArrayList<Object>();
 		args.add(new Integer(toStatus));
 		if (ids.length == 1) {
-			hql.append(" s.id = ?");
+			hql.append(" id = ?");
 			args.add(ids[0]);
 		} else {
-			hql.append(" s.id in (?");
+			hql.append(" id in (?");
 			args.add(ids[0]);
 			for (int i = 1; i < ids.length; i++) {
 				hql.append(",?");
@@ -77,7 +77,7 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 			}
 			hql.append(")");
 		}
-		hql.append(" and s.status_ != ?");
+		hql.append(" and status_ != ?");
 		args.add(new Integer(toStatus));
 
 		if (logger.isDebugEnabled()) {
@@ -105,12 +105,38 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 	}
 
 	public int updateStatus2New(String syncType, List<String> syncCodes) {
-		final String sql = "";
+		if (syncType == null || syncType.length() == 0)
+			return 0;
+
+		final StringBuffer sql = new StringBuffer(
+				"update bc_sync_base set STATUS_ = ? where SYNC_TYPE = ? and STATUS_ != ?");
 		final List<Object> args = new ArrayList<Object>();
+		args.add(SyncBase.STATUS_NEW);
+		args.add(syncType);
+		args.add(SyncBase.STATUS_NEW);
+		if (syncCodes != null && !syncCodes.isEmpty()) {
+			if (syncCodes.size() == 1) {
+				sql.append(" and SYNC_CODE = ?");
+				args.add(syncCodes.get(0));
+			} else {
+				sql.append(" and SYNC_CODE in (?");
+				args.add(syncCodes.get(0));
+				for (int i = 1; i < syncCodes.size(); i++) {
+					sql.append(",?");
+					args.add(syncCodes.get(i));
+				}
+				sql.append(")");
+			}
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("sql=" + sql.toString());
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
 		return this.getJpaTemplate().execute(new JpaCallback<Integer>() {
 			public Integer doInJpa(EntityManager em)
 					throws PersistenceException {
-				Query queryObject = em.createNativeQuery(sql);
+				Query queryObject = em.createNativeQuery(sql.toString());
 
 				// 注入参数
 				int i = 0;
@@ -126,12 +152,38 @@ public class SyncBaseDaoImpl extends HibernateCrudJpaDao<SyncBase> implements
 
 	public int updateNewStatus2Done4ExcludeCode(String syncType,
 			List<String> excludeSyncCodes) {
-		final String sql = "";
+		if (syncType == null || syncType.length() == 0)
+			return 0;
+
+		final StringBuffer sql = new StringBuffer(
+				"update bc_sync_base set STATUS_ = ? where SYNC_TYPE = ? and STATUS_ != ?");
 		final List<Object> args = new ArrayList<Object>();
+		args.add(SyncBase.STATUS_DONE);
+		args.add(syncType);
+		args.add(SyncBase.STATUS_DONE);
+		if (excludeSyncCodes != null && !excludeSyncCodes.isEmpty()) {
+			if (excludeSyncCodes.size() == 1) {
+				sql.append(" and SYNC_CODE != ?");
+				args.add(excludeSyncCodes.get(0));
+			} else {
+				sql.append(" and SYNC_CODE not in (?");
+				args.add(excludeSyncCodes.get(0));
+				for (int i = 1; i < excludeSyncCodes.size(); i++) {
+					sql.append(",?");
+					args.add(excludeSyncCodes.get(i));
+				}
+				sql.append(")");
+			}
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("sql=" + sql.toString());
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
 		return this.getJpaTemplate().execute(new JpaCallback<Integer>() {
 			public Integer doInJpa(EntityManager em)
 					throws PersistenceException {
-				Query queryObject = em.createNativeQuery(sql);
+				Query queryObject = em.createNativeQuery(sql.toString());
 
 				// 注入参数
 				int i = 0;
