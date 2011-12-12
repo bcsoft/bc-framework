@@ -1,4 +1,4 @@
--- ##BC平台的MYSQL删表脚本##
+-- ##BC平台的 postgresql 删表脚本##
 
 -- 用于生成hibernate id的序列
 DROP SEQUENCE IF EXISTS CORE_SEQUENCE;
