@@ -547,7 +547,12 @@
 				<version>2.0.1</version>
 			</dependency>
 
-			<!-- database -->
+			<!-- 数据库jdbc驱动 -->
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.1-901.jdbc4</version>
+			</dependency>
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
@@ -564,6 +569,7 @@
 				<artifactId>jtds</artifactId>
 				<version>1.2.2</version>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
@@ -713,6 +719,22 @@
 	</properties>
 
 	<profiles>
+		<profile>
+			<id>postgresql</id>
+			<properties>
+				<db.type>postgresql</db.type>
+				<db.port>5432</db.port>
+				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
+				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
+				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
 		<profile>
 			<id>mysql</id>
 			<properties>
