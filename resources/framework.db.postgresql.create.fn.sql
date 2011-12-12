@@ -17,7 +17,7 @@ BEGIN
 
 		FOR child IN select a.id id,a.type_ type_ from bc_identity_actor a inner join bc_identity_actor_relation r on r.follower_id = a.id 
 		where r.type_=0 and r.master_id=pid order by a.order_ LOOP
-			update bc_identity_actor a set a.pcode=pfcode,a.pname=pfname where a.id=child.id;
+			update bc_identity_actor a set pcode=pfcode,pname=pfname where a.id=child.id;
 			if child.type_ < 3 then 
 				-- 单位或部门执行递归处理
 				t := t + update_actor_pcodepname(child.id);
