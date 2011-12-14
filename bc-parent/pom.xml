@@ -727,6 +727,7 @@
 				<db.port>5432</db.port>
 				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
 				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
+				<db.sequence>hibernate_sequence</db.sequence>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
 			</properties>
 			<dependencies>
