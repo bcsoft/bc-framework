@@ -34,6 +34,8 @@ public class JdbcUtils {
 
 	/** 数据库类型：mysql */
 	public static final String DB_MYSQL = "mysql";
+	/** 数据库类型：postgresql */
+	public static final String DB_POSTGRESSQL = "postgresql";
 	/** 数据库类型：oracle */
 	public static final String DB_ORACLE = "oracle";
 	/** 数据库类型：mssql */
@@ -43,6 +45,36 @@ public class JdbcUtils {
 	public static String dbtype;
 
 	private JdbcUtils() {
+	}
+
+	/**
+	 * 获取生成序列值的方法字符串
+	 * 
+	 * @param sequenceName
+	 * @return
+	 */
+	public static String getSequenceValue(String sequenceName) {
+		if (JdbcUtils.dbtype.equalsIgnoreCase(DB_POSTGRESSQL)) {
+			return "nextval('" + sequenceName + "')";
+		} else if (JdbcUtils.dbtype.equalsIgnoreCase(DB_ORACLE)) {
+			return sequenceName + ".nextval";
+		} else {
+			throw new RuntimeException("this database unsupport sequence.");
+		}
+	}
+
+	/**
+	 * 获取数据库生成当前时间的函数字符串
+	 * 
+	 * @param sequenceName
+	 * @return
+	 */
+	public static String getNowValue() {
+		if (JdbcUtils.dbtype.equalsIgnoreCase(DB_ORACLE)) {
+			return "sysdate";
+		} else {
+			return "now()";
+		}
 	}
 
 	public void setDbtype(String dbtype) {
