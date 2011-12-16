@@ -52,11 +52,11 @@ public class LoginServiceImpl implements LoginService {
 
 	public Map<String, Object> loadActorByCode(final String actorCode) {
 		final StringBuffer hql = new StringBuffer(
-				"select a.id id,a.uid_ uid_,a.type_ type_,a.code code,a.name name,a.pcode pcode,a.pname pname,t.password password");
-		hql.append(",h.id hid");
-		hql.append(" from bc_identity_actor a");
-		hql.append(" inner join bc_identity_auth t on t.id=a.id");
-		hql.append(" inner join bc_identity_actor_history h on h.actor_id=a.id");
+				"select a.id as id,a.uid_ as uid_,a.type_ as type_,a.code as code,a.name as name");
+		hql.append(",a.pcode as pcode,a.pname as pname,t.password as password,h.id as hid");
+		hql.append(" from bc_identity_actor as a");
+		hql.append(" inner join bc_identity_auth as t on t.id=a.id");
+		hql.append(" inner join bc_identity_actor_history as h on h.actor_id=a.id");
 		hql.append(" where a.code = ? and h.current=1 order by h.create_date desc");
 		if (logger.isDebugEnabled()) {
 			logger.debug("actorCode=" + actorCode + ",hql=" + hql);
@@ -120,9 +120,10 @@ public class LoginServiceImpl implements LoginService {
 	public List<Map<String, String>> findActorAncestors(Long actorId) {
 		if ("oracle".equals(JdbcUtils.dbtype)) {
 			StringBuffer hql = new StringBuffer();
-			hql.append("select distinct ar.follower_id fid,ar.master_id id,m.type_ type,m.code code,m.name name,m.pcode pcode,m.pname pname");
-			hql.append(" from BC_IDENTITY_ACTOR_RELATION ar");
-			hql.append(" inner join BC_IDENTITY_ACTOR m on m.id = ar.master_id");
+			hql.append("select distinct ar.follower_id as fid,ar.master_id as id,m.type_ as type");
+			hql.append(",m.code as code,m.name as name,m.pcode as pcode,m.pname as pname");
+			hql.append(" from BC_IDENTITY_ACTOR_RELATION as ar");
+			hql.append(" inner join BC_IDENTITY_ACTOR as m on m.id = ar.master_id");
 			hql.append(" where ar.type_=0");
 			hql.append(" start with ar.follower_id = ?");
 			hql.append(" connect by prior ar.master_id = ar.follower_id");
@@ -177,9 +178,10 @@ public class LoginServiceImpl implements LoginService {
 			return null;
 
 		StringBuffer hql = new StringBuffer();
-		hql.append("select distinct ar.follower_id fid,ar.master_id id,m.type_ type,m.code code,m.name name,m.pcode pcode,m.pname pname");
-		hql.append(" from BC_IDENTITY_ACTOR_RELATION ar");
-		hql.append(" inner join BC_IDENTITY_ACTOR m on m.id = ar.master_id");
+		hql.append("select distinct ar.follower_id as fid,ar.master_id as id,m.type_ as type");
+		hql.append(",m.code as code,m.name as name,m.pcode as pcode,m.pname as pname,m.order_ as orderNo");
+		hql.append(" from BC_IDENTITY_ACTOR_RELATION as ar");
+		hql.append(" inner join BC_IDENTITY_ACTOR as m on m.id = ar.master_id");
 		hql.append(" where ar.type_=0");
 		hql.append(" and ar.follower_id");
 		if (logger.isDebugEnabled()) {
@@ -222,8 +224,8 @@ public class LoginServiceImpl implements LoginService {
 			return new ArrayList<Map<String, String>>();
 
 		StringBuffer hql = new StringBuffer();
-		hql.append("select distinct r.id id,r.code code,r.name name,r.order_ orderNo from BC_IDENTITY_ROLE r");
-		hql.append(" inner join BC_IDENTITY_ROLE_ACTOR ra on ra.rid=r.id");
+		hql.append("select distinct r.id as id,r.code as code,r.name as name,r.order_ as orderNo from BC_IDENTITY_ROLE as r");
+		hql.append(" inner join BC_IDENTITY_ROLE_ACTOR as ra on ra.rid=r.id");
 		hql.append(" where r.status_ = 0 and ra.aid");
 		if (actorIds.length == 1) {
 			hql.append(" = ?");

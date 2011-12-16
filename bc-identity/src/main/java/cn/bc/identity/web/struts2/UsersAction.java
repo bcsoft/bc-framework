@@ -66,11 +66,11 @@ public class UsersAction extends AbstractActorsAction {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.type_,a.status_,a.name name,a.code,a.order_,a.phone,a.email,a.pname");
-		sql.append(",ad.card,ad.sex,ad.create_date,ad.work_date,d.name duty");
-		sql.append(" from bc_identity_actor a");
-		sql.append(" left join bc_identity_actor_detail ad on ad.id = a.detail_id");
-		sql.append(" left join bc_identity_duty d on d.id = ad.duty_id");
+		sql.append("select a.id,a.type_,a.status_,a.name as name,a.code,a.order_,a.phone,a.email,a.pname");
+		sql.append(",ad.card,ad.sex,ad.create_date,ad.work_date,d.name as duty");
+		sql.append(" from bc_identity_actor as a");
+		sql.append(" left join bc_identity_actor_detail as ad on ad.id = a.detail_id");
+		sql.append(" left join bc_identity_duty as d on d.id = ad.duty_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数

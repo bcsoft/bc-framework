@@ -10,19 +10,22 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import cn.bc.db.JdbcUtils;
+
 /**
- * 扩展spring的jdbc插入器，使其支持基于通过sequence生成主键的数据库，如oracle。 
- * 需要额外设置属性sequence为对应的序列名
+ * 扩展spring的jdbc插入器，使其支持基于通过sequence生成主键的数据库，如oracle。 需要额外设置属性sequence为对应的序列名
  * 
  * @author dragon
  * 
  */
 public class SimpleJdbcInsertEx extends SimpleJdbcInsert {
-	private static final Log logger = LogFactory.getLog(SimpleJdbcInsertEx.class);
+	private static final Log logger = LogFactory
+			.getLog(SimpleJdbcInsertEx.class);
 
 	public SimpleJdbcInsertEx(DataSource dataSource) {
 		super(dataSource);
 	}
+
 	public SimpleJdbcInsertEx(DataSource dataSource, String sequence) {
 		super(dataSource);
 		this.setSequence(sequence);
@@ -31,17 +34,18 @@ public class SimpleJdbcInsertEx extends SimpleJdbcInsert {
 	public SimpleJdbcInsertEx(JdbcTemplate jdbcTemplate) {
 		super(jdbcTemplate);
 	}
+
 	public SimpleJdbcInsertEx(JdbcTemplate jdbcTemplate, String sequence) {
 		super(jdbcTemplate);
 		this.setSequence(sequence);
 	}
 
-	//private String insertString;
+	// private String insertString;
 
 	@Override
 	public String getInsertString() {
-		//if (insertString != null)
-		//	return insertString;// 缓存
+		// if (insertString != null)
+		// return insertString;// 缓存
 
 		// 父类默认生成的语句格式为：
 		// "INSERT INTO [SchemaName].[TableName] ([columnName1], [columnName2], ...) VALUES(?, ?, ...)"
@@ -54,7 +58,7 @@ public class SimpleJdbcInsertEx extends SimpleJdbcInsert {
 			insertString = insertString.replaceFirst(" \\(", " (" + pkKey
 					+ ", ");
 			insertString = insertString.replaceFirst(" VALUES\\(", " VALUES("
-					+ getSequence() + ".nextval, ");
+					+ JdbcUtils.getSequenceValue(this.getSequence()) + ", ");
 			if (logger.isDebugEnabled()) {
 				logger.debug("rebuild Insert string is [" + insertString + "]");
 			}
