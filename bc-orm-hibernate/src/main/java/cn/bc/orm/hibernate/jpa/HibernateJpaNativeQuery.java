@@ -150,6 +150,11 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 	public static <T> List<T> executeNativeSql(JpaTemplate jpaTemplate,
 			final String hql, final Object[] args, final RowMapper<T> rowMapper) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql);
+			logger.debug("args="
+					+ StringUtils.arrayToCommaDelimitedString(args));
+		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			@SuppressWarnings("unchecked")
 			public List<T> doInJpa(EntityManager em)
