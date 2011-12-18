@@ -1,4 +1,4 @@
-﻿-- ##bc平台的 postgresql 建表脚本##
+-- ##bc平台的 postgresql 建表脚本##
 
 -- 创建Identity用的序列，开始于1000
 CREATE sequence CORE_SEQUENCE
