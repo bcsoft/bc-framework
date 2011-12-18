@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>0.7-SNAPSHOT</version>
+		<version>0.7b1</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-web-struts2</artifactId>
