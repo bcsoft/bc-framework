@@ -35,7 +35,7 @@ public class JdbcUtils {
 	/** 数据库类型：mysql */
 	public static final String DB_MYSQL = "mysql";
 	/** 数据库类型：postgresql */
-	public static final String DB_POSTGRESSQL = "postgresql";
+	public static final String DB_POSTGRESQL = "postgresql";
 	/** 数据库类型：oracle */
 	public static final String DB_ORACLE = "oracle";
 	/** 数据库类型：mssql */
@@ -54,7 +54,7 @@ public class JdbcUtils {
 	 * @return
 	 */
 	public static String getSequenceValue(String sequenceName) {
-		if (JdbcUtils.dbtype.equalsIgnoreCase(DB_POSTGRESSQL)) {
+		if (JdbcUtils.dbtype.equalsIgnoreCase(DB_POSTGRESQL)) {
 			return "nextval('" + sequenceName + "')";
 		} else if (JdbcUtils.dbtype.equalsIgnoreCase(DB_ORACLE)) {
 			return sequenceName + ".nextval";
