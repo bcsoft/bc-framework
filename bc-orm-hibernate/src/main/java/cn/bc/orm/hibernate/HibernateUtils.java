@@ -32,7 +32,13 @@ public class HibernateUtils {
 	 * @return 如果存在选择语句，则将选择语句剔除，否则返回原查询语句
 	 */
 	public static String removeSelect(String queryString) {
-		int beginPos = queryString.toLowerCase().indexOf("from ");
-		return beginPos != -1 ? queryString.substring(beginPos) : queryString;
+		String[] ss = queryString.split("^select .* from ");
+		if (ss.length > 0) {
+			return "from " + ss[1];
+		} else {
+			return queryString;
+		}
+//		int beginPos = queryString.toLowerCase().indexOf("from ");
+//		return beginPos != -1 ? queryString.substring(beginPos) : queryString;
 	}
 }
