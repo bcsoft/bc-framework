@@ -1,5 +1,9 @@
 -- ##bc平台的 mysql 自定义函数和存储过程##
 
+-- 模拟oracle dual功能的在hibernate hql中使用的视图
+DROP VIEW IF EXISTS bc_dual; 
+CREATE VIEW bc_dual AS select null;
+
 DELIMITER $$ 
 DROP PROCEDURE IF EXISTS update_actor_pcodepname $$ 
 -- 创建更新actor的pcode和pname的存储过程：会递归处理下级单位和部门
