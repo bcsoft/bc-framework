@@ -234,7 +234,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 		Object o = this.jpaTemplate.execute(new JpaCallback<Object>() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {
 				javax.persistence.Query query = createQuery(em, hql,
-						args.toArray());
+						args != null ? args.toArray() : null);
 				jpaTemplate.prepareQuery(query);
 				return query.executeUpdate();
 			}
@@ -252,7 +252,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 		Object o = this.jpaTemplate.execute(new JpaCallback<Object>() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {
 				javax.persistence.Query query = createSqlQuery(em, sql,
-						args.toArray());
+						args != null ? args.toArray() : null);
 				jpaTemplate.prepareQuery(query);
 				return query.executeUpdate();
 			}

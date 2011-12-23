@@ -1,5 +1,8 @@
 -- ##bc平台的 postgresql 自定义函数和存储过程##
 
+-- 模拟oracle dual功能的在hibernate hql中使用的视图
+CREATE OR REPLACE VIEW bc_dual AS SELECT NULL;
+
 -- 创建更新actor的pcode和pname的存储过程：会递归处理下级单位和部门
 --	pid: actor所隶属上级的id，为0代表顶层单位
 CREATE OR REPLACE FUNCTION update_actor_pcodepname(pid IN integer) RETURNS integer AS $$

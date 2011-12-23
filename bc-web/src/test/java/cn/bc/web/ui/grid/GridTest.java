@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import cn.bc.core.RichEntity;
+import cn.bc.core.Entity;
 import cn.bc.test.Example;
 import cn.bc.web.ui.html.grid.Grid;
 
@@ -21,7 +21,7 @@ public class GridTest {
 	}
 
 	public static Grid buildTestGrid() {
-		List<RichEntity<Long>> data = new ArrayList<RichEntity<Long>>();
+		List<Entity<Long>> data = new ArrayList<Entity<Long>>();
 		Example e;
 		for (int i = 0; i < 3; i++) {
 			e = new Example();
