@@ -2,6 +2,9 @@ package cn.bc.docs.service;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import cn.bc.core.RichEntity;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -18,6 +21,7 @@ import cn.bc.docs.domain.Attach;
  */
 public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		AttachService {
+	private static Log logger = LogFactory.getLog(AttachServiceImpl.class);
 
 	public List<Attach> findByPtype(String ptype, String puid) {
 		return this
@@ -43,10 +47,17 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 										RichEntity.STATUS_ENABLED))
 								.add(new OrderCondition("fileDate",
 										Direction.Desc))).list(1, 1);
-		if(list != null && !list.isEmpty()){
+		if (list != null && !list.isEmpty()) {
 			return list.get(0);
-		}else{
+		} else {
 			return null;
 		}
+	}
+
+	public List<Attach> doCopy(String fromPtype, String fromPuid,
+			String toPtype, String toPuid) {
+		// TODO
+		logger.fatal("复制附件的方法还没实现！");
+		return null;
 	}
 }

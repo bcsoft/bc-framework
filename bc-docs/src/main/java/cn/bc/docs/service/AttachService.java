@@ -34,4 +34,20 @@ public interface AttachService extends CrudService<Attach> {
 	 * @return
 	 */
 	Attach loadByPtype(String ptype, String puid);
+
+	/**
+	 * 复制附件的处理
+	 * 
+	 * @param fromPtype
+	 *            原附件的ptype
+	 * @param fromPuid
+	 *            原附件的puid
+	 * @param toPtype
+	 *            新附件的ptype
+	 * @param toPuid
+	 *            新附件的puid
+	 * @return 复制出来的附件列表
+	 */
+	List<Attach> doCopy(String fromPtype, String fromPuid, String toPtype,
+			String toPuid);
 }
