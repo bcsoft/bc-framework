@@ -32,12 +32,14 @@ import cn.bc.core.exception.CoreException;
  */
 public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 		SetEntityClass<T> {
-	private static Log logger = LogFactory.getLog("cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao");
+	private static Log logger = LogFactory
+			.getLog("cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao");
 	protected Class<T> entityClass;
 
 	protected String pkName = "id";// 主键名称
 	private JpaTemplate jpaTemplate;
-	//private EntityManagerFactory entityManagerFactory;
+
+	// private EntityManagerFactory entityManagerFactory;
 
 	protected JpaTemplate getJpaTemplate() {
 		return jpaTemplate;
@@ -68,7 +70,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 	public void setEntityManagerFactory(
 			EntityManagerFactory entityManagerFactory) {
-		//this.entityManagerFactory = entityManagerFactory;
+		// this.entityManagerFactory = entityManagerFactory;
 		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
 	}
 
@@ -163,7 +165,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 				if (((cn.bc.core.Entity) entity).isNew()) {
 					this.jpaTemplate.persist(entity);
 				} else {
-					//执行完merge后entity还是detached, merge后返回的新对象才是Persistent
+					// 执行完merge后entity还是detached, merge后返回的新对象才是Persistent
 					entity = this.jpaTemplate.merge(entity);
 				}
 			} else {
@@ -226,15 +228,20 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 	}
 
 	protected void executeUpdate(final String hql, final List<Object> args) {
+		this.executeUpdate(hql,
+				args != null && !args.isEmpty() ? args.toArray()
+						: (Object[]) null);
+	}
+
+	protected void executeUpdate(final String hql, final Object[] args) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+					+ StringUtils.arrayToCommaDelimitedString(args));
 		}
 		Object o = this.jpaTemplate.execute(new JpaCallback<Object>() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {
-				javax.persistence.Query query = createQuery(em, hql,
-						args != null ? args.toArray() : null);
+				javax.persistence.Query query = createQuery(em, hql, args);
 				jpaTemplate.prepareQuery(query);
 				return query.executeUpdate();
 			}
@@ -270,8 +277,8 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 	 *            查询语句中的参数
 	 * @return 构建好的查询对象
 	 */
-	public static javax.persistence.Query createSqlQuery(EntityManager em, String sql,
-			Object[] args) {
+	public static javax.persistence.Query createSqlQuery(EntityManager em,
+			String sql, Object[] args) {
 		javax.persistence.Query queryObj = em.createNativeQuery(sql);
 		if (null != args && args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
@@ -290,8 +297,8 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 	 *            查询语句中的参数
 	 * @return 构建好的查询对象
 	 */
-	public static javax.persistence.Query createQuery(EntityManager em, String hql,
-			Object[] args) {
+	public static javax.persistence.Query createQuery(EntityManager em,
+			String hql, Object[] args) {
 		javax.persistence.Query queryObj = em.createQuery(hql);
 		if (null != args && args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
