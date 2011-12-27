@@ -211,7 +211,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String create() throws Exception {
 		// 初始化E
 		this.setE(this.getCrudService().create());
-		
+
 		this.afterCreate(this.getE());
 
 		// 初始化表单的配置信息
@@ -224,33 +224,44 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用create初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterCreate(E entity) {
-		
+
 	}
 
 	// 编辑表单
 	public String edit() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+
 		this.afterEdit(e);
-		
+
 		this.formPageOption = buildFormPageOption();
+
+		this.initFormComponent(true);
 		return "form";
+	}
+
+	/**
+	 * @param editable
+	 */
+	protected void initFormComponent(boolean editable) {
+		
 	}
 
 	/**
 	 * 在调用edit初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterEdit(E entity) {
-		
+
 	}
 
 	// 只读表单
 	public String open() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+
 		this.afterOpen(e);
-		
-		this.formPageOption = buildFormPageOption();
+
+		this.formPageOption = buildFormPageOption(true);
+
+		this.initFormComponent(false);
 		return "formr";
 	}
 
@@ -258,14 +269,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用open初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterOpen(E entity) {
-		
-	}
 
-	// 表单：自动判断权限
-	public String read() throws Exception {
-		e = this.getCrudService().load(this.getId());
-		this.formPageOption = buildFormPageOption();
-		return "form";
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
@@ -304,7 +308,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.afterSave(e);
 		return "saveSuccess";
 	}
-	
+
 	/**
 	 * 在调用save之前调用的方法，给基类一个扩展的处理
 	 */
@@ -317,8 +321,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected void afterSave(E entity) {
 	}
 
-
 	public String json;
+
 	// 删除
 	public String delete() throws Exception {
 		try {
@@ -334,7 +338,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 				}
 			}
 		} catch (JpaSystemException e) {
-			//处理违反外键约束导致的删除异常，提示用户因关联而无法删除
+			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
 			throw new CoreException("JpaSystemException");
 		}
 		return "deleteSuccess";
@@ -640,9 +644,17 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/** 构建表单页面的对话框初始化配置 */
 	protected PageOption buildFormPageOption() {
+		return buildFormPageOption(false);
+	}
+
+	/**
+	 * @param forceReadOnly
+	 * @return
+	 */
+	protected PageOption buildFormPageOption(boolean forceReadOnly) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		pageOption.put("readonly",this.isReadonly());
+		pageOption.put("readonly", forceReadOnly ? true : this.isReadonly());
 		return pageOption;
 	}
 

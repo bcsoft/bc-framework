@@ -38,8 +38,6 @@ public interface AttachService extends CrudService<Attach> {
 	/**
 	 * 复制附件的处理:仅支持复制app.data.realPath目录下的附件
 	 * 
-	 * @param dataPath
-	 *            全局配置的app.data.realPath目录
 	 * @param fromPtype
 	 *            原附件的ptype
 	 * @param fromPuid
@@ -52,6 +50,6 @@ public interface AttachService extends CrudService<Attach> {
 	 *            是否保留源附件的创建信息不变，设为false将创建时间和创建人设为当前用户的信息
 	 * @return 复制出来的附件列表
 	 */
-	List<Attach> doCopy(String dataPath, String fromPtype, String fromPuid,
-			String toPtype, String toPuid, boolean keepAuthorInfo);
+	List<Attach> doCopy(String fromPtype, String fromPuid, String toPtype,
+			String toPuid, boolean keepAuthorInfo);
 }

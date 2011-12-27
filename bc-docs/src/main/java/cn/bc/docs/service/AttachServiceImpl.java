@@ -61,9 +61,11 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		}
 	}
 
-	public List<Attach> doCopy(String dataPath, String fromPtype,
-			String fromPuid, String toPtype, String toPuid,
-			boolean keepAuthorInfo) {
+	public List<Attach> doCopy(String fromPtype, String fromPuid,
+			String toPtype, String toPuid, boolean keepAuthorInfo) {
+		// TODO 设置附件的真正路径
+		String dataPath = "/bcdata";
+
 		Calendar now = Calendar.getInstance();
 		if (logger.isDebugEnabled()) {
 			logger.debug("复制附件:");

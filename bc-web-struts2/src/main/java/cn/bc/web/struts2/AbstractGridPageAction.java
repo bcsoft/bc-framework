@@ -277,7 +277,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	/** 获取表格双击行的js处理函数名 */
 	protected String getGridDblRowMethod() {
-		return "bc.page.edit";
+		return this.isReadonly() ? "bc.page.open" : "bc.page.edit";
 	}
 
 	/**
