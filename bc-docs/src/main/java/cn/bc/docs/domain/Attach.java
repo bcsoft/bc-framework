@@ -28,7 +28,7 @@ public class Attach extends FileEntityImpl {
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private long size;// 文件的大小(单位为byte)
 	private long count;// 文件的下载次数
-	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;//详见RichEntity中的STATUS_常数
+	private int status = cn.bc.core.Entity.STATUS_ENABLED;//详见Entity中的STATUS_常数
 	private String subject;// 标题
 	
 	/**
