@@ -47,6 +47,7 @@ import cn.bc.web.ui.html.grid.GridHeader;
 import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.html.page.PageOption;
@@ -215,7 +216,10 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.afterCreate(this.getE());
 
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption();
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
 
 		return "form";
 	}
@@ -230,20 +234,23 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 编辑表单
 	public String edit() throws Exception {
 		e = this.getCrudService().load(this.getId());
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
 
 		this.afterEdit(e);
-
-		this.formPageOption = buildFormPageOption();
-
-		this.initFormComponent(true);
 		return "form";
 	}
 
 	/**
+	 * 初始化表单的其他配置，如下拉框列表等
+	 * 
 	 * @param editable
+	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
 	 */
-	protected void initFormComponent(boolean editable) {
-		
+	protected void initForm(boolean editable) {
+
 	}
 
 	/**
@@ -257,11 +264,13 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String open() throws Exception {
 		e = this.getCrudService().load(this.getId());
 
+		// 强制表单只读
+		this.formPageOption = buildFormPageOption(false);
+
+		// 初始化表单的其他配置
+		this.initForm(false);
+
 		this.afterOpen(e);
-
-		this.formPageOption = buildFormPageOption(true);
-
-		this.initFormComponent(false);
 		return "formr";
 	}
 
@@ -648,14 +657,35 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/**
-	 * @param forceReadOnly
+	 * @param editable
+	 *            是否为可编辑表单的配置
 	 * @return
 	 */
-	protected PageOption buildFormPageOption(boolean forceReadOnly) {
+	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		pageOption.put("readonly", forceReadOnly ? true : this.isReadonly());
+
+		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
+		boolean readonly = this.isReadonly();
+		if (editable && !readonly) {
+			pageOption.put("readonly", readonly);
+
+			// 添加默认的保存按钮
+			addDefaultEditableFormButton(pageOption);
+		} else {
+			pageOption.put("readonly", true);
+		}
+
 		return pageOption;
+	}
+
+	/**
+	 * 添加默认的可编辑表单操作按钮，默认为保存按钮
+	 * 
+	 * @param pageOption
+	 */
+	protected void addDefaultEditableFormButton(PageOption pageOption) {
+		pageOption.addButton(this.getDefaultSaveButtonOption());
 	}
 
 	/** 构建视图页面的工具条 */
@@ -706,6 +736,12 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected Button getDefaultSearchToolbarButton() {
 		return Toolbar
 				.getDefaultSearchToolbarButton(getText("title.click2search"));
+	}
+
+	// 创建默认的表单保存按钮
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return new ButtonOption(getText("label.save"), "save")
+				.setId("bcSaveBtn");
 	}
 
 	/** 构建视图页面的表格 */

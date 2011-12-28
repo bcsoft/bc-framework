@@ -25,7 +25,6 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.TextColumn;
-import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
@@ -51,7 +50,8 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.actor"), getText("key.role.bc.admin"));// 超级管理员
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 超级管理员
 	}
 
 	@Autowired
@@ -73,14 +73,8 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 
 	// 设置表单页面的尺寸
 	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption pageOption = super.buildFormPageOption().setWidth(618);
-
-		if (!this.isReadonly())
-			pageOption
-					.addButton(new ButtonOption(getText("label.save"), "save"));
-
-		return pageOption;
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(618);
 	}
 
 	@Override
