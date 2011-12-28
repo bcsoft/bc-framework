@@ -30,13 +30,12 @@ public class Attach extends FileEntityImpl {
 	private long count;// 文件的下载次数
 	private int status = cn.bc.core.Entity.STATUS_ENABLED;//详见Entity中的STATUS_常数
 	private String subject;// 标题
-	
+
 	/**
 	 * path的值是相对于app.data.realPath目录下的路径还是相对于app.data.subPath目录下的路径：
-	 * false：相对于app.data.realPath目录下的路径，
-	 * true：相对于app.data.subPath目录下的路径
+	 * false：相对于app.data.realPath目录下的路径， true：相对于app.data.subPath目录下的路径
 	 */
-	private boolean appPath = false;// 
+	private boolean appPath = false;//
 
 	public String getSubject() {
 		return subject;

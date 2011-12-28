@@ -1,5 +1,6 @@
 package cn.bc.core.util;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +34,7 @@ public class DateUtilsTest {
 		Assert.assertEquals("2011-11-01 00:00:00",
 				formater.format(date.getTime()));
 	}
-	
+
 	@Test
 	public void testGetLastDayOfMonth() throws ParseException {
 		Calendar date = DateUtils.getCalendar("2011-11-01 10:20:30");
@@ -56,5 +57,46 @@ public class DateUtilsTest {
 		DateUtils.setToLastDayOfMonth(date);
 		Assert.assertEquals("2011-11-30 23:59:59",
 				formater.format(date.getTime()));
+	}
+
+	@Test
+	public void testGetAge() throws ParseException {
+		DecimalFormat f = new DecimalFormat("0.00");
+		Calendar startDate = DateUtils.getCalendar("2010-11-01");
+		Calendar endDate = DateUtils.getCalendar("2011-11-01");
+		Assert.assertEquals("1.00",
+				f.format(DateUtils.getAge(startDate, endDate)));
+
+		startDate = DateUtils.getCalendar("2010-10-01");
+		endDate = DateUtils.getCalendar("2011-12-01");
+		Assert.assertEquals("1.17",
+				f.format(DateUtils.getAge(startDate, endDate)));
+	}
+
+	@Test
+	public void testGetAgeDetail() throws ParseException {
+		Calendar startDate = DateUtils.getCalendar("2010-01-01");
+		Calendar endDate = DateUtils.getCalendar("2011-01-01");
+		int[] detail = DateUtils.getAgeDetail(startDate, endDate);
+		Assert.assertEquals("1,0,1", detail[0] + "," + detail[1] + ","
+				+ detail[2]);
+
+		startDate = DateUtils.getCalendar("2010-01-01");
+		endDate = DateUtils.getCalendar("2011-01-01");
+		detail = DateUtils.getAgeDetail(startDate, endDate);
+		Assert.assertEquals("1,0,1", detail[0] + "," + detail[1] + ","
+				+ detail[2]);
+
+		startDate = DateUtils.getCalendar("2010-02-01");
+		endDate = DateUtils.getCalendar("2011-01-01");
+		detail = DateUtils.getAgeDetail(startDate, endDate);
+		Assert.assertEquals("0,11,1", detail[0] + "," + detail[1] + ","
+				+ detail[2]);
+
+		startDate = DateUtils.getCalendar("2010-01-01");
+		endDate = DateUtils.getCalendar("2011-01-10");
+		detail = DateUtils.getAgeDetail(startDate, endDate);
+		Assert.assertEquals("1,0,10", detail[0] + "," + detail[1] + ","
+				+ detail[2]);
 	}
 }

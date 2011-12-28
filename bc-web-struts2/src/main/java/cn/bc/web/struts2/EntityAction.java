@@ -47,6 +47,7 @@ import cn.bc.web.ui.html.grid.GridHeader;
 import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.html.page.PageOption;
@@ -211,11 +212,14 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String create() throws Exception {
 		// 初始化E
 		this.setE(this.getCrudService().create());
-		
+
 		this.afterCreate(this.getE());
 
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption();
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
 
 		return "form";
 	}
@@ -224,33 +228,49 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用create初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterCreate(E entity) {
-		
+
 	}
 
 	// 编辑表单
 	public String edit() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
+
 		this.afterEdit(e);
-		
-		this.formPageOption = buildFormPageOption();
 		return "form";
+	}
+
+	/**
+	 * 初始化表单的其他配置，如下拉框列表等
+	 * 
+	 * @param editable
+	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
+	 */
+	protected void initForm(boolean editable) {
+
 	}
 
 	/**
 	 * 在调用edit初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterEdit(E entity) {
-		
+
 	}
 
 	// 只读表单
 	public String open() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+
+		// 强制表单只读
+		this.formPageOption = buildFormPageOption(false);
+
+		// 初始化表单的其他配置
+		this.initForm(false);
+
 		this.afterOpen(e);
-		
-		this.formPageOption = buildFormPageOption();
 		return "formr";
 	}
 
@@ -258,14 +278,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用open初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterOpen(E entity) {
-		
-	}
 
-	// 表单：自动判断权限
-	public String read() throws Exception {
-		e = this.getCrudService().load(this.getId());
-		this.formPageOption = buildFormPageOption();
-		return "form";
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
@@ -304,7 +317,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.afterSave(e);
 		return "saveSuccess";
 	}
-	
+
 	/**
 	 * 在调用save之前调用的方法，给基类一个扩展的处理
 	 */
@@ -317,8 +330,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected void afterSave(E entity) {
 	}
 
-
 	public String json;
+
 	// 删除
 	public String delete() throws Exception {
 		try {
@@ -334,7 +347,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 				}
 			}
 		} catch (JpaSystemException e) {
-			//处理违反外键约束导致的删除异常，提示用户因关联而无法删除
+			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
 			throw new CoreException("JpaSystemException");
 		}
 		return "deleteSuccess";
@@ -640,10 +653,39 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/** 构建表单页面的对话框初始化配置 */
 	protected PageOption buildFormPageOption() {
+		return buildFormPageOption(false);
+	}
+
+	/**
+	 * @param editable
+	 *            是否为可编辑表单的配置
+	 * @return
+	 */
+	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		pageOption.put("readonly",this.isReadonly());
+
+		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
+		boolean readonly = this.isReadonly();
+		if (editable && !readonly) {
+			pageOption.put("readonly", readonly);
+
+			// 添加默认的保存按钮
+			addDefaultEditableFormButton(pageOption);
+		} else {
+			pageOption.put("readonly", true);
+		}
+
 		return pageOption;
+	}
+
+	/**
+	 * 添加默认的可编辑表单操作按钮，默认为保存按钮
+	 * 
+	 * @param pageOption
+	 */
+	protected void addDefaultEditableFormButton(PageOption pageOption) {
+		pageOption.addButton(this.getDefaultSaveButtonOption());
 	}
 
 	/** 构建视图页面的工具条 */
@@ -694,6 +736,12 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected Button getDefaultSearchToolbarButton() {
 		return Toolbar
 				.getDefaultSearchToolbarButton(getText("title.click2search"));
+	}
+
+	// 创建默认的表单保存按钮
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return new ButtonOption(getText("label.save"), "save")
+				.setId("bcSaveBtn");
 	}
 
 	/** 构建视图页面的表格 */
