@@ -280,4 +280,92 @@ public class DateUtils {
 			return ((wt - s - ms) / 60000) + "m " + s + "s " + ms + "ms";
 		}
 	}
+
+	/**
+	 * 计算两个日期之间的年龄:以实际足月年龄计算
+	 * 
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public static float getAge(Date startDate, Date endDate) {
+		Calendar start = Calendar.getInstance();// 创建新日期
+		start.setTime(startDate);// 将日期设置为需要的日期
+		Calendar end = Calendar.getInstance();
+		end.setTime(endDate);
+		return getAge(start, end);
+	}
+
+	/**
+	 * 计算两个日期之间的年龄:以实际足月年龄计算
+	 * 
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public static float getAge(Calendar startDate, Calendar endDate) {
+		int startYeay = startDate.get(Calendar.YEAR);// 获取日期的年份
+		int startMonth = startDate.get(Calendar.MONTH);
+		int endYeay = endDate.get(Calendar.YEAR);
+		int endMonth = endDate.get(Calendar.MONTH);
+
+		// 月份的天数相加
+		int dday = getLastDayOfMonth(startDate).get(Calendar.DATE)
+				- startDate.get(Calendar.DATE) + 1 + endDate.get(Calendar.DATE);
+
+		return (endYeay - startYeay - 1)
+				+ ((float) (11 - startMonth + endMonth + (float) dday / 30))
+				/ 12;
+	}
+
+	/**
+	 * 计算指定出生日期的当前年龄:以实际足月年龄计算
+	 * 
+	 * @param birthDate
+	 *            出生日期
+	 * @return
+	 */
+	public static float getAge(Calendar birthDate) {
+		return getAge(birthDate, Calendar.getInstance());
+	}
+
+	/**
+	 * 计算两个日期之间的年龄细节
+	 * <p>
+	 * 如1年零两个月加10天
+	 * </p>
+	 * 
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return 0-实际流逝的年数,1-不足一年的月数,2-不足一月的天数
+	 */
+	public static int[] getAgeDetail(Calendar startDate, Calendar endDate) {
+		int startYeay = startDate.get(Calendar.YEAR);// 获取日期的年份
+		int startMonth = startDate.get(Calendar.MONTH);
+		int endYeay = endDate.get(Calendar.YEAR);
+		int endMonth = endDate.get(Calendar.MONTH);
+
+		int[] detail = new int[3];
+		detail[0] = endYeay - startYeay - 1;
+		detail[1] = 11 - startMonth + endMonth;
+		int maxDay = getLastDayOfMonth(startDate).get(Calendar.DATE);
+		detail[2] = maxDay - startDate.get(Calendar.DATE) + 1
+				+ endDate.get(Calendar.DATE);
+
+		if (detail[2] >= maxDay) {
+			detail[1] += 1;
+			detail[2] -= maxDay;
+		}
+		if (detail[1] >= 12) {
+			detail[0] += 1;
+			detail[1] -= 12;
+		}
+		return detail;
+	}
 }
