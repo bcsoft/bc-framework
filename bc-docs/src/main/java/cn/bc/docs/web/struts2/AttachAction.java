@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.RichEntity;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -290,10 +291,10 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		ah.setFileDate(Calendar.getInstance());
 		ah.setFormat(attach.getExtension());
 		ah.setType(type);
-		if (context == null){
+		if (context == null) {
 			ah.setAuthor(this.actorHistoryService.loadByCode("admin"));
 			ah.setMemo("[unauth]");
-		}else{
+		} else {
 			ah.setAuthor(context.getUserHistory());
 		}
 
@@ -345,8 +346,14 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 				attachs = this.getCrudService().createQuery()
 						.condition(new InCondition("id", ids)).list();
 			} else {// 所有附件
-				attachs = this.getCrudService().createQuery()
-						.condition(new EqualsCondition("ptype", ptype)).list();
+				attachs = this
+						.getCrudService()
+						.createQuery()
+						.condition(
+								new AndCondition().add(
+										new EqualsCondition("ptype", ptype))
+										.add(new EqualsCondition("puid", puid)))
+						.list();
 			}
 			String path;
 
@@ -396,6 +403,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			}
 			zip.close();
 			inputStream = new ByteArrayInputStream(dest.toByteArray());
+			contentLength = dest.size();
 			this.getCrudService().save(attachs);
 
 			// 记录下载痕迹
