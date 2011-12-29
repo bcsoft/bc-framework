@@ -11,11 +11,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.InCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.Role;
@@ -24,7 +19,6 @@ import cn.bc.identity.service.ActorService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
-import cn.bc.web.ui.html.toolbar.Toolbar;
 
 /**
  * 通用的Actor Action
@@ -168,16 +162,18 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	}
 
 	@Override
-	public String edit() throws Exception {
-		String r = super.edit();
+	protected void initForm(boolean editable) {
+		super.initForm(editable);
+
+		// 新建时无需执行下面的初始化
+		if (this.getE().isNew())
+			return;
 
 		// 加载上级信息
 		initBelongs();
 
 		// 加载直接分配的角色和从上级继承的角色
 		dealRoles4Edit();
-
-		return r;
 	}
 
 	// 加载上级信息
@@ -198,37 +194,5 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 
 	protected Integer[] getBelongTypes() {
 		return null;
-	}
-
-	@Override
-	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("orderNo", Direction.Asc);
-	}
-
-	@Override
-	protected Condition getSpecalCondition() {
-		// 状态条件
-		Condition statusCondition = null;
-		if (status != null && status.length() > 0) {
-			String[] ss = status.split(",");
-			if (ss.length == 1) {
-				statusCondition = new EqualsCondition("status", new Integer(
-						ss[0]));
-			} else {
-				statusCondition = new InCondition("status",
-						StringUtils.stringArray2IntegerArray(ss));
-			}
-		}
-
-		return statusCondition;
-	}
-
-	@Override
-	protected Toolbar buildToolbar() {
-		return super.buildToolbar()
-				.addButton(
-						Toolbar.getDefaultToolbarRadioGroup(
-								this.getEntityStatuses(), "status", -1,
-								getText("title.click2changeSearchStatus")));
 	}
 }

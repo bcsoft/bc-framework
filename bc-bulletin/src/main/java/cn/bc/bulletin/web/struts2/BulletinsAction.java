@@ -115,7 +115,7 @@ public class BulletinsAction extends ViewAction<Map<String, Object>> {
 		boolean isManager = !this.isReadonly();
 		if (isManager) {
 			columns.add(new TextColumn4MapKey("b.status_", "status",
-					getText("bulletin.status"), 80).setSortable(true)
+					getText("bulletin.status"), 60).setSortable(true)
 					.setValueFormater(new KeyValueFormater(getStatuses())));
 		}
 
@@ -166,7 +166,7 @@ public class BulletinsAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = super.getHtmlPageToolbar();
 		if (!this.isReadonly())
 			tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-					this.getStatuses(), "status", 3,
+					this.getStatuses(), "status", 1,
 					getText("title.click2changeSearchStatus")));
 		return tb;
 	}
@@ -214,9 +214,8 @@ public class BulletinsAction extends ViewAction<Map<String, Object>> {
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getStatuses() {
+	private Map<String, String> getStatuses() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses = new HashMap<String, String>();
 		statuses.put(String.valueOf(Bulletin.STATUS_DRAFT),
 				getText("bulletin.status.draft"));
 		statuses.put(String.valueOf(Bulletin.STATUS_ISSUED),
@@ -232,13 +231,12 @@ public class BulletinsAction extends ViewAction<Map<String, Object>> {
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getScopes() {
-		Map<String, String> statuses = new HashMap<String, String>();
-		statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(Bulletin.SCOPE_LOCALUNIT),
+	private Map<String, String> getScopes() {
+		Map<String, String> scopes = new HashMap<String, String>();
+		scopes.put(String.valueOf(Bulletin.SCOPE_LOCALUNIT),
 				getText("bulletin.scope.localUnit"));
-		statuses.put(String.valueOf(Bulletin.SCOPE_SYSTEM),
+		scopes.put(String.valueOf(Bulletin.SCOPE_SYSTEM),
 				getText("bulletin.scope.system"));
-		return statuses;
+		return scopes;
 	}
 }

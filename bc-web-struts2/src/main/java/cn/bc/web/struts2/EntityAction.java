@@ -213,13 +213,13 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		// 初始化E
 		this.setE(this.getCrudService().create());
 
-		this.afterCreate(this.getE());
-
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);
+		
+		this.afterCreate(this.getE());
 
 		return "form";
 	}
@@ -354,6 +354,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 获取列表视图页面----无分页
+	@Deprecated
 	public String list() throws Exception {
 		// 根据请求的条件查找信息
 		this.es = this.findList();
@@ -366,6 +367,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 获取列表视图页面----分页
+	@Deprecated
 	public String paging() throws Exception {
 		// 首次请求时page对象为空，需要初始化一下
 		if (this.page == null)

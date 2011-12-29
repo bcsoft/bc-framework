@@ -483,7 +483,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		if (this.isReadonly()) {
 			// 查看按钮
 			tb.addButton(Toolbar
-					.getDefaultEditToolbarButton(getText("label.read")));
+					.getDefaultOpenToolbarButton(getText("label.read")));
 		} else {
 			// 新建按钮
 			tb.addButton(Toolbar

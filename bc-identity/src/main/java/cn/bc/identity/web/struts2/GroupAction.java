@@ -10,16 +10,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.service.GroupService;
-import cn.bc.web.formater.EntityStatusFormater;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
@@ -44,75 +37,27 @@ public class GroupAction extends AbstractActorAction {
 		return "Group";
 	}
 
-	public String create() throws Exception {
-		String r = super.create();
+	@Override
+	protected void afterCreate(Actor entity) {
+		super.afterCreate(entity);
 		this.getE().setStatus(Actor.STATUS_ENABLED);
 		this.getE().setType(Actor.TYPE_GROUP);
 		this.getE().setUid(this.getIdGeneratorService().next("group"));
-		return r;
 	}
 
-	// 设置视图页面的尺寸
-	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(650).setMinWidth(450)
-				.setHeight(400).setMinHeight(200);
-	}
-
-	// 设置表单页面的尺寸
 	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption pageOption = super.buildFormPageOption().setWidth(618);
-
-		if (!this.isReadonly())
-			pageOption.addButton(new ButtonOption(getText("label.save"), null,
-					"bc.groupForm.save"));
-
-		return pageOption;
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(618);
 	}
 
-	// 设置表格的列
-	protected List<Column> buildGridColumns() {
-		List<Column> columns = super.buildGridColumns();
-
-		if (this.useColumn("status"))
-			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(
-							getEntityStatuses())));
-		if (this.useColumn("pname"))
-			columns.add(new TextColumn("pname", getText("actor.pname"))
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("actor.name"), 120)
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("actor.code"), 120)
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
-					.setSortable(true).setDir(Direction.Asc)
-					.setUseTitleFromLabel(true));
-		if (this.useColumn("phone"))
-			columns.add(new TextColumn("phone", getText("actor.phone"), 120));
-		// columns.add(new TextColumn("email", getText("actor.email"), 150));
-
-		return columns;
+	@Override
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return super.getDefaultSaveButtonOption().setAction(null)
+				.setClick("bc.groupForm.save");
 	}
 
 	protected Integer[] getBelongTypes() {
 		return new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT };
-	}
-
-	@Override
-	protected Condition getSpecalCondition() {
-		Condition sc = super.getSpecalCondition();
-		// 附加岗位的查询条件
-		Condition uc = new EqualsCondition("type",
-				new Integer(Actor.TYPE_GROUP));
-		if (sc != null) {
-			return new AndCondition().add(sc).add(uc);
-		} else {
-			return uc;
-		}
 	}
 
 	public String assignUserIds;// 分配的用户id，多个id用逗号连接
@@ -139,14 +84,12 @@ public class GroupAction extends AbstractActorAction {
 	}
 
 	@Override
-	public String edit() throws Exception {
-		String r = super.edit();
+	protected void afterEdit(Actor entity) {
+		super.afterEdit(entity);
 
 		// 加载已分配的用户
 		this.ownedUsers = this.groupService.findFollower(this.getId(),
 				new Integer[] { ActorRelation.TYPE_BELONG },
 				new Integer[] { Actor.TYPE_USER });
-
-		return r;
 	}
 }
