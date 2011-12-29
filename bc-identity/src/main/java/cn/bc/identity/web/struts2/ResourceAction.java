@@ -23,7 +23,7 @@ import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
- * 资源的表单Action
+ * 资源表单Action
  * 
  * @author dragon
  * 
