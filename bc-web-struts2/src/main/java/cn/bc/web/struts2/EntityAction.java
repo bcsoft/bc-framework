@@ -228,7 +228,6 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用create初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterCreate(E entity) {
-
 	}
 
 	// 编辑表单
@@ -250,7 +249,6 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
 	 */
 	protected void initForm(boolean editable) {
-
 	}
 
 	/**
@@ -278,7 +276,6 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用open初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterOpen(E entity) {
-
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
