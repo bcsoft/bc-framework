@@ -49,6 +49,17 @@ public class Json implements Render {
 	}
 
 	/**
+	 * 获取属性值
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getString(String key) {
+		Render r = get(key);
+		return r != null ? r.toString() : null;
+	}
+
+	/**
 	 * 判断json是否为空
 	 * 
 	 * @return
