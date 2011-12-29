@@ -10,7 +10,7 @@ package cn.bc;
  */
 public interface Context {
 	/** 系统上下文保存到session中的键值 */
-	public static final String KEY = "bc-context";
+	public static String KEY = "bc-context";
 	
 	/**
 	 * 获取指定属性的值
