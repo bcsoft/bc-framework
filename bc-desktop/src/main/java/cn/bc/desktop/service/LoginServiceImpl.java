@@ -57,7 +57,7 @@ public class LoginServiceImpl implements LoginService {
 		hql.append(" from bc_identity_actor as a");
 		hql.append(" inner join bc_identity_auth as t on t.id=a.id");
 		hql.append(" inner join bc_identity_actor_history as h on h.actor_id=a.id");
-		hql.append(" where a.code = ? and h.current=1 order by h.create_date desc");
+		hql.append(" where a.code = ? and h.current='1' order by h.create_date desc");
 		if (logger.isDebugEnabled()) {
 			logger.debug("actorCode=" + actorCode + ",hql=" + hql);
 		}
