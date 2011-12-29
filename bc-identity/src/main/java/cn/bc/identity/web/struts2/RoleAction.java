@@ -64,16 +64,15 @@ public class RoleAction extends EntityAction<Long, Role> {
 				.setMinWidth(300).setMinHeight(200);
 	}
 
-	// 设置表单页面的尺寸
 	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption pageOption = super.buildFormPageOption().setWidth(618);
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(618);
+	}
 
-		if (!this.isReadonly())
-			pageOption.addButton(new ButtonOption(getText("label.save"), null,
-					"bc.roleForm.save"));
-
-		return pageOption;
+	@Override
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return super.getDefaultSaveButtonOption().setAction(null)
+				.setClick("bc.roleForm.save");
 	}
 
 	// 设置表格的列
