@@ -182,7 +182,7 @@ CREATE INDEX BCIDX_AR_TF ON BC_IDENTITY_ACTOR_RELATION (TYPE_, FOLLOWER_ID);
 CREATE TABLE BC_IDENTITY_ACTOR_HISTORY (
    ID                   INTEGER           NOT NULL,
    PID                  integer,
-   CURRENT              integer NOT NULL DEFAULT 1,
+   CURRENT              boolean NOT NULL default true,
    RANK              	integer NOT NULL DEFAULT 0,
    CREATE_DATE          timestamp                 NOT NULL,
    START_DATE           timestamp,
