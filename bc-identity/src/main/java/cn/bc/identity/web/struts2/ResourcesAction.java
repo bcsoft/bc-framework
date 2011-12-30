@@ -62,9 +62,9 @@ public class ResourcesAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select p.id as pid,p.name as pname,r.id as id,r.type_ as type,r.order_ as orderNo");
-		sql.append(",r.name as name,r.url as url,r.iconclass as iconClass,r.option_ as option");
-		sql.append(" from bc_identity_resource r");
-		sql.append(" left join bc_identity_resource p on p.id=r.belong");
+		sql.append(",r.name as name,r.url as url,r.iconclass as iconClass,r.option_ as option_");
+		sql.append(" from bc_identity_resource as r");
+		sql.append(" left join bc_identity_resource as p on p.id=r.belong");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
