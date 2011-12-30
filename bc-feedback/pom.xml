@@ -10,9 +10,8 @@
 	<description>用户反馈</description>
 	<dependencies>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<scope>provided</scope>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>

@@ -3,7 +3,13 @@
  */
 package cn.bc.feedback.domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import cn.bc.identity.domain.RichFileEntityImpl;
@@ -30,6 +36,17 @@ public class Feedback extends RichFileEntityImpl {
 
 	private String subject;// 标题
 	private String content;// 详细内容
+	private Set<Reply> replies;// 回复列表
+
+	@OneToMany(mappedBy = "feedback", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy(value = "fileDate asc")
+	public Set<Reply> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(Set<Reply> replies) {
+		this.replies = replies;
+	}
 
 	public String getSubject() {
 		return subject;
