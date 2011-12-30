@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
@@ -67,7 +68,7 @@ public class UserAction extends AbstractActorAction {
 	protected void afterCreate(Actor entity) {
 		super.afterCreate(entity);
 		this.getE().setType(Actor.TYPE_USER);
-		this.getE().setStatus(Actor.STATUS_ENABLED);
+		this.getE().setStatus(BCConstants.STATUS_ENABLED);
 		this.getE().setUid(this.idGeneratorService.next("user"));
 
 		// 初始化用户的扩展信息

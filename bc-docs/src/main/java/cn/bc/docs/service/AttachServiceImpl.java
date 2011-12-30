@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
@@ -38,7 +38,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 								.add(new EqualsCondition("ptype", ptype))
 								.add(new EqualsCondition("puid", puid))
 								.add(new EqualsCondition("status",
-										RichEntity.STATUS_ENABLED))
+										BCConstants.STATUS_ENABLED))
 								.add(new OrderCondition("fileDate",
 										Direction.Desc))).list();
 	}
@@ -51,7 +51,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 								.add(new EqualsCondition("ptype", ptype))
 								.add(new EqualsCondition("puid", puid))
 								.add(new EqualsCondition("status",
-										RichEntity.STATUS_ENABLED))
+										BCConstants.STATUS_ENABLED))
 								.add(new OrderCondition("fileDate",
 										Direction.Desc))).list(1, 1);
 		if (list != null && !list.isEmpty()) {
@@ -80,7 +80,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		// 查找要复制的附件
 		AndCondition c = new AndCondition();
 		c.add(new EqualsCondition("puid", fromPuid))
-				.add(new EqualsCondition("status", RichEntity.STATUS_ENABLED))
+				.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED))
 				.add(new OrderCondition("fileDate", Direction.Desc));
 		if (fromPtype != null && fromPtype.length() > 0)
 			c.add(new EqualsCondition("ptype", fromPtype));

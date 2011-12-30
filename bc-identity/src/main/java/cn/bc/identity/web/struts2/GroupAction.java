@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.service.GroupService;
@@ -40,7 +41,7 @@ public class GroupAction extends AbstractActorAction {
 	@Override
 	protected void afterCreate(Actor entity) {
 		super.afterCreate(entity);
-		this.getE().setStatus(Actor.STATUS_ENABLED);
+		this.getE().setStatus(BCConstants.STATUS_ENABLED);
 		this.getE().setType(Actor.TYPE_GROUP);
 		this.getE().setUid(this.getIdGeneratorService().next("group"));
 	}

@@ -27,7 +27,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -437,7 +437,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			// file.delete();
 
 			// 将附件标记为删除状态
-			attach.setStatus(RichEntity.STATUS_DELETED);
+			attach.setStatus(BCConstants.STATUS_DELETED);
 			this.getCrudService().save(attach);
 
 			// 记录一条删除痕迹
@@ -484,7 +484,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 				// file.delete();
 
 				// 将附件标记为删除状态
-				attach.setStatus(RichEntity.STATUS_DELETED);
+				attach.setStatus(BCConstants.STATUS_DELETED);
 
 				// 记录一条删除痕迹
 				ahs.add(buildHistory(AttachHistory.TYPE_DELETED, attach));

@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
@@ -229,7 +229,7 @@ public class ShortcutServiceImplTest extends
 		Actor actor = new Actor();
 		actor.setType(type);
 		actor.setInner(false);
-		actor.setStatus(RichEntity.STATUS_ENABLED);
+		actor.setStatus(BCConstants.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode(code);
 		actor.setOrderNo(order);

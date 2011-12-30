@@ -12,7 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.Entity;
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
@@ -40,7 +40,7 @@ import cn.bc.web.ui.json.Json;
 public abstract class AbstractActorsAction extends
 		ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(Entity.STATUS_ENABLED); // Actor的状态，多个用逗号连接
+	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // Actor的状态，多个用逗号连接
 
 	@Override
 	public boolean isReadonly() {

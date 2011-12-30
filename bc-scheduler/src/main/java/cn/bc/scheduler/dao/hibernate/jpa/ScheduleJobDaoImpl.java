@@ -2,6 +2,7 @@ package cn.bc.scheduler.dao.hibernate.jpa;
 
 import java.util.List;
 
+import cn.bc.BCConstants;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 import cn.bc.scheduler.dao.ScheduleJobDao;
 import cn.bc.scheduler.domain.ScheduleJob;
@@ -18,7 +19,7 @@ public class ScheduleJobDaoImpl extends HibernateCrudJpaDao<ScheduleJob>
 	public List<ScheduleJob> findAllEnabled() {
 		String hql = "from ScheduleJob t where t.status=? order by t.orderNo";
 		return (List<ScheduleJob>) this.getJpaTemplate().find(hql,
-				new Integer(ScheduleJob.STATUS_ENABLED));
+				new Integer(BCConstants.STATUS_ENABLED));
 	}
 
 	@SuppressWarnings("unchecked")

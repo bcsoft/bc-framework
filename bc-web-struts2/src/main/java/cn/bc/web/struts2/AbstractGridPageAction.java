@@ -11,8 +11,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.bc.BCConstants;
 import cn.bc.core.Page;
-import cn.bc.core.RichEntity;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
@@ -518,11 +518,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 */
 	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
 				getText("entity.status.disabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
 				getText("entity.status.enabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
 	}

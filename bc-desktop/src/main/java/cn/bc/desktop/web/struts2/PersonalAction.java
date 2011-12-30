@@ -8,7 +8,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.desktop.domain.Personal;
 import cn.bc.desktop.service.PersonalService;
 import cn.bc.identity.domain.Actor;
@@ -59,7 +59,7 @@ public class PersonalAction extends EntityAction<Long, Personal> {
 		if (personal == null) {// 没有就从全局配置复制一个
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
-			personal.setStatus(RichEntity.STATUS_ENABLED);
+			personal.setStatus(BCConstants.STATUS_ENABLED);
 			// personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());
@@ -78,7 +78,7 @@ public class PersonalAction extends EntityAction<Long, Personal> {
 		if (personal == null) {// 没有就从全局配置复制一个
 			Personal common = this.personalService.loadGlobalConfig();
 			personal = new Personal();
-			personal.setStatus(RichEntity.STATUS_ENABLED);
+			personal.setStatus(BCConstants.STATUS_ENABLED);
 			// personal.setInner(common.isInner());
 			personal.setFont(common.getFont());
 			personal.setTheme(common.getTheme());

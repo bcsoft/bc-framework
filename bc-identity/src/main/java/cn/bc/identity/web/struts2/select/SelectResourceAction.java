@@ -12,7 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.Entity;
+import cn.bc.BCConstants;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ResourceService;
 
@@ -97,7 +97,7 @@ public class SelectResourceAction extends ActionSupport {
 
 	public String execute() throws Exception {
 		this.es = this.resourceService.find4option(getType(),
-				new Integer[] { Entity.STATUS_ENABLED });
+				new Integer[] { BCConstants.STATUS_ENABLED });
 
 		// 排除不能选择的
 		long[] exclude = this.getExclude();

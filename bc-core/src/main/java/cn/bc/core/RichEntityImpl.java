@@ -6,6 +6,8 @@ package cn.bc.core;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import cn.bc.BCConstants;
+
 /**
  * 带UID和状态的基本实体接口的实现
  * 
@@ -15,7 +17,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class RichEntityImpl extends EntityImpl implements cn.bc.core.RichEntity<Long> {
 	private static final long serialVersionUID = 7826313222480961654L;
 	private String uid;
-	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
+	private int status = BCConstants.STATUS_ENABLED;
 
 	@Column(name = "UID_")
 	public String getUid() {

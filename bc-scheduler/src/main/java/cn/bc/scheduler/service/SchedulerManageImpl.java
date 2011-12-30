@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.MethodInvoker;
 
+import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.scheduler.domain.ScheduleJob;
 import cn.bc.scheduler.spring.MethodInvokingJobEx;
@@ -99,8 +100,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 		}
 
 		// 将任务的状态设置为正常
-		if (scheduleJob.getStatus() != ScheduleJob.STATUS_ENABLED) {
-			scheduleJob.setStatus(ScheduleJob.STATUS_ENABLED);
+		if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
+			scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
 			this.schedulerService.saveScheduleJob(scheduleJob);
 		}
 
@@ -130,8 +131,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 		}
 
 		// 将任务的状态设置为正常
-		if (scheduleJob.getStatus() != ScheduleJob.STATUS_ENABLED) {
-			scheduleJob.setStatus(ScheduleJob.STATUS_ENABLED);
+		if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
+			scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
 			this.schedulerService.saveScheduleJob(scheduleJob);
 		}
 
@@ -155,8 +156,8 @@ public class SchedulerManageImpl implements SchedulerManage,
 		}
 
 		// 将任务的状态设置为禁用
-		if (scheduleJob.getStatus() != ScheduleJob.STATUS_DISABLED) {
-			scheduleJob.setStatus(ScheduleJob.STATUS_DISABLED);
+		if (scheduleJob.getStatus() != BCConstants.STATUS_DISABLED) {
+			scheduleJob.setStatus(BCConstants.STATUS_DISABLED);
 			this.schedulerService.saveScheduleJob(scheduleJob);
 		}
 	}
@@ -178,7 +179,7 @@ public class SchedulerManageImpl implements SchedulerManage,
 		}
 
 		// 标记为删除状态
-		scheduleJob.setStatus(ScheduleJob.STATUS_DELETED);
+		scheduleJob.setStatus(BCConstants.STATUS_DELETED);
 		this.schedulerService.saveScheduleJob(scheduleJob);
 	}
 

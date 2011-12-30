@@ -23,10 +23,10 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.StringUtils;
 
+import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
-import cn.bc.core.RichEntity;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
@@ -928,11 +928,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 */
 	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
 				getText("entity.status.enabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
 				getText("entity.status.disabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
 	}

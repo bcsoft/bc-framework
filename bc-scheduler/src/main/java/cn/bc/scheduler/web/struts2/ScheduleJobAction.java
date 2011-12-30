@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -164,7 +165,7 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	@Override
 	public String create() throws Exception {
 		String r = super.create();
-		this.getE().setStatus(ScheduleJob.STATUS_DISABLED);// 初始化为禁用状态
+		this.getE().setStatus(BCConstants.STATUS_DISABLED);// 初始化为禁用状态
 		return r;
 	}
 
