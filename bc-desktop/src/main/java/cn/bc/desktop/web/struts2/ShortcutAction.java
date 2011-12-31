@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 
+import cn.bc.BCConstants;
 import cn.bc.Context;
-import cn.bc.core.RichEntity;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
@@ -60,7 +60,7 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 	@Override
 	public String create() throws Exception {
 		this.setE(this.shortcutService.create());
-		this.getE().setStatus(RichEntity.STATUS_ENABLED);
+		this.getE().setStatus(BCConstants.STATUS_ENABLED);
 		this.getE().setStandalone(true);
 		this.getE().setResourceId(new Long(0));
 		// 设置属于当前用户
@@ -142,7 +142,7 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		Assert.notNull(resource, "unknow resource's id:" + mid);
 
 		Shortcut shortcut = this.shortcutService.create();
-		shortcut.setStatus(RichEntity.STATUS_ENABLED);
+		shortcut.setStatus(BCConstants.STATUS_ENABLED);
 		shortcut.setStandalone(resource.getType() == Resource.TYPE_OUTER_LINK);
 		shortcut.setOrder(resource.getOrderNo());
 		shortcut.setName(resource.getName());

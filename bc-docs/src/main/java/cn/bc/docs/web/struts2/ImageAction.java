@@ -22,8 +22,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.Context;
-import cn.bc.core.RichEntity;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
@@ -160,7 +160,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			attach.setExtension("jpg");
 			attach.setPuid(puid);
 			attach.setPtype(ptype);
-			attach.setStatus(RichEntity.STATUS_ENABLED);
+			attach.setStatus(BCConstants.STATUS_ENABLED);
 			// attach.setPath(empty.substring(1));
 			attach.setSubject("empty");
 			// attach.setSize(0);

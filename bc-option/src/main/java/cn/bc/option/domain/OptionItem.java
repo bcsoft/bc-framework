@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import cn.bc.BCConstants;
 import cn.bc.core.EntityImpl;
 
 /**
@@ -32,7 +33,7 @@ public class OptionItem extends EntityImpl {
 	private String orderNo; // 排序号
 	private String icon; // 图标样式
 	private String description; // 说明
-	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
+	private int status = BCConstants.STATUS_ENABLED;
 
 	public OptionItem() {
 

@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.test.AbstractEntityCrudTest;
@@ -60,7 +60,7 @@ public class ActorHistoryServiceImplTest extends
 		// 补充一些必填域的设置
 		actor.setType(Actor.TYPE_USER);
 		actor.setInner(false);
-		actor.setStatus(RichEntity.STATUS_ENABLED);
+		actor.setStatus(BCConstants.STATUS_ENABLED);
 		actor.setUid(UUID.randomUUID().toString());
 		actor.setCode("test");
 		actor.setName("测试");

@@ -11,8 +11,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.bc.BCConstants;
 import cn.bc.core.Page;
-import cn.bc.core.RichEntity;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
@@ -277,7 +277,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	/** 获取表格双击行的js处理函数名 */
 	protected String getGridDblRowMethod() {
-		return "bc.page.edit";
+		return this.isReadonly() ? "bc.page.open" : "bc.page.edit";
 	}
 
 	/**
@@ -483,7 +483,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		if (this.isReadonly()) {
 			// 查看按钮
 			tb.addButton(Toolbar
-					.getDefaultEditToolbarButton(getText("label.read")));
+					.getDefaultOpenToolbarButton(getText("label.read")));
 		} else {
 			// 新建按钮
 			tb.addButton(Toolbar
@@ -518,11 +518,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 */
 	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
 				getText("entity.status.disabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
 				getText("entity.status.enabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
 	}

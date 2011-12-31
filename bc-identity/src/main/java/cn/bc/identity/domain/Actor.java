@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 
 import org.springframework.util.StringUtils;
 
+import cn.bc.BCConstants;
 import cn.bc.core.util.PinYinUtils;
 
 /**
@@ -52,7 +53,7 @@ public class Actor implements cn.bc.core.RichEntity<Long> {
 
 	private Long id;
 	private String uid;
-	private int status = cn.bc.core.RichEntity.STATUS_ENABLED;
+	private int status = BCConstants.STATUS_ENABLED;
 	private boolean inner = false;
 
 	private String name;

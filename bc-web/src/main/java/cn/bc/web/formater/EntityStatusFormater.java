@@ -6,7 +6,7 @@ package cn.bc.web.formater;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 
 /**
  * Entity状态值的格式化
@@ -19,9 +19,9 @@ public class EntityStatusFormater extends AbstractFormater<String> {
 
 	public EntityStatusFormater() {
 		statuses = new HashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED), "已禁用");
-		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED), "启用中");
-		statuses.put(String.valueOf(RichEntity.STATUS_DELETED), "已删除");
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED), "已禁用");
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED), "启用中");
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED), "已删除");
 	}
 
 	public EntityStatusFormater(Map<String, String> statuses) {

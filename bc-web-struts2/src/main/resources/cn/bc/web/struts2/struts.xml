@@ -66,7 +66,7 @@
 		</action>
 		<!-- 只读表单 -->
 		<action name="/*/open" class="{1}Action" method="open">
-			<result name="formr">/bc/{1}/formr.jsp</result>
+			<result name="formr">/bc/{1}/form.jsp</result>
 		</action>
 		<!-- 保存 -->
 		<action name="/*/save" class="{1}Action" method="save" />
@@ -84,6 +84,10 @@
 	
 	<!-- 一些通用处理 -->
 	<package name="bccommon" extends="bc-default" namespace="/bc/common">
+		<!-- 选择日期-->
+		<action name="selectDate" class="selectDateAction" >
+			<result name="success">/bc/common/selectDate.jsp</result>
+		</action>
 		<!-- 选择日期范围-->
 		<action name="selectDateRange" class="selectDateRangeAction" >
 			<result name="success">/bc/common/selectDateRange.jsp</result>

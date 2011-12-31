@@ -16,20 +16,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.KeyValue;
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.service.ResourceService;
-import cn.bc.identity.web.ResourceTypeFormater;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.TextColumn;
-import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
- * 模块Action
+ * 资源表单Action
  * 
  * @author dragon
  * 
@@ -51,7 +45,8 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.actor"), getText("key.role.bc.admin"));// 超级管理员
+		return !context.hasAnyRole(getText("key.role.bc.actor"),
+				getText("key.role.bc.admin"));// 超级管理员
 	}
 
 	@Autowired
@@ -59,64 +54,14 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 		this.setCrudService(resourceService);
 	}
 
-	public String create() throws Exception {
-		String r = super.create();
+	@Override
+	protected void afterCreate(Resource entity) {
 		this.getE().setType(Resource.TYPE_INNER_LINK);
-		return r;
-	}
-
-	// 设置视图页面的尺寸
-	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(800).setHeight(400)
-				.setMinWidth(450).setMinHeight(200);
-	}
-
-	// 设置表单页面的尺寸
-	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption pageOption = super.buildFormPageOption().setWidth(618);
-
-		if (!this.isReadonly())
-			pageOption
-					.addButton(new ButtonOption(getText("label.save"), "save"));
-
-		return pageOption;
 	}
 
 	@Override
-	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("orderNo", Direction.Asc);
-	}
-
-	// 设置表格的列
-	protected List<Column> buildGridColumns() {
-		List<Column> columns = super.buildGridColumns();
-
-		// columns.add(new TextColumn("status", getText("actor.status"), 40));
-		if (this.useColumn("type"))
-			columns.add(new TextColumn("type", getText("resource.type"), 80)
-					.setSortable(true).setValueFormater(
-							new ResourceTypeFormater(getModuleTypes())));
-		if (this.useColumn("belong.name"))
-			columns.add(new TextColumn("belong.name",
-					getText("resource.belong"), 80));
-		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("label.order"), 100)
-					.setSortable(true).setDir(Direction.Asc));
-		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("label.name"), 100)
-					.setSortable(true));
-		if (this.useColumn("url"))
-			columns.add(new TextColumn("url", getText("resource.url"))
-					.setSortable(true));
-		if (this.useColumn("iconClass"))
-			columns.add(new TextColumn("iconClass",
-					getText("resource.iconClass"), 100).setSortable(true));
-		if (this.useColumn("option"))
-			columns.add(new TextColumn("option", getText("resource.option"),
-					100));
-
-		return columns;
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(618);
 	}
 
 	/**
@@ -124,7 +69,7 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getModuleTypes() {
+	private Map<String, String> getModuleTypes() {
 		Map<String, String> types = new HashMap<String, String>();
 		types = new LinkedHashMap<String, String>();
 		types.put(String.valueOf(Resource.TYPE_FOLDER),
@@ -136,20 +81,13 @@ public class ResourceAction extends EntityAction<Long, Resource> {
 		return types;
 	}
 
-	// 查询条件中要匹配的域
-	protected String[] getSearchFields() {
-		return new String[] { "orderNo", "name", "url", "iconClass", "option" };
-	}
-
 	@Override
-	public String save() throws Exception {
+	protected void beforeSave(Resource entity) {
 		// 处理隶属关系
 		Resource belong = this.getE().getBelong();
 		if (belong != null
 				&& (belong.getId() == null || belong.getId().longValue() == 0)) {
 			this.getE().setBelong(null);
 		}
-
-		return super.save();
 	}
 }

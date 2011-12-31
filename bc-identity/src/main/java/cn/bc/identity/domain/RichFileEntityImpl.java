@@ -6,6 +6,8 @@ package cn.bc.identity.domain;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import cn.bc.BCConstants;
+
 /**
  * 带状态和UID的文档实体基类
  * 
@@ -16,7 +18,7 @@ public abstract class RichFileEntityImpl extends FileEntityImpl implements
 		RichFileEntity<Long> {
 	private static final long serialVersionUID = 1L;
 	private String uid;
-	private int status = RichFileEntity.STATUS_ENABLED;
+	private int status = BCConstants.STATUS_ENABLED;
 
 	@Column(name = "UID_")
 	public String getUid() {

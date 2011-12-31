@@ -8,27 +8,34 @@
 		<action name="edit" class="syslogAction" method="edit">
 			<result name="form">/bc/log/syslog/form.jsp</result>
 		</action>
-		<action name="list" class="syslogAction" method="list" />
-		<action name="paging" class="syslogAction" method="paging" />
-		<action name="data" class="syslogAction" method="data" />
-		<action name="export" class="syslogAction" method="export" />
+		<action name="open" class="syslogAction" method="open">
+			<result name="formr">/bc/log/syslog/form.jsp</result>
+		</action>
+		<action name="list" class="syslogsAction" method="list" />
+		<action name="paging" class="syslogsAction" method="paging" />
+		<action name="data" class="syslogsAction" method="data" />
+		<action name="export" class="syslogsAction" method="export" />
 	</package>
 	<!-- 我的登录日志 -->
 	<package name="mysyslog" extends="bc-default" namespace="/bc/mysyslog">
-		<action name="list" class="syslogAction" method="list">
-			<param name="my">true</param>
-		</action>
-		<action name="paging" class="syslogAction" method="paging">
-			<param name="my">true</param>
-		</action>
-		<action name="data" class="syslogAction" method="data">
-			<param name="my">true</param>
-		</action>
 		<action name="edit" class="syslogAction" method="edit">
 			<param name="my">true</param>
 			<result name="form">/bc/log/syslog/form.jsp</result>
 		</action>
-		<action name="export" class="syslogAction" method="export">
+		<action name="open" class="syslogAction" method="open">
+			<param name="my">true</param>
+			<result name="formr">/bc/log/syslog/form.jsp</result>
+		</action>
+		<action name="list" class="syslogsAction" method="list">
+			<param name="my">true</param>
+		</action>
+		<action name="paging" class="syslogsAction" method="paging">
+			<param name="my">true</param>
+		</action>
+		<action name="data" class="syslogsAction" method="data">
+			<param name="my">true</param>
+		</action>
+		<action name="export" class="syslogsAction" method="export">
 			<param name="my">true</param>
 		</action>
 	</package>

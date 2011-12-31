@@ -11,11 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.RichEntity;
+import cn.bc.BCConstants;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.domain.Role;
-import cn.bc.identity.service.ResourceService;
-import cn.bc.identity.service.RoleService;
 import cn.bc.test.AbstractEntityCrudTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -81,7 +79,7 @@ public class RoleServiceImplTest extends AbstractEntityCrudTest<Long,Role> {
 	private Resource createResource() {
 		Resource module = new Resource();
 		module.setType(Resource.TYPE_INNER_LINK);
-		module.setStatus(RichEntity.STATUS_ENABLED);
+		module.setStatus(BCConstants.STATUS_ENABLED);
 		//module.setInner(false);
 		module.setOrderNo("test"); 
 		module.setName(module.getOrderNo());

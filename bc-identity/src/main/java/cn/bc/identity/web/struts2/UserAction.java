@@ -15,10 +15,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Condition;
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorDetail;
@@ -28,13 +26,8 @@ import cn.bc.identity.domain.Role;
 import cn.bc.identity.service.DutyService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.service.UserService;
-import cn.bc.web.formater.EntityStatusFormater;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
  * 用户Action
@@ -71,10 +64,11 @@ public class UserAction extends AbstractActorAction {
 		return "User";
 	}
 
-	public String create() throws Exception {
-		String r = super.create();
+	@Override
+	protected void afterCreate(Actor entity) {
+		super.afterCreate(entity);
 		this.getE().setType(Actor.TYPE_USER);
-		this.getE().setStatus(Actor.STATUS_ENABLED);
+		this.getE().setStatus(BCConstants.STATUS_ENABLED);
 		this.getE().setUid(this.idGeneratorService.next("user"));
 
 		// 初始化用户的扩展信息
@@ -83,40 +77,18 @@ public class UserAction extends AbstractActorAction {
 		detail.setSex(ActorDetail.SEX_NONE);
 		this.getE().setDetail(detail);
 
-		// 表单可选项的加载
-		initSelects();
 		this.ownedGroups = new ArrayList<Actor>();
-
-		return r;
-	}
-
-	// 设置视图页面的尺寸
-	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(700).setMinWidth(450)
-				.setHeight(500).setMinHeight(200);
-	}
-
-	// 设置表单页面的尺寸
-	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption pageOption = super.buildFormPageOption().setWidth(665);
-
-		if (!this.isReadonly())
-			pageOption.addButton(new ButtonOption(getText("label.save"), null,
-					"bc.userForm.save"));
-
-		return pageOption;
 	}
 
 	@Override
-	protected Toolbar buildToolbar() {
-		Toolbar tb = super.buildToolbar();
-		if (!this.isReadonly())
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
-					.setText(getText("user.password.reset"))
-					.setClick("bc.userList.setPassword"));
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(665);
+	}
 
-		return tb;
+	@Override
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return super.getDefaultSaveButtonOption().setAction(null)
+				.setClick("bc.userForm.save");
 	}
 
 	@Override
@@ -125,50 +97,8 @@ public class UserAction extends AbstractActorAction {
 		return cp + "/bc/identity/user/list.js";
 	}
 
-	// 设置表格的列
-	protected List<Column> buildGridColumns() {
-		List<Column> columns = super.buildGridColumns();
-
-		if (this.useColumn("status"))
-			columns.add(new TextColumn("status", getText("actor.status"), 60)
-					.setValueFormater(new EntityStatusFormater(
-							getEntityStatuses())));
-		if (this.useColumn("pname"))
-			columns.add(new TextColumn("pname", getText("actor.pname"))
-					.setSortable(true).setUseTitleFromLabel(true));
-		// .setValueFormater(new BrFormater()));
-		if (this.useColumn("name"))
-			columns.add(new TextColumn("name", getText("user.name"), 120)
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("code"))
-			columns.add(new TextColumn("code", getText("user.code"), 120)
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("orderNo"))
-			columns.add(new TextColumn("orderNo", getText("actor.order"), 100)
-					.setSortable(true).setDir(Direction.Asc)
-					.setUseTitleFromLabel(true));
-		if (this.useColumn("phone"))
-			columns.add(new TextColumn("phone", getText("user.phone"), 100));
-		if (this.useColumn("email"))
-			columns.add(new TextColumn("email", getText("user.email"), 100));
-
-		return columns;
-	}
-
 	protected Integer[] getBelongTypes() {
 		return new Integer[] { Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT };
-	}
-
-	@Override
-	protected Condition getSpecalCondition() {
-		Condition sc = super.getSpecalCondition();
-		// 附加用户的查询条件
-		Condition uc = new EqualsCondition("type", new Integer(Actor.TYPE_USER));
-		if (sc != null) {
-			return new AndCondition().add(sc).add(uc);
-		} else {
-			return uc;
-		}
 	}
 
 	@Override
@@ -197,11 +127,15 @@ public class UserAction extends AbstractActorAction {
 	public String assignGroupIds;// 分派的岗位id，多个id用逗号连接
 
 	@Override
-	public String edit() throws Exception {
-		String r = super.edit();
+	protected void initForm(boolean editable) {
+		super.initForm(editable);
 
 		// 表单可选项的加载
 		initSelects();
+
+		// 新建时无需执行下面的初始化
+		if (this.getE().isNew())
+			return;
 
 		// 加载已拥有的岗位信息
 		this.ownedGroups = this.userService.findMaster(this.getId(),
@@ -213,8 +147,6 @@ public class UserAction extends AbstractActorAction {
 		for (Actor g : ownedGroups) {
 			inheritRolesFromGroup.addAll(g.getRoles());
 		}
-
-		return r;
 	}
 
 	// 表单可选项的加载

@@ -66,8 +66,8 @@ public class TodoWorkAction extends EntityAction<Long, TodoWork> {
 	// 设置页面的尺寸
 	@Override
 	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(800).setMinWidth(300)
-				.setHeight(600).setMinHeight(300);
+		return super.buildListPageOption().setWidth(600).setMinWidth(300)
+				.setHeight(400).setMinHeight(300);
 	}
 
 	@Override

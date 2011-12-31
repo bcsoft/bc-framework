@@ -5,7 +5,6 @@ package cn.bc.bulletin.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.interceptor.SessionAware;
@@ -16,29 +15,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.bulletin.domain.Bulletin;
-import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.MixCondition;
-import cn.bc.core.query.condition.impl.NotEqualsCondition;
-import cn.bc.core.query.condition.impl.OrCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
-import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.EntityAction;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.GridData;
-import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -87,9 +71,9 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	}
 
 	@Override
-	public String create() throws Exception {
+	protected void afterCreate(Bulletin entity) {
 		SystemContext context = (SystemContext) this.getContext();
-		Bulletin e = this.getCrudService().create();
+		Bulletin e = this.getE();
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUserHistory());
 		e.setUnit(context.getUnit());
@@ -98,40 +82,34 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		e.setStatus(Bulletin.STATUS_DRAFT);
 
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
-		this.setE(e);
 
 		// 构建附件控件
-		attachsUI = buildAttachsUI(true);
-
-		// 构建对话框参数
-		this.formPageOption = buildFormPageOption();
-
-		// 状态描述
-		statusDesc = this.getStatuses().get(String.valueOf(e.getStatus()));
-
-		return "form";
+		attachsUI = buildAttachsUI(true, false);
 	}
 
 	@Override
-	protected PageOption buildFormPageOption() {
-		PageOption option = super.buildFormPageOption().setWidth(680)
+	protected PageOption buildFormPageOption(boolean editable) {
+		return super.buildFormPageOption(editable).setWidth(680)
 				.setMaxHeight(700);
+	}
+
+	@Override
+	protected void buildFormPageButtons(PageOption option, boolean editable) {
 		if (!this.isReadonly()) {
 			option.addButton(new ButtonOption(getText("label.preview"),
 					"preview"));
 			if (this.getE().getStatus() == Bulletin.STATUS_DRAFT)
 				option.addButton(new ButtonOption(getText("bulletin.issue"),
 						null, "bc.bulletinForm.issue"));
-			option.addButton(new ButtonOption(getText("label.save"), "save"));
-		}else{
+			option.addButton(this.getDefaultSaveButtonOption());
+		} else {
 			option.addButton(new ButtonOption(getText("bulletin.seeByNewWin"),
 					"preview"));
 		}
-		return option;
 	}
 
 	@Override
-	public String save() throws Exception {
+	protected void beforeSave(Bulletin entity) {
 		Bulletin e = this.getE();
 		if (e.getIssuer() != null && e.getIssuer().getId() == null)
 			e.setIssuer(null);
@@ -139,9 +117,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		SystemContext context = (SystemContext) this.getContext();
 		e.setModifier(context.getUserHistory());
 		e.setModifiedDate(Calendar.getInstance());
-
-		this.getCrudService().save(e);
-		return "saveSuccess";
 	}
 
 	public Json json;
@@ -171,21 +146,18 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	public AttachWidget attachsUI;
 
 	@Override
-	public String edit() throws Exception {
-		this.setE(this.getCrudService().load(this.getId()));
-		this.formPageOption = buildFormPageOption();
-
+	protected void afterEdit(Bulletin entity) {
 		// 构建附件控件
-		attachsUI = buildAttachsUI(false);
-
-		// 状态描述
-		statusDesc = this.getStatuses().get(
-				String.valueOf(this.getE().getStatus()));
-
-		return "form";
+		attachsUI = buildAttachsUI(false, false);
 	}
 
-	private AttachWidget buildAttachsUI(boolean isNew) {
+	@Override
+	protected void afterOpen(Bulletin entity) {
+		// 构建附件控件
+		attachsUI = buildAttachsUI(false, true);
+	}
+
+	private AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 		// 构建附件控件
 		String ptype = "bulletin.main";
 		AttachWidget attachsUI = new AttachWidget();
@@ -200,126 +172,18 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-		if (this.isReadonly()) {
-			attachsUI.setReadOnly(true);
-		}
+
+		attachsUI.setReadOnly(forceReadonly ? true : this.isReadonly());
 		return attachsUI;
 	}
 
 	@Override
-	protected GridData buildGridData(List<Column> columns) {
-		return super.buildGridData(columns).setRowLabelExpression("subject");
-	}
+	protected void initForm(boolean editable) {
+		super.initForm(editable);
 
-	@Override
-	protected Condition getSpecalCondition() {
-		SystemContext context = (SystemContext) this.getContext();
-		Actor unit = context.getUnit();
-
-		// 其他单位且已发布的全系统公告
-		Condition commonCondition = new AndCondition().setAddBracket(true)
-				.add(new EqualsCondition("status", Bulletin.STATUS_ISSUED))
-				.add(new EqualsCondition("scope", Bulletin.SCOPE_SYSTEM))
-				.add(new NotEqualsCondition("author.unitId", unit.getId()));
-
-		MixCondition c = new OrCondition().setAddBracket(true);
-		if (this.isReadonly()) {// 管理员看本单位的所有状态公告或全系统公告
-			c.add(new EqualsCondition("author.unitId", unit.getId()));// 本单位公告
-			c.add(commonCondition);
-		} else {// 普通用户仅看已发布的本单位或全系统公告
-			c.add(new AndCondition().add(
-					new EqualsCondition("author.unitId", unit.getId())).add(
-					new EqualsCondition("status", Bulletin.STATUS_ISSUED)));// 本单位已发布公告
-			c.add(commonCondition);
-		}
-		return c;
-	}
-
-	@Override
-	protected OrderCondition getDefaultOrderCondition() {
-		if (!this.isReadonly()) {// 管理员看本单位的所有状态公告或全系统公告
-			return new OrderCondition("status")
-					.add("issueDate", Direction.Desc);
-		} else {// 普通用户仅看已发布的本单位或全系统公告
-			return new OrderCondition("issueDate", Direction.Desc);
-		}
-	}
-
-	// 设置页面的尺寸
-	@Override
-	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(800).setMinWidth(300)
-				.setHeight(400).setMinHeight(300);
-	}
-
-	@Override
-	protected Toolbar buildToolbar() {
-		Toolbar tb = new Toolbar();
-
-		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(getDefaultEditToolbarButton());
-
-			// 删除按钮
-			tb.addButton(getDefaultDeleteToolbarButton());
-		} else {// 普通用户
-			// 查看按钮
-			tb.addButton(getDefaultOpenToolbarButton());
-		}
-
-		// 搜索按钮
-		tb.addButton(getDefaultSearchToolbarButton());
-
-		return tb;
-	}
-
-	@Override
-	protected String[] getSearchFields() {
-		return new String[] { "subject", "content", "issuer.name" };
-	}
-
-	@Override
-	protected List<Column> buildGridColumns() {
-		List<Column> columns = super.buildGridColumns();
-		if (!this.isReadonly())
-			if (this.useColumn("status"))
-				columns.add(new TextColumn("status",
-						getText("bulletin.status"), 80).setSortable(true)
-						.setValueFormater(new KeyValueFormater(getStatuses())));
-		if (this.useColumn("issueDate"))
-			columns.add(new TextColumn("issueDate",
-					getText("bulletin.issueDate"), 90).setSortable(true)
-					.setDir(Direction.Desc)
-					.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		if (this.useColumn("issuer.name"))
-			columns.add(new TextColumn("issuer.name",
-					getText("bulletin.issuerName"), 90).setSortable(true));
-		if (this.useColumn("subject"))
-			columns.add(new TextColumn("subject", getText("bulletin.subject"))
-					.setSortable(true).setUseTitleFromLabel(true));
-		if (this.useColumn("scope"))
-			columns.add(new TextColumn("scope", getText("bulletin.scope"), 90)
-					.setSortable(true).setValueFormater(
-							new KeyValueFormater(getEntityStatuses())));
-		if (!this.isReadonly()) {
-			if (this.useColumn("fileDate"))
-				columns.add(new TextColumn("fileDate",
-						getText("bulletin.fileDate"), 150)
-						.setSortable(true)
-						.setDir(Direction.Desc)
-						.setValueFormater(
-								new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-			if (this.useColumn("author.name"))
-				columns.add(new TextColumn("author.name",
-						getText("bulletin.authorName"), 80).setSortable(true));
-			if (this.useColumn("unit.name"))
-				columns.add(new TextColumn("unit.name",
-						getText("bulletin.unitName"), 80).setSortable(true));
-		}
-		return columns;
+		// 状态描述
+		statusDesc = this.getStatuses().get(
+				String.valueOf(this.getE().getStatus()));
 	}
 
 	@Override
@@ -328,28 +192,12 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	}
 
 	/**
-	 * 获取公告发布范围值转换列表
-	 * 
-	 * @return
-	 */
-	protected Map<String, String> getEntityStatuses() {
-		Map<String, String> scopes = new HashMap<String, String>();
-		scopes = new HashMap<String, String>();
-		scopes.put(String.valueOf(Bulletin.SCOPE_LOCALUNIT),
-				getText("bulletin.scope.localUnit"));
-		scopes.put(String.valueOf(Bulletin.SCOPE_SYSTEM),
-				getText("bulletin.scope.system"));
-		return scopes;
-	}
-
-	/**
 	 * 获取公告状态值转换列表
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getStatuses() {
+	private Map<String, String> getStatuses() {
 		Map<String, String> statuses = new HashMap<String, String>();
-		statuses = new HashMap<String, String>();
 		statuses.put(String.valueOf(Bulletin.STATUS_DRAFT),
 				getText("bulletin.status.draft"));
 		statuses.put(String.valueOf(Bulletin.STATUS_ISSUED),

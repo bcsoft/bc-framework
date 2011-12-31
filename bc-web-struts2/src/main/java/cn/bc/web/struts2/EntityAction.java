@@ -23,10 +23,10 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.StringUtils;
 
+import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
-import cn.bc.core.RichEntity;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
@@ -47,6 +47,7 @@ import cn.bc.web.ui.html.grid.GridHeader;
 import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.PageSizeGroupButton;
 import cn.bc.web.ui.html.grid.SeekGroupButton;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.html.page.PageOption;
@@ -211,11 +212,14 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String create() throws Exception {
 		// 初始化E
 		this.setE(this.getCrudService().create());
-		
-		this.afterCreate(this.getE());
 
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption();
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
+		
+		this.afterCreate(this.getE());
 
 		return "form";
 	}
@@ -224,33 +228,47 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用create初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterCreate(E entity) {
-		
 	}
 
 	// 编辑表单
 	public String edit() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+		this.formPageOption = buildFormPageOption(true);
+
+		// 初始化表单的其他配置
+		this.initForm(true);
+
 		this.afterEdit(e);
-		
-		this.formPageOption = buildFormPageOption();
 		return "form";
+	}
+
+	/**
+	 * 初始化表单的其他配置，如下拉框列表等
+	 * 
+	 * @param editable
+	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
+	 */
+	protected void initForm(boolean editable) {
 	}
 
 	/**
 	 * 在调用edit初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterEdit(E entity) {
-		
+
 	}
 
 	// 只读表单
 	public String open() throws Exception {
 		e = this.getCrudService().load(this.getId());
-		
+
+		// 强制表单只读
+		this.formPageOption = buildFormPageOption(false);
+
+		// 初始化表单的其他配置
+		this.initForm(false);
+
 		this.afterOpen(e);
-		
-		this.formPageOption = buildFormPageOption();
 		return "formr";
 	}
 
@@ -258,14 +276,6 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 在调用open初始化entity之后、调用buildFormPageOption方法之前调用的方法，给基类一个扩展的处理
 	 */
 	protected void afterOpen(E entity) {
-		
-	}
-
-	// 表单：自动判断权限
-	public String read() throws Exception {
-		e = this.getCrudService().load(this.getId());
-		this.formPageOption = buildFormPageOption();
-		return "form";
 	}
 
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
@@ -304,7 +314,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.afterSave(e);
 		return "saveSuccess";
 	}
-	
+
 	/**
 	 * 在调用save之前调用的方法，给基类一个扩展的处理
 	 */
@@ -317,8 +327,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected void afterSave(E entity) {
 	}
 
-
 	public String json;
+
 	// 删除
 	public String delete() throws Exception {
 		try {
@@ -334,13 +344,14 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 				}
 			}
 		} catch (JpaSystemException e) {
-			//处理违反外键约束导致的删除异常，提示用户因关联而无法删除
+			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
 			throw new CoreException("JpaSystemException");
 		}
 		return "deleteSuccess";
 	}
 
 	// 获取列表视图页面----无分页
+	@Deprecated
 	public String list() throws Exception {
 		// 根据请求的条件查找信息
 		this.es = this.findList();
@@ -353,6 +364,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 获取列表视图页面----分页
+	@Deprecated
 	public String paging() throws Exception {
 		// 首次请求时page对象为空，需要初始化一下
 		if (this.page == null)
@@ -373,6 +385,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 仅获取表格的数据信息部分
+	@Deprecated
 	public String data() throws Exception {
 		if (this.page != null) {// 分页的处理
 			// 根据请求的条件查找分页信息
@@ -404,6 +417,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String contentDisposition;// 下载文件处理方法
 
 	// 导出表格的数据为excel文件
+	@Deprecated
 	public String export() throws Exception {
 		// 确定下载文件的名称(解决跨浏览器中文文件名乱码问题)
 		if (fileName == null || fileName.length() == 0)
@@ -450,6 +464,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected GridHeader buildGridHeader(List<Column> columns) {
 		GridHeader header = new GridHeader();
 		header.setColumns(columns);
@@ -462,6 +477,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected GridData buildGridData(List<Column> columns) {
 		GridData data = new GridData();
 		if (this.page != null) {
@@ -481,6 +497,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected List<? extends Object> findList() {
 		return this.getCrudService().createQuery()
 				.condition(this.getCondition()).list();
@@ -491,6 +508,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected Page<? extends Object> findPage() {
 		return this.getCrudService().createQuery()
 				.condition(this.getCondition())
@@ -498,6 +516,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 页面条件
+	@Deprecated
 	protected Condition getCondition() {
 		return new AndCondition().add(getSpecalCondition())
 				.add(getSearchCondition()).add(getOrderCondition());
@@ -508,6 +527,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected OrderCondition getOrderCondition() {
 		if (this.sort == null || this.sort.length() == 0)
 			return getDefaultOrderCondition();
@@ -536,6 +556,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected OrderCondition getDefaultOrderCondition() {
 		return null;
 	}
@@ -545,6 +566,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected Condition getSpecalCondition() {
 		return null;
 	}
@@ -586,6 +608,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected String[] getSearchFields() {
 		logger.warn("please override the method 'getSearchFields' in your action!");
 		return null;
@@ -598,6 +621,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 *            分页信息对象
 	 * @return
 	 */
+	@Deprecated
 	protected HtmlPage buildHtml4Paging() {
 		ListPage listPage = new ListPage();
 		// 工具条
@@ -628,25 +652,67 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	protected HtmlPage buildHtml4List() {
 		return this.buildHtml4Paging();
 	}
 
-	/** 构建视图页面的对话框初始化配置 */
+	/** 请使用buildFormPageOption(boolean editable)代替 */
+	@Deprecated
 	protected PageOption buildListPageOption() {
 		return new PageOption().setMinWidth(250).setMinHeight(200)
 				.setModal(false);
 	}
 
 	/** 构建表单页面的对话框初始化配置 */
+	@Deprecated
 	protected PageOption buildFormPageOption() {
+		return buildFormPageOption(false);
+	}
+
+	/**
+	 * 构建表单的对话框初始化配置
+	 * 
+	 * @param editable
+	 *            是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 * @return
+	 */
+	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		pageOption.put("readonly",this.isReadonly());
+
+		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
+		boolean readonly = this.isReadonly();
+		if (editable && !readonly) {
+			pageOption.put("readonly", readonly);
+
+		} else {
+			pageOption.put("readonly", true);
+		}
+
+		// 添加按钮
+		buildFormPageButtons(pageOption, editable);
+		
 		return pageOption;
 	}
 
+	/**
+	 * 添加表单操作按钮，默认为保存按钮
+	 * 
+	 * @param pageOption
+	 * @param editable
+	 *            是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 */
+	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+		boolean readonly = this.isReadonly();
+		if (editable && !readonly) {
+			// 添加默认的保存按钮
+			pageOption.addButton(this.getDefaultSaveButtonOption());
+		}
+	}
+
 	/** 构建视图页面的工具条 */
+	@Deprecated
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
@@ -671,32 +737,44 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	// 创建默认的新建按钮
+	@Deprecated
 	protected Button getDefaultCreateToolbarButton() {
 		return Toolbar.getDefaultCreateToolbarButton(getText("label.create"));
 	}
 
 	// 创建默认的查看按钮
+	@Deprecated
 	protected Button getDefaultOpenToolbarButton() {
 		return Toolbar.getDefaultEditToolbarButton(getText("label.read"));
 	}
 
 	// 创建默认的编辑按钮
+	@Deprecated
 	protected Button getDefaultEditToolbarButton() {
 		return Toolbar.getDefaultEditToolbarButton(getText("label.edit"));
 	}
 
 	// 创建默认的删除按钮
+	@Deprecated
 	protected Button getDefaultDeleteToolbarButton() {
 		return Toolbar.getDefaultDeleteToolbarButton(getText("label.delete"));
 	}
 
 	// 创建默认的搜索按钮
+	@Deprecated
 	protected Button getDefaultSearchToolbarButton() {
 		return Toolbar
 				.getDefaultSearchToolbarButton(getText("title.click2search"));
 	}
 
+	/** 创建默认的表单保存按钮 */
+	protected ButtonOption getDefaultSaveButtonOption() {
+		return new ButtonOption(getText("label.save"), "save")
+				.setId("bcSaveBtn");
+	}
+
 	/** 构建视图页面的表格 */
+	@Deprecated
 	protected Grid buildGrid() {
 		List<Column> columns = this.buildGridColumns();
 
@@ -718,6 +796,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		return grid;
 	}
 
+	@Deprecated
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn());
@@ -747,6 +826,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/** 构建视图页面表格底部的工具条 */
+	@Deprecated
 	protected GridFooter buildGridFooter(Grid grid) {
 		GridFooter footer = new GridFooter();
 
@@ -848,11 +928,11 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 */
 	protected Map<String, String> getEntityStatuses() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(RichEntity.STATUS_ENABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
 				getText("entity.status.enabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DISABLED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
 				getText("entity.status.disabled"));
-		statuses.put(String.valueOf(RichEntity.STATUS_DELETED),
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
 				getText("entity.status.deleted"));
 		return statuses;
 	}
