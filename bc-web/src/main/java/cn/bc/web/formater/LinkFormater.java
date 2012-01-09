@@ -20,6 +20,9 @@ public abstract class LinkFormater extends AbstractFormater<String> {
 	protected String urlPattern;
 	protected String moduleKey;
 
+	public LinkFormater() {
+	}
+
 	/**
 	 * @param urlPattern
 	 *            url格式，不要包含上下文路径，如"/bc/user/open?id={0}&name={1}"
