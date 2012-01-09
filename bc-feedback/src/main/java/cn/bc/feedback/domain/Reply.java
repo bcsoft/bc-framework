@@ -4,6 +4,9 @@
 package cn.bc.feedback.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.identity.domain.RichFileEntityImpl;
@@ -19,16 +22,18 @@ public class Reply extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	// 使用标准的状态定义，详见BCConstants.STATUS_XXX常数的定义
 
-	private Feedback parent;// 所属反馈
+	private Feedback feedback;// 所属反馈
 	private String subject;// 标题
 	private String content;// 详细内容
 
-	public Feedback getParent() {
-		return parent;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "PID", referencedColumnName = "ID")
+	public Feedback getFeedback() {
+		return feedback;
 	}
 
-	public void setParent(Feedback parent) {
-		this.parent = parent;
+	public void setFeedback(Feedback feedback) {
+		this.feedback = feedback;
 	}
 
 	public String getSubject() {
