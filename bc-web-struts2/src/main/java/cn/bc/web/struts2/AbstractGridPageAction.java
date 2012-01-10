@@ -408,8 +408,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @return
 	 */
 	protected MixCondition getGridSearchCondition() {
-		if (this.search == null || this.search.length() == 0)
+		if (this.search == null || this.search.trim().length() == 0)
 			return null;
+		this.search = this.search.trim();
 
 		// 用空格分隔多个查询条件值的处理
 		String[] values;
