@@ -154,7 +154,7 @@ public class OptionDaoImpl implements OptionDao {
 		if (optionGroupKeys == null || optionGroupKeys.length == 0)
 			return null;
 
-		String hql = "select g.key_,i.key_,i.value_,i.id from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
+		String hql = "select g.key_ as gkey,i.key_ as key,i.value_ as value,i.id as id from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
 		hql += " where g.key_";
 		Object[] args;
 		if (optionGroupKeys.length == 1) {
