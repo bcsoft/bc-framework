@@ -26,6 +26,8 @@
 			<param name="my">true</param>
 			<result name="formr">/bc/log/syslog/form.jsp</result>
 		</action>
+	</package>
+	<package name="mysyslogs" extends="bc-default" namespace="/bc/mysyslogs">
 		<action name="list" class="syslogsAction" method="list">
 			<param name="my">true</param>
 		</action>
