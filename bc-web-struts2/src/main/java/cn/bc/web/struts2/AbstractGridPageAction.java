@@ -433,7 +433,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			OrCondition or = new OrCondition();
 			for (String field : likeFields) {
 				for (String value : values) {
-					or.add(new LikeCondition(field, value));
+					or.add(getGridSearchCondition4OneField(field, value));
 				}
 			}
 
@@ -451,7 +451,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			for (String field : likeFields) {
 				or = new OrCondition();
 				for (String value : values) {
-					or.add(new LikeCondition(field, value));
+					or.add(getGridSearchCondition4OneField(field, value));
 				}
 				// 用括号将多个or条件括住
 				or.setAddBracket(true);
@@ -461,6 +461,18 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 			return and;
 		}
+	}
+
+	/**
+	 * 构建单个查询条件的方法
+	 * 
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	protected LikeCondition getGridSearchCondition4OneField(String field,
+			String value) {
+		return new LikeCondition(field, value);
 	}
 
 	@Override
