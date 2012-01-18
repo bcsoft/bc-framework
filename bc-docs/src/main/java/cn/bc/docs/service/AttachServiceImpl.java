@@ -19,6 +19,7 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.docs.domain.Attach;
+import cn.bc.identity.web.SystemContextHolder;
 
 /**
  * 附件service接口的实现
@@ -63,8 +64,8 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 
 	public List<Attach> doCopy(String fromPtype, String fromPuid,
 			String toPtype, String toPuid, boolean keepAuthorInfo) {
-		// TODO 设置附件的真正路径
-		String dataPath = "/bcdata";
+		// 附件的真正存储路径
+		String dataPath = Attach.DATA_REAL_PATH;;
 
 		Calendar now = Calendar.getInstance();
 		if (logger.isDebugEnabled()) {
@@ -94,13 +95,15 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		for (Attach old : olds) {
 			// _new = old.copy(dataPath, toPtype, toPuid);// 复制物理附件
 			_new = new Attach();
-			BeanUtils.copyProperties(this, _new);
+			BeanUtils.copyProperties(old, _new);
 			_new.setId(null);
 			_new.setPtype(toPtype);
 			_new.setPuid(toPuid);
 			if (!keepAuthorInfo) {
 				_new.setFileDate(now);
-				// TODO 设置文件的作者信息
+				
+				// 设置文件的作者信息
+				_new.setAuthor(SystemContextHolder.get().getUserHistory());
 				_new.setModifiedDate(null);
 				_new.setModifier(null);
 			}
@@ -121,7 +124,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 							.getTime()) + "." + old.getExtension();// 不含路径的文件名
 			relativeFilePath = subFolder + "/" + newFileName;
 			realFileDir = dataPath + "/" + subFolder;
-			realFilePath = realFileDir + "/" + relativeFilePath;
+			realFilePath = realFileDir + "/" + newFileName;
 			_new.setPath(relativeFilePath);
 
 			// 构建新文件要保存到的目录
