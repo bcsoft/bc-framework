@@ -154,7 +154,7 @@ public class OptionItem extends EntityImpl {
 			if (currentValue != null) {
 				boolean exist = false;
 				for (Map<String, String> oi : list) {
-					if (currentValue.equals(oi.get("key"))) {
+					if (currentValue.equals(oi.get("value"))) {
 						exist = true;
 						break;
 					}
