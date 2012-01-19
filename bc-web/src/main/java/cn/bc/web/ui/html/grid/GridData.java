@@ -83,7 +83,7 @@ public class GridData extends Div {
 		if (formater != null) {
 			if (formater instanceof LinkFormater) {
 				value = ((LinkFormater) formater).getLinkText(context,
-						cellValue);// 背面显示的是超链接的html
+						cellValue);// 避免显示的是超链接的html
 			} else {
 				value = formater.format(context, cellValue);
 			}
