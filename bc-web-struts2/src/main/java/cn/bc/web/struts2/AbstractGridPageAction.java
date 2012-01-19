@@ -59,6 +59,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	public List<T> es; // grid的数据
 	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
+	public String search4advance; // 高级搜索的条件
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 
 	public Page<T> getPage() {
