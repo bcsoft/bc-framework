@@ -113,4 +113,9 @@ public class OrderCondition implements Condition {
 	public List<Object> getValues() {
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return "ql=" + this.getExpression();
+	}
 }

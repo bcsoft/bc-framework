@@ -6,9 +6,10 @@ package cn.bc.core.query.condition.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
-
 
 /**
  * 范围条件
@@ -62,7 +63,7 @@ public class RangeCondition implements Condition {
 
 	public String getExpression(String alias) {
 		String name = this.name;
-		if(alias != null && alias.length() > 0)
+		if (alias != null && alias.length() > 0)
 			name = alias + "." + name;
 		String[] symbol = this.rangeType.toSymbol();
 		return "(" + name + " " + symbol[0] + " ? and " + name + " "
@@ -71,5 +72,14 @@ public class RangeCondition implements Condition {
 
 	public List<Object> getValues() {
 		return values;
+	}
+
+	@Override
+	public String toString() {
+		return "ql="
+				+ this.getExpression()
+				+ ",args="
+				+ StringUtils
+						.collectionToCommaDelimitedString(this.getValues());
 	}
 }

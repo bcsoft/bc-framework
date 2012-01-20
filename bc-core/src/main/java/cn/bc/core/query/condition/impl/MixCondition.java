@@ -6,6 +6,8 @@ package cn.bc.core.query.condition.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import cn.bc.core.query.condition.Condition;
 
 /**
@@ -127,5 +129,14 @@ public abstract class MixCondition implements Condition {
 				args.addAll(condition.getValues());
 		}
 		return args;
+	}
+
+	@Override
+	public String toString() {
+		return "ql="
+				+ this.getExpression()
+				+ ",args="
+				+ StringUtils
+						.collectionToCommaDelimitedString(this.getValues());
 	}
 }
