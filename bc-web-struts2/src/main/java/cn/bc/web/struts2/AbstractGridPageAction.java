@@ -3,6 +3,7 @@
  */
 package cn.bc.web.struts2;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,17 +11,22 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.bc.BCConstants;
 import cn.bc.core.Page;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.DateUtils;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
@@ -40,16 +46,6 @@ import cn.bc.web.ui.json.Json;
  * @author dragon
  * 
  */
-/**
- * @author dragon
- *
- * @param <T>
- */
-/**
- * @author dragon
- * 
- * @param <T>
- */
 public abstract class AbstractGridPageAction<T extends Object> extends
 		AbstractHtmlPageAction {
 	private static final long serialVersionUID = 1L;
@@ -59,7 +55,15 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	public List<T> es; // grid的数据
 	private Page<T> page; // 分页对象
 	public String search; // 搜索框输入的文本
-	public String search4advance; // 高级搜索的条件
+	/**
+	 * 高级搜索的条件，使用标准的json数组结构： [ { type:
+	 * "string"|"int"|"long"|"date"|"startDate"|
+	 * "endDate"|"calendar"|"startCalendar"|"endCalendar", ql:
+	 * "field=?"|"field>=?"|"field<=?"|"field like ?"|"field in (?,?,...)"|...,
+	 * value: 值|[值1,值2,...] } ]
+	 * 
+	 */
+	public String search4advance;
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 
 	public Page<T> getPage() {
@@ -404,11 +408,22 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	}
 
 	/**
-	 * 构建查询条件
+	 * 构建简易+高级的查询条件
 	 * 
 	 * @return
 	 */
 	protected MixCondition getGridSearchCondition() {
+		return ConditionUtils.mix2AndCondition(
+				this.getGridSearchCondition4Simple(),
+				this.getGridSearchCondition4Advance());
+	}
+
+	/**
+	 * 构建简易查询条件：对应默认的简易搜索条件
+	 * 
+	 * @return
+	 */
+	protected MixCondition getGridSearchCondition4Simple() {
 		if (this.search == null || this.search.trim().length() == 0)
 			return null;
 		this.search = this.search.trim();
@@ -440,6 +455,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 			// 用括号将多个or条件括住
 			or.setAddBracket(true);
+			if (logger.isDebugEnabled()) {
+				logger.debug("simpleConditions:" + or.toString());
+			}
 			return or;
 		} else {// “A+B”查询
 			// ----(f1 like v1 or f1 like v2 or ..) and (f2 like v1 or f2 like
@@ -460,6 +478,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				and.add(or);
 			}
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("simpleConditions:" + and.toString());
+			}
 			return and;
 		}
 	}
@@ -474,6 +495,62 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	protected LikeCondition getGridSearchCondition4OneField(String field,
 			String value) {
 		return new LikeCondition(field, value);
+	}
+
+	/**
+	 * 构建高级查询条件
+	 * 
+	 * @return
+	 */
+	protected MixCondition getGridSearchCondition4Advance() {
+		if (this.search4advance == null
+				|| this.search4advance.trim().length() == 0)
+			return null;
+		this.search4advance = this.search4advance.trim();
+		try {
+			JSONArray jsons = new JSONArray(this.search4advance);
+			if (jsons.length() == 0)
+				return null;
+
+			AndCondition and = new AndCondition();
+			and.setAddBracket(true);
+			JSONObject json;
+			Object value;
+			String type;
+			String ql;
+			JSONArray value1;
+			boolean isLike;
+			List<Object> args = new ArrayList<Object>();
+			for (int i = 0; i < jsons.length(); i++) {
+				json = jsons.getJSONObject(i);
+				value = json.get("value");
+				type = json.getString("type");
+				ql = json.getString("ql");
+				isLike = ql.toLowerCase().indexOf("like") != -1;
+				if (value instanceof JSONArray) {// 多个值的数组
+					value1 = (JSONArray) value;
+					args = new ArrayList<Object>();
+					for (int j = 0; j < value1.length(); j++) {
+						args.add(QlCondition.convertValue(type,
+								value1.getString(j), isLike));
+					}
+					and.add(new QlCondition(ql, args));
+				} else {// 单个值的字符串
+					and.add(new QlCondition(ql, new Object[] { QlCondition
+							.convertValue(type, (String) value, isLike) }));
+				}
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("advanceConditions:" + and.toString());
+			}
+			return and;
+		} catch (JSONException e) {
+			logger.error("can't convert to JSONArray:search4advance="
+					+ this.search4advance);
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	@Override

@@ -6,12 +6,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * 时间日期处理帮助类
  * 
  * @author dragon
  */
 public class DateUtils {
+	private final static Log logger = LogFactory.getLog(DateUtils.class);
+
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd
 	 * 
@@ -124,6 +129,8 @@ public class DateUtils {
 		try {
 			return df.parse(dateTime);
 		} catch (ParseException pe) {
+			logger.error("can't parse to date,return null:dateTime=" + dateTime
+					+ ",error=" + pe.getMessage());
 			return null;
 		}
 	}
@@ -202,6 +209,21 @@ public class DateUtils {
 	}
 
 	/**
+	 * 将日期时分秒设为0(类似yyyy-MM-dd 00:00:00)
+	 * 
+	 * @param date
+	 *            要处理的日期
+	 */
+	@SuppressWarnings("deprecation")
+	public static void setToZeroTime(Date date) {
+		if (date == null)
+			return;
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+	}
+
+	/**
 	 * 将日期时分秒设为最大值(类似yyyy-MM-dd 23:59:59)
 	 * 
 	 * @param calendar
@@ -213,6 +235,21 @@ public class DateUtils {
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
+	}
+
+	/**
+	 * 将日期时分秒设为最大值(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param date
+	 *            要处理的日期
+	 */
+	@SuppressWarnings("deprecation")
+	public static void setToMaxTime(Date date) {
+		if (date == null)
+			return;
+		date.setHours(23);
+		date.setMinutes(59);
+		date.setSeconds(59);
 	}
 
 	/**
