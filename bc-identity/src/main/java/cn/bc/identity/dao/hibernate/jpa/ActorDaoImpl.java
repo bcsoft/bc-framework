@@ -720,6 +720,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 						int i = 0;
 						map.put("id", rs[i++].toString());
 						map.put("type_", rs[i++].toString());
+						map.put("type", map.get("type"));
 						map.put("code", rs[i++].toString());
 						map.put("name", rs[i++].toString());
 						map.put("pcode", rs[i] != null ? rs[i].toString() : "");
