@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>0.7-SNAPSHOT</version>
+		<version>0.8-SNAPSHOT</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-report</artifactId>
