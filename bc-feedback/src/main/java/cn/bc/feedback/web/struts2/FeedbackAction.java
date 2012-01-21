@@ -55,8 +55,11 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.feedback"),
-				getText("key.role.bc.admin"));// 反馈管理或超级管理角色
+		if (this.getE() != null && this.getE().isNew())
+			return false;
+		else
+			return !context.hasAnyRole(getText("key.role.bc.feedback"),
+					getText("key.role.bc.admin"));// 反馈管理或超级管理角色
 	}
 
 	@Override
@@ -81,9 +84,12 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
-		if (this.getE().isNew() && editable && !this.isReadonly()) {
+		if (this.getE().isNew() && editable) {
+			// 预览按钮
 			pageOption.addButton(new ButtonOption(getText("label.preview"),
 					"preview"));
+
+			// 提交按钮
 			pageOption.addButton(new ButtonOption(getText("label.submit"),
 					"submit"));
 		}
