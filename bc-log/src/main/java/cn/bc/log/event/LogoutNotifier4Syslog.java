@@ -29,8 +29,8 @@ import cn.bc.web.util.WebUtils;
  * @author dragon
  * 
  */
-public class LogoutNotifier implements ApplicationListener<LogoutEvent> {
-	private static Log logger = LogFactory.getLog(LogoutNotifier.class);
+public class LogoutNotifier4Syslog implements ApplicationListener<LogoutEvent> {
+	private static Log logger = LogFactory.getLog(LogoutNotifier4Syslog.class);
 	private SyslogService syslogService;
 	private OnlineUserService onlineUserService;
 	private boolean trace;

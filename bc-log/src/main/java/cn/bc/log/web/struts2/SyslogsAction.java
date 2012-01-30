@@ -129,7 +129,7 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 				getText("syslog.type.login"));
 		types.put(String.valueOf(Syslog.TYPE_LOGOUT),
 				getText("syslog.type.logout"));
-		types.put(String.valueOf(Syslog.TYPE_LOGOUT2),
+		types.put(String.valueOf(Syslog.TYPE_LOGIN_TIMEOUT),
 				getText("syslog.type.logout2"));
 		return types;
 	}

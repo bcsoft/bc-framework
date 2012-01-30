@@ -30,8 +30,8 @@ import cn.bc.web.util.WebUtils;
  * @author dragon
  * 
  */
-public class LoginNotifier implements ApplicationListener<LoginEvent> {
-	private static Log logger = LogFactory.getLog(LoginNotifier.class);
+public class LoginNotifier4Syslog implements ApplicationListener<LoginEvent> {
+	private static Log logger = LogFactory.getLog(LoginNotifier4Syslog.class);
 	private SyslogService syslogService;
 	private OnlineUserService onlineUserService;
 	private boolean trace;
@@ -65,6 +65,7 @@ public class LoginNotifier implements ApplicationListener<LoginEvent> {
 			String info = user.getName() + "登录系统";
 			info += ",client=" + clientIp;
 			info += ",server=" + serverIp;
+			info += ",sid=" + request.getSession().getId();
 			logger.debug(info);
 		}
 
