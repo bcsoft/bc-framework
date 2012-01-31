@@ -31,6 +31,19 @@ public class DateUtils {
 	}
 
 	/**
+	 * 将参数中的时间格式化为：yyyy-MM-dd
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String formatCalendar2Day(Calendar calendar) {
+		if (null == calendar)
+			return "";
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		return df.format(calendar.getTime());
+	}
+
+	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm:ss
 	 * 
 	 * @param date
@@ -41,6 +54,17 @@ public class DateUtils {
 	}
 
 	/**
+	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm:ss
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String formatCalendar2Second(Calendar calendar) {
+		return formatDateTime(calendar != null ? calendar.getTime() : null,
+				"yyyy-MM-dd HH:mm:ss");
+	}
+
+	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm
 	 * 
 	 * @param date
@@ -48,6 +72,17 @@ public class DateUtils {
 	 */
 	public static String formatDateTime2Minute(Date date) {
 		return formatDateTime(date, "yyyy-MM-dd HH:mm");
+	}
+
+	/**
+	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String formatCalendar2Minute(Calendar calendar) {
+		return formatDateTime(calendar != null ? calendar.getTime() : null,
+				"yyyy-MM-dd HH:mm");
 	}
 
 	/**
@@ -63,6 +98,21 @@ public class DateUtils {
 			return "";
 		DateFormat df = new SimpleDateFormat(format);
 		return df.format(date);
+	}
+
+	/**
+	 * 将参数中的时间格式化为指定的格式
+	 * 
+	 * @param date
+	 * @param format
+	 *            格式
+	 * @return
+	 */
+	public static String formatCalendar(Calendar calendar, String format) {
+		if (null == calendar)
+			return "";
+		DateFormat df = new SimpleDateFormat(format);
+		return df.format(calendar.getTime());
 	}
 
 	/**
