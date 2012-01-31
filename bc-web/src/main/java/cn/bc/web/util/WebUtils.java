@@ -201,12 +201,19 @@ public class WebUtils implements ServletContextAware {
 	 */
 	public static String getClientIP(HttpServletRequest request) {
 		String ip = request.getHeader("x-forwarded-for");// apache转发
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getHeader("Proxy-Client-IP");
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown"))
-			ip = request.getRemoteAddr();
+		logger.debug("get clientIP by request.getHeader(\"x-forwarded-for\")");
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+			ip = request.getHeader("Proxy-Client-IP");// 使用代理
+			logger.debug("get clientIP by request.getHeader(\"Proxy-Client-IP\")");
+		}
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+			ip = request.getHeader("WL-Proxy-Client-IP");// weblogic集群
+			logger.debug("get clientIP by request.getHeader(\"WL-Proxy-Client-IP\")");
+		}
+		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+			ip = request.getRemoteAddr();// 原始
+			logger.debug("get clientIP by request.getRemoteAddr()");
+		}
 		return ip;
 	}
 
