@@ -70,11 +70,23 @@ public class Toolbar extends Div {
 		return sb;
 	}
 
+	/** 默认的高级搜索按钮 */
+	public static Button getDefaultAdvanceSearchToolbarButton(String title,
+			String advanceTitle, String conditionsFromUrl) {
+		ToolbarAdvanceSearchButton sb = new ToolbarAdvanceSearchButton();
+		sb.setAdvanceTitle(advanceTitle)
+				.setConditionsFormUrl(conditionsFromUrl).setAction("search")
+				.setTitle(title);
+		return sb;
+	}
+
 	/** 默认的单选按钮组 */
 	public static Button getDefaultToolbarRadioGroup(
-			Map<String, String> labelValues, String key, int activeIndex, String tip) {
+			Map<String, String> labelValues, String key, int activeIndex,
+			String tip) {
 		ToolbarRadioGroup rg = new ToolbarRadioGroup();
-		rg.setActive(activeIndex).setKey(key).setAction("reloadGrid").setTitle(tip);
+		rg.setActive(activeIndex).setKey(key).setAction("reloadGrid")
+				.setTitle(tip);
 		for (Entry<String, String> e : labelValues.entrySet()) {
 			rg.addRadio(e.getValue(), e.getKey());
 		}

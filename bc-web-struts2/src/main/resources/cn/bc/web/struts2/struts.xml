@@ -68,6 +68,10 @@
 		<action name="/*/open" class="{1}Action" method="open">
 			<result name="formr">/bc/{1}/form.jsp</result>
 		</action>
+		<!-- 高级搜索条件窗口 -->
+		<action name="/*/conditions" class="{1}Action" method="conditions">
+			<result name="success">/bc/{1}/conditions.jsp</result>
+		</action>
 		<!-- 保存 -->
 		<action name="/*/save" class="{1}Action" method="save" />
 		<!-- 删除 -->

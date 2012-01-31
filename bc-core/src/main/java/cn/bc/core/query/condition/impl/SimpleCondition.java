@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import cn.bc.core.query.QueryOperator;
 import cn.bc.core.query.condition.Condition;
-
 
 /**
  * 简单的符号比较条件
@@ -57,7 +58,7 @@ public class SimpleCondition implements Condition {
 
 	public String getExpression(String alias) {
 		String name = this.getName();
-		if(alias != null && alias.length() > 0)
+		if (alias != null && alias.length() > 0)
 			name = alias + "." + name;
 		StringBuilder e = new StringBuilder(name + " "
 				+ this.operator.toSymbol());
@@ -67,8 +68,9 @@ public class SimpleCondition implements Condition {
 				e.append(i == 0 ? "?" : ",?");
 			}
 			e.append(")");
-		} else if (operator == QueryOperator.IsNull || operator == QueryOperator.IsNotNull) {
-			
+		} else if (operator == QueryOperator.IsNull
+				|| operator == QueryOperator.IsNotNull) {
+
 		} else {
 			e.append(" ?");
 		}
@@ -81,5 +83,14 @@ public class SimpleCondition implements Condition {
 
 	protected String getName() {
 		return this.name;
+	}
+
+	@Override
+	public String toString() {
+		return "ql="
+				+ this.getExpression()
+				+ ",args="
+				+ StringUtils
+						.collectionToCommaDelimitedString(this.getValues());
 	}
 }

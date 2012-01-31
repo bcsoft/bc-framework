@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.bc</groupId>
 	<artifactId>bc-parent</artifactId>
-	<version>0.7-SNAPSHOT</version>
+	<version>0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>bc-parent</name>
 	<distributionManagement>  
