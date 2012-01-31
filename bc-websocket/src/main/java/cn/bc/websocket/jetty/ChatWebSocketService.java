@@ -100,7 +100,18 @@ public interface ChatWebSocketService {
 	/**
 	 * 通知其它用户指定的连接断开不再在线了
 	 * 
-	 * @param sid 断开连接的sid
+	 * @param sid
+	 *            断开连接的sid
 	 */
 	void offline(String sid);
+
+	/**
+	 * 指定的客户端登录了
+	 * 
+	 * @param sid
+	 *            客户端的sid
+	 * @param relogin
+	 *            是否是重新登录
+	 */
+	void memberLogin(String sid, boolean relogin);
 }

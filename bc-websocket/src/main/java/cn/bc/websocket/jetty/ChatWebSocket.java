@@ -99,7 +99,8 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 
 			this.connection = null;
 		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
+			//这个异常是在jetty的websocket在session超时关闭时自动创建并销毁一个临时的session导致的
+			logger.info("sid=" + this.sid + ":" + e.getMessage(),e);
 		}
 	}
 

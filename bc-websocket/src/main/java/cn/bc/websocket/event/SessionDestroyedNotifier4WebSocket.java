@@ -30,8 +30,11 @@ public class SessionDestroyedNotifier4WebSocket implements
 	}
 
 	public void onApplicationEvent(SessionDestroyedEvent event) {
-		if (logger.isDebugEnabled())
-			logger.debug("sid=" + event.getSession().getId());
+		String sid = (String) event.getSession().getAttribute("sid");
+		if (logger.isDebugEnabled()){
+			logger.debug("session id=" + event.getSession().getId());
+			logger.debug("sid=" + sid);
+		}
 
 		SystemContext context = (SystemContext) event.getContext();
 
@@ -40,6 +43,6 @@ public class SessionDestroyedNotifier4WebSocket implements
 			return;
 
 		// 通知其他连接超时下线
-		this.webSocketService.offline(event.getSession().getId());
+		this.webSocketService.offline(sid);
 	}
 }

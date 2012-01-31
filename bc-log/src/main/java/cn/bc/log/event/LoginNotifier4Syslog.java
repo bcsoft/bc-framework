@@ -3,8 +3,6 @@
  */
 package cn.bc.log.event;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,18 +52,13 @@ public class LoginNotifier4Syslog implements ApplicationListener<LoginEvent> {
 		Actor user = event.getUser();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String clientIp = WebUtils.getClientIP(request);
+		String sid = (String) request.getSession().getAttribute("sid");
 		if (logger.isDebugEnabled()) {
-			String serverIp;
-			try {
-				InetAddress localhost = InetAddress.getLocalHost();
-				serverIp = localhost.getHostAddress();
-			} catch (UnknownHostException e) {
-				serverIp = "UnknownHost";
-			}
+			String serverIp = WebUtils.getServerIP();
 			String info = user.getName() + "登录系统";
 			info += ",client=" + clientIp;
 			info += ",server=" + serverIp;
-			info += ",sid=" + request.getSession().getId();
+			info += ",sid=" + sid;
 			logger.debug(info);
 		}
 
@@ -87,7 +80,7 @@ public class LoginNotifier4Syslog implements ApplicationListener<LoginEvent> {
 		onlineUser.setPname(user.getPname());
 		onlineUser.setFullName(user.getFullName());
 		onlineUser.setIp(clientIp);
-		onlineUser.setSid(request.getSession().getId());
+		onlineUser.setSid(sid);
 		onlineUser.setBrowser(WebUtils.getBrowser(request));
 		try {
 			onlineUser.setMac(trace ? WebUtils.getMac(clientIp) : "no trace");

@@ -51,8 +51,9 @@ public class LogoutNotifier4Syslog implements ApplicationListener<LogoutEvent> {
 
 	public void onApplicationEvent(LogoutEvent event) {
 		ActorHistory userHistory = event.getUserHistory();
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String sid = (String) request.getSession().getAttribute("sid");
 		if (logger.isDebugEnabled()) {
-			HttpServletRequest request = ServletActionContext.getRequest();
 			String clientIp = WebUtils.getClientIP(request);
 			String serverIp;
 			try {
@@ -74,7 +75,6 @@ public class LogoutNotifier4Syslog implements ApplicationListener<LogoutEvent> {
 		syslogService.save(log);
 
 		// 移除下线用户
-		this.onlineUserService.remove(ServletActionContext.getRequest()
-				.getSession().getId());
+		this.onlineUserService.remove(sid);
 	}
 }

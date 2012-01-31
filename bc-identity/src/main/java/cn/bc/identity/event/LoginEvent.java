@@ -1,5 +1,7 @@
 package cn.bc.identity.event;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.ApplicationEvent;
 
 import cn.bc.identity.domain.Actor;
@@ -16,18 +18,22 @@ public class LoginEvent extends ApplicationEvent {
 	private final Actor user;
 	private final ActorHistory userHistory;
 	private final Integer loginType;
+	private final HttpServletRequest request;
 
 	/**
 	 * @param source
 	 *            事件源
+	 * @param HttpRequest
+	 *            请求
 	 * @param user
 	 *            用户
 	 * @param type
 	 *            类型，参考Syslog.TYPE_XXX常数的定义
 	 */
-	public LoginEvent(Object source, Actor user, ActorHistory userHistory,
-			Integer type) {
+	public LoginEvent(Object source, HttpServletRequest request, Actor user,
+			ActorHistory userHistory, Integer type) {
 		super(source);
+		this.request = request;
 		this.user = user;
 		this.userHistory = userHistory;
 		this.loginType = type;
@@ -53,5 +59,14 @@ public class LoginEvent extends ApplicationEvent {
 	 */
 	public Integer getLoginType() {
 		return loginType;
+	}
+
+	/**
+	 * 获取请求信息
+	 * 
+	 * @return
+	 */
+	public HttpServletRequest getRequest() {
+		return request;
 	}
 }
