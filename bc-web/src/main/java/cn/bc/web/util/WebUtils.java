@@ -16,7 +16,9 @@
 package cn.bc.web.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -213,6 +215,22 @@ public class WebUtils implements ServletContextAware {
 		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
 			ip = request.getRemoteAddr();// 原始
 			logger.debug("get clientIP by request.getRemoteAddr()");
+		}
+		return ip;
+	}
+
+	/**
+	 * 获取Server IP地址信息
+	 * 
+	 * @return
+	 */
+	public static String getServerIP() {
+		String ip;
+		try {
+			InetAddress localhost = InetAddress.getLocalHost();
+			ip = localhost.getHostAddress();
+		} catch (UnknownHostException e) {
+			ip = "UnknownHost";
 		}
 		return ip;
 	}
