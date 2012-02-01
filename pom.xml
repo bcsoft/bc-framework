@@ -35,6 +35,7 @@
 		<module>bc-docs</module>
 		<module>bc-bulletin</module>
 		<module>bc-feedback</module>
+		<module>bc-placeorigin</module>
 	</modules>
 	<scm>
 		<connection>scm:git:git://github.com/rongjihuang/bc-framework.git</connection>
