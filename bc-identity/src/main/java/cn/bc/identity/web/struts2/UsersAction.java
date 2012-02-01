@@ -16,6 +16,7 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.web.formater.SexFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.ui.html.grid.Column;
