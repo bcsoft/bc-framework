@@ -69,6 +69,8 @@ public class QlCondition implements Condition {
 
 		if (type.equals("int")) {
 			return new Integer(value);
+		} else if (type.equals("string")) {
+			return value;
 		} else if (type.equals("long")) {
 			return new Long(value);
 		} else if (type.equals("date")) {

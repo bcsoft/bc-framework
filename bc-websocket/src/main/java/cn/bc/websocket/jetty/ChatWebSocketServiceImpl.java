@@ -237,7 +237,13 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 			logger.debug("offline:sid=" + sid);
 
 		ChatWebSocket webSocket = this.get(sid);
-		Assert.notNull(webSocket);
+
+//		Assert.notNull(webSocket);
+		if (webSocket == null) {
+			logger.info("offline: not exists webSocket,ignore! sid=" + sid);
+			return;
+		}
+		
 		String msg = webSocket.getClientName() + "下线了(登录超时)！";
 		String json = buildJson(webSocket, ChatWebSocket.TYPE_OFFLINE, msg,
 				null);
