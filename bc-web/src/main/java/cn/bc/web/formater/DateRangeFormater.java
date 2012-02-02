@@ -42,7 +42,8 @@ public abstract class DateRangeFormater extends AbstractFormater<String> {
 			}
 		} else {
 			if (toDate == null) {
-				return format.format(fromDate) + "～";
+				return format.format(fromDate)
+						+ (!this.useEmptySymbol ? "～" : "");
 			} else {
 				return format.format(fromDate) + "～" + format.format(toDate);
 			}
@@ -62,4 +63,14 @@ public abstract class DateRangeFormater extends AbstractFormater<String> {
 	 * @return
 	 */
 	public abstract Date getToDate(Object context, Object value);
+
+	private boolean useEmptySymbol;
+
+	/**当没有结束日期时，是否使用"~"号，默认为使用，true为不使用
+	 * @param useEmptySymbol
+	 */
+	public DateRangeFormater setUseEmptySymbol(boolean useEmptySymbol) {
+		this.useEmptySymbol = useEmptySymbol;
+		return this;
+	}
 }
