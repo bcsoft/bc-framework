@@ -20,7 +20,7 @@
 				<!-- 登录验证信息保存到session的key -->
 				<param name="authKey">bc-context</param>
 				<!-- 排除下载文件的连接不作处理 -->
-				<param name="excludePaths">/bc/login*,/bc/attach/download*,/bc/attach/inline*,/changelog/*</param>
+				<param name="excludePaths">/bc/login*,/bc/relogin*,/bc/attach/download*,/bc/attach/inline*,/changelog/*</param>
 			</interceptor>
 			<interceptor-stack name="noCacheStack">
 				<interceptor-ref name="noCacheInterceptor" />

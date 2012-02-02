@@ -41,7 +41,8 @@ public class OnlineUserAction extends ActionSupport {
 		users = this.onlineService.getAll();
 
 		// 剔除自己
-		String sid = ServletActionContext.getRequest().getSession().getId();
+		String sid = (String) ServletActionContext.getRequest().getSession()
+				.getAttribute("sid");
 		OnlineUser onlineUser = null;
 		for (OnlineUser u : users) {
 			if (u.getSid().equals(sid)) {

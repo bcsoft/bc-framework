@@ -31,8 +31,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 		if (onlineUser == null)
 			return;
 
-		if (logger.isInfoEnabled()) {
-			logger.info(onlineUser.getName() + "上线了：" + onlineUser.toString());
+		if (logger.isDebugEnabled()) {
+			logger.debug("添加上线用户：" + onlineUser.toString());
 		}
 		this.onlineUsers.put(onlineUser.getSid(), onlineUser);
 	}
@@ -42,8 +42,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 			return;
 
 		OnlineUser onlineUser = onlineUsers.remove(sid);
-		if (logger.isInfoEnabled() && onlineUser != null) {
-			logger.info(onlineUser.getName() + "下线了：" + onlineUser.toString());
+		if (logger.isDebugEnabled() && onlineUser != null) {
+			logger.debug("移除下线用户：" + onlineUser.toString());
 		}
 	}
 

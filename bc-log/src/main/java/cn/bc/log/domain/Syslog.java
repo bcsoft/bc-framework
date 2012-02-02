@@ -24,7 +24,7 @@ public class Syslog extends BaseLog {
 	/** 注销 */
 	public static final Integer TYPE_LOGOUT = 1;
 	/** 超时 */
-	public static final Integer TYPE_LOGOUT2 = 2;
+	public static final Integer TYPE_LOGIN_TIMEOUT = 2;
 
 	private String clientIp; // 用户机器的IP地址
 	private String clientName; // 用户机器的名称
