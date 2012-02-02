@@ -14,6 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.bc.BCConstants;
 import cn.bc.core.EntityImpl;
 
@@ -168,5 +172,64 @@ public class OptionItem extends EntityImpl {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 将键值对的值列表转换为value(对应键值对的key)、label(对应键值对的value)的json数组
+	 * 
+	 * @param keyValues
+	 *            键值对
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONArray toLabelValues(List<Map<String, String>> keyValues)
+			throws JSONException {
+		return toLabelValues(keyValues, null, null);
+	}
+
+	/**
+	 * 将键值对的值列表转换为value(对应键值对的key)、label(对应键值对的value)的json数组
+	 * 
+	 * @param keyValues
+	 *            键值对
+	 * @param sameKey
+	 *            从keyValues中获取label和value的值的key
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONArray toLabelValues(List<Map<String, String>> keyValues,
+			String sameKey) throws JSONException {
+		return toLabelValues(keyValues, sameKey, sameKey);
+	}
+
+	/**
+	 * 将键值对的值列表转换为value(对应键值对的key)、label(对应键值对的value)的json数组
+	 * 
+	 * @param keyValues
+	 *            键值对
+	 * @param labelKey
+	 *            从keyValues中获取label值的key
+	 * @param valueKey
+	 *            从keyValues中获取value值的key
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONArray toLabelValues(List<Map<String, String>> keyValues,
+			String labelKey, String valueKey) throws JSONException {
+		if (labelKey == null)
+			labelKey = "value";
+		if (valueKey == null)
+			valueKey = "key";
+		JSONArray dropDownArray = new JSONArray();
+		if (keyValues != null) {
+			JSONObject json;
+			for (Map<String, String> map : keyValues) {
+				json = new JSONObject();
+				json.put("label", map.get(labelKey));
+				json.put("value", map.get(valueKey));
+				dropDownArray.put(json);
+			}
+		}
+		return dropDownArray;
 	}
 }
