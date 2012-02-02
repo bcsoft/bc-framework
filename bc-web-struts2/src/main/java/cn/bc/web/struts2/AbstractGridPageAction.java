@@ -28,6 +28,7 @@ import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.DateUtils;
+import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
@@ -573,33 +574,90 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 		if (this.isReadonly()) {
 			// 查看按钮
-			tb.addButton(Toolbar
-					.getDefaultOpenToolbarButton(getText("label.read")));
+			tb.addButton(getDefaultOpenToolbarButton());
 		} else {
 			// 新建按钮
-			tb.addButton(Toolbar
-					.getDefaultCreateToolbarButton(getText("label.create")));
+			tb.addButton(getDefaultCreateToolbarButton());
 
 			// 编辑按钮
-			tb.addButton(Toolbar
-					.getDefaultEditToolbarButton(getText("label.edit")));
+			tb.addButton(getDefaultEditToolbarButton());
 
 			if (useDisabledReplaceDelete) {
 				// 禁用按钮
-				tb.addButton(Toolbar
-						.getDefaultDisabledToolbarButton(getText("label.disabled")));
+				tb.addButton(getDefaultDisabledToolbarButton());
 			} else {
 				// 删除按钮
-				tb.addButton(Toolbar
-						.getDefaultDeleteToolbarButton(getText("label.delete")));
+				tb.addButton(getDefaultDeleteToolbarButton());
 			}
 		}
 
 		// 搜索按钮
-		tb.addButton(Toolbar
-				.getDefaultSearchToolbarButton(getText("title.click2search")));
+		tb.addButton(getDefaultSearchToolbarButton());
 
 		return tb;
+	}
+
+	/**
+	 * 创建默认的删除按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultDeleteToolbarButton() {
+		return Toolbar.getDefaultDeleteToolbarButton(getText("label.delete"));
+	}
+
+	/**
+	 * 创建默认的禁用按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultDisabledToolbarButton() {
+		return Toolbar
+				.getDefaultDisabledToolbarButton(getText("label.disabled"));
+	}
+
+	/**
+	 * 创建默认的编辑按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultEditToolbarButton() {
+		return Toolbar.getDefaultEditToolbarButton(getText("label.edit"));
+	}
+
+	/**
+	 * 创建默认的新建按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultCreateToolbarButton() {
+		return Toolbar.getDefaultCreateToolbarButton(getText("label.create"));
+	}
+
+	/**
+	 * 创建默认的查看按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultOpenToolbarButton() {
+		return Toolbar.getDefaultOpenToolbarButton(getText("label.read"));
+	}
+
+	/**
+	 * 创建默认的搜索按钮
+	 * 
+	 * @return
+	 */
+	protected Button getDefaultSearchToolbarButton() {
+		if (this.useAdvanceSearch()) {
+			return Toolbar.getDefaultAdvanceSearchToolbarButton(
+					getText("title.click2search"),
+					getText("title.click2advanceSearch"),
+					this.getAdvanceSearchConditionsActionPath());
+		} else {
+			return Toolbar
+					.getDefaultSearchToolbarButton(getText("title.click2search"));
+		}
 	}
 
 	/**
@@ -617,4 +675,51 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				getText("entity.status.deleted"));
 		return statuses;
 	}
+
+	// ==高级搜索代码开始==
+
+	/**
+	 * 获取高级搜索条件框的action路径，默认为“[上下文路径]/[子系统路径]/[domain类名的小写]/conditions”
+	 * 
+	 * @return
+	 */
+	protected String getAdvanceSearchConditionsActionPath() {
+		return this.getHtmlPageNamespace() + "/" + this.getFormActionName()
+				+ "s/conditions";
+	}
+
+	/**
+	 * 是否使用高级搜索，默认为false
+	 * 
+	 * @return
+	 */
+	protected boolean useAdvanceSearch() {
+		return false;
+	}
+
+	public String getAdvanceSearchConditionsJspPath() {
+		return BCConstants.NAMESPACE + "/" + this.getFormActionName();
+	}
+
+	/**
+	 * 高级搜索条件窗口
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String conditions() throws Exception {
+		// 加载条件窗口的可选项列表信息
+		this.initConditionsFrom();
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 初始化高级及搜索条件窗口的可选项列表信息
+	 */
+	protected void initConditionsFrom() throws Exception {
+
+	}
+
+	// ==高级搜索代码结束==
 }
