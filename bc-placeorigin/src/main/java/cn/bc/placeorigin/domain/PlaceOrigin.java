@@ -7,7 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.RichFileEntityImpl;
+import cn.bc.BCConstants;
+import cn.bc.identity.domain.FileEntityImpl;
+
 
 /**
  * 籍贯
@@ -16,7 +18,7 @@ import cn.bc.identity.domain.RichFileEntityImpl;
  */
 @Entity
 @Table(name = "BC_PLACEORIGIN")
-public class PlaceOrigin extends RichFileEntityImpl {
+public class PlaceOrigin extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	
 	/**类别：国家 */
@@ -31,7 +33,8 @@ public class PlaceOrigin extends RichFileEntityImpl {
 	public static final int TYPE_TOWNSHIP_LEVEL=4;
 	/**类别：村级 */
 	public static final int TYPE_VILLAGE_LEVEL=5;
-		
+	
+	private int status= BCConstants.STATUS_ENABLED;
 	private Long core;//统计用区划代码和城乡划分代码
 	private int type;//类型(0-国家,1-省级,2-地级,3-县级,4-乡级,5-村级)
 	private String name;//名称 例如：荔湾区
@@ -71,5 +74,12 @@ public class PlaceOrigin extends RichFileEntityImpl {
 		this.fullname = fullname;
 	}
 	
-	
+	@Column(name = "STATUS_")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }
