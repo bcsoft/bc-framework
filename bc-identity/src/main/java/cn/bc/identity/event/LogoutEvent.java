@@ -1,7 +1,11 @@
 package cn.bc.identity.event;
 
-import org.springframework.context.ApplicationEvent;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
 
 /**
@@ -10,40 +14,30 @@ import cn.bc.identity.domain.ActorHistory;
  * @author dragon
  * 
  */
-public class LogoutEvent extends ApplicationEvent {
+public class LogoutEvent extends LogBaseEvent {
 	private static final long serialVersionUID = -2066005399640273807L;
-	private final ActorHistory userHistory;
-	private final Integer loginType;
+	private static Log logger = LogFactory.getLog(LogoutEvent.class);
 
 	/**
 	 * @param source
 	 *            事件源
-	 * @param userHistory
+	 * @param request
+	 *            请求
+	 * @param user
 	 *            用户
-	 * @param type
-	 *            类型，参考Syslog.TYPE_XXX常数的定义
+	 * @param userHistory
+	 * @param sid
 	 */
-	public LogoutEvent(Object source, ActorHistory userHistory, Integer type) {
-		super(source);
-		this.userHistory = userHistory;
-		this.loginType = type;
-	}
+	public LogoutEvent(Object source, HttpServletRequest request, Actor user,
+			ActorHistory userHistory, String sid) {
+		super(source, request, user, userHistory, sid);
 
-	/**
-	 * 获取登录用户
-	 * 
-	 * @return
-	 */
-	public ActorHistory getUserHistory() {
-		return userHistory;
-	}
-
-	/**
-	 * 获取退出类型
-	 * 
-	 * @return
-	 */
-	public Integer getLoginType() {
-		return loginType;
+		if (logger.isDebugEnabled()) {
+			String info = user.getName() + "退出系统";
+			info += ",client=" + this.getClientIp();
+			info += ",server=" + this.getServerIp();
+			info += ",sid=" + this.getSid();
+			logger.debug(info);
+		}
 	}
 }

@@ -28,12 +28,10 @@ public class LoginNotifier4WebSocket implements ApplicationListener<LoginEvent> 
 	}
 
 	public void onApplicationEvent(LoginEvent event) {
-		String sid = (String) event.getRequest().getSession()
-				.getAttribute("sid");
+		String sid = (String) event.getSid();
 		if (logger.isDebugEnabled()) {
-			logger.debug("session id="
+			logger.debug("sid=" + sid + ",session id="
 					+ event.getRequest().getSession().getId());
-			logger.debug("sid=" + sid);
 		}
 
 		// 通知websocket用户重新登录了
