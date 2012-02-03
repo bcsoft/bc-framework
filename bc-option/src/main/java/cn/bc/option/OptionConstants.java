@@ -9,4 +9,5 @@ package cn.bc.option;
 public class OptionConstants {
 	/**系统管理员角色配置的键*/
 	public final static String ROLE_ADMIN = "role.admin";
+	
 }
