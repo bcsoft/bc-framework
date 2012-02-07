@@ -15,6 +15,7 @@ import cn.bc.Context;
 public class SessionDestroyedEvent extends ApplicationEvent {
 	private static final long serialVersionUID = 6578419945758700738L;
 	private final Context context;
+	private final String sid;
 
 	/**
 	 * @param source
@@ -22,9 +23,14 @@ public class SessionDestroyedEvent extends ApplicationEvent {
 	 * @param context
 	 *            上下文
 	 */
-	public SessionDestroyedEvent(Object source, Context context) {
+	public SessionDestroyedEvent(Object source, Context context, String sid) {
 		super(source);
 		this.context = context;
+		this.sid = sid;
+	}
+
+	public String getSid() {
+		return sid;
 	}
 
 	/**

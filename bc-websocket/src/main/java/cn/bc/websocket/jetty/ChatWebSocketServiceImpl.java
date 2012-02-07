@@ -60,7 +60,7 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 			webSocket = this.applicationContext.getBean(ChatWebSocket.class);
 
 			if (logger.isDebugEnabled())
-				logger.debug("create webSocket");
+				logger.debug("getPoolsMember:create webSocket");
 		} else {
 			// 取一个连接
 			webSocket = this.pools.iterator().next();
@@ -75,7 +75,7 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 			webSocket.setClientId(null);
 
 			if (logger.isDebugEnabled())
-				logger.debug("get webSocket from pools");
+				logger.debug("getPoolsMember:get webSocket from pools");
 		}
 		return webSocket;
 	}
@@ -85,7 +85,8 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 		String sid = request.getParameter("sid");
 		String c = request.getParameter("c");
 		if (c == null || c.length() == 0)
-			throw new CoreException("need parameter c to create WebSocket");
+			throw new CoreException(
+					"createWebSocket:need parameter c to create WebSocket");
 
 		// 解析客户端的连接信息
 		String[] cc = c.split(",");
@@ -94,15 +95,13 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 
 		// debug
 		if (logger.isDebugEnabled()) {
-			logger.debug("sid=" + sid);
-			logger.debug("c=" + c);
-			logger.debug("clientId=" + clientId);
-			logger.debug("clientName=" + clientName);
-
 			// 系统上下文：jetty8.0.4实际测试表明：context == null
 			SystemContext context = (SystemContext) request.getSession()
 					.getAttribute(Context.KEY);
-			logger.debug("context=" + context);
+			logger.debug("createWebSocket:sid=" + sid + ",session id="
+					+ request.getSession().getId() + ",c=" + c + ",clientId="
+					+ clientId + ",clientName=" + clientName + ",context="
+					+ context);
 		}
 
 		// 创建建一个连接
@@ -150,8 +149,8 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 			Assert.notNull(toWebSocket);
 			String json = buildJson(fromWebSocket, type, msg, null);
 			if (logger.isDebugEnabled())
-				logger.debug("fromSid=" + fromSid + ",toSid=" + toSid + ",msg="
-						+ json);
+				logger.debug("sendMessage:fromSid=" + fromSid + ",toSid="
+						+ toSid + ",msg=" + json);
 
 			try {
 				toWebSocket.getConnection().sendMessage(json);
@@ -238,12 +237,12 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 
 		ChatWebSocket webSocket = this.get(sid);
 
-//		Assert.notNull(webSocket);
+		// Assert.notNull(webSocket);
 		if (webSocket == null) {
 			logger.info("offline: not exists webSocket,ignore! sid=" + sid);
 			return;
 		}
-		
+
 		String msg = webSocket.getClientName() + "下线了(登录超时)！";
 		String json = buildJson(webSocket, ChatWebSocket.TYPE_OFFLINE, msg,
 				null);
@@ -263,7 +262,6 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 	}
 
 	public void memberLogin(String sid, boolean relogin) {
-		// TODO Auto-generated method stub
-		logger.debug("relogin=" + relogin + ",sid=" + sid);
+		logger.debug("memberLogin:relogin=" + relogin + ",sid=" + sid);
 	}
 }

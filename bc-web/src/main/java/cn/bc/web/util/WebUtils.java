@@ -219,6 +219,70 @@ public class WebUtils implements ServletContextAware {
 		return ip;
 	}
 
+	public static boolean trace = false;
+
+	public static void setTrace(boolean trace) {
+		WebUtils.trace = trace;
+	}
+
+	/**
+	 * 获取客户端信息:[0]-IP地址,[1]-名称,[2]-User Agent,[3]-mac
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static String[] getClient(HttpServletRequest request) {
+		String[] client = new String[] { null, null, null, null };
+
+		// 客户端User Agent信息
+		client[2] = request.getHeader("User-Agent");
+
+		// 如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串Ip值,其中第一个非unknown的有效IP字符串是真正的用户端的真实IP
+		String key = "X-Forwarded-For";
+
+		String clientIp = request.getHeader(key);
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			key = "Proxy-Client-IP";
+			clientIp = request.getHeader(key);
+		}
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			key = "WL-Proxy-Client-IP"; // Weblogic集群获取客户端IP
+			clientIp = request.getHeader(key);
+		}
+		if (clientIp == null || clientIp.length() == 0
+				|| "unknown".equalsIgnoreCase(clientIp)) {
+			key = "RemoteAddr";
+			clientIp = request.getRemoteAddr();// 获得客户端电脑的名字，若失败则返回客户端电脑的ip地址
+		}
+		client[0] = clientIp;
+		if (trace) {// name+ip获取方式+mac
+			logger.info("start traceClientMachine...:clientIp=" + clientIp);
+			if ("127.0.0.1".equals(clientIp) || "localhost".equals(clientIp)) {
+				// 排除本机的解析(会导致死掉)
+				client[1] = clientIp + "|" + key;
+				logger.info("skip traceClientMachine because local machine");
+			} else {
+				client[1] = request.getRemoteHost();// 客户端与服务器不同ip段时，获取计算机名可能会太耗时(视网络配置)
+				try {
+					// 获取mac地址
+					client[3] = WebUtils.getMac(clientIp);
+					client[1] = key + "|" + client[3];
+				} catch (Exception e) {
+					logger.info(e.getMessage(), e);
+					client[1] = "notrace:" + key;
+					client[3] = "notrace:";
+				}
+			}
+			logger.info("finished traceClientMachine");
+		} else {
+			client[1] = clientIp + "|" + key;
+			client[3] = "notrace:";
+		}
+		return client;
+	}
+
 	/**
 	 * 获取Server IP地址信息
 	 * 
@@ -233,6 +297,26 @@ public class WebUtils implements ServletContextAware {
 			ip = "UnknownHost";
 		}
 		return ip;
+	}
+
+	/**
+	 * 获取Server信息:[0]-IP地址,[1]-名称,[2]-url
+	 * 
+	 * @return
+	 */
+	public static String[] getServer(HttpServletRequest request) {
+		String[] server = new String[] { null, null, null };
+		try {
+			InetAddress localhost = InetAddress.getLocalHost();
+			server[0] = localhost.getHostAddress();
+			server[1] = localhost.getHostName();
+		} catch (UnknownHostException e) {
+			server[0] = "unknown";
+			server[1] = "unknown";
+		}
+		server[2] = request != null ? request.getRequestURL().toString()
+				: "unknown";
+		return server;
 	}
 
 	/**

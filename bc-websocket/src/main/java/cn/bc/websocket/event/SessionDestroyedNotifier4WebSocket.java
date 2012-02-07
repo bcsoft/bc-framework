@@ -30,8 +30,8 @@ public class SessionDestroyedNotifier4WebSocket implements
 	}
 
 	public void onApplicationEvent(SessionDestroyedEvent event) {
-		String sid = (String) event.getSession().getAttribute("sid");
-		if (logger.isDebugEnabled()){
+		String sid = event.getSid();
+		if (logger.isDebugEnabled()) {
 			logger.debug("session id=" + event.getSession().getId());
 			logger.debug("sid=" + sid);
 		}

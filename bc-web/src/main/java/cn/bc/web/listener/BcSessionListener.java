@@ -27,15 +27,19 @@ public class BcSessionListener implements HttpSessionListener {
 
 	public void sessionCreated(HttpSessionEvent se) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("sessionCreated:sid=" + se.getSession().getId());
+			logger.debug("sessionCreated:sid="
+					+ se.getSession().getAttribute("sid") + ",session id="
+					+ se.getSession().getId());
 		}
 	}
 
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
 		Context context = (Context) session.getAttribute(Context.KEY);
+		String sid = (String) session.getAttribute("sid");
 		if (logger.isDebugEnabled()) {
-			logger.debug("sessionDestroyed:sid=" + session.getId());
+			logger.debug("sessionDestroyed:sid=" + sid + ",session id="
+					+ session.getId());
 			String key;
 			for (@SuppressWarnings("unchecked")
 			Enumeration<String> e = session.getAttributeNames(); e
@@ -47,6 +51,6 @@ public class BcSessionListener implements HttpSessionListener {
 
 		// 发布session销毁事件
 		WebUtils.getWac().publishEvent(
-				new SessionDestroyedEvent(session, context));
+				new SessionDestroyedEvent(session, context, sid));
 	}
 }

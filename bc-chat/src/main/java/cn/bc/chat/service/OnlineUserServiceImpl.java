@@ -34,6 +34,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("添加上线用户：" + onlineUser.toString());
 		}
+		this.onlineUsers.remove(onlineUser.getSid());
 		this.onlineUsers.put(onlineUser.getSid(), onlineUser);
 	}
 

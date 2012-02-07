@@ -2,7 +2,8 @@ package cn.bc.identity.event;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.context.ApplicationEvent;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
@@ -13,60 +14,30 @@ import cn.bc.identity.domain.ActorHistory;
  * @author dragon
  * 
  */
-public class LoginEvent extends ApplicationEvent {
+public class LoginEvent extends LogBaseEvent {
 	private static final long serialVersionUID = 6073857021656865036L;
-	private final Actor user;
-	private final ActorHistory userHistory;
-	private final Integer loginType;
-	private final HttpServletRequest request;
+	private static Log logger = LogFactory.getLog(LoginEvent.class);
 
 	/**
 	 * @param source
 	 *            事件源
-	 * @param HttpRequest
+	 * @param request
 	 *            请求
 	 * @param user
 	 *            用户
-	 * @param type
-	 *            类型，参考Syslog.TYPE_XXX常数的定义
+	 * @param userHistory
+	 * @param sid
 	 */
 	public LoginEvent(Object source, HttpServletRequest request, Actor user,
-			ActorHistory userHistory, Integer type) {
-		super(source);
-		this.request = request;
-		this.user = user;
-		this.userHistory = userHistory;
-		this.loginType = type;
-	}
+			ActorHistory userHistory, String sid) {
+		super(source, request, user, userHistory, sid);
 
-	/**
-	 * 获取登录用户
-	 * 
-	 * @return
-	 */
-	public Actor getUser() {
-		return user;
-	}
-
-	public ActorHistory getUserHistory() {
-		return userHistory;
-	}
-
-	/**
-	 * 获取登录类型
-	 * 
-	 * @return
-	 */
-	public Integer getLoginType() {
-		return loginType;
-	}
-
-	/**
-	 * 获取请求信息
-	 * 
-	 * @return
-	 */
-	public HttpServletRequest getRequest() {
-		return request;
+		if (logger.isDebugEnabled()) {
+			String info = user.getName() + "登录系统";
+			info += ",client=" + this.getClientIp();
+			info += ",server=" + this.getServerIp();
+			info += ",sid=" + this.getSid();
+			logger.debug(info);
+		}
 	}
 }

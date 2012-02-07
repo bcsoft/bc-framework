@@ -33,7 +33,8 @@ public class ChatWebSocketServlet extends WebSocketServlet {
 			String protocol) {
 		if (logger.isDebugEnabled())
 			logger.debug("protocol=" + protocol + ",sid="
-					+ request.getParameter("sid"));
+					+ request.getParameter("sid") + ",session id="
+					+ request.getSession().getId());
 
 		return this.webSocketService.createWebSocket(request);
 	}
