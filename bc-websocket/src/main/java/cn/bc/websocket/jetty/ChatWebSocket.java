@@ -22,6 +22,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	private String clientName;// 客户端用户的名称
 	private String clientIp;// 客户端的ip地址
 	private String sid;// 客户端的会话session id
+	private Object client;// 客户端的详细对象信息
 	private Connection connection;
 	private ChatWebSocketService webSocketService = WebUtils
 			.getBean(ChatWebSocketService.class);
@@ -41,6 +42,14 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 
 	public Calendar getCreateDate() {
 		return createDate;
+	}
+
+	public Object getClient() {
+		return client;
+	}
+
+	public void setClient(Object client) {
+		this.client = client;
 	}
 
 	public void setClientId(String clientId) {

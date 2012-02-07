@@ -10,8 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import cn.bc.core.query.condition.impl.QlCondition;
-
 /**
  * 
  * @author dragon

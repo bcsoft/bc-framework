@@ -4,9 +4,9 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<!-- websocket -->
-	<package name="chatWebSocketAction" extends="bc-default" namespace="/bc/websocket">
+	<package name="websocket" extends="bc-default" namespace="/bc/websocket">
 		<action name="show" class="chatWebSocketAction" method="show"/>
-		<action name="onlineUser" class="chatWebSocketAction">
+		<action name="online" class="chatWebSocketAction">
 			<result>/bc/chat/online.jsp</result>
 		</action>
 	</package>

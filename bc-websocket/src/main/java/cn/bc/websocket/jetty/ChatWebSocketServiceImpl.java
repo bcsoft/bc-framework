@@ -11,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
 import cn.bc.Context;
+import cn.bc.chat.service.OnlineUserService;
 import cn.bc.core.exception.CoreException;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.ui.json.Json;
@@ -31,9 +33,15 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 		ApplicationContextAware {
 	private final Log logger = LogFactory
 			.getLog(ChatWebSocketServiceImpl.class);
+	private OnlineUserService onlineUserService;
 	private ApplicationContext applicationContext;
 	private final Set<ChatWebSocket> members = new CopyOnWriteArraySet<ChatWebSocket>();// 在线连接
 	private final Set<ChatWebSocket> pools = new CopyOnWriteArraySet<ChatWebSocket>();// 离线连接
+
+	@Autowired
+	public void setOnlineUserService(OnlineUserService onlineUserService) {
+		this.onlineUserService = onlineUserService;
+	}
 
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
@@ -104,12 +112,13 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 					+ context);
 		}
 
-		// 创建建一个连接
+		// 创建一个连接
 		ChatWebSocket webSocket = this.getPoolsMember();
 		webSocket.setSid(sid);
 		webSocket.setClientName(clientName);
 		webSocket.setClientId(clientId);
 		webSocket.setClientIp(WebUtils.getClientIP(request));// 客户端的IP地址信息
+		webSocket.setClient(this.onlineUserService.get(sid));// 记录在线用户的详细信息
 
 		return webSocket;
 	}

@@ -28,18 +28,18 @@ import com.opensymphony.xwork2.ActionSupport;
 public class OnlineUserAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	// private static Log logger = LogFactory.getLog(OnlineUserAction.class);
-	private OnlineUserService onlineService;
+	private OnlineUserService onlineUserService;
 
 	@Autowired
-	public void setOnlineService(OnlineUserService onlineService) {
-		this.onlineService = onlineService;
+	public void setOnlineUserService(OnlineUserService onlineUserService) {
+		this.onlineUserService = onlineUserService;
 	}
 
 	public List<OnlineUser> users;// 在线用户
 
 	public String execute() throws Exception {
 		// 获取在线用户列表
-		users = this.onlineService.getAll();
+		users = this.onlineUserService.getAll();
 
 		// 剔除自己
 		String sid = (String) ServletActionContext.getRequest().getSession()
@@ -62,7 +62,7 @@ public class OnlineUserAction extends ActionSupport {
 	// 显示所有在线用户的信息
 	public String show() {
 		// 获取在线用户列表
-		users = this.onlineService.getAll();
+		users = this.onlineUserService.getAll();
 		html = new StringBuffer(
 				"<table class='table' cellspacing='0' cellpadding='4' style='border-color:#ccc;border-style:solid;border-width:1px 1px 0 1px;'>");
 
@@ -79,7 +79,8 @@ public class OnlineUserAction extends ActionSupport {
 		html.append("\r\n<td" + middleTdStyle + ">IP</td>");
 		html.append("\r\n<td" + middleTdStyle + ">SID</td>");
 		html.append("\r\n<td" + middleTdStyle + ">MAC</td>");
-		html.append("\r\n<td" + lastTdStyle + ">ID</td>");
+		html.append("\r\n<td" + middleTdStyle + ">ID</td>");
+		html.append("\r\n<td" + lastTdStyle + ">User Agent</td>");
 		html.append("\r\n</tr>");
 
 		int i = 1;
@@ -99,7 +100,8 @@ public class OnlineUserAction extends ActionSupport {
 			html.append("\r\n<td" + middleTdStyle + ">" + u.getIp() + "</td>");
 			html.append("\r\n<td" + middleTdStyle + ">" + u.getSid() + "</td>");
 			html.append("\r\n<td" + middleTdStyle + ">" + u.getMac() + "</td>");
-			html.append("\r\n<td" + lastTdStyle + ">" + u.getId() + "</td>");
+			html.append("\r\n<td" + middleTdStyle + ">" + u.getId() + "</td>");
+			html.append("\r\n<td" + lastTdStyle + ">" + u.getBrowser() + "</td>");
 
 			html.append("\r\n</tr>");
 			i++;
