@@ -214,4 +214,25 @@ public class StringUtils {
 	public static String wrapQuota(String str) {
 		return "\"" + str + "\"";
 	}
+
+	/**
+	 * 计算子串出现的次数
+	 * 
+	 * @param str
+	 * @param sub
+	 * @return
+	 */
+	public static int countMatches(String str, String sub) {
+		if (str == null || str.length() == 0 || sub == null
+				|| sub.length() == 0) {
+			return 0;
+		}
+		int count = 0;
+		int idx = 0;
+		while ((idx = str.indexOf(sub, idx)) != -1) {
+			count++;
+			idx += sub.length();
+		}
+		return count;
+	}
 }
