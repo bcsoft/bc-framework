@@ -1,5 +1,7 @@
 package cn.bc.websocket.jetty;
 
+import java.util.Calendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -15,6 +17,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	public final static int TYPE_USER = 2;// 用户发到用户的信息
 	public final static int TYPE_BROADCAST = 3;// 全局广播的信息
 	public final static int TYPE_SYSTIP = 4;// 用户发到用户出现异常时系统返回信息
+	private Calendar createDate;// 创建时间
 	private String clientId;// 客户端用户的id
 	private String clientName;// 客户端用户的名称
 	private String clientIp;// 客户端的ip地址
@@ -24,6 +27,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 			.getBean(ChatWebSocketService.class);
 
 	public ChatWebSocket() {
+		this.createDate = Calendar.getInstance();
 	}
 
 	public ChatWebSocket(String sid, String clientIp, String clientId,
@@ -32,6 +36,11 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		this.clientId = clientId;
 		this.clientName = clientName;
 		this.sid = sid;
+		this.createDate = Calendar.getInstance();
+	}
+
+	public Calendar getCreateDate() {
+		return createDate;
 	}
 
 	public void setClientId(String clientId) {
@@ -99,8 +108,8 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 
 			this.connection = null;
 		} catch (Exception e) {
-			//这个异常是在jetty的websocket在session超时关闭时自动创建并销毁一个临时的session导致的
-			logger.info("sid=" + this.sid + ":" + e.getMessage(),e);
+			// 这个异常是在jetty的websocket在session超时关闭时自动创建并销毁一个临时的session导致的
+			logger.info("sid=" + this.sid + ":" + e.getMessage(), e);
 		}
 	}
 

@@ -264,4 +264,8 @@ public class ChatWebSocketServiceImpl implements ChatWebSocketService,
 	public void memberLogin(String sid, boolean relogin) {
 		logger.debug("memberLogin:relogin=" + relogin + ",sid=" + sid);
 	}
+
+	public Set<ChatWebSocket> getAll() {
+		return this.members;
+	}
 }

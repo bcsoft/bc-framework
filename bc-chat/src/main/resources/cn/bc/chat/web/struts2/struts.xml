@@ -8,6 +8,7 @@
 		<action name="onlineUser" class="onlineUserAction">
 			<result>/bc/chat/online.jsp</result>
 		</action>
+		<action name="show" class="onlineUserAction" method="show"/>
 	</package>
 	<package name="onlineMessage" extends="bc-default" namespace="/bc/chat">
 		<action name="message" class="onlineMessageAction">
