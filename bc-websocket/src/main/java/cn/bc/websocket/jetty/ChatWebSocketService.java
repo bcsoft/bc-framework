@@ -1,5 +1,7 @@
 package cn.bc.websocket.jetty;
 
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -114,4 +116,11 @@ public interface ChatWebSocketService {
 	 *            是否是重新登录
 	 */
 	void memberLogin(String sid, boolean relogin);
+
+	/**
+	 * 获取所有在线聊天客户端
+	 * 
+	 * @return
+	 */
+	Set<ChatWebSocket> getAll();
 }

@@ -28,6 +28,7 @@ import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.DateUtils;
+import cn.bc.core.util.StringUtils;
 import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
@@ -517,11 +518,13 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			and.setAddBracket(true);
 			JSONObject json;
 			Object value;
+			Object[] values;
 			String type;
 			String ql;
 			JSONArray value1;
 			boolean isLike;
 			List<Object> args = new ArrayList<Object>();
+			int c;
 			for (int i = 0; i < jsons.length(); i++) {
 				json = jsons.getJSONObject(i);
 				value = json.get("value");
@@ -537,8 +540,14 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 					}
 					and.add(new QlCondition(ql, args));
 				} else {// 单个值的字符串
-					and.add(new QlCondition(ql, new Object[] { QlCondition
-							.convertValue(type, (String) value, isLike) }));
+					c = StringUtils.countMatches(ql, "?");
+					values = new Object[c];
+					value = QlCondition.convertValue(type, (String) value,
+							isLike);// 转换值为指定的类型
+					for (int j = 0; j < values.length; j++) {
+						values[j] = value;// 如果查询语句中有多个?号，就将值复制出多个来
+					}
+					and.add(new QlCondition(ql, values));
 				}
 			}
 
