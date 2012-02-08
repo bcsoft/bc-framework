@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.bc.BCConstants;
 import cn.bc.identity.dao.IdGeneratorDao;
 import cn.bc.identity.domain.IdGenerator;
 
@@ -109,7 +110,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 		Long num = this.nextValue(type + "." + yyyyMM);
 
 		// 合并返回
-		return yyyyMM + new DecimalFormat(pattern).format(num);
+		return yyyyMM + BCConstants.SN_SPLIT_SYMBOL + new DecimalFormat(pattern).format(num);
 	}
 
 	public String nextSN4Month(String type) {
@@ -131,6 +132,6 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 		Long num = this.nextValue(type + "." + yyyyMMdd);
 
 		// 合并返回
-		return yyyyMMdd + new DecimalFormat(pattern).format(num);
+		return yyyyMMdd + BCConstants.SN_SPLIT_SYMBOL + new DecimalFormat(pattern).format(num);
 	}
 }
