@@ -16,4 +16,7 @@ public class BCConstants {
 	public static final int STATUS_DISABLED = 1;
 	/** 状态：已删除 */
 	public static final int STATUS_DELETED = 2;
+	
+	/** 流水号连接符 */
+	public static final String SN_SPLIT_SYMBOL = "-";
 }
