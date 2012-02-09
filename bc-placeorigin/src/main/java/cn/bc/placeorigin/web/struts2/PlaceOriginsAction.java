@@ -55,11 +55,10 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id as id,a.core as core, a.type_ as type,a.status_ as status,");
-		sql.append("a.name as name,a.full_name as fullname");
+		sql.append("select a.id as id,a.core as core, a.type_ as type,a.status_ as status");
+		sql.append(",a.name as name,a.full_name as fullname,a.full_core as fullcore,p.name as pname");
 		sql.append(" from bc_placeorigin a");
-		sql.append("");
-		sql.append("");
+		sql.append(" left join bc_placeorigin p on p.id=a.pid");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -76,6 +75,8 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 				map.put("status", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("fullname", rs[i++]);
+				map.put("fullcore", rs[i++]);
+				map.put("pname",rs[i++]);
 				return map;
 			}
 		});
@@ -89,20 +90,31 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 		if (!this.isReadonly()) {
 			// 状态
 			columns.add(new TextColumn4MapKey("a.status_", "status",
-					getText("placeorigin.status"), 30).setSortable(true)
+					getText("placeorigin.status"), 40).setSortable(true)
 					.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		}
 		// 类型
 		columns.add(new TextColumn4MapKey("a.type_", "type",
-				getText("placeorigin.type"), 30).setSortable(true)
+				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
 		// 名称
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("placeorigin.name"), 100).setUseTitleFromLabel(true));
+		//上级
+		columns.add(new TextColumn4MapKey("p.name", "pname",
+				getText("placeorigin.higherlevel"), 100).setUseTitleFromLabel(true));
+		//编码
+		columns.add(new TextColumn4MapKey("a.core", "core",
+				getText("placeorigin.core"), 60).setUseTitleFromLabel(true)
+				);
 		// 全名
 		columns.add(new TextColumn4MapKey("a.full_name", "fullname",
 				getText("placeorigin.fullname"), 200)
 				.setUseTitleFromLabel(true));
+		//全编码
+		columns.add(new TextColumn4MapKey("a.full_core", "fullcore",
+				getText("placeorigin.fullcore"), 120).setUseTitleFromLabel(true)
+				);
 		return columns;
 	}
 
@@ -117,7 +129,7 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 		return mstatus;
 	}
 
-	// 类型值装换
+	// 类型值转换
 	private Map<String, String> getTypes() {
 		Map<String, String> mstatus = new HashMap<String, String>();
 		mstatus.put(String.valueOf(PlaceOrigin.TYPE_COUNTRY_LEVEL),
