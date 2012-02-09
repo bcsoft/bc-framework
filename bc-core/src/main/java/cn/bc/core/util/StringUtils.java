@@ -1,6 +1,7 @@
 package cn.bc.core.util;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
@@ -234,5 +235,23 @@ public class StringUtils {
 			idx += sub.length();
 		}
 		return count;
+	}
+
+	private static DecimalFormat sizeInfoFormater = new DecimalFormat("#.#");
+
+	/**
+	 * 格式化文件大小为易读的格式，如10Bytes、10.2KB、20.3MB
+	 * 
+	 * @param size
+	 *            已字节为单位的文件大小
+	 * @return
+	 */
+	public static String formatSize(long size) {
+		if (size < 1024)
+			return sizeInfoFormater.format(size) + "Bytes";
+		else if (size < 1024 * 1024)
+			return sizeInfoFormater.format(size / 1024) + "KB";
+		else
+			return sizeInfoFormater.format(size / 1024 / 1024) + "MB";
 	}
 }
