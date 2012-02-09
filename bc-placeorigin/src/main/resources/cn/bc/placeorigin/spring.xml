@@ -15,9 +15,11 @@
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 
 	<!-- placeOrigin -->
-	<bean id="placeOriginDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="placeOriginDao" class="cn.bc.placeorigin.dao.hibernate.jpa.PlaceOriginDaoImpl"
 		p:entityClass="cn.bc.placeorigin.domain.PlaceOrigin"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="placeOriginService" class="cn.bc.core.service.DefaultCrudService"
-		p:entityClass="cn.bc.placeorigin.domain.PlaceOrigin" p:crudDao-ref="placeOriginDao" />
+	<bean id="placeOriginService" class="cn.bc.placeorigin.service.PlaceOriginServiceImpl"
+		p:entityClass="cn.bc.placeorigin.domain.PlaceOrigin" 
+		p:placeOriginDao-ref="placeOriginDao"
+		/>
 </beans>
