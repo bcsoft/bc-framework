@@ -35,7 +35,8 @@ public class PlaceOrigin extends FileEntityImpl {
 	public static final int TYPE_VILLAGE_LEVEL=5;
 	
 	private int status= BCConstants.STATUS_ENABLED;
-	private Long core;//统计用区划代码和城乡划分代码
+	private Long core;//编码 县及县以上行政区划代码
+	private Long fullcore;//全编码 统计用区划代码和城乡划分代码
 	private int type;//类型(0-国家,1-省级,2-地级,3-县级,4-乡级,5-村级)
 	private String name;//名称 例如：荔湾区
 	private Long pid;//所隶属的上级地方ID
@@ -82,4 +83,14 @@ public class PlaceOrigin extends FileEntityImpl {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+	@Column(name = "FULL_CORE")
+	public Long getFullcore() {
+		return fullcore;
+	}
+	public void setFullcore(Long fullcore) {
+		this.fullcore = fullcore;
+	}
+	
+	
 }
