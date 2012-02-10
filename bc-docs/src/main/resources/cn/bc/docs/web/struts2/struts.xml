@@ -103,4 +103,11 @@
 			</result>
 		</action>
 	</package>
+	
+	<!-- browser -->
+	<package name="browser" extends="bc-default" namespace="/bc/browser">
+		<action name="list" class="browserAction">
+			<result name="success">/bc/docs/attach/browser.jsp</result>
+		</action>
+	</package>
 </struts>

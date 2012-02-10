@@ -18,6 +18,8 @@ import cn.bc.web.ui.html.Tr;
  * 
  */
 public class GridHeader extends Div {
+	/** 表格头的默认样式 */
+	public final static String DEFAULT_ROW_CLASS = "ui-state-default row";
 	private List<Column> columns = new ArrayList<Column>();
 	private String toggleSelectTitle;// 全选反选的提示信息
 
@@ -60,7 +62,7 @@ public class GridHeader extends Div {
 		left.addChild(leftTable);
 		leftTable
 				.addChild(new Tr()
-						.addClazz("ui-state-default row")
+						.addClazz(DEFAULT_ROW_CLASS)
 						.addChild(
 								new Td().addClazz("id")
 										.setTitle(this.getToggleSelectTitle())
@@ -72,7 +74,7 @@ public class GridHeader extends Div {
 		Component rightTable = new Table().addClazz("table")
 				.setAttr("cellspacing", "0").setAttr("cellpadding", "0");
 		right.addChild(rightTable);
-		Component tr = new Tr().addClazz("ui-state-default row");
+		Component tr = new Tr().addClazz(DEFAULT_ROW_CLASS);
 		rightTable.addChild(tr);
 		Component td;
 		Column column;

@@ -32,6 +32,8 @@ import cn.bc.web.ui.html.Tr;
  */
 public class GridData extends Div {
 	private static final Log logger = LogFactory.getLog(GridData.class);
+	/** 表格数据行的默认样式 */
+	public final static String DEFAULT_ROW_CLASS = "ui-widget-content row";
 	private List<? extends Object> data;
 	private List<Column> columns = new ArrayList<Column>();
 	private int pageNo;
@@ -198,7 +200,7 @@ public class GridData extends Div {
 		left.addChild(leftTable);
 		for (Object rowData : this.data) {
 			// 行设置
-			tr = new Tr().addClazz("ui-state-default row");
+			tr = new Tr().addClazz(DEFAULT_ROW_CLASS);
 			leftTable.addChild(tr);
 			if (rc % 2 == 0) {
 				tr.addClazz("odd");// 奇数行
@@ -259,7 +261,7 @@ public class GridData extends Div {
 		JSONObject hiddenValues;
 		for (Object rowData : this.data) {
 			// 行设置
-			tr = new Tr().addClazz("ui-state-default row");
+			tr = new Tr().addClazz(DEFAULT_ROW_CLASS);
 			rightTable.addChild(tr);
 			if (rc % 2 == 0) {
 				tr.addClazz("odd");// 奇数行

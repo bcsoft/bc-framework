@@ -31,30 +31,34 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		AttachService {
 	private static Log logger = LogFactory.getLog(AttachServiceImpl.class);
 
+	public List<Attach> findByPtype(String ptype) {
+		return this.findByPtype(ptype, null);
+	}
+
 	public List<Attach> findByPtype(String ptype, String puid) {
-		return this
-				.createQuery()
-				.condition(
-						new AndCondition()
-								.add(new EqualsCondition("ptype", ptype))
-								.add(new EqualsCondition("puid", puid))
-								.add(new EqualsCondition("status",
-										BCConstants.STATUS_ENABLED))
-								.add(new OrderCondition("fileDate",
-										Direction.Desc))).list();
+		AndCondition and = new AndCondition();
+		if (ptype != null && ptype.length() > 0)
+			and.add(new EqualsCondition("ptype", ptype));
+		if (puid != null && puid.length() > 0)
+			and.add(new EqualsCondition("puid", puid));
+
+		and.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED));
+		and.add(new OrderCondition("fileDate", Direction.Desc));
+
+		return this.createQuery().condition(and).list();
 	}
 
 	public Attach loadByPtype(String ptype, String puid) {
-		List<Attach> list = this
-				.createQuery()
-				.condition(
-						new AndCondition()
-								.add(new EqualsCondition("ptype", ptype))
-								.add(new EqualsCondition("puid", puid))
-								.add(new EqualsCondition("status",
-										BCConstants.STATUS_ENABLED))
-								.add(new OrderCondition("fileDate",
-										Direction.Desc))).list(1, 1);
+		AndCondition and = new AndCondition();
+		if (ptype != null && ptype.length() > 0)
+			and.add(new EqualsCondition("ptype", ptype));
+		if (puid != null && puid.length() > 0)
+			and.add(new EqualsCondition("puid", puid));
+
+		and.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED));
+		and.add(new OrderCondition("fileDate", Direction.Desc));
+
+		List<Attach> list = this.createQuery().condition(and).list(1, 1);
 		if (list != null && !list.isEmpty()) {
 			return list.get(0);
 		} else {
@@ -65,7 +69,8 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 	public List<Attach> doCopy(String fromPtype, String fromPuid,
 			String toPtype, String toPuid, boolean keepAuthorInfo) {
 		// 附件的真正存储路径
-		String dataPath = Attach.DATA_REAL_PATH;;
+		String dataPath = Attach.DATA_REAL_PATH;
+		;
 
 		Calendar now = Calendar.getInstance();
 		if (logger.isDebugEnabled()) {
@@ -101,7 +106,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			_new.setPuid(toPuid);
 			if (!keepAuthorInfo) {
 				_new.setFileDate(now);
-				
+
 				// 设置文件的作者信息
 				_new.setAuthor(SystemContextHolder.get().getUserHistory());
 				_new.setModifiedDate(null);

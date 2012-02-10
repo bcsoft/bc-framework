@@ -248,12 +248,9 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		if (this.puid == null || this.puid.length() == 0) {// 下载正常的附件
 			attach = this.attachService.load(this.getId());
 		} else {// 下载浏览器
-			List<Attach> attachs = this.attachService.findByPtype("browser",
-					this.puid);
-			if (attachs == null || attachs.isEmpty())
-				throw new CoreException("undefined browser:ptype=browser,puid="
-						+ this.puid);
-			attach = attachs.get(0);
+			attach = this.attachService.loadByPtype(null, this.puid);
+			if (attach == null)
+				throw new CoreException("undefined browser:puid=" + this.puid);
 		}
 		downloadAttach(attach);
 		return SUCCESS;
