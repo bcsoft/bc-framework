@@ -11,10 +11,16 @@
 		<action name="open" class="syslogAction" method="open">
 			<result name="formr">/bc/log/syslog/form.jsp</result>
 		</action>
+	</package>
+	<package name="syslogss" extends="bc-default" namespace="/bc/syslogs">
 		<action name="list" class="syslogsAction" method="list" />
 		<action name="paging" class="syslogsAction" method="paging" />
 		<action name="data" class="syslogsAction" method="data" />
 		<action name="export" class="syslogsAction" method="export" />
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="syslogsAction" method="conditions">
+			<result name="success">/bc/log/syslog/conditions.jsp</result>
+		</action>
 	</package>
 	<!-- 我的登录日志 -->
 	<package name="mysyslog" extends="bc-default" namespace="/bc/mysyslog">
@@ -39,6 +45,10 @@
 		</action>
 		<action name="export" class="syslogsAction" method="export">
 			<param name="my">true</param>
+		</action>
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="syslogsAction" method="conditions">
+			<result name="success">/bc/log/syslog/conditions.jsp</result>
 		</action>
 	</package>
 </struts>

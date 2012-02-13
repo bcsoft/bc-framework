@@ -25,6 +25,8 @@ public class Syslog extends BaseLog {
 	public static final Integer TYPE_LOGOUT = 1;
 	/** 超时 */
 	public static final Integer TYPE_LOGIN_TIMEOUT = 2;
+	/** 超时后的自动重登录 */
+	public static final Integer TYPE_RELOGIN = 3;
 
 	private String clientIp; // 用户机器的IP地址
 	private String clientName; // 用户机器的名称
