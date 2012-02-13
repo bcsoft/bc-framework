@@ -99,4 +99,14 @@ public class PageOption extends Json {
 		put("modal", modal);
 		return this;
 	}
+
+	public PageOption setMinimizable(boolean minimizable) {
+		put("minimizable", minimizable);
+		return this;
+	}
+
+	public PageOption setMaximizable(boolean maximizable) {
+		put("maximizable", maximizable);
+		return this;
+	}
 }

@@ -41,6 +41,8 @@ public abstract class AbstractSelectPageAction<T extends Object> extends
 				.setHeight(450)
 				.setMinHeight(220)
 				.setModal(true)
+				.setMinimizable(false)
+				.setMaximizable(false)
 				.addButton(
 						new ButtonOption(getText("label.ok"), null,
 								getClickOkMethod()));
