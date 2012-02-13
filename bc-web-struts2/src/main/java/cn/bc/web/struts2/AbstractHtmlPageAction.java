@@ -104,7 +104,7 @@ public abstract class AbstractHtmlPageAction extends ActionSupport implements
 	/** 页面配置参数 */
 	protected PageOption getHtmlPageOption() {
 		return new PageOption().setMinWidth(250).setMinHeight(120)
-				.setModal(false);
+				.setModal(false).setMinimizable(true).setMaximizable(true);
 	}
 
 	/** 页面加载后调用的js初始化方法 */

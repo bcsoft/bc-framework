@@ -24,6 +24,7 @@ public class SelectDateAction extends ActionSupport {
 
 	public String title = getText("title.selectDate");// 对话框标题
 	private Calendar curDate;// 日期 yyyy-MM-dd
+	public boolean time;// 是否使用时间
 
 	public Calendar getCurDate() {
 		return curDate;

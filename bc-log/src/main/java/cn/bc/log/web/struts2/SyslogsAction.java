@@ -12,10 +12,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.ActorHistory;
@@ -28,7 +28,6 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
  * 系统日志视图Action
@@ -44,12 +43,7 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getFormActionName() {
-		return "syslog";
-	}
-
-	@Override
-	protected OrderCondition getGridDefaultOrderCondition() {
-		return new OrderCondition("l.file_date", Direction.Desc);
+		return my ? "mysyslog" : "syslog";
 	}
 
 	@Override
@@ -169,10 +163,7 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageTitle() {
-		if (my)
-			return this.getText(this.getFormActionName() + ".title.my");
-		else
-			return this.getText(this.getFormActionName() + ".title");
+		return this.getText(this.getFormActionName() + ".title");
 	}
 
 	@Override
@@ -180,14 +171,26 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		// 查看按钮
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-check")
-				.setText(getText("label.check"))
+		tb.addButton(this.getDefaultOpenToolbarButton().setAction(null)
 				.setClick("bc.syslogList.checkWork"));
 
 		// 搜索按钮
-		tb.addButton(Toolbar
-				.getDefaultSearchToolbarButton(getText("title.click2search")));
+		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
 	}
+
+	// ==高级搜索代码开始==
+
+	@Override
+	protected boolean useAdvanceSearch() {
+		return true;
+	}
+
+	@Override
+	public String getAdvanceSearchConditionsJspPath() {
+		return BCConstants.NAMESPACE + "/log/" + this.getFormActionName();
+	}
+
+	// ==高级搜索代码结束==
 }
