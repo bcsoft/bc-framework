@@ -38,7 +38,7 @@ public class LoginNotifier4Syslog implements ApplicationListener<LoginEvent> {
 
 		// 记录登录日志
 		Syslog log = new Syslog();
-		log.setType(Syslog.TYPE_LOGIN);
+		log.setType(event.isRelogin() ? Syslog.TYPE_RELOGIN : Syslog.TYPE_LOGIN);
 		log.setAuthor(event.getUserHistory());
 		log.setFileDate(Calendar.getInstance());
 		log.setSubject(user.getName() + "登录系统");
