@@ -178,7 +178,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 	}
 
 	@Override
-	protected void initForm(boolean editable) {
+	protected void initForm(boolean editable) throws Exception {
 		super.initForm(editable);
 
 		// 状态描述

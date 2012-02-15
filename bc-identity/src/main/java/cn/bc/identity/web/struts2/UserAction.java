@@ -127,7 +127,7 @@ public class UserAction extends AbstractActorAction {
 	public String assignGroupIds;// 分派的岗位id，多个id用逗号连接
 
 	@Override
-	protected void initForm(boolean editable) {
+	protected void initForm(boolean editable) throws Exception {
 		super.initForm(editable);
 
 		// 表单可选项的加载
