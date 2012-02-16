@@ -102,7 +102,7 @@ public class OptionGroupsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "g.key", "g.value", "g.order_", "g.icon" };
+		return new String[] { "g.key_", "g.value", "g.order_", "g.icon" };
 	}
 
 	@Override

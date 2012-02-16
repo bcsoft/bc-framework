@@ -132,6 +132,9 @@
 									<property name="runtime_classpath" refid="maven.runtime.classpath" />
 									<property name="test_classpath" refid="maven.test.classpath" />
 									<property name="plugin_classpath" refid="maven.plugin.classpath" />
+									<property name="app.name" value="${app.name}" />
+									<property name="app.ver" value="${app.ver}" />
+									<property name="app.data.realPath" value="${app.data.realPath}" />
 
 									<ant antfile="${basedir}/build.xml">
 										<target name="build" />
