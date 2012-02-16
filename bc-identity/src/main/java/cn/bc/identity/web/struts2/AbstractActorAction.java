@@ -162,7 +162,7 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 	}
 
 	@Override
-	protected void initForm(boolean editable) {
+	protected void initForm(boolean editable) throws Exception {
 		super.initForm(editable);
 
 		// 新建时无需执行下面的初始化

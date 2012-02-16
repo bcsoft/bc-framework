@@ -125,7 +125,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 	}
 
 	@Override
-	protected void initForm(boolean editable) {
+	protected void initForm(boolean editable) throws Exception {
 		super.initForm(editable);
 	}
 

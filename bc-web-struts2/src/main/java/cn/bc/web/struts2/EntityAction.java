@@ -248,7 +248,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * @param editable
 	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
 	 */
-	protected void initForm(boolean editable) {
+	protected void initForm(boolean editable) throws Exception {
 	}
 
 	/**
