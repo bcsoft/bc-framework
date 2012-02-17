@@ -167,7 +167,7 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name", "a.full_name" };
+		return new String[] { "a.core","a.name", "a.full_name","a.full_core" };
 	}
 
 	@Override
