@@ -102,9 +102,9 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 
 		final String queryString = queryTemp;
 		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + queryString);
 			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + queryString);
 		}
 		Number c = jpaTemplate.execute(new JpaCallback<Number>() {
 			public Number doInJpa(EntityManager em) throws PersistenceException {
@@ -139,9 +139,9 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql);
 		}
 
 		return executeNativeSql(jpaTemplate, hql, args.toArray(),
@@ -151,9 +151,9 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	public static <T> List<T> executeNativeSql(JpaTemplate jpaTemplate,
 			final String hql, final Object[] args, final RowMapper<T> rowMapper) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ StringUtils.arrayToCommaDelimitedString(args));
+					+ StringUtils.arrayToCommaDelimitedString(args) + ";hql="
+					+ hql);
 		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			@SuppressWarnings("unchecked")
@@ -192,11 +192,10 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("pageNo=" + pageNo);
-			logger.debug("pageSize=" + _pageSize);
-			logger.debug("hql=" + hql);
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+			logger.debug("pageNo=" + pageNo + ";pageSize=" + _pageSize
+					+ ";args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql);
 		}
 		return jpaTemplate.execute(new JpaCallback<List<T>>() {
 			public List<T> doInJpa(EntityManager em)
