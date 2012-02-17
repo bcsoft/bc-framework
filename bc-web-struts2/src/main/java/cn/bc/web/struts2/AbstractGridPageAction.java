@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -534,9 +536,34 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				if (value instanceof JSONArray) {// 多个值的数组
 					value1 = (JSONArray) value;
 					args = new ArrayList<Object>();
-					for (int j = 0; j < value1.length(); j++) {
-						args.add(QlCondition.convertValue(type,
-								value1.getString(j), isLike));
+
+					if ("multi".equals(type)) {// 带?[num]标记的多值特殊处理
+						// 转换占位参数的值
+						Object[] multiArgs = new Object[value1.length()];
+						for (int j = 0; j < value1.length(); j++) {
+							json = value1.getJSONObject(j);
+							multiArgs[j] = QlCondition.convertValue(json
+									.getString("type"),
+									json.getString("value"),
+									json.has("like") ? json.getBoolean("like")
+											: false);
+						}
+						
+						// 按照?[num]的位置生成相应的参数列表
+						String regex = "\\?\\d+";//匹配?[num]模式
+						Pattern p = Pattern.compile(regex);
+						Matcher m = p.matcher(ql);
+						while (m.find()) {
+							args.add(multiArgs[Integer.parseInt(m.group().substring(1))]);
+						}
+						
+						// 替换所有?[num]为?
+						ql = ql.replaceAll("\\?\\d+", "\\?");
+					} else {// 常规处理
+						for (int j = 0; j < value1.length(); j++) {
+							args.add(QlCondition.convertValue(type,
+									value1.getString(j), isLike));
+						}
 					}
 					and.add(new QlCondition(ql, args));
 				} else {// 单个值的字符串
