@@ -3,6 +3,29 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	
-	
+	<!-- placeOrigin -->
+	<package name="placeOrigin" extends="bc-default" namespace="/bc/placeOrigin">
+		<action name="create" class="placeOriginAction" method="create">
+			<result name="form">/bc/placeOrigin/form.jsp</result>
+		</action>
+		<action name="edit" class="placeOriginAction" method="edit">
+			<result name="form">/bc/placeOrigin/form.jsp</result>
+		</action>
+		<action name="open" class="placeOriginAction" method="open">
+			<result name="formr">/bc/placeOrigin/form.jsp</result>
+		</action>
+		<action name="save" class="placeOriginAction" method="save"/>
+		<action name="delete" class="placeOriginAction" method="delete"/>
+		<action name="list" class="placeOriginAction" method="list"/>
+		<action name="paging" class="placeOriginAction" method="paging"/>
+		<action name="data" class="placeOriginAction" method="data"/>
+		<action name="findPlaceOriginPname" class="placeOriginAction" method="findPname"/>
+	</package>
+	<package name="selectSuperiorPlace" extends="bc-default" namespace="/bc/selectSuperiorPlace">
+		<action name="save" class="selectSuperiorPlaceAction" method="save"/>
+		<action name="delete" class="selectSuperiorPlaceAction" method="delete"/>
+		<action name="list" class="selectSuperiorPlaceAction" method="list"/>
+		<action name="paging" class="selectSuperiorPlaceAction" method="paging"/>
+		<action name="data" class="selectSuperiorPlaceAction" method="data"/>
+	</package>
 </struts>
