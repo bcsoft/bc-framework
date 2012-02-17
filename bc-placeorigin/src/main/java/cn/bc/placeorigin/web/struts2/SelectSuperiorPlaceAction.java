@@ -2,7 +2,6 @@ package cn.bc.placeorigin.web.struts2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,49 +12,39 @@ import org.springframework.stereotype.Controller;
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.identity.web.SystemContext;
 import cn.bc.placeorigin.domain.PlaceOrigin;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.json.Json;
 
 /**
- * 籍贯视图Action
+ * 选择籍贯Action
  * 
  * @author lbj
  * 
  */
-
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
+public class SelectSuperiorPlaceAction extends
+		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
+
+	public String types;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 
-	// 权限
 	@Override
-	public boolean isReadonly() {
-		// 系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin")
-				,getText("key.role.bc.placeorigin"));
-	}
-
-	@Override
-	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认的排序方法
-		return new OrderCondition("a.core", Direction.Asc);
+	protected String getClickOkMethod() {
+		return "bc.superiorPlaceSelectDialog.clickOk";
 	}
 
 	@Override
@@ -97,20 +86,10 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
-		if (!this.isReadonly()) {
-			// 状态
-			columns.add(new TextColumn4MapKey("a.status_", "status",
-					getText("placeorigin.status"), 40).setSortable(true)
-					.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		}
 		// 类型
 		columns.add(new TextColumn4MapKey("a.type_", "type",
 				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
-		// 上级
-		columns.add(new TextColumn4MapKey("p.name", "pname",
-				getText("placeorigin.higherlevel"), 100)
-				.setUseTitleFromLabel(true));
 		// 编码
 		columns.add(new TextColumn4MapKey("a.core", "core",
 				getText("placeorigin.core"), 60).setUseTitleFromLabel(true));
@@ -129,17 +108,6 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.desc_", "desc",
 				getText("placeorigin.desc")).setUseTitleFromLabel(true));
 		return columns;
-	}
-
-	// 状态值转换
-	private Map<String, String> getStatuses() {
-		Map<String, String> mstatus = new LinkedHashMap<String, String>();
-		mstatus.put(String.valueOf(BCConstants.STATUS_ENABLED),
-				getText("placeorigin.status.enabled"));
-		mstatus.put(String.valueOf(BCConstants.STATUS_DISABLED),
-				getText("placeorigin.status.disabled"));
-		mstatus.put("", getText("placeorigin.status.all"));
-		return mstatus;
 	}
 
 	// 类型值转换
@@ -161,6 +129,11 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
+	protected PageOption getHtmlPageOption() {
+		return super.getHtmlPageOption().setWidth(500).setHeight(450);
+	}
+
+	@Override
 	protected String getGridRowLabelExpression() {
 		return "['name']";
 	}
@@ -171,68 +144,53 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected String getFormActionName() {
-		return "placeOrigin";
+	protected String getHtmlPageNamespace() {
+		return this.getContextPath() + BCConstants.NAMESPACE;
 	}
 
 	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
-
-		if (this.isReadonly()) {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		} else {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-
-			// 禁用按钮
-			tb.addButton(this.getDefaultDisabledToolbarButton());
-		}
-
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
-				"status", 0, getText("title.click2changeSearchStatus")));
-
-		return tb;
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认的排序方法
+		return new OrderCondition("a.core", Direction.Asc);
 	}
 
 	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(450)
-				.setHeight(400).setMinHeight(200);
+	protected HtmlPage buildHtmlPage() {
+		return super.buildHtmlPage().setNamespace(
+				this.getHtmlPageNamespace() + "/selectSuperiorPlace");
+	}
+
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getHtmlPageNamespace() + "/placeOrigin/select.js";
 	}
 
 	@Override
 	protected Condition getGridSpecalCondition() {
-		// 状态条件
-		Condition statusCondition = null;
-		if (status != null && status.length() > 0) {
-			String[] ss = status.split(",");
-			if (ss.length == 1) {
-				statusCondition = new EqualsCondition("a.status_", new Integer(
-						ss[0]));
-			} else {
-				statusCondition = new InCondition("a.status_",
-						StringUtils.stringArray2IntegerArray(ss));
-			}
+		if (types != null && status != null) {
+			return new AndCondition(new EqualsCondition("a.status_",
+					new Integer(Integer.valueOf(status))), new EqualsCondition(
+					"a.type_", new Integer(Integer.valueOf(types))));
+		} else {
+			return null;
 		}
-
-		return statusCondition;
 	}
 
 	@Override
 	protected Json getGridExtrasData() {
-		Json json = new Json();
-		// 状态条件
-		if (this.status != null || this.status.length() != 0) {
+		if (this.status == null || this.status.length() == 0) {
+			return null;
+		} else {
+			Json json = new Json();
 			json.put("status", status);
+			json.put("types", types);
+			return json;
 		}
-		return json.isEmpty() ? null : json;
+	}
+
+	@Override
+	protected String getHtmlPageTitle() {
+		return this.getText("selectSuperiorPlace.title");
 	}
 
 }

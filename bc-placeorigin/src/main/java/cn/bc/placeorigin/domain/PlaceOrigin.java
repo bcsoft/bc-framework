@@ -41,6 +41,7 @@ public class PlaceOrigin extends FileEntityImpl {
 	private String name;//名称 例如：荔湾区
 	private Long pid;//所隶属的上级地方ID
 	private String fullname;//全名 例如：广东省广州市荔湾区
+	private String desc;//备注
 	
 	public Long getCore() {
 		return core;
@@ -90,6 +91,14 @@ public class PlaceOrigin extends FileEntityImpl {
 	}
 	public void setFullcore(Long fullcore) {
 		this.fullcore = fullcore;
+	}
+	
+	@Column(name = "DESC_")
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 	
 	

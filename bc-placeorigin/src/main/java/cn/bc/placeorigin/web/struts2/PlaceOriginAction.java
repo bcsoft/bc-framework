@@ -42,13 +42,14 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 	public boolean isReadonly() {
 		// 系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin"));
+		return !context.hasAnyRole(getText("key.role.bc.admin")
+				,getText("key.role.bc.placeorigin"));
 	}
 	
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(600)
-				.setHeight(400);
+		return super.buildFormPageOption(editable).setWidth(400).setMinWidth(300)
+				.setHeight(400).setMinHeight(200);
 	}
 
 	@Override
@@ -60,6 +61,13 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 		}
 	}
 
+	@Override
+	protected void afterCreate(PlaceOrigin entity) {
+		//类型默认为省级
+		entity.setType(PlaceOrigin.TYPE_PROVINCE_LEVEL);	
+		super.afterCreate(entity);
+	}
+	
 	public Json json;
 	@Override
 	public String delete() throws Exception {
@@ -86,6 +94,25 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 		return "json";
 	}
 	
+	// ======== 通过pid查找上级名称开始 ========
+	private Long pid;
+
+	public Long getPid() {
+		return pid;
+	}
+
+	public void setPid(Long pid) {
+		this.pid = pid;
+	}
 	
+	public String findPname(){
+		json = new Json();
+		json.put("pname", this.placeOriginService.findPname(pid));
+		return "json";
+	}
+	
+	
+	
+	// ======== 通过pid查找上级名称结束========
 	
 }

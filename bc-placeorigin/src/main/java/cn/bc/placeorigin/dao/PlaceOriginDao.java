@@ -10,5 +10,11 @@ import cn.bc.placeorigin.domain.PlaceOrigin;
  * 
  */
 public interface PlaceOriginDao extends CrudDao<PlaceOrigin> {
-
+	/**
+	 * 通过PID找到上级的对象
+	 * 
+	 * @param pid
+	 * @return 上级的对象
+	 */
+	PlaceOrigin findPname(Long pid);
 }

@@ -10,5 +10,11 @@ import cn.bc.placeorigin.domain.PlaceOrigin;
  * 
  */
 public interface PlaceOriginService extends CrudService<PlaceOrigin> {
-
+	/**
+	 * 通过PID找到上级名称
+	 * 
+	 * @param pid
+	 * @return 上级的名称
+	 */
+	String findPname(Long pid);
 }

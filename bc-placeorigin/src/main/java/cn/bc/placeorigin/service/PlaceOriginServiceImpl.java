@@ -14,12 +14,20 @@ import cn.bc.placeorigin.domain.PlaceOrigin;
  */
 public class PlaceOriginServiceImpl extends DefaultCrudService<PlaceOrigin>
 		implements PlaceOriginService {
-	// private PlaceOriginDao placeOriginDao;
+	 private PlaceOriginDao placeOriginDao;
 
 	@Autowired
 	public void setPlaceOriginDao(PlaceOriginDao placeOriginDao) {
-		// this.placeOriginDao = placeOriginDao;
+		 this.placeOriginDao = placeOriginDao;
 		this.setCrudDao(placeOriginDao);
+	}
+
+	public String findPname(Long pid) {
+		PlaceOrigin p=this.placeOriginDao.findPname(pid);
+		if(p!=null){
+			return p.getName();
+		}
+		return null;
 	}
 
 }
