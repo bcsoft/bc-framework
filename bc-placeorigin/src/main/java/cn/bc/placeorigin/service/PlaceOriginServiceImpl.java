@@ -1,5 +1,7 @@
 package cn.bc.placeorigin.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.service.DefaultCrudService;
@@ -28,6 +30,10 @@ public class PlaceOriginServiceImpl extends DefaultCrudService<PlaceOrigin>
 			return p.getName();
 		}
 		return null;
+	}
+
+	public List<PlaceOrigin> findPlaceOrigin(String core) {
+		return this.placeOriginDao.findPlaceOrigin(core);
 	}
 
 }

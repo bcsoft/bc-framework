@@ -40,4 +40,13 @@ public class PlaceOriginDaoImpl extends HibernateCrudJpaDao<PlaceOrigin>
 		}		 
 	}
 
+
+	@SuppressWarnings("unchecked")
+	public List<PlaceOrigin> findPlaceOrigin(String core) {
+		List<PlaceOrigin> pList=null;
+		String hql="from PlaceOrigin where core=? and status=?";
+		pList=this.getJpaTemplate().find(hql,new Object[]{core,new Integer(BCConstants.STATUS_ENABLED)});
+		return pList;
+	}
+
 }
