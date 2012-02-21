@@ -14,6 +14,7 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -168,9 +169,20 @@ public class SelectSuperiorPlaceAction extends
 	@Override
 	protected Condition getGridSpecalCondition() {
 		if (types != null && status != null) {
-			return new AndCondition(new EqualsCondition("a.status_",
-					new Integer(Integer.valueOf(status))), new EqualsCondition(
-					"a.type_", new Integer(Integer.valueOf(types))));
+			if(types.length()==1){
+				return new AndCondition(new EqualsCondition("a.status_",
+						new Integer(Integer.valueOf(status))), new EqualsCondition(
+						"a.type_", new Integer(Integer.valueOf(types))));
+			}else{
+				String[] sa=types.split(",");
+				List<Integer> list=new ArrayList<Integer>();
+				for(String str:sa){
+					list.add(Integer.valueOf(str));
+				}
+				return new AndCondition(new EqualsCondition("a.status_",
+						new Integer(Integer.valueOf(status)))
+				,new InCondition("a.type_", list));
+			}
 		} else {
 			return null;
 		}
