@@ -43,6 +43,7 @@ public class PlaceOrigin extends FileEntityImpl {
 	private String fullname;//全名 例如：广东省广州市荔湾区
 	private String desc;//备注
 	
+	@Column(name = "CODE")
 	public String getCore() {
 		return core;
 	}
@@ -85,7 +86,7 @@ public class PlaceOrigin extends FileEntityImpl {
 		this.status = status;
 	}
 	
-	@Column(name = "FULL_CORE")
+	@Column(name = "FULL_CODE")
 	public String getFullcore() {
 		return fullcore;
 	}
