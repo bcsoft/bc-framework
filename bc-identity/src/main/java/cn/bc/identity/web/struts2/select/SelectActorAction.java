@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
-import cn.bc.core.exception.CoreException;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.ActorService;
 
@@ -109,9 +108,8 @@ public class SelectActorAction extends ActionSupport {
 	public String execute() throws Exception {
 		// 获取指定类型和状态的的actor信息
 		if (this.isHistory()) {
-			throw new CoreException("unsupport method.");
-			// this.es = this.actorService.findHistory4Option(getActorTypes(),
-			// getActorStatues());
+			this.es = this.actorService.findHistory4option(getActorTypes(),
+					getActorStatues());
 		} else {
 			this.es = this.actorService.find4option(getActorTypes(),
 					getActorStatues());

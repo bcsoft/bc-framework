@@ -707,9 +707,9 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		// 排序
 		hql.append(" order by a.order_");
 		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql.toString());
 			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
 		}
 
 		return HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(),
@@ -719,6 +719,77 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 						Map<String, String> map = new HashMap<String, String>();
 						int i = 0;
 						map.put("id", rs[i++].toString());
+						map.put("type_", rs[i++].toString());
+						map.put("type", map.get("type"));
+						map.put("code", rs[i++].toString());
+						map.put("name", rs[i++].toString());
+						map.put("pcode", rs[i] != null ? rs[i].toString() : "");
+						i++;
+						map.put("pname", rs[i] != null ? rs[i].toString() : "");
+						return map;
+					}
+				});
+	}
+
+	public List<Map<String, String>> findHistory4option(Integer[] actorTypes,
+			Integer[] actorStatues) {
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select h.id as id,h.actor_id as aid,a.type_ as type");
+		hql.append(",a.code as code,h.actor_name as name,h.pcode as pcode,h.pname as pname");
+		hql.append(" from bc_identity_actor_history h");
+		hql.append(" inner join bc_identity_actor a on a.id=h.actor_id");
+		hql.append(" where h.current = ?");
+		args.add(new Boolean(true));
+
+		// 类型
+		if (actorTypes != null && actorTypes.length > 0) {
+			if (actorTypes.length == 1) {
+				hql.append(" and a.type_=?");
+				args.add(actorTypes[0]);
+			} else {
+				hql.append(" and a.type_ in (?");
+				args.add(actorTypes[0]);
+				for (int i = 1; i < actorTypes.length; i++) {
+					hql.append(",?");
+					args.add(actorTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 状态
+		if (actorStatues != null && actorStatues.length > 0) {
+			if (actorStatues.length == 1) {
+				hql.append(" and a.status_=?");
+				args.add(actorStatues[0]);
+			} else {
+				hql.append(" and a.status_ in (?");
+				args.add(actorStatues[0]);
+				for (int i = 1; i < actorStatues.length; i++) {
+					hql.append(",?");
+					args.add(actorStatues[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 排序
+		hql.append(" order by a.order_,h.rank");
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+
+		return HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(),
+				hql.toString(), args.toArray(),
+				new RowMapper<Map<String, String>>() {
+					public Map<String, String> mapRow(Object[] rs, int rowNum) {
+						Map<String, String> map = new HashMap<String, String>();
+						int i = 0;
+						map.put("id", rs[i++].toString());
+						map.put("aid", rs[i++].toString());
 						map.put("type_", rs[i++].toString());
 						map.put("type", map.get("type"));
 						map.put("code", rs[i++].toString());

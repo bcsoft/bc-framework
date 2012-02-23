@@ -136,4 +136,9 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 			Integer[] actorStatues) {
 		return this.actorDao.find4option(actorTypes, actorStatues);
 	}
+
+	public List<Map<String, String>> findHistory4option(Integer[] actorTypes,
+			Integer[] actorStatues) {
+		return this.actorDao.findHistory4option(actorTypes, actorStatues);
+	}
 }

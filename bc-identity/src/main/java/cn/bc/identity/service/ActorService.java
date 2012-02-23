@@ -222,4 +222,25 @@ public interface ActorService extends CrudService<Actor> {
 	 */
 	List<Map<String, String>> find4option(Integer[] actorTypes,
 			Integer[] actorStatues);
+
+	/**
+	 * 获取指定类型和状态的ActorHistory信息
+	 * 
+	 * @param actorTypes
+	 *            类型列表
+	 * @param actorStatues
+	 *            状态列表
+	 * @return 返回结果中的元素Map格式为：
+	 *         <ul>
+	 *         <li>id -- ActorHistory的id</li>
+	 *         <li>aid -- Actor的id</li>
+	 *         <li>type -- Actor的type</li>
+	 *         <li>code -- Actor的code</li>
+	 *         <li>name -- Actor的name</li>
+	 *         <li>pcode -- ActorHistory的pcode</li>
+	 *         <li>pname -- ActorHistory的pname</li>
+	 *         </ul>
+	 */
+	List<Map<String, String>> findHistory4option(Integer[] actorTypes,
+			Integer[] actorStatues);
 }
