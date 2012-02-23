@@ -32,8 +32,8 @@ public class PlaceOriginServiceImpl extends DefaultCrudService<PlaceOrigin>
 		return null;
 	}
 
-	public List<PlaceOrigin> findPlaceOrigin(String core) {
-		return this.placeOriginDao.findPlaceOrigin(core);
+	public List<PlaceOrigin> findPlaceOrigin(String code) {
+		return this.placeOriginDao.findPlaceOrigin(code);
 	}
 
 }

@@ -54,8 +54,8 @@ public class SelectSuperiorPlaceAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id as id,a.core as core, a.type_ as type,a.status_ as status");
-		sql.append(",a.name as name,a.full_name as fullname,a.full_core as fullcore");
+		sql.append("select a.id as id,a.code as code, a.type_ as type,a.status_ as status");
+		sql.append(",a.name as name,a.full_name as fullname,a.full_code as fullcore");
 		sql.append(",p.name as pname,a.desc_ as desc");
 		sql.append(" from bc_placeorigin a");
 		sql.append(" left join bc_placeorigin p on p.id=a.pid");
@@ -70,12 +70,12 @@ public class SelectSuperiorPlaceAction extends
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("core", rs[i++]);
+				map.put("code", rs[i++]);
 				map.put("type", rs[i++]);
 				map.put("status", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("fullname", rs[i++]);
-				map.put("fullcore", rs[i++]);
+				map.put("fullcode", rs[i++]);
 				map.put("pname", rs[i++]);
 				return map;
 			}
@@ -92,8 +92,8 @@ public class SelectSuperiorPlaceAction extends
 				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
 		// 编码
-		columns.add(new TextColumn4MapKey("a.core", "core",
-				getText("placeorigin.core"), 60).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.code", "code",
+				getText("placeorigin.code"), 60).setUseTitleFromLabel(true));
 		// 名称
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("placeorigin.name"), 100).setUseTitleFromLabel(true));
@@ -102,8 +102,8 @@ public class SelectSuperiorPlaceAction extends
 				getText("placeorigin.fullname"), 200)
 				.setUseTitleFromLabel(true));
 		// 全编码
-		columns.add(new TextColumn4MapKey("a.full_core", "fullcore",
-				getText("placeorigin.fullcore"), 140)
+		columns.add(new TextColumn4MapKey("a.full_code", "fullcode",
+				getText("placeorigin.fullcode"), 140)
 				.setUseTitleFromLabel(true));
 		// 备注
 		columns.add(new TextColumn4MapKey("a.desc_", "desc",
@@ -152,7 +152,7 @@ public class SelectSuperiorPlaceAction extends
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认的排序方法
-		return new OrderCondition("a.core", Direction.Asc);
+		return new OrderCondition("a.code", Direction.Asc);
 	}
 
 	@Override

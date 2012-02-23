@@ -26,5 +26,5 @@ public interface PlaceOriginDao extends CrudDao<PlaceOrigin> {
 	 * @param core 编码
 	 * @return 保存籍贯对象的集合
 	 */
-	List<PlaceOrigin> findPlaceOrigin(String core);
+	List<PlaceOrigin> findPlaceOrigin(String code);
 }
