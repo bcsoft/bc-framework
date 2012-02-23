@@ -55,7 +55,7 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认的排序方法
-		return new OrderCondition("a.core", Direction.Asc);
+		return new OrderCondition("a.code", Direction.Asc);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 				.setUseTitleFromLabel(true));
 		// 编码
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("placeorigin.core"), 60).setUseTitleFromLabel(true));
+				getText("placeorigin.code"), 60).setUseTitleFromLabel(true));
 		// 名称
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("placeorigin.name"), 100).setUseTitleFromLabel(true));
@@ -123,7 +123,7 @@ public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
 				.setUseTitleFromLabel(true));
 		// 全编码
 		columns.add(new TextColumn4MapKey("a.full_code", "fullcode",
-				getText("placeorigin.fullcore"), 140)
+				getText("placeorigin.fullcode"), 140)
 				.setUseTitleFromLabel(true));
 		// 备注
 		columns.add(new TextColumn4MapKey("a.desc_", "desc",

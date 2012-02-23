@@ -42,10 +42,10 @@ public class PlaceOriginDaoImpl extends HibernateCrudJpaDao<PlaceOrigin>
 
 
 	@SuppressWarnings("unchecked")
-	public List<PlaceOrigin> findPlaceOrigin(String core) {
+	public List<PlaceOrigin> findPlaceOrigin(String code) {
 		List<PlaceOrigin> pList=null;
-		String hql="from PlaceOrigin where core=? and status=?";
-		pList=this.getJpaTemplate().find(hql,new Object[]{core,new Integer(BCConstants.STATUS_ENABLED)});
+		String hql="from PlaceOrigin where code=? and status=?";
+		pList=this.getJpaTemplate().find(hql,new Object[]{code,new Integer(BCConstants.STATUS_ENABLED)});
 		return pList;
 	}
 
