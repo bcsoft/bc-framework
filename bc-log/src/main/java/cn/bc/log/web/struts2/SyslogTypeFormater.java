@@ -23,6 +23,7 @@ public class SyslogTypeFormater extends AbstractFormater<String> {
 		types.put(String.valueOf(Syslog.TYPE_LOGIN), "登录");
 		types.put(String.valueOf(Syslog.TYPE_LOGOUT), "主动注销");
 		types.put(String.valueOf(Syslog.TYPE_LOGIN_TIMEOUT), "超时注销");
+		types.put(String.valueOf(Syslog.TYPE_RELOGIN), "重登录");
 	}
 
 	public SyslogTypeFormater(Map<String, String> types) {
