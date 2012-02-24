@@ -11,6 +11,9 @@
 		<action name="edit" class="bulletinAction" method="edit">
 			<result name="form">/bc/bulletin/form.jsp</result>
 		</action>
+		<action name="open" class="bulletinAction" method="open">
+			<result name="formr">/bc/bulletin/form.jsp</result>
+		</action>
 		<action name="save" class="bulletinAction" method="save"/>
 		<action name="issue" class="bulletinAction" method="issue"/>
 		<action name="delete" class="bulletinAction" method="delete"/>
