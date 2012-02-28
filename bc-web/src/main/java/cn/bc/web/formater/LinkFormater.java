@@ -35,6 +35,11 @@ public abstract class LinkFormater extends AbstractFormater<String> {
 	}
 
 	public String format(Object context, Object value) {
+		// 判断是否应该格式化链接
+		if (!this.isLinkable(context, value)) {
+			return value != null ? value.toString() : "";
+		}
+
 		Object _value;
 		if (value instanceof Formater) {
 			_value = ((Formater<?>) value).format(context, value);
@@ -65,6 +70,19 @@ public abstract class LinkFormater extends AbstractFormater<String> {
 		} else {
 			return "&nbsp;";
 		}
+	}
+
+	/**
+	 * 确定是否应该格式化连接
+	 * 
+	 * @param context
+	 *            上下文
+	 * @param value
+	 *            当前值
+	 * @return
+	 */
+	protected boolean isLinkable(Object context, Object value) {
+		return true;
 	}
 
 	/**

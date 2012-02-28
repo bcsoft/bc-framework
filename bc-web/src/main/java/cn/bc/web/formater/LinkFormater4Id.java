@@ -50,4 +50,9 @@ public abstract class LinkFormater4Id extends LinkFormater {
 	public String getWinId(Object context, Object value) {
 		return this.moduleKey + this.getIdValue(context, value);
 	}
+
+	@Override
+	protected boolean isLinkable(Object context, Object value) {
+		return this.getIdValue(context, value) != null;
+	}
 }
