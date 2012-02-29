@@ -109,4 +109,14 @@ public class PageOption extends Json {
 		put("maximizable", maximizable);
 		return this;
 	}
+
+	public PageOption setHelp(String key) {
+		put("help", key);
+		return this;
+	}
+
+	public PageOption setPrint(String key) {
+		put("print", key);
+		return this;
+	}
 }
