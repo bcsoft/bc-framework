@@ -98,6 +98,14 @@
 		</action>
 	</package>
 	
+	<!-- 帮助 -->
+	<package name="help" extends="struts-default" namespace="/">
+		<action name="help" class="helpAction">
+			<result name="file">/help/${f}.html</result>
+			<result name="anchor">/help/index.htm</result>
+		</action>
+	</package>
+	
 	<!-- 用于显示功能待开发的配置 -->
 	<package name="error" extends="bc-default" namespace="/bc/error">
 		<action name="todo" class="errorAction" method="todo">
