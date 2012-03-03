@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
@@ -241,6 +242,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	public String contentType;
 	public long contentLength;
 	public InputStream inputStream;
+	public String path;
 
 	// 下载附件
 	public String download() throws Exception {
@@ -256,10 +258,25 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		return SUCCESS;
 	}
 
+	// 下载物理附件
+	public String file() throws Exception {
+		if (this.path == null || this.path.length() == 0) {// 下载正常的附件
+			throw new Exception("need path");
+		}
+
+		// 获取附件的物理文件路径
+		String path = getText("app.data.realPath") + File.separator + this.path;
+		String ext = StringUtils.getFilenameExtension(path);
+		String fn = StringUtils.getFilename(path);
+
+		// 处理物理文件的下载
+		this.downloadFile(ext, path, fn);
+
+		return SUCCESS;
+	}
+
 	private void downloadAttach(Attach attach) throws FileNotFoundException {
-		contentType = AttachUtils.getContentType(attach.getExtension());
-		filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
-				attach.getSubject());
+		// 获取附件的物理文件路径
 		String path;
 		if (attach.isAppPath())
 			path = WebUtils.rootPath + File.separator
@@ -269,9 +286,8 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			path = getText("app.data.realPath") + File.separator
 					+ attach.getPath();
 
-		File file = new File(path);
-		contentLength = file.length();
-		inputStream = new FileInputStream(file);
+		// 处理物理文件的下载
+		this.downloadFile(attach.getExtension(), path, attach.getSubject());
 
 		// 累计下载次数
 		attach.setCount(attach.getCount() + 1);
@@ -280,6 +296,16 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		// 记录一条下载痕迹
 		this.attachHistoryService.save(buildHistory(
 				AttachHistory.TYPE_DOWNLOAD, attach));
+	}
+
+	private void downloadFile(String ext, String path, String filename)
+			throws FileNotFoundException {
+		contentType = AttachUtils.getContentType(ext);
+		filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
+				filename);
+		File file = new File(path);
+		contentLength = file.length();
+		inputStream = new FileInputStream(file);
 	}
 
 	private AttachHistory buildHistory(int type, Attach attach) {

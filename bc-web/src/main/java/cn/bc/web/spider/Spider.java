@@ -7,5 +7,5 @@ package cn.bc.web.spider;
  * 
  */
 public interface Spider<T> {
-	T excute();
+	T excute() throws Exception;
 }
