@@ -43,18 +43,16 @@ public class CacheInterceptor extends CanExcludeInterceptor {
 	}
 
 	public void setExpires(long expires) {
-		this.expires = expires;
-
 		// 初始化缓存配置：分钟转换为毫秒
 		if (expires < 0) {// 缓存多少个月（按平均每月30.5天机算）
-			expires = -1 * 2635200000l;// 30.5 * 24 * 60 * 60 * 1000
+			this.expires = expires * -2635200000l;// 30.5 * 24 * 60 * 60 * 1000
 		} else {// 缓存多少分钟
-			expires = expires * 60000l;
+			this.expires = expires * 60000l;
 		}
 	}
 
 	public String intercept(ActionInvocation invocation) throws Exception {
-		if(logger.isDebugEnabled())
+		if (logger.isDebugEnabled())
 			logger.debug("expires=" + getExpires());
 		ActionContext context = invocation.getInvocationContext();
 		HttpServletResponse response = (HttpServletResponse) context
@@ -64,8 +62,10 @@ public class CacheInterceptor extends CanExcludeInterceptor {
 
 		// 排除处理
 		if (!isExcludePath(request)) {
-			if(logger.isInfoEnabled())
-				logger.info("set Cache-Control for path=" + WebUtils.getResourcePath(request) + ",expires=" + getExpires());
+			if (logger.isInfoEnabled())
+				logger.info("set Cache-Control for path="
+						+ WebUtils.getResourcePath(request) + ",expires="
+						+ getExpires());
 			// 缓存控制
 			if (expires != 0) {
 				long date = new java.util.Date().getTime();
@@ -78,9 +78,10 @@ public class CacheInterceptor extends CanExcludeInterceptor {
 				response.setHeader("Cache-Control", "no-cache");
 				response.setDateHeader("Expires", 0);
 			}
-		}else{
-			if(logger.isDebugEnabled())
-				logger.debug("isExcludePath=true in path=" + WebUtils.getResourcePath(request));
+		} else {
+			if (logger.isDebugEnabled())
+				logger.debug("isExcludePath=true in path="
+						+ WebUtils.getResourcePath(request));
 		}
 
 		return invocation.invoke();
