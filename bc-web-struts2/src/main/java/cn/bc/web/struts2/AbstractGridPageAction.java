@@ -307,17 +307,51 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @return
 	 */
 	protected GridData getGridData(List<Column> columns) {
-		GridData data = new GridData();
+		GridData data = new GridData() {
+			public String getRowClass(List<? extends Object> data,
+					Object rowData, int index, int type) {
+				return getGridRowClass(data, rowData, index, type);
+			}
+		};
 		if (this.page != null) {
 			data.setPageNo(page.getPageNo());
 			data.setPageCount(page.getPageCount());
 			data.setTotalCount(page.getTotalCount());
 		}
-		data.setData(this.es);
+		data.setData(this.rebuildGridData(this.es));
 		data.setColumns(columns);
 		data.setRowLabelExpression(getGridRowLabelExpression());
 		// data.setName(getText(StringUtils.uncapitalize(getEntityConfigName())));
 		return data;
+	}
+
+	/**
+	 * 对视图的数据执行特殊的处理，默认不作任何处理
+	 * 
+	 * @param data
+	 *            视图的数据
+	 * @return 处理后的数据
+	 */
+	protected List<T> rebuildGridData(List<T> data) {
+		return data;
+	}
+
+	/**
+	 * 获取数据行需要附加的特殊样式
+	 * 
+	 * @param data
+	 *            整个grid的数据
+	 * @param rowData
+	 *            此行包含的数据
+	 * @param index
+	 *            行的索引号
+	 * @param type
+	 *            0-左侧固定列的行,1-右侧数据列的行
+	 * @return 返回空将不附加特殊样式
+	 */
+	protected String getGridRowClass(List<? extends Object> data,
+			Object rowData, int index, int type) {
+		return null;
 	}
 
 	/** 构建视图页面表格底部的工具条 */
@@ -548,15 +582,16 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 									json.has("like") ? json.getBoolean("like")
 											: false);
 						}
-						
+
 						// 按照?[num]的位置生成相应的参数列表
-						String regex = "\\?\\d+";//匹配?[num]模式
+						String regex = "\\?\\d+";// 匹配?[num]模式
 						Pattern p = Pattern.compile(regex);
 						Matcher m = p.matcher(ql);
 						while (m.find()) {
-							args.add(multiArgs[Integer.parseInt(m.group().substring(1))]);
+							args.add(multiArgs[Integer.parseInt(m.group()
+									.substring(1))]);
 						}
-						
+
 						// 替换所有?[num]为?
 						ql = ql.replaceAll("\\?\\d+", "\\?");
 					} else {// 常规处理

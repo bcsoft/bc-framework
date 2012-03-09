@@ -208,6 +208,11 @@ public class GridData extends Div {
 				tr.addClazz("even");// 偶数行
 			}
 
+			// 添加行的特殊样式
+			String specClass = this.getRowClass(this.data, rowData, rc, 0);
+			if (specClass != null && specClass.length() > 0)
+				tr.addClazz(specClass);
+
 			// 循环添加行的单元格（第一列为id列忽略）
 			column = Grid.getIDColumn(this.columns);
 			td = new Td().addClazz("id");
@@ -268,6 +273,11 @@ public class GridData extends Div {
 			} else {
 				tr.addClazz("even");// 偶数行
 			}
+
+			// 添加行的特殊样式
+			String specClass = this.getRowClass(this.data, rowData, rc, 1);
+			if (specClass != null && specClass.length() > 0)
+				tr.addClazz(specClass);
 
 			// 计算隐藏域的值
 			hiddenValues = new JSONObject();
@@ -331,5 +341,24 @@ public class GridData extends Div {
 
 			rc++;
 		}
+	}
+
+	/**
+	 * 获取数据行需要附加的特殊样式
+	 * 
+	 * @param data
+	 *            整个grid的数据
+	 * @param rowData
+	 *            此行包含的数据
+	 * @param rowData2
+	 * @param index
+	 *            行的索引号
+	 * @param type
+	 *            0-左侧固定列的行,1-右侧数据列的行
+	 * @return 返回空将不附加特殊样式
+	 */
+	public String getRowClass(List<? extends Object> data, Object rowData,
+			int index, int type) {
+		return null;
 	}
 }
