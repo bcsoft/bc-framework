@@ -5,16 +5,18 @@ package cn.bc.feedback.web.struts2;
 
 import java.util.Calendar;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.service.CrudService;
+import cn.bc.core.util.DateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.feedback.domain.Feedback;
+import cn.bc.feedback.domain.Reply;
+import cn.bc.feedback.service.FeedbackService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
@@ -33,13 +35,15 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 	// private static Log logger = LogFactory.getLog(FeedbackAction.class);
 	private static final long serialVersionUID = 1L;
 	private IdGeneratorService idGeneratorService;
+	private FeedbackService feedbackService;
 	private AttachService attachService;
 	public boolean isManager;
+	public boolean hasDeletePriviledge;
 
 	@Autowired
-	public void setFeedbackService(
-			@Qualifier(value = "feedbackService") CrudService<Feedback> crudService) {
-		this.setCrudService(crudService);
+	public void setFeedbackService(FeedbackService feedbackService) {
+		this.setCrudService(feedbackService);
+		this.feedbackService = feedbackService;
 	}
 
 	@Autowired
@@ -79,7 +83,7 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(600);
+		return super.buildFormPageOption(editable).setWidth(600).setHeight(500);
 	}
 
 	@Override
@@ -113,7 +117,9 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false, false);
 
-		// TODO 获取回复信息列表
+		// 是否有删除权限
+		hasDeletePriviledge = ((SystemContext) this.getContext()).hasAnyRole(
+				getText("key.role.bc.feedback"), getText("key.role.bc.admin"));
 	}
 
 	@Override
@@ -121,7 +127,9 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false, true);
 
-		// TODO 获取回复信息列表
+		// 是否有删除权限
+		hasDeletePriviledge = ((SystemContext) this.getContext()).hasAnyRole(
+				getText("key.role.bc.feedback"), getText("key.role.bc.admin"));
 	}
 
 	@Override
@@ -148,5 +156,50 @@ public class FeedbackAction extends EntityAction<Long, Feedback> {
 		attachsUI.setReadOnly(forceReadonly ? true : this.isReadonly()
 				|| !this.getE().isNew());
 		return attachsUI;
+	}
+
+	public String content;
+
+	public String doReply() throws Exception {
+		JSONObject json = new JSONObject();
+		if (this.getId() != null && content != null && content.length() > 0) {
+			Reply reply = this.feedbackService.addReply(this.getId(), content);
+			json.put("success", true);
+			json.put("id", reply.getId());
+			json.put("authorName", reply.getAuthor().getName());
+			json.put("content", reply.getContent());
+			json.put("fileDate",
+					DateUtils.formatCalendar2Minute(reply.getFileDate()));
+		} else {
+			json.put("success", false);
+			json.put("msg", this.getId() != null ? "回复内容不能为空！"
+					: "没有指定回复所属的反馈信息！");
+		}
+
+		this.json = json.toString();
+		return "json";
+	}
+
+	public String deleteReply() throws Exception {
+		JSONObject json = new JSONObject();
+		if (this.getId() != null) {
+			// 是否有删除权限
+			hasDeletePriviledge = ((SystemContext) this.getContext())
+					.hasAnyRole(getText("key.role.bc.feedback"),
+							getText("key.role.bc.admin"));
+
+			if (hasDeletePriviledge) {
+				this.feedbackService.deleteReply(this.getId());
+				json.put("success", true);
+			} else {
+				json.put("success", false);
+				json.put("msg", "你没有删除回复的权限！");
+			}
+		} else {
+			json.put("success", false);
+			json.put("msg", "没有指定要删除的信息！");
+		}
+		this.json = json.toString();
+		return "json";
 	}
 }

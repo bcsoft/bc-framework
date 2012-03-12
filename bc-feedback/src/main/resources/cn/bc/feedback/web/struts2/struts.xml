@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 反馈管理 -->
+	<package name="feedback" extends="bc-default" namespace="/bc/feedback">
+		<action name="create" class="feedbackAction" method="create">
+			<result name="form">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="edit" class="feedbackAction" method="edit">
+			<result name="form">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="open" class="feedbackAction" method="open">
+			<result name="formr">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="save" class="feedbackAction" method="save"/>
+		<action name="issue" class="feedbackAction" method="issue"/>
+		<action name="doReply" class="feedbackAction" method="doReply"/>
+		<action name="deleteReply" class="feedbackAction" method="deleteReply"/>
+	</package>
+	<!-- 我的反馈 -->
+	<package name="myfeedback" extends="bc-default" namespace="/bc/myfeedback">
+		<action name="create" class="feedbackAction" method="create">
+			<result name="form">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="edit" class="feedbackAction" method="edit">
+			<result name="form">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="open" class="feedbackAction" method="open">
+			<result name="formr">/bc/feedback/form.jsp</result>
+		</action>
+		<action name="save" class="feedbackAction" method="save"/>
+		<action name="issue" class="feedbackAction" method="issue"/>
+		<action name="doReply" class="feedbackAction" method="doReply"/>
+		<action name="deleteReply" class="feedbackAction" method="deleteReply"/>
+	</package>
+	<package name="myfeedbacks" extends="bc-default" namespace="/bc/myfeedbacks">
+		<action name="list" class="feedbacksAction" method="list">
+			<param name="my">true</param>
+		</action>
+		<action name="paging" class="feedbacksAction" method="paging">
+			<param name="my">true</param>
+		</action>
+		<action name="data" class="feedbacksAction" method="data">
+			<param name="my">true</param>
+		</action>
+		<action name="export" class="feedbacksAction" method="export">
+			<param name="my">true</param>
+		</action>
+	</package>
+</struts>

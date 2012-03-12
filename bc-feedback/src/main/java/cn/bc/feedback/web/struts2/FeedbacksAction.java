@@ -43,10 +43,11 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status;
+	public boolean my = false;
 
 	@Override
 	protected String getFormActionName() {
-		return "feedback";
+		return my ? "myfeedback" : "feedback";
 	}
 
 	@Override
@@ -68,9 +69,10 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select f.id,f.status_,f.subject,f.file_date,h.actor_name");
+		sql.append("select f.id,f.status_,f.subject,f.file_date,h.actor_name name1,r.actor_name name2,f.last_reply_date,f.reply_count");
 		sql.append(" from bc_feedback f");
 		sql.append(" inner join bc_identity_actor_history h on h.id = f.author_id");
+		sql.append(" left join bc_identity_actor_history r on r.id = f.last_replier_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -86,6 +88,9 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("fileDate", rs[i++]);
 				map.put("authorName", rs[i++]);
+				map.put("lastReplier", rs[i++]);
+				map.put("lastReplyDate", rs[i++]);
+				map.put("replyCount", rs[i++]);
 				return map;
 			}
 		});
@@ -97,7 +102,7 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("f.id", "id"));
 		columns.add(new TextColumn4MapKey("f.status_", "status",
-				getText("label.status"), 80).setSortable(true)
+				getText("label.status"), 50).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getStatuses())));
 		columns.add(new TextColumn4MapKey("f.subject", "subject",
 				getText("label.subject")).setSortable(true)
@@ -106,6 +111,13 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 				getText("label.submitDate"), 130).setSortable(true)
 				.setDir(Direction.Desc)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("f.reply_count", "replyCount",
+				getText("feedback.replyCount"), 60).setSortable(true));
+		columns.add(new TextColumn4MapKey("f.last_reply_date", "lastReplyDate",
+				getText("feedback.lastReplyDate"), 130).setSortable(true)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("r.actor_name", "lastReplier",
+				getText("feedback.lastReplier"), 80).setSortable(true));
 		if (!this.isReadonly()) {
 			columns.add(new TextColumn4MapKey("h.actor_name", "authorName",
 					getText("label.submitterName"), 80).setSortable(true));
@@ -123,6 +135,15 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(800).setMinWidth(450)
 				.setHeight(400).setMinHeight(200);
+	}
+
+	@Override
+	protected String getHtmlPageTitle() {
+		if (my) {
+			return this.getText("feedback.title2");
+		} else {
+			return this.getText("feedback.title1");
+		}
 	}
 
 	@Override
@@ -162,7 +183,7 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
 		Condition authorCondition;
-		if (!this.isReadonly()) {// 本模块管理员看全部
+		if (!this.isReadonly() && !my) {// 本模块管理员和非我的反馈 看全部
 			authorCondition = null;
 		} else {// 普通用户仅看自己提交的
 			authorCondition = new EqualsCondition("f.author_id", context
