@@ -24,6 +24,15 @@ public class FeedbackDaoImpl extends HibernateCrudJpaDao<Feedback> implements
 
 	public Reply addReply(Reply reply) {
 		this.getJpaTemplate().persist(reply);
+
+		// 更新反馈的最后回复信息
+		StringBuffer hql = new StringBuffer();
+		hql.append("update Feedback set lastReplyDate=?");
+		hql.append(",lastReplier=?");
+		hql.append(",replyCount=replyCount+1");
+		this.executeUpdate(hql.toString(), new Object[] { reply.getFileDate(),
+				reply.getAuthor() });
+
 		return reply;
 	}
 

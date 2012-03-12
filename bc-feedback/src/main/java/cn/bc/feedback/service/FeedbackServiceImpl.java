@@ -47,13 +47,6 @@ public class FeedbackServiceImpl extends DefaultCrudService<Feedback> implements
 		Feedback feedback = this.load(pid);
 		reply.setFeedback(feedback);
 		reply = this.feedbackDao.addReply(reply);
-
-		// 更新反馈的最后回复信息
-		feedback.setLastReplyDate(reply.getFileDate());
-		feedback.setLastReplier(reply.getAuthor());
-		feedback.setReplyCount(feedback.getReplyCount() + 1);
-		this.feedbackDao.save(feedback);
-
 		return reply;
 	}
 
