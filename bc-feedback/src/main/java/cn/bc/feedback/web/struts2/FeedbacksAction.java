@@ -128,7 +128,7 @@ public class FeedbacksAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "f.subject", "f.author_id" };
+		return new String[] { "f.subject", "h.actor_name", "r.actor_name" };
 	}
 
 	@Override
