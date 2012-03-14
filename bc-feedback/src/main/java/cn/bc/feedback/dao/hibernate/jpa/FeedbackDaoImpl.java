@@ -30,8 +30,9 @@ public class FeedbackDaoImpl extends HibernateCrudJpaDao<Feedback> implements
 		hql.append("update Feedback set lastReplyDate=?");
 		hql.append(",lastReplier=?");
 		hql.append(",replyCount=replyCount+1");
+		hql.append(" where id=?");
 		this.executeUpdate(hql.toString(), new Object[] { reply.getFileDate(),
-				reply.getAuthor() });
+				reply.getAuthor(), reply.getFeedback().getId() });
 
 		return reply;
 	}
