@@ -3,6 +3,8 @@ package cn.bc.web.ws.dotnet.converter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +26,7 @@ import cn.bc.web.ws.dotnet.Row;
  * 
  */
 public class DataSetConverter implements WSConverter<DataSet> {
+	private static final Log logger = LogFactory.getLog(DataSetConverter.class);
 	private String columnSelector = "[minOccurs]";
 	private String rowSelector = "Table";
 	private String msgSelector = "strMsg";
@@ -69,6 +72,11 @@ public class DataSetConverter implements WSConverter<DataSet> {
 	}
 
 	public DataSet convert(String xml) {
+		if (logger.isDebugEnabled()){
+			logger.debug("----xml----start");
+			logger.debug(xml);
+			logger.debug("----xml----end");
+		}
 		DataSet dataSet = new DataSet();
 		Document doc = Jsoup.parse(xml);
 
