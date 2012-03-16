@@ -35,6 +35,7 @@
 			<tx:method name="delete*" propagation="REQUIRED" read-only="false" />
 			<tx:method name="update*" propagation="REQUIRED" read-only="false" />
 			<tx:method name="do*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="add*" propagation="REQUIRED" read-only="false" />
 		</tx:attributes>
 	</tx:advice>
 </beans>

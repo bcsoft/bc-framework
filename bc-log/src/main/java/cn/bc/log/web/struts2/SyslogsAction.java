@@ -16,6 +16,7 @@ import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.ActorHistory;
@@ -44,6 +45,11 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String getFormActionName() {
 		return my ? "mysyslog" : "syslog";
+	}
+
+	@Override
+	protected OrderCondition getGridDefaultOrderCondition() {
+		return new OrderCondition("l.file_date", Direction.Desc);
 	}
 
 	@Override

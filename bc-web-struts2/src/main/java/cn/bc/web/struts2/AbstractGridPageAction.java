@@ -464,7 +464,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	protected MixCondition getGridSearchCondition4Simple() {
 		if (this.search == null || this.search.trim().length() == 0)
 			return null;
-		this.search = this.search.trim();
+		this.search = this.search.trim().replaceAll("＋", "+");
 
 		// 用空格分隔多个查询条件值的处理
 		String[] values;
@@ -503,16 +503,16 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			AndCondition and = new AndCondition();
 			// 用括号将多个and条件括住
 			and.setAddBracket(true);
-
+			
 			OrCondition or;
-			for (String field : likeFields) {
+			for (String value : values) {
 				or = new OrCondition();
-				for (String value : values) {
-					or.add(getGridSearchCondition4OneField(field, value));
+				for (String field : likeFields) {
+						or.add(getGridSearchCondition4OneField(field, value));
 				}
+
 				// 用括号将多个or条件括住
 				or.setAddBracket(true);
-
 				and.add(or);
 			}
 

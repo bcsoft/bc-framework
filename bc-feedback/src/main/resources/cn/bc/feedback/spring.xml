@@ -15,9 +15,8 @@
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 
 	<!-- feedback -->
-	<bean id="feedbackDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
-		p:entityClass="cn.bc.feedback.domain.Feedback"
+	<bean id="feedbackDao" class="cn.bc.feedback.dao.hibernate.jpa.FeedbackDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="feedbackService" class="cn.bc.core.service.DefaultCrudService"
-		p:entityClass="cn.bc.feedback.domain.Feedback" p:crudDao-ref="feedbackDao" />
+	<bean id="feedbackService" class="cn.bc.feedback.service.FeedbackServiceImpl"
+		p:crudDao-ref="feedbackDao" />
 </beans>
