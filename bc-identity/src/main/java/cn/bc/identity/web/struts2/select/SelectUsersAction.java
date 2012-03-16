@@ -40,12 +40,12 @@ import cn.bc.web.ui.json.Json;
 public class SelectUsersAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 车辆的状态，多个用逗号连接
+	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 用户的状态，多个用逗号连接
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：创建时间
-		return new OrderCondition("h.file_date", Direction.Desc);
+		return new OrderCondition("h.create_date", Direction.Desc);
 	}
 
 	@Override
@@ -83,20 +83,20 @@ public class SelectUsersAction extends
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("h.id", "id"));
 		columns.add(new TextColumn4MapKey("h.actor_name", "actor_name",
-				getText("car.code"), 50).setSortable(true)
+				getText("user.name"), 30).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("car.motorcade"), 80).setSortable(true)
+				getText("user.code"), 40).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("h.upper_name", "upper_name",
-				getText("car.businessType"), 60).setSortable(true)
+				getText("user.department"), 40).setSortable(true)
 				.setUseTitleFromLabel(true));
 		return columns;
 	}
 
 	@Override
 	protected String getHtmlPageTitle() {
-		return this.getText("user.title.selectUser");
+		return this.getText("user.title.select");
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class SelectUsersAction extends
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(400).setHeight(450);
+		return super.getHtmlPageOption().setWidth(300).setHeight(350);
 	}
 
 	@Override
@@ -117,12 +117,12 @@ public class SelectUsersAction extends
 	@Override
 	protected HtmlPage buildHtmlPage() {
 		return super.buildHtmlPage().setNamespace(
-				this.getHtmlPageNamespace() + "/selectUser");
+				this.getHtmlPageNamespace() + "/selectUsers");
 	}
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/user/select.js";
+		return this.getHtmlPageNamespace() + "/identity/user/select.js";
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class SelectUsersAction extends
 
 	@Override
 	protected String getClickOkMethod() {
-		return "bs.carSelectDialog.clickOk";
+		return "bc.userSelectDialog.clickOk";
 	}
 
 	@Override

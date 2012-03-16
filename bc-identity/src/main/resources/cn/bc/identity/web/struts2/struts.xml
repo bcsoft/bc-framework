@@ -155,6 +155,10 @@
 			<result>/bc/identity/user/select.jsp</result>
 		</action>
 	</package>
+	<package name="selectUsers" extends="bc-default" namespace="/bc">
+		<action name="selectUsers" class="selectUsersAction">
+		</action>
+	</package>
 	<package name="authData" extends="bc-default" namespace="/bc/auth">
 		<action name="setPassword" class="authDataAction" method="setPassword">
 			<result name="form">/bc/identity/user/password.jsp</result>
