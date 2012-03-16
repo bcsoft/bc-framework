@@ -40,7 +40,16 @@ import cn.bc.web.ui.json.Json;
 public class SelectUsersAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
+	private boolean history;// 是否选择ActorHistory信息
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 用户的状态，多个用逗号连接
+
+	public boolean isHistory() {
+		return history;
+	}
+
+	public void setHistory(boolean history) {
+		this.history = history;
+	}
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
@@ -54,9 +63,16 @@ public class SelectUsersAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code ");
-		sql.append("from bc_identity_actor_history h");
-		sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
+		// 是否选择ActorHistory信息
+		if (this.isHistory()) {
+			sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code ");
+			sql.append("from bc_identity_actor_history h");
+			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
+		} else {
+			sql.append("select a.id,a.status_,h.actor_name,h.upper_name,a.code ");
+			sql.append("from bc_identity_actor_history h");
+			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
+		}
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
