@@ -5,6 +5,7 @@ package cn.bc.identity.web.struts2.select;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -41,7 +43,8 @@ public class SelectUsersAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	private boolean history;// 是否选择ActorHistory信息
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 用户的状态，多个用逗号连接
+	public String status = String.valueOf(BCConstants.STATUS_ENABLED) + ","
+			+ String.valueOf(BCConstants.STATUS_DISABLED); // 用户的状态，多个用逗号连接
 
 	public boolean isHistory() {
 		return history;
@@ -53,8 +56,9 @@ public class SelectUsersAction extends
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认排序方向：创建时间
-		return new OrderCondition("h.create_date", Direction.Desc);
+		// 默认排序方向：状态|创建时间
+		return new OrderCondition("a.status_", Direction.Asc).add(
+				"h.create_date", Direction.Desc);
 	}
 
 	@Override
@@ -98,8 +102,11 @@ public class SelectUsersAction extends
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("h.id", "id"));
+		columns.add(new TextColumn4MapKey("a.status_", "status",
+				getText("actor.status"), 30).setSortable(true)
+				.setValueFormater(new EntityStatusFormater(getBCStatuses())));
 		columns.add(new TextColumn4MapKey("h.actor_name", "actor_name",
-				getText("user.name"), 30).setSortable(true)
+				getText("user.name"), 40).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
 				getText("user.code"), 40).setSortable(true)
@@ -110,6 +117,23 @@ public class SelectUsersAction extends
 		return columns;
 	}
 
+	/**
+	 * 状态值转换列表：正常|禁用|删除|全部
+	 * 
+	 * @return
+	 */
+	protected Map<String, String> getBCStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
+				getText("bc.status.enabled"));
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
+				getText("bc.status.disabled"));
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
+				getText("bc.status.deleted"));
+		statuses.put("", getText("bc.status.all"));
+		return statuses;
+	}
+
 	@Override
 	protected String getHtmlPageTitle() {
 		return this.getText("user.title.select");
@@ -117,12 +141,12 @@ public class SelectUsersAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "h.actor_name", "a.code" };
+		return new String[] { "h.actor_name", "a.code", "a.py" };
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(300).setHeight(350);
+		return super.getHtmlPageOption().setWidth(350).setHeight(450);
 	}
 
 	@Override
