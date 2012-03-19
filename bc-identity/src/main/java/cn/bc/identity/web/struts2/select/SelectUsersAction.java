@@ -68,7 +68,7 @@ public class SelectUsersAction extends
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		// 是否选择ActorHistory信息
-		if (this.isHistory()) {
+		if (this.history) {
 			sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code ");
 			sql.append("from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
@@ -101,7 +101,11 @@ public class SelectUsersAction extends
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("h.id", "id"));
+		if (this.history) {
+			columns.add(new IdColumn4MapKey("h.id", "id"));
+		} else {
+			columns.add(new IdColumn4MapKey("a.id", "id"));
+		}
 		columns.add(new TextColumn4MapKey("a.status_", "status",
 				getText("actor.status"), 30).setSortable(true)
 				.setValueFormater(new EntityStatusFormater(getBCStatuses())));
@@ -182,13 +186,14 @@ public class SelectUsersAction extends
 
 	@Override
 	protected Json getGridExtrasData() {
-		if (this.status == null || this.status.length() == 0) {
-			return null;
-		} else {
-			Json json = new Json();
+		Json json = new Json();
+		// 状态条件
+		if (this.status != null || this.status.length() != 0) {
 			json.put("status", status);
-			return json;
 		}
+		json.put("history", history);
+
+		return json.isEmpty() ? null : json;
 	}
 
 	@Override
