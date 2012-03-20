@@ -7,7 +7,7 @@ import cn.bc.log.domain.Worklog;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 
 /**
- * 工作日志Dao接口的实现
+ * 操作日志Dao接口的实现
  * 
  * @author dragon
  * 
