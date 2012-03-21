@@ -14,19 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.service.ActorHistoryService;
-import cn.bc.log.domain.Worklog;
+import cn.bc.log.domain.OperateLog;
 import cn.bc.test.AbstractEntityCrudTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ContextConfiguration("classpath:spring-test.xml")
-public class WorklogServiceImplTest extends
-		AbstractEntityCrudTest<Long, Worklog> {
+public class OperateLogServiceImplTest extends
+		AbstractEntityCrudTest<Long, OperateLog> {
 	private ActorHistoryService actorHistoryService;
-	WorklogService worklogService;
+	OperateLogService worklogService;
 
 	@Autowired
-	public void setWorklogService(WorklogService worklogService) {
+	public void setWorklogService(OperateLogService worklogService) {
 		this.worklogService = worklogService;
 		this.crudOperations = worklogService;// 赋值基类的crud操作对象
 	}
@@ -37,12 +37,13 @@ public class WorklogServiceImplTest extends
 	}
 
 	@Override
-	protected Worklog createInstance(String config) {
-		Worklog entity = super.createInstance(config);
+	protected OperateLog createInstance(String config) {
+		OperateLog entity = super.createInstance(config);
 		entity.setUid("uid");
 
 		// 补充一些额外的设置
-		entity.setType(Worklog.TYPE_SYSTEM);
+		entity.setType(OperateLog.TYPE_WORK);
+		entity.setWay(OperateLog.WAY_USER);
 		entity.setPtype("ptype");
 		entity.setPid("pid");
 		entity.setSubject("subject");
@@ -63,7 +64,7 @@ public class WorklogServiceImplTest extends
 	@Test
 	public void testFindWithParent() {
 		// 先插入一条数据
-		Worklog worklog = this.createInstance(getDefaultConfig());
+		OperateLog worklog = this.createInstance(getDefaultConfig());
 		worklog.setPtype("ptype");
 		worklog.setPid(UUID.randomUUID().toString());
 		Assert.assertNull(worklog.getId());
@@ -71,8 +72,8 @@ public class WorklogServiceImplTest extends
 		Assert.assertNotNull(worklog.getId());
 
 		// 从数据库加载
-		List<Worklog> worklogs = this.worklogService.find(worklog.getPtype(),
-				worklog.getPid());
+		List<OperateLog> worklogs = this.worklogService.find(
+				worklog.getPtype(), worklog.getPid());
 
 		Assert.assertNotNull(worklogs);
 		Assert.assertEquals(1, worklogs.size());

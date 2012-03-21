@@ -3,7 +3,7 @@ package cn.bc.log.dao;
 import java.util.List;
 
 import cn.bc.core.dao.CrudDao;
-import cn.bc.log.domain.Worklog;
+import cn.bc.log.domain.OperateLog;
 
 /**
  * 操作日志Dao接口
@@ -11,7 +11,7 @@ import cn.bc.log.domain.Worklog;
  * @author dragon
  * 
  */
-public interface WorklogDao extends CrudDao<Worklog> {
+public interface OperateLogDao extends CrudDao<OperateLog> {
 	/**
 	 * 获取指定文档的操作日志
 	 * 
@@ -21,5 +21,5 @@ public interface WorklogDao extends CrudDao<Worklog> {
 	 *            文档标识号
 	 * @return
 	 */
-	List<Worklog> find(String ptype, String pid);
+	List<OperateLog> find(String ptype, String pid);
 }

@@ -2,8 +2,8 @@ package cn.bc.log.dao.hibernate.jpa;
 
 import java.util.List;
 
-import cn.bc.log.dao.WorklogDao;
-import cn.bc.log.domain.Worklog;
+import cn.bc.log.dao.OperateLogDao;
+import cn.bc.log.domain.OperateLog;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 
 /**
@@ -12,11 +12,11 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  * @author dragon
  * 
  */
-public class WorklogDaoImpl extends HibernateCrudJpaDao<Worklog> implements
-		WorklogDao {
+public class OperateLogDaoImpl extends HibernateCrudJpaDao<OperateLog> implements
+		OperateLogDao {
 
 	@SuppressWarnings("unchecked")
-	public List<Worklog> find(String ptype, String pid) {
+	public List<OperateLog> find(String ptype, String pid) {
 		return this.getJpaTemplate().find(
 				"from Worklog wl where wl.ptype=? and wl.pid=?", ptype, pid);
 	}

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="769" measuredHeight="169">
+    <widgets xsi:type="model:Window" id="1" width="769" height="169" text="操作日志信息" measuredWidth="769" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="769" measuredWidth="769" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="6" y="26" text="新建, 编辑, 删除" measuredWidth="134" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="新建"/>
+      <items x="45" y="0" width="44" height="30" text="编辑"/>
+      <items x="89" y="0" width="45" height="30" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" x="10" y="72" width="750" text="(w:30). !,日志类型,操作时间,操作人,创建方式,所属模块,文档号,标题&#xA;1,审计日志,2012-02-01 12:00,小明,自动生成,司机,123,修改张三的联系电话为13122227777&#xA;2,工作日志,2012-01-01 11:00,小明,用户新建,司机,123,补充信息1&#xA;" measuredWidth="750" measuredHeight="73" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="6" x="577" y="29" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="7" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="8" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="30" x="416" y="184" measuredWidth="289" measuredHeight="249">
+    <widgets xsi:type="model:Panel" id="31" y="24" width="289" height="225" measuredWidth="289" measuredHeight="225"/>
+    <widgets xsi:type="model:Button" id="32" x="10" y="208" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="33" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="36" x="273" y="26" width="13" measuredWidth="13" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Label" id="45" x="10" y="41" text="所属模块：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="51" x="10" y="149" text="操作时间：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="53" x="136" y="173" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="56" x="152" y="41" text="日志类型：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="70" x="10" y="65" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="59" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="64" x="92" y="7" measuredWidth="29" measuredHeight="14">
+        <widgets xsi:type="model:Icon" id="62" x="17" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="63" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="71" x="152" y="65" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="60" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="65" x="93" y="6" measuredWidth="29" measuredHeight="14">
+        <widgets xsi:type="model:Icon" id="66" x="17" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="67" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Label" id="68" x="10" y="96" text="操作人：" measuredWidth="53" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="72" x="10" y="120" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="73" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="74" x="92" y="7" measuredWidth="29" measuredHeight="14">
+        <widgets xsi:type="model:Icon" id="75" x="17" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="76" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Label" id="77" x="152" y="96" text="创建方式：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="78" x="152" y="120" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="79" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="80" x="93" y="6" measuredWidth="29" measuredHeight="14">
+        <widgets xsi:type="model:Icon" id="81" x="17" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="82" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="83" x="56" y="296" measuredWidth="0" measuredHeight="0"/>
+    <widgets xsi:type="model:WidgetGroup" id="89" x="10" y="173" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="90" width="127" text="2012-01-10" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="91" x="95" y="7" measuredWidth="26" measuredHeight="12">
+        <widgets xsi:type="model:Icon" id="92" x="14" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="93" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="calendar (custom)"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="94" x="152" y="173" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="95" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="96" x="95" y="7" measuredWidth="26" measuredHeight="12">
+        <widgets xsi:type="model:Icon" id="97" x="14" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="delete (custom)"/>
+        <widgets xsi:type="model:Icon" id="98" width="12" height="12" measuredWidth="12" measuredHeight="12" icon="calendar (custom)"/>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="184" measuredWidth="401" measuredHeight="281">
+    <widgets xsi:type="model:Window" id="100" y="24" width="401" height="257" text="工作日志信息" measuredWidth="401" measuredHeight="257" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="101" y="236" width="401" measuredWidth="401" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="102" x="338" y="244" width="53" text="保存" measuredWidth="53" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="105" x="10" y="72" width="381" text="填写标题" measuredWidth="381" measuredHeight="25">
+      <font italic="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="106" x="206" y="43" text="张三 创建于 2011-01-02 12:00:00 " measuredWidth="195" measuredHeight="25" textAlignment="Right" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="114" x="6" text="工作日志表单：" measuredWidth="89" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="115" x="10" y="104" width="381" height="73" text="详细内容" measuredWidth="381" measuredHeight="73" verticalScrollbar="true">
+      <font italic="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="116" x="10" y="184" text="0 个附件共 0Bytes&#x9;" measuredWidth="106" measuredHeight="25" textAlignment="Right">
+      <font underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="117" x="115" y="184" text="添加附件 打包下载 全部删除" measuredWidth="157" measuredHeight="25" textAlignment="Right">
+      <font underline="true"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="118" x="8" y="480" width="401" height="121" text="说明：&#xD;&#xA;1) 审计日志为后台自动生成，用户不可以通过系统新建，&#xD;&#xA;用户只能新建操作日志。&#xD;&#xA;2) 用户新建的工作日志，一般不可以继续修改，只有具有“操作日志管理”权限的用户方可执行编辑、删除操作。&#xD;&#xA;3) 对于自动生成的日志信息，任何人都不可以编辑、删除。" measuredWidth="401" measuredHeight="121" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

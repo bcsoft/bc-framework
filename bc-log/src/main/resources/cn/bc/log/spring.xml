@@ -13,18 +13,15 @@
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
-		
+
 	<!-- syslog -->
 	<bean id="syslogDao" class="cn.bc.log.dao.hibernate.jpa.SyslogDaoImpl"
-		p:entityClass="cn.bc.log.domain.Syslog"
-		p:entityManagerFactory-ref="entityManagerFactory" />
+		p:entityClass="cn.bc.log.domain.Syslog" p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="syslogService" class="cn.bc.log.service.SyslogServiceImpl"
 		p:entityClass="cn.bc.log.domain.Syslog" />
-		
-	<!-- worklog -->
-	<bean id="worklogDao" class="cn.bc.log.dao.hibernate.jpa.WorklogDaoImpl"
-		p:entityClass="cn.bc.log.domain.Worklog"
+
+	<!-- operateLog -->
+	<bean id="operateLogDao" class="cn.bc.log.dao.hibernate.jpa.OperateLogDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="worklogService" class="cn.bc.log.service.WorklogServiceImpl"
-		p:entityClass="cn.bc.log.domain.Worklog" />
+	<bean id="operateLogService" class="cn.bc.log.service.OperateLogServiceImpl" />
 </beans>
