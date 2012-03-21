@@ -41,13 +41,13 @@ public class OperateLogServiceImpl extends DefaultCrudService<OperateLog>
 	}
 
 	public OperateLog saveWorkLog(String ptype, String pid, String subject,
-			String content, String stype) {
-		return this.saveWorkLog(ptype, pid, subject, content, stype,
+			String content, String operate) {
+		return this.saveWorkLog(ptype, pid, subject, content, operate,
 				OperateLog.WAY_SYSTEM);
 	}
 
 	public OperateLog saveWorkLog(String ptype, String pid, String subject,
-			String content, String stype, int way) {
+			String content, String operate, int way) {
 		Assert.hasText(ptype, "ptype 不能为空！");
 		Assert.hasText(pid, "pid 不能为空！");
 		Assert.hasText(subject, "subject 不能为空！");
@@ -61,7 +61,7 @@ public class OperateLogServiceImpl extends DefaultCrudService<OperateLog>
 		worklog.setPid(pid);
 		worklog.setSubject(subject);
 		worklog.setContent(content);
-		worklog.setOperate(stype);
+		worklog.setOperate(operate);
 		worklog.setUid(this.idGeneratorService.next("WorkLog"));
 
 		return this.save(worklog);
@@ -69,7 +69,7 @@ public class OperateLogServiceImpl extends DefaultCrudService<OperateLog>
 
 	public OperateLog saveAuditLog(String ptype, String pid,
 			Set<AuditItem> auditItems, String subject, String content,
-			String stype) {
+			String operate) {
 		Assert.hasText(ptype, "ptype 不能为空！");
 		Assert.hasText(pid, "pid 不能为空！");
 		Assert.notEmpty(auditItems, "auditItems 不能为空！");
@@ -84,7 +84,7 @@ public class OperateLogServiceImpl extends DefaultCrudService<OperateLog>
 		auditLog.setPid(pid);
 		auditLog.setSubject(subject);
 		auditLog.setContent(content);
-		auditLog.setOperate(stype);
+		auditLog.setOperate(operate);
 		auditLog.setUid(this.idGeneratorService.next("AuditLog"));
 
 		for (AuditItem auditItem : auditItems) {

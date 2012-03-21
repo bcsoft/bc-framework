@@ -36,12 +36,12 @@ public interface OperateLogService extends CrudService<OperateLog> {
 	 *            标题，不能为空
 	 * @param content
 	 *            详细内容
-	 * @param stype
+	 * @param operate
 	 *            操作分类，如create、update、delete等
 	 * @return 插入成功后的工作日志信息
 	 */
 	OperateLog saveWorkLog(String ptype, String pid, String subject,
-			String content, String stype);
+			String content, String operate);
 
 	/**
 	 * 插入一条工作日志信息
@@ -54,14 +54,14 @@ public interface OperateLogService extends CrudService<OperateLog> {
 	 *            标题，不能为空
 	 * @param content
 	 *            详细内容
-	 * @param stype
+	 * @param operate
 	 *            操作分类，如create、update、delete等
 	 * @param way
 	 *            创建方式
 	 * @return 插入成功后的工作日志信息
 	 */
 	OperateLog saveWorkLog(String ptype, String pid, String subject,
-			String content, String stype, int way);
+			String content, String operate, int way);
 
 	/**
 	 * 插入一条审计日志信息
@@ -76,11 +76,11 @@ public interface OperateLogService extends CrudService<OperateLog> {
 	 *            标题，不能为空
 	 * @param content
 	 *            详细内容
-	 * @param stype
+	 * @param operate
 	 *            操作分类，如create、update、delete等
 	 * @return 插入成功后的审计日志信息
 	 */
 	OperateLog saveAuditLog(String ptype, String pid,
 			Set<AuditItem> auditItems, String subject, String content,
-			String stype);
+			String operate);
 }
