@@ -1,5 +1,10 @@
 package cn.bc.web.ui.html;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.bc.web.ui.AbstractComponent;
 
 /**
@@ -9,8 +14,10 @@ import cn.bc.web.ui.AbstractComponent;
  * 
  */
 public class Button extends AbstractComponent {
+	private static Log logger = LogFactory.getLog(Button.class);
 	private String icon;// 首选图标样式
 	private String text;// 显示的文字
+	private JSONObject extra;// 额外的数据
 
 	public String getTag() {
 		return "button";
@@ -44,6 +51,18 @@ public class Button extends AbstractComponent {
 
 	public Button setClick(String click) {
 		this.setAttr("data-click", click);
+		return this;
+	}
+
+	public Button addParam(String name, String value) {
+		if (extra == null)
+			extra = new JSONObject();
+		try {
+			extra.put(name, value);
+		} catch (JSONException e) {
+			logger.error(e.getMessage(), e);
+		}
+		this.setAttr("data-extra", extra.toString());
 		return this;
 	}
 
