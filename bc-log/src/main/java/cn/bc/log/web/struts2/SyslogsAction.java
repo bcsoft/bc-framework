@@ -29,6 +29,7 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
  * 系统日志视图Action
@@ -181,6 +182,11 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 		// 查看按钮
 		tb.addButton(this.getDefaultOpenToolbarButton().setAction(null)
 				.setClick("bc.syslogList.checkWork"));
+
+		// 按日统计登录帐号数按钮
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-check")
+				.setText(getText("syslog.statsByDay"))
+				.setClick("bc.syslogList.statsByDay"));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());

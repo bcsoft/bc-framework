@@ -51,4 +51,11 @@
 			<result name="success">/bc/log/syslog/conditions.jsp</result>
 		</action>
 	</package>
+	
+	<!-- 登录日志统计 -->
+	<package name="syslogStats" extends="bc-default" namespace="/bc/syslogStats">
+		<action name="statsByDay" class="syslogStatsAction" method="statsByDay">
+			<result name="success">/bc/log/syslog/stats/statsByDay.jsp</result>
+		</action>
+	</package>
 </struts>
