@@ -7,12 +7,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
+import cn.bc.core.util.DateUtils;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridExporter;
 import cn.bc.web.ui.html.grid.GridFooter;
@@ -43,6 +45,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 
 	// 导出表格的数据为excel文件
 	public String export() throws Exception {
+		Date startTime = new Date();
 		// 确定下载文件的名称(解决跨浏览器中文文件名乱码问题)
 		if (this.fileName == null || this.fileName.length() == 0)
 			this.fileName = this.getDefaultExportFileName();
@@ -73,11 +76,14 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		}
 
 		// 导出数据到Excel
+		if(logger.isDebugEnabled())logger.debug("1:"+DateUtils.getWasteTime(startTime));
 		GridExporter exporter = new GridExporter();
 		exporter.setColumns(this.getExportColumns()).setTitle(title)
 				.setData(this.es).setIdLabel(getText("label.idLabel"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream(this.bufferSize);
+		if(logger.isDebugEnabled())logger.debug("2:"+DateUtils.getWasteTime(startTime));
 		exporter.exportTo(out);
+		if(logger.isDebugEnabled())logger.debug("3:"+DateUtils.getWasteTime(startTime));
 		this.inputStream = new ByteArrayInputStream(out.toByteArray());
 
 		return "export";

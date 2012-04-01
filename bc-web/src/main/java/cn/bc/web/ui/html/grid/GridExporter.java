@@ -95,6 +95,7 @@ public class GridExporter implements Exporter {
 	}
 
 	public void exportTo(OutputStream outputStream) throws Exception {
+		Date startTime = new Date();
 		if (logger.isDebugEnabled())
 			logger.debug("templateFile=" + this.getTemplateFile());
 		XLSTransformer transformer = new XLSTransformer();
@@ -106,7 +107,11 @@ public class GridExporter implements Exporter {
 			is = new BufferedInputStream(new FileInputStream(
 					this.getTemplateFile()));
 
+		if (logger.isDebugEnabled())
+			logger.debug("exportTo 1:" + DateUtils.getWasteTime(startTime));
 		transformer.transformXLS(is, this.parseData()).write(outputStream);
+		if (logger.isDebugEnabled())
+			logger.debug("exportTo 2:" + DateUtils.getWasteTime(startTime));
 		is.close();
 		outputStream.flush();
 		outputStream.close();
@@ -126,6 +131,7 @@ public class GridExporter implements Exporter {
 	 * @return
 	 */
 	protected Map<String, Object> parseData() {
+		Date startTime = new Date();
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 导出时间
@@ -169,6 +175,8 @@ public class GridExporter implements Exporter {
 		}
 		map.put("rowDatas", rows);
 
+		if (logger.isDebugEnabled())
+			logger.debug("parseData:" + DateUtils.getWasteTime(startTime));
 		return map;
 	}
 }
