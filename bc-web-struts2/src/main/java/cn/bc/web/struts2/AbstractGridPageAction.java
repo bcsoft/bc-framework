@@ -31,6 +31,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.StringUtils;
+import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.Button;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
@@ -194,11 +195,14 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				.setEditUrl(this.getEditUrl()).setOpenUrl(this.getOpenUrl())
 				.setAttr("data-name", getText(getFormActionName()));
 
-		// 附件工具条
-		listPage.addChild(getHtmlPageToolbar());
+		// 附加头部信息
+		listPage.addChild(getHtmlPageHeader());
 
 		// 附加Grid
 		listPage.addChild(getHtmlPageGrid());
+
+		// 附加页脚信息
+		listPage.addChild(getHtmlPageFooter());
 
 		// 额外参数配置
 		Json json = this.getGridExtrasData();
@@ -206,6 +210,17 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			listPage.setAttr("data-extras", json.toString());
 
 		return listPage;
+	}
+
+	/** 附加头部信息 */
+	protected Component getHtmlPageHeader() {
+		// 默认为工具条
+		return getHtmlPageToolbar();
+	}
+
+	/** 附加页脚信息 */
+	protected Component getHtmlPageFooter() {
+		return null;
 	}
 
 	/** 获取视图action的简易名称 */
@@ -503,12 +518,12 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			AndCondition and = new AndCondition();
 			// 用括号将多个and条件括住
 			and.setAddBracket(true);
-			
+
 			OrCondition or;
 			for (String value : values) {
 				or = new OrCondition();
 				for (String field : likeFields) {
-						or.add(getGridSearchCondition4OneField(field, value));
+					or.add(getGridSearchCondition4OneField(field, value));
 				}
 
 				// 用括号将多个or条件括住
