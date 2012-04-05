@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Image" id="18" x="857" y="879"/>
+  <widgets xsi:type="model:WidgetGroup" id="28" x="8" y="8" measuredWidth="761" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="1" width="761" height="377" text="发票年度销售统计" measuredWidth="761" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:WidgetGroup" id="123" y="19" measuredWidth="761" measuredHeight="166">
+      <widgets xsi:type="model:Accordion" id="124" width="761" height="166" text="统计条件" measuredWidth="761" measuredHeight="166" selection="0">
+        <items x="0" y="2" width="761" height="27" text="统计条件"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="126" x="33" y="37" text="公司：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="153" x="72" y="37" measuredWidth="235" measuredHeight="26">
+        <widgets xsi:type="model:TextField" id="154" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="155" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Label" id="156" x="5" y="1" text="宝城 X" measuredWidth="41" measuredHeight="25">
+          <font underline="true"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="157" x="57" y="1" text="广发 X" measuredWidth="41" measuredHeight="25">
+          <font underline="true"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Label" id="158" x="21" y="67" text="分公司：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="159" x="72" y="67" measuredWidth="235" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="160" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="161" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="164" x="33" y="99" text="车队：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="165" x="72" y="99" measuredWidth="235" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="166" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="167" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="168" x="33" y="131" text="车辆：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="169" x="72" y="131" measuredWidth="235" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="170" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="171" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="172" x="332" y="37" text="购买人：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="173" x="384" y="37" measuredWidth="235" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="174" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="175" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="176" x="332" y="67" text="销售员：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="177" x="384" y="67" measuredWidth="235" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="178" width="235" measuredWidth="235" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="179" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="184" x="319" y="97" measuredWidth="250" measuredHeight="25">
+        <widgets xsi:type="model:Label" id="185" text="统计年份：" measuredWidth="65" measuredHeight="25">
+          <font bold="false"/>
+        </widgets>
+        <widgets xsi:type="model:TextField" id="186" x="80" width="50" text="2005" measuredWidth="50" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="187" x="64" text="从" measuredWidth="17" measuredHeight="25">
+          <font bold="false"/>
+        </widgets>
+        <widgets xsi:type="model:TextField" id="188" x="169" width="49" text="2012" measuredWidth="49" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="189" x="137" width="25" text="年到" measuredWidth="25" measuredHeight="25">
+          <font bold="false"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="190" x="225" width="25" text="年" measuredWidth="25" measuredHeight="25">
+          <font bold="false"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Button" id="191" x="575" y="130" text="查询" measuredWidth="44" measuredHeight="27">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="193" y="182" measuredWidth="761" measuredHeight="131">
+      <widgets xsi:type="model:Accordion" id="194" width="761" height="131" text="统计结果" measuredWidth="761" measuredHeight="131" selection="0">
+        <items x="0" y="2" width="761" height="27" text="统计结果"/>
+      </widgets>
+      <widgets xsi:type="model:Table" id="230" y="27" width="761" height="104" text="(w:30). !,(w:30). 年份,(w:30). 销售数量(卷),销售合计(元)&#xA;1,2010,10,70.00&#xA;2,2011,20,140.00&#xA;3,2012,30,210.00" measuredWidth="761" measuredHeight="104" alternative="#eeeeee">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="232" x="732" y="3" measuredWidth="24" measuredHeight="24" icon="bar-chart (medium)"/>
+      <widgets xsi:type="model:Icon" id="233" x="704" y="3" measuredWidth="24" measuredHeight="24" icon="line-chart (medium)"/>
+      <widgets xsi:type="model:Icon" id="234" x="672" y="3" measuredWidth="24" measuredHeight="24" icon="pie-chart (medium)"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
