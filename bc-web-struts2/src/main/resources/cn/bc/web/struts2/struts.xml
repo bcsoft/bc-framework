@@ -70,7 +70,7 @@
 		</action>
 		<!-- 高级搜索条件窗口 -->
 		<action name="/*/conditions" class="{1}Action" method="conditions">
-			<result name="success">/bc/{1}/conditions.jsp</result>
+			<result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
 		</action>
 		<!-- 保存 -->
 		<action name="/*/save" class="{1}Action" method="save" />

@@ -23,5 +23,6 @@
 	<!-- operateLog -->
 	<bean id="operateLogDao" class="cn.bc.log.dao.hibernate.jpa.OperateLogDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="operateLogService" class="cn.bc.log.service.OperateLogServiceImpl" />
+	<bean id="operateLogService" class="cn.bc.log.service.OperateLogServiceImpl" 
+		p:crudDao-ref="operateLogDao"/>
 </beans>
