@@ -5,13 +5,10 @@ package cn.bc.log.domain;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 操作日志：包括工作日志和审计日志
@@ -92,8 +89,10 @@ public class OperateLog extends BaseLog {
 		this.operate = operate;
 	}
 
-	@OneToMany(mappedBy = "belong", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy(value = "orderNo asc")
+	// @OneToMany(mappedBy = "belong", fetch = FetchType.EAGER, cascade =
+	// CascadeType.ALL, orphanRemoval = true)
+	// @OrderBy(value = "orderNo asc")
+	@Transient
 	public Set<AuditItem> getAuditItems() {
 		return auditItems;
 	}

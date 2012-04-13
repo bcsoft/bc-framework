@@ -24,7 +24,7 @@ public class AuditItem extends EntityImpl {
 
 	private OperateLog belong;// 所隶属的日志条目
 	private String key;// 审计条目:如字段名、属性名
-	private String label;// 审计条目的描述:如字段名、属性名的中文描述
+	private String lable;// 审计条目的描述:如字段名、属性名的中文描述
 	private String oldValue;// 原值
 	private String newValue;// 新值
 	private String orderNo;// 同一belong内的排序号
@@ -39,12 +39,12 @@ public class AuditItem extends EntityImpl {
 		this.belong = belong;
 	}
 
-	public String getLabel() {
-		return label;
+	public String getLable() {
+		return lable;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setLable(String lable) {
+		this.lable = lable;
 	}
 
 	@Column(name = "ORDER_")
