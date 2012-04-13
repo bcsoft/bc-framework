@@ -218,7 +218,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 		// 初始化表单的其他配置
 		this.initForm(true);
-		
+
 		this.afterCreate(this.getE());
 
 		return "form";
@@ -692,7 +692,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 		// 添加按钮
 		buildFormPageButtons(pageOption, editable);
-		
+
 		return pageOption;
 	}
 
@@ -705,10 +705,25 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 */
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		boolean readonly = this.isReadonly();
+
+		if (this.useFormPrint()) {
+			// 添加打印按钮
+			pageOption.addButton(this.getDefaultPrintButtonOption());
+		}
+
 		if (editable && !readonly) {
 			// 添加默认的保存按钮
 			pageOption.addButton(this.getDefaultSaveButtonOption());
 		}
+	}
+
+	/**
+	 * 是否使用表单打印功能
+	 * 
+	 * @return
+	 */
+	protected boolean useFormPrint() {
+		return true;
 	}
 
 	/** 构建视图页面的工具条 */
@@ -771,6 +786,12 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected ButtonOption getDefaultSaveButtonOption() {
 		return new ButtonOption(getText("label.save"), "save")
 				.setId("bcSaveBtn");
+	}
+
+	/** 创建默认的表单打印按钮 */
+	protected ButtonOption getDefaultPrintButtonOption() {
+		return new ButtonOption(getText("label.print"), "print")
+				.setId("bcPrintBtn");
 	}
 
 	/** 构建视图页面的表格 */

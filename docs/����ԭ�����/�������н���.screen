@@ -2,7 +2,7 @@
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
   <widgets xsi:type="model:Image" id="18" x="857" y="879"/>
   <widgets xsi:type="model:WidgetGroup" id="28" x="8" y="8" measuredWidth="761" measuredHeight="377">
-    <widgets xsi:type="model:Window" id="1" width="761" height="377" text="发票年度销售统计" measuredWidth="761" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Window" id="1" width="761" height="377" text="发票销售统计(按年)" measuredWidth="761" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:WidgetGroup" id="123" y="19" measuredWidth="761" measuredHeight="166">
       <widgets xsi:type="model:Accordion" id="124" width="761" height="166" text="统计条件" measuredWidth="761" measuredHeight="166" selection="0">
         <items x="0" y="2" width="761" height="27" text="统计条件"/>
@@ -100,7 +100,7 @@
       </widgets>
       <widgets xsi:type="model:Icon" id="232" x="732" y="3" measuredWidth="24" measuredHeight="24" icon="bar-chart (medium)"/>
       <widgets xsi:type="model:Icon" id="233" x="704" y="3" measuredWidth="24" measuredHeight="24" icon="line-chart (medium)"/>
-      <widgets xsi:type="model:Icon" id="234" x="672" y="3" measuredWidth="24" measuredHeight="24" icon="pie-chart (medium)"/>
+      <widgets xsi:type="model:Icon" id="234" x="675" y="3" measuredWidth="24" measuredHeight="24" icon="pie-chart (medium)"/>
     </widgets>
   </widgets>
   <hRuler/>
