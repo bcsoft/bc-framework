@@ -680,6 +680,9 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
+		
+		if(this.useFormPrint())
+			pageOption.setPrint("default.form");
 
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
