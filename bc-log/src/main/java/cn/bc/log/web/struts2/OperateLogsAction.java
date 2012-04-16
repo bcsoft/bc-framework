@@ -63,9 +63,11 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	public boolean isReadonly() {
-		// 车辆经营权管理员或系统管理员
+		// 操作日志管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin"));
+		return !context.hasAnyRole(getText("key.role.bc.operateLog"),
+				getText("key.role.bc.admin"));
+
 	}
 
 	@Override
