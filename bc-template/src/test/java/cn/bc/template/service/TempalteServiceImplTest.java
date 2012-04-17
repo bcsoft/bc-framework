@@ -1,7 +1,9 @@
 package cn.bc.template.service;
 
 import java.util.Calendar;
+import java.util.UUID;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,7 @@ public class TempalteServiceImplTest extends
 		template.setCode(code);
 		template.setContent("testContent");
 		template.setType(Template.TYPE_TEXT);
-		//template.setAuthor(this.actorHistoryService.load(100729L));
+		// template.setAuthor(this.actorHistoryService.load(100729L));
 		template.setAuthor(this.actorHistoryService.loadByCode("admin"));
 		template.setFileDate(Calendar.getInstance());
 		template.setInner(1);
@@ -57,15 +59,35 @@ public class TempalteServiceImplTest extends
 	}
 
 	@Test
+	public void testGetContent() {
+		String code = UUID.randomUUID().toString();
+
+		// == 测试获取不存在的模板
+		Assert.assertNull(this.templateService.getContent(code));
+
+		// == 测试获取存在的模板
+		String content = "test";
+		Template t = createInstance(null);
+		t.setCode(code);
+		t.setContent(content);
+		this.templateService.save(t);
+		Assert.assertEquals(content, this.templateService.getContent(code));
+	}
+
+	// == 以下为待清理的代码 ==
+
+	@Test
 	public void testFindOneTemplateRtnContent() {
 		// Template tpl=this.createInstance(this.getDefaultConfig());
 		// String r = this.templateService.findOneTemplateRtnContent(code);
 		// Assert.assertEquals("testContent", r);
-		//Assert.assertEquals("testContent",this.createInstance(this.getDefaultConfig()).getCode());
-		//String t = this.templateService.findOneTemplateRtnContent("text.111");
-		//Assert.assertEquals("testtext", t);
-		//InputStream is = this.templateService.findOneTemplateRtnFile("excel.222");
-		//Assert.assertNotNull(is);
+		// Assert.assertEquals("testContent",this.createInstance(this.getDefaultConfig()).getCode());
+		// String t =
+		// this.templateService.findOneTemplateRtnContent("text.111");
+		// Assert.assertEquals("testtext", t);
+		// InputStream is =
+		// this.templateService.findOneTemplateRtnFile("excel.222");
+		// Assert.assertNotNull(is);
 
 		/*
 		 * try { BufferedInputStream bis=new BufferedInputStream(is);
@@ -74,8 +96,7 @@ public class TempalteServiceImplTest extends
 		 * byte[] b=new byte[4096]; while((i=bis.read(b))!=-1){ fos.write(b); }
 		 * is.close(); bis.close(); fos.close(); //bos.close();
 		 * 
-		 * } catch (IOException e) { 
-		 * e.printStackTrace(); }
+		 * } catch (IOException e) { e.printStackTrace(); }
 		 */
 	}
 }
