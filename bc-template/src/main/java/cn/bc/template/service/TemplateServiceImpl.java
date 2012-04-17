@@ -51,8 +51,11 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			return null;
 		}
 
-		// TODO
-		return null;
+		// 不处理非纯文本类型的
+		if (!tpl.isPureText())
+			return null;
+
+		return tpl.getContent();
 	}
 
 	public InputStream getInputStream(String code) {
