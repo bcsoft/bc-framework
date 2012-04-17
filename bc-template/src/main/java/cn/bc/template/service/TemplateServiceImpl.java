@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,5 +142,21 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
 	public int countTemplateFileName(String fileName) {
 		return this.templateDao.countTemplateFileName( fileName);
+	}
+
+	public String format(String source, Map<String, String> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String formatTemplate(String templateCode, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void formatTemplateTo(String templateCode,
+			Map<String, Object> params, OutputStream out) {
+		// TODO Auto-generated method stub
+		
 	}
 }
