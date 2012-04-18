@@ -719,8 +719,8 @@
 		<db.port>3306</db.port>
 		<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
 		<db.url><![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
-		<db.username>bcdemo</db.username>
-		<db.password>bcdemo</db.password>
+		<db.username>${db.name}</db.username>
+		<db.password>${db.name}</db.password>
 		<jndi.name>${db.name}</jndi.name>
 		<!-- 使用oracle数据库时设置为sequence的名称，用于测试中qc.core.jdbc.SimpleJdbcInsertEx插入数据并返回id值 -->
 		<db.sequence />
@@ -736,6 +736,7 @@
 	<profiles>
 		<profile>
 			<id>postgresql</id>
+			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
 				<db.type>postgresql</db.type>
 				<db.port>5432</db.port>

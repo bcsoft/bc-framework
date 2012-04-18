@@ -27,6 +27,10 @@
 	<category name="cn.bc.template.dao.hibernate.jpa.TemplateDaoImpl">
 	  <priority value="WARN" />
 	</category>
+ 	<!-- hibernate：设为DEBUG，查看实际的sql语句，相当于hibernate.show_sql=true (org.hibernate.jdbc.util.SQLStatementLogger) -->
+	<category name="org.hibernate.SQL">
+	  <priority value="DEBUG" />
+	</category>
     	
   	<!-- 设置默认的日志级别(该设置必须放在最后,否则加载会解析出错) -->
 	<!-- 优先级别:OFF/FATAL/ERROR/WARN /INFO /DEBUG /ALL -->
