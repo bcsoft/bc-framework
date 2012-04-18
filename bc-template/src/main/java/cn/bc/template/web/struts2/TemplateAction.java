@@ -62,21 +62,9 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
-			//新建时
-			if(this.getId()==null){
 				pageOption.addButton(new ButtonOption(getText("label.save"),
 						null, "bc.templateForm.save")
 						.setId("templateSave"));
-			}else{
-				Template template=this.templateService.load(this.getId());
-				//非内置和非excel、word、other
-				if(template.getInner().equals(Template.INNER_FALSE)
-						&&!this.typeisExcelWordOther(template.getType())){
-					pageOption.addButton(new ButtonOption(getText("label.save"),
-							null, "bc.templateForm.save")
-							.setId("templateSave"));
-				}
-			}
 		}
 	}
 
@@ -89,23 +77,15 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void afterCreate(Template entity){
 		super.afterCreate(entity);
-		entity.setType(Template.TYPE_EXCEL);
+		entity.setType(Template.TYPE_FILE_EXCEL);
 		//内置 默认为否
-		entity.setInner(1);
-		// 设置全局唯一编码 新建时默认excel
-		entity.setCode(this.getIdGeneratorService().next(Template.KEY_CODE_EXCEL));
-	}
-	
-	private boolean typeisExcelWordOther(Integer type){
-		return type.equals(Template.TYPE_EXCEL)
-				||type.equals(Template.TYPE_WORD)
-				||type.equals(Template.TYPE_OTHER);
+		entity.setInner(false);
 	}
 	
 	@Override
 	public String delete() throws Exception {
 		Template template=this.templateService.load(this.getId());
-		if(this.typeisExcelWordOther(template.getType())){
+		if(template.isFile()){
 			//文件名
 			String fileName=template.getTemplateFileName();
 			//文件保存的绝对路径
@@ -125,35 +105,15 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	}
 
 	public Integer type;
-	//按类型取得全局唯一编码
-	public String getCode(){
-		Json json=new Json();
-		if(type.equals(Template.TYPE_EXCEL)){//excel
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_EXCEL));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_WORD)){//word
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_WORD));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_TEXT)){//text
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_TEXT));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_HTML)){//html
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_HTML));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_OTHER)){//other
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_OTHER));
-			this.json=json.toString();
-		}
-		return "json";
-	}
+	
 
-	public String fileName;
-	//检测文件名称
-	public String checkFileName(){
+	public String code;
+	//检查编码是否唯一
+	public String isUniqueCode(){
 		Json json=new Json();
-		int count=this.templateService.countTemplateFileName(fileName);
-		if(count!=0){
-			json.put("result", getText("template.save.filename"));
+		boolean flag=this.templateService.isUnique(this.getId(), code);
+		if(!flag){
+			json.put("result", getText("template.save.code"));
 			this.json=json.toString();
 			return "json";
 		}else{
@@ -173,7 +133,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	
 	public String download() throws Exception{
 		Template template=this.templateService.load(this.getId());
-		if(this.typeisExcelWordOther(template.getType())){
+		if(template.isFile()){
 			downloadTemplate(template);
 		}else{
 			

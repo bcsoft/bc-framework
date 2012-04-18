@@ -43,13 +43,6 @@ public class Template extends FileEntityImpl {
 	 * 自定义文本
 	 */
 	public static final int TYPE_CUSTOM_TEXT=5;
-	/**	 * 内置：是
-	 */
-	public static final boolean INNER_TURE=true;
-	/**
-	 * 内置：否
-	 */
-	public static final boolean INNER_FALSE=false;
 	private String order;//排序号
 	private int type;//类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;//编码：全局唯一
@@ -136,8 +129,25 @@ public class Template extends FileEntityImpl {
 	 */
 	@Transient
 	public boolean isPureText() {
-		int type = getType().intValue();
-		if (type == Template.TYPE_TEXT || (type == Template.TYPE_WORD)) {
+		int type = getType();
+		if (type == Template.TYPE_FILE_TEXT || (type == Template.TYPE_FILE_WORD)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 判断是否是文本
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isFile() {
+		int type = getType();
+		if (type == Template.TYPE_FILE_TEXT || (type == Template.TYPE_FILE_WORD)
+				|| (type == Template.TYPE_FILE_EXCEL)
+				|| (type == Template.TYPE_FILE_OTHER)) {
 			return true;
 		} else {
 			return false;

@@ -146,9 +146,10 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			return null;
 
 		// excel、word、other
-		if (type.equals(Template.TYPE_EXCEL)
+		if (/*type.equals(Template.TYPE_EXCEL)
 				|| type.equals(Template.KEY_CODE_WORD)
-				|| type.equals(Template.KEY_CODE_OTHER)) {
+				|| type.equals(Template.KEY_CODE_OTHER)*/
+				true) {
 			try {
 				File dir = new File(Attach.DATA_REAL_PATH
 						+ Template.DATA_SUB_PATH);
