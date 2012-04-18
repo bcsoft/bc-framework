@@ -66,7 +66,7 @@ import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConne
 import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
 
 /**
- * 附件Action
+ * 基于Attach的附件处理Action
  * 
  * @author dragon
  * 
