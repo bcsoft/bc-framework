@@ -19,55 +19,39 @@ import cn.bc.identity.domain.FileEntityImpl;
 @Table(name = "BC_TEMPLATE")
 public class Template extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
-
+	
 	/** 模板存储的子路径，开头带"/"，末尾不要带"/" */
 	public static String DATA_SUB_PATH = "/template";
 
 	/**
 	 * Excel文件
 	 */
-	public static final int TYPE_EXCEL = 1;
+	public static final int TYPE_EXCEL=1;
 	/**
 	 * Word文件
 	 */
-	public static final int TYPE_WORD = 2;
+	public static final int TYPE_WORD=2;
 	/**
-	 * Text文件
+	 * 纯文本文件
 	 */
-	public static final int TYPE_TEXT = 3;
+	public static final int TYPE_TEXT=3;
 	/**
-	 * HTML文件
+	 * 其它附件
 	 */
-	public static final int TYPE_HTML = 4;
+	public static final int TYPE_OTHER=4;
 	/**
-	 * 其它文件
+	 * 自定义文本
 	 */
-	public static final int TYPE_OTHER = 5;
-
-	/**
-	 * 内置：是
-	 */
-	public static final int INNER_TURE = 0;
-	/**
-	 * 内置：否
-	 */
-	public static final int INNER_FALSE = 1;
-
-	public static final String KEY_CODE_EXCEL = "excel.tpl";
-	public static final String KEY_CODE_WORD = "word.tpl";
-	public static final String KEY_CODE_TEXT = "text.tpl";
-	public static final String KEY_CODE_HTML = "html.tpl";
-	public static final String KEY_CODE_OTHER = "other.tpl";
-
-	private String order;// 排序号
-	private Integer type;// 类型：1-Excel文件、2-Word文件、3-文本文件、4-Html文件、5-其它文件
-	private String code;// 编码：全局唯一
-	private String name;// 模板名称
-	private String templateFileName;// 模板文件
-	private String content;// 模板内容：文本和Html类型显示模板内容
-	private Integer inner;// 内置：0-是、1-否，默认否
-
-	@Column(name = "ORDER_")
+	public static final int TYPE_CUSTOM=5;
+	private String order;//排序号
+	private int type;//类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
+	private String code;//编码：全局唯一
+	private String name;//模板名称
+	private String templateFileName;//模板文件：系统定义的文件名
+	private String subject;//用户文件：用户定义的文件名
+	private String content;//模板内容：文本和Html类型显示模板内容
+	private boolean inner;//内置：是、否，默认否
+	@Column(name="ORDER_")
 	public String getOrder() {
 		return order;
 	}
@@ -77,11 +61,11 @@ public class Template extends FileEntityImpl {
 	}
 
 	@Column(name = "TYPE_")
-	public Integer getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 
@@ -110,6 +94,7 @@ public class Template extends FileEntityImpl {
 		this.templateFileName = templateFileName;
 	}
 
+
 	public String getContent() {
 		return content;
 	}
@@ -118,14 +103,24 @@ public class Template extends FileEntityImpl {
 		this.content = content;
 	}
 
-	@Column(name = "INNER_")
-	public Integer getInner() {
+	@Column(name="USER_FILE_NAME")
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	@Column(name="INNER_")
+	public boolean isInner() {
 		return inner;
 	}
 
-	public void setInner(Integer inner) {
+	public void setInner(boolean inner) {
 		this.inner = inner;
 	}
+
 
 	/**
 	 * 判断是否是纯文本型模板
@@ -134,8 +129,40 @@ public class Template extends FileEntityImpl {
 	 */
 	@Transient
 	public boolean isPureText() {
-		int type = getType().intValue();
+		int type = getType();
 		if (type == Template.TYPE_TEXT || (type == Template.TYPE_WORD)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 判断是否是自定义文本
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isCustomText() {
+		int type = getType();
+		if (type == Template.TYPE_CUSTOM) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 判断是否是文件
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isFile() {
+		int type = getType();
+		if (type == Template.TYPE_TEXT || (type == Template.TYPE_WORD)
+				|| (type == Template.TYPE_EXCEL)
+				|| (type == Template.TYPE_OTHER)) {
 			return true;
 		} else {
 			return false;

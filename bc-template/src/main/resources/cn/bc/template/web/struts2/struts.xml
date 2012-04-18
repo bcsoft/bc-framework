@@ -17,8 +17,7 @@
 		<action name="delete" class="templateAction" method="delete"/>
 		<action name="list" class="templateAction" method="list"/>
 		<action name="data" class="templateAction" method="data"/>
-		<action name="getCode" class="templateAction" method="getCode"/>
-		<action name="checkFileName" class="templateAction" method="checkFileName"/>
+		<action name="isUniqueCode" class="templateAction" method="isUniqueCode"/>
 		<action name="download" class="templateAction" method="download">
 			<result name="success" type="stream">
 				<!-- 下载文件类型定义 -->

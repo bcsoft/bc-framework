@@ -57,7 +57,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.order_ as order,t.code,t.type_ as type,t.name,t.template_file_name as filename");
+		sql.append("select t.id,t.order_ as order,t.code,t.type_ as type,t.name,t.user_file_name as filename");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner");
 		sql.append(" from bc_template t");
@@ -103,8 +103,8 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
 		columns.add(new TextColumn4MapKey("t.name", "name",
 				getText("template.name"), 100).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.template_filer_path", "filename",
-				getText("template.tfpath"), 100).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.user_filer_path", "filename",
+				getText("template.tfpath")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.inner_", "inner",
 				getText("template.inner"),35).setSortable(true).setValueFormater(
 				new KeyValueFormater(this.getInners())));
@@ -116,7 +116,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("am.actor_name", "mname",
 				getText("template.modifier"), 80));
 		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
-				getText("template.modifiedDate"))
+				getText("template.modifiedDate"),150)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		
 		return columns;
@@ -134,8 +134,8 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				getText("template.type.word"));
 		map.put(String.valueOf(Template.TYPE_TEXT),
 				getText("template.type.text"));
-		map.put(String.valueOf(Template.TYPE_HTML),
-				getText("template.type.normal"));
+		map.put(String.valueOf(Template.TYPE_CUSTOM),
+				getText("template.type.costom"));
 		map.put(String.valueOf(Template.TYPE_OTHER),
 				getText("template.type.other"));
 		return map;
@@ -147,9 +147,9 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	 */
 	private Map<String, String> getInners() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put(String.valueOf(Template.INNER_TURE),
+		map.put(String.valueOf(true),
 				getText("template.inner.ture"));
-		map.put(String.valueOf(Template.INNER_FALSE),
+		map.put(String.valueOf(false),
 				getText("template.inner.false"));
 
 		return map;
@@ -162,7 +162,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "t.code", "t.name", "am.actor_name","t.template_file_name" };
+		return new String[] { "t.code", "t.name", "am.actor_name","t.user_file_name" };
 	}
 
 	@Override

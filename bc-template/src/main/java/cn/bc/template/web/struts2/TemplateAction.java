@@ -62,21 +62,9 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
-			//新建时
-			if(this.getId()==null){
 				pageOption.addButton(new ButtonOption(getText("label.save"),
 						null, "bc.templateForm.save")
 						.setId("templateSave"));
-			}else{
-				Template template=this.templateService.load(this.getId());
-				//非内置和非excel、word、other
-				if(template.getInner().equals(Template.INNER_FALSE)
-						&&!this.typeisExcelWordOther(template.getType())){
-					pageOption.addButton(new ButtonOption(getText("label.save"),
-							null, "bc.templateForm.save")
-							.setId("templateSave"));
-				}
-			}
 		}
 	}
 
@@ -91,69 +79,18 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		super.afterCreate(entity);
 		entity.setType(Template.TYPE_EXCEL);
 		//内置 默认为否
-		entity.setInner(1);
-		// 设置全局唯一编码 新建时默认excel
-		entity.setCode(this.getIdGeneratorService().next(Template.KEY_CODE_EXCEL));
+		entity.setInner(false);
 	}
 	
-	private boolean typeisExcelWordOther(Integer type){
-		return type.equals(Template.TYPE_EXCEL)
-				||type.equals(Template.TYPE_WORD)
-				||type.equals(Template.TYPE_OTHER);
-	}
-	
-	@Override
-	public String delete() throws Exception {
-		Template template=this.templateService.load(this.getId());
-		if(this.typeisExcelWordOther(template.getType())){
-			//文件名
-			String fileName=template.getTemplateFileName();
-			//文件保存的绝对路径
-			String appPath=Attach.DATA_REAL_PATH+"/"+Template.DATA_SUB_PATH;
-			//目录
-			File dir=new File(appPath);
-			//存在此路径
-			if(dir.isDirectory()&&fileName!=null&&!fileName.equals("")){
-				File file=new File(appPath+"/"+fileName);
-				if(file.exists()){
-					//存在则删除
-					file.delete();
-				}
-			}
-		}
-		return super.delete();
-	}
-
 	public Integer type;
-	//按类型取得全局唯一编码
-	public String getCode(){
+	public Long tid;
+	public String code;
+	//检查编码是否唯一
+	public String isUniqueCode(){
 		Json json=new Json();
-		if(type.equals(Template.TYPE_EXCEL)){//excel
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_EXCEL));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_WORD)){//word
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_WORD));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_TEXT)){//text
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_TEXT));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_HTML)){//html
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_HTML));
-			this.json=json.toString();
-		}else if(type.equals(Template.TYPE_OTHER)){//other
-			json.put("code",this.getIdGeneratorService().next(Template.KEY_CODE_OTHER));
-			this.json=json.toString();
-		}
-		return "json";
-	}
-
-	public String fileName;
-	//检测文件名称
-	public String checkFileName(){
-		Json json=new Json();
-		int count=this.templateService.countTemplateFileName(fileName);
-		if(count!=0){
-			json.put("result", getText("template.save.filename"));
+		boolean flag=this.templateService.isUnique(this.tid, code);
+		if(flag){
+			json.put("result", getText("template.save.code"));
 			this.json=json.toString();
 			return "json";
 		}else{
@@ -173,20 +110,19 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	
 	public String download() throws Exception{
 		Template template=this.templateService.load(this.getId());
-		if(this.typeisExcelWordOther(template.getType())){
+		if(template.isFile()){
 			downloadTemplate(template);
-		}else{
-			
 		}
 		return SUCCESS;
 	}
-	
+		
 	private void downloadTemplate(Template template) throws FileNotFoundException {
 		// 获取附件的物理文件路径
 		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int index=template.getTemplateFileName().indexOf(".");
-		String ext=template.getTemplateFileName().substring(index+1);
-		String fName=template.getTemplateFileName().substring(0,index);
+		int indexD=template.getTemplateFileName().indexOf(".");
+		int indexX=template.getTemplateFileName().indexOf("/");
+		String ext=template.getTemplateFileName().substring(indexD+1);
+		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
 		this.downloadFile(ext, path,fName);
 	}
 	
@@ -208,9 +144,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public String inline() throws Exception {
 		Template template=this.templateService.load(this.getId());
 		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int index=template.getTemplateFileName().indexOf(".");
-		String ext=template.getTemplateFileName().substring(index+1);
-		String fName=template.getTemplateFileName().substring(0,index);
+		int indexD=template.getTemplateFileName().indexOf(".");
+		int indexX=template.getTemplateFileName().indexOf("/");
+		String ext=template.getTemplateFileName().substring(indexD+1);
+		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
 		
 		if (isConvertFile(ext)) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
