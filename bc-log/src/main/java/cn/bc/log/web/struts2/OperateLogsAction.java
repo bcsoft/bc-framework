@@ -122,7 +122,7 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 				getText("operateLog.fileDate"), 120).setSortable(true)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("l.subject", "subject",
-				getText("operateLog.subject"), 160).setSortable(true)
+				getText("operateLog.subject")).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("ac.actor_name", "author",
 				getText("operateLog.author"), 80).setSortable(true)
@@ -273,7 +273,6 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 	protected String getGridDblRowMethod() {
 		return "bc.page.open";
 	}
-
 
 	// ==高级搜索代码开始==
 	@Override
