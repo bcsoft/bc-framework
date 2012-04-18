@@ -53,7 +53,7 @@ public class FileAction extends ActionSupport {
 	public String download() throws Exception {
 		Date startTime = new Date();
 		// 附件的绝对路径名
-		String path = Attach.DATA_REAL_PATH + File.separator + this.f;
+		String path = Attach.DATA_REAL_PATH + "/" + this.f;
 
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(path);
