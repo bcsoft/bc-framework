@@ -52,7 +52,7 @@ public class TempalteServiceImplTest extends
 		Template template = super.createInstance(config);
 		template.setCode(UUID.randomUUID().toString());
 		template.setContent("testContent");
-		template.setType(Template.TYPE_CUSTOM_TEXT);
+		template.setType(Template.TYPE_CUSTOM);
 		template.setAuthor(this.actorHistoryService.loadByCode("admin"));
 		template.setFileDate(Calendar.getInstance());
 		template.setInner(false);
@@ -72,7 +72,7 @@ public class TempalteServiceImplTest extends
 		String content = "test";
 		Template t = createInstance(null);
 		t.setCode(UUID.randomUUID().toString());
-		t.setType(Template.TYPE_CUSTOM_TEXT);
+		t.setType(Template.TYPE_CUSTOM);
 		t.setContent(content);
 		this.templateService.save(t);
 		Assert.assertEquals(content,
@@ -96,7 +96,7 @@ public class TempalteServiceImplTest extends
 		// 保存一个模板
 		Template t = createInstance(null);
 		t.setCode(UUID.randomUUID().toString());
-		t.setType(Template.TYPE_FILE_TEXT);
+		t.setType(Template.TYPE_TEXT);
 		// t.setSubject("text.txt");
 		// t.setPath("text.txt");
 		this.templateService.save(t);

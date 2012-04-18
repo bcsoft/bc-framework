@@ -26,31 +26,31 @@ public class Template extends FileEntityImpl {
 	/**
 	 * Excel文件
 	 */
-	public static final int TYPE_FILE_EXCEL=1;
+	public static final int TYPE_EXCEL=1;
 	/**
 	 * Word文件
 	 */
-	public static final int TYPE_FILE_WORD=2;
+	public static final int TYPE_WORD=2;
 	/**
 	 * 纯文本文件
 	 */
-	public static final int TYPE_FILE_TEXT=3;
+	public static final int TYPE_TEXT=3;
 	/**
 	 * 其它附件
 	 */
-	public static final int TYPE_FILE_OTHER=4;
+	public static final int TYPE_OTHER=4;
 	/**
 	 * 自定义文本
 	 */
-	public static final int TYPE_CUSTOM_TEXT=5;
+	public static final int TYPE_CUSTOM=5;
 	private String order;//排序号
 	private int type;//类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;//编码：全局唯一
 	private String name;//模板名称
 	private String templateFileName;//模板文件：系统定义的文件名
-	private String userFileName;//用户文件：用户定义的文件名
+	private String subject;//用户文件：用户定义的文件名
 	private String content;//模板内容：文本和Html类型显示模板内容
-	private boolean inner;//内置：0-是、1-否，默认否
+	private boolean inner;//内置：是、否，默认否
 	@Column(name="ORDER_")
 	public String getOrder() {
 		return order;
@@ -104,12 +104,12 @@ public class Template extends FileEntityImpl {
 	}
 
 	@Column(name="USER_FILE_NAME")
-	public String getUserFileName() {
-		return userFileName;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setUserFileName(String userFileName) {
-		this.userFileName = userFileName;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	@Column(name="INNER_")
@@ -130,7 +130,7 @@ public class Template extends FileEntityImpl {
 	@Transient
 	public boolean isPureText() {
 		int type = getType();
-		if (type == Template.TYPE_FILE_TEXT || (type == Template.TYPE_FILE_WORD)) {
+		if (type == Template.TYPE_TEXT || (type == Template.TYPE_WORD)) {
 			return true;
 		} else {
 			return false;
@@ -138,16 +138,31 @@ public class Template extends FileEntityImpl {
 	}
 	
 	/**
-	 * 判断是否是文本
+	 * 判断是否是自定义文本
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isCustomText() {
+		int type = getType();
+		if (type == Template.TYPE_CUSTOM) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 判断是否是文件
 	 * 
 	 * @return
 	 */
 	@Transient
 	public boolean isFile() {
 		int type = getType();
-		if (type == Template.TYPE_FILE_TEXT || (type == Template.TYPE_FILE_WORD)
-				|| (type == Template.TYPE_FILE_EXCEL)
-				|| (type == Template.TYPE_FILE_OTHER)) {
+		if (type == Template.TYPE_TEXT || (type == Template.TYPE_WORD)
+				|| (type == Template.TYPE_EXCEL)
+				|| (type == Template.TYPE_OTHER)) {
 			return true;
 		} else {
 			return false;

@@ -104,7 +104,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("t.name", "name",
 				getText("template.name"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.user_filer_path", "filename",
-				getText("template.tfpath"), 100).setUseTitleFromLabel(true));
+				getText("template.tfpath")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.inner_", "inner",
 				getText("template.inner"),35).setSortable(true).setValueFormater(
 				new KeyValueFormater(this.getInners())));
@@ -116,7 +116,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("am.actor_name", "mname",
 				getText("template.modifier"), 80));
 		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
-				getText("template.modifiedDate"))
+				getText("template.modifiedDate"),150)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
 		
 		return columns;
@@ -128,15 +128,15 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	 */
 	private Map<String, String> getTypes() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put(String.valueOf(Template.TYPE_FILE_EXCEL),
+		map.put(String.valueOf(Template.TYPE_EXCEL),
 				getText("template.type.excel"));
-		map.put(String.valueOf(Template.TYPE_FILE_WORD),
+		map.put(String.valueOf(Template.TYPE_WORD),
 				getText("template.type.word"));
-		map.put(String.valueOf(Template.TYPE_FILE_TEXT),
+		map.put(String.valueOf(Template.TYPE_TEXT),
 				getText("template.type.text"));
-		map.put(String.valueOf(Template.TYPE_CUSTOM_TEXT),
+		map.put(String.valueOf(Template.TYPE_CUSTOM),
 				getText("template.type.costom"));
-		map.put(String.valueOf(Template.TYPE_FILE_OTHER),
+		map.put(String.valueOf(Template.TYPE_OTHER),
 				getText("template.type.other"));
 		return map;
 	}
@@ -147,9 +147,9 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	 */
 	private Map<String, String> getInners() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put(getText("template.inner.string.ture"),
+		map.put(String.valueOf(true),
 				getText("template.inner.ture"));
-		map.put(getText("template.inner.string.false"),
+		map.put(String.valueOf(false),
 				getText("template.inner.false"));
 
 		return map;

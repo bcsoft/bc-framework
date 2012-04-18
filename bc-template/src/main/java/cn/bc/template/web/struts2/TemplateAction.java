@@ -77,42 +77,19 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void afterCreate(Template entity){
 		super.afterCreate(entity);
-		entity.setType(Template.TYPE_FILE_EXCEL);
+		entity.setType(Template.TYPE_EXCEL);
 		//内置 默认为否
 		entity.setInner(false);
 	}
 	
-	@Override
-	public String delete() throws Exception {
-		Template template=this.templateService.load(this.getId());
-		if(template.isFile()){
-			//文件名
-			String fileName=template.getTemplateFileName();
-			//文件保存的绝对路径
-			String appPath=Attach.DATA_REAL_PATH+"/"+Template.DATA_SUB_PATH;
-			//目录
-			File dir=new File(appPath);
-			//存在此路径
-			if(dir.isDirectory()&&fileName!=null&&!fileName.equals("")){
-				File file=new File(appPath+"/"+fileName);
-				if(file.exists()){
-					//存在则删除
-					file.delete();
-				}
-			}
-		}
-		return super.delete();
-	}
-
 	public Integer type;
-	
-
+	public Long tid;
 	public String code;
 	//检查编码是否唯一
 	public String isUniqueCode(){
 		Json json=new Json();
-		boolean flag=this.templateService.isUnique(this.getId(), code);
-		if(!flag){
+		boolean flag=this.templateService.isUnique(this.tid, code);
+		if(flag){
 			json.put("result", getText("template.save.code"));
 			this.json=json.toString();
 			return "json";
@@ -135,18 +112,17 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		Template template=this.templateService.load(this.getId());
 		if(template.isFile()){
 			downloadTemplate(template);
-		}else{
-			
 		}
 		return SUCCESS;
 	}
-	
+		
 	private void downloadTemplate(Template template) throws FileNotFoundException {
 		// 获取附件的物理文件路径
 		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int index=template.getTemplateFileName().indexOf(".");
-		String ext=template.getTemplateFileName().substring(index+1);
-		String fName=template.getTemplateFileName().substring(0,index);
+		int indexD=template.getTemplateFileName().indexOf(".");
+		int indexX=template.getTemplateFileName().indexOf("/");
+		String ext=template.getTemplateFileName().substring(indexD+1);
+		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
 		this.downloadFile(ext, path,fName);
 	}
 	
@@ -168,9 +144,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public String inline() throws Exception {
 		Template template=this.templateService.load(this.getId());
 		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int index=template.getTemplateFileName().indexOf(".");
-		String ext=template.getTemplateFileName().substring(index+1);
-		String fName=template.getTemplateFileName().substring(0,index);
+		int indexD=template.getTemplateFileName().indexOf(".");
+		int indexX=template.getTemplateFileName().indexOf("/");
+		String ext=template.getTemplateFileName().substring(indexD+1);
+		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
 		
 		if (isConvertFile(ext)) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
