@@ -118,11 +118,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		
 	private void downloadTemplate(Template template) throws FileNotFoundException {
 		// 获取附件的物理文件路径
-		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int indexD=template.getTemplateFileName().indexOf(".");
-		int indexX=template.getTemplateFileName().indexOf("/");
-		String ext=template.getTemplateFileName().substring(indexD+1);
-		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
+		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getPath();
+		int indexD=template.getPath().indexOf(".");
+		int indexX=template.getPath().indexOf("/");
+		String ext=template.getPath().substring(indexD+1);
+		String fName=template.getPath().substring(indexX+1,indexD);
 		this.downloadFile(ext, path,fName);
 	}
 	
@@ -143,11 +143,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	// 支持在线打开文档查看的文件下载
 	public String inline() throws Exception {
 		Template template=this.templateService.load(this.getId());
-		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getTemplateFileName();
-		int indexD=template.getTemplateFileName().indexOf(".");
-		int indexX=template.getTemplateFileName().indexOf("/");
-		String ext=template.getTemplateFileName().substring(indexD+1);
-		String fName=template.getTemplateFileName().substring(indexX+1,indexD);
+		String path=Attach.DATA_REAL_PATH+Template.DATA_SUB_PATH+File.separator+template.getPath();
+		int indexD=template.getPath().indexOf(".");
+		int indexX=template.getPath().indexOf("/");
+		String ext=template.getPath().substring(indexD+1);
+		String fName=template.getPath().substring(indexX+1,indexD);
 		
 		if (isConvertFile(ext)) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
