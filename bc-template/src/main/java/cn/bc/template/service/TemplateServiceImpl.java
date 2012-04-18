@@ -2,7 +2,6 @@ package cn.bc.template.service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.bc.core.exception.CoreException;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.docs.domain.Attach;
 import cn.bc.template.dao.TemplateDao;
@@ -58,11 +56,6 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if (!tpl.isPureText())
 			return null;
 		
-		// 文件名称
-		String filename = tpl.getTemplateFileName();
-		File fileDir = new File(Attach.DATA_REAL_PATH
-				+ Template.DATA_SUB_PATH + "/" + filename);
-		
 		return tpl.getContent();
 	}
 
@@ -76,7 +69,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if(tpl.isFile()){
 			try {
 				// 文件名称
-				String filename = tpl.getTemplateFileName();
+				String filename = tpl.getPath();
 				File fileDir = new File(Attach.DATA_REAL_PATH
 						+ Template.DATA_SUB_PATH + "/" + filename);
 				// 没有此文件

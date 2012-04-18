@@ -47,8 +47,8 @@ public class Template extends FileEntityImpl {
 	private int type;//类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;//编码：全局唯一
 	private String name;//模板名称
-	private String templateFileName;//模板文件：系统定义的文件名
-	private String subject;//用户文件：用户定义的文件名
+	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
+	private String subject;//标题
 	private String content;//模板内容：文本和Html类型显示模板内容
 	private boolean inner;//内置：是、否，默认否
 	@Column(name="ORDER_")
@@ -85,15 +85,13 @@ public class Template extends FileEntityImpl {
 		this.name = name;
 	}
 
-	@Column(name = "TEMPLATE_FILE_NAME")
-	public String getTemplateFileName() {
-		return templateFileName;
+	public String getPath() {
+		return path;
 	}
 
-	public void setTemplateFileName(String templateFileName) {
-		this.templateFileName = templateFileName;
+	public void setPath(String path) {
+		this.path = path;
 	}
-
 
 	public String getContent() {
 		return content;
@@ -103,7 +101,6 @@ public class Template extends FileEntityImpl {
 		this.content = content;
 	}
 
-	@Column(name="USER_FILE_NAME")
 	public String getSubject() {
 		return subject;
 	}
