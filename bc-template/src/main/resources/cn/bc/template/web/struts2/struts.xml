@@ -18,29 +18,5 @@
 		<action name="list" class="templateAction" method="list"/>
 		<action name="data" class="templateAction" method="data"/>
 		<action name="isUniqueCode" class="templateAction" method="isUniqueCode"/>
-		<action name="download" class="templateAction" method="download">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="inline" class="templateAction" method="inline">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}"</param>
-			</result>
-		</action>
 	</package>
 </struts>

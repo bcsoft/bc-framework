@@ -70,7 +70,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			try {
 				// 文件名称
 				String filename = tpl.getPath();
-				File fileDir = new File(Attach.DATA_REAL_PATH
+				File fileDir = new File(Attach.DATA_REAL_PATH + "/"
 						+ Template.DATA_SUB_PATH + "/" + filename);
 				// 没有此文件
 				if (!fileDir.exists())

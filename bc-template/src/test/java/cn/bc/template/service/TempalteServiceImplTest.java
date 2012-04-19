@@ -85,7 +85,7 @@ public class TempalteServiceImplTest extends
 
 		// 创建一个纯文本附件
 		String content = "test";
-		File file = new File(Attach.DATA_REAL_PATH + Template.DATA_SUB_PATH
+		File file = new File(Attach.DATA_REAL_PATH + "/" + Template.DATA_SUB_PATH
 				+ "/test.txt");
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();

@@ -20,8 +20,8 @@ import cn.bc.identity.domain.FileEntityImpl;
 public class Template extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	
-	/** 模板存储的子路径，开头带"/"，末尾不要带"/" */
-	public static String DATA_SUB_PATH = "/template";
+	/** 模板存储的子路径，开头末尾不要带"/" */
+	public static String DATA_SUB_PATH = "template";
 
 	/**
 	 * Excel文件
