@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import cn.bc.Context;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.identity.web.SystemContextHolder;
 
 /**
  * Html5文件上传的实现.
