@@ -15,6 +15,7 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.template.domain.Template;
+import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -98,30 +99,31 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("t.order_", "order",
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
-				getText("template.code"), 100).setSortable(true));
+				getText("template.code"), 100).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.type_", "type",
 				getText("template.type"), 80)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
+		columns.add(new TextColumn4MapKey("t.subject", "subject",
+				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.path", "path",
 				getText("template.tfpath")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject"),100).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.inner_", "inner",
-				getText("template.inner"),35).setSortable(true).setValueFormater(
-				new KeyValueFormater(this.getInners())));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
 				getText("template.desc"), 100).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.inner_", "inner",
+				getText("template.inner"), 35).setSortable(true)
+				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("au.actor_name", "uname",
-				getText("template.author"), 60));
+				getText("template.author"), 80));
 		columns.add(new TextColumn4MapKey("t.file_date", "file_date",
-				getText("template.fileDate"), 150)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
+				getText("template.fileDate"), 130)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("am.actor_name", "mname",
 				getText("template.modifier"), 80));
 		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
-				getText("template.modifiedDate"),150)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss")));
-		
+				getText("template.modifiedDate"), 130)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+
 		return columns;
 	}
 
@@ -144,20 +146,6 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		return map;
 	}
 
-	/**
-	 * 内置值转换:
-	 * 
-	 */
-	private Map<String, String> getInners() {
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put(String.valueOf(true),
-				getText("template.inner.ture"));
-		map.put(String.valueOf(false),
-				getText("template.inner.false"));
-
-		return map;
-	}
-
 	@Override
 	protected String getGridRowLabelExpression() {
 		return "['subject']";
@@ -165,7 +153,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "t.code", "am.actor_name","t.path","t.subject" };
+		return new String[] { "t.code", "am.actor_name", "t.path", "t.subject" };
 	}
 
 	@Override
@@ -198,11 +186,13 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 			// 下载
 			tb.addButton(new ToolbarButton()
 					.setIcon("ui-icon-arrowthickstop-1-s")
-					.setText(getText("label.download")).setClick("bc.templateList.download"));
+					.setText(getText("label.download"))
+					.setClick("bc.templateList.download"));
 
 			// 在线预览
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("label.preview.inline")).setClick("bc.templateList.inline"));
+					.setText(getText("label.preview.inline"))
+					.setClick("bc.templateList.inline"));
 		}
 
 		// 搜索按钮
@@ -210,10 +200,10 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 		return tb;
 	}
-	
+
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace()+"/template/list.js";
+		return this.getHtmlPageNamespace() + "/template/list.js";
 	}
 
 	// ==高级搜索代码开始==
@@ -222,6 +212,5 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		return true;
 	}
 	// ==高级搜索代码结束==
-	
-	
+
 }

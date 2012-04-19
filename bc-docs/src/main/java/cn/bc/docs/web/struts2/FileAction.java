@@ -86,6 +86,7 @@ public class FileAction extends ActionSupport {
 	}
 
 	private static final int BUFFER = 4096;
+	public String from;// 指定原始文件的类型，默认为文件扩展名
 	public String to;// 预览时转换到的文件类型，默认为pdf
 	public String f;// 要下载的文件，相对于Attach.DATA_REAL_PATH下的子路径，前后均不带/
 	public String n;// [可选]指定下载为的文件名
@@ -131,11 +132,12 @@ public class FileAction extends ActionSupport {
 			// convert
 			DocumentConverter converter = new OpenOfficeDocumentConverter(
 					connection);
-			String from = extension;
+			if (this.from == null || this.from.length() == 0)
+				this.from = extension;
 			if (this.to == null || this.to.length() == 0)
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
 			converter.convert(inputStream,
-					formaters.getFormatByFileExtension(from), outputStream,
+					formaters.getFormatByFileExtension(this.from), outputStream,
 					formaters.getFormatByFileExtension(this.to));
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
