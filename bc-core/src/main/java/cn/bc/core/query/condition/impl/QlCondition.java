@@ -58,7 +58,7 @@ public class QlCondition implements Condition {
 
 	/**
 	 * @param type
-	 *            值类型："int"|"long"|"date"|"startDate"|"endDate"|"calendar"|
+	 *            值类型："int"|"long"|"float"|"date"|"startDate"|"endDate"|"calendar"|
 	 *            "startCalendar"|"endCalendar"
 	 * @param value
 	 * @return
@@ -73,6 +73,8 @@ public class QlCondition implements Condition {
 			return value;
 		} else if (type.equals("long")) {
 			return new Long(value);
+		} else if (type.equals("float")) {
+			return new Float(value);
 		} else if (type.equals("date")) {
 			return DateUtils.getDate(value);
 		} else if (type.equals("startDate")) {
