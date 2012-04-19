@@ -1,7 +1,5 @@
 package cn.bc.template.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.service.DefaultCrudService;
-import cn.bc.docs.domain.Attach;
+import cn.bc.core.util.TemplateUtils;
 import cn.bc.template.dao.TemplateDao;
 import cn.bc.template.domain.Template;
 
@@ -48,14 +46,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			logger.warn("没有找到编码为'" + code + "'的模板!");
 			return null;
 		}
-		//自定义文本
-		if(tpl.isCustomText())
-			return tpl.getContent();
 
-		// 不处理非纯文本类型的
-		if (!tpl.isPureText())
-			return null;
-		
 		return tpl.getContent();
 	}
 
@@ -66,51 +57,22 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			return null;
 		}
 
-		if(tpl.isFile()){
-			try {
-				// 文件名称
-				String filename = tpl.getPath();
-				File fileDir = new File(Attach.DATA_REAL_PATH + "/"
-						+ Template.DATA_SUB_PATH + "/" + filename);
-				// 没有此文件
-				if (!fileDir.exists())
-				return null;
-				
-				InputStream is = new FileInputStream(fileDir);
-				return is;
-			} catch (IOException ex) {
-				logger.error(ex.getMessage(), ex);
-				// 报错返回空
-				return null;
-			}
-		}
-		
-		// TODO 生成文件流
-		return null;
+		return tpl.getInputStream();
 	}
 
 	public String format(String code, Map<String, Object> args) {
-		Template tpl = loadByCode(code);
-		if (tpl == null) {
-			logger.warn("没有找到编码为'" + code + "'的模板!");
-			return null;
-		}
-
-		// TODO
-		return null;
+		String source = this.getContent(code);
+		return TemplateUtils.format(source, args);
 	}
 
 	public void formatTo(String code, Map<String, Object> args, OutputStream out) {
-		Template tpl = loadByCode(code);
-		if (tpl == null) {
-			logger.warn("没有找到编码为'" + code + "'的模板!");
-			return;
+		String source = this.getContent(code);
+		String r = TemplateUtils.format(source, args);
+		try {
+			out.write(r.getBytes());
+			out.close();
+		} catch (IOException e) {
+			logger.warn("formatTo 写入数据到流错误：" + e.getMessage());
 		}
-
-		// TODO
 	}
-
-	// == 以下为待清理的接口 ==
-
-	
 }
