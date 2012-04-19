@@ -70,7 +70,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(550)
+		return super.buildFormPageOption(editable).setWidth(560)
 				.setMinHeight(200).setMinWidth(300);
 	}
 

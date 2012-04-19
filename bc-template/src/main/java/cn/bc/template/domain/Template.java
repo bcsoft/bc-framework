@@ -46,11 +46,12 @@ public class Template extends FileEntityImpl {
 	private String order;//排序号
 	private int type;//类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;//编码：全局唯一
-	private String name;//模板名称
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private String subject;//标题
 	private String content;//模板内容：文本和Html类型显示模板内容
 	private boolean inner;//内置：是、否，默认否
+	private String desc;//备注
+	
 	@Column(name="ORDER_")
 	public String getOrder() {
 		return order;
@@ -75,14 +76,6 @@ public class Template extends FileEntityImpl {
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getPath() {
@@ -117,7 +110,15 @@ public class Template extends FileEntityImpl {
 	public void setInner(boolean inner) {
 		this.inner = inner;
 	}
+	
+	@Column(name="DESC_")
+	public String getDesc() {
+		return desc;
+	}
 
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
 	/**
 	 * 判断是否是纯文本型模板
