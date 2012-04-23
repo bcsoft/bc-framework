@@ -39,18 +39,6 @@ public class WordTempalteTest {
 
 		map.put("name", "Zues");
 		map.put("sex", "男");
-		map.put("idCard", "200010");
-		map.put("year1", "2000");
-		map.put("month1", "07");
-		map.put("year2", "2008");
-		map.put("month2", "07");
-		map.put("gap", "2");
-		map.put("zhuanye", "计算机科学与技术");
-		map.put("type", "研究生");
-		map.put("bianhao", "2011020301");
-		map.put("nowy", "2011");
-		map.put("nowm", "01");
-		map.put("nowd", "20220301");
 		// 注意biyezheng_moban.doc文档位置,此例中为应用根目录
 		HWPFDocument document = replaceDoc("D:\\t\\wordTpl.doc", map);
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
