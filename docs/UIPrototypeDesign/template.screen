@@ -29,16 +29,16 @@
       <items x="89" y="0" width="45" height="30" text="全部"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="6" x="520" y="424" width="223" height="121" text="视图说明：&#xD;&#xA;1) 当类型为&quot;自定义文本&quot;时，下载的是模板内容构成的txt文件，其余类型下载的是模板文件。&#xD;&#xA;2) 执行删除操作时，如果为内置的，不允许删除。" measuredWidth="223" measuredHeight="121" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="6" x="520" y="592" width="223" height="121" text="视图说明：&#xD;&#xA;1) 当类型为&quot;自定义文本&quot;时，下载的是模板内容构成的txt文件，其余类型下载的是模板文件。&#xD;&#xA;2) 执行删除操作时，如果为内置的，不允许删除。" measuredWidth="223" measuredHeight="121" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Note" id="8" x="520" y="560" width="223" height="289" text="表单说明：&#xD;&#xA;1) 当类型为自定义文本时，显示模板内容，不显示附件路径；其余类型则相反。&#xD;&#xA;2) &quot;附件路径&quot;保存的是文件相对于data/template目录下的相对路径名。&#xD;&#xA;3) 保存时，如果状态为正常，需要将其余相同编码模板的状态设置为禁用，保证相同编码的模板只有一个是处于正常状态。&#xD;&#xA;4) 上传文件后，&quot;标题&quot;、&quot;模板路径&quot;的值自动生成，但用户可以自行修改标题，路径只读。&#xD;&#xA;5) 查看版本历史是指查看相同编码的所有模板信息列表。" measuredWidth="223" measuredHeight="289" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="8" x="520" y="728" width="223" height="321" text="表单说明：&#xD;&#xA;1) 当类型为自定义文本时，显示模板内容，不显示附件路径；其余类型则相反。&#xD;&#xA;2) &quot;附件路径&quot;保存的是文件相对于data/template目录下的相对路径名。&#xD;&#xA;3) 保存时，如果状态为正常，需要将其余相同编码模板的状态设置为禁用，保证相同编码的模板只有一个是处于正常状态。&#xD;&#xA;4) 上传文件后，&quot;标题&quot;、&quot;模板路径&quot;的值自动生成，但用户可以自行修改标题，路径只读。&#xD;&#xA;5) 查看版本历史是指查看相同编码的所有模板信息列表。&#xD;&#xA;6) 配置参数仅在点击小灯炮后根据内容自动获取出来。" measuredWidth="223" measuredHeight="321" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="9" x="8" y="208" measuredWidth="505" measuredHeight="341">
-    <widgets xsi:type="model:Window" id="10" y="24" width="505" height="317" text="模板信息" measuredWidth="505" measuredHeight="317" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:HLine" id="11" x="1" y="298" width="504" measuredWidth="504" measuredHeight="6"/>
-    <widgets xsi:type="model:Button" id="12" x="446" y="306" width="48" text="保存" measuredWidth="48" measuredHeight="27">
+  <widgets xsi:type="model:WidgetGroup" id="9" x="8" y="208" measuredWidth="505" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="10" y="24" width="505" height="353" text="模板信息" measuredWidth="505" measuredHeight="353" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="11" y="336" width="504" measuredWidth="504" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="12" x="452" y="344" width="48" text="保存" measuredWidth="48" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="13" x="10" y="136" text="*模板标题：" measuredWidth="70" measuredHeight="25">
@@ -53,14 +53,11 @@
     <widgets xsi:type="model:TextField" id="17" x="79" y="106" width="170" text="BC-FJ03" measuredWidth="170" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="18" x="190" y="274" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
+    <widgets xsi:type="model:Label" id="18" x="196" y="312" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="19" x="10" y="166" text="*附件路径：" measuredWidth="70" measuredHeight="25">
       <font bold="false"/>
-    </widgets>
-    <widgets xsi:type="model:TextField" id="20" x="79" y="166" width="420" text="201204/201204201200000.docx" measuredWidth="420" measuredHeight="25" state="disabled">
-      <font/>
     </widgets>
     <widgets xsi:type="model:RadioButton" id="21" x="79" y="53" text="Excel模板" measuredWidth="73" measuredHeight="25">
       <font/>
@@ -93,7 +90,7 @@
       <widgets xsi:type="model:Icon" id="64" x="401" y="5" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
       <widgets xsi:type="model:Icon" id="65" x="383" y="5" measuredWidth="16" measuredHeight="16" icon="upload (small)"/>
     </widgets>
-    <widgets xsi:type="model:Button" id="67" x="394" y="306" width="48" text="预览" measuredWidth="48" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="67" x="400" y="344" width="48" text="预览" measuredWidth="48" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="68" x="39" y="190" text="备注：" measuredWidth="41" measuredHeight="25">
@@ -114,7 +111,7 @@
     <widgets xsi:type="model:TextField" id="104" x="329" y="106" width="170" text="BC-FJ03-A00-20110805" measuredWidth="170" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" id="105" x="301" y="306" width="88" text="查看版本历史" measuredWidth="88" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="105" x="307" y="344" width="88" text="查看版本历史" measuredWidth="88" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="109" x="356" y="250" text="状态：" measuredWidth="41" measuredHeight="25">
@@ -125,6 +122,18 @@
     </widgets>
     <widgets xsi:type="model:RadioButton" id="111" x="451" y="250" text="禁用" measuredWidth="44" measuredHeight="25">
       <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="152" x="79" y="166" measuredWidth="420" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="20" width="420" text="201204/201204201200000.docx" measuredWidth="420" measuredHeight="25" state="disabled">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="149" x="400" y="5" measuredWidth="16" measuredHeight="16" icon="bulb (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="150" x="10" y="281" width="490" height="32" text="司机姓名,车牌号码" measuredWidth="490" measuredHeight="32" foreground="#f4cccc" textAlignment="Left">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="151" x="15" y="257" text="配置参数：" measuredWidth="65" measuredHeight="25">
+      <font bold="false"/>
     </widgets>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="34" x="520" y="208" measuredWidth="185" measuredHeight="201">
@@ -155,10 +164,10 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="112" x="8" y="560" measuredWidth="505" measuredHeight="409">
-    <widgets xsi:type="model:Window" id="113" y="24" width="505" height="385" text="模板信息" measuredWidth="505" measuredHeight="385" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:HLine" id="114" x="1" y="368" width="504" measuredWidth="504" measuredHeight="6"/>
-    <widgets xsi:type="model:Button" id="115" x="446" y="376" width="48" text="保存" measuredWidth="48" measuredHeight="27">
+  <widgets xsi:type="model:WidgetGroup" id="112" x="8" y="600" measuredWidth="505" measuredHeight="449">
+    <widgets xsi:type="model:Window" id="113" y="24" width="505" height="425" text="模板信息" measuredWidth="505" measuredHeight="425" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="114" x="1" y="408" width="504" measuredWidth="504" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="115" x="446" y="416" width="48" text="保存" measuredWidth="48" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="116" x="10" y="136" text="*模板标题：" measuredWidth="70" measuredHeight="25">
@@ -173,7 +182,7 @@
     <widgets xsi:type="model:TextField" id="119" x="79" y="106" width="170" text="BC-FJ03" measuredWidth="170" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="120" x="190" y="344" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
+    <widgets xsi:type="model:Label" id="120" x="190" y="384" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
       <font/>
     </widgets>
     <widgets xsi:type="model:RadioButton" id="123" x="79" y="53" text="Excel模板" measuredWidth="73" measuredHeight="25">
@@ -203,7 +212,7 @@
     <widgets xsi:type="model:TextField" id="132" x="79" y="136" width="420" text="车辆转让协议" measuredWidth="420" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" id="135" x="394" y="376" width="48" text="预览" measuredWidth="48" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="135" x="394" y="416" width="48" text="预览" measuredWidth="48" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="136" x="39" y="161" text="备注：" measuredWidth="41" measuredHeight="25">
@@ -224,7 +233,7 @@
     <widgets xsi:type="model:TextField" id="141" x="329" y="106" width="170" text="BC-FJ03-A00-20110805" measuredWidth="170" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" id="142" x="301" y="376" width="88" text="查看版本历史" measuredWidth="88" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="142" x="301" y="416" width="88" text="查看版本历史" measuredWidth="88" measuredHeight="27">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="143" x="356" y="320" text="状态：" measuredWidth="41" measuredHeight="25">
@@ -240,6 +249,35 @@
       <font bold="false"/>
     </widgets>
     <widgets xsi:type="model:TextArea" id="147" x="79" y="227" width="420" height="94" text="&lt;div>...&lt;/div>" measuredWidth="420" measuredHeight="94" verticalScrollbar="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="153" x="48" y="246" measuredWidth="16" measuredHeight="16" icon="bulb (small)"/>
+    <widgets xsi:type="model:Rectangle" id="154" x="10" y="352" width="490" height="32" text="司机姓名,车牌号码" measuredWidth="490" measuredHeight="32" foreground="#f4cccc" textAlignment="Left">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="155" x="15" y="328" text="配置参数：" measuredWidth="65" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="156" x="520" y="416" width="265" measuredWidth="265" measuredHeight="153">
+    <widgets xsi:type="model:Window" id="157" y="24" width="265" height="129" text="输入模板预览需要的参数值" measuredWidth="265" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="158" y="112" width="264" measuredWidth="264" measuredHeight="6"/>
+    <widgets xsi:type="model:Label" id="172" x="6" width="25" text="预览：" measuredWidth="25" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="174" x="216" y="120" width="40" text="预览" measuredWidth="40" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="177" x="20" y="53" width="61" text="司机姓名：" measuredWidth="61" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="178" x="80" y="53" width="178" text="张三" measuredWidth="178" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="190" x="20" y="83" width="61" text="车牌号码：" measuredWidth="61" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="191" x="80" y="83" width="178" text="粤A.XXXX1" measuredWidth="178" measuredHeight="25">
       <font/>
     </widgets>
   </widgets>
