@@ -57,14 +57,44 @@ public class Template extends FileEntityImpl {
 	 * 自定义文本
 	 */
 	public static final int TYPE_CUSTOM = 5;
+	
 	private String order;// 排序号
 	private int type;// 类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
-	private String code;// 编码：全局唯一
+	private String code;// 编码
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private String subject;// 标题
 	private String content;// 模板内容：文本和Html类型显示模板内容
 	private boolean inner;// 内置：是、否，默认否
 	private String desc;// 备注
+	private int status;//状态：0-正常,1-禁用
+	private String version;//版本号
+	private String category;//所属分类
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	@Column(name="STATUS_")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	@Column(name="VERSION_")
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 	@Column(name = "ORDER_")
 	public String getOrder() {

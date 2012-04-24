@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package cn.bc.template.web.struts2;
 
 import java.util.ArrayList;
@@ -12,56 +15,48 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.identity.web.SystemContext;
 import cn.bc.template.domain.Template;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
- * 模板视图Action
+ * 查看历史版本号Action
  * 
- * @author lbj
+ * @author 
  * 
  */
-
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class TemplatesAction extends ViewAction<Map<String, Object>> {
+public class ShowTemplateVersionAction extends
+		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
+	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 车辆保单险种的状态，多个用逗号连接
 	public String code;
+	public String tid;
 
 	@Override
-	public boolean isReadonly() {
-		// 模板管理员或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：模板管理员
-		return !context.hasAnyRole(getText("key.role.bc.template"),
-				getText("key.role.bc.admin"));
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认排序方向：创建日期
+		return new OrderCondition("t.order_", Direction.Asc);
 	}
-
-	@Override
-	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("t.order_");
-	}
-
+	
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
-
+		
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select t.id,t.order_ as order,t.code,t.type_ as type,t.desc_,t.path,t.subject");
@@ -100,7 +95,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 			}
 		});
 		return sqlObject;
-	}
+	}       
 
 	@Override
 	protected List<Column> getGridColumns() {
@@ -146,7 +141,6 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 		return columns;
 	}
-
 	/**
 	 * 类型值转换:Excel|Word|文本文件|自定义文本|其它附件
 	 * 
@@ -177,12 +171,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				, getText("template.status.all"));
 		return statuses;
 	}
-
-	@Override
-	protected String getGridRowLabelExpression() {
-		return "['subject']";
-	}
-
+	
 	@Override
 	protected String[] getGridSearchFields() {
 		return new String[] { "t.code", "am.actor_name"
@@ -190,78 +179,67 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected String getFormActionName() {
-		return "template";
+	protected String getHtmlPageTitle() {
+		return this.getText("template.code")+code+this.getText("template.history.version");
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+		return super.getHtmlPageOption()
+				.setMinHeight(200).setMinWidth(300).setWidth(610).setHeight(340).setModal(false);
 	}
 
 	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
-
-		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-					.setText(getText("label.delete"))
-					.setClick("bc.templateList.deleteone"));
-
-			// 下载
-			tb.addButton(new ToolbarButton()
-					.setIcon("ui-icon-arrowthickstop-1-s")
-					.setText(getText("label.download"))
-					.setClick("bc.templateList.download"));
-
-			// 在线预览
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("label.preview.inline"))
-					.setClick("bc.templateList.inline"));
-		}
-		
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("template.status.tips")));
-
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
-
-		return tb;
+	protected String getGridRowLabelExpression() {
+		return "['subject']";
 	}
-	
+
+	@Override
+	protected HtmlPage buildHtmlPage() {
+		return super.buildHtmlPage().setNamespace(
+				this.getHtmlPageNamespace() + "/showTemplateVersion");
+	}
+
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getHtmlPageNamespace() + "/template/show.js";
+	}
+
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("t.status_",Integer.parseInt(status))
-						,new EqualsCondition("t.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("t.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
+		if(code != null && code.length() > 0){
 			statusCondition=new EqualsCondition("t.code",code);
 		}
 		return statusCondition;
 	}
 
 	@Override
-	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/template/list.js";
+	protected Json getGridExtrasData() {
+		Json json = new Json();
+		if(tid!=null&&tid.length()>0){
+			json.put("tid", tid);
+		}
+		if(code!=null&&code.length()>0){
+			json.put("code", code);
+		}
+		return json;
 	}
 
-	// ==高级搜索代码开始==
 	@Override
-	protected boolean useAdvanceSearch() {
-		return true;
+	protected String getClickOkMethod() {
+		return "bc.templateShowDialog.clickOk";
 	}
-	// ==高级搜索代码结束==
+
+	@Override
+	protected String getHtmlPageNamespace() {
+		return this.getContextPath() + BCConstants.NAMESPACE;
+	}
+	
+	@Override
+	protected String getFormActionName() {
+		return "template";
+	}
 
 }

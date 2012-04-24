@@ -17,6 +17,6 @@
 		<action name="delete" class="templateAction" method="delete"/>
 		<action name="list" class="templateAction" method="list"/>
 		<action name="data" class="templateAction" method="data"/>
-		<action name="isUniqueCode" class="templateAction" method="isUniqueCode"/>
+		<action name="isUniqueCodeAndVersion" class="templateAction" method="isUniqueCodeAndVersion"/>
 	</package>
 </struts>
