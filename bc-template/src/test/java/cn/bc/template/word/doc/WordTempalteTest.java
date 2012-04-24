@@ -1,4 +1,4 @@
-package cn.bc.template.word;
+package cn.bc.template.word.doc;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,12 +40,12 @@ public class WordTempalteTest {
 		map.put("name", "Zues");
 		map.put("sex", "男");
 		// 注意biyezheng_moban.doc文档位置,此例中为应用根目录
-		HWPFDocument document = replaceDoc("D:\\t\\wordTpl.doc", map);
+		HWPFDocument document = replaceDoc("／t／wordTpl.doc", map);
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		try {
 			document.write(ostream);
 			// 输出word文件
-			OutputStream outs = new FileOutputStream("D:\\t\\wordReal.doc");
+			OutputStream outs = new FileOutputStream("／t／wordTpl_copy.doc");
 			outs.write(ostream.toByteArray());
 			outs.close();
 		} catch (IOException e) {
