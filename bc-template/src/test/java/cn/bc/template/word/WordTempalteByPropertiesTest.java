@@ -3,7 +3,11 @@ package cn.bc.template.word;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,14 +22,11 @@ import org.apache.poi.openxml4j.opc.PackageProperties;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.PositionInParagraph;
-import org.apache.poi.xwpf.usermodel.TextSegement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.Test;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperties;
-import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
@@ -240,12 +241,12 @@ public class WordTempalteByPropertiesTest {
 
 		POIXMLProperties pp = docx.getProperties();
 		CTProperties ctps = pp.getCustomProperties().getUnderlyingProperties();
-//		System.out.println(ctps);
-//		for (CTProperty ctp : ctps.getPropertyList()) {
-//			System.out.println(ctp);
-//			System.out.println(ctp.getLpwstr());
-//			System.out.println(ctp.getI4());
-//		}
+		// System.out.println(ctps);
+		// for (CTProperty ctp : ctps.getPropertyList()) {
+		// System.out.println(ctp);
+		// System.out.println(ctp.getLpwstr());
+		// System.out.println(ctp.getI4());
+		// }
 
 		// 设置新的标题：ok
 		pp.getCoreProperties().setTitle("新的标题属性值");
@@ -258,7 +259,7 @@ public class WordTempalteByPropertiesTest {
 		this.changeText(docx);
 
 		// 写入到新文件
-		docx.write(new FileOutputStream("d:\\t\\newDoc.docx"));
+		docx.write(new FileOutputStream("/t/newDoc.docx"));
 	}
 
 	// 替换${name}占位符
@@ -270,12 +271,71 @@ public class WordTempalteByPropertiesTest {
 				// System.out.println("========" + run.getCTR());
 				for (CTText t : run.getCTR().getTList()) {
 					if (t.getStringValue().indexOf("${name}") != -1) {
-						//System.out.println("========" + t.getStringValue());
+						// System.out.println("========" + t.getStringValue());
 						t.setStringValue(t.getStringValue().replaceAll(
 								"\\$\\{name\\}", "名称名称"));
 					}
 				}
 			}
+		}
+	}
+
+	// 创建文档
+	@Test
+	public void testReplaceMarker() throws Exception {
+		OPCPackage p = getPackage();
+		XWPFDocument docx = new XWPFDocument(p);
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("name", "1111");
+		map.put("age", "30");
+
+		// 替换占位符
+		this.replaceMarker(docx, map);
+
+		// 写入到新文件
+		docx.write(new FileOutputStream("/t/newDoc.docx"));
+	}
+
+	private void replaceMarker(XWPFDocument document, Map<String, String> map) {
+		Iterator<XWPFParagraph> ps = document.getParagraphsIterator();
+		String pattern = "";
+		int i = 0;
+		for (String k : map.keySet()) {
+			if (i > 0)
+				pattern += "|";
+			pattern += "(?<=\\$\\{)" + k + "(?=\\})";
+			i++;
+		}
+		System.out.println("pattern=" + pattern);
+		Pattern p = Pattern.compile(pattern);
+		Matcher m;
+		String k;
+		while (ps.hasNext()) {
+			XWPFParagraph paragraph = ps.next();
+			for (XWPFRun run : paragraph.getRuns()) {
+				for (CTText t : run.getCTR().getTList()) {
+					m = p.matcher(t.getStringValue());
+					if (m.find()) {
+						k = m.group();
+						System.out.println("k=" + k + ",s="
+								+ t.getStringValue());
+						t.setStringValue(t.getStringValue().replaceAll(
+								"\\$\\{" + k + "\\}", map.get(k)));
+					}
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testFindKeies() {
+		String pattern = "(?<=\\$\\{)name(?=\\})|(?<=\\$\\{)编号(?=\\})";
+		String source = "AA${name},${编号}BB,${编号}CC,name}";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(source);
+		while (m.find()) {
+			System.out.println(m.group());
 		}
 	}
 }
