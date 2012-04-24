@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,16 @@ import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.poifs.filesystem.DirectoryEntry;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 public class WordTempalteTest {
+	// 加载xml文档的内容
+	private HWPFDocument loadDocument() throws Exception {
+		InputStream is = new ClassPathResource(
+				"cn/bc/template/word/docTpl.doc").getInputStream();
+		HWPFDocument document = new HWPFDocument(is);
+		return document;
+	}
 
 	@Test
 	public void testWriteWordFile() {
@@ -40,12 +49,12 @@ public class WordTempalteTest {
 		map.put("name", "Zues");
 		map.put("sex", "男");
 		// 注意biyezheng_moban.doc文档位置,此例中为应用根目录
-		HWPFDocument document = replaceDoc("／t／wordTpl.doc", map);
+		HWPFDocument document = replaceDoc("/t/wordTpl.doc", map);
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		try {
 			document.write(ostream);
 			// 输出word文件
-			OutputStream outs = new FileOutputStream("／t／wordTpl_copy.doc");
+			OutputStream outs = new FileOutputStream("/t/wordTpl_copy.doc");
 			outs.write(ostream.toByteArray());
 			outs.close();
 		} catch (IOException e) {
