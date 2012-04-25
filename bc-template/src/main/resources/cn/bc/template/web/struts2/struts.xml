@@ -18,5 +18,6 @@
 		<action name="list" class="templateAction" method="list"/>
 		<action name="data" class="templateAction" method="data"/>
 		<action name="isUniqueCodeAndVersion" class="templateAction" method="isUniqueCodeAndVersion"/>
+		<action name="loadTplConfigParam" class="templateAction" method="loadTplConfigParam"/>
 	</package>
 </struts>
