@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.bc.BCConstants;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.template.dao.TemplateDao;
@@ -36,8 +37,8 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		return this.templateDao.loadByCode(code);
 	}
 
-	public boolean isUnique(Long currentId, String code) {
-		return this.templateDao.isUnique(currentId, code);
+	public boolean isUniqueCodeAndVersion(Long currentId, String code,String version) {
+		return this.templateDao.isUniqueCodeAndVersion(currentId, code,version);
 	}
 
 	public String getContent(String code) {
@@ -74,5 +75,14 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		} catch (IOException e) {
 			logger.warn("formatTo 写入数据到流错误：" + e.getMessage());
 		}
+	}
+
+	public void saveTpl(Template template) {
+		Template oldTpl= this.templateDao.loadByCode(template.getCode());
+		if(oldTpl!=null){
+			oldTpl.setStatus(BCConstants.STATUS_DISABLED);
+			this.templateDao.save(oldTpl);
+		}
+		this.templateDao.save(template);
 	}
 }

@@ -23,15 +23,17 @@ public interface TemplateService extends CrudService<Template> {
 	public Template loadByCode(String code);
 
 	/**
-	 * 判断指定的编码是否唯一
+	 * 判断指定的编码与版本号是否唯一
 	 * 
 	 * @param currentId
 	 *            当前模板的id
 	 * @param code
 	 *            当前模板要使用的编码
+	 * @param version
+	 *            当前模板要使用的版本号
 	 * @return
 	 */
-	public boolean isUnique(Long currentId, String code);
+	public boolean isUniqueCodeAndVersion(Long currentId, String code,String version);
 
 	/**
 	 * 获取指定编码模板对象的字符串内容信息
@@ -85,6 +87,13 @@ public interface TemplateService extends CrudService<Template> {
 	 */
 	public void formatTo(String code, Map<String, Object> args, OutputStream out);
 
+	/**
+	 * 保存方法，自动将同编码的另外一条状态为正常的模板转为禁用
+	 * 
+	 * @param template
+	 * @return
+	 */
+	public void saveTpl(Template template);
 
 	
 }
