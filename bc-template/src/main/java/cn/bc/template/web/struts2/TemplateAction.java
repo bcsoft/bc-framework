@@ -1,22 +1,14 @@
 package cn.bc.template.web.struts2;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
-import cn.bc.docs.domain.Attach;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.template.domain.Template;
@@ -129,19 +121,8 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	//---- 加载配置参数  ---开始--
 	public String loadTplConfigParam(){
 		Json json = new Json();
-		
-		//word文档
-		if(type.equals(Template.TYPE_WORD)){
-			//保存参数的字符串
-			String param=this.findParam(this.readDoc(path));
-			if(param==null){
-				this.json=json.toString();
-				return "json";
-			}
-			json.put("value", param);
-		}
 		//自定义文本
-		else if(type.equals(Template.TYPE_CUSTOM)){
+		if(type.equals(Template.TYPE_CUSTOM)){
 			//保存参数的字符串
 			String param=this.findParam(content);
 			if(param==null){
@@ -205,39 +186,6 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		if(param.length()>0)
 			return param; 
 		return null;
-	}
-	
-	//读取word文档
-	private String readDoc(String path){
-		InputStream is=this.getInputStream(path);
-		
-		if(is==null)
-		return null;
-		try {
-			HWPFDocument doc = new HWPFDocument(is);
-			// 读取word文本内容
-			Range bodyRange = doc.getRange();
-			return bodyRange.text();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	//获取模板的附件流
-	private InputStream getInputStream(String path) {
-
-		// 读取文件流并返回
-		String p = Attach.DATA_REAL_PATH + "/" + Template.DATA_SUB_PATH + "/"
-				+ path;
-		File file = new File(p);
-		try {
-			return new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			logger.warn("getInputStream 附件文件不存在:file=" + p);
-			return null;
-		}
 	}
 	//---- 加载配置参数  ---结束--
 }
