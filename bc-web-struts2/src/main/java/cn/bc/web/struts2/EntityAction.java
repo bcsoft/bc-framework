@@ -211,7 +211,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 新建表单
 	public String create() throws Exception {
 		// 初始化E
-		this.setE(this.getCrudService().create());
+		this.setE(createEntity());
 
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
@@ -222,6 +222,10 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.afterCreate(this.getE());
 
 		return "form";
+	}
+
+	protected E createEntity() {
+		return this.getCrudService().create();
 	}
 
 	/**
