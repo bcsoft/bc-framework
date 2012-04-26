@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="7" x="8" y="8" measuredWidth="777" measuredHeight="193">
-    <widgets xsi:type="model:Window" id="1" y="24" width="777" height="169" text="模板信息" measuredWidth="777" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
+  <widgets xsi:type="model:WidgetGroup" id="7" x="8" y="8" measuredWidth="849" measuredHeight="193">
+    <widgets xsi:type="model:Window" id="1" y="24" width="849" height="169" text="模板信息" measuredWidth="849" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="2" y="83" width="735" measuredWidth="735" measuredHeight="6"/>
     <widgets xsi:type="model:ButtonBar" id="3" x="6" y="50" text="新建, 编辑, 禁用, 删除, 下载, 在线查看" measuredWidth="290" measuredHeight="30" selection="0">
       <font/>
@@ -12,13 +12,13 @@
       <items x="177" y="0" width="44" height="30" text="下载"/>
       <items x="221" y="0" width="69" height="30" text="在线查看"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="5" y="85" width="777" text="(w:30). !,状态,排序号,编码,版本号,类型,标题,附件路径,备注,内置,创建人,创建时间,最后修改人,最后修改时间&#xA;1,正常,0001,tpl1,,Excel模板,Excel模板1,201204/mytpl.xls,,是,张三,2012-01-01,李四,2012-01-10&#xA;2,正常,0002,tpl2,,纯文本模板,文本模板1,201204/mytpl.txt,,否,张三,2012-01-01,李四,2012-01-10" measuredWidth="777" measuredHeight="73" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" y="85" width="849" text="(w:30). !,状态,排序号,编码,版本号,所属分类,类型,标题,附件路径,备注,内置,创建人,创建时间,最后修改人,最后修改时间&#xA;1,正常,0001,tpl1,,,Excel模板,Excel模板1,201204/mytpl.xls,,是,张三,2012-01-01,李四,2012-01-10&#xA;2,正常,0002,tpl2,,,纯文本模板,文本模板1,201204/mytpl.txt,,否,张三,2012-01-01,李四,2012-01-10" measuredWidth="849" measuredHeight="73" alternative="#eeeeee">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="29" x="6" text="模板视图：" measuredWidth="65" measuredHeight="25">
       <font bold="true"/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="30" x="584" y="53" measuredWidth="183" measuredHeight="24">
+    <widgets xsi:type="model:WidgetGroup" id="30" x="656" y="53" measuredWidth="183" measuredHeight="24">
       <widgets xsi:type="model:SearchField" id="31" width="183" measuredWidth="183" measuredHeight="24"/>
       <widgets xsi:type="model:Icon" id="32" x="156" y="7" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
     </widgets>
@@ -29,10 +29,10 @@
       <items x="89" y="0" width="45" height="30" text="全部"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="6" x="520" y="592" width="223" height="121" text="视图说明：&#xD;&#xA;1) 当类型为&quot;自定义文本&quot;时，下载的是模板内容构成的txt文件，其余类型下载的是模板文件。&#xD;&#xA;2) 执行删除操作时，如果为内置的，不允许删除。" measuredWidth="223" measuredHeight="121" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="6" x="520" y="592" width="265" height="97" text="视图说明：&#xD;&#xA;1) 当类型为&quot;自定义文本&quot;时，下载的是模板内容构成的txt文件，其余类型下载的是模板文件。&#xD;&#xA;2) 执行删除操作时，如果为内置的，不允许删除。" measuredWidth="265" measuredHeight="97" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Note" id="8" x="520" y="728" width="223" height="321" text="表单说明：&#xD;&#xA;1) 当类型为自定义文本时，显示模板内容，不显示附件路径；其余类型则相反。&#xD;&#xA;2) &quot;附件路径&quot;保存的是文件相对于data/template目录下的相对路径名。&#xD;&#xA;3) 保存时，如果状态为正常，需要将其余相同编码模板的状态设置为禁用，保证相同编码的模板只有一个是处于正常状态。&#xD;&#xA;4) 上传文件后，&quot;标题&quot;、&quot;模板路径&quot;的值自动生成，但用户可以自行修改标题，路径只读。&#xD;&#xA;5) 查看版本历史是指查看相同编码的所有模板信息列表。&#xD;&#xA;6) 配置参数仅在点击小灯炮后根据内容自动获取出来。" measuredWidth="223" measuredHeight="321" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="8" x="520" y="696" width="265" height="273" text="表单说明：&#xD;&#xA;1) 当类型为自定义文本时，显示模板内容，不显示附件路径；其余类型则相反。&#xD;&#xA;2) &quot;附件路径&quot;保存的是文件相对于data/template目录下的相对路径名。&#xD;&#xA;3) 保存时，如果状态为正常，需要将其余相同编码模板的状态设置为禁用，保证相同编码的模板只有一个是处于正常状态。&#xD;&#xA;4) 上传文件后，&quot;标题&quot;、&quot;模板路径&quot;的值自动生成，但用户可以自行修改标题，路径只读。&#xD;&#xA;5) 查看版本历史是指查看相同编码的所有模板信息列表。&#xD;&#xA;6) 配置参数仅在点击小灯炮后根据内容自动获取出来。&#xD;&#xA;7) 编码+版本号作唯一性检测" measuredWidth="265" measuredHeight="273" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="9" x="8" y="208" measuredWidth="505" measuredHeight="377">
