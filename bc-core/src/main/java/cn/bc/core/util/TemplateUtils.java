@@ -1,8 +1,10 @@
 package cn.bc.core.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,5 +154,27 @@ public class TemplateUtils {
 			logger.debug("markers=" + markers);
 		}
 		return markers;
+	}
+
+	/**
+	 * 将字符串写入到流
+	 * 
+	 * @param source
+	 *            要写入到流中的字符串
+	 * @param out
+	 * @throws IOException
+	 */
+	public static void copy(String source, OutputStream out) throws IOException {
+		if (out == null || source == null)
+			return;
+		try {
+			out.write(source.getBytes());
+			out.flush();
+		} finally {
+			try {
+				out.close();
+			} catch (IOException ex) {
+			}
+		}
 	}
 }

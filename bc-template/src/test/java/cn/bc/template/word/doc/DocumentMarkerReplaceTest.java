@@ -32,9 +32,8 @@ public class DocumentMarkerReplaceTest {
 		System.out.println(bodyRange.text());
 		// 替换文本内容
 		for (Map.Entry<String, String> entry : map.entrySet()) {
-			// bodyRange
-			// .replaceText("${" + entry.getKey() + "}", entry.getValue());
-
+			bodyRange
+					.replaceText("${" + entry.getKey() + "}", entry.getValue());
 		}
 		bodyRange.insertAfter("新插入的文本");
 
