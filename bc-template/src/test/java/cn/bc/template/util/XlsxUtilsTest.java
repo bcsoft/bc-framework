@@ -3,6 +3,8 @@
  */
 package cn.bc.template.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -26,7 +28,7 @@ public class XlsxUtilsTest {
 	// 加载docx文档
 	private InputStream getDocumentInputStream() throws IOException,
 			InvalidFormatException {
-		return new ClassPathResource("cn/bc/template/word/xlsxTpl.xlsx")
+		return new ClassPathResource("cn/bc/template/excel/xlsxTpl.xlsx")
 				.getInputStream();
 	}
 
@@ -35,7 +37,7 @@ public class XlsxUtilsTest {
 		String content = XlsxUtils.loadText(this.getDocumentInputStream());
 		Assert.assertNotNull(content);
 		Assert.assertTrue(content.length() > 0);
-		System.out.println(content);
+		// System.out.println(content);
 	}
 
 	@Test
@@ -61,7 +63,7 @@ public class XlsxUtilsTest {
 				markerValues);
 		Assert.assertNotNull(workbook);
 
-		// workbook.write(new FileOutputStream(new File("/t/xlsxTpl.xlsx")));
+		workbook.write(new FileOutputStream(new File("/t/xlsxTpl.xlsx")));
 
 		// 输出格式化后的文本内容
 		// System.out.println(XlsxUtils.loadText(workbook));
