@@ -119,7 +119,7 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 				getText("operateLog.type"), 60).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getType())));
 		columns.add(new TextColumn4MapKey("l.file_date", "file_date",
-				getText("operateLog.fileDate"), 120).setSortable(true)
+				getText("operateLog.fileDate"), 140).setSortable(true)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("l.subject", "subject",
 				getText("operateLog.subject")).setSortable(true)
