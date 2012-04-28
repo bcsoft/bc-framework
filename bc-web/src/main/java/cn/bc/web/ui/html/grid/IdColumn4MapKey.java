@@ -7,6 +7,12 @@ package cn.bc.web.ui.html.grid;
  * 
  */
 public class IdColumn4MapKey extends IdColumn {
+	private String originValueExpression;// 原始值表达式的值
+
+	public String getOriginValueExpression() {
+		return originValueExpression;
+	}
+
 	/**
 	 * @param id
 	 *            数据库的列名，如"t.name"
@@ -16,6 +22,7 @@ public class IdColumn4MapKey extends IdColumn {
 	public IdColumn4MapKey(String id, String valueExpression) {
 		super();
 		this.setId(id);
+		this.originValueExpression = valueExpression;
 		this.setValueExpression(wrap4ve(valueExpression));
 	}
 

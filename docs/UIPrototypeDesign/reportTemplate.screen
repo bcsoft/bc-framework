@@ -49,7 +49,7 @@
     <widgets xsi:type="model:Label" id="129" x="33" y="147" text="备注：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="137" x="344" y="56" text="分类：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="137" x="320" y="56" text="所属分类：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="141" x="320" y="86" text="展现方式：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
@@ -70,7 +70,7 @@
         <font underline="true"/>
       </widgets>
     </widgets>
-    <widgets xsi:type="model:TextArea" id="163" x="10" y="253" width="608" height="183" measuredWidth="608" measuredHeight="183" verticalScrollbar="true">
+    <widgets xsi:type="model:TextArea" id="163" x="10" y="253" width="608" height="183" text="columns: [&#xD;&#xA;    {id: &quot;name&quot;, label: &quot;名称&quot;, width: 100, sortable: true, dir: &quot;asc&quot;, el:&quot;&quot;, formater: &quot;&quot;},&#xD;&#xA;    {...}&#xD;&#xA;],&#xD;&#xA;data: ...&#xD;&#xA;" measuredWidth="608" measuredHeight="183" verticalScrollbar="true">
       <font italic="true"/>
     </widgets>
     <widgets xsi:type="model:Label" id="164" x="10" y="229" text="详细配置：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
@@ -87,7 +87,7 @@
         <font/>
       </widgets>
       <widgets xsi:type="model:Icon" id="170" x="523" y="4" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-      <widgets xsi:type="model:Label" id="171" x="5" y="1" text="角色1 X" measuredWidth="48" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="171" x="5" y="1" text="单位1 X" measuredWidth="48" measuredHeight="25">
         <font underline="true"/>
       </widgets>
       <widgets xsi:type="model:Label" id="172" x="52" y="1" text="岗位1 X" measuredWidth="48" measuredHeight="25">
@@ -109,6 +109,9 @@
     <widgets xsi:type="model:Button" id="178" x="496" y="477" width="56" text="执行" measuredWidth="56" measuredHeight="27">
       <font/>
     </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="180" x="640" y="224" width="393" height="361" text="详细配置说明：&#xD;&#xA;1）固定数据的报表&#xD;&#xA;columns: [ &quot;姓名&quot;, &quot;年龄&quot;, &quot;比例&quot; ],&#xD;&#xA;data: [ { &quot;小明&quot;, 20, 0.5 }, { &quot;小红&quot;, 30, 0.2 }, { &quot;小军&quot;, 10, 0.3 } ]&#xD;&#xA;&#xD;&#xA;2）基于sql的动态报表&#xD;&#xA;type: &quot;sql&quot;,&#xD;&#xA;columns: [&#xD;&#xA;    {id: &quot;name&quot;, label: &quot;名称&quot;, width: 100, sortable: true, dir: &quot;asc&quot;, el:&quot;&quot;, formater: &quot;&quot;, hidden: false},&#xD;&#xA;    {...}&#xD;&#xA;],&#xD;&#xA;sql: &quot;select t.id as id, t.name as name,... from table t ....&quot;,&#xD;&#xA;conditionForm: &quot;tpl:xxx1_code&quot;,&#xD;&#xA;exportTpl: &quot;tpl:xxx2_code&quot;,&#xD;&#xA;ui: &quot;data,line,pie&quot;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;进度控制：先完成无conditionForm的报表实现&#xD;&#xA;" measuredWidth="393" measuredHeight="361" annotation="true" textAlignment="Left">
+    <font/>
   </widgets>
   <hRuler/>
   <vRuler/>
