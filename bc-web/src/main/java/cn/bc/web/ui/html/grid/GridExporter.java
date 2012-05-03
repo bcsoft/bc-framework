@@ -1,7 +1,7 @@
 package cn.bc.web.ui.html.grid;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.expression.ExpressionParser;
 
@@ -29,7 +30,7 @@ import cn.bc.core.util.DateUtils;
  */
 public class GridExporter implements Exporter {
 	private static final Log logger = LogFactory.getLog(GridExporter.class);
-	private String templateFile; // 模板文件
+	private InputStream templateFile; // 模板文件
 	private String title; // 标题
 	private String idLabel; // id列的列标题
 	private List<Column> columns;
@@ -76,11 +77,11 @@ public class GridExporter implements Exporter {
 		return this;
 	}
 
-	public String getTemplateFile() {
+	public InputStream getTemplateFile() {
 		return templateFile;
 	}
 
-	public GridExporter setTemplateFile(String templateFile) {
+	public GridExporter setTemplateFile(InputStream templateFile) {
 		this.templateFile = templateFile;
 		return this;
 	}
@@ -99,13 +100,10 @@ public class GridExporter implements Exporter {
 		if (logger.isDebugEnabled())
 			logger.debug("templateFile=" + this.getTemplateFile());
 		XLSTransformer transformer = new XLSTransformer();
-		InputStream is;
-		if (this.getTemplateFile() == null)
+		InputStream is = this.getTemplateFile();
+		if (is == null)
 			is = new ClassPathResource("cn/bc/web/template/export.xls")
 					.getInputStream();// 使用默认的模板
-		else
-			is = new BufferedInputStream(new FileInputStream(
-					this.getTemplateFile()));
 
 		if (logger.isDebugEnabled())
 			logger.debug("exportTo 1:" + DateUtils.getWasteTime(startTime));
@@ -118,11 +116,15 @@ public class GridExporter implements Exporter {
 	}
 
 	public void exportTo(String outputFile) throws Exception {
-		if (logger.isDebugEnabled())
-			logger.debug("templateFile=" + this.getTemplateFile());
 		XLSTransformer transformer = new XLSTransformer();
-		transformer.transformXLS(this.getTemplateFile(), this.parseData(),
-				outputFile);
+		Workbook workbook = transformer.transformXLS(this.getTemplateFile(),
+				this.parseData());
+		OutputStream os = new BufferedOutputStream(new FileOutputStream(
+				outputFile));
+		workbook.write(os);
+		this.getTemplateFile().close();
+		os.flush();
+		os.close();
 	}
 
 	/**

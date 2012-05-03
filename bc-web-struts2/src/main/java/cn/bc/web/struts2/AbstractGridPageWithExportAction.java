@@ -76,14 +76,16 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		}
 
 		// 导出数据到Excel
-		if(logger.isDebugEnabled())logger.debug("1:"+DateUtils.getWasteTime(startTime));
-		GridExporter exporter = new GridExporter();
-		exporter.setColumns(this.getExportColumns()).setTitle(title)
-				.setData(this.es).setIdLabel(getText("label.idLabel"));
+		if (logger.isDebugEnabled())
+			logger.debug("1:" + DateUtils.getWasteTime(startTime));
+		GridExporter exporter = buileGridExporter(title,
+				getText("label.idLabel"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream(this.bufferSize);
-		if(logger.isDebugEnabled())logger.debug("2:"+DateUtils.getWasteTime(startTime));
+		if (logger.isDebugEnabled())
+			logger.debug("2:" + DateUtils.getWasteTime(startTime));
 		exporter.exportTo(out);
-		if(logger.isDebugEnabled())logger.debug("3:"+DateUtils.getWasteTime(startTime));
+		if (logger.isDebugEnabled())
+			logger.debug("3:" + DateUtils.getWasteTime(startTime));
 		this.inputStream = new ByteArrayInputStream(out.toByteArray());
 
 		return "export";
@@ -95,6 +97,20 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		// 163下载.html：text/html
 		// 163下载.rar|.reg：application/octet-stream
 		// application/x-msdownload
+	}
+
+	/**
+	 * 构建一个表格导出器
+	 * 
+	 * @param title 标题
+	 * @param idLabel id列的标题名称
+	 * @return
+	 */
+	protected GridExporter buileGridExporter(String title, String idLabel) {
+		GridExporter exporter = new GridExporter();
+		exporter.setColumns(this.getExportColumns()).setTitle(title)
+				.setData(this.es).setIdLabel(idLabel);
+		return exporter;
 	}
 
 	/**
