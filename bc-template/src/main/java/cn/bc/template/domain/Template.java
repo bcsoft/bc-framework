@@ -58,7 +58,7 @@ public class Template extends FileEntityImpl {
 	 */
 	public static final int TYPE_CUSTOM = 5;
 	
-	private String order;// 排序号
+	private String orderNo;// 排序号
 	private int type;// 类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;// 编码
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
@@ -97,12 +97,12 @@ public class Template extends FileEntityImpl {
 	}
 
 	@Column(name = "ORDER_")
-	public String getOrder() {
-		return order;
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	@Column(name = "TYPE_")

@@ -59,7 +59,7 @@ public class ShowTemplateVersionAction extends
 		
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.order_ as order,t.code,t.type_ as type,t.desc_,t.path,t.subject");
+		sql.append("select t.id,t.order_ as orderNo,t.code,t.type_ as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
 		sql.append(",t.category");
@@ -77,7 +77,7 @@ public class ShowTemplateVersionAction extends
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("order", rs[i++]);
+				map.put("orderNo", rs[i++]);
 				map.put("code", rs[i++]);
 				map.put("type", rs[i++]);
 				map.put("desc_", rs[i++]);
@@ -105,7 +105,7 @@ public class ShowTemplateVersionAction extends
 				getText("template.status"), 40)
 				.setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		columns.add(new TextColumn4MapKey("t.order_", "order",
+		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
 				getText("template.code"), 100).setSortable(true)
