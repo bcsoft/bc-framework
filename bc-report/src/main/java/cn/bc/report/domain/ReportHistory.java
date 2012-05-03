@@ -29,24 +29,22 @@ public class ReportHistory extends EntityImpl {
 	public static String DATA_SUB_PATH = "report/history";
 
 	private String category;// 所属分类，如"营运系统/发票统计"
-	private String name;// 描述性名称
-	private String cron;// 任务运行时的定时表达式
+	private String subject;// 标题
 	private String msg;// 运行结果的描述信息，如成功、异常信息
 	private boolean success;// 运行是否成功
 	private String path;// 报表运行结果所在的相对路径（相对于DATA_SUB_PATH下的子路径），如果有多个附件用分号连接
-	private ReportTask task;// 对应的报表任务
+	private Long taskId;// 对应的报表任务ID，仅作记录不作外键关联
 
 	private Calendar fileDate;// 创建时间
 	private ActorHistory author;// 创建人
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "PID", referencedColumnName = "ID")
-	public ReportTask getTask() {
-		return task;
+	@Column(name = "TASK_ID")
+	public Long getTaskId() {
+		return taskId;
 	}
 
-	public void setTask(ReportTask task) {
-		this.task = task;
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
 	}
 
 	public String getCategory() {
@@ -57,20 +55,12 @@ public class ReportHistory extends EntityImpl {
 		this.category = category;
 	}
 
-	public String getName() {
-		return name;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCron() {
-		return cron;
-	}
-
-	public void setCron(String cron) {
-		this.cron = cron;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	public String getPath() {

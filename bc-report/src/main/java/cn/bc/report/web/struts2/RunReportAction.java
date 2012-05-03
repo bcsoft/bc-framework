@@ -20,6 +20,7 @@ import cn.bc.core.query.Query;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
+import cn.bc.report.domain.ReportTemplate;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -38,6 +39,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 public class RunReportAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String code;// 报表模板的编码
+	private ReportTemplate tpl;// 报表模板
 	private JSONObject config;// 报表模板的详细配置
 
 	private JSONObject getConfig() {
@@ -46,6 +48,25 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 		this.initConfig();
 		return config;
+	}
+
+	private void initConfig() {
+		// 初始化配置信息
+		// TODO 加载模板配置
+		tpl = new ReportTemplate();
+
+		// TODO 获取详细配置信息
+		tpl.setConfig("{type: 'sql',"
+				+ "columns: ["
+				+ "    {id: 'a.id', label: 'ID', width: 40, el:'name'},"
+				+ "    {id: 'a.name', label: '名称', width: 100, el:'name'},"
+				+ "    {id: 'a.pname', label: '上级', el:'pname'}"
+				+ "],"
+				+ "sql: 'select a.id as id,a.name as name,a.pname as pname from bc_identity_actor a order by a.code',"
+				+ "conditionForm: 'tpl:testConditionForm',"
+				+ "exportTpl: 'tpl:testExportTemplate',"
+				+ "ui: 'data',width: 600,height: 400}");
+		this.config = tpl.getConfigJson();
 	}
 
 	@Override
@@ -137,29 +158,6 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		return super.list();
 	}
 
-	private void initConfig() {
-		// 初始化配置信息
-		// TODO 加载模板配置
-
-		// TODO 获取详细配置信息
-		try {
-			this.config = new JSONObject(
-					"{type: 'sql',"
-							+ "columns: ["
-							+ "    {id: 'a.id', label: 'ID', width: 40, el:'name'},"
-							+ "    {id: 'a.name', label: '名称', width: 100, el:'name'},"
-							+ "    {id: 'a.pname', label: '上级', el:'pname'}"
-							+ "],"
-							+ "sql: 'select a.id as id,a.name as name,a.pname as pname from bc_identity_actor a order by a.code',"
-							+ "conditionForm: 'tpl:testConditionForm',"
-							+ "exportTpl: 'tpl:testExportTemplate',"
-							+ "ui: 'data',width: 600,height: 400}");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
@@ -206,7 +204,7 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		});
 		return sqlObject;
 	}
-	
+
 	@Override
 	protected String[] getGridSearchFields() {
 		// 不处理

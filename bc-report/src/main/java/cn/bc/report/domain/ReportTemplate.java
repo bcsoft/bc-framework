@@ -13,6 +13,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.FileEntityImpl;
@@ -27,6 +33,7 @@ import cn.bc.identity.domain.FileEntityImpl;
 @Table(name = "BC_REPORT_TEMPLATE")
 public class ReportTemplate extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
+	private static Log logger = LogFactory.getLog(ReportTemplate.class);
 
 	private int status;// 状态：0-正常,1-禁用
 	private String orderNo;// 排序号
@@ -105,5 +112,32 @@ public class ReportTemplate extends FileEntityImpl {
 
 	public void setConfig(String config) {
 		this.config = config;
+		this.configJson = null;
+	}
+
+	private JSONObject configJson;
+
+	/**
+	 * 获取配置的json对象
+	 * 
+	 * @return
+	 */
+	@Transient
+	public JSONObject getConfigJson() {
+		if (configJson != null)
+			return configJson;
+
+		if (this.getConfig() == null || this.getConfig().length() == 0) {
+			this.configJson = null;
+			return this.configJson;
+		}
+
+		try {
+			configJson = new JSONObject(this.getConfig());
+		} catch (JSONException e) {
+			logger.error(e.getMessage(), e);
+			this.configJson = null;
+		}
+		return configJson;
 	}
 }
