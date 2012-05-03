@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="769" measuredHeight="177">
-    <widgets xsi:type="model:Window" id="1" width="769" height="177" text="报表模版信息" measuredWidth="769" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:HLine" id="2" y="59" width="769" measuredWidth="769" measuredHeight="6"/>
-    <widgets xsi:type="model:ButtonBar" id="3" x="6" y="26" text="新建, 编辑,禁用" measuredWidth="134" measuredHeight="30" selection="0">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" width="625" measuredWidth="751" measuredHeight="177">
+    <widgets xsi:type="model:Window" id="1" width="751" height="177" text="报表模版信息" measuredWidth="751" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="4" y="26" width="133" text="新建, 编辑,禁用" measuredWidth="133" measuredHeight="30" selection="0">
       <font/>
       <items x="0" y="0" width="45" height="30" text="新建"/>
       <items x="45" y="0" width="44" height="30" text="编辑"/>
-      <items x="89" y="0" width="45" height="30" text="禁用"/>
+      <items x="89" y="0" width="44" height="30" text="禁用"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="5" y="61" width="769" text="(w:30). !,(w:30). 状态,(w:30). 分类,(w:30). 名称,(w:30). 编码,(w:30). 展现方式,备注,使用人&#xA;1,启用,营运系统/发票统计,发票销售统计表(按年),INVOICE_STATS_YEAR,数据表、柱图、折线图&#xA;2,启用,营运系统/发票统计,发票销售统计表(按月),INVOICE_STATS_MONTH,数据表&#xA;3,启用,营运系统/发票统计,发票销售统计表(按日),INVOICE_STATS_DAY,数据表、折线图&#xA;" measuredWidth="769" measuredHeight="96" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" y="61" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,(w:30). 备注,使用人,创建人,创建日期&#xA;1,启用,001,营运系统/发票统计,发票销售统计表(按年),INVOICE_STATS_YEAR&#xA;2,启用,002,营运系统/发票统计,发票销售统计表(按月),INVOICE_STATS_MONTH&#xA;3,启用,003,营运系统/发票统计,发票销售统计表(按日),INVOICE_STATS_DAY&#xA;" measuredWidth="751" measuredHeight="96" alternative="#eeeeee">
       <font/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="6" x="577" y="29" measuredWidth="183" measuredHeight="24">
-      <widgets xsi:type="model:SearchField" id="7" width="183" measuredWidth="183" measuredHeight="24"/>
+    <widgets xsi:type="model:WidgetGroup" id="6" x="468" y="29" width="148" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="7" width="148" measuredWidth="148" measuredHeight="24"/>
     </widgets>
-    <widgets xsi:type="model:ButtonBar" id="177" x="152" y="26" text="正常,禁用,全部" measuredWidth="134" measuredHeight="30" selection="0">
+    <widgets xsi:type="model:ButtonBar" id="177" x="144" y="26" width="129" text="正常,禁用,全部" measuredWidth="129" measuredHeight="30" selection="0">
       <font/>
       <items x="0" y="0" width="45" height="30" text="正常"/>
       <items x="45" y="0" width="44" height="30" text="禁用"/>
-      <items x="89" y="0" width="45" height="30" text="全部"/>
+      <items x="89" y="0" width="40" height="30" text="全部"/>
     </widgets>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="200" measuredWidth="625" measuredHeight="513">
@@ -34,13 +34,13 @@
     <widgets xsi:type="model:TextArea" id="115" x="73" y="145" width="546" height="73" measuredWidth="546" measuredHeight="73" verticalScrollbar="true">
       <font italic="true"/>
     </widgets>
-    <widgets xsi:type="model:Label" id="119" x="33" y="56" text="名称：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="119" x="27" y="56" text="*名称：" measuredWidth="46" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
     <widgets xsi:type="model:TextField" id="121" x="72" y="56" width="235" measuredWidth="235" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="125" x="33" y="86" text="编码：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="125" x="27" y="86" text="*编码：" measuredWidth="46" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
     <widgets xsi:type="model:TextField" id="127" x="72" y="86" width="235" measuredWidth="235" measuredHeight="25">
@@ -49,28 +49,19 @@
     <widgets xsi:type="model:Label" id="129" x="33" y="147" text="备注：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="137" x="344" y="56" text="分类：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="137" x="315" y="56" text="*所属分类：" measuredWidth="70" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="141" x="320" y="86" text="展现方式：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="141" x="332" y="86" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
     <widgets xsi:type="model:TextField" id="154" x="384" y="56" width="235" text="营运系统/发票统计" measuredWidth="235" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="158" x="384" y="86" measuredWidth="235" measuredHeight="26">
-      <widgets xsi:type="model:TextField" id="159" width="235" measuredWidth="235" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:Icon" id="160" x="212" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-      <widgets xsi:type="model:Label" id="161" x="5" y="1" text="数据表 X" measuredWidth="53" measuredHeight="25">
-        <font underline="true"/>
-      </widgets>
-      <widgets xsi:type="model:Label" id="162" x="61" y="1" text="柱图 X" measuredWidth="41" measuredHeight="25">
-        <font underline="true"/>
-      </widgets>
+    <widgets xsi:type="model:TextField" id="159" x="384" y="86" width="235" measuredWidth="235" measuredHeight="25">
+      <font/>
     </widgets>
-    <widgets xsi:type="model:TextArea" id="163" x="10" y="253" width="608" height="183" measuredWidth="608" measuredHeight="183" verticalScrollbar="true">
+    <widgets xsi:type="model:TextArea" id="163" x="10" y="253" width="608" height="183" text="columns: [&#xD;&#xA;    {id: &quot;name&quot;, label: &quot;名称&quot;, width: 100, sortable: true, dir: &quot;asc&quot;, el:&quot;&quot;, formater: &quot;&quot;},&#xD;&#xA;    {...}&#xD;&#xA;],&#xD;&#xA;data: ...&#xD;&#xA;" measuredWidth="608" measuredHeight="183" verticalScrollbar="true">
       <font italic="true"/>
     </widgets>
     <widgets xsi:type="model:Label" id="164" x="10" y="229" text="详细配置：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
@@ -87,7 +78,7 @@
         <font/>
       </widgets>
       <widgets xsi:type="model:Icon" id="170" x="523" y="4" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-      <widgets xsi:type="model:Label" id="171" x="5" y="1" text="角色1 X" measuredWidth="48" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="171" x="5" y="1" text="单位1 X" measuredWidth="48" measuredHeight="25">
         <font underline="true"/>
       </widgets>
       <widgets xsi:type="model:Label" id="172" x="52" y="1" text="岗位1 X" measuredWidth="48" measuredHeight="25">
@@ -109,6 +100,9 @@
     <widgets xsi:type="model:Button" id="178" x="496" y="477" width="56" text="执行" measuredWidth="56" measuredHeight="27">
       <font/>
     </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="180" x="640" y="224" width="393" height="361" text="详细配置说明：&#xD;&#xA;1）固定数据的报表&#xD;&#xA;columns: [ &quot;姓名&quot;, &quot;年龄&quot;, &quot;比例&quot; ],&#xD;&#xA;data: [ { &quot;小明&quot;, 20, 0.5 }, { &quot;小红&quot;, 30, 0.2 }, { &quot;小军&quot;, 10, 0.3 } ]&#xD;&#xA;&#xD;&#xA;2）基于sql的动态报表&#xD;&#xA;type: &quot;sql&quot;,&#xD;&#xA;columns: [&#xD;&#xA;    {id: &quot;name&quot;, label: &quot;名称&quot;, width: 100, sortable: true, dir: &quot;asc&quot;, el:&quot;&quot;, formater: &quot;&quot;, hidden: false},&#xD;&#xA;    {...}&#xD;&#xA;],&#xD;&#xA;sql: &quot;select t.id as id, t.name as name,... from table t ....&quot;,&#xD;&#xA;conditionForm: &quot;tpl:xxx1_code&quot;,&#xD;&#xA;exportTpl: &quot;tpl:xxx2_code&quot;,&#xD;&#xA;ui: &quot;data,line,pie&quot;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;进度控制：先完成无conditionForm的报表实现&#xD;&#xA;" measuredWidth="393" measuredHeight="361" annotation="true" textAlignment="Left">
+    <font/>
   </widgets>
   <hRuler/>
   <vRuler/>

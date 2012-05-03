@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" width="625" measuredWidth="697" measuredHeight="129">
+    <widgets xsi:type="model:Window" id="1" width="697" height="129" text="历史报表信息" measuredWidth="697" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:Table" id="5" y="61" width="697" text="(w:30). !,(w:30). 状态,(w:30). 创建时间,(w:30). 所属分类,(w:30). 标题,附件,(w:30). 创建人&#xA;1,成功,2012-01-01 12:30,营运系统/车辆信息,2012年4月在案车辆,201201/201201011230241234.xls,超级管理员&#xA;" measuredWidth="697" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="177" x="6" y="26" width="107" text="下载,在线查看" measuredWidth="107" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="下载"/>
+      <items x="45" y="0" width="62" height="30" text="在线查看"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="183" x="120" y="26" width="129" text="成功,失败,全部" measuredWidth="129" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="成功"/>
+      <items x="45" y="0" width="44" height="30" text="失败"/>
+      <items x="89" y="0" width="40" height="30" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="192" x="504" y="29" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="193" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="194" x="156" y="7" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="144" measuredWidth="625" measuredHeight="297">
+    <widgets xsi:type="model:Window" id="100" y="24" width="625" height="273" text="历史报表信息" measuredWidth="625" measuredHeight="273" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="114" x="6" text="历史报表表单：" measuredWidth="89" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="119" x="9" y="82" text="报表标题：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="121" x="73" y="82" width="542" text="发票销售统计表(按年)" measuredWidth="542" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="137" x="9" y="53" text="所属分类：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="141" x="334" y="140" text="创建人：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="154" x="73" y="53" width="542" text="营运系统/发票统计" measuredWidth="542" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="159" x="384" y="140" width="231" text="超级管理员" measuredWidth="231" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="181" x="8" y="192" width="608" height="93" text="如异常信息等，在点击右侧的小图标时方显示" measuredWidth="608" measuredHeight="93">
+      <font italic="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="182" x="33" y="168" text="状态：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="184" x="9" y="140" text="创建时间：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="185" x="73" y="140" width="234" text="2012-01-01 12:30:10" measuredWidth="234" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="186" x="9" y="111" text="附件路径：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="189" x="98" y="171" measuredWidth="16" measuredHeight="16" icon="desc (small)"/>
+    <widgets xsi:type="model:Label" id="190" x="73" y="168" text="失败" measuredWidth="29" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="231" x="73" y="111" measuredWidth="542" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="187" width="542" text="201201/201201011230101234.xls" measuredWidth="542" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="188" x="522" y="5" measuredWidth="16" measuredHeight="16" icon="print-preview (small)"/>
+      <widgets xsi:type="model:Icon" id="191" x="504" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="206" x="8" y="448" measuredWidth="289" measuredHeight="193">
+    <widgets xsi:type="model:Panel" id="207" y="24" width="289" height="169" measuredWidth="289" measuredHeight="169"/>
+    <widgets xsi:type="model:Button" id="208" x="10" y="156" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="209" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="210" x="273" y="26" width="13" measuredWidth="13" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Label" id="217" x="10" y="41" text="所属分类：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="219" x="10" y="96" text="创建时间：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="220" x="10" y="118" width="127" measuredWidth="127" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="221" x="136" y="118" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="222" x="152" y="118" width="127" measuredWidth="127" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="224" x="10" y="61" width="269" measuredWidth="269" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="223" x="260" y="66" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="225" x="240" y="66" measuredWidth="16" measuredHeight="16" icon="desc (small)"/>
+    <widgets xsi:type="model:Icon" id="226" x="260" y="123" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="227" x="240" y="123" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    <widgets xsi:type="model:Icon" id="228" x="116" y="123" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="229" x="96" y="123" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+  </widgets>
+  <widgets xsi:type="model:Note" id="230" x="312" y="472" width="321" height="169" text="说明：&#xD;&#xA;1）表单全为只读状态" measuredWidth="321" measuredHeight="169" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
