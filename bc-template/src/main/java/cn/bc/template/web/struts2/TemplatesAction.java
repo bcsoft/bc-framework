@@ -107,25 +107,22 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("t.id", "id"));
 		columns.add(new TextColumn4MapKey("a.status_", "status",
-				getText("template.status"), 40)
-				.setSortable(true)
+				getText("template.status"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
-		columns.add(new TextColumn4MapKey("t.code", "code",
-				getText("template.code"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.version_", "version",
-				getText("template.version"), 100)
-				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.category", "category",
-				getText("template.category"), 100)
-				.setUseTitleFromLabel(true));
+				getText("template.category"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.type_", "type",
 				getText("template.type"), 80)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.code", "code",
+				getText("template.code"), 100).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.version_", "version",
+				getText("template.version"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.path", "path",
 				getText("template.tfpath")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
@@ -165,16 +162,15 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				getText("template.type.other"));
 		return map;
 	}
-	
-	//状态键值转换
-	private Map<String,String> getStatuses(){
-		Map<String,String> statuses=new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED)
-				, getText("template.status.normal"));
-		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED)
-				, getText("template.status.disabled"));
-		statuses.put(""
-				, getText("template.status.all"));
+
+	// 状态键值转换
+	private Map<String, String> getStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
+				getText("template.status.normal"));
+		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
+				getText("template.status.disabled"));
+		statuses.put("", getText("template.status.all"));
 		return statuses;
 	}
 
@@ -185,8 +181,8 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "t.code", "am.actor_name"
-				, "t.path", "t.subject","t.version_","t.category" };
+		return new String[] { "t.code", "am.actor_name", "t.path", "t.subject",
+				"t.version_", "t.category" };
 	}
 
 	@Override
@@ -226,28 +222,31 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 					.setText(getText("label.preview.inline"))
 					.setClick("bc.templateList.inline"));
 		}
-		
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("template.status.tips")));
+
+		// 状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+				"status", 0, getText("template.status.tips")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
 	}
-	
+
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("t.status_",Integer.parseInt(status))
-						,new EqualsCondition("t.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("t.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
-			statusCondition=new EqualsCondition("t.code",code);
+		if (status != null && status.length() > 0 && code != null
+				&& code.length() > 0) {
+			statusCondition = new AndCondition(new EqualsCondition("t.status_",
+					Integer.parseInt(status)), new EqualsCondition("t.code",
+					code));
+		} else if (status != null && status.length() > 0) {
+			statusCondition = new EqualsCondition("t.status_",
+					Integer.parseInt(status));
+		} else if (code != null && code.length() > 0) {
+			statusCondition = new EqualsCondition("t.code", code);
 		}
 		return statusCondition;
 	}
