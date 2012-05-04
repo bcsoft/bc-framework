@@ -35,7 +35,7 @@ public class ReportTemplate extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	private static Log logger = LogFactory.getLog(ReportTemplate.class);
 
-	private int status;// 状态：0-正常,1-禁用
+	private int status;// 状态：0-启用,1-禁用
 	private String orderNo;// 排序号
 	private String category;// 所属分类，如"营运系统/发票统计"
 	private String name;// 名称
