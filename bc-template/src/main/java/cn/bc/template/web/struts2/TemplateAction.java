@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 import cn.bc.BCConstants;
 import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.TemplateUtils;
+import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
@@ -40,13 +41,6 @@ import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
-
-import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
-import com.artofsolving.jodconverter.DocumentConverter;
-import com.artofsolving.jodconverter.DocumentFormatRegistry;
-import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
 
 /**
  * 模板表单Action
@@ -152,30 +146,32 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public String content;// 模板内容
 
 	// ---- 加载配置参数 ---开始--
-	public String loadTplConfigParam() {
+	public String loadTplConfigParam() throws Exception {
 		Json json = new Json();
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(path);
 
+		Template tpl = this.templateService.load(tid);
+		InputStream is = tpl.getInputStream();
+		List<String> markers;
 		// 自定义文本
 		if (type.equals(Template.TYPE_CUSTOM)) {
+			markers = TemplateUtils.findMarkers(content);
 			// 保存参数的集合
-			json.put("value",
-					this.getParamStr(TemplateUtils.findMarkers(content)));
+			json.put("value", this.getParamStr(markers));
 		} else if (type.equals(Template.TYPE_EXCEL) && extension.equals("xls")) {
-			json.put("value", this.getParamStr(XlsUtils
-					.findMarkers(this.templateService.load(tid)
-							.getInputStream())));
+			markers = XlsUtils.findMarkers(is);
+			json.put("value", this.getParamStr(markers));
 		} else if (type.equals(Template.TYPE_WORD) && extension.equals("docx")) {
-			json.put("value", this.getParamStr(DocxUtils
-					.findMarkers(this.templateService.load(tid)
-							.getInputStream())));
+			markers = DocxUtils.findMarkers(is);
+			json.put("value", this.getParamStr(markers));
 		} else if (type.equals(Template.TYPE_TEXT)) {
 			Template txt = new Template();
 			txt.setPath(this.path);
-			json.put("value", this.getParamStr(TemplateUtils.findMarkers(txt
-					.getInputStream())));
+			markers = TemplateUtils.findMarkers(txt.getInputStream());
+			json.put("value", this.getParamStr(markers));
 		}
+		is.close();
 		this.json = json.toString();
 		return "json";
 	}
@@ -263,14 +259,14 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				}
 				markerValues.put(json.getString("key"), v);
 			}
-			InputStream inputStream = null;
+			InputStream is;
 			if (template.getType() == Template.TYPE_WORD
 					&& extension.equals("docx")) {
 				XWPFDocument docx = DocxUtils.format(template.getInputStream(),
 						markerValues);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				docx.write(out);
-				inputStream = new ByteArrayInputStream(out.toByteArray());
+				is = new ByteArrayInputStream(out.toByteArray());
 				out.close();
 			} else if (template.getType() == Template.TYPE_EXCEL
 					&& extension.equals("xls")) {
@@ -278,55 +274,36 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 						markerValues);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				xls.write(out);
-				inputStream = new ByteArrayInputStream(out.toByteArray());
+				is = new ByteArrayInputStream(out.toByteArray());
 				out.close();
 			} else if (template.isPureText()) {
 				template.setContent(FreeMarkerUtils.format(
 						template.getContent(), markerValues));
 				template.setType(Template.TYPE_CUSTOM);
-				inputStream = template.getInputStream();
+				is = template.getInputStream();
 				if (extension == null)
 					extension = "txt";
 			} else {
-				inputStream = template.getInputStream();
+				is = template.getInputStream();
 			}
 
-			// 调用jodconvert将附件转换为pdf文档后再下载
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-					BUFFER);
-
-			// connect to an OpenOffice.org instance running on port 8100
-			OpenOfficeConnection connection = new SocketOpenOfficeConnection(
-					getText("jodconverter.soffice.host"),
-					Integer.parseInt(getText("jodconverter.soffice.port")));
-			connection.connect();
-			if (logger.isDebugEnabled()) {
-				logger.debug("connect:" + DateUtils.getWasteTime(startTime));
-			}
-
-			DocumentFormatRegistry formaters = new DefaultDocumentFormatRegistry();
-
-			// convert
-			DocumentConverter converter = new OpenOfficeDocumentConverter(
-					connection);
 			if (this.from == null || this.from.length() == 0)
 				this.from = extension;
 			if (this.to == null || this.to.length() == 0)
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-			converter.convert(inputStream,
-					formaters.getFormatByFileExtension(this.from),
-					outputStream, formaters.getFormatByFileExtension(this.to));
+
+			// 调用jodconvert将附件转换为pdf文档后再下载
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
+					BUFFER);
+			OfficeUtils.convert(is, this.from, outputStream, this.to);
+			is.close();
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
 			}
 
-			// close the connection
-			connection.disconnect();
-
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
 			byte[] bs = outputStream.toByteArray();
 			this.inputStream = new ByteArrayInputStream(bs);
-			this.inputStream.close();
 			this.contentType = AttachUtils.getContentType(this.to);
 			this.contentLength = bs.length;
 			this.filename = WebUtils.encodeFileName(ServletActionContext
