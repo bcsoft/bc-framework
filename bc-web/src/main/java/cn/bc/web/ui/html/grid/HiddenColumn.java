@@ -42,11 +42,11 @@ public class HiddenColumn implements Column {
 		return this;
 	}
 
-	public Formater<String> getValueFormater() {
+	public Formater<? extends Object> getValueFormater() {
 		return null;
 	}
 
-	public Column setValueFormater(Formater<String> valueFormater) {
+	public Column setValueFormater(Formater<? extends Object> valueFormater) {
 		// do nothing
 		return this;
 	}

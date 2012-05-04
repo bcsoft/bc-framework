@@ -34,6 +34,16 @@ public class StringUtils {
 	}
 
 	/**
+	 * 获取对象的字符串表示,null值转换为长度为0的字符串
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static String null2Empty(Object source) {
+		return source != null ? source.toString() : "";
+	}
+
+	/**
 	 * 将指定的字符串转换成toEncode的编码
 	 * 
 	 * @param isoString

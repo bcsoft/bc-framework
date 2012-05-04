@@ -44,8 +44,8 @@ public interface Column {
 	 * 单元格值的格式化处理器
 	 * @return
 	 */
-	Formater<String> getValueFormater();
-	Column setValueFormater(Formater<String> valueFormater);
+	Formater<? extends Object> getValueFormater();
+	Column setValueFormater(Formater<? extends Object> valueFormater);
 	
 	/**
 	 * @return 是否将单元格值同时作为提示信息

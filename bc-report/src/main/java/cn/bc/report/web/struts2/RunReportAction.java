@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -80,19 +81,20 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		// TODO 加载模板配置
 		// this.tpl = this.reportTemplateService.loadByCode(this.code);
 		this.tpl = new ReportTemplate();
-		this.tpl.setName("报表测试标题");
+		this.tpl.setName("每日登录帐号数统计");
 
 		// TODO 获取详细配置信息
 		this.tpl.setConfig("{type: 'sql',"
 				+ "columns: ["
-				+ "    {type:'id',id: 'a.id', width: 40, el:'name'},"
-				+ "    {id: 'a.name', label: '名称', width: 100, el:'name'},"
-				+ "    {id: 'a.pname', label: '上级', el:'pname'}"
+				+ "    {type:'id',id: 'id', width: 40, el:'id'},"
+				+ "    {id: 'logday', label: '登录日', width: 100, el:'logday'},"
+				+ "    {id: 'count', label: '登录帐号数', width: 100, el:'count'},"
+				+ "    {id: 'names', label: '登录账号', el:'names'}"
 				+ "],"
-				+ "sql: 'select a.id as id,a.name as name,a.pname as pname from bc_identity_actor a order by a.code',"
-				+ "conditionForm: 'tpl:testConditionForm',"
-				+ "exportTpl: 'tpl:testExportTemplate',"
-				+ "ui: 'data',width: 600,height: 400}");
+				+ "sql: 'tpl:accountLoginStat4DaySQL',"
+				+ "condition: 'tpl:testConditionForm',"
+				+ "export: 'tpl:accountLoginStat4DayTemplate',"
+				+ "width: 600,height: 400}");
 		this.config = tpl.getConfigJson();
 
 		// 避免空指针引用
@@ -109,7 +111,7 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 		// 搜索按钮
 		tb.addButton(getDefaultSearchToolbarButton());
-		return tb;
+		return null;
 	}
 
 	@Override
@@ -138,7 +140,7 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 				po.setHeight(this.config.getInt("height"));
 			}
 		} catch (JSONException e) {
-			logger.error(e.getMessage());
+			throw new CoreException(e.getMessage());
 		}
 
 		return po;
@@ -164,7 +166,7 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		try {
 			jColumns = this.getConfig().getJSONArray("columns");
 		} catch (JSONException e) {
-			logger.error(e.getMessage());
+			throw new CoreException(e.getMessage());
 		}
 		JSONObject jcolumn = null;
 		for (int i = 0; i < jColumns.length(); i++) {
@@ -181,14 +183,9 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 							jcolumn.has("width") ? jcolumn.getInt("width") : 0));
 				}
 			} catch (JSONException e) {
-				logger.error(e.getMessage());
-				jcolumn = null;
+				throw new CoreException(e.getMessage());
 			}
 		}
-
-		// columns.add(new IdColumn4MapKey("a.id", "id"));
-		// columns.add(new TextColumn4MapKey("a.name", "name", "姓名", 100));
-		// columns.add(new TextColumn4MapKey("a.pname", "pname", "上级"));
 		return columns;
 	}
 
@@ -209,30 +206,29 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		GridExporter exporter = super.buileGridExporter(title, idLabel);
 
 		// 设置导出模板
-		if (this.getConfig().has("exportTpl")) {
+		if (this.getConfig().has("export")) {
 			try {
-				String exportTpl = this.getConfig().getString("exportTpl");
-				if (exportTpl.startsWith("tpl:")) {
-					Template t = this.templateService.loadByCode(exportTpl
+				String export = this.getConfig().getString("export");
+				if (export.startsWith("tpl:")) {
+					Template t = this.templateService.loadByCode(export
 							.substring(4));
 					if (t != null && t.getType() == Template.TYPE_EXCEL) {
 						exporter.setTemplateFile(t.getInputStream());
 					} else {
-						logger.error("指定的模板不存在或不是Excel模板:exportTpl="
-								+ exportTpl);
+						throw new CoreException("指定的模板不存在或不是Excel模板:export="
+								+ export);
 					}
 				} else {
-					File file = new File(Attach.DATA_REAL_PATH + "/"
-							+ exportTpl);
+					File file = new File(Attach.DATA_REAL_PATH + "/" + export);
 					try {
 						exporter.setTemplateFile(new FileInputStream(file));
 					} catch (FileNotFoundException e) {
-						logger.error("指定的模板文件不存在:file="
+						throw new CoreException("指定的模板文件不存在:file="
 								+ file.getAbsolutePath());
 					}
 				}
 			} catch (JSONException e) {
-				logger.error(e.getMessage());
+				throw new CoreException(e.getMessage());
 			}
 		}
 
@@ -245,9 +241,23 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		try {
-			sqlObject.setSql(this.getConfig().getString("sql"));
+			String sql = this.getConfig().getString("sql");
+			if (sql.startsWith("tpl:")) {
+				Template t = this.templateService.loadByCode(sql.substring(4));
+				if (t != null) {
+					if (t.isPureText()) {
+						sqlObject.setSql(t.getContent());
+					} else {
+						throw new CoreException("指定的sql模板不是纯文本类型:sql=" + sql);
+					}
+				} else {
+					throw new CoreException("指定的sql模板不存在:sql=" + sql);
+				}
+			} else {
+				sqlObject.setSql(sql);
+			}
 		} catch (JSONException e) {
-			logger.error(e.getMessage());
+			throw new CoreException(e.getMessage());
 		}
 
 		// 注入参数
