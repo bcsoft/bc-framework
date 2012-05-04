@@ -11,10 +11,10 @@ import java.util.Map;
  * @author dragon
  * 
  */
-public class KeyValueFormater extends AbstractFormater<String> {
-	private Map<String, String> kvs;
+public class KeyValueFormater extends AbstractFormater<Object> {
+	private Map<String, ? extends Object> kvs;
 
-	public KeyValueFormater setKvs(Map<String, String> kvs) {
+	public KeyValueFormater setKvs(Map<String, ? extends Object> kvs) {
 		this.kvs = kvs;
 		return this;
 	}
@@ -22,17 +22,16 @@ public class KeyValueFormater extends AbstractFormater<String> {
 	public KeyValueFormater() {
 	}
 
-	public KeyValueFormater(Map<String, String> kvs) {
+	public KeyValueFormater(Map<String, ? extends Object> kvs) {
 		this.kvs = kvs;
 	}
 
-	public String format(Object context, Object value) {
+	public Object format(Object context, Object value) {
 		if (value == null)
 			return null;
 		if (kvs == null)
 			return "undefined";
 
-		String f = kvs.get(value.toString());
-		return f == null ? "undefined" : f;
+		return value != null ? kvs.get(value.toString()) : null;
 	}
 }

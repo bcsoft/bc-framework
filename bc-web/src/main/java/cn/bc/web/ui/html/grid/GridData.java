@@ -14,6 +14,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import cn.bc.core.util.StringUtils;
 import cn.bc.web.formater.Formater;
 import cn.bc.web.formater.LinkFormater;
 import cn.bc.web.ui.Component;
@@ -69,19 +70,19 @@ public class GridData extends Div {
 		}
 	}
 
-	public static String formatValue(Object context, Object cellValue,
-			Formater<String> formater) {
-		String value;
+	public static Object formatValue(Object context, Object cellValue,
+			Formater<? extends Object> formater) {
+		Object value;
 		if (formater != null)
 			value = formater.format(context, cellValue);
 		else
-			value = (cellValue != null ? cellValue.toString() : "");
-		return value != null ? value : "";
+			value = cellValue;
+		return value;
 	}
 
-	public static String formatValue2Label(Object context, Object cellValue,
-			Formater<String> formater) {
-		String value;
+	public static Object formatValue2Label(Object context, Object cellValue,
+			Formater<? extends Object> formater) {
+		Object value;
 		if (formater != null) {
 			if (formater instanceof LinkFormater) {
 				value = ((LinkFormater) formater).getLinkText(context,
@@ -90,9 +91,11 @@ public class GridData extends Div {
 				value = formater.format(context, cellValue);
 			}
 		} else {
-			value = (cellValue != null ? cellValue.toString() : "");
+			// value = (cellValue != null ? cellValue.toString() : "");
+			value = cellValue;
 		}
-		return value != null ? value : "";
+		// return value != null ? value : "";
+		return value;
 	}
 
 	public GridData() {
@@ -241,11 +244,9 @@ public class GridData extends Div {
 									rowData,
 									getRowLabelExpression() != null ? getRowLabelExpression()
 											: "id", null));// 行的标题
-			td.setAttr(
-					"data-id",
-					formatValue(rowData,
-							getValue(rowData, column.getValueExpression()),
-							column.getValueFormater()));// 行的id
+			td.setAttr("data-id", StringUtils.null2Empty(formatValue(rowData,
+					getValue(rowData, column.getValueExpression()),
+					column.getValueFormater())));// 行的id
 			td.addChild(new Span().addClazz("ui-icon"));// 勾选标记符
 			td.addChild(new Text(String.valueOf(rc + 1)));// 行号
 
@@ -262,7 +263,7 @@ public class GridData extends Div {
 		rightTable.addStyle("width", totalWidth + "px");
 		rightTable.setAttr("originWidth", totalWidth + "");
 		rc = 0;
-		String cellValue;
+		Object cellValue;
 		JSONObject hiddenValues;
 		for (Object rowData : this.data) {
 			// 行设置
@@ -320,7 +321,7 @@ public class GridData extends Div {
 						column.getValueExpression());
 				cellValue = formatValue(rowData, srcCellValue,
 						column.getValueFormater());
-				td.addChild(new Text(cellValue))
+				td.addChild(new Text(StringUtils.null2Empty(cellValue)))
 						.setAttr(
 								"data-value",
 								srcCellValue != null ? srcCellValue.toString()
@@ -331,7 +332,7 @@ public class GridData extends Div {
 						if (srcCellValue != null)
 							td.setTitle(srcCellValue.toString());
 					} else {
-						td.setTitle(cellValue);
+						td.setTitle(StringUtils.null2Empty(cellValue));
 					}
 				}
 			}
