@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileCopyUtils;
 
+import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.FileEntityImpl;
 
@@ -57,7 +59,7 @@ public class Template extends FileEntityImpl {
 	 * 自定义文本
 	 */
 	public static final int TYPE_CUSTOM = 5;
-	
+
 	private String orderNo;// 排序号
 	private int type;// 类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;// 编码
@@ -66,10 +68,10 @@ public class Template extends FileEntityImpl {
 	private String content;// 模板内容：文本和Html类型显示模板内容
 	private boolean inner;// 内置：是、否，默认否
 	private String desc;// 备注
-	private int status;//状态：0-正常,1-禁用
-	private String version;//版本号
-	private String category;//所属分类
-	
+	private int status;// 状态：0-正常,1-禁用
+	private String version;// 版本号
+	private String category;// 所属分类
+
 	public String getCategory() {
 		return category;
 	}
@@ -78,7 +80,7 @@ public class Template extends FileEntityImpl {
 		this.category = category;
 	}
 
-	@Column(name="STATUS_")
+	@Column(name = "STATUS_")
 	public int getStatus() {
 		return status;
 	}
@@ -87,7 +89,7 @@ public class Template extends FileEntityImpl {
 		this.status = status;
 	}
 
-	@Column(name="VERSION_")
+	@Column(name = "VERSION_")
 	public String getVersion() {
 		return version;
 	}
@@ -130,36 +132,49 @@ public class Template extends FileEntityImpl {
 		this.path = path;
 	}
 
+	public String getContent() {
+		return getContent(null);
+	}
+
 	/**
 	 * 获取模板的文本字符串
 	 * <p>
 	 * 如果附件不是纯文本类型返回null,如果是自定义文本内容直接返回配置的内容,如果是纯文本附件返回附件的内容
 	 * </p>
 	 * 
+	 * @param args
+	 *            格式化参数，为空代表不执行格式化
 	 * @return
 	 */
-	public String getContent() {
-		// 自定义文本
-		if (this.getType() == TYPE_CUSTOM)
-			return this.content;
-
+	public String getContent(Map<String, Object> args) {
 		// 不处理非纯文本类型
 		if (!this.isPureText())
 			return null;
 
-		// 读取文件流的字符串内容并返回
-		String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
-				+ this.getPath();
-		File file = new File(p);
-		try {
-			return FileCopyUtils.copyToString(new FileReader(file));
-		} catch (FileNotFoundException e) {
-			logger.warn("getContent 附件文件不存在:file=" + p);
-			return null;
-		} catch (IOException e) {
-			logger.warn("getContent 读取模板文件错误:file=" + p + ",error=" + e.getMessage());
-			return null;
+		String txt = null;
+		// 自定义文本
+		if (this.getType() == TYPE_CUSTOM) {
+			txt = this.content;
+		} else {
+			// 读取文件流的字符串内容
+			String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
+					+ this.getPath();
+			File file = new File(p);
+			try {
+				txt = FileCopyUtils.copyToString(new FileReader(file));
+			} catch (FileNotFoundException e) {
+				logger.warn("getContent 附件文件不存在:file=" + p);
+			} catch (IOException e) {
+				logger.warn("getContent 读取模板文件错误:file=" + p + ",error="
+						+ e.getMessage());
+			}
 		}
+
+		if (txt == null || args == null || args.isEmpty())
+			return txt;
+
+		// 格式化处理
+		return TemplateUtils.format(txt, args);
 	}
 
 	/**
