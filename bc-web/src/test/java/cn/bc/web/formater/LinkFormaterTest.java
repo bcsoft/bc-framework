@@ -17,7 +17,7 @@ public class LinkFormaterTest {
 			}
 		};
 
-		String r = lf.format(null, "张三");
+		Object r = lf.format(null, "张三");
 		Assert.assertEquals(
 				"<a href=\"/bs/carman/edit?id=111\" class=\"bc-link\" data-mtype=\"user\">张三</a>",
 				r);
@@ -44,7 +44,7 @@ public class LinkFormaterTest {
 			}
 		};
 
-		String r = lf.format(null, "张三");
+		Object r = lf.format(null, "张三");
 		Assert.assertEquals(
 				"<a href=\"/bs/carman/edit?id=111\" class=\"bc-link\" data-mtype=\"user\" data-title=\"用户 - 张三\" data-mid=\"user111\">张三</a>",
 				r);

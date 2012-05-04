@@ -16,7 +16,7 @@ import cn.bc.core.util.StringUtils;
  * @author dragon
  * 
  */
-public abstract class LinkFormater extends AbstractFormater<String> {
+public abstract class LinkFormater extends AbstractFormater<Object> {
 	protected String urlPattern;
 	protected String moduleKey;
 
@@ -34,7 +34,7 @@ public abstract class LinkFormater extends AbstractFormater<String> {
 		this.moduleKey = moduleKey;
 	}
 
-	public String format(Object context, Object value) {
+	public Object format(Object context, Object value) {
 		// 判断是否应该格式化链接
 		if (!this.isLinkable(context, value)) {
 			return value != null ? value.toString() : "";

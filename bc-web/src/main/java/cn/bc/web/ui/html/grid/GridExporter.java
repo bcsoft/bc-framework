@@ -153,15 +153,15 @@ public class GridExporter implements Exporter {
 		map.put("columnNames", columnNames);
 
 		// 表格数据
-		Collection<Collection<String>> rows = new ArrayList<Collection<String>>();
-		Collection<String> row;
-		String value;
+		Collection<Collection<Object>> rows = new ArrayList<Collection<Object>>();
+		Collection<Object> row;
+		Object value;
 		int i = 1;
 		for (Object rowData : data) {
-			row = new ArrayList<String>();
+			row = new ArrayList<Object>();
 			for (Column column : columns) {
 				if (column instanceof IdColumn) {
-					value = i + "";
+					value = i;
 					row.add(value);
 				} else {
 					value = GridData.formatValue2Label(
@@ -169,7 +169,9 @@ public class GridExporter implements Exporter {
 							GridData.getValue(rowData,
 									column.getValueExpression(), parser),
 							column.getValueFormater());
-					row.add(value == null || value.length() == 0 ? "" : value);
+					//row.add(value == null || value.length() == 0 ? "" : value);
+					//System.out.println(value.getClass());
+					row.add(value);
 				}
 			}
 			rows.add(row);

@@ -13,7 +13,7 @@ import java.util.Date;
  * @author dragon
  * 
  */
-public class CalendarFormater extends AbstractFormater<String> {
+public class CalendarFormater extends AbstractFormater<Object> {
 	protected SimpleDateFormat format;
 
 	public CalendarFormater() {
