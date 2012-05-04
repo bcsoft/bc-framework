@@ -156,13 +156,9 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 			//保存参数的集合	
 			json.put("value", this.getParamStr(TemplateUtils.findMarkers(content)));
 		}else if(type.equals(Template.TYPE_EXCEL)&&extension.equals("xls")){
-			Template excel=new Template();
-			excel.setPath(this.path);
-			json.put("value",this.getParamStr(XlsUtils.findMarkers(excel.getInputStream())));
+			json.put("value",this.getParamStr(XlsUtils.findMarkers(this.templateService.load(tid).getInputStream())));
 		}else if(type.equals(Template.TYPE_WORD)&&extension.equals("docx")){
-			Template word=new Template();
-			word.setPath(this.path);
-			json.put("value",this.getParamStr(DocxUtils.findMarkers(word.getInputStream())));
+			json.put("value",this.getParamStr(DocxUtils.findMarkers(this.templateService.load(tid).getInputStream())));
 		}else if(type.equals(Template.TYPE_TEXT)){
 			Template txt=new Template();
 			txt.setPath(this.path);
@@ -254,16 +250,21 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				docx.write(out);
 				inputStream=new ByteArrayInputStream(out.toByteArray());
+				out.close();
 			}else if(template.getType()==Template.TYPE_EXCEL&&extension.equals("xls")){
 				HSSFWorkbook xls=XlsUtils.format(template.getInputStream(), markerValues);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				xls.write(out);
 				inputStream=new ByteArrayInputStream(out.toByteArray());
+				out.close();
 			}else if(template.isPureText()){
 				template.setContent(FreeMarkerUtils.format(template.getContent(), markerValues));
+				template.setType(Template.TYPE_CUSTOM);
 				inputStream=template.getInputStream();
+				if(extension==null)
+					extension="txt";
 			}else{
-				inputStream =template.getInputStream();
+				inputStream=template.getInputStream();
 			}
 			
 			// 调用jodconvert将附件转换为pdf文档后再下载
