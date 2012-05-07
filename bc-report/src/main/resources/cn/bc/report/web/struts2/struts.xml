@@ -17,4 +17,21 @@
 			</result>
 		</action>
 	</package>
+	<package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">
+		<action name="create" class="reportTemplateAction" method="create">
+			<result name="form">/bc/reportTemplate/form.jsp</result>
+		</action>
+		<action name="edit" class="reportTemplateAction" method="edit">
+			<result name="form">/bc/reportTemplate/form.jsp</result>
+		</action>
+		<action name="open" class="reportTemplateAction" method="open">
+			<result name="formr">/bc/reportTemplate/form.jsp</result>
+		</action>
+		<action name="save" class="reportTemplateAction" method="save"/>
+		<action name="delete" class="reportTemplateAction" method="delete"/>
+		<action name="list" class="reportTemplateAction" method="list"/>
+		<action name="paging" class="reportTemplateAction" method="paging"/>
+		<action name="data" class="reportTemplateAction" method="data"/>
+		<action name="isUniqueCode" class="reportTemplateAction" method="isUniqueCode"/>
+	</package>
 </struts>

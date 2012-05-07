@@ -27,4 +27,10 @@ public class ReportTemplateServiceImpl extends
 	public ReportTemplate loadByCode(String code) {
 		return this.reportTemplateDao.loadByCode(code);
 	}
+
+	public boolean isUniqueCode(Long currentId, String code) {
+		return this.reportTemplateDao.isUniqueCode(currentId, code);
+	}
+
+
 }
