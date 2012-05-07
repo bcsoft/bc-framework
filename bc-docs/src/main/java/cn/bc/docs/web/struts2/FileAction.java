@@ -20,15 +20,10 @@ import org.springframework.util.StringUtils;
 
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.web.util.WebUtils;
 
-import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
-import com.artofsolving.jodconverter.DocumentConverter;
-import com.artofsolving.jodconverter.DocumentFormatRegistry;
-import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -118,33 +113,15 @@ public class FileAction extends ActionSupport {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
 					BUFFER);
 
-			// connect to an OpenOffice.org instance running on port 8100
-			OpenOfficeConnection connection = new SocketOpenOfficeConnection(
-					getText("jodconverter.soffice.host"),
-					Integer.parseInt(getText("jodconverter.soffice.port")));
-			connection.connect();
-			if (logger.isDebugEnabled()) {
-				logger.debug("connect:" + DateUtils.getWasteTime(startTime));
-			}
-
-			DocumentFormatRegistry formaters = new DefaultDocumentFormatRegistry();
-
-			// convert
-			DocumentConverter converter = new OpenOfficeDocumentConverter(
-					connection);
 			if (this.from == null || this.from.length() == 0)
 				this.from = extension;
 			if (this.to == null || this.to.length() == 0)
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-			converter.convert(inputStream,
-					formaters.getFormatByFileExtension(this.from), outputStream,
-					formaters.getFormatByFileExtension(this.to));
+			// convert
+			OfficeUtils.convert(inputStream, this.from, outputStream, this.to);
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
 			}
-
-			// close the connection
-			connection.disconnect();
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
 			byte[] bs = outputStream.toByteArray();

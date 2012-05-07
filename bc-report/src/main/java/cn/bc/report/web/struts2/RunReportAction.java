@@ -84,13 +84,11 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		this.tpl.setName("每日登录帐号数统计");
 
 		// TODO 获取详细配置信息
-		this.tpl.setConfig("{type: 'sql',"
-				+ "columns: ["
+		this.tpl.setConfig("{type: 'sql'," + "columns: ["
 				+ "    {type:'id',id: 'id', width: 40, el:'id'},"
 				+ "    {id: 'logday', label: '登录日', width: 100, el:'logday'},"
 				+ "    {id: 'count', label: '登录帐号数', width: 100, el:'count'},"
-				+ "    {id: 'names', label: '登录账号', el:'names'}"
-				+ "],"
+				+ "    {id: 'names', label: '登录账号', el:'names'}" + "],"
 				+ "sql: 'tpl:accountLoginStat4DaySQL',"
 				+ "condition: 'tpl:testConditionForm',"
 				+ "export: 'tpl:accountLoginStat4DayTemplate',"
@@ -187,6 +185,12 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 			}
 		}
 		return columns;
+	}
+
+	@Override
+	public String paging() throws Exception {
+		this.initConfig();
+		return super.paging();
 	}
 
 	@Override
@@ -294,6 +298,11 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String getDefaultExportFileName() {
 		return this.tpl.getName();
+	}
+
+	@Override
+	protected boolean useAdvanceSearch() {
+		return this.getConfig().has("condition");
 	}
 
 	@Override
