@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,8 +20,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
+import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.impl.MixCondition;
+import cn.bc.core.util.TemplateUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.Attach;
@@ -34,11 +36,16 @@ import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridExporter;
+import cn.bc.web.ui.html.grid.GridFooter;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
+import cn.bc.web.ui.html.grid.PageSizeGroupButton;
+import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 报表执行Action
@@ -48,9 +55,9 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class RunReportAction extends ViewAction<Map<String, Object>> {
+public class ReportAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(RunReportAction.class);
+	// private static Log logger = LogFactory.getLog(ReportAction.class);
 	public String code;// 报表模板的编码
 	private ReportTemplateService reportTemplateService;// 报表模板服务
 	private TemplateService templateService;
@@ -78,21 +85,22 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 	private void initConfig() {
 		// 初始化配置信息
-		// TODO 加载模板配置
-		// this.tpl = this.reportTemplateService.loadByCode(this.code);
-		this.tpl = new ReportTemplate();
-		this.tpl.setName("每日登录帐号数统计");
-
-		// TODO 获取详细配置信息
-		this.tpl.setConfig("{type: 'sql'," + "columns: ["
-				+ "    {type:'id',id: 'id', width: 40, el:'id'},"
-				+ "    {id: 'logday', label: '登录日', width: 100, el:'logday'},"
-				+ "    {id: 'count', label: '登录帐号数', width: 100, el:'count'},"
-				+ "    {id: 'names', label: '登录账号', el:'names'}" + "],"
-				+ "sql: 'tpl:accountLoginStat4DaySQL',"
-				+ "condition: 'tpl:testConditionForm',"
-				+ "export: 'tpl:accountLoginStat4DayTemplate',"
-				+ "width: 600,height: 400}");
+		this.tpl = this.reportTemplateService.loadByCode(this.code);
+		if (this.tpl == null) {
+			throw new CoreException("指定的模板不存在:code=" + this.code);
+		}
+		// this.tpl = new ReportTemplate();
+		// this.tpl.setName("每日登录帐号数统计");
+		//
+		// this.tpl.setConfig("{type: 'sql'," + "columns: ["
+		// + "    {type:'id',id: 'id', width: 40, el:'id'},"
+		// + "    {id: 'logday', label: '登录日', width: 100, el:'logday'},"
+		// + "    {id: 'count', label: '登录帐号数', width: 100, el:'count'},"
+		// + "    {id: 'names', label: '登录账号', el:'names'}" + "],"
+		// + "sql: 'tpl:accountLoginStat4DaySQL',"
+		// + "condition: 'tpl:testConditionForm',"
+		// + "export: 'tpl:accountLoginStat4DayTemplate',"
+		// + "width: 600,height: 400}");
 		this.config = tpl.getConfigJson();
 
 		// 避免空指针引用
@@ -102,14 +110,24 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
-		Toolbar tb = new Toolbar();
+		if (this.useAdvanceSearch()) {
+			Toolbar tb = new Toolbar();
 
-		// TODO 添加额外的工具条按钮
-		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+			// TODO 添加额外的工具条按钮
+			tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 
-		// 搜索按钮
-		tb.addButton(getDefaultSearchToolbarButton());
-		return null;
+			// 搜索按钮
+			tb.addButton(getDefaultSearchToolbarButton());
+			return tb;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	protected String getAdvanceSearchConditionsActionPath() {
+		return this.getHtmlPageNamespace() + "/report/conditions?code="
+				+ this.code;
 	}
 
 	@Override
@@ -119,7 +137,7 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getViewActionName() {
-		return "runReport";
+		return "report";
 	}
 
 	@Override
@@ -187,6 +205,16 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		return columns;
 	}
 
+	/**
+	 * 执行报表
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String run() throws Exception {
+		return this.list();
+	}
+
 	@Override
 	public String paging() throws Exception {
 		this.initConfig();
@@ -200,9 +228,52 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
+	protected List<Map<String, Object>> findList() {
+		return this.getQuery().list();
+	}
+
+	@Override
+	protected Page<Map<String, Object>> findPage() {
+		return this.getQuery().page(this.getPage().getPageNo(),
+				this.getPage().getPageSize());
+	}
+
+	@Override
 	public String export() throws Exception {
 		this.initConfig();
 		return super.export();
+	}
+
+	@Override
+	protected GridFooter getGridFooter(Grid grid) {
+		GridFooter footer = new GridFooter();
+
+		// 刷新按钮
+		footer.addButton(GridFooter
+				.getDefaultRefreshButton(getText("label.refresh")));
+
+		// 分页按钮
+		if (this.getPage() != null) {
+			footer.addButton(new SeekGroupButton()
+					.setPageNo(this.getPage().getPageNo())
+					.setPageCount(this.getPage().getPageCount())
+					.setTotalCount(this.getPage().getTotalCount()));
+			footer.addButton(new PageSizeGroupButton().setActiveValue(25)
+					.setValues(new int[] { 25, 50, 100 })
+					.setTitle(getText("label.pageSize")));
+		}
+
+		// 添加自定义的按钮
+		this.extendGridFooterButton(footer);
+
+		return footer;
+	}
+
+	@Override
+	protected void extendGridExtrasData(Json json) {
+		super.extendGridExtrasData(json);
+		if (this.code != null)
+			json.put("code", this.code);
 	}
 
 	@Override
@@ -219,15 +290,16 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 					if (t != null && t.getType() == Template.TYPE_EXCEL) {
 						exporter.setTemplateFile(t.getInputStream());
 					} else {
-						throw new CoreException("指定的模板不存在或不是Excel模板:export="
-								+ export);
+						throw new CoreException(
+								"template is not exists or is not excel type:export="
+										+ export);
 					}
 				} else {
 					File file = new File(Attach.DATA_REAL_PATH + "/" + export);
 					try {
 						exporter.setTemplateFile(new FileInputStream(file));
 					} catch (FileNotFoundException e) {
-						throw new CoreException("指定的模板文件不存在:file="
+						throw new CoreException("template is not exists:file="
 								+ file.getAbsolutePath());
 					}
 				}
@@ -245,27 +317,34 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		try {
+			// 解析sql
 			String sql = this.getConfig().getString("sql");
+			Condition c = this.getGridCondition();
+			Map<String, Object> params = buildParams(c);
 			if (sql.startsWith("tpl:")) {
 				Template t = this.templateService.loadByCode(sql.substring(4));
 				if (t != null) {
 					if (t.isPureText()) {
-						sqlObject.setSql(t.getContent());
+						sqlObject.setSql(t.getContent(params));
 					} else {
-						throw new CoreException("指定的sql模板不是纯文本类型:sql=" + sql);
+						throw new CoreException(
+								"sql template is not pure text:sql=" + sql);
 					}
 				} else {
-					throw new CoreException("指定的sql模板不存在:sql=" + sql);
+					throw new CoreException("sql template is not exists:sql="
+							+ sql);
 				}
 			} else {
-				sqlObject.setSql(sql);
+				sqlObject.setSql(TemplateUtils.format(sql, params));
+			}
+
+			// 注入参数
+			if (c != null) {
+				sqlObject.setArgs(c.getValues());
 			}
 		} catch (JSONException e) {
 			throw new CoreException(e.getMessage());
 		}
-
-		// 注入参数
-		sqlObject.setArgs(null);
 
 		// 获取所有列的值表达式
 		final List<String> mapKeys = new ArrayList<String>();
@@ -305,9 +384,60 @@ public class RunReportAction extends ViewAction<Map<String, Object>> {
 		return this.getConfig().has("condition");
 	}
 
+	public String resultPath;
+
+	@Override
+	public String conditions() throws Exception {
+		if (!this.getConfig().has("condition")) {
+			throw new CoreException("unsupport method");
+		}
+
+		String condition = this.getConfig().getString("condition");
+		if (condition.startsWith("tpl:")) {// 使用模板方法
+			Template t = this.templateService
+					.loadByCode(condition.substring(4));
+			if (t.isPureText()) {
+				this.json = t.getContent(buildParams(this.getGridCondition()));
+				this.resultPath = "/cn/bc/web/struts2/json.ftl";
+				return "freemarker";
+			} else {
+				throw new CoreException("指定的模板不是纯文本模板:condition=" + condition);
+			}
+		} else if (condition.startsWith("action:")) {// 使用自定义的action条件方法
+			this.resultPath = condition.substring(7);
+			return "redirectAction";
+		} else if (condition.startsWith("jsp:")) {// 使用自定义的jsp页面
+			this.resultPath = condition.substring(7);
+			return SUCCESS;
+		} else {// 纯文本
+			this.json = condition;
+			this.resultPath = "/cn/bc/web/struts2/json.ftl";
+			return "freemarker";
+		}
+	}
+
+	private Map<String, Object> buildParams(Condition c) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (c != null) {
+			if (c instanceof MixCondition) {
+				if (!((MixCondition) c).isEmpty()) {
+					params.put("condition", c.getExpression());
+				}
+			} else {
+				params.put("condition", c.getExpression());
+			}
+		}
+		return params;
+	}
+
 	@Override
 	protected String[] getGridSearchFields() {
-		// 不处理
+		if (this.getConfig().has("search")) {
+			try {
+				return this.getConfig().getString("search").split(",");
+			} catch (JSONException e) {
+			}
+		}
 		return null;
 	}
 

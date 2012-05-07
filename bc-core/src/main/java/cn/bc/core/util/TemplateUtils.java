@@ -65,7 +65,7 @@ public class TemplateUtils {
 	public static String format(String tpl, Map<String, Object> args) {
 		if (tpl == null || tpl.length() == 0)
 			return "";
-		if (null == args || args.isEmpty())
+		if (null == args)
 			return tpl;
 
 		TemplateRenderer tplRender = new TemplateRenderer(tpl);

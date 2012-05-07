@@ -7,9 +7,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -161,7 +161,8 @@ public class Template extends FileEntityImpl {
 					+ this.getPath();
 			File file = new File(p);
 			try {
-				txt = FileCopyUtils.copyToString(new FileReader(file));
+				txt = FileCopyUtils.copyToString(new InputStreamReader(
+						new FileInputStream(file), "UTF-8"));
 			} catch (FileNotFoundException e) {
 				logger.warn("getContent 附件文件不存在:file=" + p);
 			} catch (IOException e) {
@@ -170,7 +171,7 @@ public class Template extends FileEntityImpl {
 			}
 		}
 
-		if (txt == null || args == null || args.isEmpty())
+		if (txt == null || args == null)
 			return txt;
 
 		// 格式化处理

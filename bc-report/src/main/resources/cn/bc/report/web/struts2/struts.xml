@@ -17,6 +17,27 @@
 			</result>
 		</action>
 	</package>
+
+	<!-- 报表执行器 -->
+	<package name="bc-report" extends="bc-default" namespace="/bc/report">
+		<!-- 报表条件 -->
+		<action name="conditions" class="reportAction" method="conditions">
+			<result name="success">${resultPath}</result>
+			<result type="freemarker" name="freemarker">${resultPath}</result>
+			<result type="redirectAction" name="redirectAction">${resultPath}</result>
+		</action>
+		<!-- 执行报表 -->
+		<action name="run" class="reportAction" method="run" />
+		<!-- 非分页视图 -->
+		<action name="list" class="reportAction" method="list" />
+		<!-- 分页视图 -->
+		<action name="paging" class="reportAction" method="paging" />
+		<!-- 分页数据 -->
+		<action name="data" class="reportAction" method="data" />
+		<!-- 导出 视图数据 -->
+		<action name="export" class="reportAction" method="export" />
+	</package>
+
 	<package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">
 		<action name="create" class="reportTemplateAction" method="create">
 			<result name="form">/bc/reportTemplate/form.jsp</result>
@@ -27,11 +48,12 @@
 		<action name="open" class="reportTemplateAction" method="open">
 			<result name="formr">/bc/reportTemplate/form.jsp</result>
 		</action>
-		<action name="save" class="reportTemplateAction" method="save"/>
-		<action name="delete" class="reportTemplateAction" method="delete"/>
-		<action name="list" class="reportTemplateAction" method="list"/>
-		<action name="paging" class="reportTemplateAction" method="paging"/>
-		<action name="data" class="reportTemplateAction" method="data"/>
-		<action name="isUniqueCode" class="reportTemplateAction" method="isUniqueCode"/>
+		<action name="save" class="reportTemplateAction" method="save" />
+		<action name="delete" class="reportTemplateAction" method="delete" />
+		<action name="list" class="reportTemplateAction" method="list" />
+		<action name="paging" class="reportTemplateAction" method="paging" />
+		<action name="data" class="reportTemplateAction" method="data" />
+		<action name="isUniqueCode" class="reportTemplateAction"
+			method="isUniqueCode" />
 	</package>
 </struts>
