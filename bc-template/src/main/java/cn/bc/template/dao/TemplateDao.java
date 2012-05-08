@@ -11,10 +11,11 @@ import cn.bc.template.domain.Template;
  */
 public interface TemplateDao extends CrudDao<Template> {
 	/**
-	 * 根据编码获取状态为正常的模板对象
+	 * 根据编码(和版本号)获取模板对象
 	 * 
 	 * @param code
-	 * @return 指定编码的模板对象
+	 *            如果含字符":"，则进行分拆，前面部分为编码，后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本
+	 * @return 指定编码(和版本号)的模板对象
 	 */
 	public Template loadByCode(String code);
 
@@ -29,7 +30,7 @@ public interface TemplateDao extends CrudDao<Template> {
 	 *            当前模板要使用的版本号
 	 * @return
 	 */
-	public boolean isUniqueCodeAndVersion(Long currentId, String code,String version);
+	public boolean isUniqueCodeAndVersion(Long currentId, String code,
+			String version);
 
-	
 }
