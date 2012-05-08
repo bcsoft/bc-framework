@@ -41,7 +41,66 @@ public class ReportTemplate extends FileEntityImpl {
 	private String name;// 名称
 	private String code;// 编码，全局唯一
 	private String desc;// 备注
-	private String config;// 详细配置
+	/**
+	 * 详细配置
+	 * <p>
+	 * 必须使用标准的Json格式进行配置，格式为：{columns:[...],sql:"...",condition:"...",search:
+	 * "...",export:"...",width:100,height:100}，各个参数详细说明如下：
+	 * </p>
+	 * <ul>
+	 * <li>columns -
+	 * 列配置，数组类型，数组元素为标准json格式，格式为：{type:"id",id:"...",label:"...",width
+	 * :100,el:"..."}，各参数说明如下;
+	 * <ul>
+	 * <li>
+	 * type - [可选]列类型，如果为id列，务必配置为第一个元素，且指定type:"id"，内部将会使用IdColumn4MapKey类实现；
+	 * 没有指定type，则内部默认使用TextColumn4MapKey类来实现</li>
+	 * <li>
+	 * id - 列标识，对应sql语句中的选择项，如"select t.name from XX t"中的"t.name"</li>
+	 * <li>
+	 * label - 列头显示的标题文字</li>
+	 * <li>
+	 * width - 列的宽度</li>
+	 * <li>
+	 * el - 获取列值的spring表达式简写，由于列内部默认使用了TextColumn4MapKey的实现类，故一般对应Map中的键值</li>
+	 * </ul>
+	 * <li>
+	 * sql -
+	 * 获取报表数据的sql语句，可以直接撰写标准的sql语句，也可以配置为从模板库中获取（格式为"tpl:[模板的编码][:模板的版本号]"，
+	 * 没有版本号时使用当前版本）； 当使用到搜索功能时，可以在模板中使用特殊的${condition}参数进行参数控制，如
+	 * "select t.name from XX t where id=1 $if{condition != null}and ${condition}$end"
+	 * ，当condition的值为"t.type>3"时，最终的sql为
+	 * "select t.name from XX t where id=1 and t.type>3"
+	 * ；当condition为空时，最终的sql为"select t.name from XX t where id=1"</li>
+	 * </li>
+	 * <li>
+	 * condition - 报表高级搜索条件的配置，支持4种配置模式：
+	 * <ul>
+	 * <li>直接写html代码</li>
+	 * <li>从模板库中获取html代码，格式为"tpl:[模板的编码][:模板的版本号]"，没有版本号时使用当前版本</li>
+	 * <li>使用预定义的jsp页面，格式为"jsp:[文件路径]"，如"jsp:/path/to/conditions.jsp"，路径必须带前缀"/"
+	 * </li>
+	 * <li>使用预定义的action请求，格式为"action:[action路径]"，如"action:path/to/yourAction"，
+	 * 路径不能带前缀"/"</li>
+	 * </ul>
+	 * </li>
+	 * <li>
+	 * export - 导出报表数据的Excel模板配置，支持2种配置模式：
+	 * <ul>
+	 * <li>从模板库中获取Excel模板，格式为"tpl:[模板的编码][:模板的版本号]"，没有版本号时使用当前版本</li>
+	 * <li>直接指定Excel文件的路径"，如"path/to/excel.xls
+	 * "，路径是相对于Attach.DATA_REAL_PATH下的相对路径，不能带前缀"/"</li>
+	 * </ul>
+	 * </li>
+	 * <li>
+	 * search - 模糊搜索条件对应的sql查询项，多个项间用逗号连接，如"t.name,t.code"</li>
+	 * <li>
+	 * width - 报表视图的宽度</li>
+	 * <li>
+	 * height - 报表视图的高度</li>
+	 * </ul>
+	 */
+	private String config;
 	private Set<Actor> users;// 使用人，为空代表所有人均可使用
 
 	@ManyToMany(fetch = FetchType.EAGER)

@@ -346,7 +346,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			throw new CoreException(e.getMessage());
 		}
 
-		// 获取所有列的值表达式
+		// 获取所有列的值表达式，作为数据映射的键值
 		final List<String> mapKeys = new ArrayList<String>();
 		for (Column column : this.getGridColumns()) {
 			if (column instanceof TextColumn4MapKey)

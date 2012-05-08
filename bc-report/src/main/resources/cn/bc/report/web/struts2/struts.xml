@@ -24,7 +24,10 @@
 		<action name="conditions" class="reportAction" method="conditions">
 			<result name="success">${resultPath}</result>
 			<result type="freemarker" name="freemarker">${resultPath}</result>
-			<result type="redirectAction" name="redirectAction">${resultPath}</result>
+			<result type="redirectAction" name="redirectAction">  
+                <param name="actionName">${resultPath}</param>  
+                <param name="namespace">/</param>  
+            </result>  
 		</action>
 		<!-- 执行报表 -->
 		<action name="run" class="reportAction" method="run" />
