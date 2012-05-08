@@ -191,11 +191,13 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				if (jcolumn.has("type")
 						&& "id".equals(jcolumn.getString("type"))) {// IdColumn4MapKey列
 					columns.add(new IdColumn4MapKey(jcolumn.getString("id"),
-							jcolumn.getString("el")));
+							jcolumn.has("el") ? jcolumn.getString("el")
+									: jcolumn.getString("id")));
 				} else {// 默认使用TextColumn4MapKey列
 					columns.add(new TextColumn4MapKey(jcolumn.getString("id"),
-							jcolumn.getString("el"),
-							jcolumn.getString("label"),
+							jcolumn.has("el") ? jcolumn.getString("el")
+									: jcolumn.getString("id"), jcolumn
+									.getString("label"),
 							jcolumn.has("width") ? jcolumn.getInt("width") : 0));
 				}
 			} catch (JSONException e) {
@@ -212,7 +214,12 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	 * @throws Exception
 	 */
 	public String run() throws Exception {
-		return this.list();
+		if (this.getConfig().has("paging")
+				&& this.getConfig().getBoolean("paging")) {
+			return this.paging();
+		} else {
+			return this.list();
+		}
 	}
 
 	@Override
@@ -325,7 +332,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				Template t = this.templateService.loadByCode(sql.substring(4));
 				if (t != null) {
 					if (t.isPureText()) {
-						sqlObject.setSql(t.getContent(params));
+						sqlObject.setSql(t.getContent(params).trim());
 					} else {
 						throw new CoreException(
 								"sql template is not pure text:sql=" + sql);
@@ -335,7 +342,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 							+ sql);
 				}
 			} else {
-				sqlObject.setSql(TemplateUtils.format(sql, params));
+				sqlObject.setSql(TemplateUtils.format(sql, params).trim());
 			}
 
 			// 注入参数
