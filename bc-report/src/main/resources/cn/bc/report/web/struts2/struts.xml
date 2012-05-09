@@ -40,16 +40,16 @@
 		<!-- 导出 视图数据 -->
 		<action name="export" class="reportAction" method="export" />
 	</package>
-
+	<!-- 报表模板 -->
 	<package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">
 		<action name="create" class="reportTemplateAction" method="create">
-			<result name="form">/bc/reportTemplate/form.jsp</result>
+			<result name="form">/bc/report/template/form.jsp</result>
 		</action>
 		<action name="edit" class="reportTemplateAction" method="edit">
-			<result name="form">/bc/reportTemplate/form.jsp</result>
+			<result name="form">/bc/report/template/form.jsp</result>
 		</action>
 		<action name="open" class="reportTemplateAction" method="open">
-			<result name="formr">/bc/reportTemplate/form.jsp</result>
+			<result name="formr">/bc/report/template/form.jsp</result>
 		</action>
 		<action name="save" class="reportTemplateAction" method="save" />
 		<action name="delete" class="reportTemplateAction" method="delete" />
@@ -58,5 +58,50 @@
 		<action name="data" class="reportTemplateAction" method="data" />
 		<action name="isUniqueCode" class="reportTemplateAction"
 			method="isUniqueCode" />
+	</package>
+	
+	<!-- 表报模板选择 -->
+	<package name="selectReportTemplate" extends="bc-default" namespace="/bc/selectReportTemplate">
+		<action name="save" class="selectReportTemplateAction" method="save"/>
+		<action name="delete" class="selectReportTemplateAction" method="delete"/>
+		<action name="list" class="selectReportTemplateAction" method="list"/>
+		<action name="paging" class="selectReportTemplateAction" method="paging"/>
+		<action name="data" class="selectReportTemplateAction" method="data"/>
+	</package>
+	
+	<!-- 报表任务 -->
+	<package name="reportTask" extends="bc-default" namespace="/bc/reportTask">
+		<action name="create" class="reportTaskeAction" method="create">
+			<result name="form">/bc/report/task/form.jsp</result>
+		</action>
+		<action name="edit" class="reportTemplateAction" method="edit">
+			<result name="form">/bc/report/task/form.jsp</result>
+		</action>
+		<action name="open" class="reportTemplateAction" method="open">
+			<result name="formr">/bc/report/task/form.jsp</result>
+		</action>
+		<action name="save" class="reportTaskAction" method="save" />
+		<action name="delete" class="reportTaskAction" method="delete" />
+		<action name="list" class="reportTaskAction" method="list" />
+		<action name="paging" class="reportTaskAction" method="paging" />
+		<action name="data" class="reportTaskAction" method="data" />
+	</package>
+	
+	<!-- 报表历史 -->
+	<package name="reportHistroy" extends="bc-default" namespace="/bc/reportHistroy">
+		<action name="create" class="reportHistroyAction" method="create">
+			<result name="form">/bc/report/histroy/form.jsp</result>
+		</action>
+		<action name="edit" class="reportHistroyAction" method="edit">
+			<result name="form">/bc/report/histroy/form.jsp</result>
+		</action>
+		<action name="open" class="reportHistroyAction" method="open">
+			<result name="formr">/bc/report/histroy/form.jsp</result>
+		</action>
+		<action name="save" class="reportHistroyAction" method="save" />
+		<action name="delete" class="reportHistroyAction" method="delete" />
+		<action name="list" class="reportHistroyAction" method="list" />
+		<action name="paging" class="reportHistroyAction" method="paging" />
+		<action name="data" class="reportHistroyAction" method="data" />
 	</package>
 </struts>
