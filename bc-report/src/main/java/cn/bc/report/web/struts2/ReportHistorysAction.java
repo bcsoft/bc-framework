@@ -6,17 +6,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.option.domain.OptionItem;
+import cn.bc.report.service.ReportHistoryService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -26,6 +32,7 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 历史报表视图Action
@@ -39,6 +46,7 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String success = String.valueOf(true);
+	public Long taskId;
 
 	@Override
 	public boolean isReadonly() {
@@ -60,7 +68,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname");
+		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.task_id");
 		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
 		sqlObject.setSql(sql.toString());
@@ -151,7 +159,6 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					.setIcon("ui-icon-arrowthickstop-1-s")
 					.setText(getText("label.download"))
 					.setClick("bc.reportHistoryList.download"));
-
 			// 在线预览
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
 					.setText(getText("label.preview.inline"))
@@ -171,9 +178,13 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
-		if(success != null && success.length() > 0){
+		if(success != null && success.length() > 0&&taskId!=null){
+			statusCondition = new AndCondition(new EqualsCondition("a.success",Boolean.valueOf(success)),
+					new EqualsCondition("a.task_id",taskId));
+		}else if(success != null && success.length() > 0){
 			statusCondition = new EqualsCondition("a.success",Boolean.valueOf(success));
-						
+		}else if(taskId!=null){
+			statusCondition =new EqualsCondition("a.task_id",taskId);
 		}
 		return statusCondition;
 	}
@@ -183,17 +194,46 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	protected String getHtmlPageJs() {
 		return this.getHtmlPageNamespace() + "/report/history/list.js";
 	}
+	
+	@Override
+	protected Json getGridExtrasData() {
+		Json json = new Json();
+		if(success != null && success.length() > 0&&taskId!=null){
+			json.put("success", success);
+			json.put("taskId", taskId);
+		}else if(success != null && success.length() > 0){
+			json.put("success", success);
+		}else if(taskId!=null){
+			json.put("taskId", taskId);		
+		}
+		if(json.isEmpty()) return null;
+		return json;
+	}
 
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
+	public ReportHistoryService reportHistoryService;
+	
+	@Autowired
+	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
+		this.reportHistoryService=reportHistoryService;
+	}
+	
+	public JSONArray categorys;// 所属分类下拉列表信息
+	
+	@Override
+	protected void initConditionsFrom() throws Exception {
+		this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
+	}
 
 	@Override
-	protected String getAdvanceSearchConditionsActionPath() {
-		return this.getHtmlPageNamespace()+"/report/history/conditions.jsp";
+	public String getAdvanceSearchConditionsJspPath() {
+		return BCConstants.NAMESPACE + "/report/history";
 	}
+		
 	// ==高级搜索代码结束==
 
 }

@@ -1,14 +1,13 @@
 package cn.bc.report.web.struts2;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.service.CrudService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.report.domain.ReportHistory;
+import cn.bc.report.service.ReportHistoryService;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.page.PageOption;
 
@@ -23,11 +22,12 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class ReportHistoryAction extends EntityAction<Long, ReportHistory> {
 	private static final long serialVersionUID = 1L;
+	public ReportHistoryService reportHistoryService;
 	
 	@Autowired
-	public void setReportHistoryService(
-			@Qualifier(value = "reportHistoryService") CrudService<ReportHistory> crudService) {
-		this.setCrudService(crudService);
+	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
+		this.reportHistoryService=reportHistoryService;
+		this.setCrudService(reportHistoryService);
 	}
 	
 	@Override

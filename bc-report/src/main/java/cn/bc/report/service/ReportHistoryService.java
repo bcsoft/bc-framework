@@ -1,0 +1,22 @@
+package cn.bc.report.service;
+
+import java.util.List;
+import java.util.Map;
+
+import cn.bc.core.service.CrudService;
+import cn.bc.report.domain.ReportHistory;
+
+/**
+ * 历史报表Service接口
+ * 
+ * @author lbj
+ * 
+ */
+public interface ReportHistoryService extends CrudService<ReportHistory> {
+	/**
+	 * 查找所属分类选项
+	 * 
+	 * @return
+	 */
+	public List<Map<String,String>> findCategoryOption();
+}
