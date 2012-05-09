@@ -36,6 +36,11 @@
 			<artifactId>bc-template</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-option</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- 导出Excel需要的包 -->
 		<dependency>

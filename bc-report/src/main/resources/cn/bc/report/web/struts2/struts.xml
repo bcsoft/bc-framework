@@ -87,6 +87,15 @@
 		<action name="data" class="reportTaskAction" method="data" />
 	</package>
 	
+	<!-- 查看执行记录 -->
+	<package name="viewExcuteReportTaskRecode" extends="bc-default" namespace="/bc/viewExcuteReportTaskRecod">
+		<action name="save" class="viewExcuteReportTaskRecodAction" method="save"/>
+		<action name="delete" class="viewExcuteReportTaskRecodAction" method="delete"/>
+		<action name="list" class="viewExcuteReportTaskRecodAction" method="list"/>
+		<action name="paging" class="viewExcuteReportTaskRecodAction" method="paging"/>
+		<action name="data" class="viewExcuteReportTaskRecodAction" method="data"/>
+	</package>
+	
 	<!-- 报表历史 -->
 	<package name="reportHistory" extends="bc-default" namespace="/bc/reportHistory">
 		<action name="create" class="reportHistoryAction" method="create">
@@ -97,7 +106,7 @@
 		</action>
 		<action name="open" class="reportHistoryAction" method="open">
 			<result name="formr">/bc/report/history/form.jsp</result>
-		</action>
+		</action> 
 		<action name="save" class="reportHistoryAction" method="save" />
 		<action name="delete" class="reportHistoryAction" method="delete" />
 		<action name="list" class="reportHistoryAction" method="list" />

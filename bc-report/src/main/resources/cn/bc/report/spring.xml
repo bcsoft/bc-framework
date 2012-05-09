@@ -25,9 +25,9 @@
 		p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
 		
 	<!-- reportHistory -->
-	<bean id="reportHistoryDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="reportHistoryDao" class="cn.bc.report.dao.hibernate.jpa.ReportHistoryDaoImpl"
 		p:entityClass="cn.bc.report.domain.ReportHistory"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="reportHistoryService" class="cn.bc.core.service.DefaultCrudService"
+	<bean id="reportHistoryService" class="cn.bc.report.service.ReportHistoryServiceImpl"
 		p:entityClass="cn.bc.report.domain.ReportHistory" p:crudDao-ref="reportHistoryDao" />
 </beans>

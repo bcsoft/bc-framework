@@ -1,4 +1,4 @@
-package cn.bc.report.web.struts2;
+package cn.bc.report.web.struts2.select;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -20,46 +18,35 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.identity.web.SystemContext;
-import cn.bc.option.domain.OptionItem;
-import cn.bc.report.service.ReportHistoryService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
- * 历史报表视图Action
+ * 查看执行记录Action
  * 
  * @author lbj
  * 
  */
-
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
+public class ViewExcuteReportTaskRecodeAction extends
+		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String success = String.valueOf(true);
 	public Long taskId;
 
 	@Override
-	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表管理员，历史报表管理员、超级管理员
-		return !context.hasAnyRole(getText("key.role.bc.report"),
-				getText("key.role.bc.report.History"),
-				getText("key.role.bc.admin"));
-	}
-
-	@Override
-	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.file_date",Direction.Desc);
+	protected String getClickOkMethod() {
+		return "bc.viewExcuteReportTaskRecodeList.clickOk";
 	}
 
 	@Override
@@ -115,6 +102,37 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				getText("report.author")));
 		return columns;
 	}
+
+
+	@Override
+	protected PageOption getHtmlPageOption() {
+		return super.getHtmlPageOption().setMinWidth(500)
+				.setMinHeight(300).setWidth(600).setHeight(450).setModal(false);
+	}
+	
+	@Override
+	protected Toolbar getHtmlPageToolbar() {
+		Toolbar tb = new Toolbar();
+
+		// 下载
+		tb.addButton(new ToolbarButton()
+				.setIcon("ui-icon-arrowthickstop-1-s")
+				.setText(getText("label.download"))
+				.setClick("bc.viewExcuteReportTaskRecodeList.download"));
+		// 在线预览
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
+				.setText(getText("label.preview.inline"))
+				.setClick("bc.viewExcuteReportTaskRecodeList.inline"));
+		
+		//状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+				this.getStatuses(), "success", 0, getText("report.status.tips")));
+
+		// 搜索按钮
+		tb.addButton(this.getDefaultSearchToolbarButton());
+
+		return tb;
+	}
 	
 	//状态键值转换
 	private Map<String,String> getStatuses(){
@@ -139,41 +157,27 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected String getFormActionName() {
-		return "reportHistory";
+	protected String getHtmlPageNamespace() {
+		return this.getContextPath() + BCConstants.NAMESPACE;
 	}
 
 	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认的排序方法
+		return new OrderCondition("a.file_date",Direction.Desc);
 	}
 
 	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
-
-		if (!this.isReadonly()) {
-			// 下载
-			tb.addButton(new ToolbarButton()
-					.setIcon("ui-icon-arrowthickstop-1-s")
-					.setText(getText("label.download"))
-					.setClick("bc.reportHistoryList.download"));
-			// 在线预览
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("label.preview.inline"))
-					.setClick("bc.reportHistoryList.inline"));
-		}
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "success", 0, getText("report.status.tips")));
-
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
-
-		return tb;
+	protected HtmlPage buildHtmlPage() {
+		return super.buildHtmlPage().setNamespace(
+				this.getHtmlPageNamespace() + "/viewExcuteReportTaskRecode");
 	}
-	
+
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getHtmlPageNamespace() + "/report/history/view/select.js";
+	}
+
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
@@ -187,12 +191,6 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 			statusCondition =new EqualsCondition("a.task_id",taskId);
 		}
 		return statusCondition;
-	}
-	
-
-	@Override
-	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/history/list.js";
 	}
 	
 	@Override
@@ -209,31 +207,17 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		if(json.isEmpty()) return null;
 		return json;
 	}
-
+	
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
-	public ReportHistoryService reportHistoryService;
-	
-	@Autowired
-	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
-		this.reportHistoryService=reportHistoryService;
-	}
-	
-	public JSONArray categorys;// 所属分类下拉列表信息
-	
-	@Override
-	protected void initConditionsFrom() throws Exception {
-		this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
-	}
 
 	@Override
-	public String getAdvanceSearchConditionsJspPath() {
-		return BCConstants.NAMESPACE + "/report/history";
+	protected String getAdvanceSearchConditionsActionPath() {
+		return this.getHtmlPageNamespace()+"/report/history/view/conditions.jsp";
 	}
-		
 	// ==高级搜索代码结束==
 
 }
