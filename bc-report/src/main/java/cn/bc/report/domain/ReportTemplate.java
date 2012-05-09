@@ -80,8 +80,7 @@ public class ReportTemplate extends FileEntityImpl {
 	 * <li>从模板库中获取html代码，格式为"tpl:[模板的编码][:模板的版本号]"，没有版本号时使用当前版本</li>
 	 * <li>使用预定义的jsp页面，格式为"jsp:[文件路径]"，如"jsp:/path/to/conditions.jsp"，路径必须带前缀"/"
 	 * </li>
-	 * <li>使用预定义的action请求，格式为"action:[action路径]"，如"action:path/to/yourAction"，
-	 * 路径不能带前缀"/"</li>
+	 * <li>使用预定义的action请求，格式为"action:[action路径]"，如"action:/path/to/yourAction"</li>
 	 * </ul>
 	 * </li>
 	 * <li>
@@ -98,6 +97,33 @@ public class ReportTemplate extends FileEntityImpl {
 	 * width - 报表视图的宽度</li>
 	 * <li>
 	 * height - 报表视图的高度</li>
+	 * <li>
+	 * paging - [可选]报表视图是否分页，true或false，默认不分页</li>
+	 * <li>
+	 * js - [可选]附加特殊的js文件，如"/path/to/my.js"，路径必须带前缀"/"，多个路径用逗号连接</li>
+	 * <li>
+	 * initMethod - [可选]页面加载后所调用js文件中的初始化方法名称</li>
+	 * <li>
+	 * tb -
+	 * [可选]自定义工具条按钮，数组类型，数组元素为标准json格式，格式为：{text:"...",id:"...",click:"...",
+	 * action:"...",icon:"...",title:"...",callback:"..."}，各参数说明如下;
+	 * <ul>
+	 * <li>
+	 * text - 按钮显示的名称</li>
+	 * <li>
+	 * click - 点击按钮调用的处理函数的名称</li>
+	 * <li>
+	 * id - [可选]按钮标识</li>
+	 * <li>
+	 * icon - [可选]按钮图标的样式</li>
+	 * <li>
+	 * title - [可选]按钮的鼠标提示信息</li>
+	 * <li>
+	 * action - [可选]内置antion的名称</li>
+	 * <li>
+	 * callback - [可选]点击按钮的回调函数</li>
+	 * </ul>
+	 * </li>
 	 * </ul>
 	 */
 	private String config;
