@@ -10,9 +10,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
@@ -29,7 +28,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
- * 报表模板视图Action
+ * 历史报表视图Action
  * 
  * @author lbj
  * 
@@ -37,23 +36,22 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
+public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
-	public String code;
+	public String success = String.valueOf(true);
 
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表管理员，报表模板管理员、超级管理员
+		// 配置权限：报表管理员，历史报表管理员、超级管理员
 		return !context.hasAnyRole(getText("key.role.bc.report"),
-				getText("key.role.bc.report.template"),
+				getText("key.role.bc.report.History"),
 				getText("key.role.bc.admin"));
 	}
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.order_");
+		return new OrderCondition("a.file_date",Direction.Desc);
 	}
 
 	@Override
@@ -62,12 +60,9 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.category,a.code,a.name,a.desc_ as desc");
-		sql.append(",b.actor_name as uname,a.file_date,c.actor_name as mname");
-		sql.append(",a.modified_date");
-		sql.append(" from bc_report_template a");
+		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname");
+		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -79,16 +74,12 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("status", rs[i++]);
-				map.put("orderNo", rs[i++]);
-				map.put("category", rs[i++]);
-				map.put("code", rs[i++]);
-				map.put("name", rs[i++]);
-				map.put("desc_", rs[i++]);
-				map.put("uname", rs[i++]);
+				map.put("success", rs[i++]);
 				map.put("file_date", rs[i++]);
-				map.put("mname", rs[i++]);
-				map.put("modified_date", rs[i++]);			
+				map.put("category", rs[i++]);
+				map.put("subject", rs[i++]);
+				map.put("path", rs[i++]);
+				map.put("uname", rs[i++]);
 				return map;
 			}
 		});
@@ -99,59 +90,49 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
-		columns.add(new TextColumn4MapKey("a.status_", "status",
-				getText("reportTemplate.status"), 40).setSortable(true)
+		columns.add(new TextColumn4MapKey("a.success", "success",
+				getText("report.status"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
-				getText("reportTemplate.order"), 60).setSortable(true));
-		columns.add(new TextColumn4MapKey("a.category", "category",
-				getText("reportTemplate.category"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("reportTemplate.name"), 200).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("reportTemplate.code"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("reportTemplate.desc")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
-				getText("reportTemplate.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("reportTemplate.fileDate"), 130)
+				getText("report.fileDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("reportTemplate.modifier"), 80));
-		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("reportTemplate.modifiedDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("a.category", "category",
+				getText("report.category"), 100).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.subject", "subject",
+				getText("reportHistory.subject"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.path", "path",
+				getText("reportHistory.path"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
+				getText("report.author")));
 		return columns;
 	}
 	
 	//状态键值转换
 	private Map<String,String> getStatuses(){
 		Map<String,String> statuses=new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED)
-				, getText("reportTemplate.status.normal"));
-		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED)
-				, getText("reportTemplate.status.disabled"));
+		statuses.put(String.valueOf(true)
+				, getText("reportHistory.status.success"));
+		statuses.put(String.valueOf(false)
+				, getText("reportHistory.status.lost"));
 		statuses.put(""
-				, getText("reportTemplate.status.all"));
+				, getText("report.status.all"));
 		return statuses;
 	}
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['name']";
+		return "['subject']";
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.code", "b.actor_name", "a.name","a.category" };
+		return new String[] { "a.subject", "b.actor_name","a.category" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "reportTemplate";
+		return "reportHistory";
 	}
 
 	@Override
@@ -165,22 +146,20 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
+			// 下载
+			tb.addButton(new ToolbarButton()
+					.setIcon("ui-icon-arrowthickstop-1-s")
+					.setText(getText("label.download"))
+					.setClick("bc.reportHistoryList.download"));
 
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
-			tb.addButton(this.getDefaultDisabledToolbarButton());
-			
-			// 执行按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
-					.setText(getText("reportTemplate.execute"))
-					.setClick("bc.reportTemplateList.execute"));
+			// 在线预览
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
+					.setText(getText("label.preview.inline"))
+					.setClick("bc.reportHistoryList.inline"));
 		}
 		//状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
+				this.getStatuses(), "success", 0, getText("report.status.tips")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -192,27 +171,29 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("a.status_",Integer.parseInt(status))
-						,new EqualsCondition("a.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("a.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
-			statusCondition=new EqualsCondition("a.code",code);
+		if(success != null && success.length() > 0){
+			statusCondition = new EqualsCondition("a.success",Boolean.valueOf(success));
+						
 		}
 		return statusCondition;
 	}
 	
+
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/template/list.js";
+		return this.getHtmlPageNamespace() + "/report/history/list.js";
 	}
 
-	/*// ==高级搜索代码开始==
+	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
+
+	@Override
+	protected String getAdvanceSearchConditionsActionPath() {
+		return this.getHtmlPageNamespace()+"/report/history/conditions.jsp";
+	}
 	// ==高级搜索代码结束==
-*/
+
 }

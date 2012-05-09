@@ -3,6 +3,8 @@
  */
 package cn.bc.report.domain;
 
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,7 +21,7 @@ import cn.bc.identity.domain.FileEntityImpl;
  * 
  */
 @Entity
-@Table(name = "BC_REPORT_TEMPLATE")
+@Table(name = "BC_REPORT_TASK")
 public class ReportTask extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
@@ -30,6 +32,8 @@ public class ReportTask extends FileEntityImpl {
 	private String desc;// 备注
 	private String config;// 详细配置
 	private ReportTemplate template;// 所用模板
+	
+	private Calendar startDate;//开始时间
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
@@ -91,4 +95,14 @@ public class ReportTask extends FileEntityImpl {
 	public void setConfig(String config) {
 		this.config = config;
 	}
+
+	@Column(name="START_DATE")
+	public Calendar getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Calendar startDate) {
+		this.startDate = startDate;
+	}
+
 }

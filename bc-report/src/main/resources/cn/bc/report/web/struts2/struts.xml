@@ -71,13 +71,13 @@
 	
 	<!-- 报表任务 -->
 	<package name="reportTask" extends="bc-default" namespace="/bc/reportTask">
-		<action name="create" class="reportTaskeAction" method="create">
+		<action name="create" class="reportTaskAction" method="create">
 			<result name="form">/bc/report/task/form.jsp</result>
 		</action>
-		<action name="edit" class="reportTemplateAction" method="edit">
+		<action name="edit" class="reportTaskAction" method="edit">
 			<result name="form">/bc/report/task/form.jsp</result>
 		</action>
-		<action name="open" class="reportTemplateAction" method="open">
+		<action name="open" class="reportTaskAction" method="open">
 			<result name="formr">/bc/report/task/form.jsp</result>
 		</action>
 		<action name="save" class="reportTaskAction" method="save" />
@@ -88,20 +88,20 @@
 	</package>
 	
 	<!-- 报表历史 -->
-	<package name="reportHistroy" extends="bc-default" namespace="/bc/reportHistroy">
-		<action name="create" class="reportHistroyAction" method="create">
-			<result name="form">/bc/report/histroy/form.jsp</result>
+	<package name="reportHistory" extends="bc-default" namespace="/bc/reportHistory">
+		<action name="create" class="reportHistoryAction" method="create">
+			<result name="form">/bc/report/history/form.jsp</result>
 		</action>
-		<action name="edit" class="reportHistroyAction" method="edit">
-			<result name="form">/bc/report/histroy/form.jsp</result>
+		<action name="edit" class="reportHistoryAction" method="edit">
+			<result name="form">/bc/report/history/form.jsp</result>
 		</action>
-		<action name="open" class="reportHistroyAction" method="open">
-			<result name="formr">/bc/report/histroy/form.jsp</result>
+		<action name="open" class="reportHistoryAction" method="open">
+			<result name="formr">/bc/report/history/form.jsp</result>
 		</action>
-		<action name="save" class="reportHistroyAction" method="save" />
-		<action name="delete" class="reportHistroyAction" method="delete" />
-		<action name="list" class="reportHistroyAction" method="list" />
-		<action name="paging" class="reportHistroyAction" method="paging" />
-		<action name="data" class="reportHistroyAction" method="data" />
+		<action name="save" class="reportHistoryAction" method="save" />
+		<action name="delete" class="reportHistoryAction" method="delete" />
+		<action name="list" class="reportHistoryAction" method="list" />
+		<action name="paging" class="reportHistoryAction" method="paging" />
+		<action name="data" class="reportHistoryAction" method="data" />
 	</package>
 </struts>

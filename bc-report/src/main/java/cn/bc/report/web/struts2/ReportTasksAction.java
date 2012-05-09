@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
@@ -26,10 +25,9 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
- * 报表模板视图Action
+ * 报表任务视图Action
  * 
  * @author lbj
  * 
@@ -37,17 +35,16 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
+public class ReportTasksAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
-	public String code;
 
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表管理员，报表模板管理员、超级管理员
+		// 配置权限：报表管理员，报表任务管理员、超级管理员
 		return !context.hasAnyRole(getText("key.role.bc.report"),
-				getText("key.role.bc.report.template"),
+				getText("key.role.bc.report.Task"),
 				getText("key.role.bc.admin"));
 	}
 
@@ -62,12 +59,12 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.category,a.code,a.name,a.desc_ as desc");
-		sql.append(",b.actor_name as uname,a.file_date,c.actor_name as mname");
-		sql.append(",a.modified_date");
-		sql.append(" from bc_report_template a");
-		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id");
+		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,t.category,a.name,t.name as tname,a.cron,a.desc_ as desc");
+		sql.append(",b.actor_name as uname,a.file_date,c.actor_name as mname,a.modified_date");
+		sql.append(" from bc_report_task a");
+		sql.append(" inner join bc_report_template t on t.id=a.pid");
+		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id ");
+		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id ");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -82,8 +79,9 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 				map.put("status", rs[i++]);
 				map.put("orderNo", rs[i++]);
 				map.put("category", rs[i++]);
-				map.put("code", rs[i++]);
 				map.put("name", rs[i++]);
+				map.put("tname", rs[i++]);
+				map.put("cron", rs[i++]);
 				map.put("desc_", rs[i++]);
 				map.put("uname", rs[i++]);
 				map.put("file_date", rs[i++]);
@@ -100,29 +98,30 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
 		columns.add(new TextColumn4MapKey("a.status_", "status",
-				getText("reportTemplate.status"), 40).setSortable(true)
+				getText("report.status"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
-				getText("reportTemplate.order"), 60).setSortable(true));
-		columns.add(new TextColumn4MapKey("a.category", "category",
-				getText("reportTemplate.category"), 100).setSortable(true)
+				getText("report.order"), 60).setSortable(true));
+		columns.add(new TextColumn4MapKey("t.category", "category",
+				getText("report.category"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("reportTemplate.name"), 200).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("reportTemplate.code"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
+				getText("reportTask.name"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.name", "tname",
+				getText("reportTask.template"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.cron", "cron",
+				getText("reportTask.cron"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("reportTemplate.desc")).setUseTitleFromLabel(true));
+				getText("report.desc")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
-				getText("reportTemplate.author"), 80));
+				getText("report.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("reportTemplate.fileDate"), 130)
+				getText("report.fileDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("reportTemplate.modifier"), 80));
+				getText("report.modifier"), 80));
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("reportTemplate.modifiedDate"), 130)
+				getText("report.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		return columns;
 	}
@@ -131,11 +130,11 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	private Map<String,String> getStatuses(){
 		Map<String,String> statuses=new LinkedHashMap<String, String>();
 		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED)
-				, getText("reportTemplate.status.normal"));
+				, getText("report.status.normal"));
 		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED)
-				, getText("reportTemplate.status.disabled"));
+				, getText("report.status.disabled"));
 		statuses.put(""
-				, getText("reportTemplate.status.all"));
+				, getText("report.status.all"));
 		return statuses;
 	}
 
@@ -146,12 +145,12 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.code", "b.actor_name", "a.name","a.category" };
+		return new String[] { "t.name", "b.actor_name", "a.name","t.category" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "reportTemplate";
+		return "reportTask";
 	}
 
 	@Override
@@ -170,17 +169,12 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 			// 编辑按钮
 			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
+			// 禁用按钮
 			tb.addButton(this.getDefaultDisabledToolbarButton());
-			
-			// 执行按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
-					.setText(getText("reportTemplate.execute"))
-					.setClick("bc.reportTemplateList.execute"));
 		}
 		//状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
+				this.getStatuses(), "status", 0, getText("report.status.tips")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -192,20 +186,10 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("a.status_",Integer.parseInt(status))
-						,new EqualsCondition("a.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("a.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
-			statusCondition=new EqualsCondition("a.code",code);
+		if(status != null && status.length() > 0){
+			statusCondition = new EqualsCondition("a.status_",Integer.parseInt(status));
 		}
 		return statusCondition;
-	}
-	
-	@Override
-	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/template/list.js";
 	}
 
 	/*// ==高级搜索代码开始==

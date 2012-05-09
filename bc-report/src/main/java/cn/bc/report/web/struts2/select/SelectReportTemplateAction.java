@@ -1,8 +1,7 @@
-package cn.bc.report.web.struts2;
+package cn.bc.report.web.struts2.select;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,48 +11,36 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.formater.KeyValueFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
- * 报表模板视图Action
+ * 选择报表模板Action
  * 
  * @author lbj
  * 
  */
-
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
+public class SelectReportTemplateAction extends
+		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
+
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
-	public String code;
 
 	@Override
-	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表管理员，报表模板管理员、超级管理员
-		return !context.hasAnyRole(getText("key.role.bc.report"),
-				getText("key.role.bc.report.template"),
-				getText("key.role.bc.admin"));
-	}
-
-	@Override
-	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.order_");
+	protected String getClickOkMethod() {
+		return "bc.selectReportTemplate.clickOk";
 	}
 
 	@Override
@@ -99,9 +86,6 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
-		columns.add(new TextColumn4MapKey("a.status_", "status",
-				getText("reportTemplate.status"), 40).setSortable(true)
-				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("reportTemplate.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",
@@ -126,17 +110,11 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		return columns;
 	}
-	
-	//状态键值转换
-	private Map<String,String> getStatuses(){
-		Map<String,String> statuses=new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED)
-				, getText("reportTemplate.status.normal"));
-		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED)
-				, getText("reportTemplate.status.disabled"));
-		statuses.put(""
-				, getText("reportTemplate.status.all"));
-		return statuses;
+
+
+	@Override
+	protected PageOption getHtmlPageOption() {
+		return super.getHtmlPageOption().setWidth(500).setHeight(450);
 	}
 
 	@Override
@@ -146,73 +124,50 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.code", "b.actor_name", "a.name","a.category" };
+		return new String[] { "a.code", "b.actor_name", "a.name","a.category"};
 	}
 
 	@Override
-	protected String getFormActionName() {
-		return "reportTemplate";
+	protected String getHtmlPageNamespace() {
+		return this.getContextPath() + BCConstants.NAMESPACE;
 	}
 
 	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认的排序方法
+		return new OrderCondition("a.order_");
 	}
 
 	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
-
-		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
-			tb.addButton(this.getDefaultDisabledToolbarButton());
-			
-			// 执行按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
-					.setText(getText("reportTemplate.execute"))
-					.setClick("bc.reportTemplateList.execute"));
-		}
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
-
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
-
-		return tb;
+	protected HtmlPage buildHtmlPage() {
+		return super.buildHtmlPage().setNamespace(
+				this.getHtmlPageNamespace() + "/selectReportTemplate");
 	}
-	
-	@Override
-	protected Condition getGridSpecalCondition() {
-		// 状态条件
-		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("a.status_",Integer.parseInt(status))
-						,new EqualsCondition("a.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("a.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
-			statusCondition=new EqualsCondition("a.code",code);
-		}
-		return statusCondition;
-	}
-	
+
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/template/list.js";
+		return this.getHtmlPageNamespace() + "/report/template/select.js";
 	}
 
-	/*// ==高级搜索代码开始==
 	@Override
-	protected boolean useAdvanceSearch() {
-		return true;
+	protected Condition getGridSpecalCondition() {
+		return new EqualsCondition("a.status_",Integer.parseInt(status));
 	}
-	// ==高级搜索代码结束==
-*/
+
+	@Override
+	protected Json getGridExtrasData() {
+		if (this.status == null || this.status.length() == 0) {
+			return null;
+		} else {
+			Json json = new Json();
+			json.put("status", status);
+			return json;
+		}
+	}
+
+	@Override
+	protected String getHtmlPageTitle() {
+		return this.getText("selectReportTemplate.title");
+	}
+
 }

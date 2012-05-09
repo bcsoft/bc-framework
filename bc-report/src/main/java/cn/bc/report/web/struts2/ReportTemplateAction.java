@@ -54,10 +54,10 @@ public class ReportTemplateAction extends FileEntityAction<Long, ReportTemplate>
 
 	@Override
 	public boolean isReadonly() {
-		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表模板管理员
-		return !context.hasAnyRole(getText("key.role.bc.report.template"),
+		// 配置权限：报表管理员，报表模板管理员、超级管理员
+		return !context.hasAnyRole(getText("key.role.bc.report"),
+				getText("key.role.bc.report.template"),
 				getText("key.role.bc.admin"));
 	}
 

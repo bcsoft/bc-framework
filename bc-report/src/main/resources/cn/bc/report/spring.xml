@@ -18,11 +18,11 @@
 	<bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl"/>
 	
 	<!-- reportTask -->
-	<bean id="reportTaskDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="reportTaskDao" class="cn.bc.report.dao.hibernate.jpa.ReportTaskDaoImpl"
 		p:entityClass="cn.bc.report.domain.ReportTask"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="reportTaskService" class="cn.bc.core.service.DefaultCrudService"
-		p:entityClass="cn.bc.report.domain.ReportTask" p:crudDao-ref="reportTaskDao" />
+	<bean id="reportTaskService" class="cn.bc.report.service.ReportTaskServiceImpl"
+		p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
 		
 	<!-- reportHistory -->
 	<bean id="reportHistoryDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
