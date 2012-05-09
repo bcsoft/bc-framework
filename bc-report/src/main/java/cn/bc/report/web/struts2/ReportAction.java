@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
 import cn.bc.core.Page;
@@ -45,6 +48,7 @@ import cn.bc.web.ui.html.grid.SeekGroupButton;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -57,7 +61,7 @@ import cn.bc.web.ui.json.Json;
 @Controller
 public class ReportAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	// private static Log logger = LogFactory.getLog(ReportAction.class);
+	private static Log logger = LogFactory.getLog(ReportAction.class);
 	public String code;// 报表模板的编码
 	private ReportTemplateService reportTemplateService;// 报表模板服务
 	private TemplateService templateService;
@@ -110,16 +114,51 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
-		if (this.useAdvanceSearch()) {
+		// 判断是否生成工具条
+		if (!(this.getConfig().has("search") || this.getConfig().has("tb") || this
+				.getConfig().has("condition")))
+			return null;
+
+		try {
+			// 获取按钮配置
+			JSONArray tbCfg = this.getConfig().getJSONArray("tb");
 			Toolbar tb = new Toolbar();
 
-			// TODO 添加额外的工具条按钮
-			tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+			// 添加自定义的按钮
+			JSONObject buttonCfg;
+			ToolbarButton button;
+			for (int i = 0; i < tbCfg.length(); i++) {
+				buttonCfg = tbCfg.getJSONObject(i);
+				button = new ToolbarButton();
+				tb.addButton(button);
+				if (buttonCfg.has("text"))
+					button.setText(buttonCfg.getString("text"));
+				if (buttonCfg.has("click"))
+					button.setClick(buttonCfg.getString("click"));
+				if (buttonCfg.has("icon"))
+					button.setIcon(buttonCfg.getString("icon"));
+				if (buttonCfg.has("id"))
+					button.setId(buttonCfg.getString("id"));
+				if (buttonCfg.has("icon2"))
+					button.setSecondaryIcon(buttonCfg.getString("icon2"));
+				if (buttonCfg.has("action"))
+					button.setAction(buttonCfg.getString("action"));
+				if (buttonCfg.has("title"))
+					button.setTitle(buttonCfg.getString("title"));
+				if (buttonCfg.has("callback"))
+					button.setCallback(buttonCfg.getString("callback"));
+			}
 
-			// 搜索按钮
-			tb.addButton(getDefaultSearchToolbarButton());
+			// 添加搜索按钮
+			if (this.getConfig().has("search")
+					|| this.getConfig().has("condition")) {
+				if (tb.isEmpty())
+					tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+				tb.addButton(getDefaultSearchToolbarButton());
+			}
 			return tb;
-		} else {
+		} catch (JSONException e) {
+			logger.error(e.getMessage());
 			return null;
 		}
 	}
@@ -412,6 +451,8 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			}
 		} else if (condition.startsWith("action:")) {// 使用自定义的action条件方法
 			this.resultPath = condition.substring(7);
+			if (this.resultPath.startsWith("/"))
+				this.resultPath = this.resultPath.substring(1);// 去除前缀"/"
 			return "redirectAction";
 		} else if (condition.startsWith("jsp:")) {// 使用自定义的jsp页面
 			this.resultPath = condition.substring(7);
@@ -449,20 +490,56 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
+	protected String getHtmlPageJs() {
+		// 判断是否有额外的js、css文件配置
+		if (!this.getConfig().has("js"))
+			return null;
+		String js;
+		try {
+			js = this.getConfig().getString("js");
+		} catch (JSONException e) {
+			js = null;
+		}
+		if (js == null)
+			return null;
+
+		// 附加上下文路径
+		String[] jss = js.split(",");
+		for (int i = 0; i < jss.length; i++) {
+			if (!(jss[i].startsWith("http") || jss[i].startsWith("js:") || jss[i]
+					.startsWith("css:"))) {
+				jss[i] = this.getContextPath() + jss[i];
+			}
+		}
+		return StringUtils.arrayToCommaDelimitedString(jss);
+	}
+
+	@Override
+	protected String getHtmlPageInitMethod() {
+		if (!this.getConfig().has("initMethod"))
+			return null;
+		try {
+			return this.getConfig().getString("initMethod");
+		} catch (JSONException e) {
+			return null;
+		}
+	}
+
+	@Override
 	protected String getGridRowLabelExpression() {
 		// 不处理
 		return null;
 	}
 
 	@Override
-	protected String getFormActionName() {
-		// 没有表单处理
+	protected String getGridDblRowMethod() {
+		// 取消双击处理函数
 		return null;
 	}
 
 	@Override
-	protected String getGridDblRowMethod() {
-		// 取消双击处理函数
+	protected String getFormActionName() {
+		// 没有表单处理
 		return null;
 	}
 }
