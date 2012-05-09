@@ -22,6 +22,11 @@ public class Toolbar extends Div {
 		return "div";
 	}
 
+	/** 判断工具条是否没有任何按钮 */
+	public boolean isEmpty() {
+		return this.children == null || this.children.isEmpty();
+	}
+
 	/** 添加按钮 */
 	public Toolbar addButton(Component button) {
 		this.addChild(button);
