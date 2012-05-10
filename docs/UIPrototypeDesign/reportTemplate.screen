@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
   <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="751" measuredHeight="153">
-    <widgets xsi:type="model:Window" id="1" y="24" width="751" height="129" text="报表模版信息" measuredWidth="751" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Window" id="1" y="24" width="751" height="129" text="报表模版管理" measuredWidth="751" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="2" y="83" width="625" measuredWidth="625" measuredHeight="6"/>
     <widgets xsi:type="model:ButtonBar" id="3" x="4" y="50" width="181" text="新建, 编辑,禁用,执行" measuredWidth="181" measuredHeight="30" selection="">
       <font/>
@@ -22,11 +22,11 @@
       <items x="45" y="0" width="44" height="30" text="禁用"/>
       <items x="89" y="0" width="40" height="30" text="全部"/>
     </widgets>
-    <widgets xsi:type="model:Label" id="181" text="视图：" measuredWidth="41" measuredHeight="25">
+    <widgets xsi:type="model:Label" id="181" text="视图：（报表模板）" measuredWidth="113" measuredHeight="25">
       <font bold="true"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="168" measuredWidth="500" measuredHeight="476">
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="320" measuredWidth="500" measuredHeight="476">
     <widgets xsi:type="model:Window" id="100" y="24" width="500" height="452" text="报表模版信息" measuredWidth="500" measuredHeight="452" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="101" y="430" width="500" measuredWidth="500" measuredHeight="6"/>
     <widgets xsi:type="model:Button" id="102" x="438" y="439" width="56" text="保存" measuredWidth="56" measuredHeight="27">
@@ -41,13 +41,13 @@
     <widgets xsi:type="model:Label" id="119" x="25" y="80" text="*名称：" measuredWidth="46" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="121" x="71" y="80" width="423" measuredWidth="423" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="121" x="71" y="80" width="423" text="每日登录帐号数" measuredWidth="423" measuredHeight="25">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="125" x="25" y="107" text="*编码：" measuredWidth="46" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="127" x="71" y="107" width="423" measuredWidth="423" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="127" x="71" y="107" width="423" text="LOGIN_STATS" measuredWidth="423" measuredHeight="25">
       <font/>
     </widgets>
     <widgets xsi:type="model:Label" id="129" x="29" y="190" text="备注：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
@@ -59,10 +59,10 @@
     <widgets xsi:type="model:Label" id="141" x="17" y="134" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="154" x="71" y="53" width="423" text="营运系统/发票统计" measuredWidth="423" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="154" x="71" y="53" width="423" text="平台/登录统计" measuredWidth="423" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="159" x="71" y="134" width="423" measuredWidth="423" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="159" x="71" y="134" width="423" text="1001" measuredWidth="423" measuredHeight="25">
       <font/>
     </widgets>
     <widgets xsi:type="model:TextArea" id="163" x="10" y="287" width="484" height="122" text="columns: [&#xD;&#xA;    {id: &quot;name&quot;, label: &quot;名称&quot;, width: 100, sortable: true, dir: &quot;asc&quot;, el:&quot;&quot;, formater: &quot;&quot;},&#xD;&#xA;    {...}&#xD;&#xA;],&#xD;&#xA;data: ...&#xD;&#xA;" measuredWidth="484" measuredHeight="122" verticalScrollbar="true">
@@ -105,8 +105,26 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="180" x="520" y="192" width="239" height="361" text="视图说明：&#xD;&#xA;1）点击执行操作的结果与表单中的执行操作相同&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1） 使用人可以添加组织(单位、部门、岗位)、人员，如果添加的是组织，则组织内的所有人都有权限使用。如果不配置使用人，则所有人都有权限使用。&#xD;&#xA;2）详细配置请参考Domain中相应字段的注释说明。&#xD;&#xA;3）点击执行操作时，直接运行报表并显示运行结果。" measuredWidth="239" measuredHeight="361" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="180" x="520" y="344" width="329" height="361" text="&quot;报表模板&quot;管理视图说明：&#xD;&#xA;1）报表管理员方有权限进行编辑修改等操作。&#xD;&#xA;2）点击执行操作的结果与表单中的执行操作相同&#xD;&#xA;3）双击行进入报表模板的编辑状态。&#xD;&#xA;&#xD;&#xA;&quot;我的报表&quot;视图说明：&#xD;&#xA;1）所有用户都有&quot;我的报表&quot;视图权限，在此视图只可以看到自己相关的报表模板，双击时直接运行报表而不是打开报表模板的表单。&#xD;&#xA;2）&quot;查看历史报表&quot;操作打开历史报表视图，查看有权限使用报表的任务运行历史信息。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）报表的使用人用于控制可以执行此报表的用户（不可编辑修改）；使用人可以是组织(单位、部门、岗位)或人员，如果添加的是组织，则组织内的所有人都有权限使用；如果不配置使用人，则所有人都有权限使用。&#xD;&#xA;2）详细配置请参考Domain中相应字段的注释说明。&#xD;&#xA;3）点击执行操作时，直接运行报表并显示运行结果。" measuredWidth="329" measuredHeight="361" annotation="true" textAlignment="Left">
     <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="183" x="8" y="160" measuredWidth="751" measuredHeight="153">
+    <widgets xsi:type="model:Window" id="184" y="24" width="751" height="129" text="我的报表" measuredWidth="751" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="185" y="83" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="186" x="4" y="50" width="133" text="执行,查看历史报表" measuredWidth="133" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="执行"/>
+      <items x="45" y="0" width="88" height="30" text="查看历史报表"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="187" y="85" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,使用人,备注,[创建、修改人信息...]&#xA;1,启用,1001,平台/登录统计,每日登录帐号数,LOGIN_STATS,张三,小明&#xA;" measuredWidth="751" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="188" x="593" y="53" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="189" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="191" text="视图：（我的报表）" measuredWidth="113" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
   </widgets>
   <hRuler/>
   <vRuler/>
