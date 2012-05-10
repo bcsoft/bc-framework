@@ -10,7 +10,7 @@
       <items x="89" y="0" width="44" height="30" text="禁用"/>
       <items x="133" y="0" width="48" height="30" text="执行"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="5" y="85" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,使用人,备注,[创建、修改人信息...]&#xA;1,启用,1001,平台/登录统计,每日登录帐号数,LOGIN_STATS,张三,小明&#xA;" measuredWidth="751" measuredHeight="50" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" y="85" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,使用人,备注,[创建、修改人信息...]&#xA;1,正常,1001,平台/登录统计,每日登录帐号数,LOGIN_STATS,张三,小明&#xA;" measuredWidth="751" measuredHeight="50" alternative="#eeeeee">
       <font/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="6" x="593" y="53" measuredWidth="148" measuredHeight="24">
@@ -91,7 +91,7 @@
       <font underline="true"/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="182" x="354" y="263" measuredWidth="136" measuredHeight="25">
-      <widgets xsi:type="model:RadioButton" id="174" x="40" text="启用" measuredWidth="44" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:RadioButton" id="174" x="40" text="正常" measuredWidth="44" measuredHeight="25" selected="true">
         <font/>
       </widgets>
       <widgets xsi:type="model:RadioButton" id="175" x="92" text="禁用" measuredWidth="44" measuredHeight="25">
@@ -116,7 +116,7 @@
       <items x="0" y="0" width="45" height="30" text="执行"/>
       <items x="45" y="0" width="88" height="30" text="查看历史报表"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="187" y="85" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,使用人,备注,[创建、修改人信息...]&#xA;1,启用,1001,平台/登录统计,每日登录帐号数,LOGIN_STATS,张三,小明&#xA;" measuredWidth="751" measuredHeight="50" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="187" y="85" width="751" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 分类,(w:30). 名称,(w:30). 编码,使用人,备注,[创建、修改人信息...]&#xA;1,正常,1001,平台/登录统计,每日登录帐号数,LOGIN_STATS,张三,小明&#xA;" measuredWidth="751" measuredHeight="50" alternative="#eeeeee">
       <font/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="188" x="593" y="53" measuredWidth="148" measuredHeight="24">
