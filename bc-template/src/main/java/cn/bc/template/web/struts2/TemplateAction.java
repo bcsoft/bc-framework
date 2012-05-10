@@ -90,7 +90,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(560)
+		return super.buildFormPageOption(editable).setWidth(545)
 				.setMinHeight(200).setMinWidth(300);
 	}
 
@@ -148,27 +148,20 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	// ---- 加载配置参数 ---开始--
 	public String loadTplConfigParam() throws Exception {
 		Json json = new Json();
-		// 附件的扩展名
-		String extension = StringUtils.getFilenameExtension(path);
-
 		Template tpl = this.templateService.load(tid);
+		// 附件的扩展名
+		String extension = StringUtils.getFilenameExtension(tpl.getPath());
 		InputStream is = tpl.getInputStream();
 		List<String> markers;
-		// 自定义文本
-		if (type.equals(Template.TYPE_CUSTOM)) {
-			markers = TemplateUtils.findMarkers(content);
+		if (tpl.isPureText()) {
+			markers = TemplateUtils.findMarkers(is);
 			// 保存参数的集合
 			json.put("value", this.getParamStr(markers));
-		} else if (type.equals(Template.TYPE_EXCEL) && extension.equals("xls")) {
+		} else if (tpl.getType()==Template.TYPE_EXCEL && extension.equals("xls")) {
 			markers = XlsUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
-		} else if (type.equals(Template.TYPE_WORD) && extension.equals("docx")) {
+		} else if (tpl.getType()==Template.TYPE_WORD && extension.equals("docx")) {
 			markers = DocxUtils.findMarkers(is);
-			json.put("value", this.getParamStr(markers));
-		} else if (type.equals(Template.TYPE_TEXT)) {
-			Template txt = new Template();
-			txt.setPath(this.path);
-			markers = TemplateUtils.findMarkers(txt.getInputStream());
 			json.put("value", this.getParamStr(markers));
 		}
 		is.close();
@@ -184,7 +177,6 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 			} else {
 				param = param + "," + list.get(i);
 			}
-
 		}
 		return param;
 	}
@@ -245,19 +237,23 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		this.n = StringUtils.getFilename(template.getSubject());
 		if (isConvertFile(extension) || template.isPureText()) {
 			// 解释需要配置参数替换为指定的值。
-			Map<String, Object> markerValues = new HashMap<String, Object>();
-			JSONArray jsons = new JSONArray(this.markerValueJsons);
-			JSONObject json;
-			Object v;
-			for (int i = 0; i < jsons.length(); i++) {
-				json = jsons.getJSONObject(i);
-				v = json.get("value");
-				if (v instanceof JSONArray) {
-					v = convert2Collection((JSONArray) v);
-				} else if (v instanceof JSONObject) {
-					v = convert2Map((JSONObject) v);
-				}
-				markerValues.put(json.getString("key"), v);
+			Map<String, Object> markerValues = null;
+			JSONArray jsons =null;
+			if(this.markerValueJsons!=null&&this.markerValueJsons.length()>0){
+				markerValues = new HashMap<String, Object>();
+				jsons = new JSONArray(this.markerValueJsons);
+				JSONObject json;
+				Object v;
+				for (int i = 0; i < jsons.length(); i++) {
+					json = jsons.getJSONObject(i);
+					v = json.get("value");
+					if (v instanceof JSONArray) {
+						v = convert2Collection((JSONArray) v);
+					} else if (v instanceof JSONObject) {
+						v = convert2Map((JSONObject) v);
+					}
+					markerValues.put(json.getString("key"), v);
+				}	
 			}
 			InputStream is;
 			if (template.getType() == Template.TYPE_WORD
@@ -277,9 +273,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				is = new ByteArrayInputStream(out.toByteArray());
 				out.close();
 			} else if (template.isPureText()) {
-				template.setContent(FreeMarkerUtils.format(
-						template.getContent(), markerValues));
-				template.setType(Template.TYPE_CUSTOM);
+				if(markerValues!=null&&!markerValues.isEmpty()){
+					template.setContent(FreeMarkerUtils.format(
+							template.getContent(), markerValues));
+					template.setType(Template.TYPE_CUSTOM);
+				}
 				is = template.getInputStream();
 				if (extension == null)
 					extension = "txt";

@@ -29,6 +29,7 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 模板视图Action
@@ -201,15 +202,17 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
+			if(code == null || code.length()==0){
+				// 新建按钮
+				tb.addButton(this.getDefaultCreateToolbarButton());
 
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-					.setText(getText("label.delete"))
-					.setClick("bc.templateList.deleteone"));
+				// 编辑按钮
+				tb.addButton(this.getDefaultEditToolbarButton());
+				// 删除按钮
+				tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
+						.setText(getText("label.delete"))
+						.setClick("bc.templateList.deleteone"));
+			}
 
 			// 下载
 			tb.addButton(new ToolbarButton()
@@ -250,6 +253,23 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		}
 		return statusCondition;
 	}
+	
+	@Override
+	protected Json getGridExtrasData() {
+		Json json = new Json();
+		if(status != null && status.length() > 0 && code != null
+				&& code.length() > 0){
+			json.put("status", status);
+			json.put("code", code);
+		}else if(status != null && status.length() > 0){
+			json.put("status", status);
+		}else if(code != null && code.length() > 0){
+			json.put("code", code);		
+		}
+		if(json.isEmpty()) return null;
+		return json;
+	}
+	
 
 	@Override
 	protected String getHtmlPageJs() {
