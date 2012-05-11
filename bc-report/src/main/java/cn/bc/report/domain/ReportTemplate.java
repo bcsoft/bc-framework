@@ -218,7 +218,7 @@ public class ReportTemplate extends FileEntityImpl {
 		}
 
 		try {
-			configJson = new JSONObject(this.getConfig());
+			configJson = new JSONObject(this.getConfig().replaceAll("\\s", " "));//替换换行、回车等符号为空格
 		} catch (JSONException e) {
 			logger.error(e.getMessage(), e);
 			this.configJson = null;
