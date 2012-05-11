@@ -59,7 +59,18 @@
 		<action name="isUniqueCode" class="reportTemplateAction"
 			method="isUniqueCode" />
 	</package>
-	
+	<!-- 我的报表模板 -->
+	<package name="myReportTemplates" extends="bc-default" namespace="/bc/myReportTemplates">
+		<action name="list" class="reportTemplatesAction" method="list" >
+			<param name="my">true</param>
+		</action>
+		<action name="paging" class="reportTemplatesAction" method="paging" >
+			<param name="my">true</param>
+		</action>
+		<action name="data" class="reportTemplatesAction" method="data" >
+			<param name="my">true</param>
+		</action>
+	</package>
 	<!-- 表报模板选择 -->
 	<package name="selectReportTemplate" extends="bc-default" namespace="/bc/selectReportTemplate">
 		<action name="save" class="selectReportTemplateAction" method="save"/>
@@ -87,16 +98,7 @@
 		<action name="data" class="reportTaskAction" method="data" />
 	</package>
 	
-	<!-- 查看执行记录 -->
-	<package name="viewExcuteReportTaskRecode" extends="bc-default" namespace="/bc/viewExcuteReportTaskRecod">
-		<action name="save" class="viewExcuteReportTaskRecodAction" method="save"/>
-		<action name="delete" class="viewExcuteReportTaskRecodAction" method="delete"/>
-		<action name="list" class="viewExcuteReportTaskRecodAction" method="list"/>
-		<action name="paging" class="viewExcuteReportTaskRecodAction" method="paging"/>
-		<action name="data" class="viewExcuteReportTaskRecodAction" method="data"/>
-	</package>
-	
-	<!-- 报表历史 -->
+	<!-- 历史报表 -->
 	<package name="reportHistory" extends="bc-default" namespace="/bc/reportHistory">
 		<action name="create" class="reportHistoryAction" method="create">
 			<result name="form">/bc/report/history/form.jsp</result>
@@ -112,5 +114,29 @@
 		<action name="list" class="reportHistoryAction" method="list" />
 		<action name="paging" class="reportHistoryAction" method="paging" />
 		<action name="data" class="reportHistoryAction" method="data" />
+	</package>
+	
+	<!-- 我的历史报表 -->
+	<package name="myReportHistorys" extends="bc-default" namespace="/bc/myReportHistorys">
+		<action name="list" class="reportHistorysAction" method="list" >
+			<param name="my">true</param>
+		</action>
+		<action name="paging" class="reportHistorysAction" method="paging" >
+			<param name="my">true</param>
+		</action>
+		<action name="data" class="reportHistorysAction" method="data" >
+			<param name="my">true</param>
+		</action>
+		<action name="conditions" class="reportHistorysAction" method="conditions" >
+			<result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
+		</action>
+	</package>
+	<package name="myReportHistory" extends="bc-default" namespace="/bc/myReportHistory">
+		<action name="edit" class="reportHistoryAction" method="edit">
+			<result name="form">/bc/report/history/form.jsp</result>
+		</action>
+		<action name="open" class="reportHistoryAction" method="open">
+			<result name="formr">/bc/report/history/form.jsp</result>
+		</action> 
 	</package>
 </struts>

@@ -15,6 +15,7 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
@@ -40,7 +41,7 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
-	public String code;
+	public boolean my=false;
 
 	@Override
 	public boolean isReadonly() {
@@ -151,13 +152,18 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getFormActionName() {
-		return "reportTemplate";
+		return my?"myReportTemplate":"reportTemplate";
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
+	}
+	
+	@Override
+	protected String getGridDblRowMethod() {
+		return my?"bc.reportTemplateList.execute":super.getGridDblRowMethod();
 	}
 
 	@Override
@@ -167,17 +173,17 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		if (!this.isReadonly()) {
 			// 新建按钮
 			tb.addButton(this.getDefaultCreateToolbarButton());
-
 			// 编辑按钮
 			tb.addButton(this.getDefaultEditToolbarButton());
 			// 删除按钮
 			tb.addButton(this.getDefaultDisabledToolbarButton());
-			
+		}else if(!this.isReadonly()||my){
 			// 执行按钮
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
 					.setText(getText("reportTemplate.execute"))
 					.setClick("bc.reportTemplateList.execute"));
 		}
+				
 		//状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
 				this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
@@ -191,16 +197,37 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
-		Condition statusCondition = null;
-		if(status != null && status.length() > 0&&code != null&&code.length()>0){
-			statusCondition = new AndCondition(new EqualsCondition("a.status_",Integer.parseInt(status))
-						,new EqualsCondition("a.code",code));
-		}else if(status != null && status.length() > 0){
-			statusCondition=new EqualsCondition("a.status_",Integer.parseInt(status));
-		}else if(code != null && code.length() > 0){
-			statusCondition=new EqualsCondition("a.code",code);
+		AndCondition andCondition =new AndCondition();
+		if(status != null && status.length() > 0){
+			andCondition.add(new EqualsCondition("a.status_",Integer.parseInt(status)));
 		}
-		return statusCondition;
+		
+		if(my){
+			SystemContext context = (SystemContext) this.getContext();
+			//保存的用户id键值集合
+			List<Object> ids=new ArrayList<Object>();
+			ids.add(context.getUser().getId());
+			Long[] aids=context.getAttr(SystemContext.KEY_ANCESTORS);
+			for(Long id:aids){
+				ids.add(id);
+			}
+			
+			//根据集合数量，生成的占位符字符串
+			String qlStr="";
+			for(int i=0;i<ids.size();i++){
+				if(i+1!=ids.size()){
+					qlStr+="?,";
+				}else{
+					qlStr+="?";
+				}
+			}
+			andCondition.add(new QlCondition("a.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
+					,ids));
+		}
+		
+		if(andCondition.isEmpty())return null;
+		
+		return andCondition;
 	}
 	
 	@Override

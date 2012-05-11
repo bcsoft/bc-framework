@@ -17,7 +17,9 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
@@ -47,6 +49,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String success = String.valueOf(true);
 	public Long taskId;
+	public boolean my=false;
 
 	@Override
 	public boolean isReadonly() {
@@ -71,6 +74,8 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.task_id");
 		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
+		sql.append(" left join bc_report_task c on c.id=a.task_id");
+		sql.append(" left join bc_report_template d on d.id=c.pid");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -140,7 +145,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getFormActionName() {
-		return "reportHistory";
+		return my?"myReportHistory":"reportHistory";
 	}
 
 	@Override
@@ -153,17 +158,16 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		if (!this.isReadonly()) {
-			// 下载
-			tb.addButton(new ToolbarButton()
-					.setIcon("ui-icon-arrowthickstop-1-s")
-					.setText(getText("label.download"))
-					.setClick("bc.reportHistoryList.download"));
-			// 在线预览
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("label.preview.inline"))
-					.setClick("bc.reportHistoryList.inline"));
-		}
+		// 下载
+		tb.addButton(new ToolbarButton()
+				.setIcon("ui-icon-arrowthickstop-1-s")
+				.setText(getText("label.download"))
+				.setClick("bc.reportHistoryList.download"));
+		// 在线预览
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
+				.setText(getText("label.preview.inline"))
+				.setClick("bc.reportHistoryList.inline"));
+		
 		//状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
 				this.getStatuses(), "success", 0, getText("report.status.tips")));
@@ -177,16 +181,45 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
-		Condition statusCondition = null;
-		if(success != null && success.length() > 0&&taskId!=null){
-			statusCondition = new AndCondition(new EqualsCondition("a.success",Boolean.valueOf(success)),
-					new EqualsCondition("a.task_id",taskId));
-		}else if(success != null && success.length() > 0){
-			statusCondition = new EqualsCondition("a.success",Boolean.valueOf(success));
-		}else if(taskId!=null){
-			statusCondition =new EqualsCondition("a.task_id",taskId);
+		AndCondition andCondition =new AndCondition();
+		if(success != null && success.length() > 0){
+			andCondition.add(new EqualsCondition("a.success",Boolean.valueOf(success)));
 		}
-		return statusCondition;
+		
+		if(taskId!=null){
+			andCondition.add(new EqualsCondition("a.task_id",taskId));
+		}
+		
+		if(my){
+			SystemContext context = (SystemContext) this.getContext();
+			OrCondition orCondition=new OrCondition();
+			orCondition.add(new EqualsCondition("a.author_id",context.getUser().getId()));
+			//保存的用户id键值集合
+			List<Object> ids=new ArrayList<Object>();
+			ids.add(context.getUser().getId());
+			Long[] aids=context.getAttr(SystemContext.KEY_ANCESTORS);
+			for(Long id:aids){
+				ids.add(id);
+			}
+			
+			//根据集合数量，生成的占位符字符串
+			String qlStr="";
+			for(int i=0;i<ids.size();i++){
+				if(i+1!=ids.size()){
+					qlStr+="?,";
+				}else{
+					qlStr+="?";
+				}
+			}
+			
+			orCondition.add(new QlCondition("d.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
+					,ids));
+			andCondition.add(orCondition.setAddBracket(true));
+		}
+		
+		if(andCondition.isEmpty())return null;
+		
+		return andCondition;
 	}
 	
 
