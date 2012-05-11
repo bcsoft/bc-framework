@@ -131,7 +131,7 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="223" x="8" y="624" width="626" height="161" text="视图说明：&#xD;&#xA;1）只有管理员方可进行相关操作处理。&#xD;&#xA;2）&quot;启动/重置任务&quot;操作将导致相应报表任务被启动（如果原来已停止）或重置（如果原来已启动）。&#xD;&#xA;3）&quot;停止任务&quot;操作将导致相应启动中的报表任务被停止，状态设为&quot;已禁用&quot;。&#xD;&#xA;4）启动中的任务，如果碰到异常，将根据&quot;忽略异常&quot;的配置确定是否继续调度下去。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）新建保存后默认状态为&quot;已停止&quot;，需要在视图中执行&quot;启动/重置任务&quot;操作方可启动任务。&#xD;&#xA;" measuredWidth="626" measuredHeight="161" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="223" x="8" y="624" width="626" height="161" text="视图说明：&#xD;&#xA;1）只有管理员方可进行相关操作处理。&#xD;&#xA;2）&quot;启动/重置任务&quot;操作将导致相应报表任务被启动（如果原来已停止）或重置（如果原来已启动）。&#xD;&#xA;3）&quot;停止任务&quot;操作将导致相应启动中的报表任务被停止，状态设为&quot;已停止&quot;。&#xD;&#xA;4）启动中的任务，如果碰到异常，将根据&quot;忽略异常&quot;的配置确定是否继续调度下去。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）新建保存后默认状态为&quot;已停止&quot;，需要在视图中执行&quot;启动/重置任务&quot;操作方可启动任务。&#xD;&#xA;" measuredWidth="626" measuredHeight="161" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>
