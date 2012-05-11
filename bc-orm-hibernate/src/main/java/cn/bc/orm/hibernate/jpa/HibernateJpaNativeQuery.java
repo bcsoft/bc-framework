@@ -18,11 +18,9 @@ import org.springframework.util.StringUtils;
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.JdbcUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.orm.hibernate.HibernateUtils;
 
 /**
  * 基于hibernate的查询接口实现
@@ -58,20 +56,21 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	}
 
 	private String getSql() {
-		String sql_ = sqlObject.getSql();
-		if (condition != null) {
-			String expression = this.condition.getExpression();
-			if (condition instanceof OrderCondition) {
-				sql_ += " order by " + expression;
-			} else {
-				if (expression != null && expression.startsWith("order by")) {
-					sql_ += " " + expression;
-				} else if (expression != null && expression.length() > 0) {
-					sql_ += " where " + expression;
-				}
-			}
-		}
-		return sql_;
+		// String sql_ = sqlObject.getSql();
+		// if (condition != null) {
+		// String expression = this.condition.getExpression();
+		// if (condition instanceof OrderCondition) {
+		// sql_ += " order by " + expression;
+		// } else {
+		// if (expression != null && expression.startsWith("order by")) {
+		// sql_ += " " + expression;
+		// } else if (expression != null && expression.length() > 0) {
+		// sql_ += " where " + expression;
+		// }
+		// }
+		// }
+		// return sql_;
+		return sqlObject.getSql(condition);
 	}
 
 	// --implements Query
@@ -82,13 +81,15 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 	}
 
 	public int count() {
-		String queryTemp = HibernateUtils.removeOrderBy(getSql());
-		if (!queryTemp.startsWith("select")) {
-			queryTemp = "select count(*) " + queryTemp;
-		} else {
-			queryTemp = "select count(*) "
-					+ HibernateUtils.removeSelect(queryTemp);
-		}
+		// String queryTemp = HibernateUtils.removeOrderBy(getSql());
+		// if (!queryTemp.startsWith("select")) {
+		// queryTemp = "select count(*) " + queryTemp;
+		// } else {
+		// queryTemp = "select count(*) "
+		// + HibernateUtils.removeSelect(queryTemp);
+		// }
+		String queryTemp = "select count(*) "
+				+ this.sqlObject.getFromWhereSql(condition);
 
 		// 合并参数
 		final List<Object> args = new ArrayList<Object>();

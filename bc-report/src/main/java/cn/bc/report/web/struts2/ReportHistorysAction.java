@@ -49,7 +49,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String success = String.valueOf(true);
 	public Long taskId;
-	public boolean my=false;
+	public boolean my = false;
 
 	@Override
 	public boolean isReadonly() {
@@ -62,21 +62,20 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.file_date",Direction.Desc);
+		return new OrderCondition("a.file_date", Direction.Desc);
 	}
 
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
-		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.task_id");
-		sql.append(" from bc_report_history a");
-		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		sql.append(" left join bc_report_task c on c.id=a.task_id");
-		sql.append(" left join bc_report_template d on d.id=c.pid");
-		sqlObject.setSql(sql.toString());
+		// 构建查询语句
+		sqlObject
+				.setSelect("a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.task_id");
+		sqlObject.setFrom("bc_report_history a"
+				+ " inner join bc_identity_actor_history b on b.id=a.author_id"
+				+ " left join bc_report_task c on c.id=a.task_id"
+				+ " left join bc_report_template d on d.id=c.pid");
 
 		// 注入参数
 		sqlObject.setArgs(null);
@@ -113,23 +112,23 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				getText("report.category"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.subject", "subject",
-				getText("reportHistory.subject"), 200).setUseTitleFromLabel(true));
+				getText("reportHistory.subject"), 200)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.path", "path",
 				getText("reportHistory.path"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
 				getText("report.author")));
 		return columns;
 	}
-	
-	//状态键值转换
-	private Map<String,String> getStatuses(){
-		Map<String,String> statuses=new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(true)
-				, getText("reportHistory.status.success"));
-		statuses.put(String.valueOf(false)
-				, getText("reportHistory.status.lost"));
-		statuses.put(""
-				, getText("report.status.all"));
+
+	// 状态键值转换
+	private Map<String, String> getStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(true),
+				getText("reportHistory.status.success"));
+		statuses.put(String.valueOf(false),
+				getText("reportHistory.status.lost"));
+		statuses.put("", getText("report.status.all"));
 		return statuses;
 	}
 
@@ -140,12 +139,12 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.subject", "b.actor_name","a.category" };
+		return new String[] { "a.subject", "b.actor_name", "a.category" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return my?"myReportHistory":"reportHistory";
+		return my ? "myReportHistory" : "reportHistory";
 	}
 
 	@Override
@@ -159,87 +158,90 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		// 下载
-		tb.addButton(new ToolbarButton()
-				.setIcon("ui-icon-arrowthickstop-1-s")
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthickstop-1-s")
 				.setText(getText("label.download"))
 				.setClick("bc.reportHistoryList.download"));
 		// 在线预览
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
 				.setText(getText("label.preview.inline"))
 				.setClick("bc.reportHistoryList.inline"));
-		
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "success", 0, getText("report.status.tips")));
+
+		// 状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+				"success", 0, getText("report.status.tips")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
 	}
-	
+
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
-		AndCondition andCondition =new AndCondition();
-		if(success != null && success.length() > 0){
-			andCondition.add(new EqualsCondition("a.success",Boolean.valueOf(success)));
+		AndCondition andCondition = new AndCondition();
+		if (success != null && success.length() > 0) {
+			andCondition.add(new EqualsCondition("a.success", Boolean
+					.valueOf(success)));
 		}
-		
-		if(taskId!=null){
-			andCondition.add(new EqualsCondition("a.task_id",taskId));
+
+		if (taskId != null) {
+			andCondition.add(new EqualsCondition("a.task_id", taskId));
 		}
-		
-		if(my){
+
+		if (my) {
 			SystemContext context = (SystemContext) this.getContext();
-			OrCondition orCondition=new OrCondition();
-			orCondition.add(new EqualsCondition("a.author_id",context.getUser().getId()));
-			//保存的用户id键值集合
-			List<Object> ids=new ArrayList<Object>();
+			OrCondition orCondition = new OrCondition();
+			orCondition.add(new EqualsCondition("a.author_id", context
+					.getUser().getId()));
+			// 保存的用户id键值集合
+			List<Object> ids = new ArrayList<Object>();
 			ids.add(context.getUser().getId());
-			Long[] aids=context.getAttr(SystemContext.KEY_ANCESTORS);
-			for(Long id:aids){
+			Long[] aids = context.getAttr(SystemContext.KEY_ANCESTORS);
+			for (Long id : aids) {
 				ids.add(id);
 			}
-			
-			//根据集合数量，生成的占位符字符串
-			String qlStr="";
-			for(int i=0;i<ids.size();i++){
-				if(i+1!=ids.size()){
-					qlStr+="?,";
-				}else{
-					qlStr+="?";
+
+			// 根据集合数量，生成的占位符字符串
+			String qlStr = "";
+			for (int i = 0; i < ids.size(); i++) {
+				if (i + 1 != ids.size()) {
+					qlStr += "?,";
+				} else {
+					qlStr += "?";
 				}
 			}
-			
-			orCondition.add(new QlCondition("d.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
-					,ids));
+
+			orCondition.add(new QlCondition(
+					"d.id in (select r.tid from  bc_report_template_actor r where r.aid in ("
+							+ qlStr + "))", ids));
 			andCondition.add(orCondition.setAddBracket(true));
 		}
-		
-		if(andCondition.isEmpty())return null;
-		
+
+		if (andCondition.isEmpty())
+			return null;
+
 		return andCondition;
 	}
-	
 
 	@Override
 	protected String getHtmlPageJs() {
 		return this.getHtmlPageNamespace() + "/report/history/list.js";
 	}
-	
+
 	@Override
 	protected Json getGridExtrasData() {
 		Json json = new Json();
-		if(success != null && success.length() > 0&&taskId!=null){
+		if (success != null && success.length() > 0 && taskId != null) {
 			json.put("success", success);
 			json.put("taskId", taskId);
-		}else if(success != null && success.length() > 0){
+		} else if (success != null && success.length() > 0) {
 			json.put("success", success);
-		}else if(taskId!=null){
-			json.put("taskId", taskId);		
+		} else if (taskId != null) {
+			json.put("taskId", taskId);
 		}
-		if(json.isEmpty()) return null;
+		if (json.isEmpty())
+			return null;
 		return json;
 	}
 
@@ -248,25 +250,28 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
+
 	public ReportHistoryService reportHistoryService;
-	
+
 	@Autowired
-	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
-		this.reportHistoryService=reportHistoryService;
+	public void setReportHistoryService(
+			ReportHistoryService reportHistoryService) {
+		this.reportHistoryService = reportHistoryService;
 	}
-	
+
 	public JSONArray categorys;// 所属分类下拉列表信息
-	
+
 	@Override
 	protected void initConditionsFrom() throws Exception {
-		this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
+		this.categorys = OptionItem.toLabelValues(this.reportHistoryService
+				.findCategoryOption());
 	}
 
 	@Override
 	public String getAdvanceSearchConditionsJspPath() {
 		return BCConstants.NAMESPACE + "/report/history";
 	}
-		
+
 	// ==高级搜索代码结束==
 
 }
