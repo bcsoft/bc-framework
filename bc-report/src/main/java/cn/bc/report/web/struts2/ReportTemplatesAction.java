@@ -14,6 +14,7 @@ import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.db.jdbc.RowMapper;
@@ -217,9 +218,6 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		}
 		
 		if(my){
-			//我的报表显示为状态正常的
-			andCondition.add(new EqualsCondition("a.status_",BCConstants.STATUS_ENABLED));
-			
 			SystemContext context = (SystemContext) this.getContext();
 			//保存的用户id键值集合
 			List<Object> ids=new ArrayList<Object>();
@@ -238,8 +236,16 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 					qlStr+="?";
 				}
 			}
-			andCondition.add(new QlCondition("a.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
-					,ids));
+			andCondition.add(
+				//我的报表显示为状态正常的
+				new EqualsCondition("a.status_",BCConstants.STATUS_ENABLED),
+				new OrCondition(
+					//如果不配置使用人，则所有人都有权限使用
+					new QlCondition("a.id not in(select r.tid from  bc_report_template_actor r)",new Object[]{}),
+					//报表的使用人
+					new QlCondition("a.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
+						,ids)).setAddBracket(true)
+			);		
 		}
 		
 		if(andCondition.isEmpty())return null;
