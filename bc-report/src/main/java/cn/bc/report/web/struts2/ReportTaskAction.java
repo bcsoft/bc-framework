@@ -70,8 +70,7 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 			pageOption.addButton(new ButtonOption(getText("reportTask.viewExcuteRecode"), null,
 					"bc.reportTaskForm.viewExcuteRecode"));
 			// 添加保存按钮
-			pageOption.addButton(new ButtonOption(getText("label.save"), null,
-					"bc.reportTaskForm.save"));
+			pageOption.addButton(this.getDefaultSaveButtonOption());
 		}
 	}
 
