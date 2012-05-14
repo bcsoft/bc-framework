@@ -87,26 +87,26 @@ public class SelectReportTemplateAction extends
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
-				getText("reportTemplate.order"), 60).setSortable(true));
+				getText("report.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",
-				getText("reportTemplate.category"), 100).setSortable(true)
+				getText("report.category"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("reportTemplate.name"), 200).setUseTitleFromLabel(true));
+				getText("report.name"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("reportTemplate.code"), 100).setSortable(true)
+				getText("report.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("reportTemplate.desc")).setUseTitleFromLabel(true));
+				getText("report.desc")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
-				getText("reportTemplate.author"), 80));
+				getText("report.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("reportTemplate.fileDate"), 130)
+				getText("report.fileDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("reportTemplate.modifier"), 80));
+				getText("report.modifier"), 80));
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("reportTemplate.modifiedDate"), 130)
+				getText("report.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		return columns;
 	}

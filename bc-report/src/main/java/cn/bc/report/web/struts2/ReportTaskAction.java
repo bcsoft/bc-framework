@@ -57,7 +57,7 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 	@Override
 	protected void afterCreate(ReportTask entity) {
 		super.afterCreate(entity);
-		entity.setStartDate(Calendar.getInstance());
+		entity.setIgnoreError(false);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 		boolean readonly = this.isReadonly();
 
 		if (editable && !readonly) {
-			// 添加执行按钮
+			// 添加查看调度历史按钮
 			pageOption.addButton(new ButtonOption(getText("reportTask.viewExcuteRecode"), null,
 					"bc.reportTaskForm.viewExcuteRecode"));
 			// 添加保存按钮
@@ -75,10 +75,26 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 		}
 	}
 
+	// 启动/重置
+		public String start() throws Exception {
+			if (this.getIds() == null || this.getIds().length() == 0) {
+				throw new CoreException("must set property ids");
+			}
 
-	
-	@Override
-	public String delete() throws Exception {
+			Long[] ids = cn.bc.core.util.StringUtils.stringArray2LongArray(this
+					.getIds().split(","));
+			for (Long id : ids) {
+				
+			}
+
+			Json json = new Json();
+			json.put("msg", "任务启动/重置成功！");
+			this.json=json.toString();
+			return "json";
+		}
+
+	//停止任务
+	public String stop() throws Exception {
 		SystemContext context = this.getSystyemContext();
 		// 将状态设置为禁用而不是物理删除,更新最后修改人和修改时间
 		Map<String, Object> attributes = new HashMap<String, Object>();
@@ -86,19 +102,16 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 		attributes.put("modifier", context.getUserHistory());
 		attributes.put("modifiedDate", Calendar.getInstance());
 
-		if (this.getId() != null) {// 处理一条
-			this.reportTaskService.update(this.getId(), attributes);
-		} else {// 处理一批
-			if (this.getIds() != null && this.getIds().length() > 0) {
-				Long[] ids = cn.bc.core.util.StringUtils
-						.stringArray2LongArray(this.getIds().split(","));
-				this.reportTaskService.update(ids, attributes);
-			} else {
-				throw new CoreException("must set property id or ids");
-			}
+		if (this.getIds() != null && this.getIds().length() > 0) {
+			Long[] ids = cn.bc.core.util.StringUtils
+					.stringArray2LongArray(this.getIds().split(","));
+			this.reportTaskService.update(ids, attributes);
+		} else {
+			throw new CoreException("must set property id or ids");
 		}
+		
 		Json json = new Json();
-		json.put("msg", getText("form.disabled.success"));
+		json.put("msg", "任务停止成功！");
 		this.json=json.toString();
 		return "json";
 	}

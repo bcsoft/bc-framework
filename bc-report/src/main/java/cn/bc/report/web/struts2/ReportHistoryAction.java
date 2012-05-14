@@ -41,7 +41,7 @@ public class ReportHistoryAction extends EntityAction<Long, ReportHistory> {
 	
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(650)
+		return super.buildFormPageOption(editable).setWidth(500)
 				.setMinHeight(200).setMinWidth(300);
 	}
 

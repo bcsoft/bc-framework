@@ -25,7 +25,7 @@ import cn.bc.identity.domain.FileEntityImpl;
 public class ReportTask extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
-	private int status;// 状态：0-正常,1-禁用
+	private int status;// 状态：0-已启用2,1-已禁用
 	private String orderNo;// 排序号
 	private String name;// 任务名称
 	private String cron;// 定时表达式，按标准的cron表达式，参考http://rongjih.blog.163.com/blog/static/33574461201032011858793/
@@ -34,6 +34,7 @@ public class ReportTask extends FileEntityImpl {
 	private ReportTemplate template;// 所用模板
 	
 	private Calendar startDate;//开始时间
+	private boolean ignoreError = false; // 发现异常是否忽略后继续调度
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
@@ -105,4 +106,12 @@ public class ReportTask extends FileEntityImpl {
 		this.startDate = startDate;
 	}
 
+	@Column(name = "IGNORE_ERROR")
+	public boolean isIgnoreError() {
+		return ignoreError;
+	}
+
+	public void setIgnoreError(boolean stopInError) {
+		this.ignoreError = stopInError;
+	}
 }

@@ -96,6 +96,10 @@
 		<action name="list" class="reportTaskAction" method="list" />
 		<action name="paging" class="reportTaskAction" method="paging" />
 		<action name="data" class="reportTaskAction" method="data" />
+		<!-- 启动/重置任务 -->
+		<action name="start" class="reportTaskAction" method="start" />
+		<!-- 停止任务 -->
+		<action name="stop" class="reportTaskAction" method="stop" />
 	</package>
 	
 	<!-- 历史报表 -->

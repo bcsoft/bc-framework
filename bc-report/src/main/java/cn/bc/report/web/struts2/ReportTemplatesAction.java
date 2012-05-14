@@ -101,29 +101,29 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
 		columns.add(new TextColumn4MapKey("a.status_", "status",
-				getText("reportTemplate.status"), 40).setSortable(true)
+				getText("report.status"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
-				getText("reportTemplate.order"), 60).setSortable(true));
+				getText("report.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",
-				getText("reportTemplate.category"), 200).setSortable(true)
+				getText("report.category"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("reportTemplate.name"), 250).setUseTitleFromLabel(true));
+				getText("report.name"), 250).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("reportTemplate.code"), 200).setSortable(true)
+				getText("report.code"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("reportTemplate.desc")).setUseTitleFromLabel(true));
+				getText("report.desc")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
-				getText("reportTemplate.author"), 80));
+				getText("report.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("reportTemplate.fileDate"), 130)
+				getText("report.fileDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("reportTemplate.modifier"), 80));
+				getText("report.modifier"), 80));
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("reportTemplate.modifiedDate"), 130)
+				getText("report.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		return columns;
 	}
@@ -132,11 +132,11 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	private Map<String,String> getStatuses(){
 		Map<String,String> statuses=new LinkedHashMap<String, String>();
 		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED)
-				, getText("reportTemplate.status.normal"));
+				, getText("report.status.normal"));
 		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED)
-				, getText("reportTemplate.status.disabled"));
+				, getText("report.status.disabled"));
 		statuses.put(""
-				, getText("reportTemplate.status.all"));
+				, getText("bc.status.all"));
 		return statuses;
 	}
 
@@ -170,24 +170,32 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		if (!this.isReadonly()) {
+		if (!this.isReadonly()&&!my) {
 			// 新建按钮
 			tb.addButton(this.getDefaultCreateToolbarButton());
 			// 编辑按钮
 			tb.addButton(this.getDefaultEditToolbarButton());
 			// 删除按钮
 			tb.addButton(this.getDefaultDisabledToolbarButton());
-		}else if(!this.isReadonly()||my){
 			// 执行按钮
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
 					.setText(getText("reportTemplate.execute"))
 					.setClick("bc.reportTemplateList.execute"));
+			//状态按钮组
+			tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+					this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
+			
+		}else{
+			// 执行按钮
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
+					.setText(getText("reportTemplate.execute"))
+					.setClick("bc.reportTemplateList.execute"));
+			// 查看历史报表
+			tb.addButton(new ToolbarButton().setIcon("ui-icon ui-icon-lightbulb")
+					.setText(getText("myReportTemplate.viewReportHistory"))
+					.setClick("bc.reportTemplateList.viewReportHistory"));
 		}
 				
-		//状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-				this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
-
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
@@ -200,9 +208,10 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		AndCondition andCondition =new AndCondition();
 		if(status != null && status.length() > 0){
 			andCondition.add(new EqualsCondition("a.status_",Integer.parseInt(status)));
-		}
-		
-		if(my){
+		}else if(my){
+			//我的报表显示为状态正常的
+			andCondition.add(new EqualsCondition("a.status_",BCConstants.STATUS_ENABLED));
+			
 			SystemContext context = (SystemContext) this.getContext();
 			//保存的用户id键值集合
 			List<Object> ids=new ArrayList<Object>();
@@ -235,11 +244,4 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		return this.getHtmlPageNamespace() + "/report/template/list.js";
 	}
 
-	/*// ==高级搜索代码开始==
-	@Override
-	protected boolean useAdvanceSearch() {
-		return true;
-	}
-	// ==高级搜索代码结束==
-*/
 }

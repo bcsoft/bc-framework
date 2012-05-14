@@ -48,7 +48,8 @@ import cn.bc.web.ui.json.Json;
 public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String success = String.valueOf(true);
-	public Long taskId;
+	public String sourceType;
+	public Long sourceId;
 	public boolean my=false;
 
 	@Override
@@ -71,11 +72,15 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.task_id");
+		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.source_type as sourceType");
 		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		sql.append(" left join bc_report_task c on c.id=a.task_id");
-		sql.append(" left join bc_report_template d on d.id=c.pid");
+		//报表任务
+		if(sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2。task"))){
+			sql.append(" inner join bc_report_task c on c.id=a.source_id");	
+		}else if(my){
+			sql.append(" left join bc_report_task c on c.id=a.source_id");
+		}
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -93,6 +98,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("path", rs[i++]);
 				map.put("uname", rs[i++]);
+				map.put("sourceType", rs[i++]);
 				return map;
 			}
 		});
@@ -109,6 +115,9 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
 				getText("report.fileDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("a.source_type", "sourceType",
+				getText("reportHistory.source"), 65).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",
 				getText("report.category"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -129,7 +138,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		statuses.put(String.valueOf(false)
 				, getText("reportHistory.status.lost"));
 		statuses.put(""
-				, getText("report.status.all"));
+				, getText("bc.status.all"));
 		return statuses;
 	}
 
@@ -185,15 +194,16 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		if(success != null && success.length() > 0){
 			andCondition.add(new EqualsCondition("a.success",Boolean.valueOf(success)));
 		}
-		
-		if(taskId!=null){
-			andCondition.add(new EqualsCondition("a.task_id",taskId));
+		//报表任务查看历史
+		if(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2。task"))){
+			andCondition.add(new EqualsCondition("a.source_type",sourceType));
+			andCondition.add(new EqualsCondition("a.source_id",sourceId));
 		}
 		
 		if(my){
+			//((a.author_id=100729 and a.source_type = '用户生成' ) or (a.source_type = '报表任务' and t.pid in (select r.tid from  bc_report_template_actor r where r.aid in (100024,1,100024))))
 			SystemContext context = (SystemContext) this.getContext();
-			OrCondition orCondition=new OrCondition();
-			orCondition.add(new EqualsCondition("a.author_id",context.getUser().getId()));
+
 			//保存的用户id键值集合
 			List<Object> ids=new ArrayList<Object>();
 			ids.add(context.getUser().getId());
@@ -211,10 +221,20 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					qlStr+="?";
 				}
 			}
-			
-			orCondition.add(new QlCondition("d.id in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
-					,ids));
-			andCondition.add(orCondition.setAddBracket(true));
+		
+			andCondition.add(
+				new OrCondition(
+					new OrCondition(
+						new EqualsCondition("a.author_id",context.getUserHistory().getId()),
+						new EqualsCondition("a.source_type",getText("reportHistory.source2.user"))		
+						).setAddBracket(true),
+					new AndCondition(
+						new EqualsCondition("a.source_type",getText("reportHistory.source2.task")),
+						new QlCondition("c.pid in (select r.tid from  bc_report_template_actor r where r.aid in ("+qlStr+"))"
+									,ids)
+					).setAddBracket(true)
+				).setAddBracket(true)
+			);
 		}
 		
 		if(andCondition.isEmpty())return null;
@@ -231,13 +251,15 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Json getGridExtrasData() {
 		Json json = new Json();
-		if(success != null && success.length() > 0&&taskId!=null){
+		if(success != null && success.length() > 0l){
 			json.put("success", success);
-			json.put("taskId", taskId);
-		}else if(success != null && success.length() > 0){
-			json.put("success", success);
-		}else if(taskId!=null){
-			json.put("taskId", taskId);		
+		}
+		if(sourceType != null && sourceType.length() > 0&&sourceType.equals(getText("reportHistory.source2。task"))){
+			json.put("sourceType", sourceType);
+			json.put("sourceId", sourceId);	
+		}
+		if(my){
+			json.put("my","true");
 		}
 		if(json.isEmpty()) return null;
 		return json;

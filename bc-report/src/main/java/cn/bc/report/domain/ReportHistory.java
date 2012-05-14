@@ -33,19 +33,10 @@ public class ReportHistory extends EntityImpl {
 	private String msg;// 运行结果的描述信息，如成功、异常信息
 	private boolean success;// 运行是否成功
 	private String path;// 报表运行结果所在的相对路径（相对于DATA_SUB_PATH下的子路径），如果有多个附件用分号连接
-	private Long taskId;// 对应的报表任务ID，仅作记录不作外键关联
-
+	private String sourceType;//来源
+	private String sourceId;//来源id
 	private Calendar fileDate;// 创建时间
 	private ActorHistory author;// 创建人
-
-	@Column(name = "TASK_ID")
-	public Long getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(Long taskId) {
-		this.taskId = taskId;
-	}
 
 	public String getCategory() {
 		return category;
@@ -105,4 +96,24 @@ public class ReportHistory extends EntityImpl {
 	public void setAuthor(ActorHistory author) {
 		this.author = author;
 	}
+
+	@Column(name="SOURCE_TYPE")
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	@Column(name="SOURCE_ID")
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+	
+	
 }
