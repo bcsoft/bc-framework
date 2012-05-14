@@ -273,14 +273,22 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	}
 
 	public JSONArray categorys;// 所属分类下拉列表信息
+	public JSONArray sources;
 
 	@Override
 	protected void initConditionsFrom() throws Exception {
-		this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
+		if(!(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2.task")))){
+			this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
+			this.sources=OptionItem.toLabelValues(this.reportHistoryService.findSourceOption());
+		}
 	}
 
 	@Override
 	public String getAdvanceSearchConditionsJspPath() {
+		//报表任务查看历史
+		if(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2.task"))){
+			return BCConstants.NAMESPACE + "/report/history/task";
+		}
 		return BCConstants.NAMESPACE + "/report/history";
 	}
 		

@@ -33,6 +33,21 @@ public class ReportHistoryDaoImpl extends HibernateCrudJpaDao<ReportHistory>
 				}
 		});
 	}
+	
+	public List<Map<String, String>> findSourceOption() {
+		String hql="SELECT a.source_type,1";
+		   hql+=" FROM bc_report_history a";
+		   hql+=" GROUP BY a.source_type"; 
+		 return	HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(), hql,null
+		 	,new RowMapper<Map<String, String>>() {
+				public Map<String, String> mapRow(Object[] rs, int rowNum) {
+					Map<String, String> oi = new HashMap<String, String>();
+					int i = 0;
+					oi.put("value", rs[i++].toString());
+					return oi;
+				}
+		});
+	}
 
 	
 }

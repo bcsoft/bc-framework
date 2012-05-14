@@ -30,4 +30,8 @@ public class ReportHistoryServiceImpl extends
 	public List<Map<String, String>> findCategoryOption() {
 		return this.reportHistoryDao.findCategoryOption();
 	}
+
+	public List<Map<String, String>> findSourceOption() {
+		return this.reportHistoryDao.findSourceOption();
+	}
 }
