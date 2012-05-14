@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="713" measuredHeight="153">
-    <widgets xsi:type="model:Window" id="1" y="24" width="713" height="129" text="报表任务信息" measuredWidth="713" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="777" measuredHeight="153">
+    <widgets xsi:type="model:Window" id="1" y="24" width="777" height="129" text="报表任务信息" measuredWidth="777" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="2" y="83" width="625" measuredWidth="625" measuredHeight="6"/>
     <widgets xsi:type="model:ButtonBar" id="3" y="50" width="293" text="新建,编辑,删除,启动/重置任务,停止任务" measuredWidth="293" measuredHeight="30" selection="">
       <font/>
@@ -11,10 +11,10 @@
       <items x="133" y="0" width="97" height="30" text="启动/重置任务"/>
       <items x="230" y="0" width="63" height="30" text="停止任务"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="5" y="85" width="713" text="(w:30). !,(w:30). 状态,(w:30). 排序号,定时表达式,忽略异常,(w:30). 分类,(w:30). 任务名称,(w:30). 所用模板,(w:30). 备注,[创建、修改人信息...]&#xA;1,已启动,1001,0 0 12 * * ？,否,营运系统/发票统计,发票销售统计表(按年),发票销售统计表(按年)" measuredWidth="713" measuredHeight="50" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" y="85" width="777" text="(w:30). !,(w:30). 状态,(w:30). 排序号,定时表达式,忽略异常,(w:30). 分类,(w:30). 任务名称,(w:30). 所用模板,(w:30). 备注,[创建、修改人信息...]&#xA;1,已启动,1001,0 0 12 * * ？,否,营运系统/发票统计,发票销售统计表(按年),发票销售统计表(按年)" measuredWidth="777" measuredHeight="50" alternative="#eeeeee">
       <font/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="6" x="539" y="53" measuredWidth="148" measuredHeight="24">
+    <widgets xsi:type="model:WidgetGroup" id="6" x="624" y="53" measuredWidth="148" measuredHeight="24">
       <widgets xsi:type="model:SearchField" id="7" width="148" measuredWidth="148" measuredHeight="24"/>
     </widgets>
     <widgets xsi:type="model:Label" id="216" text="视图：" measuredWidth="41" measuredHeight="25">
@@ -131,7 +131,7 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="223" x="8" y="624" width="626" height="161" text="视图说明：&#xD;&#xA;1）只有管理员方可进行相关操作处理。&#xD;&#xA;2）&quot;启动/重置任务&quot;操作将导致相应报表任务被启动（如果原来已停止）或重置（如果原来已启动）。&#xD;&#xA;3）&quot;停止任务&quot;操作将导致相应启动中的报表任务被停止，状态设为&quot;已禁用&quot;。&#xD;&#xA;4）启动中的任务，如果碰到异常，将根据&quot;忽略异常&quot;的配置确定是否继续调度下去。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）新建保存后默认状态为&quot;已停止&quot;，需要在视图中执行&quot;启动/重置任务&quot;操作方可启动任务。&#xD;&#xA;" measuredWidth="626" measuredHeight="161" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="223" x="8" y="624" width="626" height="161" text="视图说明：&#xD;&#xA;1）只有管理员方可进行相关操作处理。&#xD;&#xA;2）&quot;启动/重置任务&quot;操作将导致相应报表任务被启动（如果原来已停止）或重置（如果原来已启动）。&#xD;&#xA;3）&quot;停止任务&quot;操作将导致相应启动中的报表任务被停止，状态设为&quot;已停止&quot;。&#xD;&#xA;4）启动中的任务，如果碰到异常，将根据&quot;忽略异常&quot;的配置确定是否继续调度下去。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）新建保存后默认状态为&quot;已停止&quot;，需要在视图中执行&quot;启动/重置任务&quot;操作方可启动任务。&#xD;&#xA;" measuredWidth="626" measuredHeight="161" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>

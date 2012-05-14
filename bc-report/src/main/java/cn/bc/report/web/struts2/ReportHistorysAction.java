@@ -50,7 +50,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	public String success = String.valueOf(true);
 	public String sourceType;
 	public Long sourceId;
-	public boolean my=false;
+	public boolean my = false;
 
 	@Override
 	public boolean isReadonly() {
@@ -63,7 +63,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.file_date",Direction.Desc);
+		return new OrderCondition("a.file_date", Direction.Desc);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				getText("report.author")));
 		return columns;
 	}
-	
+		
 	//状态键值转换
 	private Map<String,String> getStatuses(){
 		Map<String,String> statuses=new LinkedHashMap<String, String>();
@@ -149,12 +149,12 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.subject", "b.actor_name","a.category" };
+		return new String[] { "a.subject", "b.actor_name", "a.category" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return my?"myReportHistory":"reportHistory";
+		return my ? "myReportHistory" : "reportHistory";
 	}
 
 	@Override
@@ -190,28 +190,27 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
-		AndCondition andCondition =new AndCondition();
-		if(success != null && success.length() > 0){
-			andCondition.add(new EqualsCondition("a.success",Boolean.valueOf(success)));
+		AndCondition andCondition = new AndCondition();
+		if (success != null && success.length() > 0) {
+			andCondition.add(new EqualsCondition("a.success", Boolean
+					.valueOf(success)));
 		}
 		//报表任务查看历史
 		if(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2。task"))){
 			andCondition.add(new EqualsCondition("a.source_type",sourceType));
 			andCondition.add(new EqualsCondition("a.source_id",sourceId));
 		}
-		
-		if(my){
+
+		if (my) {
 			//((a.author_id=100729 and a.source_type = '用户生成' ) or (a.source_type = '报表任务' and t.pid in (select r.tid from  bc_report_template_actor r where r.aid in (100024,1,100024))))
 			SystemContext context = (SystemContext) this.getContext();
 
 			//保存的用户id键值集合
 			List<Object> ids=new ArrayList<Object>();
-			ids.add(context.getUser().getId());
-			Long[] aids=context.getAttr(SystemContext.KEY_ANCESTORS);
-			for(Long id:aids){
+			Long[] aids = context.getAttr(SystemContext.KEY_ANCESTORS);
+			for (Long id : aids) {
 				ids.add(id);
 			}
-			
 			//根据集合数量，生成的占位符字符串
 			String qlStr="";
 			for(int i=0;i<ids.size();i++){
@@ -219,8 +218,6 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					qlStr+="?,";
 				}else{
 					qlStr+="?";
-				}
-			}
 		
 			andCondition.add(
 				new OrCondition(
@@ -236,25 +233,25 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				).setAddBracket(true)
 			);
 		}
-		
-		if(andCondition.isEmpty())return null;
-		
+
+		if (andCondition.isEmpty())
+			return null;
+
 		return andCondition;
 	}
-	
 
 	@Override
 	protected String getHtmlPageJs() {
 		return this.getHtmlPageNamespace() + "/report/history/list.js";
 	}
-	
+
 	@Override
 	protected Json getGridExtrasData() {
 		Json json = new Json();
 		if(success != null && success.length() > 0l){
 			json.put("success", success);
 		}
-		if(sourceType != null && sourceType.length() > 0&&sourceType.equals(getText("reportHistory.source2。task"))){
+		if(sourceType != null && sourceType.length() > 0&&sourceType.equals(getText("reportHistory.source2.task"))){
 			json.put("sourceType", sourceType);
 			json.put("sourceId", sourceId);	
 		}
@@ -270,15 +267,16 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
+
 	public ReportHistoryService reportHistoryService;
 	
 	@Autowired
 	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
 		this.reportHistoryService=reportHistoryService;
 	}
-	
+
 	public JSONArray categorys;// 所属分类下拉列表信息
-	
+
 	@Override
 	protected void initConditionsFrom() throws Exception {
 		this.categorys=OptionItem.toLabelValues(this.reportHistoryService.findCategoryOption());
