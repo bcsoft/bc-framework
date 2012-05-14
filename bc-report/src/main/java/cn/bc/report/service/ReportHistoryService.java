@@ -19,4 +19,10 @@ public interface ReportHistoryService extends CrudService<ReportHistory> {
 	 * @return
 	 */
 	public List<Map<String,String>> findCategoryOption();
+	
+	/**
+	 * 查找来源选项
+	 * 
+	 */
+	public List<Map<String, String>> findSourceOption();
 }

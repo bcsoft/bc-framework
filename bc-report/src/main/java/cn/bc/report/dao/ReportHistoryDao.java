@@ -19,4 +19,10 @@ public interface ReportHistoryDao extends CrudDao<ReportHistory> {
 	 * @return
 	 */
 	public List<Map<String,String>> findCategoryOption();
+	
+	/**
+	 * 查找来源选项
+	 * 
+	 */
+	public List<Map<String, String>> findSourceOption();
 }
