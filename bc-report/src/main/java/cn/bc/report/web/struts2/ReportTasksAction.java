@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
-import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -185,6 +183,8 @@ public class ReportTasksAction extends ViewAction<Map<String, Object>> {
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
 					.setText(getText("reportTask.stop"))
 					.setClick("bc.reportTaskList.stop"));
+		}else{
+			tb.addButton(getDefaultOpenToolbarButton());
 		}
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());

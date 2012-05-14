@@ -28,6 +28,7 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 报表模板视图Action
@@ -185,6 +186,11 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 			tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
 					this.getStatuses(), "status", 0, getText("reportTemplate.status.tips")));
 			
+		}else if(this.isReadonly()&&!my){
+			// 执行按钮
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
+					.setText(getText("reportTemplate.execute"))
+					.setClick("bc.reportTemplateList.execute"));
 		}else{
 			// 执行按钮
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-play")
@@ -206,9 +212,11 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		AndCondition andCondition =new AndCondition();
-		if(status != null && status.length() > 0){
+		if(status != null && status.length() > 0 && !my){
 			andCondition.add(new EqualsCondition("a.status_",Integer.parseInt(status)));
-		}else if(my){
+		}
+		
+		if(my){
 			//我的报表显示为状态正常的
 			andCondition.add(new EqualsCondition("a.status_",BCConstants.STATUS_ENABLED));
 			
@@ -237,6 +245,21 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		if(andCondition.isEmpty())return null;
 		
 		return andCondition;
+	}
+	
+	@Override
+	protected Json getGridExtrasData() {
+		Json json = new Json();
+		if(status != null && status.length() > 0 && !my){
+			json.put("status", status);
+		}
+		
+		if(my){
+			json.put("my","true");
+			json.put("status", BCConstants.STATUS_ENABLED);
+		}
+		if(json.isEmpty()) return null;
+		return json;
 	}
 	
 	@Override

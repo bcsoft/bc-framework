@@ -50,7 +50,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	public String success = String.valueOf(true);
 	public String sourceType;
 	public Long sourceId;
-	public boolean my = false;
+	public boolean my = false;//是否从我的报表打开视图
 
 	@Override
 	public boolean isReadonly() {
@@ -69,17 +69,13 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
-
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.source_type as sourceType");
 		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		//报表任务
-		if(sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2。task"))){
-			sql.append(" inner join bc_report_task c on c.id=a.source_id");	
-		}else if(my){
-			sql.append(" left join bc_report_task c on c.id=a.source_id");
+		if(my){
+			sql.append(" left join bc_report_task c on c.id=a.source_id ");
 		}
 		sqlObject.setSql(sql.toString());
 
@@ -196,13 +192,13 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					.valueOf(success)));
 		}
 		//报表任务查看历史
-		if(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2。task"))){
+		if(sourceId!=null&&sourceType!=null&&sourceType.length()>0&&sourceType.equals(getText("reportHistory.source2.task"))){
 			andCondition.add(new EqualsCondition("a.source_type",sourceType));
 			andCondition.add(new EqualsCondition("a.source_id",sourceId));
 		}
-
 		if (my) {
-			//((a.author_id=100729 and a.source_type = '用户生成' ) or (a.source_type = '报表任务' and t.pid in (select r.tid from  bc_report_template_actor r where r.aid in (100024,1,100024))))
+			//((a.author_id=100729 and a.source_type = '用户生成' ) or 
+			//       (a.source_type = '报表任务' and t.pid in (select r.tid from  bc_report_template_actor r where r.aid in (100024,1,100024))))
 			SystemContext context = (SystemContext) this.getContext();
 
 			//保存的用户id键值集合
@@ -218,10 +214,11 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					qlStr+="?,";
 				}else{
 					qlStr+="?";
-		
+				}
+			}	
 			andCondition.add(
 				new OrCondition(
-					new OrCondition(
+					new AndCondition(
 						new EqualsCondition("a.author_id",context.getUserHistory().getId()),
 						new EqualsCondition("a.source_type",getText("reportHistory.source2.user"))		
 						).setAddBracket(true),
@@ -233,7 +230,6 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				).setAddBracket(true)
 			);
 		}
-
 		if (andCondition.isEmpty())
 			return null;
 
@@ -251,7 +247,8 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		if(success != null && success.length() > 0l){
 			json.put("success", success);
 		}
-		if(sourceType != null && sourceType.length() > 0&&sourceType.equals(getText("reportHistory.source2.task"))){
+		if(sourceId != null && sourceType != null && sourceType.length() > 0
+				&& sourceType.equals(getText("reportHistory.source2.task"))){
 			json.put("sourceType", sourceType);
 			json.put("sourceId", sourceId);	
 		}
