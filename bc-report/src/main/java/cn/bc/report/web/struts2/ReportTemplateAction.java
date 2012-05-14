@@ -65,7 +65,7 @@ public class ReportTemplateAction extends FileEntityAction<Long, ReportTemplate>
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(650)
-				.setMinHeight(200).setMinWidth(300);
+				.setMinHeight(200).setMinWidth(300).setHeight(500);
 	}
 	
 	
