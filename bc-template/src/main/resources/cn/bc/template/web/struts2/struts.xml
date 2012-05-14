@@ -44,4 +44,21 @@
 			</result>
 		</action>
 	</package>
+	
+	<package name="templateType" extends="bc-default" namespace="/bc/templateType">
+		<action name="create" class="templateTypeAction" method="create">
+			<result name="form">/bc/template/type/form.jsp</result>
+		</action>
+		<action name="edit" class="templateTypeAction" method="edit">
+			<result name="form">/bc/template/type/form.jsp</result>
+		</action>
+		<action name="open" class="templateTypeAction" method="open">
+			<result name="formr">/bc/template/type/form.jsp</result>
+		</action>
+		<action name="save" class="templateTypeAction" method="save"/>
+		<action name="delete" class="templateTypeAction" method="delete"/>
+		<action name="list" class="templateTypeAction" method="list"/>
+		<action name="data" class="templateTypeAction" method="data"/>
+		<action name="isUniqueCode" class="templateTypeAction" method="isUniqueCode"/>
+	</package>
 </struts>

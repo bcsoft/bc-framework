@@ -19,5 +19,13 @@
 	<bean id="templateService" class="cn.bc.template.service.TemplateServiceImpl"
 		p:entityClass="cn.bc.template.domain.Template" 
 		p:templateDao-ref="templateDao"
+		/>
+		
+	<bean id="templateTypeDao" class="cn.bc.template.dao.hibernate.jpa.TemplateTypeDaoImpl"
+		p:entityClass="cn.bc.template.domain.TemplateType"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
+		p:entityClass="cn.bc.template.domain.TemplateType" 
+		p:templateTypeDao-ref="templateTypeDao"
 		/>	
 </beans>

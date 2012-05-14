@@ -4,7 +4,7 @@ import cn.bc.core.dao.CrudDao;
 import cn.bc.template.domain.Template;
 
 /**
- * Dao接口
+ * 模板类型Dao接口
  * 
  * @author lbj
  * 

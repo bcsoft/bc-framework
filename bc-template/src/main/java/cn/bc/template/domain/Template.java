@@ -26,7 +26,7 @@ import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.FileEntityImpl;
 
 /**
- * 
+ * 模板
  * 
  * @author lbj
  */
