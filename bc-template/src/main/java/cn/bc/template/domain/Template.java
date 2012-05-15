@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -30,6 +29,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.util.FileCopyUtils;
 
 import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.FileEntityImpl;
@@ -61,7 +61,7 @@ public class Template extends FileEntityImpl {
 	private String version;// 版本号
 	private String category;// 所属分类
 	private TemplateType templateType;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "TYPE_ID", referencedColumnName = "ID")
 	public TemplateType getTemplateType() {
@@ -124,7 +124,20 @@ public class Template extends FileEntityImpl {
 	}
 
 	public String getContent() {
-		return getContent(null);
+		return content;
+	}
+
+	/**
+	 * 获取模板的文本字符串
+	 * <p>
+	 * 如果附件不是纯文本类型返回null,如果是自定义文本内容直接返回配置的内容,如果是纯文本附件返回附件的内容
+	 * </p>
+	 * 
+	 * @return
+	 */
+	@Transient
+	public String getContentEx() {
+		return getContentEx(null);
 	}
 
 	/**
@@ -137,7 +150,7 @@ public class Template extends FileEntityImpl {
 	 *            格式化参数，为空代表不执行格式化
 	 * @return
 	 */
-	public String getContent(Map<String, Object> args) {
+	public String getContentEx(Map<String, Object> args) {
 		// 不处理非纯文本类型
 		if (!this.isPureText())
 			return null;
@@ -242,17 +255,22 @@ public class Template extends FileEntityImpl {
 	 * 用指定的参数格式化此模板，并将结果保存为附件
 	 * 
 	 * @param params
+	 * @param ptype
+	 * @param puid
 	 * @return
 	 * @throws IOException
 	 */
-	public Attach format2Attach(Map<String, Object> params) throws IOException {
+	public Attach format2Attach(Map<String, Object> params, String ptype,
+			String puid) throws IOException {
 		Attach attach = new Attach();
 		attach.setAuthor(SystemContextHolder.get().getUserHistory());
 		attach.setFileDate(Calendar.getInstance());
 		attach.setSubject(this.getSubject());
 		attach.setAppPath(false);
+		attach.setPtype(ptype);
+		attach.setPuid(puid);
 		String extension;
-		if (this.getType() == TYPE_CUSTOM)
+		if ("custom".equals(this.getTemplateType().getCode()))
 			extension = "txt";
 		else
 			extension = this.getPath().substring(
@@ -280,12 +298,21 @@ public class Template extends FileEntityImpl {
 		}
 
 		// 保存到文件
-		if (this.getType() == Template.TYPE_WORD && extension.equals("docx")) {
+		if ("docx".equals(this.getTemplateType().getExtension())) {
 			XWPFDocument docx = DocxUtils.format(this.getInputStream(), params);
 			FileOutputStream out = new FileOutputStream(realpath);
 			docx.write(out);
 			out.close();
+		} else {
+			throw new CoreException("TODO:Attach.format2Attach type="
+					+ this.getTemplateType().getExtension());
 		}
+
+		// 设置附件大小
+		attach.setSize(new File(realpath).length());
+
+		// 设置附件相对路径
+		attach.setPath(datedir + "/" + fileName);
 
 		return attach;
 	}

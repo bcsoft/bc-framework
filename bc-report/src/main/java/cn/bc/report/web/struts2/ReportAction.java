@@ -371,7 +371,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				Template t = this.templateService.loadByCode(sql.substring(4));
 				if (t != null) {
 					if (t.isPureText()) {
-						sqlObject.setSql(t.getContent(params).trim());
+						sqlObject.setSql(t.getContentEx(params).trim());
 					} else {
 						throw new CoreException(
 								"sql template is not pure text:sql=" + sql);
@@ -443,7 +443,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			Template t = this.templateService
 					.loadByCode(condition.substring(4));
 			if (t.isPureText()) {
-				this.json = t.getContent(buildParams(this.getGridCondition()));
+				this.json = t.getContentEx(buildParams(this.getGridCondition()));
 				this.resultPath = "/cn/bc/web/struts2/json.ftl";
 				return "freemarker";
 			} else {
