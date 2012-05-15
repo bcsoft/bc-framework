@@ -45,6 +45,7 @@
 		</action>
 	</package>
 	
+	<!-- 模板类型 -->
 	<package name="templateType" extends="bc-default" namespace="/bc/templateType">
 		<action name="create" class="templateTypeAction" method="create">
 			<result name="form">/bc/template/type/form.jsp</result>
@@ -62,5 +63,12 @@
 		<action name="isUniqueCode" class="templateTypeAction" method="isUniqueCode"/>
 		<action name="loadOneById" class="templateTypeAction" method="loadOneById"/>
 		<action name="loadOneByCode" class="templateTypeAction" method="loadOneByCode"/>
+	</package>
+	
+	<!-- 选择模板 -->
+	<package name="selectTempalte" extends="bc-default" namespace="/bc/selectTempalte">
+		<action name="list" class="selectTempalteAction" method="list"/>
+		<action name="paging" class="selectTempalteAction" method="paging"/>
+		<action name="data" class="selectTempalteAction" method="data"/>
 	</package>
 </struts>
