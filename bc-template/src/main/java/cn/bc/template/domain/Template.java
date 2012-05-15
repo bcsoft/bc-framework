@@ -14,6 +14,9 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -39,29 +42,7 @@ public class Template extends FileEntityImpl {
 	/** 模板存储的子路径，开头末尾不要带"/" */
 	public static String DATA_SUB_PATH = "template";
 
-	/**
-	 * Excel文件
-	 */
-	public static final int TYPE_EXCEL = 1;
-	/**
-	 * Word文件
-	 */
-	public static final int TYPE_WORD = 2;
-	/**
-	 * 纯文本文件
-	 */
-	public static final int TYPE_TEXT = 3;
-	/**
-	 * 其它附件
-	 */
-	public static final int TYPE_OTHER = 4;
-	/**
-	 * 自定义文本
-	 */
-	public static final int TYPE_CUSTOM = 5;
-
 	private String orderNo;// 排序号
-	private int type;// 类型：1-Excel模板、2-Word模板、3-纯文本模板、4-其它附件、5-自定义文本
 	private String code;// 编码
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private String subject;// 标题
@@ -71,6 +52,17 @@ public class Template extends FileEntityImpl {
 	private int status;// 状态：0-正常,1-禁用
 	private String version;// 版本号
 	private String category;// 所属分类
+	private TemplateType templateType;
+	
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "TYPE_ID", referencedColumnName = "ID")
+	public TemplateType getTemplateType() {
+		return templateType;
+	}
+
+	public void setTemplateType(TemplateType templateType) {
+		this.templateType = templateType;
+	}
 
 	public String getCategory() {
 		return category;
@@ -105,15 +97,6 @@ public class Template extends FileEntityImpl {
 
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
-	}
-
-	@Column(name = "TYPE_")
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
 	}
 
 	public String getCode() {
@@ -153,7 +136,7 @@ public class Template extends FileEntityImpl {
 
 		String txt = null;
 		// 自定义文本
-		if (this.getType() == TYPE_CUSTOM) {
+		if (this.templateType.getCode().equals("custom")) {
 			txt = this.content;
 		} else {
 			// 读取文件流的字符串内容
@@ -189,7 +172,7 @@ public class Template extends FileEntityImpl {
 	@Transient
 	public InputStream getInputStream() {
 		// 自定义文本,返回由此内容构成的字节流
-		if (this.getType() == TYPE_CUSTOM) {
+		if (this.templateType.getCode().equals("custom")) {
 			if (this.content == null)
 				return null;
 			return new ByteArrayInputStream(this.content.getBytes());
@@ -244,10 +227,6 @@ public class Template extends FileEntityImpl {
 	 */
 	@Transient
 	public boolean isPureText() {
-		return type == Template.TYPE_CUSTOM
-				|| (this.getPath() != null && (this.getPath().endsWith(".xml")
-						|| this.getPath().endsWith(".txt")
-						|| this.getPath().endsWith(".cvs") || this.getPath()
-						.endsWith(".log")));
+		return this.templateType.isPureText();
 	}
 }

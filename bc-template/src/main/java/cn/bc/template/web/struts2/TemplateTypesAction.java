@@ -53,7 +53,7 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.status_").add("a.order",Direction.Asc);
+		return new OrderCondition("a.status_").add("a.order_",Direction.Asc);
 	}
 
 	@Override
@@ -62,11 +62,11 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.status_,a.order_,a.code,a.name,a.is_pure_text,a.is_path,a.ext,a.desc_");
-		sql.append(",b.actor_name,a.file_date,c.actor_name,a.modified_date");
+		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.code,a.name,a.is_pure_text as isPureText,a.is_path as isPath,a.ext,a.desc_ as desc");
+		sql.append(",b.actor_name,a.file_date,c.actor_name as mname,a.modified_date");
 		sql.append(" from bc_template_type a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
-		sql.append(" left join bc_identity_actor_history c on b.id=a.modifier_id");
+		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -109,7 +109,7 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 				getText("template.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("template.name"), 150).setUseTitleFromLabel(true));
+				getText("template.name"), 180).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.is_pure_text", "isPureText",
 				getText("templateType.isPureText"), 50)
 				.setValueFormater(new BooleanFormater()));
@@ -117,9 +117,9 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 				getText("templateType.isPath"), 65)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("a.ext", "ext",
-				getText("templateType.ext"), 50).setUseTitleFromLabel(true));
+				getText("templateType.ext"), 80).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("template.desc"), 100).setUseTitleFromLabel(true));
+				getText("template.desc")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "actor_name",
 				getText("template.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
@@ -130,7 +130,6 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
 				getText("template.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-
 		return columns;
 	}
 
@@ -194,7 +193,7 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 		// 状态条件
 		Condition statusCondition = null;
 		if(status != null && status.length() > 0) {
-			statusCondition = new EqualsCondition("t.status_",
+			statusCondition = new EqualsCondition("a.status_",
 					Integer.parseInt(status));
 		}
 		return statusCondition;

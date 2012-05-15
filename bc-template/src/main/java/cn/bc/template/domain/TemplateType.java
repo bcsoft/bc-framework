@@ -24,10 +24,20 @@ public class TemplateType extends FileEntityImpl {
 	private String orderNo;// 排序号
 	private String code;// 编码
 	private String name;// 模板类型名称
-	private boolean isPath=true;// 是否关联附件
-	private boolean isPureText=false;// 是否纯文本
+	private boolean Path=true;// 是否关联附件
+	private boolean PureText=false;// 是否纯文本
 	private String extension;// 备注
 	private String desc;// 备注
+/*	private Set<Template> templates;// 
+	
+	@OneToMany(mappedBy = "templateType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	public Set<Template> getTemplates() {
+		return templates;
+	}
+
+	public void setTemplates(Set<Template> templates) {
+		this.templates = templates;
+	}*/
 
 	@Column(name = "STATUS_")
 	public int getStatus() {
@@ -73,24 +83,6 @@ public class TemplateType extends FileEntityImpl {
 		this.name = name;
 	}
 
-	@Column(name = "IS_PATH")
-	public boolean isPath() {
-		return isPath;
-	}
-
-	public void setPath(boolean isPath) {
-		this.isPath = isPath;
-	}
-
-	@Column(name = "IS_PURE_TEXT")
-	public boolean isPureText() {
-		return isPureText;
-	}
-
-	public void setPureText(boolean isPureText) {
-		this.isPureText = isPureText;
-	}
-
 	@Column(name = "EXT")
 	public String getExtension() {
 		return extension;
@@ -98,6 +90,32 @@ public class TemplateType extends FileEntityImpl {
 
 	public void setExtension(String extension) {
 		this.extension = extension;
+	}
+
+	/**
+	 * 是否为附件
+	 * @return
+	 */
+	@Column(name = "IS_PATH")
+	public boolean isPath() {
+		return Path;
+	}
+
+	public void setPath(boolean path) {
+		Path = path;
+	}
+
+	/**
+	 * 是否为纯文本
+	 * @return
+	 */
+	@Column(name = "IS_PURE_TEXT")
+	public boolean isPureText() {
+		return PureText;
+	}
+
+	public void setPureText(boolean pureText) {
+		PureText = pureText;
 	}
 	
 	

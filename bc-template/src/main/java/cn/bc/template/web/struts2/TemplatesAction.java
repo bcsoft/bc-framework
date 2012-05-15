@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,8 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.template.domain.Template;
+import cn.bc.option.domain.OptionItem;
+import cn.bc.template.service.TemplateTypeService;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
@@ -65,11 +68,12 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.order_ as orderNo,t.code,t.type_ as type,t.desc_,t.path,t.subject");
+		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
 		sql.append(",t.category");
 		sql.append(" from bc_template t");
+		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
 		sql.append(" left join bc_identity_actor_history am on am.id=t.modifier_id");
 		sqlObject.setSql(sql.toString());
@@ -114,9 +118,8 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("t.category", "category",
 				getText("template.category"), 150).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.type_", "type",
-				getText("template.type"), 80)
-				.setValueFormater(new KeyValueFormater(this.getTypes())));
+		columns.add(new TextColumn4MapKey("a.name", "type",
+				getText("template.type"), 80));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
@@ -145,24 +148,6 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		return columns;
 	}
 
-	/**
-	 * 类型值转换:Excel|Word|文本文件|自定义文本|其它附件
-	 * 
-	 */
-	private Map<String, String> getTypes() {
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put(String.valueOf(Template.TYPE_EXCEL),
-				getText("template.type.excel"));
-		map.put(String.valueOf(Template.TYPE_WORD),
-				getText("template.type.word"));
-		map.put(String.valueOf(Template.TYPE_TEXT),
-				getText("template.type.text"));
-		map.put(String.valueOf(Template.TYPE_CUSTOM),
-				getText("template.type.costom"));
-		map.put(String.valueOf(Template.TYPE_OTHER),
-				getText("template.type.other"));
-		return map;
-	}
 
 	// 状态键值转换
 	private Map<String, String> getStatuses() {
@@ -183,7 +168,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String[] getGridSearchFields() {
 		return new String[] { "t.code", "am.actor_name", "t.path", "t.subject",
-				"t.version_", "t.category" };
+				"t.version_", "t.category","a.name" };
 	}
 
 	@Override
@@ -193,7 +178,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(850).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -220,10 +205,17 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 					.setText(getText("label.download"))
 					.setClick("bc.templateList.download"));
 
-			// 在线预览
+			// 在线查看
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("label.preview.inline"))
+					.setText(getText("template.preview.inline"))
 					.setClick("bc.templateList.inline"));
+			
+			if(code == null || code.length()==0){
+				// 配置模板类型
+				tb.addButton(new ToolbarButton().setIcon("ui-icon-wrench")
+						.setText(getText("template.config.type"))
+						.setClick("bc.templateList.configType"));
+			}
 		}
 
 		// 状态按钮组
@@ -281,6 +273,22 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
+	
+	private TemplateTypeService templateTypeService;
+	
+	@Autowired
+	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
+		this.templateTypeService = templateTypeService;
+	}
+
+	public JSONArray types;
+
+	@Override
+	protected void initConditionsFrom() throws Exception {
+		this.types=OptionItem.toLabelValues(this.templateTypeService.findTemplateTypeOption(false));
+	}
+	
+	
 	// ==高级搜索代码结束==
 
 }

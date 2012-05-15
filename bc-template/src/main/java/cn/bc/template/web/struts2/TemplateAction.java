@@ -34,6 +34,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
+import cn.bc.template.service.TemplateTypeService;
 import cn.bc.template.util.DocxUtils;
 import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
@@ -54,6 +55,12 @@ import cn.bc.web.util.WebUtils;
 public class TemplateAction extends FileEntityAction<Long, Template> {
 	private static final long serialVersionUID = 1L;
 	private TemplateService templateService;
+	private TemplateTypeService templateTypeService;
+	
+	@Autowired
+	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
+		this.templateTypeService = templateTypeService;
+	}
 
 	@Autowired
 	public void setTemplateService(TemplateService templateService) {
@@ -63,7 +70,6 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 
 	@Override
 	public boolean isReadonly() {
-
 		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
@@ -97,7 +103,6 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void afterCreate(Template entity) {
 		super.afterCreate(entity);
-		entity.setType(Template.TYPE_EXCEL);
 		// 内置 默认为否
 		entity.setInner(false);
 		// 状态正常
@@ -150,17 +155,17 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		Json json = new Json();
 		Template tpl = this.templateService.load(tid);
 		// 附件的扩展名
-		String extension = StringUtils.getFilenameExtension(tpl.getPath());
+		String extension = tpl.getTemplateType().getExtension();
 		InputStream is = tpl.getInputStream();
 		List<String> markers;
 		if (tpl.isPureText()) {
 			markers = TemplateUtils.findMarkers(is);
 			// 保存参数的集合
 			json.put("value", this.getParamStr(markers));
-		} else if (tpl.getType()==Template.TYPE_EXCEL && extension.equals("xls")) {
+		} else if (tpl.getTemplateType().getCode().equals("xls")&& extension.equals("xls")) {
 			markers = XlsUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
-		} else if (tpl.getType()==Template.TYPE_WORD && extension.equals("docx")) {
+		} else if (tpl.getTemplateType().getCode().equals("word-docx") && extension.equals("docx")) {
 			markers = DocxUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
 		}
@@ -224,7 +229,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		Date startTime = new Date();
 
 		// 附件的扩展名
-		String extension = StringUtils.getFilenameExtension(template.getPath());
+		String extension = template.getTemplateType().getExtension();
 
 		// debug
 		if (logger.isDebugEnabled()) {
@@ -256,7 +261,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				}	
 			}
 			InputStream is;
-			if (template.getType() == Template.TYPE_WORD
+			if (template.getTemplateType().getCode().equals("word-docx")
 					&& extension.equals("docx")) {
 				XWPFDocument docx = DocxUtils.format(template.getInputStream(),
 						markerValues);
@@ -264,7 +269,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				docx.write(out);
 				is = new ByteArrayInputStream(out.toByteArray());
 				out.close();
-			} else if (template.getType() == Template.TYPE_EXCEL
+			} else if (template.getTemplateType().getCode().equals("xls")
 					&& extension.equals("xls")) {
 				HSSFWorkbook xls = XlsUtils.format(template.getInputStream(),
 						markerValues);
@@ -276,7 +281,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				if(markerValues!=null&&!markerValues.isEmpty()){
 					template.setContent(FreeMarkerUtils.format(
 							template.getContent(), markerValues));
-					template.setType(Template.TYPE_CUSTOM);
+					template.setTemplateType(this.templateTypeService.loadByCode("custom"));
 				}
 				is = template.getInputStream();
 				if (extension == null)

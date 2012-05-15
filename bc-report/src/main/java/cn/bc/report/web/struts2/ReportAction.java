@@ -333,7 +333,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				if (export.startsWith("tpl:")) {
 					Template t = this.templateService.loadByCode(export
 							.substring(4));
-					if (t != null && t.getType() == Template.TYPE_EXCEL) {
+					if (t != null && t.getTemplateType().getCode().equals("xls")) {
 						exporter.setTemplateFile(t.getInputStream());
 					} else {
 						throw new CoreException(

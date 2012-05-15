@@ -56,10 +56,10 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if(tpl.isPureText())return tpl.getContent();
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(tpl.getPath());
-		if(tpl.getType()==Template.TYPE_WORD&&extension.equals("docx"))
+		if(tpl.getTemplateType().getCode().equals("word-docx")&&extension.equals("docx"))
 			return DocxUtils.loadText(tpl.getInputStream());
 		
-		if(tpl.getType()==Template.TYPE_EXCEL&&extension.equals("xls"))
+		if(tpl.getTemplateType().getCode().equals("xls")&&extension.equals("xls"))
 			return XlsUtils.loadText(tpl.getInputStream());
 			
 		logger.warn("文件后缀名："+extension+",未转换为字符串类型");
@@ -98,7 +98,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			// 附件的扩展名
 			String extension = StringUtils.getFilenameExtension(tpl.getPath()); 
 			
-			if(tpl.getType()==Template.TYPE_WORD&&extension.equals("docx")){
+			if(tpl.getTemplateType().getCode().equals("word-docx")&&extension.equals("docx")){
 				XWPFDocument docx=DocxUtils.format(tpl.getInputStream(), args);
 				try {
 					docx.write(out);
@@ -106,7 +106,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 				} catch (IOException e) {
 					logger.warn("formatTo 写入数据到流错误：" + e.getMessage());
 				}
-			}else if(tpl.getType()==Template.TYPE_EXCEL&&extension.equals("xls")){
+			}else if(tpl.getTemplateType().getCode().equals("xls")&&extension.equals("xls")){
 				HSSFWorkbook xls=XlsUtils.format(tpl.getInputStream(), args);
 				try {
 					xls.write(out);

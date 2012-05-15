@@ -45,7 +45,7 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(545)
+		return super.buildFormPageOption(editable).setWidth(510)
 				.setMinHeight(200).setMinWidth(300);
 	}
 	
@@ -63,13 +63,17 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		super.afterCreate(entity);
 		// 状态正常
 		entity.setStatus(BCConstants.STATUS_ENABLED);
+		//关联附件
+		entity.setPath(true);
+		//纯文本
+		entity.setPureText(false);
 	}
 
 	public Long tid;// 模板类型id
 	public String code;// 编码
 
-	// 检查编码与版本号唯一
-	public String isUniqueCodeAndVersion() {
+	// 检查编码唯一
+	public String isUniqueCode() {
 		Json json = new Json();
 		boolean flag = this.templateTypeService.isUniqueCode(this.tid,
 				code);
@@ -84,5 +88,5 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		}
 	}
 
-
+	
 }

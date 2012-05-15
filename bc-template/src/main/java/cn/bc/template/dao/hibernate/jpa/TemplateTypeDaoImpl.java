@@ -23,6 +23,12 @@ import cn.bc.template.domain.TemplateType;
  */
 public class TemplateTypeDaoImpl extends HibernateCrudJpaDao<TemplateType> implements
 	TemplateTypeDao {
+	
+	public TemplateType loadByCode(String code) {
+		if (code == null)
+			return null;
+		return this.createQuery().condition(new EqualsCondition("code", code)).singleResult();
+	}
 
 	public boolean isUniqueCode(Long currentId, String code) {
 		Condition c;
@@ -36,17 +42,20 @@ public class TemplateTypeDaoImpl extends HibernateCrudJpaDao<TemplateType> imple
 		return this.createQuery().condition(c).count() > 0;
 	}
 
-	public List<Map<String, String>> findTemplateTypeOption() {
+	public List<Map<String, String>> findTemplateTypeOption(boolean isEnabled) {
 		String hql="SELECT a.id,a.name";
 		   hql+=" FROM bc_template_type a";
-		   hql+=" WHERE a.status_="+BCConstants.STATUS_ENABLED; 
+		   if(isEnabled){
+			   hql+=" WHERE a.status_="+BCConstants.STATUS_ENABLED;
+		   }
+		   hql+=" ORDER BY a.order_";
 		 return	HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(), hql,null
 		 	,new RowMapper<Map<String, String>>() {
 				public Map<String, String> mapRow(Object[] rs, int rowNum) {
 					Map<String, String> oi = new HashMap<String, String>();
 					int i = 0;
-					oi.put("id", rs[i++].toString());
-					oi.put("name", rs[i++].toString());
+					oi.put("key", rs[i++].toString());
+					oi.put("value", rs[i++].toString());
 					return oi;
 				}
 		});

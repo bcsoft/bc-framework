@@ -31,6 +31,12 @@ public class TempalteServiceImplTest extends
 	TemplateService templateService;
 	IdGeneratorService idGeneratorService;
 	ActorHistoryService actorHistoryService;
+    TemplateTypeService templateTypeService;
+	
+	@Autowired
+	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
+		this.templateTypeService = templateTypeService;
+	}
 
 	@Autowired
 	public void setTemplateService(TemplateService templateService) {
@@ -53,7 +59,7 @@ public class TempalteServiceImplTest extends
 		Template template = super.createInstance(config);
 		template.setCode(UUID.randomUUID().toString());
 		template.setContent("testContent");
-		template.setType(Template.TYPE_CUSTOM);
+		template.setTemplateType(this.templateTypeService.loadByCode("custom"));
 		template.setAuthor(this.actorHistoryService.loadByCode("admin"));
 		template.setFileDate(Calendar.getInstance());
 		template.setInner(false);
@@ -73,7 +79,7 @@ public class TempalteServiceImplTest extends
 		String content = "test";
 		Template t = createInstance(null);
 		t.setCode(UUID.randomUUID().toString());
-		t.setType(Template.TYPE_CUSTOM);
+		t.setTemplateType(this.templateTypeService.loadByCode("custom"));
 		t.setContent(content);
 		this.templateService.save(t);
 		Assert.assertEquals(content,
@@ -92,7 +98,7 @@ public class TempalteServiceImplTest extends
 		// // 保存一个模板
 		Template t = createInstance(null);
 		t.setCode(UUID.randomUUID().toString());
-		t.setType(Template.TYPE_TEXT);
+		t.setTemplateType(this.templateTypeService.loadByCode("txt"));
 		t.setSubject("test.txt");
 		t.setPath("test.txt");
 		t.setContent(null);
@@ -115,7 +121,7 @@ public class TempalteServiceImplTest extends
 		// // 保存一个模板
 		Template t = createInstance(null);
 		t.setCode(UUID.randomUUID().toString());
-		t.setType(Template.TYPE_TEXT);
+		t.setTemplateType(this.templateTypeService.loadByCode("txt"));
 		t.setSubject("test.txt");
 		t.setPath("test.txt");
 		t.setContent(null);

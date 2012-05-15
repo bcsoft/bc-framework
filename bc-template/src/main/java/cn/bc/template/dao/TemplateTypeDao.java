@@ -13,6 +13,15 @@ import cn.bc.template.domain.TemplateType;
  * 
  */
 public interface TemplateTypeDao extends CrudDao<TemplateType> {
+	
+	/**
+	 * 加载一个模板类型
+	 * 
+	 * @param code 编码
+	 * @return
+	 */
+	public TemplateType loadByCode(String code);
+	
 	/**
 	 * 判断指定的编码是否唯一
 	 * 
@@ -27,8 +36,10 @@ public interface TemplateTypeDao extends CrudDao<TemplateType> {
 	/**
 	 * 查找模板类型
 	 * 
+	 * @param isEnabled 查找状态正常的模板类型：是，否
+	 * 
 	 * @return
 	 */
-	public List<Map<String,String>> findTemplateTypeOption();
+	public List<Map<String,String>> findTemplateTypeOption(boolean isEnabled);
 
 }
