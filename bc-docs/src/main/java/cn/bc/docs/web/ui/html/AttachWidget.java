@@ -132,6 +132,13 @@ public class AttachWidget extends Div {
 		return headUI;
 	}
 
+	/**
+	 * 创建个附件对应的html组件
+	 * 
+	 * @param attach
+	 *            附件
+	 * @return
+	 */
 	protected Component buildAttachUI(Attach attach) {
 		Table attachUI = new Table();
 		attachUI.addClazz("attach").setAttr("cellpadding", "0")
@@ -162,10 +169,20 @@ public class AttachWidget extends Div {
 						new Text(AttachUtils.getSizeInfo(attach.getSize()))))
 				.addChild(operations));
 		operations.addClazz("operations");
-		operations.addChild(defaultAttachButton4Inline(null));// 在线查看按钮
-		operations.addChild(defaultAttachButton4Download(null));// 下载按钮
-		if (!this.isReadOnly())
-			operations.addChild(defaultAttachButton4Delete(null));// 删除按钮
+
+		// 如果没有自定义设置，创建默认的操作按钮
+		if (this.attachButtons == null || this.attachButtons.isEmpty()) {
+			this.addAttachButton(defaultAttachButton4Inline(null));// 在线查看按钮
+			this.addAttachButton(defaultAttachButton4Download(null));// 下载按钮
+			this.addAttachButton(defaultAttachButton4Print(null));// 打印按钮
+			if (!this.isReadOnly())
+				this.addAttachButton(defaultAttachButton4Delete(null));// 删除按钮
+		}
+
+		// 将额外的操作按钮添加到td
+		for (Component button : this.attachButtons) {
+			operations.addChild(button);
+		}
 
 		return attachUI;
 	}
@@ -443,6 +460,15 @@ public class AttachWidget extends Div {
 	public static Component defaultAttachButton4Download(String label) {
 		return createButton(label == null ? "下载" : label, "download", null,
 				null);
+	}
+
+	/**
+	 * 默认的"打印"按钮
+	 * 
+	 * @return
+	 */
+	public static Component defaultAttachButton4Print(String label) {
+		return createButton(label == null ? "打印" : label, "print", null, null);
 	}
 
 	/**

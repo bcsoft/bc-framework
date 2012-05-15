@@ -7,9 +7,13 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -22,11 +26,15 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.util.FileCopyUtils;
 
+import cn.bc.BCConstants;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.FileEntityImpl;
+import cn.bc.identity.web.SystemContextHolder;
+import cn.bc.template.util.DocxUtils;
 
 /**
  * 模板
@@ -228,5 +236,57 @@ public class Template extends FileEntityImpl {
 	@Transient
 	public boolean isPureText() {
 		return this.templateType.isPureText();
+	}
+
+	/**
+	 * 用指定的参数格式化此模板，并将结果保存为附件
+	 * 
+	 * @param params
+	 * @return
+	 * @throws IOException
+	 */
+	public Attach format2Attach(Map<String, Object> params) throws IOException {
+		Attach attach = new Attach();
+		attach.setAuthor(SystemContextHolder.get().getUserHistory());
+		attach.setFileDate(Calendar.getInstance());
+		attach.setSubject(this.getSubject());
+		attach.setAppPath(false);
+		String extension;
+		if (this.getType() == TYPE_CUSTOM)
+			extension = "txt";
+		else
+			extension = this.getPath().substring(
+					this.getPath().lastIndexOf(".") + 1);
+		attach.setExtension(extension);
+		attach.setStatus(BCConstants.STATUS_ENABLED);
+
+		// 文件存储的相对路径（年月），避免超出目录内文件数的限制
+		Calendar now = Calendar.getInstance();
+		String datedir = new SimpleDateFormat("yyyyMM").format(now.getTime());
+
+		// 要保存的物理文件
+		String realpath;// 绝对路径名
+		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
+				.getTime()) + "." + extension;// 不含路径的文件名
+		realpath = Attach.DATA_REAL_PATH + "/" + datedir + "/" + fileName;
+
+		// 构建文件要保存到的目录
+		File file = new File(realpath);
+		if (!file.getParentFile().exists()) {
+			if (logger.isInfoEnabled()) {
+				logger.info("mkdir=" + file.getParentFile().getAbsolutePath());
+			}
+			file.getParentFile().mkdirs();
+		}
+
+		// 保存到文件
+		if (this.getType() == Template.TYPE_WORD && extension.equals("docx")) {
+			XWPFDocument docx = DocxUtils.format(this.getInputStream(), params);
+			FileOutputStream out = new FileOutputStream(realpath);
+			docx.write(out);
+			out.close();
+		}
+
+		return attach;
 	}
 }
