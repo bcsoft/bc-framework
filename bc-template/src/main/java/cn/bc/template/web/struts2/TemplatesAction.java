@@ -121,7 +121,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("t.category", "category",
 				getText("template.category"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
-				getText("template.type"), 80));
+				getText("template.type"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
