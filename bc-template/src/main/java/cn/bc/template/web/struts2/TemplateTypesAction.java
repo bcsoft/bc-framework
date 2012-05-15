@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
-import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -27,7 +25,6 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.json.Json;
 
 /**
  * 模板类型视图Action
@@ -176,11 +173,9 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 				tb.addButton(this.getDefaultEditToolbarButton());
 				// 删除按钮
 				tb.addButton(this.getDefaultDeleteToolbarButton());
+		}else{
+			tb.addButton(this.getDefaultOpenToolbarButton());
 		}
-
-		// 状态按钮组
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
-				"status", 0, getText("template.status.tips")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -188,25 +183,4 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 		return tb;
 	}
 
-	@Override
-	protected Condition getGridSpecalCondition() {
-		// 状态条件
-		Condition statusCondition = null;
-		if(status != null && status.length() > 0) {
-			statusCondition = new EqualsCondition("a.status_",
-					Integer.parseInt(status));
-		}
-		return statusCondition;
-	}
-	
-	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
-	   if(status != null && status.length() > 0){
-			json.put("status", status);
-		}
-		if(json.isEmpty()) return null;
-		return json;
-	}
-	
 }

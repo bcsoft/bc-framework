@@ -32,6 +32,7 @@ import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
+import cn.bc.option.domain.OptionItem;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.service.TemplateTypeService;
@@ -56,7 +57,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	private static final long serialVersionUID = 1L;
 	private TemplateService templateService;
 	private TemplateTypeService templateTypeService;
-	
+
+	// 模板类型集合
+	public List<Map<String, String>> typeList;
+
 	@Autowired
 	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
 		this.templateTypeService = templateTypeService;
@@ -80,14 +84,14 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
+			pageOption.addButton(new ButtonOption(
+					getText("template.preview.test"), null,
+					"bc.templateForm.inline").setId("templateInline"));
 			pageOption
 					.addButton(new ButtonOption(
 							getText("template.show.history.version"), null,
 							"bc.templateForm.showVersion")
 							.setId("templateShowVersion"));
-			pageOption.addButton(new ButtonOption(
-					getText("label.preview.inline"), null,
-					"bc.templateForm.inline").setId("templateInline"));
 			if (editable)
 				pageOption.addButton(new ButtonOption(getText("label.save"),
 						null, "bc.templateForm.save").setId("templateSave"));
@@ -97,7 +101,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(545)
-				.setMinHeight(200).setMinWidth(300);
+				.setMinHeight(200).setMinWidth(300).setMaxHeight(800);
 	}
 
 	@Override
@@ -107,6 +111,27 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		entity.setInner(false);
 		// 状态正常
 		entity.setStatus(BCConstants.STATUS_ENABLED);
+		//默认模板类型为自定义文本
+		entity.setTemplateType(this.templateTypeService.loadByCode("custom"));
+
+		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+	}
+
+	@Override
+	protected void afterEdit(Template entity) {
+		super.afterEdit(entity);
+
+		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
+				.toString(), entity.getTemplateType().getName());
+	}
+
+	@Override
+	protected void afterOpen(Template entity) {
+		super.afterOpen(entity);
+		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
+				.toString(), entity.getTemplateType().getName());
 	}
 
 	@Override
@@ -162,10 +187,12 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 			markers = TemplateUtils.findMarkers(is);
 			// 保存参数的集合
 			json.put("value", this.getParamStr(markers));
-		} else if (tpl.getTemplateType().getCode().equals("xls")&& extension.equals("xls")) {
+		} else if (tpl.getTemplateType().getCode().equals("xls")
+				&& extension.equals("xls")) {
 			markers = XlsUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
-		} else if (tpl.getTemplateType().getCode().equals("word-docx") && extension.equals("docx")) {
+		} else if (tpl.getTemplateType().getCode().equals("word-docx")
+				&& extension.equals("docx")) {
 			markers = DocxUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
 		}
@@ -243,8 +270,9 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		if (isConvertFile(extension) || template.isPureText()) {
 			// 解释需要配置参数替换为指定的值。
 			Map<String, Object> markerValues = null;
-			JSONArray jsons =null;
-			if(this.markerValueJsons!=null&&this.markerValueJsons.length()>0){
+			JSONArray jsons = null;
+			if (this.markerValueJsons != null
+					&& this.markerValueJsons.length() > 0) {
 				markerValues = new HashMap<String, Object>();
 				jsons = new JSONArray(this.markerValueJsons);
 				JSONObject json;
@@ -258,7 +286,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 						v = convert2Map((JSONObject) v);
 					}
 					markerValues.put(json.getString("key"), v);
-				}	
+				}
 			}
 			InputStream is;
 			if (template.getTemplateType().getCode().equals("word-docx")
@@ -278,10 +306,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				is = new ByteArrayInputStream(out.toByteArray());
 				out.close();
 			} else if (template.isPureText()) {
-				if(markerValues!=null&&!markerValues.isEmpty()){
+				if (markerValues != null && !markerValues.isEmpty()) {
 					template.setContent(FreeMarkerUtils.format(
 							template.getContent(), markerValues));
-					template.setTemplateType(this.templateTypeService.loadByCode("custom"));
+					template.setTemplateType(this.templateTypeService
+							.loadByCode("custom"));
 				}
 				is = template.getInputStream();
 				if (extension == null)

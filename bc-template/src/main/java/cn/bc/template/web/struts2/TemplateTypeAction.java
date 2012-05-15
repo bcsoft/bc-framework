@@ -3,9 +3,11 @@ package cn.bc.template.web.struts2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.template.domain.TemplateType;
@@ -67,6 +69,32 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		entity.setPath(true);
 		//纯文本
 		entity.setPureText(false);
+	}	
+
+	@Override
+	public String delete() throws Exception {
+		try {
+			if (this.getId() != null) {// 删除一条
+				this.getCrudService().delete(this.getId());
+			} else {// 删除一批
+				if (this.getIds() != null && this.getIds().length() > 0) {
+					Long[] ids = cn.bc.core.util.StringUtils
+							.stringArray2LongArray(this.getIds().split(","));
+					this.getCrudService().delete(ids);
+				} else {
+					throw new CoreException("must set property id or ids");
+				}
+			}
+		} catch (JpaSystemException e) {
+			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
+			//throw new CoreException("JpaSystemException");
+			
+			Json json = new Json();
+			json.put("msg", getText("templateType.msg.delete"));
+			this.json=json.toString();
+			return "json";
+		}
+		return "deleteSuccess";
 	}
 
 	public Long tid;// 模板类型id
@@ -88,5 +116,34 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		}
 	}
 
+	//id加载一个模板类型的明细
+	public String loadOneById(){
+		if(tid == null)return "json";
+		TemplateType tt=templateTypeService.load(tid);
+		if(tt == null)return "json";
+		this.json=this.setTemplateType4Json(tt);
+		return "json";
+	}
+	
+	//code加载一个模板类型的明细
+	public String loadOneByCode(){
+		if(code == null&&code.length() == 0)return "json";
+		TemplateType tt=templateTypeService.loadByCode(code);
+		if(tt == null)return "json";
+		this.json=this.setTemplateType4Json(tt);
+		return "json";
+	}
+	
+	//将一个对象转为json格式
+	private String setTemplateType4Json(TemplateType tt){
+		Json json = new Json();
+		json.put("id", tt.getId());
+		json.put("code", tt.getCode());
+		json.put("ext", tt.getExtension());
+		json.put("name", tt.getName());
+		json.put("isPath", tt.isPath());
+		json.put("isPureText", tt.isPureText());
+		return json.toString();
+	}
 	
 }

@@ -27,6 +27,7 @@ import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
@@ -71,7 +72,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category");
+		sql.append(",t.category,a.code as typeCode");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
@@ -101,6 +102,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				map.put("status", rs[i++]);
 				map.put("version", rs[i++]);
 				map.put("category", rs[i++]);
+				map.put("typeCode", rs[i++]);
 				return map;
 			}
 		});
@@ -144,7 +146,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
 				getText("template.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-
+		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		return columns;
 	}
 

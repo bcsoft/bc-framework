@@ -60,5 +60,7 @@
 		<action name="list" class="templateTypeAction" method="list"/>
 		<action name="data" class="templateTypeAction" method="data"/>
 		<action name="isUniqueCode" class="templateTypeAction" method="isUniqueCode"/>
+		<action name="loadOneById" class="templateTypeAction" method="loadOneById"/>
+		<action name="loadOneByCode" class="templateTypeAction" method="loadOneByCode"/>
 	</package>
 </struts>
