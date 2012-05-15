@@ -102,7 +102,7 @@ public class SelectTemplateAction extends
 		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
-				getText("template.type"), 80));
+				getText("template.type"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
