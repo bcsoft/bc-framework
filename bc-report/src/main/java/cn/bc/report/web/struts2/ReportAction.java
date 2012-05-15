@@ -120,33 +120,34 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			return null;
 
 		try {
-			// 获取按钮配置
-			JSONArray tbCfg = this.getConfig().getJSONArray("tb");
 			Toolbar tb = new Toolbar();
-
+			
 			// 添加自定义的按钮
-			JSONObject buttonCfg;
-			ToolbarButton button;
-			for (int i = 0; i < tbCfg.length(); i++) {
-				buttonCfg = tbCfg.getJSONObject(i);
-				button = new ToolbarButton();
-				tb.addButton(button);
-				if (buttonCfg.has("text"))
-					button.setText(buttonCfg.getString("text"));
-				if (buttonCfg.has("click"))
-					button.setClick(buttonCfg.getString("click"));
-				if (buttonCfg.has("icon"))
-					button.setIcon(buttonCfg.getString("icon"));
-				if (buttonCfg.has("id"))
-					button.setId(buttonCfg.getString("id"));
-				if (buttonCfg.has("icon2"))
-					button.setSecondaryIcon(buttonCfg.getString("icon2"));
-				if (buttonCfg.has("action"))
-					button.setAction(buttonCfg.getString("action"));
-				if (buttonCfg.has("title"))
-					button.setTitle(buttonCfg.getString("title"));
-				if (buttonCfg.has("callback"))
-					button.setCallback(buttonCfg.getString("callback"));
+			if (this.getConfig().has("tb")) {
+				JSONArray tbCfg = this.getConfig().getJSONArray("tb");
+				JSONObject buttonCfg;
+				ToolbarButton button;
+				for (int i = 0; i < tbCfg.length(); i++) {
+					buttonCfg = tbCfg.getJSONObject(i);
+					button = new ToolbarButton();
+					tb.addButton(button);
+					if (buttonCfg.has("text"))
+						button.setText(buttonCfg.getString("text"));
+					if (buttonCfg.has("click"))
+						button.setClick(buttonCfg.getString("click"));
+					if (buttonCfg.has("icon"))
+						button.setIcon(buttonCfg.getString("icon"));
+					if (buttonCfg.has("id"))
+						button.setId(buttonCfg.getString("id"));
+					if (buttonCfg.has("icon2"))
+						button.setSecondaryIcon(buttonCfg.getString("icon2"));
+					if (buttonCfg.has("action"))
+						button.setAction(buttonCfg.getString("action"));
+					if (buttonCfg.has("title"))
+						button.setTitle(buttonCfg.getString("title"));
+					if (buttonCfg.has("callback"))
+						button.setCallback(buttonCfg.getString("callback"));
+				}
 			}
 
 			// 添加搜索按钮
@@ -165,8 +166,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getAdvanceSearchConditionsActionPath() {
-		return this.getHtmlPageNamespace() + "/report/conditions?code="
-				+ this.code;
+		return this.getHtmlPageNamespace() + "/report/conditions";
 	}
 
 	@Override
