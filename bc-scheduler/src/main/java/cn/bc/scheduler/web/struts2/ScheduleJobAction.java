@@ -169,8 +169,6 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 		return r;
 	}
 
-	public Json json;
-
 	// 启动/重置
 	public String start() throws Exception {
 		if (this.getIds() == null || this.getIds().length() == 0) {
@@ -183,8 +181,9 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 			this.schedulerManage.scheduleJob(id);
 		}
 
-		this.json = new Json();
-		this.json.put("msg", "任务启动/重置成功！");
+		Json json = new Json();
+		json.put("msg", "任务启动/重置成功！");
+		this.json = json.toString();
 		return "json";
 	}
 
@@ -200,8 +199,9 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 			this.schedulerManage.stopJob(id);
 		}
 
-		this.json = new Json();
-		this.json.put("msg", "任务停止/禁用成功！");
+		Json json = new Json();
+		json.put("msg", "任务停止/禁用成功！");
+		this.json = json.toString();
 		return "json";
 	}
 }

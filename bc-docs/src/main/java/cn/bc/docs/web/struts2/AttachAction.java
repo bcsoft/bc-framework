@@ -438,8 +438,6 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		return SUCCESS;
 	}
 
-	public String json;
-
 	// 删除附件
 	public String delete() {
 		Json _json = new Json();
