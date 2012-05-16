@@ -119,8 +119,6 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		e.setModifiedDate(Calendar.getInstance());
 	}
 
-	public Json json;
-
 	// 发布
 	public String issue() throws Exception {
 		SystemContext context = (SystemContext) this.getContext();
@@ -137,9 +135,10 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 
 		this.getCrudService().save(e);
 
-		json = new Json();
+		Json json = new Json();
 		json.put("id", e.getId());
 		json.put("msg", getText("bulletin.issueSuccess"));
+		this.json = json.toString();
 		return "json";
 	}
 

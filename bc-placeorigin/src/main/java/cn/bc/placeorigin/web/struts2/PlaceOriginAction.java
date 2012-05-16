@@ -68,7 +68,6 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 		super.afterCreate(entity);
 	}
 	
-	public Json json;
 	@Override
 	public String delete() throws Exception {
 		SystemContext context = this.getSystyemContext();
@@ -89,8 +88,9 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 				throw new CoreException("must set property id or ids");
 			}
 		}
-		json = new Json();
+		Json json = new Json();
 		json.put("msg", getText("form.disabled.success"));
+		this.json = json.toString();
 		return "json";
 	}
 	
@@ -106,8 +106,9 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 	}
 	
 	public String findPname(){
-		json = new Json();
+		Json json = new Json();
 		json.put("pname", this.placeOriginService.findPname(pid));
+		this.json = json.toString();
 		return "json";
 	}
 	

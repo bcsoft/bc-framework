@@ -128,7 +128,6 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 	}
 
 	public Long mid;
-	public Json json;
 
 	/**
 	 * 拖动系统菜单中的项到桌面生成快捷方式的保存
@@ -159,9 +158,10 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		// 保存
 		this.shortcutService.save(shortcut);
 
-		json = new Json();
+		Json json = new Json();
 		json.put("id", shortcut.getId());
 		json.put("msg", "快捷方式“" + resource.getName() + "”已保存！");
+		this.json = json.toString();
 		return "json";
 	}
 
