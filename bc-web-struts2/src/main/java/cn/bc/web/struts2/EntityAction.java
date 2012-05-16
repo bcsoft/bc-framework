@@ -29,6 +29,9 @@ import cn.bc.core.Entity;
 import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.exception.InnerLimitedException;
+import cn.bc.core.exception.NotExistsException;
+import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -52,6 +55,7 @@ import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.ListPage;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -335,6 +339,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 删除
 	public String delete() throws Exception {
+		Json _json = new Json();
 		try {
 			if (this.getId() != null) {// 删除一条
 				this.getCrudService().delete(this.getId());
@@ -347,11 +352,30 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 					throw new CoreException("must set property id or ids");
 				}
 			}
+			_json.put("success", true);
+			_json.put("msg", getText("form.delete.success"));
+			json = _json.toString();
+			return "deleteSuccess";
+		} catch (PermissionDeniedException e) {
+			// 执行没有权限的操作
+			_json.put("msg", getText("exception.delete.permissionDenied"));
+			_json.put("e", e.getClass().getSimpleName());
+		} catch (InnerLimitedException e) {
+			// 删除内置对象
+			_json.put("msg", getText("exception.delete.innerLimited"));
+			_json.put("e", e.getClass().getSimpleName());
+		} catch (NotExistsException e) {
+			// 执行没有权限的操作
+			_json.put("msg", getText("exception.delete.notExists"));
+			_json.put("e", e.getClass().getSimpleName());
 		} catch (JpaSystemException e) {
-			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
-			throw new CoreException("JpaSystemException");
+			// 其他JPA异常等
+			_json.put("msg", e.toString());
+			_json.put("e", e.getClass().getSimpleName());
 		}
-		return "deleteSuccess";
+		_json.put("success", false);
+		json = _json.toString();
+		return "json";
 	}
 
 	// 获取列表视图页面----无分页
@@ -684,8 +708,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
 				.setMinHeight(200).setModal(false);
-		
-		if(this.useFormPrint())
+
+		if (this.useFormPrint())
 			pageOption.setPrint("default.form");
 
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
