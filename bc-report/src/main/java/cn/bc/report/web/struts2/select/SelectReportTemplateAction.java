@@ -42,7 +42,7 @@ public class SelectReportTemplateAction extends
 	
 	@Override
 	protected String getClickOkMethod() {
-		return "bc.selectReportTemplate.clickOk";
+		return "bc.reportTemplateSelectDialog.clickOk";
 	}
 
 	@Override
