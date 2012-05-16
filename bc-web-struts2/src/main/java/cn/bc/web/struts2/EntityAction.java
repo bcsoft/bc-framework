@@ -355,7 +355,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 			_json.put("success", true);
 			_json.put("msg", getText("form.delete.success"));
 			json = _json.toString();
-			return "deleteSuccess";
+			return "json";
 		} catch (PermissionDeniedException e) {
 			// 执行没有权限的操作
 			_json.put("msg", getText("exception.delete.permissionDenied"));
