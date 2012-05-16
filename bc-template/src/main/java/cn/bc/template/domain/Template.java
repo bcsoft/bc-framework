@@ -25,16 +25,19 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.util.FileCopyUtils;
 
 import cn.bc.BCConstants;
-import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.FileEntityImpl;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.util.DocxUtils;
+import cn.bc.template.util.XlsUtils;
+import cn.bc.template.util.XlsxUtils;
 
 /**
  * 模板
@@ -297,15 +300,35 @@ public class Template extends FileEntityImpl {
 			file.getParentFile().mkdirs();
 		}
 
-		// 保存到文件
-		if ("docx".equals(this.getTemplateType().getExtension())) {
+		logger.info("realpath=" + realpath);
+		// 格式化并保存到文件
+		if ("docx".equalsIgnoreCase(this.getTemplateType().getExtension())) {// Word2007+
 			XWPFDocument docx = DocxUtils.format(this.getInputStream(), params);
 			FileOutputStream out = new FileOutputStream(realpath);
 			docx.write(out);
 			out.close();
-		} else {
-			throw new CoreException("TODO:Attach.format2Attach type="
-					+ this.getTemplateType().getExtension());
+		} else if ("xls"
+				.equalsIgnoreCase(this.getTemplateType().getExtension())) {// Excel97-2003
+			HSSFWorkbook xls = XlsUtils.format(this.getInputStream(), params);
+			FileOutputStream out = new FileOutputStream(realpath);
+			xls.write(out);
+			out.close();
+		} else if ("xlsx".equalsIgnoreCase(this.getTemplateType()
+				.getExtension())) {// Excel2007+
+			XSSFWorkbook xlsx = XlsxUtils.format(this.getInputStream(), params);
+			FileOutputStream out = new FileOutputStream(realpath);
+			xlsx.write(out);
+			out.close();
+		} else if (this.getTemplateType().isPureText()) {// 纯文本
+			String s = this.getContentEx(params);
+			FileOutputStream out = new FileOutputStream(realpath);
+			out.write(s.getBytes());
+			out.close();
+		} else {// 其它类型直接复制附件
+			if (logger.isInfoEnabled())
+				logger.info("pure copy file");
+			FileCopyUtils.copy(this.getInputStream(), new FileOutputStream(
+					realpath));
 		}
 
 		// 设置附件大小
