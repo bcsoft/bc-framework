@@ -163,7 +163,7 @@ public class SelectTemplateAction extends
 
 	@Override
 	protected Condition getGridSpecalCondition() {
-		AndCondition andCondition=new AndCondition(new EqualsCondition("a.status_", BCConstants.STATUS_ENABLED));
+		AndCondition andCondition=new AndCondition(new EqualsCondition("t.status_", BCConstants.STATUS_ENABLED));
 		if(category!=null&&category.length()>0){
 			if(category.indexOf(",")==-1){
 				andCondition.add(new EqualsCondition("t.category", category));

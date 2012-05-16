@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -37,7 +39,8 @@ public class SelectReportTemplateAction extends
 	private static final long serialVersionUID = 1L;
 
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
-
+	public String category;
+	
 	@Override
 	protected String getClickOkMethod() {
 		return "bc.selectReportTemplate.clickOk";
@@ -89,8 +92,7 @@ public class SelectReportTemplateAction extends
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("report.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",
-				getText("report.category"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
+				getText("report.category"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("report.name"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
@@ -151,18 +153,25 @@ public class SelectReportTemplateAction extends
 
 	@Override
 	protected Condition getGridSpecalCondition() {
-		return new EqualsCondition("a.status_",Integer.parseInt(status));
+		AndCondition andCondition=new AndCondition(new EqualsCondition("a.status_", BCConstants.STATUS_ENABLED));
+		if(category!=null&&category.length()>0){
+			if(category.indexOf(",")==-1){
+				andCondition.add(new EqualsCondition("a.category", category));
+			}else{
+				andCondition.add(new InCondition("a.category", category.split(",")));
+			}
+		}
+		return andCondition;
 	}
 
 	@Override
 	protected Json getGridExtrasData() {
-		if (this.status == null || this.status.length() == 0) {
-			return null;
-		} else {
-			Json json = new Json();
-			json.put("status", status);
-			return json;
+		Json json = new Json();
+		json.put("status", status);
+		if(category!=null&&category.length()>0){
+			json.put("category", category);
 		}
+		return json;
 	}
 
 	@Override
