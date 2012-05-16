@@ -336,7 +336,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 						template.setContent(format);
 						is=template.getInputStream();
 					}else{
-						is=new ByteArrayInputStream(template.getContent(markerValues).getBytes());
+						is=new ByteArrayInputStream(template.getContentEx(markerValues).getBytes());
 					}
 				}else{
 					is = template.getInputStream();
