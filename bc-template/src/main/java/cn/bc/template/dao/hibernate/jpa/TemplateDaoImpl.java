@@ -51,4 +51,18 @@ public class TemplateDaoImpl extends HibernateCrudJpaDao<Template> implements
 		}
 		return this.createQuery().condition(c).count() > 0;
 	}
+	
+	
+	public Template loadByCodeAndId(String code,Long id){
+		if(code == null || id == null)
+			return null;
+		AndCondition c = new AndCondition();
+		c.add(new EqualsCondition("code", code));
+		//状态正常
+		c.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED));
+		
+		//id不等于本对象
+		c.add(new NotEqualsCondition("id",id));
+		return this.createQuery().condition(c).singleResult();
+	}
 }

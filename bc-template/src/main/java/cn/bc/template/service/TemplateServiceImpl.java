@@ -122,7 +122,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 	}
 
 	public void saveTpl(Template template) {
-		Template oldTpl= this.templateDao.loadByCode(template.getCode());
+		Template oldTpl= this.templateDao.loadByCodeAndId(template.getCode(),template.getId());
 		if(oldTpl!=null){
 			oldTpl.setStatus(BCConstants.STATUS_DISABLED);
 			this.templateDao.save(oldTpl);

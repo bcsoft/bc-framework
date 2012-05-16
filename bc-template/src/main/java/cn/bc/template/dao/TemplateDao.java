@@ -32,5 +32,12 @@ public interface TemplateDao extends CrudDao<Template> {
 	 */
 	public boolean isUniqueCodeAndVersion(Long currentId, String code,
 			String version);
-
+	/**
+	 * 根据编码和id获取编码相同但id不同，且状态为正常的模板对象
+	 * 
+	 * @param code
+	 * @param id
+	 * @return
+	 */
+	public Template loadByCodeAndId(String code,Long id);
 }
