@@ -171,6 +171,16 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 			return "json";
 		}
 	}
+	
+	//检查模板内容是否为空
+	public String isContent(){
+		Json json = new Json();
+		Template t=this.templateService.load(tid);
+		boolean flag = (t.getContent()==null||t.getContent().length()==0);
+		json.put("result", flag);
+		this.json = json.toString();
+		return "json";
+	}
 
 	public String path;// 物理文件保存的相对路径
 	public String content;// 模板内容
@@ -179,6 +189,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public String loadTplConfigParam() throws Exception {
 		Json json = new Json();
 		Template tpl = this.templateService.load(tid);
+		if(tpl.getTemplateType().getCode().equals("custom")
+				&&content!=null&&content.length()>0){
+			tpl.setContent(content);
+		}
 		// 附件的扩展名
 		String extension = tpl.getTemplateType().getExtension();
 		InputStream is = tpl.getInputStream();
@@ -223,6 +237,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	// 下载自定义文本
 	public String download() throws Exception {
 		Template coustText = this.templateService.load(tid);
+		if(coustText.getTemplateType().getCode().equals("custom")
+				&&content!=null&&content.length()>0){
+			coustText.setContent(content);
+		}
+		
 		Date startTime = new Date();
 		// 附件的扩展名
 		String extension = "txt";
@@ -253,6 +272,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	// 在线查看
 	public String inline() throws Exception {
 		Template template = this.templateService.load(tid);
+		if(template.getTemplateType().getCode().equals("custom")
+				&&content!=null&&content.length()>0){
+			template.setContent(content);
+		}
+		
 		Date startTime = new Date();
 
 		// 附件的扩展名
@@ -307,12 +331,17 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				out.close();
 			} else if (template.isPureText()) {
 				if (markerValues != null && !markerValues.isEmpty()) {
-					template.setContent(FreeMarkerUtils.format(
-							template.getContent(), markerValues));
-					template.setTemplateType(this.templateTypeService
-							.loadByCode("custom"));
+					if(template.getTemplateType().getCode().equals("custom")){
+						String format=FreeMarkerUtils.format(template.getContent(), markerValues);
+						template.setContent(format);
+						is=template.getInputStream();
+					}else{
+						is=new ByteArrayInputStream(template.getContentEx(markerValues).getBytes());
+					}
+				}else{
+					is = template.getInputStream();
 				}
-				is = template.getInputStream();
+				
 				if (extension == null)
 					extension = "txt";
 			} else {
