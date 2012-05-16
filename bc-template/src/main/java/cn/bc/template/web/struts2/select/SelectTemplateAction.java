@@ -16,6 +16,7 @@ import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -164,7 +165,11 @@ public class SelectTemplateAction extends
 	protected Condition getGridSpecalCondition() {
 		AndCondition andCondition=new AndCondition(new EqualsCondition("a.status_", BCConstants.STATUS_ENABLED));
 		if(category!=null&&category.length()>0){
-			 andCondition.add(new EqualsCondition("t.category", category));
+			if(category.indexOf(",")==-1){
+				andCondition.add(new EqualsCondition("t.category", category));
+			}else{
+				andCondition.add(new InCondition("t.category", category.split(",")));
+			}
 		}
 		return andCondition;
 	}
