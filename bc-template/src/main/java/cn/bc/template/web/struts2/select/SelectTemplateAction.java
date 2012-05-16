@@ -41,7 +41,7 @@ import cn.bc.web.ui.json.Json;
 public class SelectTemplateAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED); // 车辆保单险种的状态，多个用逗号连接
+	public String status = String.valueOf(BCConstants.STATUS_ENABLED); //状态
 	public String category;//所属分类
 
 	@Override
@@ -163,7 +163,11 @@ public class SelectTemplateAction extends
 
 	@Override
 	protected Condition getGridSpecalCondition() {
-		AndCondition andCondition=new AndCondition(new EqualsCondition("t.status_", BCConstants.STATUS_ENABLED));
+		AndCondition andCondition=new AndCondition();
+		if(status!=null&&status.length()>0){
+			andCondition.add(new EqualsCondition("t.status_", Integer.parseInt(status)));
+		}
+		
 		if(category!=null&&category.length()>0){
 			if(category.indexOf(",")==-1){
 				andCondition.add(new EqualsCondition("t.category", category));
@@ -177,7 +181,9 @@ public class SelectTemplateAction extends
 	@Override
 	protected Json getGridExtrasData() {
 		Json json = new Json();
-		json.put("status", status);
+		if(status!=null&&status.length()>0){
+			json.put("status", status);
+		}
 		if(category!=null&&category.length()>0){
 			json.put("category", category);
 		}

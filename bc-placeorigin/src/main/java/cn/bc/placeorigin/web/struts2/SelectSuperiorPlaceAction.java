@@ -168,36 +168,31 @@ public class SelectSuperiorPlaceAction extends
 
 	@Override
 	protected Condition getGridSpecalCondition() {
-		if (types != null && status != null) {
-			if(types.length()==1){
-				return new AndCondition(new EqualsCondition("a.status_",
-						new Integer(Integer.valueOf(status))), new EqualsCondition(
-						"a.type_", new Integer(Integer.valueOf(types))));
-			}else{
-				String[] sa=types.split(",");
-				List<Integer> list=new ArrayList<Integer>();
-				for(String str:sa){
-					list.add(Integer.valueOf(str));
-				}
-				return new AndCondition(new EqualsCondition("a.status_",
-						new Integer(Integer.valueOf(status)))
-				,new InCondition("a.type_", list));
-			}
-		} else {
-			return null;
+		AndCondition andCondition=new AndCondition();
+		if(status!=null&&status.length()>0){
+			andCondition.add(new EqualsCondition("a.status_", Integer.parseInt(status)));
 		}
+		
+		if(types!=null&&types.length()>0){
+			if(types.indexOf(",")==-1){
+				andCondition.add(new EqualsCondition("a.type_", Integer.valueOf(types)));
+			}else{
+				andCondition.add(new InCondition("a.type_", types.split(",")));
+			}
+		}
+		return andCondition;
 	}
 
 	@Override
 	protected Json getGridExtrasData() {
-		if (this.status == null || this.status.length() == 0) {
-			return null;
-		} else {
-			Json json = new Json();
+		Json json = new Json();
+		if(status!=null&&status.length()>0){
 			json.put("status", status);
-			json.put("types", types);
-			return json;
 		}
+		if(types!=null&&types.length()>0){
+			json.put("types", types);
+		}
+		return json;
 	}
 
 	@Override
