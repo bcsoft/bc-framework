@@ -170,7 +170,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				.setClick("bc.reportHistoryList.download"));
 		// 在线预览
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-				.setText(getText("label.preview.inline"))
+				.setText(getText("reportHistory.priview.inline"))
 				.setClick("bc.reportHistoryList.inline"));
 		
 		//状态按钮组

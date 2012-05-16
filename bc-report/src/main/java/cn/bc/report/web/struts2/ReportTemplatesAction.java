@@ -67,7 +67,7 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.category,a.code,a.name,a.desc_ as desc");
 		sql.append(",b.actor_name as uname,a.file_date,c.actor_name as mname");
-		sql.append(",a.modified_date");
+		sql.append(",a.modified_date,getreporttemplateuser(a.id)");
 		sql.append(" from bc_report_template a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
 		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id");
@@ -91,7 +91,8 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 				map.put("uname", rs[i++]);
 				map.put("file_date", rs[i++]);
 				map.put("mname", rs[i++]);
-				map.put("modified_date", rs[i++]);			
+				map.put("modified_date", rs[i++]);		
+				map.put("users", rs[i++]);		
 				return map;
 			}
 		});
@@ -115,8 +116,10 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.code", "code",
 				getText("report.code"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("", "users",
+				getText("reportTemplate.user")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("report.desc")).setUseTitleFromLabel(true));
+				getText("report.desc"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
 				getText("report.author"), 80));
 		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
