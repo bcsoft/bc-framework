@@ -20,6 +20,7 @@ import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -59,7 +60,7 @@ public class SelectTemplateAction extends
 		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category,a.code as typeCode");
+		sql.append(",t.category,a.code as typeCode,t.formated");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
@@ -90,6 +91,7 @@ public class SelectTemplateAction extends
 				map.put("version", rs[i++]);
 				map.put("category", rs[i++]);
 				map.put("typeCode", rs[i++]);
+				map.put("formated", rs[i++]);
 				return map;
 			}
 		});
@@ -113,6 +115,11 @@ public class SelectTemplateAction extends
 				getText("template.version"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.path", "path",
 				getText("template.tfpath")).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.formated", "formated",
+				getText("template.file.formated"), 80).setSortable(true)
+				.setValueFormater(new BooleanFormater()));
+		columns.add(new TextColumn4MapKey("t.size_", "size",
+				getText("template.file.size"),110).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
 				getText("template.desc"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("au.actor_name", "uname",
