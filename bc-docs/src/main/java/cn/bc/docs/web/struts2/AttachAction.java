@@ -301,8 +301,8 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	private void downloadFile(String ext, String path, String filename)
 			throws FileNotFoundException {
 		this.contentType = AttachUtils.getContentType(ext);
-		this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(),
-				filename);
+		this.filename = WebUtils.encodeFileName(
+				ServletActionContext.getRequest(), filename);
 		File file = new File(path);
 		this.contentLength = file.length();
 		this.inputStream = new FileInputStream(file);
@@ -368,14 +368,16 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 					ids[i] = new Long(_ids[i]);
 				attachs = this.getCrudService().createQuery()
 						.condition(new InCondition("id", ids)).list();
-			} else {// 所有附件
+			} else {// 所有附件(状态为正常的)
 				attachs = this
 						.getCrudService()
 						.createQuery()
 						.condition(
-								new AndCondition().add(
-										new EqualsCondition("ptype", ptype))
-										.add(new EqualsCondition("puid", puid)))
+								new AndCondition()
+										.add(new EqualsCondition("ptype", ptype))
+										.add(new EqualsCondition("puid", puid))
+										.add(new EqualsCondition("status",
+												BCConstants.STATUS_ENABLED)))
 						.list();
 			}
 			String path;
