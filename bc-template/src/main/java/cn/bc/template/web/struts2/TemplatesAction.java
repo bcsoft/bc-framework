@@ -24,6 +24,7 @@ import cn.bc.option.domain.OptionItem;
 import cn.bc.template.service.TemplateTypeService;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -137,7 +138,8 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				getText("template.file.formatted"), 80).setSortable(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("t.size_", "size",
-				getText("template.file.size"),110).setUseTitleFromLabel(true));
+				getText("template.file.size"),110).setUseTitleFromLabel(true)
+				.setValueFormater(new FileSizeFormater()));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
 				getText("template.desc"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.inner_", "inner",
