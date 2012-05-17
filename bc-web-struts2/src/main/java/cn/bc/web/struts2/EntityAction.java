@@ -407,8 +407,16 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * @param e
 	 */
 	protected void dealOtherDeleteException(Json json, Exception e) {
-		json.put("msg", e.toString());
-		json.put("e", e.getClass().getSimpleName());
+		if ((e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException)
+				|| (e.getCause().getCause() != null && e.getCause().getCause() instanceof org.hibernate.exception.ConstraintViolationException)) {
+			// 违反约束关联引发的异常
+			json.put("msg", getText("exception.delete.constraintViolation"));
+			json.put("e", e.getClass().getSimpleName());
+		} else {
+			// 其他异常
+			json.put("msg", e.toString());
+			json.put("e", e.getClass().getSimpleName());
+		}
 	}
 
 	// 获取列表视图页面----无分页
