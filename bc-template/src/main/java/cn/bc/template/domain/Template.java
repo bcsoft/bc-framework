@@ -64,10 +64,9 @@ public class Template extends FileEntityImpl {
 	private String version;// 版本号
 	private String category;// 所属分类
 	private TemplateType templateType;
-	private Long size;//文件的大小(单位为字节) 默认0
-	private boolean formatted;//格式化：模板是否允许格式化  默认否
-	
-	
+	private Long size;// 文件的大小(单位为字节) 默认0
+	private boolean formatted;// 格式化：模板是否允许格式化 默认否
+
 	@Column(name = "SIZE_")
 	public long getSize() {
 		return size;
@@ -234,7 +233,7 @@ public class Template extends FileEntityImpl {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 获取模板的附件长度
 	 * <p>
@@ -244,14 +243,14 @@ public class Template extends FileEntityImpl {
 	 * @return
 	 */
 	@Transient
-	public long getSizeEx(){
+	public long getSizeEx() {
 		// 自定义文本
 		if (this.getTemplateType().getCode().equals("custom")) {
 			if (this.content == null)
 				return 0;
 			return this.content.getBytes().length;
 		}
-		// 
+		//
 		String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
 				+ this.getPath();
 		File file = new File(p);
@@ -345,30 +344,41 @@ public class Template extends FileEntityImpl {
 		}
 
 		logger.info("realpath=" + realpath);
-		// 格式化并保存到文件
-		if ("docx".equalsIgnoreCase(this.getTemplateType().getExtension())) {// Word2007+
-			XWPFDocument docx = DocxUtils.format(this.getInputStream(), params);
-			FileOutputStream out = new FileOutputStream(realpath);
-			docx.write(out);
-			out.close();
-		} else if ("xls"
-				.equalsIgnoreCase(this.getTemplateType().getExtension())) {// Excel97-2003
-			HSSFWorkbook xls = XlsUtils.format(this.getInputStream(), params);
-			FileOutputStream out = new FileOutputStream(realpath);
-			xls.write(out);
-			out.close();
-		} else if ("xlsx".equalsIgnoreCase(this.getTemplateType()
-				.getExtension())) {// Excel2007+
-			XSSFWorkbook xlsx = XlsxUtils.format(this.getInputStream(), params);
-			FileOutputStream out = new FileOutputStream(realpath);
-			xlsx.write(out);
-			out.close();
-		} else if (this.getTemplateType().isPureText()) {// 纯文本
-			String s = this.getContentEx(params);
-			FileOutputStream out = new FileOutputStream(realpath);
-			out.write(s.getBytes());
-			out.close();
-		} else {// 其它类型直接复制附件
+		if (this.isFormatted()) {
+			// 格式化并保存到文件
+			if ("docx".equalsIgnoreCase(this.getTemplateType().getExtension())) {// Word2007+
+				XWPFDocument docx = DocxUtils.format(this.getInputStream(),
+						params);
+				FileOutputStream out = new FileOutputStream(realpath);
+				docx.write(out);
+				out.close();
+			} else if ("xls".equalsIgnoreCase(this.getTemplateType()
+					.getExtension())) {// Excel97-2003
+				HSSFWorkbook xls = XlsUtils.format(this.getInputStream(),
+						params);
+				FileOutputStream out = new FileOutputStream(realpath);
+				xls.write(out);
+				out.close();
+			} else if ("xlsx".equalsIgnoreCase(this.getTemplateType()
+					.getExtension())) {// Excel2007+
+				XSSFWorkbook xlsx = XlsxUtils.format(this.getInputStream(),
+						params);
+				FileOutputStream out = new FileOutputStream(realpath);
+				xlsx.write(out);
+				out.close();
+			} else if (this.getTemplateType().isPureText()) {// 纯文本
+				String s = this.getContentEx(params);
+				FileOutputStream out = new FileOutputStream(realpath);
+				out.write(s.getBytes());
+				out.close();
+			} else {// 其它类型直接复制附件
+				if (logger.isInfoEnabled())
+					logger.info("pure copy file");
+				FileCopyUtils.copy(this.getInputStream(), new FileOutputStream(
+						realpath));
+			}
+		} else {
+			// 直接复制附件
 			if (logger.isInfoEnabled())
 				logger.info("pure copy file");
 			FileCopyUtils.copy(this.getInputStream(), new FileOutputStream(
