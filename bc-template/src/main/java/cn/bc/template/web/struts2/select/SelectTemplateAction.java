@@ -57,7 +57,7 @@ public class SelectTemplateAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.code,a.name as type,t.subject");
+		sql.append("select t.id,t.code,a.name as type,t.subject,t.path");
 		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
@@ -75,6 +75,7 @@ public class SelectTemplateAction extends
 				map.put("code", rs[i++]);
 				map.put("type", rs[i++]);
 				map.put("subject", rs[i++]);
+				map.put("path", rs[i++]);
 				map.put("version", rs[i++]);
 				map.put("category", rs[i++]);
 				map.put("typeCode", rs[i++]);
@@ -107,7 +108,8 @@ public class SelectTemplateAction extends
 		columns.add(new TextColumn4MapKey("t.formatted", "formatted",
 				getText("template.file.formatted"), 80).setSortable(true)
 				.setValueFormater(new BooleanFormater()));
-		columns.add(new HiddenColumn4MapKey("a.typeCode", "typeCode"));
+		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
+		columns.add(new HiddenColumn4MapKey("path", "path"));
 		return columns;
 	}
 	
