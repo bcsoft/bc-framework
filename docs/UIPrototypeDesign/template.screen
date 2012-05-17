@@ -264,6 +264,20 @@
     </widgets>
   </widgets>
   <widgets xsi:type="model:VLine" id="253" x="520" y="180" height="849" measuredWidth="6" measuredHeight="849" foreground="#ff9900"/>
+  <widgets xsi:type="model:WidgetGroup" id="263" x="8" y="1072" measuredWidth="473" measuredHeight="173">
+    <widgets xsi:type="model:Window" id="264" y="24" width="473" height="149" text="选择模板信息" measuredWidth="473" measuredHeight="149" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="265" y="83" width="473" measuredWidth="473" measuredHeight="6"/>
+    <widgets xsi:type="model:Table" id="267" y="85" width="473" text="(w:30). !,标题,编码,版本号,所属分类,类型,大小,允许格式化&#xA;1,XX模板,tpl1,1,平台/登录统计,Excel,1.2MB,是" measuredWidth="473" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="268" text="选择模板：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="270" x="280" y="53" width="183" measuredWidth="183" measuredHeight="24"/>
+    <widgets xsi:type="model:Button" id="273" x="426" y="140" width="40" text="确认" measuredWidth="40" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font/>
