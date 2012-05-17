@@ -64,6 +64,27 @@ public class Template extends FileEntityImpl {
 	private String version;// 版本号
 	private String category;// 所属分类
 	private TemplateType templateType;
+	private Long size;//文件的大小(单位为字节) 默认0
+	private boolean formatted;//格式化：模板是否允许格式化  默认否
+	
+	
+	@Column(name = "SIZE_")
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(long size) {
+		this.size = size;
+	}
+
+	@Column(name = "FORMATTED")
+	public boolean isFormatted() {
+		return formatted;
+	}
+
+	public void setFormatted(boolean formatted) {
+		this.formatted = formatted;
+	}
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "TYPE_ID", referencedColumnName = "ID")
@@ -160,7 +181,7 @@ public class Template extends FileEntityImpl {
 
 		String txt = null;
 		// 自定义文本
-		if (this.templateType.getCode().equals("custom")) {
+		if (this.getTemplateType().getCode().equals("custom")) {
 			txt = this.content;
 		} else {
 			// 读取文件流的字符串内容
@@ -196,7 +217,7 @@ public class Template extends FileEntityImpl {
 	@Transient
 	public InputStream getInputStream() {
 		// 自定义文本,返回由此内容构成的字节流
-		if (this.templateType.getCode().equals("custom")) {
+		if (this.getTemplateType().getCode().equals("custom")) {
 			if (this.content == null)
 				return null;
 			return new ByteArrayInputStream(this.content.getBytes());
@@ -212,6 +233,29 @@ public class Template extends FileEntityImpl {
 			logger.warn("getInputStream 附件文件不存在:file=" + p);
 			return null;
 		}
+	}
+	
+	/**
+	 * 获取模板的附件长度
+	 * <p>
+	 * 如果是自定义文本内容返回此内容字节的长度,如果是附件类型返回附件长度
+	 * </p>
+	 * 
+	 * @return
+	 */
+	@Transient
+	public long getSizeEx(){
+		// 自定义文本
+		if (this.getTemplateType().getCode().equals("custom")) {
+			if (this.content == null)
+				return 0;
+			return this.content.getBytes().length;
+		}
+		// 
+		String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
+				+ this.getPath();
+		File file = new File(p);
+		return file.length();
 	}
 
 	public void setContent(String content) {

@@ -113,6 +113,8 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		entity.setStatus(BCConstants.STATUS_ENABLED);
 		//默认模板类型为自定义文本
 		entity.setTemplateType(this.templateTypeService.loadByCode("custom"));
+		//默认模板不可格式化
+		entity.setFormatted(false);
 
 		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
 	}
@@ -137,6 +139,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	public String save() throws Exception {
 		Template template = this.getE();
+		template.setTemplateType(this.templateTypeService.load(template.getTemplateType().getId()));
+		//设置保存文件大小                                               获取文件大小
+		template.setSize(template.getSizeEx());
+		
 		// 状态：禁用
 		if (template.getStatus() != BCConstants.STATUS_ENABLED) {
 			this.beforeSave(template);

@@ -20,7 +20,8 @@ import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.BooleanFormater;
+import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
@@ -56,14 +57,10 @@ public class SelectTemplateAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
-		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
-		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category,a.code as typeCode");
+		sql.append("select t.id,t.code,a.name as type,t.subject");
+		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
-		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
-		sql.append(" left join bc_identity_actor_history am on am.id=t.modifier_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -75,21 +72,14 @@ public class SelectTemplateAction extends
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("orderNo", rs[i++]);
 				map.put("code", rs[i++]);
 				map.put("type", rs[i++]);
-				map.put("desc_", rs[i++]);
-				map.put("path", rs[i++]);
 				map.put("subject", rs[i++]);
-				map.put("uname", rs[i++]);
-				map.put("file_date", rs[i++]);
-				map.put("mname", rs[i++]);
-				map.put("modified_date", rs[i++]);
-				map.put("inner", rs[i++]);
-				map.put("status", rs[i++]);
 				map.put("version", rs[i++]);
 				map.put("category", rs[i++]);
 				map.put("typeCode", rs[i++]);
+				map.put("formatted", rs[i++]);
+				map.put("size", rs[i++]);
 				return map;
 			}
 		});
@@ -100,10 +90,6 @@ public class SelectTemplateAction extends
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("t.id", "id"));
-		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
-				getText("template.order"), 60).setSortable(true));
-		columns.add(new TextColumn4MapKey("a.name", "type",
-				getText("template.type"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
@@ -111,28 +97,23 @@ public class SelectTemplateAction extends
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.version_", "version",
 				getText("template.version"), 100).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.path", "path",
-				getText("template.tfpath")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
-				getText("template.desc"), 100).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("au.actor_name", "uname",
-				getText("template.author"), 80));
-		columns.add(new TextColumn4MapKey("t.file_date", "file_date",
-				getText("template.fileDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("am.actor_name", "mname",
-				getText("template.modifier"), 80));
-		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
-				getText("template.modifiedDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
+		columns.add(new TextColumn4MapKey("a.name", "type",
+				getText("template.type"), 150).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.category", "category",
+				getText("template.category"), 150).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.size_", "size",
+				getText("template.file.size"),110).setUseTitleFromLabel(true)
+				.setValueFormater(new FileSizeFormater()));
+		columns.add(new TextColumn4MapKey("t.formatted", "formatted",
+				getText("template.file.formatted"), 80).setSortable(true)
+				.setValueFormater(new BooleanFormater()));
+		columns.add(new HiddenColumn4MapKey("a.typeCode", "typeCode"));
 		return columns;
 	}
 	
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[]{"t.code", "am.actor_name", "t.path", "t.subject",
-				"t.version_", "t.category","a.name"};
+		return new String[]{"t.code", "t.subject","t.version_", "t.category","a.name"};
 	}
 
 	@Override

@@ -156,23 +156,19 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 		attachsUI = buildAttachsUI(false, true);
 	}
 
-	private AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
+	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 		// 构建附件控件
 		String ptype = "bulletin.main";
-		AttachWidget attachsUI = new AttachWidget();
-		attachsUI.setFlashUpload(isFlashUpload());
-		attachsUI.addClazz("formAttachs");
-		if (!isNew)
-			attachsUI.addAttach(this.attachService.findByPtype(ptype, this
-					.getE().getUid()));
-		attachsUI.setPuid(this.getE().getUid()).setPtype(ptype);
+		String puid = this.getE().getUid();
+		boolean readonly = forceReadonly ? true : this.isReadonly();
+		AttachWidget attachsUI = AttachWidget.defaultAttachWidget(isNew,
+				readonly, isFlashUpload(), this.attachService, ptype, puid);
 
 		// 上传附件的限制
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
 
-		attachsUI.setReadOnly(forceReadonly ? true : this.isReadonly());
 		return attachsUI;
 	}
 
