@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.web.ui.Component;
 import cn.bc.web.ui.html.A;
@@ -478,5 +479,44 @@ public class AttachWidget extends Div {
 	 */
 	public static Component defaultAttachButton4Delete(String label) {
 		return createButton(label == null ? "删除" : label, "delete", null, null);
+	}
+
+	/**
+	 * 构建一个默认的附件控件
+	 * 
+	 * @param isNew
+	 *            所属文档是否处于新建状态
+	 * @param readonly
+	 *            控件的只读状态
+	 * @param ptype
+	 *            所属文档类型
+	 * @param puid
+	 *            所属文档的uid
+	 * @param useFlashUpload
+	 *            是否使用flash上传附件
+	 * @param attachService
+	 *            附件服务
+	 * @return
+	 */
+	public static AttachWidget defaultAttachWidget(boolean isNew,
+			boolean readonly, boolean useFlashUpload,
+			AttachService attachService, String ptype, String puid) {
+		// 构建附件控件
+		AttachWidget attachsUI = new AttachWidget();
+		attachsUI.setFlashUpload(useFlashUpload);
+		attachsUI.addClazz("formAttachs");
+		if (!isNew)
+			attachsUI.addAttach(attachService.findByPtype(ptype, puid));
+		attachsUI.setPuid(puid).setPtype(ptype);
+
+		// 上传附件的限制
+		// attachsUI.addExtension(getText("app.attachs.extensions"))
+		// .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+		// .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+
+		// 只读控制
+		attachsUI.setReadOnly(readonly);
+
+		return attachsUI;
 	}
 }
