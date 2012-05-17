@@ -114,7 +114,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		//默认模板类型为自定义文本
 		entity.setTemplateType(this.templateTypeService.loadByCode("custom"));
 		//默认模板不可格式化
-		entity.setFormated(false);
+		entity.setFormatted(false);
 
 		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
 	}

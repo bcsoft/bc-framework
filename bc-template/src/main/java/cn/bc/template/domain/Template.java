@@ -65,7 +65,7 @@ public class Template extends FileEntityImpl {
 	private String category;// 所属分类
 	private TemplateType templateType;
 	private Long size;//文件的大小(单位为字节) 默认0
-	private boolean formated;//格式化：模板是否允许格式化  默认否
+	private boolean formatted;//格式化：模板是否允许格式化  默认否
 	
 	
 	@Column(name = "SIZE_")
@@ -77,13 +77,13 @@ public class Template extends FileEntityImpl {
 		this.size = size;
 	}
 
-	@Column(name = "FORMATED")
-	public boolean isFormated() {
-		return formated;
+	@Column(name = "FORMATTED")
+	public boolean isFormatted() {
+		return formatted;
 	}
 
-	public void setFormated(boolean formated) {
-		this.formated = formated;
+	public void setFormatted(boolean formatted) {
+		this.formatted = formatted;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)

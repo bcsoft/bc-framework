@@ -60,7 +60,7 @@ public class SelectTemplateAction extends
 		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category,a.code as typeCode,t.formated");
+		sql.append(",t.category,a.code as typeCode,t.formatted,t.size_ as size");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
@@ -91,7 +91,8 @@ public class SelectTemplateAction extends
 				map.put("version", rs[i++]);
 				map.put("category", rs[i++]);
 				map.put("typeCode", rs[i++]);
-				map.put("formated", rs[i++]);
+				map.put("formatted", rs[i++]);
+				map.put("size", rs[i++]);
 				return map;
 			}
 		});
@@ -115,8 +116,8 @@ public class SelectTemplateAction extends
 				getText("template.version"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.path", "path",
 				getText("template.tfpath")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.formated", "formated",
-				getText("template.file.formated"), 80).setSortable(true)
+		columns.add(new TextColumn4MapKey("t.formatted", "formatted",
+				getText("template.file.formatted"), 80).setSortable(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("t.size_", "size",
 				getText("template.file.size"),110).setUseTitleFromLabel(true));
