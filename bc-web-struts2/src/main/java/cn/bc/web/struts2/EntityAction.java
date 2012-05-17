@@ -20,7 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
@@ -28,6 +27,7 @@ import cn.bc.Context;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
 import cn.bc.core.SetEntityClass;
+import cn.bc.core.exception.ConstraintViolationException;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.exception.InnerLimitedException;
 import cn.bc.core.exception.NotExistsException;
@@ -358,24 +358,57 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 			return "json";
 		} catch (PermissionDeniedException e) {
 			// 执行没有权限的操作
-			_json.put("msg", getText("exception.delete.permissionDenied"));
+			_json.put("msg", getDeleteExceptionMsg(e));
 			_json.put("e", e.getClass().getSimpleName());
 		} catch (InnerLimitedException e) {
 			// 删除内置对象
-			_json.put("msg", getText("exception.delete.innerLimited"));
+			_json.put("msg", getDeleteExceptionMsg(e));
 			_json.put("e", e.getClass().getSimpleName());
 		} catch (NotExistsException e) {
 			// 执行没有权限的操作
-			_json.put("msg", getText("exception.delete.notExists"));
+			_json.put("msg", getDeleteExceptionMsg(e));
 			_json.put("e", e.getClass().getSimpleName());
-		} catch (JpaSystemException e) {
-			// 其他JPA异常等
-			_json.put("msg", e.toString());
+		} catch (ConstraintViolationException e) {
+			// 违反约束关联引发的异常
+			_json.put("msg", getDeleteExceptionMsg(e));
 			_json.put("e", e.getClass().getSimpleName());
+		} catch (Exception e) {
+			// 其他异常
+			dealOtherDeleteException(_json, e);
 		}
 		_json.put("success", false);
 		json = _json.toString();
 		return "json";
+	}
+
+	/**
+	 * 获取删除操作的异常提示信息
+	 * 
+	 * @return
+	 */
+	protected String getDeleteExceptionMsg(Exception e) {
+		if (e instanceof PermissionDeniedException) {
+			return getText("exception.delete.permissionDenied");
+		} else if (e instanceof InnerLimitedException) {
+			return getText("exception.delete.innerLimited");
+		} else if (e instanceof NotExistsException) {
+			return getText("exception.delete.notExists");
+		} else if (e instanceof ConstraintViolationException) {
+			return getText("exception.delete.constraintViolation");
+		} else {
+			return e.getMessage();
+		}
+	}
+
+	/**
+	 * 删除操作平台没有处理的异常的默认处理
+	 * 
+	 * @param json
+	 * @param e
+	 */
+	protected void dealOtherDeleteException(Json json, Exception e) {
+		json.put("msg", e.toString());
+		json.put("e", e.getClass().getSimpleName());
 	}
 
 	// 获取列表视图页面----无分页
