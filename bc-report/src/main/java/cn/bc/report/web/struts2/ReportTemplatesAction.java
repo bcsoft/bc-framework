@@ -116,8 +116,10 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.code", "code",
 				getText("report.code"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("", "users",
-				getText("reportTemplate.user")).setUseTitleFromLabel(true));
+		if(!my){
+			columns.add(new TextColumn4MapKey("", "users",
+					getText("reportTemplate.user")).setUseTitleFromLabel(true));
+		}
 		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
 				getText("report.desc"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.actor_name", "uname",
