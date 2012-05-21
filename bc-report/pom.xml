@@ -12,6 +12,10 @@
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 			<scope>provided</scope>
@@ -39,6 +43,17 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-option</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- 操作日志模块 -->
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-log</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-scheduler</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
