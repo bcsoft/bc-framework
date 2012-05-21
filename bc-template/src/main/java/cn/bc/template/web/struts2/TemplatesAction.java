@@ -21,6 +21,7 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.option.domain.OptionItem;
+import cn.bc.template.service.TemplateService;
 import cn.bc.template.service.TemplateTypeService;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
@@ -286,17 +287,25 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	}
 	
 	private TemplateTypeService templateTypeService;
+	private TemplateService templateService;
 	
 	@Autowired
 	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
 		this.templateTypeService = templateTypeService;
 	}
+	
+	@Autowired
+	public void setTemplateService(TemplateService templateService) {
+		this.templateService = templateService;
+	}
 
 	public JSONArray types;
+	public JSONArray categorys;
 
 	@Override
 	protected void initConditionsFrom() throws Exception {
 		this.types=OptionItem.toLabelValues(this.templateTypeService.findTemplateTypeOption(false));
+		this.categorys=OptionItem.toLabelValues(this.templateService.findCategoryOption());
 	}
 	
 	

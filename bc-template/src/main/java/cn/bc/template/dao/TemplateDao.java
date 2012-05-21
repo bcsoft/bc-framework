@@ -1,5 +1,8 @@
 package cn.bc.template.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.bc.core.dao.CrudDao;
 import cn.bc.template.domain.Template;
 
@@ -40,4 +43,10 @@ public interface TemplateDao extends CrudDao<Template> {
 	 * @return
 	 */
 	public Template loadByCodeAndId(String code,Long id);
+	
+	/**
+	 * 查找模板分类
+	 * @return
+	 */
+	public List<Map<String, String>> findCategoryOption();
 }
