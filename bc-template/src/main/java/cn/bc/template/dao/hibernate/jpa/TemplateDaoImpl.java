@@ -78,7 +78,7 @@ public class TemplateDaoImpl extends HibernateCrudJpaDao<Template> implements
 	public List<Map<String, String>> findCategoryOption() {
 		String hql="SELECT a.category,1";
 		   hql+=" FROM bc_template a";
-		   hql+=" GROUP a.category";
+		   hql+=" GROUP BY a.category";
 		 return	HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(), hql,null
 		 	,new RowMapper<Map<String, String>>() {
 				public Map<String, String> mapRow(Object[] rs, int rowNum) {
