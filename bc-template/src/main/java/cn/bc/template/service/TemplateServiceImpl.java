@@ -3,6 +3,7 @@ package cn.bc.template.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -128,5 +129,9 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			this.templateDao.save(oldTpl);
 		}
 		this.templateDao.save(template);
+	}
+
+	public List<Map<String, String>> findCategoryOption() {
+		return this.templateDao.findCategoryOption();
 	}
 }

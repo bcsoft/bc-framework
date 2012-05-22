@@ -2,6 +2,7 @@ package cn.bc.template.service;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import cn.bc.core.service.CrudService;
@@ -94,6 +95,12 @@ public interface TemplateService extends CrudService<Template> {
 	 * @return
 	 */
 	public void saveTpl(Template template);
+	
+	/**
+	 * 查找模板分类
+	 * @return
+	 */
+	public List<Map<String, String>> findCategoryOption();
 
 	
 }
