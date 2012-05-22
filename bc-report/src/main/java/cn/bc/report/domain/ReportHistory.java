@@ -34,7 +34,7 @@ public class ReportHistory extends EntityImpl {
 	private boolean success;// 运行是否成功
 	private String path;// 报表运行结果所在的相对路径（相对于DATA_SUB_PATH下的子路径），如果有多个附件用分号连接
 	private String sourceType;//来源:有报表任务、用户生成和其它，报表任务是指通过报表任务定时生成的报表，用户生成是指用户手动执行报表模板，并通过"存为历史"操作而产生的，其它是指通过其它模块独立生成的
-	private String sourceId;//来源id:来源为报表任务时，来源ID记录的是报表任务的ID；来源为用户生成时，来源ID为报表模板的ID；其它来源时，来源ID有调用者自行确定记录什么信息；来源信息仅用于后台的历史追索，不作任何约束关联
+	private Long sourceId;//来源id:来源为报表任务时，来源ID记录的是报表任务的ID；来源为用户生成时，来源ID为报表模板的ID；其它来源时，来源ID有调用者自行确定记录什么信息；来源信息仅用于后台的历史追索，不作任何约束关联
 	private Calendar fileDate;// 创建时间
 	private ActorHistory author;// 创建人
 
@@ -107,11 +107,11 @@ public class ReportHistory extends EntityImpl {
 	}
 
 	@Column(name="SOURCE_ID")
-	public String getSourceId() {
+	public Long getSourceId() {
 		return sourceId;
 	}
 
-	public void setSourceId(String sourceId) {
+	public void setSourceId(Long sourceId) {
 		this.sourceId = sourceId;
 	}
 	

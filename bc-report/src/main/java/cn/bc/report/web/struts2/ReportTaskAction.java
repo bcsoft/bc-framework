@@ -88,10 +88,10 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 				this.reportTaskService.doStart(id);
 			}
 			json.put("success", true);
-			json.put("msg", "任务启动/重置成功！");
+			json.put("msg", "报表任务启动/重置成功！");
 		} catch (Exception e) {
 			json.put("success", false);
-			json.put("msg", "任务启动/重置失败！");
+			json.put("msg", "报表任务启动/重置失败！");
 		}
 
 		this.json = json.toString();
@@ -114,10 +114,10 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 				this.reportTaskService.doStop(id);
 			}
 			json.put("success", true);
-			json.put("msg", "任务停止成功！");
+			json.put("msg", "报表任务停止成功！");
 		} catch (Exception e) {
 			json.put("success", false);
-			json.put("msg", "任务停止失败！");
+			json.put("msg", "报表任务停止失败！");
 		}
 
 		this.json = json.toString();
