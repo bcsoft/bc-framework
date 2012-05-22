@@ -32,6 +32,7 @@ public class KeyValueFormater extends AbstractFormater<Object> {
 		if (kvs == null)
 			return "undefined";
 
-		return value != null ? kvs.get(value.toString()) : null;
+		return kvs.get(value.toString()) != null ? kvs.get(value.toString())
+				: value.toString();
 	}
 }
