@@ -58,7 +58,7 @@ public class SelectTemplateAction extends
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select t.id,t.code,a.name as type,t.subject,t.path");
-		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size");
+		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size,t.desc_");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sqlObject.setSql(sql.toString());
@@ -81,6 +81,7 @@ public class SelectTemplateAction extends
 				map.put("typeCode", rs[i++]);
 				map.put("formatted", rs[i++]);
 				map.put("size", rs[i++]);
+				map.put("desc_", rs[i++]);
 				return map;
 			}
 		});
@@ -97,7 +98,9 @@ public class SelectTemplateAction extends
 				getText("template.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.version_", "version",
-				getText("template.version"), 100).setUseTitleFromLabel(true));
+				getText("template.version"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
+				getText("template.desc"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
 				getText("template.type"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.category", "category",
