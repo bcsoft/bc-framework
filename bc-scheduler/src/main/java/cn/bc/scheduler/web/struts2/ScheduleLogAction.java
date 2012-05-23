@@ -4,7 +4,9 @@
 package cn.bc.scheduler.web.struts2;
 
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +21,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.scheduler.domain.ScheduleLog;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarRangeFormaterEx;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.Grid;
@@ -53,7 +56,8 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 
 	@Override
 	protected Grid buildGrid() {
-		return super.buildGrid().setSingleSelect(true).setDblClickRow("bc.page.open");
+		return super.buildGrid().setSingleSelect(true)
+				.setDblClickRow("bc.page.open");
 	}
 
 	@Override
@@ -99,7 +103,9 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 	protected List<Column> buildGridColumns() {
 		List<Column> columns = super.buildGridColumns();
 		columns.add(new TextColumn("success", getText("scheduleLog.success"),
-				65).setSortable(true).setValueFormater(new BooleanFormater()));
+				65).setSortable(true).setValueFormater(
+				new BooleanFormater(getText("bc.status.success"),
+						getText("bc.status.fail"))));
 		columns.add(new TextColumn("cfgName", getText("scheduleLog.cfgName"))
 				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn("startDate",

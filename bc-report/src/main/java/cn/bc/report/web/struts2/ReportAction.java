@@ -6,6 +6,7 @@ package cn.bc.report.web.struts2;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
@@ -121,7 +123,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 		try {
 			Toolbar tb = new Toolbar();
-			
+
 			// 添加自定义的按钮
 			if (this.getConfig().has("tb")) {
 				JSONArray tbCfg = this.getConfig().getJSONArray("tb");
@@ -203,8 +205,13 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Query<Map<String, Object>> getQuery() {
+		return buildQuery(jpaTemplate, getSqlObject());
+	}
+
+	public static Query<Map<String, Object>> buildQuery(
+			JpaTemplate jpaTemplate, SqlObject<Map<String, Object>> sqlObject) {
 		return new HibernateJpaNativeQuery<Map<String, Object>>(jpaTemplate,
-				getSqlObject());
+				sqlObject);
 	}
 
 	private List<Column> columns;
@@ -214,12 +221,17 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 		if (columns != null)
 			return columns;
 
-		columns = new ArrayList<Column>();
+		else
+			return buildGridColumns(this.getConfig());
+	}
+
+	public static List<Column> buildGridColumns(JSONObject config) {
+		List<Column> columns = new ArrayList<Column>();
 
 		// 初始化列的配置信息
 		JSONArray jColumns = null;
 		try {
-			jColumns = this.getConfig().getJSONArray("columns");
+			jColumns = config.getJSONArray("columns");
 		} catch (JSONException e) {
 			throw new CoreException(e.getMessage());
 		}
@@ -327,14 +339,23 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 		GridExporter exporter = super.buileGridExporter(title, idLabel);
 
 		// 设置导出模板
-		if (this.getConfig().has("export")) {
+		exporter.setTemplateFile(buildExportTemplate(this.templateService,
+				this.getConfig()));
+
+		return exporter;
+	}
+
+	public static InputStream buildExportTemplate(
+			TemplateService templateService, JSONObject config) {
+		if (config.has("export")) {
 			try {
-				String export = this.getConfig().getString("export");
+				String export = config.getString("export");
 				if (export.startsWith("tpl:")) {
-					Template t = this.templateService.loadByCode(export
-							.substring(4));
-					if (t != null && t.getTemplateType().getCode().equals("xls")) {
-						exporter.setTemplateFile(t.getInputStream());
+					Template t = templateService
+							.loadByCode(export.substring(4));
+					if (t != null
+							&& t.getTemplateType().getCode().equals("xls")) {// 只能使用excel模板
+						return t.getInputStream();
 					} else {
 						throw new CoreException(
 								"template is not exists or is not excel type:export="
@@ -343,7 +364,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				} else {
 					File file = new File(Attach.DATA_REAL_PATH + "/" + export);
 					try {
-						exporter.setTemplateFile(new FileInputStream(file));
+						return new FileInputStream(file);
 					} catch (FileNotFoundException e) {
 						throw new CoreException("template is not exists:file="
 								+ file.getAbsolutePath());
@@ -353,25 +374,31 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				throw new CoreException(e.getMessage());
 			}
 		}
-
-		return exporter;
+		return null;
 	}
 
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
+		JSONObject config = this.getConfig();
+		return buildSqlObject(this.templateService, config,
+				this.getGridCondition(), this.getGridColumns());
+	}
+
+	public static SqlObject<Map<String, Object>> buildSqlObject(
+			TemplateService templateService, JSONObject config, Condition c,
+			List<Column> columns) {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		try {
 			// 解析sql
-			String sql = this.getConfig().getString("sql");
-			Condition c = this.getGridCondition();
+			String sql = config.getString("sql");
 			Map<String, Object> params = buildParams(c);
 			if (sql.startsWith("tpl:")) {
-				Template t = this.templateService.loadByCode(sql.substring(4));
-				if (t != null) {
-					if (t.isPureText()) {
-						sqlObject.setSql(t.getContentEx(params).trim());
+				Template tpl = templateService.loadByCode(sql.substring(4));
+				if (tpl != null) {
+					if (tpl.isPureText()) {
+						sqlObject.setSql(tpl.getContentEx(params).trim());
 					} else {
 						throw new CoreException(
 								"sql template is not pure text:sql=" + sql);
@@ -394,7 +421,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 		// 获取所有列的值表达式，作为数据映射的键值
 		final List<String> mapKeys = new ArrayList<String>();
-		for (Column column : this.getGridColumns()) {
+		for (Column column : columns) {
 			if (column instanceof TextColumn4MapKey)
 				mapKeys.add(((TextColumn4MapKey) column)
 						.getOriginValueExpression());
@@ -443,7 +470,8 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			Template t = this.templateService
 					.loadByCode(condition.substring(4));
 			if (t.isPureText()) {
-				this.json = t.getContentEx(buildParams(this.getGridCondition()));
+				this.json = t
+						.getContentEx(buildParams(this.getGridCondition()));
 				this.resultPath = "/cn/bc/web/struts2/json.ftl";
 				return "freemarker";
 			} else {
@@ -464,7 +492,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 		}
 	}
 
-	private Map<String, Object> buildParams(Condition c) {
+	public static Map<String, Object> buildParams(Condition c) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (c != null) {
 			if (c instanceof MixCondition) {

@@ -24,6 +24,7 @@ import cn.bc.identity.domain.FileEntityImpl;
 @Table(name = "BC_REPORT_TASK")
 public class ReportTask extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
+	public static final String GROUP_NAME = "REPORT_TASK";
 
 	private int status;// 状态：0-已启用2,1-已禁用
 	private String orderNo;// 排序号
@@ -32,8 +33,8 @@ public class ReportTask extends FileEntityImpl {
 	private String desc;// 备注
 	private String config;// 详细配置
 	private ReportTemplate template;// 所用模板
-	
-	private Calendar startDate;//开始时间
+
+	private Calendar startDate;// 开始时间
 	private boolean ignoreError = false; // 发现异常是否忽略后继续调度
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -97,7 +98,7 @@ public class ReportTask extends FileEntityImpl {
 		this.config = config;
 	}
 
-	@Column(name="START_DATE")
+	@Column(name = "START_DATE")
 	public Calendar getStartDate() {
 		return startDate;
 	}
