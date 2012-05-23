@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +20,6 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
 
 import cn.bc.core.util.DateUtils;
-import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.ActorHistory;
 import cn.bc.report.domain.ReportHistory;
@@ -123,8 +121,21 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 		scheduleLog.setCfgCron(reportTask.getCron());
 
 		try {
-			// 运行报表任务对应的模板
-			context.setResult(this.runReportTemplate());
+			// 执行报表模板并返回生成的历史报表
+			ReportTemplate tpl = this.reportTask.getTemplate();
+			Assert.notNull(tpl, "报表任务配置的报表模板为空！");
+			ReportHistory h = buildReportHistory(tpl, "xls",
+					this.templateService, this.jpaTemplate);
+			
+			// 设置报表历史的一些信息
+			h.setAuthor(this.executor);
+			h.setSourceType("报表任务");
+			h.setSourceId(this.reportTask.getId());
+			
+			// 保存报表历史
+			this.reportHistoryService.save(h);
+			
+			context.setResult(null);
 
 			// 记录成功日志
 			scheduleLog.setSuccess(true);
@@ -141,21 +152,24 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 	}
 
 	/**
-	 * 实际执行报表任务的代码
+	 * 执行报表模板并返回生成的历史报表
 	 * 
+	 * @param tpl
+	 * @param extension
+	 * @param templateService
+	 * @param jpaTemplate
 	 * @return
 	 * @throws Exception
 	 */
-	protected Object runReportTemplate() throws Exception {
+	public static ReportHistory buildReportHistory(ReportTemplate tpl,
+			String extension, TemplateService templateService,
+			JpaTemplate jpaTemplate) throws Exception {
 		Calendar now = Calendar.getInstance();
-		ReportTemplate tpl = this.reportTask.getTemplate();
-		Assert.notNull(tpl, "报表任务配置的报表模板为空！");
 		JSONObject config = tpl.getConfigJson();
 		Assert.notNull(config, "报表模板的详细配置为空！");
 		logger.info("runReportTemplate:id=" + tpl.getId() + ",name="
 				+ tpl.getName());
 
-		String extension = "xls";
 		String datedir = new SimpleDateFormat("yyyyMM").format(now.getTime());
 
 		// 不含路径的文件名
@@ -180,9 +194,13 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 		exporter.setIdLabel("序号");
 		exporter.setTitle(tpl.getName());
 		exporter.setColumns(columns);// 列配置
-		exporter.setData(this.findData(config, columns));// 数据
+		exporter.setData(ReportAction
+				.buildQuery(
+						jpaTemplate,
+						ReportAction.buildSqlObject(templateService, config,
+								null, columns)).condition(null).list());// 数据
 		exporter.setTemplateFile(ReportAction.buildExportTemplate(
-				this.templateService, config));// 导出数据的模板
+				templateService, config));// 导出数据的模板
 		FileOutputStream out = new FileOutputStream(file);
 		if (logger.isDebugEnabled())
 			logger.debug("runReportTemplate:"
@@ -192,29 +210,11 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 		// 保存一个历史报表
 		ReportHistory h = new ReportHistory();
 		h.setFileDate(now);
-		h.setAuthor(this.executor);
 		h.setSuccess(true);
 		h.setCategory(tpl.getCategory());
 		h.setPath(datedir + "/" + fileName);
-		h.setSourceType("报表任务");
-		h.setSourceId(this.reportTask.getId());
 		h.setSubject(tpl.getName());
-		this.reportHistoryService.save(h);
 
-		return null;
-	}
-
-	private List<? extends Object> findData(JSONObject config,
-			List<Column> columns) {
-		// 忽略分页和搜索条件
-		return ReportAction
-				.buildQuery(jpaTemplate, getSqlObject(config, columns))
-				.condition(null).list();
-	}
-
-	private SqlObject<Map<String, Object>> getSqlObject(JSONObject config,
-			List<Column> columns) {
-		return ReportAction.buildSqlObject(this.templateService, config, null,
-				columns);
+		return h;
 	}
 }

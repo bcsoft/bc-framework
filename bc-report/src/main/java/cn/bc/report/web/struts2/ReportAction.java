@@ -22,6 +22,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
@@ -34,9 +35,13 @@ import cn.bc.core.util.TemplateUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.Attach;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
+import cn.bc.report.domain.ReportHistory;
 import cn.bc.report.domain.ReportTemplate;
+import cn.bc.report.service.ReportHistoryService;
 import cn.bc.report.service.ReportTemplateService;
+import cn.bc.report.service.RunReportTemplateJobBean;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 import cn.bc.web.struts2.ViewAction;
@@ -66,9 +71,16 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	private static Log logger = LogFactory.getLog(ReportAction.class);
 	public String code;// 报表模板的编码
 	private ReportTemplateService reportTemplateService;// 报表模板服务
+	private ReportHistoryService reportHistoryService;
 	private TemplateService templateService;
 	private ReportTemplate tpl;// 报表模板
 	private JSONObject config;// 报表模板的详细配置
+
+	@Autowired
+	public void setReportHistoryService(
+			ReportHistoryService reportHistoryService) {
+		this.reportHistoryService = reportHistoryService;
+	}
 
 	@Autowired
 	public void setReportTemplateService(
@@ -123,6 +135,10 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 		try {
 			Toolbar tb = new Toolbar();
+
+			// 添加存为历史按钮
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-tag")
+					.setText("存为历史报表").setClick("bc.report.save2history"));
 
 			// 添加自定义的按钮
 			if (this.getConfig().has("tb")) {
@@ -300,6 +316,37 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	public String export() throws Exception {
 		this.initConfig();
 		return super.export();
+	}
+
+	/**
+	 * 将报表运行结果存为历史
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String save2history() throws Exception {
+		Json json = new Json();
+
+		this.initConfig();
+
+		// 执行报表模板并返回生成的历史报表
+		Assert.notNull(tpl, "报表任务配置的报表模板为空！");
+		ReportHistory h = RunReportTemplateJobBean.buildReportHistory(this.tpl,
+				"xls", this.templateService, this.jpaTemplate);
+
+		// 设置报表历史的一些信息
+		h.setAuthor(((SystemContext) this.getContext()).getUserHistory());
+		h.setSourceType("用户生成");
+		h.setSourceId(this.tpl.getId());
+
+		// 保存报表历史
+		this.reportHistoryService.save(h);
+
+		json.put("success", true);
+		json.put("msg", "success");
+
+		this.json = json.toString();
+		return "json";
 	}
 
 	@Override
@@ -519,9 +566,11 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
+		String defaultJs = "/bc/report/report.js";
 		// 判断是否有额外的js、css文件配置
 		if (!this.getConfig().has("js"))
-			return null;
+			return this.getContextPath() + defaultJs;
+
 		String js;
 		try {
 			js = this.getConfig().getString("js");
@@ -529,7 +578,9 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			js = null;
 		}
 		if (js == null)
-			return null;
+			return this.getContextPath() + defaultJs;
+		else
+			js = defaultJs + "," + js;
 
 		// 附加上下文路径
 		String[] jss = js.split(",");
