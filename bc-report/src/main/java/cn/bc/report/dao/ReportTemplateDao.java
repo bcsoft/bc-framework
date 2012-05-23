@@ -17,7 +17,7 @@ public interface ReportTemplateDao extends CrudDao<ReportTemplate> {
 	 * @return 指定编码的报表模板对象
 	 */
 	public ReportTemplate loadByCode(String code);
-	
+
 	/**
 	 * 检测编码是否唯一
 	 * 
@@ -25,5 +25,5 @@ public interface ReportTemplateDao extends CrudDao<ReportTemplate> {
 	 * @param code
 	 * @return
 	 */
-	public boolean isUniqueCode(Long currentId,String code);
+	public boolean isUniqueCode(Long currentId, String code);
 }

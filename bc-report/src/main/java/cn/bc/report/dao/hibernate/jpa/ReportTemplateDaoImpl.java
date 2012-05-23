@@ -16,17 +16,16 @@ import cn.bc.report.domain.ReportTemplate;
  */
 public class ReportTemplateDaoImpl extends HibernateCrudJpaDao<ReportTemplate>
 		implements ReportTemplateDao {
-
 	public ReportTemplate loadByCode(String code) {
 		return this.createQuery().condition(new EqualsCondition("code", code))
 				.singleResult();
 	}
-	
-	public boolean isUniqueCode(Long currentId,String code){
+
+	public boolean isUniqueCode(Long currentId, String code) {
 		Condition c;
 		if (currentId == null) {
-			c =new EqualsCondition("code", code);
-			
+			c = new EqualsCondition("code", code);
+
 		} else {
 			c = new AndCondition().add(new EqualsCondition("code", code)).add(
 					new NotEqualsCondition("id", currentId));

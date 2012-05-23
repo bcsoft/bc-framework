@@ -11,7 +11,6 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaTemplate;
 
 import cn.bc.BCConstants;
 import cn.bc.core.service.DefaultCrudService;
@@ -23,8 +22,8 @@ import cn.bc.log.domain.OperateLog;
 import cn.bc.log.service.OperateLogService;
 import cn.bc.report.dao.ReportTaskDao;
 import cn.bc.report.domain.ReportTask;
+import cn.bc.report.scheduler.RunReportTemplateJobBean;
 import cn.bc.scheduler.service.SchedulerService;
-import cn.bc.template.service.TemplateService;
 
 /**
  * 报表任务Service接口的实现
@@ -40,9 +39,7 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask>
 	private Scheduler scheduler;
 	private SchedulerService schedulerService;
 	private ActorHistoryService actorHistoryService;
-	private JpaTemplate jpaTemplate;
-	private TemplateService templateService;
-	private ReportHistoryService reportHistoryService;
+	private ReportService reportService;
 	private IdGeneratorService idGeneratorService;
 
 	@Autowired
@@ -51,19 +48,8 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask>
 	}
 
 	@Autowired
-	public void setReportHistoryService(
-			ReportHistoryService reportHistoryService) {
-		this.reportHistoryService = reportHistoryService;
-	}
-
-	@Autowired
-	public void setTemplateService(TemplateService templateService) {
-		this.templateService = templateService;
-	}
-
-	@Autowired
-	public void setJpaTemplate(JpaTemplate jpaTemplate) {
-		this.jpaTemplate = jpaTemplate;
+	public void setReportService(ReportService reportService) {
+		this.reportService = reportService;
 	}
 
 	@Autowired
@@ -107,7 +93,9 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask>
 			logger.warn("ignore unknowed reportTaskId:" + taskId);
 			return null;
 		}
-		logger.warn("scheduling reportTask:" + reportTask.getTemplate().getCategory() + "/" + reportTask.getName());
+		logger.warn("scheduling reportTask:"
+				+ reportTask.getTemplate().getCategory() + "/"
+				+ reportTask.getName());
 
 		Date nextDate;
 		String triggerName = "REPORT_TASK_TRIGGER" + reportTask.getId();
@@ -120,16 +108,12 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask>
 					RunReportTemplateJobBean.class);
 
 			// 记录状态数据：要注入到RunReportTemplateJobBean的属性
-			jobDetail.getJobDataMap().put("reportTask", reportTask);// 记录配置信息
 			jobDetail.getJobDataMap().put("schedulerService",
 					this.schedulerService);
-			jobDetail.getJobDataMap().put("jpaTemplate", this.jpaTemplate);
-			jobDetail.getJobDataMap().put("templateService",
-					this.templateService);
-			jobDetail.getJobDataMap().put("reportHistoryService",
-					this.reportHistoryService);
+			jobDetail.getJobDataMap().put("reportService", this.reportService);
 			jobDetail.getJobDataMap().put("executor",
 					this.actorHistoryService.loadByCode("admin"));
+			jobDetail.getJobDataMap().put("reportTask", reportTask);
 
 			trigger = new CronTrigger(triggerName, ReportTask.GROUP_NAME,
 					reportTask.getCron());

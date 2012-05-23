@@ -15,19 +15,39 @@
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 	<bean id="reportTemplateDao" class="cn.bc.report.dao.hibernate.jpa.ReportTemplateDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl"/>
-	
+	<bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl" />
+
 	<!-- reportTask -->
 	<bean id="reportTaskDao" class="cn.bc.report.dao.hibernate.jpa.ReportTaskDaoImpl"
 		p:entityClass="cn.bc.report.domain.ReportTask"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="reportTaskService" class="cn.bc.report.service.ReportTaskServiceImpl"
-		p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
-		
+		p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao" />
+
 	<!-- reportHistory -->
 	<bean id="reportHistoryDao" class="cn.bc.report.dao.hibernate.jpa.ReportHistoryDaoImpl"
 		p:entityClass="cn.bc.report.domain.ReportHistory"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="reportHistoryService" class="cn.bc.report.service.ReportHistoryServiceImpl"
 		p:entityClass="cn.bc.report.domain.ReportHistory" p:crudDao-ref="reportHistoryDao" />
+
+	<!-- reportService事务 -->
+	<aop:config>
+		<!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+			包或实现类使用within关键字，接口实现使用this关键字
+		 -->
+		<aop:pointcut id="reportServiceMethod"
+			expression="this(cn.bc.report.service.ReportService)" />
+		<aop:advisor pointcut-ref="reportServiceMethod" advice-ref="reportServiceTxAdvice" />
+	</aop:config>
+	<tx:advice id="reportServiceTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
+			<tx:method name="run*" propagation="REQUIRED" read-only="false" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- reportService -->
+	<bean id="reportService" class="cn.bc.report.service.ReportServiceImpl" />
 </beans>
