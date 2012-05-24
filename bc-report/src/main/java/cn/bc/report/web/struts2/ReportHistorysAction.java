@@ -1,6 +1,7 @@
 package cn.bc.report.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.option.domain.OptionItem;
 import cn.bc.report.service.ReportHistoryService;
-import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.DateRangeFormaterEx;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -63,7 +64,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("a.file_date", Direction.Desc);
+		return new OrderCondition("a.start_date", Direction.Desc);
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.success,a.file_date,a.category,a.subject,a.path,b.actor_name as uname,a.source_type as sourceType");
+		sql.append("select a.id,a.success,a.start_date,a.end_date,a.category,a.subject,a.path,b.actor_name as uname,a.source_type as sourceType");
 		sql.append(" from bc_report_history a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
 		if (my) {
@@ -89,7 +90,8 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				int i = 0;
 				map.put("id", rs[i++]);
 				map.put("success", rs[i++]);
-				map.put("file_date", rs[i++]);
+				map.put("start_date", rs[i++]);
+				map.put("end_date", rs[i++]);
 				map.put("category", rs[i++]);
 				map.put("subject", rs[i++]);
 				map.put("path", rs[i++]);
@@ -108,9 +110,16 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.success", "success",
 				getText("report.status"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("report.fileDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("a.start_date", "start_date",
+				getText("report.dateRange"), 220).setUseTitleFromLabel(true)
+				.setValueFormater(new DateRangeFormaterEx() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Date getToDate(Object context, Object value) {
+						return (Date) ((Map<String, Object>) context)
+								.get("end_date");
+					}
+				}));
 		columns.add(new TextColumn4MapKey("a.source_type", "sourceType",
 				getText("reportHistory.source"), 65).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.category", "category",

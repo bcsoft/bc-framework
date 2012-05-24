@@ -39,6 +39,8 @@
 		<action name="data" class="reportAction" method="data" />
 		<!-- 导出 视图数据 -->
 		<action name="export" class="reportAction" method="export" />
+		<!-- 存为历史报表 -->
+		<action name="save2history" class="reportAction" method="save2history" />
 	</package>
 	<!-- 报表模板 -->
 	<package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">

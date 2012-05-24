@@ -14,8 +14,6 @@ import cn.bc.report.domain.ReportTemplate;
  */
 public class ReportTemplateServiceImpl extends
 		DefaultCrudService<ReportTemplate> implements ReportTemplateService {
-//	private static Log logger = LogFactory.getLog(ReportTemplateServiceImpl.class);
-
 	private ReportTemplateDao reportTemplateDao;
 
 	@Autowired
@@ -31,6 +29,4 @@ public class ReportTemplateServiceImpl extends
 	public boolean isUniqueCode(Long currentId, String code) {
 		return this.reportTemplateDao.isUniqueCode(currentId, code);
 	}
-
-
 }
