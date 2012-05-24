@@ -195,9 +195,13 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 			andCondition.add(new EqualsCondition("a.source_id", sourceId));
 		}
 		if (my) {
-			// ((a.author_id=100729 and a.source_type = '用户生成' ) or
+			// ((a.author_id=100729 and a.source_type = '用户生成' ) 
+			// or
 			// (a.source_type = '报表任务' and t.pid in (select r.tid from
-			// bc_report_template_actor r where r.aid in (100024,1,100024))))
+			// bc_report_template_actor r where r.aid in (100024,1,100024)))
+			// or
+			// (a.source_type = '报表任务' and c.pid not in (select r.tid from  bc_report_template_actor r));
+			//)
 			SystemContext context = (SystemContext) this.getContext();
 
 			// 保存的用户id键值集合
@@ -215,16 +219,23 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 					qlStr += "?";
 				}
 			}
-			andCondition.add(new OrCondition(new AndCondition(
-					new EqualsCondition("a.author_id", context.getUserHistory()
-							.getId()), new EqualsCondition("a.source_type",
-							getText("reportHistory.source2.user")))
-					.setAddBracket(true), new AndCondition(new EqualsCondition(
-					"a.source_type", getText("reportHistory.source2.task")),
-					new QlCondition(
-							"c.pid in (select r.tid from  bc_report_template_actor r where r.aid in ("
-									+ qlStr + "))", ids)).setAddBracket(true))
-					.setAddBracket(true));
+			andCondition.add(
+				new OrCondition(
+						new AndCondition(
+							new EqualsCondition("a.author_id", context.getUserHistory().getId()), 
+							new EqualsCondition("a.source_type",getText("reportHistory.source2.user"))
+							).setAddBracket(true)
+						,new AndCondition(
+							new EqualsCondition("a.source_type", getText("reportHistory.source2.task")),
+							new QlCondition("c.pid in (select r.tid from  bc_report_template_actor r where r.aid in ("
+										+ qlStr + "))", ids)
+							).setAddBracket(true)
+						,new AndCondition(
+							new EqualsCondition("a.source_type", getText("reportHistory.source2.task")),
+							new QlCondition("c.pid not in (select r.tid from  bc_report_template_actor r)",new Object[]{})
+							).setAddBracket(true)
+					).setAddBracket(true)
+			);
 		}
 		if (andCondition.isEmpty())
 			return null;
