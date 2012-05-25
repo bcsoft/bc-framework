@@ -147,7 +147,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['subject']";
+		return my?"'我的历史报表：'+['subject']" :"['subject']";
 	}
 
 	@Override

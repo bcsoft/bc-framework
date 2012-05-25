@@ -94,13 +94,13 @@ public class SelectTemplateAction extends
 		columns.add(new IdColumn4MapKey("t.id", "id"));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
+				getText("template.desc")).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("t.version_", "version",
+				getText("template.version"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
 				getText("template.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.version_", "version",
-				getText("template.version"), 200).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
-				getText("template.desc"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
 				getText("template.type"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.category", "category",
