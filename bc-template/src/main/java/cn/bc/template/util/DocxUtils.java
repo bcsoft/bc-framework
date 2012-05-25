@@ -15,6 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -128,6 +130,22 @@ public class DocxUtils {
 		if (logger.isDebugEnabled())
 			logger.debug("pattern=" + pattern);
 		Pattern _pattern = Pattern.compile(pattern);
+
+		// 页眉的处理
+		List<XWPFHeader> headers = document.getHeaderList();
+		for (XWPFHeader header : headers) {
+			for (XWPFParagraph p : header.getListParagraph()) {
+				formatParagraph(p, markerValues, _pattern);
+			}
+		}
+
+		// 页脚的处理
+		List<XWPFFooter> footers = document.getFooterList();
+		for (XWPFFooter footer : footers) {
+			for (XWPFParagraph p : footer.getListParagraph()) {
+				formatParagraph(p, markerValues, _pattern);
+			}
+		}
 
 		// 段落的处理
 		Iterator<XWPFParagraph> ps = document.getParagraphsIterator();
