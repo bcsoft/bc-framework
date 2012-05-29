@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -388,7 +388,7 @@ public class ReportTemplate extends FileEntityImpl {
 		// 数据映射器
 		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
 			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<String, Object>();
+				Map<String, Object> map = new LinkedHashMap<String, Object>();
 				int i = 0;
 				for (String key : mapKeys) {
 					map.put(key, rs[i]);
@@ -401,7 +401,7 @@ public class ReportTemplate extends FileEntityImpl {
 	}
 
 	public static Map<String, Object> buildParams(Condition condition) {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		if (condition != null) {
 			if (condition instanceof MixCondition) {
 				if (!((MixCondition) condition).isEmpty()) {

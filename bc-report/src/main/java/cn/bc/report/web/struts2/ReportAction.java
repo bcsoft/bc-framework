@@ -22,6 +22,8 @@ import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.report.chart.hightcharts.ChartOption;
+import cn.bc.report.chart.hightcharts.Series;
 import cn.bc.report.domain.ReportTemplate;
 import cn.bc.report.service.ReportService;
 import cn.bc.template.domain.Template;
@@ -188,6 +190,8 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 			return this.tpl.getConfigColumns();
 	}
 
+	public ChartOption chartOption;
+
 	/**
 	 * 执行报表
 	 * 
@@ -195,11 +199,69 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	 * @throws Exception
 	 */
 	public String run() throws Exception {
-		if (this.getConfig().has("paging")
-				&& this.getConfig().getBoolean("paging")) {
-			return this.paging();
+		// 报表配置
+		JSONObject config = this.getConfig();
+
+		// 报表类型：默认为数据报表(type=data)
+		String type = config.has("type") ? config.getString("type") : "data";
+		if ("data".equals(type)) {// 数据报表
+			if (config.has("paging") && config.getBoolean("paging")) {
+				return this.paging();
+			} else {
+				return this.list();
+			}
+		} else if ("chart".equals(type)) {// 图形报表
+			// 初始化图表配置
+			chartOption = ChartOption.getDefaultChartOption(config
+					.has("chartOption") ? config.getJSONObject("chartOption")
+					: null);
+
+			// 构建图表的数据信息
+			initChartData(chartOption);
+			return "chart";
 		} else {
-			return this.list();
+			throw new CoreException("unsupport report type");
+		}
+	}
+
+	private void initChartData(ChartOption chartOption) throws JSONException {
+		// 获取数据
+		List<Map<String, Object>> list = this.findList();
+
+		// 转换成图表的数据格式
+		int xIndex = 0;
+		int yIndex = 1;
+		if (chartOption.getChart().isInverted()) {
+			xIndex = 1;
+			yIndex = 0;
+		}
+		boolean hasXAxisCategories = chartOption.getXAxis().has("categories");
+		boolean hasSeriesData = false;
+		if (chartOption.getSeries().length() > 0
+				&& chartOption.getSeries().getJSONObject(0).has("data")) {
+			hasSeriesData = true;
+		}
+		JSONArray xdata = new JSONArray();
+		JSONArray ydata = new JSONArray();
+		Object[] values;
+		for (Map<String, Object> map : list) {
+			values = map.values().toArray();
+			xdata.put(values[xIndex]);
+			ydata.put(values[yIndex]);
+		}
+		if (!hasXAxisCategories) {
+			chartOption.getXAxis().setCategories(xdata);
+		}
+		if (!hasSeriesData) {
+			if (chartOption.getSeries().length() > 0) {
+				Series s = new Series(chartOption.getSeries().getJSONObject(0));
+				s.setData(ydata);
+				chartOption.getSeries().put(0, s);
+			} else {
+				Series s = new Series();
+				s.setData(ydata);
+				chartOption.getSeries().put(s);
+			}
 		}
 	}
 

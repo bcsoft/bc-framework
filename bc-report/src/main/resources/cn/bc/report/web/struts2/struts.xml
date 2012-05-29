@@ -30,7 +30,9 @@
             </result>  
 		</action>
 		<!-- 执行报表 -->
-		<action name="run" class="reportAction" method="run" />
+		<action name="run" class="reportAction" method="run" >
+			<result name="chart">/bc/report/chart/chart.jsp</result>
+		</action>
 		<!-- 非分页视图 -->
 		<action name="list" class="reportAction" method="list" />
 		<!-- 分页视图 -->
