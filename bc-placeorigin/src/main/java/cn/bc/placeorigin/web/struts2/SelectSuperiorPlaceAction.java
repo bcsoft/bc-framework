@@ -146,7 +146,7 @@ public class SelectSuperiorPlaceAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name", "a.full_name","p.nam" };
+		return new String[] { "a.name", "a.full_name","p.name" };
 	}
 
 	@Override
