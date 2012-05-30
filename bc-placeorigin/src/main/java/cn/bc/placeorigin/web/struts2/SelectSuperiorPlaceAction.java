@@ -91,6 +91,10 @@ public class SelectSuperiorPlaceAction extends
 		columns.add(new TextColumn4MapKey("a.type_", "type",
 				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
+		// 上级
+		columns.add(new TextColumn4MapKey("p.name", "pname",
+				getText("placeorigin.higherlevel"), 100)
+				.setUseTitleFromLabel(true));
 		// 编码
 		columns.add(new TextColumn4MapKey("a.code", "code",
 				getText("placeorigin.code"), 60).setUseTitleFromLabel(true));
@@ -141,7 +145,7 @@ public class SelectSuperiorPlaceAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name", "a.full_name" };
+		return new String[] { "a.name", "a.full_name","p.nam" };
 	}
 
 	@Override
