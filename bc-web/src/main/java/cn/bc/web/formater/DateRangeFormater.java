@@ -38,14 +38,17 @@ public abstract class DateRangeFormater extends AbstractFormater<String> {
 			if (toDate == null) {
 				return "";
 			} else {
-				return "～" + format.format(toDate);
+				return (this.connector != null ? this.connector
+						+ format.format(toDate) : "～" + format.format(toDate));
 			}
 		} else {
 			if (toDate == null) {
 				return format.format(fromDate)
 						+ (!this.useEmptySymbol ? "～" : "");
 			} else {
-				return format.format(fromDate) + "～" + format.format(toDate);
+				return (this.connector != null ? format.format(fromDate)
+						+ this.connector + format.format(toDate) : format
+						.format(fromDate) + "～" + format.format(toDate));
 			}
 		}
 	}
@@ -65,12 +68,27 @@ public abstract class DateRangeFormater extends AbstractFormater<String> {
 	public abstract Date getToDate(Object context, Object value);
 
 	private boolean useEmptySymbol;
+	private String connector;
 
-	/**当没有结束日期时，是否使用"~"号，默认为使用，true为不使用
+	/**
+	 * 当没有结束日期时，是否使用"~"号，默认为使用，true为不使用
+	 * 
 	 * @param useEmptySymbol
 	 */
 	public DateRangeFormater setUseEmptySymbol(boolean useEmptySymbol) {
 		this.useEmptySymbol = useEmptySymbol;
 		return this;
 	}
+
+	/**
+	 * 日期之间使用的连接符如"~"或","
+	 * 
+	 * @param connector
+	 * @return
+	 */
+	public DateRangeFormater setConnector(String connector) {
+		this.connector = connector;
+		return this;
+	}
+
 }
