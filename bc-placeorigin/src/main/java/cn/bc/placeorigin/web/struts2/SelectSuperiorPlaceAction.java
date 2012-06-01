@@ -16,6 +16,7 @@ import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.placeorigin.domain.PlaceOrigin;
@@ -91,6 +92,10 @@ public class SelectSuperiorPlaceAction extends
 		columns.add(new TextColumn4MapKey("a.type_", "type",
 				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
+		// 上级
+		columns.add(new TextColumn4MapKey("p.name", "pname",
+				getText("placeorigin.higherlevel"), 100)
+				.setUseTitleFromLabel(true));
 		// 编码
 		columns.add(new TextColumn4MapKey("a.code", "code",
 				getText("placeorigin.code"), 60).setUseTitleFromLabel(true));
@@ -141,7 +146,7 @@ public class SelectSuperiorPlaceAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name", "a.full_name" };
+		return new String[] { "a.name", "a.full_name","p.name" };
 	}
 
 	@Override
@@ -177,7 +182,7 @@ public class SelectSuperiorPlaceAction extends
 			if(types.indexOf(",")==-1){
 				andCondition.add(new EqualsCondition("a.type_", Integer.valueOf(types)));
 			}else{
-				andCondition.add(new InCondition("a.type_", types.split(",")));
+				andCondition.add(new InCondition("a.type_",StringUtils.stringArray2IntegerArray(types.split(","))));
 			}
 		}
 		return andCondition;
