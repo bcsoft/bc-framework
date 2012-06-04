@@ -20,7 +20,7 @@ import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
- * 调查
+ * 调查问卷
  * 
  * @author dragon
  */
