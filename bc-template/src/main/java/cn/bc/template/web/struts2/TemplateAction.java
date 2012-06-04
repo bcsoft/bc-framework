@@ -356,8 +356,14 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 
 			if (this.from == null || this.from.length() == 0)
 				this.from = extension;
-			if (this.to == null || this.to.length() == 0)
-				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+			if (this.to == null || this.to.length() == 0) {
+				if ("xls".equalsIgnoreCase(this.from)
+						|| "xlsx".equalsIgnoreCase(this.from)) {
+					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+				} else {
+					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+				}
+			}
 
 			// 调用jodconvert将附件转换为pdf文档后再下载
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
