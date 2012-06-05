@@ -23,7 +23,7 @@
       <widgets xsi:type="model:SearchField" id="16" width="183" measuredWidth="183" measuredHeight="24"/>
       <widgets xsi:type="model:Icon" id="17" x="156" y="7" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
     </widgets>
-    <widgets xsi:type="model:Label" id="111" text="调查管理(管理员)：" measuredWidth="111" measuredHeight="25">
+    <widgets xsi:type="model:Label" id="111" text="调查管理视图(管理员)：" measuredWidth="135" measuredHeight="25">
       <font bold="true"/>
     </widgets>
   </widgets>
@@ -309,7 +309,7 @@
       <font bold="true"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="259" x="760" y="8" measuredWidth="633" measuredHeight="497">
+  <widgets xsi:type="model:WidgetGroup" id="259" x="648" y="480" measuredWidth="633" measuredHeight="497">
     <widgets xsi:type="model:Window" id="260" y="24" width="633" height="473" text="问卷表单" measuredWidth="633" measuredHeight="473" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:Label" id="261" text="问卷表单(预览或待提交状态)：" measuredWidth="171" measuredHeight="25">
       <font bold="true"/>
@@ -371,7 +371,7 @@
     </widgets>
     <widgets xsi:type="model:HLine" id="398" y="455" width="633" measuredWidth="633" measuredHeight="6"/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="399" x="760" y="512" measuredWidth="633" measuredHeight="497">
+  <widgets xsi:type="model:WidgetGroup" id="399" x="1288" y="480" measuredWidth="633" measuredHeight="497">
     <widgets xsi:type="model:Window" id="400" y="24" width="633" height="473" text="问卷表单" measuredWidth="633" measuredHeight="473" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:Label" id="401" text="问卷表单(预览或待提交状态 - 带统计结果)：" measuredWidth="244" measuredHeight="25">
       <font bold="true"/>
@@ -409,7 +409,6 @@
           <font/>
         </widgets>
       </widgets>
-      <widgets xsi:type="model:HLine" id="428" y="34" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
       <widgets xsi:type="model:WidgetGroup" id="429" x="427" y="48" measuredWidth="180" measuredHeight="25">
         <widgets xsi:type="model:ProgressBar" id="430" x="31" y="3" measuredWidth="100" measuredHeight="18" value="60" background="#00ff00"/>
         <widgets xsi:type="model:Label" id="431" x="132" text="60.00％" measuredWidth="48" measuredHeight="25">
@@ -489,7 +488,7 @@
     </widgets>
     <widgets xsi:type="model:HLine" id="423" y="455" width="633" measuredWidth="633" measuredHeight="6"/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="453" x="1400" y="512" measuredWidth="633" measuredHeight="457">
+  <widgets xsi:type="model:WidgetGroup" id="453" x="1056" y="8" measuredWidth="633" measuredHeight="457">
     <widgets xsi:type="model:Window" id="454" y="24" width="633" height="433" text="问卷统计" measuredWidth="633" measuredHeight="433" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:Label" id="455" text="查看结果：" measuredWidth="65" measuredHeight="25">
       <font bold="true"/>
@@ -598,6 +597,76 @@
       <widgets xsi:type="model:Table" id="519" x="14" y="19" width="601" text="(w:40). 姓名,(w:120). 提交时间,提交内容&#xA;小明,2012-02-02 09:00:00,继续增加投入，提高服务水平。&#xA;小张,2012-02-03 09:00:00,网络系统不太稳定，网管人员比较辛苦。&#xA;小李,2012-02-04 09:00:00,还有待提高。" measuredWidth="601" measuredHeight="96" border="false" alternative="#eeeeee" verticalLines="false" header="false">
         <font/>
       </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="520" x="760" y="8" measuredWidth="289" measuredHeight="233">
+    <widgets xsi:type="model:Panel" id="521" y="24" width="289" height="209" measuredWidth="289" measuredHeight="209"/>
+    <widgets xsi:type="model:Button" id="522" x="10" y="196" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="523" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="524" x="273" y="26" width="13" measuredWidth="13" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Label" id="526" x="10" y="34" text="发布日期：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="527" x="136" y="56" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="532" x="152" y="56" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="533" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="534" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="535" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="536" x="10" y="56" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="537" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="538" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="539" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="565" x="10" y="84" text="调查期限(开始日期)：" measuredWidth="121" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="566" x="136" y="106" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="567" x="152" y="106" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="568" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="569" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="570" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="571" x="10" y="106" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="572" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="573" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="574" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="575" x="10" y="138" text="调查期限(结束日期)：" measuredWidth="121" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="576" x="136" y="160" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="577" x="152" y="160" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="578" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="579" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="580" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="581" x="10" y="160" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="582" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="583" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="584" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
     </widgets>
   </widgets>
   <hRuler/>
