@@ -5,7 +5,7 @@
     <widgets xsi:type="model:Label" id="401" text="问卷表单(预览或待提交状态 - 带统计结果)：" measuredWidth="244" measuredHeight="25">
       <font bold="true"/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="402" x="10" y="55" measuredWidth="615" measuredHeight="61">
+    <widgets xsi:type="model:WidgetGroup" id="402" x="10" y="55" measuredWidth="615" measuredHeight="62">
       <widgets xsi:type="model:Label" id="403" x="394" y="35" text="调查期限：从2012-02-01到2012-03-31" measuredWidth="221" measuredHeight="25">
         <font/>
       </widgets>
@@ -14,6 +14,9 @@
       </widgets>
       <widgets xsi:type="model:HLine" id="405" y="55" width="615" measuredWidth="615" measuredHeight="6" foreground="#999999"/>
       <widgets xsi:type="model:Icon" id="406" x="14" y="40" measuredWidth="16" measuredHeight="16" icon="bar-chart (small)"/>
+      <widgets xsi:type="model:Link" id="591" x="30" y="37" text="查看结果" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="407" x="10" y="124" measuredWidth="615" measuredHeight="97">
       <widgets xsi:type="model:Label" id="408" x="14" text="1. 联网的速度如何？" measuredWidth="115" measuredHeight="25" foreground="#0000ff">
@@ -116,8 +119,8 @@
       <font/>
     </widgets>
     <widgets xsi:type="model:HLine" id="423" y="455" width="633" measuredWidth="633" measuredHeight="6"/>
-    <widgets xsi:type="model:Arrow" id="585" x="40" y="104" width="393" height="65" measuredWidth="393" measuredHeight="65" annotation="true" foreground="#ff9900" left="false" right="true"/>
-    <widgets xsi:type="model:Note" id="586" x="192" y="120" width="177" height="65" text="如果问卷配置为&quot;提交前允许查看结果&quot;，点击这个小图标可查看别人已提交答案的统计信息" measuredWidth="177" measuredHeight="65" annotation="true" textAlignment="Left">
+    <widgets xsi:type="model:Arrow" id="585" x="88" y="104" width="345" height="65" measuredWidth="345" measuredHeight="65" annotation="true" foreground="#ff9900" left="false" right="true"/>
+    <widgets xsi:type="model:Note" id="586" x="192" y="120" width="177" height="65" text="如果问卷配置为&quot;提交前允许查看结果&quot;，点击这里可查看别人已提交答案的统计信息" measuredWidth="177" measuredHeight="65" annotation="true" textAlignment="Left">
       <font/>
     </widgets>
     <widgets xsi:type="model:Panel" id="587" x="424" y="132" width="201" height="229" measuredWidth="201" measuredHeight="229" alpha="0" foreground="#999999" border="dashed-rounded"/>
