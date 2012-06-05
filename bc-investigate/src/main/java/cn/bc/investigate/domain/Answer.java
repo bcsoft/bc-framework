@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import cn.bc.core.EntityImpl;
 
 /**
- * 问题的答案
+ * 问题项的答案
  * 
  * @author dragon
  */

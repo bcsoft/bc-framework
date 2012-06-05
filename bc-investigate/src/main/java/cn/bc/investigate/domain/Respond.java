@@ -16,7 +16,7 @@ import cn.bc.core.EntityImpl;
 import cn.bc.identity.domain.ActorHistory;
 
 /**
- * 用户对调查进行的作答
+ * 作答记录
  * 
  * @author dragon
  */

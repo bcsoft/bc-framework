@@ -33,7 +33,7 @@ public class Questionary extends RichFileEntityImpl {
 	public static final int STATUS_DRAFT = 0;
 	/** 状态值:已发布，值为1 */
 	public static final int STATUS_ISSUE = 1;
-	/** 状态值:已结束，值为2 */
+	/** 状态值:已归档，值为2 */
 	public static final int STATUS_END = 2;
 
 	private String subject; // 标题
