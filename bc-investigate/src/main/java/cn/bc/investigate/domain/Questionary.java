@@ -39,6 +39,7 @@ public class Questionary extends RichFileEntityImpl {
 	private String subject; // 标题
 	private Calendar startDate; // 开始日期
 	private Calendar endDate; // 结束日期
+	private boolean permitted = true; // 是否允许提交前查看结果
 	private Set<Question> questions;// 问题集
 	private Set<Respond> responds;// 作答集
 	private Set<Actor> actors;// 调查范围，为空代表所有人均可提交调查
@@ -85,6 +86,14 @@ public class Questionary extends RichFileEntityImpl {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	public boolean isPermitted() {
+		return permitted;
+	}
+
+	public void setPermitted(boolean permitted) {
+		this.permitted = permitted;
 	}
 
 	@Column(name = "START_DATE")

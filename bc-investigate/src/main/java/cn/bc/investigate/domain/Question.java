@@ -46,8 +46,9 @@ public class Question extends EntityImpl {
 	public static final String CFG_VALUE_VERTIVAL = "vertical";
 
 	private String subject; // 标题
-	private int orderNo; // 排序号
+	private int orderNo; // 排序号 
 	private int type; // 类型:0-单选题,1-多选题,2-问答题,参考 TYPE_XXX 常数的定义
+	private boolean required = true; // 是否为必选题，默认为是
 	private Questionary questionary; // 所属调查表
 	private Set<QuestionItem> items;// 问题项:单选题多选题的每个选项对应一个,问答题对应一个
 
@@ -79,6 +80,14 @@ public class Question extends EntityImpl {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 	@Column(name = "ORDER_")

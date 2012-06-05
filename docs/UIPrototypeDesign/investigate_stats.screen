@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="453" x="8" y="8" measuredWidth="633" measuredHeight="481">
+    <widgets xsi:type="model:Window" id="454" y="24" width="633" height="457" text="问卷统计" measuredWidth="633" measuredHeight="457" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="455" text="查看问卷统计结果：" measuredWidth="113" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="456" x="10" y="55" measuredWidth="615" measuredHeight="61">
+      <widgets xsi:type="model:Label" id="457" x="394" y="35" text="调查期限：从2012-02-01到2012-03-31" measuredWidth="221" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="458" x="222" text="网络基础条件调查表" measuredWidth="194" measuredHeight="36" foreground="#351c75">
+        <font size="16"/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="459" y="55" width="615" measuredWidth="615" measuredHeight="6" foreground="#999999"/>
+      <widgets xsi:type="model:Label" id="504" x="14" y="36" text="参与人数：100，状态：2012-01-01由张三发布|归档" measuredWidth="287" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="461" x="10" y="124" measuredWidth="615" measuredHeight="97">
+      <widgets xsi:type="model:Label" id="462" x="14" text="1. 联网的速度如何？" measuredWidth="115" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="463" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:WidgetGroup" id="466" x="427" y="25" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="467" x="31" y="3" measuredWidth="100" measuredHeight="18" value="10" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="468" x="132" text="10.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="469" text="10人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="471" x="427" y="48" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="472" x="31" y="3" measuredWidth="100" measuredHeight="18" value="60" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="473" x="132" text="60.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="474" text="60人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="475" x="427" y="72" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="476" x="31" y="3" measuredWidth="100" measuredHeight="18" value="30" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="477" x="132" text="30.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="478" text="30人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Text" id="505" x="14" y="29" text="* 明显快了很多" measuredWidth="96" measuredHeight="17">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Text" id="507" x="14" y="52" text="* 比原来有点快" measuredWidth="96" measuredHeight="17" foreground="#ff0000">
+        <font bold="true"/>
+      </widgets>
+      <widgets xsi:type="model:Text" id="508" x="14" y="76" text="* 感觉与原来一样" measuredWidth="108" measuredHeight="17">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="479" x="10" y="230" measuredWidth="615" measuredHeight="97">
+      <widgets xsi:type="model:Label" id="480" x="14" text="2. 你熟悉哪些网络设备？" measuredWidth="139" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="481" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:WidgetGroup" id="484" x="428" y="25" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="485" x="31" y="3" measuredWidth="100" measuredHeight="18" value="10" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="486" x="132" text="10.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="487" text="10人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="488" x="428" y="48" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="489" x="31" y="3" measuredWidth="100" measuredHeight="18" value="60" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="490" x="132" text="60.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="491" text="60人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="492" x="428" y="72" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="493" x="31" y="3" measuredWidth="100" measuredHeight="18" value="30" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="494" x="132" text="30.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="495" text="30人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Text" id="514" x="14" y="29" text="* 交换机" measuredWidth="60" measuredHeight="17" foreground="#ff0000">
+        <font bold="true"/>
+      </widgets>
+      <widgets xsi:type="model:Text" id="515" x="14" y="52" text="* 路由器" measuredWidth="60" measuredHeight="17" foreground="#ff0000">
+        <font bold="true"/>
+      </widgets>
+      <widgets xsi:type="model:Text" id="516" x="14" y="76" text="* 调制解调器" measuredWidth="84" measuredHeight="17">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="496" x="10" y="338" measuredWidth="615" measuredHeight="138">
+      <widgets xsi:type="model:Label" id="497" x="14" text="3. 你对当前网络设施还有其它哪方面的建议？" measuredWidth="247" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="498" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:Table" id="519" x="14" y="19" width="601" text="(w:40). 姓名,(w:120). 提交时间,内容&#xA;小明,2012-02-02 09:00:00,继续增加投入，提高服务水平。&#xA;小张,2012-02-03 09:00:00,网络系统不太稳定，网管人员比较辛苦。&#xA;小李,2012-02-04 09:00:00,还有待提高。&#xA;......" measuredWidth="601" measuredHeight="119" border="false" alternative="#eeeeee" verticalLines="false" header="false">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="585" x="542" y="5" measuredWidth="16" measuredHeight="16" icon="table (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Tooltip" id="598" x="397" y="375" text="只显示最先提交的3个答案，其它的通过&#xD;&#xA;点击上面的小图标查看所有人提交的答案" measuredWidth="226" measuredHeight="59" background="#00ff00">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Tooltip" id="599" x="331" y="115" text="选择此选项的总人数" measuredWidth="118" measuredHeight="42" background="#00ff00" position="bottomRight">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Tooltip" id="600" x="483" y="115" text="选择此选项的比率" measuredWidth="106" measuredHeight="42" background="#00ff00" position="bottomRight">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="587" x="8" y="496" measuredWidth="633" measuredHeight="169">
+    <widgets xsi:type="model:Window" id="588" y="24" width="633" height="145" text="答案: 你对当前网络设施还有其它哪方面的建议？" measuredWidth="633" measuredHeight="145" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="591" y="75" width="633" text="(w:30). ,(w:40). 姓名,(w:60).提交时间,内容&#xA;,小明,2012-02-02 09:00:00,继续增加投入，提高服务水平。&#xA;,小张,2012-02-03 09:00:00,继续增加投入，提高服务水平。" measuredWidth="633" measuredHeight="73" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="594" x="446" y="48" width="183" measuredWidth="183" measuredHeight="24"/>
+    <widgets xsi:type="model:Label" id="596" text="查看问答题答案的视图：" measuredWidth="137" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="597" x="533" y="366" width="39" height="169" measuredWidth="39" measuredHeight="169" annotation="true" foreground="#ff9900" direction="bottom"/>
+  <widgets xsi:type="model:Note" id="601" x="16" y="672" width="617" height="105" text="说明：&#xD;&#xA;1）如果是从&quot;我参与的调查&quot;打开的问卷统计，对每个问题高亮显示自己提交的答案，而从管理端打开则不需高亮显示。&#xD;&#xA;2）对问答题的答案，由于参与的用户可能太多，只显示最先提交的3个答案，其它的通过点击问答题右则的小图标，打开一个分页视图查看所有人提交的答案。" measuredWidth="617" measuredHeight="105" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
