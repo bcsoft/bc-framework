@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="589" x="8" y="8" measuredWidth="633" measuredHeight="553">
+    <widgets xsi:type="model:Window" id="400" y="24" width="633" height="529" text="试卷作答" measuredWidth="633" measuredHeight="529" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="401" text="试卷作答界面 (预览或待作答状态)：" measuredWidth="199" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="402" x="10" y="55" measuredWidth="615" measuredHeight="62">
+      <widgets xsi:type="model:Label" id="403" x="394" y="35" text="答卷期限：从2012-02-01到2012-03-31" measuredWidth="221" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="404" x="182" text="2012年2月某基础知识测试" measuredWidth="254" measuredHeight="36" foreground="#351c75">
+        <font size="16"/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="405" y="55" width="615" measuredWidth="615" measuredHeight="6" foreground="#999999"/>
+      <widgets xsi:type="model:Icon" id="406" x="14" y="40" measuredWidth="16" measuredHeight="16" icon="bar-chart (small)"/>
+      <widgets xsi:type="model:Link" id="591" x="30" y="37" text="查看统计" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="407" x="10" y="124" measuredWidth="615" measuredHeight="97">
+      <widgets xsi:type="model:Label" id="408" x="14" text="1. 1 + 1 = ?" measuredWidth="73" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="409" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:Label" id="410" x="94" text="(必选)" measuredWidth="37" measuredHeight="25" foreground="#ff0000">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:List" id="411" x="14" y="24" text="() 1&#xA;() 2&#xA;() 3" measuredWidth="37" measuredHeight="73" border="false" alpha="0">
+        <font/>
+        <items x="0" y="2" width="37" height="23" text="() 1"/>
+        <items x="0" y="25" width="37" height="23" text="() 2"/>
+        <items x="0" y="48" width="37" height="23" text="() 3"/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="427" x="427" y="25" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="424" x="31" y="3" measuredWidth="100" measuredHeight="18" value="10" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="425" x="132" text="10.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="426" text="10人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="429" x="427" y="48" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="430" x="31" y="3" measuredWidth="100" measuredHeight="18" value="60" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="431" x="132" text="60.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="432" text="60人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="434" x="427" y="72" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="435" x="31" y="3" measuredWidth="100" measuredHeight="18" value="30" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="436" x="132" text="30.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="437" text="30人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="412" x="10" y="230" measuredWidth="615" measuredHeight="97">
+      <widgets xsi:type="model:Label" id="413" x="14" text="2. 下面哪些答案是正确的？" measuredWidth="151" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="414" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:Label" id="415" x="174" text="(必选)" measuredWidth="37" measuredHeight="25" foreground="#ff0000">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:List" id="416" x="14" y="24" text="[] 1+1=2&#xA;[] 1+1>1&#xA;[] 1+1=0" measuredWidth="69" measuredHeight="73" border="false" alpha="0">
+        <font/>
+        <items x="0" y="2" width="69" height="23" text="[] 1+1=2"/>
+        <items x="0" y="25" width="69" height="23" text="[] 1+1>1"/>
+        <items x="0" y="48" width="69" height="23" text="[] 1+1=0"/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="439" x="428" y="25" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="440" x="31" y="3" measuredWidth="100" measuredHeight="18" value="10" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="441" x="132" text="10.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="442" text="10人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="444" x="428" y="48" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="445" x="31" y="3" measuredWidth="100" measuredHeight="18" value="60" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="446" x="132" text="60.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="447" text="60人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="448" x="428" y="72" measuredWidth="180" measuredHeight="25">
+        <widgets xsi:type="model:ProgressBar" id="449" x="31" y="3" measuredWidth="100" measuredHeight="18" value="30" background="#00ff00"/>
+        <widgets xsi:type="model:Label" id="450" x="132" text="30.00％" measuredWidth="48" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="451" text="30人" measuredWidth="31" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="417" x="10" y="338" measuredWidth="615" measuredHeight="48">
+      <widgets xsi:type="model:Label" id="418" x="14" text="3. 在对应的地方填写正确的词语！" measuredWidth="187" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="419" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:Label" id="420" x="230" text="(必答)" measuredWidth="37" measuredHeight="25" foreground="#ff0000">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="452" x="272" y="5" measuredWidth="16" measuredHeight="16" icon="print-preview (small)"/>
+      <widgets xsi:type="model:WidgetGroup" id="609" x="23" y="29" measuredWidth="566" measuredHeight="19">
+        <widgets xsi:type="model:Text" id="598" x="44" text="年" measuredWidth="12" measuredHeight="17">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:HLine" id="601" y="13" width="43" measuredWidth="43" measuredHeight="6" foreground="#cccccc"/>
+        <widgets xsi:type="model:HLine" id="603" x="55" y="13" width="43" measuredWidth="43" measuredHeight="6" foreground="#cccccc"/>
+        <widgets xsi:type="model:HLine" id="604" x="111" y="13" width="43" measuredWidth="43" measuredHeight="6" foreground="#cccccc"/>
+        <widgets xsi:type="model:Text" id="605" x="97" text="月" measuredWidth="12" measuredHeight="17">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Text" id="606" x="153" text="日，北京市人民政府正式向中国奥委会递交了举办" measuredWidth="264" measuredHeight="17">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:HLine" id="607" x="416" y="13" width="43" measuredWidth="43" measuredHeight="6" foreground="#cccccc"/>
+        <widgets xsi:type="model:Text" id="608" x="458" text="年奥运会的申请书。" measuredWidth="108" measuredHeight="17">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Button" id="422" x="580" y="521" width="43" text="提交" measuredWidth="43" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="423" y="512" width="633" measuredWidth="633" measuredHeight="6"/>
+    <widgets xsi:type="model:Arrow" id="585" x="88" y="104" width="345" height="65" measuredWidth="345" measuredHeight="65" annotation="true" foreground="#ff9900" left="false" right="true"/>
+    <widgets xsi:type="model:Note" id="586" x="192" y="120" width="177" height="65" text="如果试卷配置为&quot;答卷前允许查看统计&quot;，点击这里可查看别人已提交答案的统计信息" measuredWidth="177" measuredHeight="65" annotation="true" textAlignment="Left">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Panel" id="587" x="424" y="139" width="199" height="195" measuredWidth="199" measuredHeight="195" alpha="0" foreground="#999999" border="dashed-rounded"/>
+    <widgets xsi:type="model:Tooltip" id="588" x="347" y="200" text="即时统计信息" measuredWidth="82" measuredHeight="42" background="#00ff00" position="bottomRight">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="592" x="10" y="400" measuredWidth="615" measuredHeight="108">
+      <widgets xsi:type="model:Label" id="593" x="14" text="4. 解析一下“好好学习，天天向上”？" measuredWidth="211" measuredHeight="25" foreground="#0000ff">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="594" y="19" width="615" measuredWidth="615" measuredHeight="6" foreground="#eeeeee"/>
+      <widgets xsi:type="model:Label" id="595" x="230" text="(必答)" measuredWidth="37" measuredHeight="25" foreground="#ff0000">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:TextArea" id="596" x="22" y="32" width="577" height="76" measuredWidth="577" measuredHeight="76" verticalScrollbar="true">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="597" x="272" y="5" measuredWidth="16" measuredHeight="16" icon="print-preview (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="590" x="16" y="576" width="345" height="81" text="说明：&#xD;&#xA;1）预览时不显示小图标和即时统计信息。&#xD;&#xA;2）如果试卷配置为&quot;答卷前允许查看统计&quot;，点击左上角的&quot;查看统计&quot;，将在试题右侧显示即时统计信息。" measuredWidth="345" measuredHeight="81" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
