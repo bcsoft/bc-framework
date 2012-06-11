@@ -4,7 +4,9 @@
 package cn.bc.investigate.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +17,14 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.investigate.domain.Questionary;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.DateRangeFormater;
+import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -44,7 +48,6 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	public String module;// 所属模块
 	public List<Map<String, String>> ptypeList; // 所属模块列表
 
-
 	@Override
 	public boolean isReadonly() {
 		// 操作日志管理员或系统管理员
@@ -57,7 +60,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：创建日期
-		return new OrderCondition("l.file_date", Direction.Desc);
+		return new OrderCondition("q.file_date", Direction.Desc);
 
 	}
 
@@ -67,10 +70,11 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select l.id,l.type_,l.file_date,ac.actor_name author,l.way,l.ptype,l.pid,l.subject ");
-		sql.append(" from bc_log_operate l");
-		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY ac on ac.id=l.author_id");
-		sql.append(" left join bc_identity_actor a on a.id=ac.actor_id");
+		sql.append("select q.id,q.status_,q.subject,q.start_date,q.end_date,iss.actor_name issuer,q.issue_date");
+		sql.append(",q.file_date,ad.actor_name author");
+		sql.append(" from bc_ivg_questionary q");
+		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY ad on ad.id=q.author_id");
+		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY iss on iss.id=q.issuer_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -82,13 +86,15 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("type", rs[i++]);// 类别：0-工作日志,1-审计日志
-				map.put("file_date", rs[i++]);// 创建时间
-				map.put("author", rs[i++]);// 创建人
-				map.put("way", rs[i++]);// 创建方式：0-用户创建,1-自动生成
-				map.put("ptype", rs[i++]);// 所属模块
-				map.put("pid", rs[i++]);// 文档标识
-				map.put("subject", rs[i++]);// 标题
+				map.put("status_", rs[i++]);
+				map.put("subject", rs[i++]);
+				map.put("start_date", rs[i++]);
+				map.put("end_date", rs[i++]);
+				map.put("issuer", rs[i++]);
+				map.put("issue_date", rs[i++]);
+				map.put("file_date", rs[i++]);
+				map.put("author", rs[i++]);
+
 				return map;
 			}
 		});
@@ -98,54 +104,57 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("l.id", "id"));
-		columns.add(new TextColumn4MapKey("l.file_date", "file_date",
-				getText("operateLog.fileDate"), 140).setSortable(true)
+		columns.add(new IdColumn4MapKey("q.id", "id"));
+		columns.add(new TextColumn4MapKey("q.status_", "status_",
+				getText("questionary.status"), 40).setSortable(true)
+				.setValueFormater(new EntityStatusFormater()));
+		columns.add(new TextColumn4MapKey("q.subject", "subject",
+				getText("questionary.subject")).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
+				getText("questionary.Deadline"), 180)
+				.setValueFormater(new DateRangeFormater("yyyy-MM-dd") {
+					@Override
+					public Date getToDate(Object context, Object value) {
+						@SuppressWarnings("rawtypes")
+						Map contract = (Map) context;
+						return (Date) contract.get("end_date");
+					}
+				}));
+		columns.add(new TextColumn4MapKey("iss.actor_name", "issuer",
+				getText("questionary.issuer"), 80).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("q.issue_date", "issue_date",
+				getText("questionary.issueDate"), 140).setSortable(true)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("l.subject", "subject",
-				getText("operateLog.subject")).setSortable(true)
+		columns.add(new TextColumn4MapKey("ad.actor_name", "author",
+				getText("questionary.author"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("ac.actor_name", "author",
-				getText("operateLog.author"), 80).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("l.pid", "pid",
-				getText("operateLog.pid"), 80).setSortable(true)
-				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("q.file_date", "file_date",
+				getText("questionary.fileDate"), 140).setSortable(true)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 
 		return columns;
 	}
 
-
-
-
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ac.actor_name", "l.subject", "l.pid", "a.code",
-				"a.py" };
+		return new String[] { "ac.actor_name", "q.subject", };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "operateLog";
+		return "questionary";
 	}
 
 	@Override
 	protected Condition getGridSpecalCondition() {
 		// 模块条件
 		Condition moduleCondition = null;
-		if (module != null) {
-			moduleCondition = new EqualsCondition("l.ptype", module);
-		}
 		// 车辆Id条件
 		Condition carIdCondition = null;
-		if (carId != null) {
-			carIdCondition = new EqualsCondition("l.pid", carId);
-		}
 		// 司机ID条件
 		Condition carManIdCondition = null;
-		if (carManId != null) {
-			carManIdCondition = new EqualsCondition("l.pid", carManId);
-		}
 		return ConditionUtils.mix2AndCondition(moduleCondition, ConditionUtils
 				.mix2OrCondition(carIdCondition, carManIdCondition));
 	}
@@ -154,18 +163,6 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	protected Json getGridExtrasData() {
 		Json json = new Json();
 
-		// 模块条件
-		if (this.module != null && this.module.trim().length() > 0) {
-			json.put("module", module);
-		}
-		// 车辆ID条件
-		if (this.carId != null && this.carId.trim().length() > 0) {
-			json.put("carId", carId);
-		}
-		// 司机ID条件
-		if (this.carManId != null && this.carManId.trim().length() > 0) {
-			json.put("carManId", carManId);
-		}
 		return json.isEmpty() ? null : json;
 	}
 
@@ -188,12 +185,18 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 			// 查看按钮
 			tb.addButton(this.getDefaultOpenToolbarButton());
 		} else {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-			// 车辆司机表单页签下可以新建
-			if (carId != null || carManId != null) {
-				// 编辑按钮
-				tb.addButton(this.getDefaultCreateToolbarButton());
+			// 新建按钮
+			tb.addButton(this.getDefaultCreateToolbarButton());
+
+			// 编辑按钮
+			tb.addButton(this.getDefaultEditToolbarButton());
+			// 删除
+			tb.addButton(this.getDefaultDeleteToolbarButton());
+			// 如果是管理员,可以看到状态按钮组
+			if (!this.isReadonly()) {
+				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+						this.getBSStatuses(), "status", 1,
+						getText("title.click2changeSearchStatus")));
 
 			}
 		}
@@ -204,10 +207,34 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		return tb;
 	}
 
+	/**
+	 * 状态值转换列表：待发布|已发布|已结束|全部
+	 * 
+	 * @return
+	 */
+	protected Map<String, String> getBSStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(Questionary.STATUS_DRAFT),
+				getText("questionary.release.wait"));
+		statuses.put(String.valueOf(Questionary.STATUS_ISSUE),
+				getText("questionary.release.already"));
+		statuses.put(String.valueOf(Questionary.STATUS_END),
+				getText("questionary.release.end"));
+		statuses.put("", getText("questionary.release.all"));
+		return statuses;
+	}
+
 	@Override
 	protected String getGridDblRowMethod() {
 		return "bc.page.open";
 	}
 
+	// ==高级搜索代码开始==
+	@Override
+	protected boolean useAdvanceSearch() {
+		return true;
+	}
+
+	// ==高级搜索代码结束==
 
 }

@@ -15,7 +15,7 @@
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
 
 
-	<!-- operateLog -->
+	<!-- questionary -->
 	<bean id="questionaryDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionaryDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="questionaryService" class="cn.bc.investigate.service.QuestionaryServiceImpl" 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.bc.business.investigate.service;
+package cn.bc.investigate.service;
 
 import cn.bc.core.service.CrudService;
 import cn.bc.investigate.domain.Questionary;

@@ -1,9 +1,9 @@
 /**
  * 
  */
-package cn.bc.business.investigate.dao.hibernate.jpa;
+package cn.bc.investigate.dao.hibernate.jpa;
 
-import cn.bc.business.investigate.dao.QuestionaryDao;
+import cn.bc.investigate.dao.QuestionaryDao;
 import cn.bc.investigate.domain.Questionary;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 
