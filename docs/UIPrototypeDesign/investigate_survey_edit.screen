@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="18" x="8" y="8" measuredWidth="633" measuredHeight="673">
-    <widgets xsi:type="model:Window" id="19" y="24" width="633" height="649" text="问卷表单" measuredWidth="633" measuredHeight="649" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:Label" id="114" text="问卷表单(编辑状态)：" measuredWidth="123" measuredHeight="25">
+  <widgets xsi:type="model:WidgetGroup" id="18" x="8" y="8" measuredWidth="633" measuredHeight="651">
+    <widgets xsi:type="model:Window" id="19" y="24" width="633" height="627" text="网上调查表单" measuredWidth="633" measuredHeight="627" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="114" text="网上调查表单(编辑状态)：" measuredWidth="147" measuredHeight="25">
       <font bold="true"/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="199" x="36" y="53" measuredWidth="589" measuredHeight="80">
@@ -53,37 +53,37 @@
         <widgets xsi:type="model:Icon" id="727" x="472" y="3" measuredWidth="16" measuredHeight="16" icon="usergroup (small)"/>
         <widgets xsi:type="model:Icon" id="728" x="453" y="4" measuredWidth="16" measuredHeight="16" icon="user (small)"/>
       </widgets>
-      <widgets xsi:type="model:Checkbox" id="395" x="455" y="27" text="提交前允许查看结果" measuredWidth="129" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:Checkbox" id="395" x="455" y="27" text="提交前允许查看统计" measuredWidth="129" measuredHeight="25" selected="true">
         <font/>
       </widgets>
     </widgets>
-    <widgets xsi:type="model:Button" id="21" x="583" y="636" width="43" text="发布" measuredWidth="43" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="21" x="583" y="619" width="43" text="发布" measuredWidth="43" measuredHeight="27">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="25" x="324" y="582" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
+    <widgets xsi:type="model:Label" id="25" x="324" y="565" text="创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
       <font/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="165" y="135" measuredWidth="633" measuredHeight="140">
+    <widgets xsi:type="model:WidgetGroup" id="165" y="135" measuredWidth="633" measuredHeight="138">
       <widgets xsi:type="model:HLine" id="20" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
-      <widgets xsi:type="model:Label" id="127" x="48" y="9" text="问题标题：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="127" x="72" y="32" text="题目：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Label" id="130" x="48" y="36" text="问题类型：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="130" x="72" y="9" text="题型：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="132" x="112" y="36" text="单选题" measuredWidth="56" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:RadioButton" id="132" x="112" y="9" text="单选题" measuredWidth="56" measuredHeight="25" selected="true">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="133" x="177" y="36" text="多选题" measuredWidth="56" measuredHeight="25">
+      <widgets xsi:type="model:RadioButton" id="133" x="177" y="9" text="多选题" measuredWidth="56" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="134" x="240" y="36" text="问答题" measuredWidth="56" measuredHeight="25">
+      <widgets xsi:type="model:RadioButton" id="134" x="240" y="9" text="问答题" measuredWidth="56" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Label" id="136" x="48" y="61" text="选项列表：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="136" x="72" y="59" text="选项：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="149" x="456" y="36" measuredWidth="158" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="149" x="456" y="9" measuredWidth="158" measuredHeight="25">
         <widgets xsi:type="model:Label" id="135" text="选项布局：" measuredWidth="65" measuredHeight="25">
           <font/>
         </widgets>
@@ -94,32 +94,41 @@
           <font/>
         </widgets>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="142" x="112" y="61" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="141" width="513" text="明显快了很多" measuredWidth="513" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="142" x="112" y="59" measuredWidth="513" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="141" x="19" width="494" text="明显快了很多" measuredWidth="494" measuredHeight="25">
           <font/>
         </widgets>
         <widgets xsi:type="model:Icon" id="140" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
         <widgets xsi:type="model:Icon" id="155" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
         <widgets xsi:type="model:Icon" id="161" x="453" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+        <widgets xsi:type="model:RadioButton" id="732" measuredWidth="20" measuredHeight="25">
+          <font/>
+        </widgets>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="143" x="112" y="88" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="144" width="513" text="比原来有点快" measuredWidth="513" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="143" x="112" y="86" measuredWidth="513" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="144" x="19" width="494" text="比原来有点快" measuredWidth="494" measuredHeight="25">
           <font/>
         </widgets>
         <widgets xsi:type="model:Icon" id="145" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
         <widgets xsi:type="model:Icon" id="153" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
         <widgets xsi:type="model:Icon" id="154" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
         <widgets xsi:type="model:Icon" id="162" x="436" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+        <widgets xsi:type="model:RadioButton" id="733" measuredWidth="20" measuredHeight="25">
+          <font/>
+        </widgets>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="146" x="112" y="115" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="147" width="513" text="感觉与原来一样" measuredWidth="513" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="146" x="112" y="113" measuredWidth="513" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="147" x="19" width="494" text="感觉与原来一样" measuredWidth="494" measuredHeight="25">
           <font/>
         </widgets>
         <widgets xsi:type="model:Icon" id="148" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
         <widgets xsi:type="model:Icon" id="156" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
         <widgets xsi:type="model:Icon" id="163" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+        <widgets xsi:type="model:RadioButton" id="734" measuredWidth="20" measuredHeight="25">
+          <font/>
+        </widgets>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="157" x="112" y="9" measuredWidth="513" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="157" x="112" y="32" measuredWidth="513" measuredHeight="25">
         <widgets xsi:type="model:TextField" id="158" width="513" text="联网的速度如何？" measuredWidth="513" measuredHeight="25">
           <font/>
         </widgets>
@@ -130,103 +139,31 @@
       <widgets xsi:type="model:Label" id="164" x="10" y="9" text="第1道" measuredWidth="36" measuredHeight="25" foreground="#ff0000">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Checkbox" id="244" x="308" y="35" text="必选题" measuredWidth="57" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:Checkbox" id="244" x="308" y="8" text="必选题" measuredWidth="57" measuredHeight="25" selected="true">
         <font/>
       </widgets>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="166" y="281" measuredWidth="633" measuredHeight="142">
-      <widgets xsi:type="model:HLine" id="167" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
-      <widgets xsi:type="model:Label" id="168" x="48" y="11" text="问题标题：" measuredWidth="65" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:Label" id="169" x="48" y="38" text="问题类型：" measuredWidth="65" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:RadioButton" id="170" x="112" y="38" text="单选题" measuredWidth="56" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:RadioButton" id="171" x="177" y="38" text="多选题" measuredWidth="56" measuredHeight="25" selected="true">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:RadioButton" id="172" x="240" y="38" text="问答题" measuredWidth="56" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:Label" id="173" x="48" y="63" text="选项列表：" measuredWidth="65" measuredHeight="25">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="174" x="456" y="38" measuredWidth="158" measuredHeight="25">
-        <widgets xsi:type="model:Label" id="175" text="选项布局：" measuredWidth="65" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:RadioButton" id="176" x="114" text="水平" measuredWidth="44" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:RadioButton" id="177" x="64" text="垂直" measuredWidth="44" measuredHeight="25" selected="true">
-          <font/>
-        </widgets>
-      </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="178" x="112" y="63" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="179" width="513" text="交换机" measuredWidth="513" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:Icon" id="180" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
-        <widgets xsi:type="model:Icon" id="181" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-        <widgets xsi:type="model:Icon" id="182" x="453" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
-      </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="183" x="112" y="90" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="184" width="513" text="路由器" measuredWidth="513" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:Icon" id="185" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
-        <widgets xsi:type="model:Icon" id="186" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-        <widgets xsi:type="model:Icon" id="187" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
-        <widgets xsi:type="model:Icon" id="188" x="436" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
-      </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="189" x="112" y="117" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="190" width="513" text="调制解调器" measuredWidth="513" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:Icon" id="191" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
-        <widgets xsi:type="model:Icon" id="192" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-        <widgets xsi:type="model:Icon" id="193" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
-      </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="194" x="112" y="11" measuredWidth="513" measuredHeight="25">
-        <widgets xsi:type="model:TextField" id="195" width="513" text="你熟悉哪些网络设备？" measuredWidth="513" measuredHeight="25">
-          <font/>
-        </widgets>
-        <widgets xsi:type="model:Icon" id="196" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
-        <widgets xsi:type="model:Icon" id="197" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-        <widgets xsi:type="model:Icon" id="237" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
-        <widgets xsi:type="model:Icon" id="238" x="436" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
-      </widgets>
-      <widgets xsi:type="model:Label" id="198" x="10" y="11" text="第2道" measuredWidth="36" measuredHeight="25" foreground="#ff0000">
-        <font/>
-      </widgets>
-      <widgets xsi:type="model:Checkbox" id="243" x="308" y="37" text="必选题" measuredWidth="57" measuredHeight="25" selected="true">
-        <font/>
-      </widgets>
-    </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="200" y="429" measuredWidth="633" measuredHeight="144">
+    <widgets xsi:type="model:WidgetGroup" id="200" y="418" measuredWidth="633" measuredHeight="139">
       <widgets xsi:type="model:HLine" id="201" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
-      <widgets xsi:type="model:Label" id="202" x="48" y="11" text="问题标题：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="202" x="72" y="36" text="题目：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Label" id="203" x="48" y="38" text="问题类型：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="203" x="72" y="8" text="题型：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="204" x="112" y="38" text="单选题" measuredWidth="56" measuredHeight="25">
+      <widgets xsi:type="model:RadioButton" id="204" x="112" y="8" text="单选题" measuredWidth="56" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="205" x="177" y="38" text="多选题" measuredWidth="56" measuredHeight="25">
+      <widgets xsi:type="model:RadioButton" id="205" x="177" y="8" text="多选题" measuredWidth="56" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:RadioButton" id="206" x="240" y="38" text="问答题" measuredWidth="56" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:RadioButton" id="206" x="240" y="8" text="问答题" measuredWidth="56" measuredHeight="25" selected="true">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Label" id="207" x="48" y="63" text="默认内容：" measuredWidth="65" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="207" x="72" y="58" text="内容：" measuredWidth="41" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="208" x="513" y="39" measuredWidth="112" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="208" x="513" y="9" measuredWidth="112" measuredHeight="25">
         <widgets xsi:type="model:Label" id="209" text="默认行数：" measuredWidth="65" measuredHeight="25">
           <font/>
         </widgets>
@@ -234,7 +171,7 @@
           <font/>
         </widgets>
       </widgets>
-      <widgets xsi:type="model:WidgetGroup" id="228" x="112" y="11" measuredWidth="513" measuredHeight="25">
+      <widgets xsi:type="model:WidgetGroup" id="228" x="112" y="36" measuredWidth="513" measuredHeight="25">
         <widgets xsi:type="model:TextField" id="229" width="513" text="你对当前网络设施还有其它哪方面的建议？" measuredWidth="513" measuredHeight="25">
           <font/>
         </widgets>
@@ -242,26 +179,106 @@
         <widgets xsi:type="model:Icon" id="231" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
         <widgets xsi:type="model:Icon" id="241" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
       </widgets>
-      <widgets xsi:type="model:Label" id="232" x="10" y="11" text="第3道" measuredWidth="36" measuredHeight="25" foreground="#ff0000">
+      <widgets xsi:type="model:Label" id="232" x="10" y="8" text="第3道" measuredWidth="36" measuredHeight="25" foreground="#ff0000">
         <font/>
       </widgets>
-      <widgets xsi:type="model:TextArea" id="234" x="112" y="68" width="513" height="76" measuredWidth="513" measuredHeight="76" verticalScrollbar="true">
+      <widgets xsi:type="model:TextArea" id="234" x="112" y="63" width="513" height="76" measuredWidth="513" measuredHeight="76" verticalScrollbar="true">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Checkbox" id="242" x="308" y="37" text="必答题" measuredWidth="57" measuredHeight="25" selected="true">
+      <widgets xsi:type="model:Checkbox" id="242" x="308" y="7" text="必答题" measuredWidth="57" measuredHeight="25" selected="true">
         <font/>
       </widgets>
     </widgets>
-    <widgets xsi:type="model:HLine" id="245" y="627" width="633" measuredWidth="633" measuredHeight="6"/>
-    <widgets xsi:type="model:HLine" id="246" y="577" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
-    <widgets xsi:type="model:Button" id="256" x="488" y="636" width="43" text="保存" measuredWidth="43" measuredHeight="27">
+    <widgets xsi:type="model:HLine" id="245" y="610" width="633" measuredWidth="633" measuredHeight="6"/>
+    <widgets xsi:type="model:HLine" id="246" y="560" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
+    <widgets xsi:type="model:Button" id="256" x="488" y="619" width="43" text="保存" measuredWidth="43" measuredHeight="27">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" id="257" x="536" y="636" width="43" text="预览" measuredWidth="43" measuredHeight="27">
+    <widgets xsi:type="model:Button" id="257" x="536" y="619" width="43" text="预览" measuredWidth="43" measuredHeight="27">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="258" x="341" y="603" text="发布：张三(2011-01-01)，归档：张三(2011-01-01)" measuredWidth="285" measuredHeight="25" textAlignment="Right" foreground="#999999">
+    <widgets xsi:type="model:Label" id="258" x="341" y="586" text="发布：张三(2011-01-01)，归档：张三(2011-01-01)" measuredWidth="285" measuredHeight="25" textAlignment="Right" foreground="#999999">
       <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="773" y="276" measuredWidth="633" measuredHeight="138">
+      <widgets xsi:type="model:HLine" id="774" width="633" measuredWidth="633" measuredHeight="6" lineStyle="dotted"/>
+      <widgets xsi:type="model:Label" id="775" x="72" y="32" text="题目：" measuredWidth="41" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="776" x="72" y="9" text="题型：" measuredWidth="41" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:RadioButton" id="777" x="112" y="9" text="单选题" measuredWidth="56" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:RadioButton" id="778" x="177" y="9" text="多选题" measuredWidth="56" measuredHeight="25" selected="true">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:RadioButton" id="779" x="240" y="9" text="问答题" measuredWidth="56" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="780" x="72" y="59" text="选项：" measuredWidth="41" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="781" x="456" y="9" measuredWidth="158" measuredHeight="25">
+        <widgets xsi:type="model:Label" id="782" text="选项布局：" measuredWidth="65" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:RadioButton" id="783" x="114" text="水平" measuredWidth="44" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:RadioButton" id="784" x="64" text="垂直" measuredWidth="44" measuredHeight="25" selected="true">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="785" x="114" y="59" measuredWidth="511" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="786" x="17" width="494" text="交换机" measuredWidth="494" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="787" x="489" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
+        <widgets xsi:type="model:Icon" id="788" x="470" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Icon" id="789" x="451" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+        <widgets xsi:type="model:Checkbox" id="813" measuredWidth="21" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="791" x="114" y="86" measuredWidth="511" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="792" x="17" width="494" text="路由器" measuredWidth="494" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="793" x="489" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
+        <widgets xsi:type="model:Icon" id="794" x="470" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Icon" id="795" x="452" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+        <widgets xsi:type="model:Icon" id="796" x="434" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+        <widgets xsi:type="model:Checkbox" id="812" measuredWidth="21" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="798" x="114" y="113" measuredWidth="511" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="799" x="17" width="494" text="调制解调器" measuredWidth="494" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="800" x="489" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
+        <widgets xsi:type="model:Icon" id="801" x="470" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Icon" id="802" x="452" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+        <widgets xsi:type="model:Checkbox" id="811" measuredWidth="21" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="804" x="112" y="32" measuredWidth="513" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="805" width="513" text="你熟悉哪些网络设备？" measuredWidth="513" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="806" x="491" y="5" measuredWidth="16" measuredHeight="16" icon="circled-mul (small)"/>
+        <widgets xsi:type="model:Icon" id="807" x="472" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Icon" id="808" x="454" y="5" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="809" x="10" y="9" text="第2道" measuredWidth="36" measuredHeight="25" foreground="#ff0000">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Checkbox" id="810" x="308" y="8" text="必选题" measuredWidth="57" measuredHeight="25" selected="true">
+        <font/>
+      </widgets>
     </widgets>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="631" x="656" y="32" measuredWidth="371" measuredHeight="100">
@@ -344,7 +361,7 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="726" x="656" y="352" width="297" height="137" text="说明：&#xD;&#xA;1）当没有&quot;指定参与人&quot;时，所有用户均可以参与此问卷的调查，否则只有指定的参与人才可参与；参与人可以是岗位、部门、单位或用户。&#xD;&#xA;2）如果选择了&quot;提交前允许查看结果&quot;，则提交作答的用户可以在提交答案前先查看别人提交的答案统计信息，作为参考。" measuredWidth="297" measuredHeight="137" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="726" x="656" y="352" width="330" height="137" text="说明：&#xD;&#xA;1）当没有&quot;指定参与人&quot;时，所有用户均可以参与此问卷的调查，否则只有指定的参与人才可参与；参与人可以是岗位、部门、单位或用户。&#xD;&#xA;2）如果选择了&quot;提交前允许查看统计&quot;，则提交作答的用户可以在提交答案前先查看别人提交的答案统计信息，作为参考。" measuredWidth="330" measuredHeight="137" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <widgets xsi:type="model:Arrow" id="730" x="626" y="104" width="55" height="56" measuredWidth="55" measuredHeight="56" annotation="true" foreground="#ff9900" left="false" right="true" direction="bottom"/>

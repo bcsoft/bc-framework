@@ -53,7 +53,7 @@
         <widgets xsi:type="model:Icon" id="727" x="472" y="3" measuredWidth="16" measuredHeight="16" icon="usergroup (small)"/>
         <widgets xsi:type="model:Icon" id="728" x="453" y="4" measuredWidth="16" measuredHeight="16" icon="user (small)"/>
       </widgets>
-      <widgets xsi:type="model:Checkbox" id="395" x="455" y="27" text="答卷前允许查看统计" measuredWidth="129" measuredHeight="25">
+      <widgets xsi:type="model:Checkbox" id="395" x="455" y="27" text="提交前允许查看统计" measuredWidth="129" measuredHeight="25">
         <font/>
       </widgets>
     </widgets>
@@ -557,7 +557,7 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="726" x="664" y="336" width="297" height="193" text="说明：&#xD;&#xA;1）当没有&quot;指定答卷人&quot;时，所有用户均可以参与此试卷的考试，否则只有指定的答卷人才可参与；答卷人可以是岗位、部门、单位或用户。&#xD;&#xA;2）如果选择了&quot;答卷前允许查看统计&quot;，则作答的用户可以在提交答案前先查看别人提交的答案统计信息，作为参考。&#xD;&#xA;3）对于多选题，可以配置为必须全选对才能有得分或者任意选对一项也有相应项的得分，但是如果选错任一项都将没分。" measuredWidth="297" measuredHeight="193" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="726" x="664" y="336" width="297" height="193" text="说明：&#xD;&#xA;1）当没有&quot;指定答卷人&quot;时，所有用户均可以参与此试卷的考试，否则只有指定的答卷人才可参与；答卷人可以是岗位、部门、单位或用户。&#xD;&#xA;2）如果选择了&quot;提交前允许查看统计&quot;，则作答的用户可以在提交答案前先查看别人提交的答案统计信息，作为参考。&#xD;&#xA;3）对于多选题，可以配置为必须全选对才能有得分或者任意选对一项也有相应项的得分，但是如果选错任一项都将没分。" measuredWidth="297" measuredHeight="193" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <widgets xsi:type="model:Arrow" id="730" x="626" y="104" width="55" height="56" measuredWidth="55" measuredHeight="56" annotation="true" foreground="#ff9900" left="false" right="true" direction="bottom"/>
