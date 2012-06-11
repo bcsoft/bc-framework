@@ -20,7 +20,7 @@ import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
- * 调查问卷
+ * 问卷
  * 
  * @author dragon
  */
@@ -29,6 +29,11 @@ import cn.bc.identity.domain.RichFileEntityImpl;
 public class Questionary extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
+	/** 类型:网上调查 */
+	public static final int TYPE_SURVEY = 0;
+	/** 类型:网上考试 */
+	public static final int TYPE_PAPER = 1;
+
 	/** 状态值:草稿，值为0 */
 	public static final int STATUS_DRAFT = 0;
 	/** 状态值:已发布，值为1 */
@@ -36,18 +41,28 @@ public class Questionary extends RichFileEntityImpl {
 	/** 状态值:已归档，值为2 */
 	public static final int STATUS_END = 2;
 
+	private int type; // 类型，见 TYPE_XXXX 常数的定义
 	private String subject; // 标题
 	private Calendar startDate; // 开始日期
 	private Calendar endDate; // 结束日期
-	private boolean permitted = true; // 是否允许提交前查看结果
+	private boolean permitted = true; // 提交前允许查看统计
 	private Set<Question> questions;// 问题集
 	private Set<Respond> responds;// 作答集
-	private Set<Actor> actors;// 调查范围，为空代表所有人均可提交调查
+	private Set<Actor> actors;// 参与人:为空代表所有人均可提交
 
 	private ActorHistory issuer; // 发布人
 	private Calendar issueDate; // 发布时间
 	private ActorHistory pigeonholer; // 归档人
 	private Calendar pigeonholeDate; // 归档时间
+
+	@Column(name = "TYPE_")
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	@OneToMany(mappedBy = "questionary", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy(value = "orderNo asc")

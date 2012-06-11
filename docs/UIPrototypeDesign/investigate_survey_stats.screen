@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
   <widgets xsi:type="model:WidgetGroup" id="453" x="8" y="8" measuredWidth="633" measuredHeight="481">
-    <widgets xsi:type="model:Window" id="454" y="24" width="633" height="457" text="问卷统计" measuredWidth="633" measuredHeight="457" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:Label" id="455" text="查看问卷统计结果：" measuredWidth="113" measuredHeight="25">
+    <widgets xsi:type="model:Window" id="454" y="24" width="633" height="457" text="网上调查统计" measuredWidth="633" measuredHeight="457" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="455" text="网上调查统计结果：" measuredWidth="113" measuredHeight="25">
       <font bold="true"/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="456" x="10" y="55" measuredWidth="615" measuredHeight="61">
@@ -132,7 +132,7 @@
     </widgets>
   </widgets>
   <widgets xsi:type="model:Arrow" id="597" x="533" y="366" width="39" height="169" measuredWidth="39" measuredHeight="169" annotation="true" foreground="#ff9900" direction="bottom"/>
-  <widgets xsi:type="model:Note" id="601" x="16" y="672" width="617" height="105" text="说明：&#xD;&#xA;1）如果是从&quot;我参与的调查&quot;打开的问卷统计，对每个问题高亮显示自己提交的答案，而从管理端打开则不需高亮显示。&#xD;&#xA;2）对问答题的答案，由于参与的用户可能太多，只显示最先提交的3个答案，其它的通过点击问答题右则的小图标，打开一个分页视图查看所有人提交的答案。" measuredWidth="617" measuredHeight="105" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="601" x="16" y="672" width="617" height="105" text="说明：&#xD;&#xA;1）如果是从一般答卷人视图打开的问卷统计，对每个问题高亮显示自己提交的答案，而从管理端打开则不需高亮显示。&#xD;&#xA;2）对问答题的答案，由于参与的用户可能太多，只显示最先提交的3个答案（单行显示），其它的通过点击问答题右则的小图标，打开一个分页视图查看所有人提交的答案。" measuredWidth="617" measuredHeight="105" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>

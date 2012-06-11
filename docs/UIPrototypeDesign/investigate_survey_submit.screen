@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
   <widgets xsi:type="model:WidgetGroup" id="589" x="8" y="8" measuredWidth="633" measuredHeight="497">
-    <widgets xsi:type="model:Window" id="400" y="24" width="633" height="473" text="问卷表单" measuredWidth="633" measuredHeight="473" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:Label" id="401" text="问卷表单(预览或待提交状态 - 带统计结果)：" measuredWidth="244" measuredHeight="25">
+    <widgets xsi:type="model:Window" id="400" y="24" width="633" height="473" text="网上调查表单" measuredWidth="633" measuredHeight="473" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="401" text="网上调查表单(预览或待提交状态 - 带统计结果)：" measuredWidth="268" measuredHeight="25">
       <font bold="true"/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="402" x="10" y="55" measuredWidth="615" measuredHeight="62">
@@ -14,7 +14,7 @@
       </widgets>
       <widgets xsi:type="model:HLine" id="405" y="55" width="615" measuredWidth="615" measuredHeight="6" foreground="#999999"/>
       <widgets xsi:type="model:Icon" id="406" x="14" y="40" measuredWidth="16" measuredHeight="16" icon="bar-chart (small)"/>
-      <widgets xsi:type="model:Link" id="591" x="30" y="37" text="查看结果" measuredWidth="51" measuredHeight="25">
+      <widgets xsi:type="model:Link" id="591" x="30" y="37" text="查看统计" measuredWidth="51" measuredHeight="25">
         <font/>
       </widgets>
     </widgets>
@@ -128,7 +128,7 @@
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="590" x="8" y="512" width="345" height="81" text="说明：&#xD;&#xA;1）预览时不显示小图标和即时统计信息。&#xD;&#xA;2）提交时如果问卷配置为&quot;提交前允许查看结果&quot;，点击左上角小图标在问题右侧显示即时统计信息。" measuredWidth="345" measuredHeight="81" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="590" x="8" y="512" width="425" height="81" text="说明：&#xD;&#xA;1）&quot;查看统计&quot;功能由问卷的&quot;提交前允许查看统计&quot;的值决定是否显示。&#xD;&#xA;2）预览时不显示&quot;提交&quot;按钮，仅是预览功能。&#xD;&#xA;3）点击左上角的&quot;查看统计&quot;，在问题右侧显示即时统计信息。" measuredWidth="425" measuredHeight="81" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>
