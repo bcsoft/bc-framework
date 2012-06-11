@@ -19,6 +19,7 @@ public class Answer extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 	private Respond respond; // 对应的作答
 	private QuestionItem item; // 作答的问题项
+	private int score; // 得分（仅适用于网上考试）
 	private String content; // 问答题填写的内容
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -47,5 +48,13 @@ public class Answer extends EntityImpl {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

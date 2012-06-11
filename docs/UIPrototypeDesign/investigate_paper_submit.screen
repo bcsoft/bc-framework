@@ -156,7 +156,7 @@
       <widgets xsi:type="model:Icon" id="597" x="272" y="5" measuredWidth="16" measuredHeight="16" icon="print-preview (small)"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="590" x="16" y="576" width="345" height="81" text="说明：&#xD;&#xA;1）预览时不显示小图标和即时统计信息。&#xD;&#xA;2）如果试卷配置为&quot;答卷前允许查看统计&quot;，点击左上角的&quot;查看统计&quot;，将在试题右侧显示即时统计信息。" measuredWidth="345" measuredHeight="81" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="590" x="16" y="576" width="345" height="97" text="说明：&#xD;&#xA;1）&quot;查看统计&quot;功能由试卷的&quot;提交前允许查看统计&quot;的值决定是否显示。&#xD;&#xA;2）预览时不显示&quot;提交&quot;按钮，仅是预览功能。&#xD;&#xA;3）点击左上角的&quot;查看统计&quot;，在问题右侧显示即时统计信息。" measuredWidth="345" measuredHeight="97" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>
