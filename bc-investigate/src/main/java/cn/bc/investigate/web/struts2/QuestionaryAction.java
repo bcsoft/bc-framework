@@ -3,11 +3,14 @@
  */
 package cn.bc.investigate.web.struts2;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.investigate.domain.Questionary;
 import cn.bc.investigate.service.QuestionaryService;
@@ -26,6 +29,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private QuestionaryService questionaryService;
+	public Set<Actor> ownedUsers;// 已分配的用户
 
 	@Autowired
 	public void setQuestionaryService(QuestionaryService questionaryService) {
@@ -35,9 +39,24 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(530)
+		return super.buildFormPageOption(editable).setWidth(630)
 				.setMinWidth(320);
 
 	}
 
+	@Override
+	protected void afterEdit(Questionary entity) {
+		super.afterEdit(entity);
+
+		// 加载已参与的人
+		this.ownedUsers = entity.getActors();
+	}
+
+	@Override
+	protected void afterOpen(Questionary entity) {
+		super.afterOpen(entity);
+
+		// 加载已参与的人
+		this.ownedUsers = entity.getActors();
+	}
 }
