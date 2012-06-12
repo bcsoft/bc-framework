@@ -303,7 +303,7 @@ public class SqlObject<T extends Object> {
 	public static String removeSelect(String queryString) {
 		int index = queryString.indexOf("!!from");
 		if (index != -1) {// 使用特殊的标记区分 from y的位置
-			return queryString.substring(index + 6);
+			return queryString.substring(index + 2);
 		} else {
 			queryString = queryString.replaceAll("[\\f\\n\\r\\t\\v]", " ");// 替换所有制表符、换页符、换行符、回车符为空格
 			String regex = "^select .* from ";
