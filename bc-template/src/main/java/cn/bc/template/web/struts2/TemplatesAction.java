@@ -191,7 +191,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(850).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+				.setHeight(400).setMinHeight(300).setHelp("mubanguanli");
 	}
 
 	@Override
@@ -311,4 +311,5 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	
 	// ==高级搜索代码结束==
 
+	
 }
