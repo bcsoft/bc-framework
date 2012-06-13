@@ -50,6 +50,7 @@ import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.Grid;
 import cn.bc.web.ui.html.grid.GridData;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.ui.html.page.PageOption;
@@ -170,9 +171,9 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 		// 查看
-		tb.addButton(getDefaultOpenToolbarButton());
+		// tb.addButton(getDefaultOpenToolbarButton());
 
-		// 在线预览
+		// 在线查看
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
 				.setText(getText("label.preview.inline"))
 				.setClick("bc.attachList.inline"));
@@ -202,6 +203,11 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	protected String[] getSearchFields() {
 		return new String[] { "subject", "path", "extension", "ptype", "puid",
 				"authorName" };
+	}
+
+	@Override
+	protected Grid buildGrid() {
+		return super.buildGrid().setDblClickRow(null);
 	}
 
 	@Override
@@ -402,23 +408,34 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 							+ attach.getPath();
 
 				File file = new File(path);
+				String name, extFromPath, extFromName;
 				if (file.exists()) {
+					// 获取压缩文件显示的文件名
+					name = attach.getSubject();
+					extFromPath = StringUtils.getFilenameExtension(path);
+
+					// 附加实际的扩展名
+					if (name.lastIndexOf(".") == -1) {
+						if (extFromPath != null) {
+							name += "." + extFromPath;
+						}
+					} else {
+						extFromName = StringUtils.getFilenameExtension(name);
+						if (!extFromName.equals(extFromPath)) {
+							name += "." + extFromPath;
+						}
+					}
+
 					// 添加到压缩文件
 					byte data[] = new byte[BUFFER];
 					FileInputStream fi = new FileInputStream(file);
 					origin = new BufferedInputStream(fi, BUFFER);
-					ZipEntry entry = new ZipEntry((i + 1) + "_"
-							+ attach.getSubject());
+					ZipEntry entry = new ZipEntry((i + 1) + "_" + name);
 					zip.putNextEntry(entry);
 					int count;
 					while ((count = origin.read(data, 0, BUFFER)) != -1) {
 						zip.write(data, 0, count);
 					}
-					// int j = 0;
-					// while (j < i) {
-					// int k = request.getInputStream().read(buffer, j, i - j);
-					// j += k;
-					// }
 					origin.close();
 
 					ahs.add(buildHistory(AttachHistory.TYPE_ZIP, attach));
