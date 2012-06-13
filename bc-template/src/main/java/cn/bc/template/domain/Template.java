@@ -321,7 +321,7 @@ public class Template extends FileEntityImpl {
 		else
 			extension = this.getPath().substring(
 					this.getPath().lastIndexOf(".") + 1);
-		attach.setExtension(extension);
+		attach.setFormat(extension);
 		attach.setStatus(BCConstants.STATUS_ENABLED);
 
 		// 文件存储的相对路径（年月），避免超出目录内文件数的限制

@@ -20,6 +20,7 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.AttachHistory;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -65,9 +66,8 @@ public class AttachHistorysAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ah.id id,ah.file_date fileDate,ah.type_ as type,ah.format format,ah.subject subject");
-		sql.append(",a.path path,ah.c_ip clientIp,ah.c_info clientInfo,h.actor_name authorName");
+		sql.append(",ah.ptype ptype,ah.puid puid,ah.path path,ah.apppath apppath,ah.c_ip clientIp,ah.c_info clientInfo,h.actor_name authorName");
 		sql.append(" from bc_docs_attach_history ah");
-		sql.append(" inner join bc_docs_attach a on a.id = ah.aid");
 		sql.append(" inner join bc_identity_actor_history h on h.id = ah.author_id");
 		sqlObject.setSql(sql.toString());
 
@@ -84,7 +84,10 @@ public class AttachHistorysAction extends ViewAction<Map<String, Object>> {
 				map.put("type", rs[i++]);
 				map.put("format", rs[i++]);
 				map.put("subject", rs[i++]);
+				map.put("ptype", rs[i++]);
+				map.put("puid", rs[i++]);
 				map.put("path", rs[i++]);
+				map.put("apppath", rs[i++]);
 				map.put("clientIp", rs[i++]);
 				map.put("clientInfo", rs[i++]);
 				map.put("authorName", rs[i++]);
@@ -110,16 +113,27 @@ public class AttachHistorysAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("h.actor_name", "authorName",
 				getText("attachHistory.authorName"), 80).setSortable(true));
 		columns.add(new TextColumn4MapKey("ah.type_", "type",
-				getText("attachHistory.type"), 60).setSortable(true).setValueFormater(
-				new KeyValueFormater(getTypes())));
+				getText("attachHistory.type"), 60).setSortable(true)
+				.setValueFormater(new KeyValueFormater(getTypes())));
 		columns.add(new TextColumn4MapKey("ah.format", "format",
 				getText("attachHistory.format"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("ah.subject", "subject",
 				getText("attachHistory.subject")).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.path", "path",
+		columns.add(new TextColumn4MapKey("ah.path", "path",
 				getText("attachHistory.path"), 120).setSortable(true)
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("ah.ptype", "ptype",
+				getText("attach.ptype"), 120).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("ah.puid", "puid",
+				getText("attach.puid"), 150).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("ah.apppath", "apppath",
+				getText("attachHistory.appPath"), 90).setSortable(true)
+				.setValueFormater(
+						new BooleanFormater(getText("label.yes"),
+								getText("label.no"))));
 		columns.add(new TextColumn4MapKey("l.c_ip", "clientIp",
 				getText("attachHistory.clientIp"), 110).setSortable(true));
 		columns.add(new TextColumn4MapKey("l.c_info", "clientInfo",
@@ -145,17 +159,20 @@ public class AttachHistorysAction extends ViewAction<Map<String, Object>> {
 				getText("attachHistory.type.convert"));
 		types.put(String.valueOf(AttachHistory.TYPE_DELETED),
 				getText("attachHistory.type.deleted"));
+		types.put(String.valueOf(AttachHistory.TYPE_UPLOAD),
+				getText("attachHistory.type.upload"));
 		return types;
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ah.subject", "h.actor_name", "a.path", "ah.c_ip" };
+		return new String[] { "ah.subject", "h.actor_name", "ah.path",
+				"ah.c_ip" };
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(600).setMinWidth(300)
+		return super.getHtmlPageOption().setWidth(700).setMinWidth(300)
 				.setHeight(380).setMinHeight(300);
 	}
 
@@ -167,7 +184,7 @@ public class AttachHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-		
+
 		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 
 		// 搜索

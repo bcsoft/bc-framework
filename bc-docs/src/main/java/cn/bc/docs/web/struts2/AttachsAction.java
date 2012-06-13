@@ -66,7 +66,7 @@ public class AttachsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id id,a.status_ status,a.file_date fileDate,a.size_ size,a.ext ext,a.subject subject");
+		sql.append("select a.id id,a.status_ status,a.file_date fileDate,a.size_ size,a.format format,a.subject subject");
 		sql.append(",a.path path,a.ptype ptype,a.puid puid,a.apppath apppath,h.actor_name authorName");
 		sql.append(" from bc_docs_attach a");
 		sql.append(" inner join bc_identity_actor_history h on h.id = a.author_id");
@@ -84,7 +84,7 @@ public class AttachsAction extends ViewAction<Map<String, Object>> {
 				map.put("status", rs[i++]);
 				map.put("fileDate", rs[i++]);
 				map.put("size", rs[i++]);
-				map.put("ext", rs[i++]);
+				map.put("format", rs[i++]);
 				map.put("subject", rs[i++]);
 				map.put("path", rs[i++]);
 				map.put("ptype", rs[i++]);
@@ -123,8 +123,8 @@ public class AttachsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.size_", "size",
 				getText("attach.size"), 60).setSortable(true).setValueFormater(
 				new FileSizeFormater()));
-		columns.add(new TextColumn4MapKey("a.ext", "ext",
-				getText("attach.extension"), 45).setSortable(true));
+		columns.add(new TextColumn4MapKey("a.format", "format",
+				getText("attach.format"), 45).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.subject", "subject",
 				getText("attach.subject")).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -132,10 +132,10 @@ public class AttachsAction extends ViewAction<Map<String, Object>> {
 				getText("attach.path"), 120).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.ptype", "ptype",
-				getText("attach.ptype"), 100).setSortable(true)
+				getText("attach.ptype"), 120).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.puid", "puid",
-				getText("attach.puid"), 100).setSortable(true)
+				getText("attach.puid"), 150).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.apppath", "apppath",
 				getText("attach.appPath"), 90).setSortable(true)

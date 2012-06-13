@@ -191,7 +191,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 					+ attach.getPath();
 
 		// 处理物理文件的下载
-		this.downloadFile(attach.getExtension(), path, attach.getSubject());
+		this.downloadFile(attach.getFormat(), path, attach.getSubject());
 
 		// 累计下载次数
 		attach.setCount(attach.getCount() + 1);
@@ -216,7 +216,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		SystemContext context = (SystemContext) this.getContext();
 		AttachHistory ah = new AttachHistory();
 		ah.setFileDate(Calendar.getInstance());
-		ah.setFormat(attach.getExtension());
+		ah.setFormat(attach.getFormat());
 		ah.setType(type);
 		if (context == null) {
 			ah.setAuthor(this.actorHistoryService.loadByCode("admin"));
@@ -225,8 +225,11 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			ah.setAuthor(context.getUserHistory());
 		}
 
+		ah.setPtype(Attach.class.getSimpleName());
+		ah.setPuid(attach.getId().toString());
 		ah.setSubject(attach.getSubject());
-		ah.setAttach(attach);
+		ah.setPath(attach.getPath());
+		ah.setAppPath(attach.isAppPath());
 
 		// 客户端信息
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -459,7 +462,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			path = getText("app.data.realPath") + File.separator
 					+ attach.getPath();
 
-		if (isConvertFile(attach.getExtension())) {
+		if (isConvertFile(attach.getFormat())) {
 			// 调用jodconvert将附件转换为pdf文档后再下载
 			FileInputStream inputStream = new FileInputStream(new File(path));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
@@ -476,7 +479,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 			// convert
 			DocumentConverter converter = new OpenOfficeDocumentConverter(
 					connection);
-			String from = attach.getExtension();
+			String from = attach.getFormat();
 			// if("docx".equalsIgnoreCase(from))
 			// from = "doc";
 			// else if("xlsx".equalsIgnoreCase(from))
@@ -504,7 +507,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 							+ "." + this.to);
 		} else {
 			// 设置下载文件的参数
-			contentType = AttachUtils.getContentType(attach.getExtension());
+			contentType = AttachUtils.getContentType(attach.getFormat());
 			filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), attach.getSubject());
 

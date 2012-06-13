@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.bc.core.service.CrudService;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
 
 /**
  * 附件Service接口
@@ -61,4 +62,9 @@ public interface AttachService extends CrudService<Attach> {
 	 */
 	List<Attach> doCopy(String fromPtype, String fromPuid, String toPtype,
 			String toPuid, boolean keepAuthorInfo);
+
+	/**
+	 * 保存一个附件操作日志
+	 */
+	AttachHistory saveHistory(AttachHistory history);
 }
