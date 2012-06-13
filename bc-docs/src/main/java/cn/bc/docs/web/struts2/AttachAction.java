@@ -30,11 +30,9 @@ import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
-import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
@@ -44,18 +42,7 @@ import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.service.ActorHistoryService;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.formater.EntityStatusFormater;
-import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.EntityAction;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.Grid;
-import cn.bc.web.ui.html.grid.GridData;
-import cn.bc.web.ui.html.grid.TextColumn;
-import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
 
@@ -153,95 +140,6 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 		this.setE(e);
 		return "form";
-	}
-
-	@Override
-	protected GridData buildGridData(List<Column> columns) {
-		return super.buildGridData(columns).setRowLabelExpression("subject");
-	}
-
-	// 设置页面的尺寸
-	@Override
-	protected PageOption buildListPageOption() {
-		return super.buildListPageOption().setWidth(900).setMinWidth(300)
-				.setHeight(400).setMinHeight(300);
-	}
-
-	@Override
-	protected Toolbar buildToolbar() {
-		Toolbar tb = new Toolbar();
-		// 查看
-		// tb.addButton(getDefaultOpenToolbarButton());
-
-		// 在线查看
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-				.setText(getText("label.preview.inline"))
-				.setClick("bc.attachList.inline"));
-
-		// 下载
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthickstop-1-s")
-				.setText(getText("label.download"))
-				.setClick("bc.attachList.download"));
-
-		// 打包下载
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-link")
-				.setText(getText("label.download.zip"))
-				.setClick("bc.attachList.downloadZip"));
-
-		// 访问日志
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")
-				.setText(getText("attach.visit.history"))
-				.setClick("bc.attachList.visitHistory"));
-
-		// 搜索
-		tb.addButton(getDefaultSearchToolbarButton());
-
-		return tb;
-	}
-
-	@Override
-	protected String[] getSearchFields() {
-		return new String[] { "subject", "path", "extension", "ptype", "puid",
-				"authorName" };
-	}
-
-	@Override
-	protected Grid buildGrid() {
-		return super.buildGrid().setDblClickRow(null);
-	}
-
-	@Override
-	protected List<Column> buildGridColumns() {
-		List<Column> columns = super.buildGridColumns();
-		columns.add(new TextColumn("status", getText("attach.status"), 60)
-				.setValueFormater(new EntityStatusFormater(getEntityStatuses())));
-		columns.add(new TextColumn("fileDate", getText("attach.fileDate"), 130)
-				.setSortable(true).setDir(Direction.Desc)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn("author.name", getText("attach.authorName"),
-				80).setSortable(true));
-		columns.add(new TextColumn("size", getText("attach.size"), 80)
-				.setSortable(true).setValueFormater(new FileSizeFormater()));
-		columns.add(new TextColumn("extension", getText("attach.extension"), 50)
-				.setSortable(true));
-		columns.add(new TextColumn("subject", getText("attach.subject"))
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("path", getText("attach.path"), 120)
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("ptype", getText("attach.ptype"), 100)
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("puid", getText("attach.puid"), 100)
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn("appPath", getText("attach.appPath"), 100)
-				.setSortable(true).setValueFormater(
-						new BooleanFormater(getText("label.yes"),
-								getText("label.no"))));
-		return columns;
-	}
-
-	@Override
-	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("fileDate", Direction.Desc);
 	}
 
 	public String filename;
