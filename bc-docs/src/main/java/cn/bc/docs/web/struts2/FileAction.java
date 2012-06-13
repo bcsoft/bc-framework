@@ -8,11 +8,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -20,8 +22,11 @@ import org.springframework.util.StringUtils;
 
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
+import cn.bc.docs.service.AttachService;
 import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
+import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.web.util.WebUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -37,12 +42,20 @@ import com.opensymphony.xwork2.ActionSupport;
 public class FileAction extends ActionSupport {
 	private static Log logger = LogFactory.getLog(FileAction.class);
 	private static final long serialVersionUID = 1L;
+	private AttachService attachService;
 
 	public String filename;
 	public String contentType;
 	public long contentLength;
 	public InputStream inputStream;
 	public String path;
+	public String ptype;
+	public String puid;
+
+	@Autowired
+	public void setAttachService(AttachService attachService) {
+		this.attachService = attachService;
+	}
 
 	// 下载附件
 	public String download() throws Exception {
@@ -77,7 +90,32 @@ public class FileAction extends ActionSupport {
 			logger.debug("download:" + DateUtils.getWasteTime(startTime));
 		}
 
+		// 创建文件上传日志
+		saveAttachHistory(AttachHistory.TYPE_DOWNLOAD, this.f, extension);
+
 		return SUCCESS;
+	}
+
+	// 创建文件上传日志
+	private void saveAttachHistory(int type, String path, String extension) {
+		if (ptype != null && puid != null) {
+			AttachHistory history = new AttachHistory();
+			history.setPtype(ptype);
+			history.setPuid(puid);
+			history.setType(type);
+			history.setAuthor(SystemContextHolder.get().getUserHistory());
+			history.setFileDate(Calendar.getInstance());
+			history.setPath(path);
+			history.setAppPath(false);
+			history.setFormat(extension);
+			history.setSubject(n);
+			String[] c = WebUtils.getClient(ServletActionContext.getRequest());
+			history.setClientIp(c[0]);
+			history.setClientInfo(c[2]);
+			this.attachService.saveHistory(history);
+		} else {
+			logger.warn("没有指定ptype、puid参数，不保存文件上传记录");
+		}
 	}
 
 	private static final int BUFFER = 4096;
@@ -143,6 +181,9 @@ public class FileAction extends ActionSupport {
 			this.contentLength = file.length();
 			this.inputStream = new FileInputStream(file);
 		}
+
+		// 创建文件上传日志
+		saveAttachHistory(AttachHistory.TYPE_INLINE, this.f, extension);
 
 		return SUCCESS;
 	}
