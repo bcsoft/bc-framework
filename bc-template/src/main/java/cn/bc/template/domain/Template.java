@@ -33,7 +33,7 @@ import org.springframework.util.FileCopyUtils;
 import cn.bc.BCConstants;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
-import cn.bc.identity.domain.FileEntityImpl;
+import cn.bc.identity.domain.RichFileEntityImpl;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.util.DocxUtils;
 import cn.bc.template.util.XlsUtils;
@@ -46,10 +46,10 @@ import cn.bc.template.util.XlsxUtils;
  */
 @Entity
 @Table(name = "BC_TEMPLATE")
-public class Template extends FileEntityImpl {
+public class Template extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	private static Log logger = LogFactory.getLog(Template.class);
-
+	public static final String ATTACH_TYPE = Template.class.getSimpleName();
 	/** 模板存储的子路径，开头末尾不要带"/" */
 	public static String DATA_SUB_PATH = "template";
 
@@ -60,7 +60,6 @@ public class Template extends FileEntityImpl {
 	private String content;// 模板内容：文本和Html类型显示模板内容
 	private boolean inner;// 内置：是、否，默认否
 	private String desc;// 备注
-	private int status;// 状态：0-正常,1-禁用
 	private String version;// 版本号
 	private String category;// 所属分类
 	private TemplateType templateType;
@@ -101,15 +100,6 @@ public class Template extends FileEntityImpl {
 
 	public void setCategory(String category) {
 		this.category = category;
-	}
-
-	@Column(name = "STATUS_")
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	@Column(name = "VERSION_")
@@ -321,7 +311,7 @@ public class Template extends FileEntityImpl {
 		else
 			extension = this.getPath().substring(
 					this.getPath().lastIndexOf(".") + 1);
-		attach.setExtension(extension);
+		attach.setFormat(extension);
 		attach.setStatus(BCConstants.STATUS_ENABLED);
 
 		// 文件存储的相对路径（年月），避免超出目录内文件数的限制

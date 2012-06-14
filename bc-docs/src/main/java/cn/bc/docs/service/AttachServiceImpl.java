@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
@@ -18,7 +19,9 @@ import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.service.DefaultCrudService;
+import cn.bc.docs.dao.AttachHistoryDao;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
 import cn.bc.identity.web.SystemContextHolder;
 
 /**
@@ -30,6 +33,12 @@ import cn.bc.identity.web.SystemContextHolder;
 public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		AttachService {
 	private static Log logger = LogFactory.getLog(AttachServiceImpl.class);
+	private AttachHistoryDao attachHistoryDao;
+
+	@Autowired
+	public void setAttachHistoryDao(AttachHistoryDao attachHistoryDao) {
+		this.attachHistoryDao = attachHistoryDao;
+	}
 
 	public List<Attach> findByPtype(String ptype) {
 		return this.findByPtype(ptype, null);
@@ -126,7 +135,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			String newFileName = toPtype
 					+ (toPtype.length() > 0 ? "_" : "")
 					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-							.getTime()) + "." + old.getExtension();// 不含路径的文件名
+							.getTime()) + "." + old.getFormat();// 不含路径的文件名
 			relativeFilePath = subFolder + "/" + newFileName;
 			realFileDir = dataPath + "/" + subFolder;
 			realFilePath = realFileDir + "/" + newFileName;
@@ -164,5 +173,9 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 
 		// 返回复制的新附件记录
 		return news;
+	}
+
+	public AttachHistory saveHistory(AttachHistory history) {
+		return this.attachHistoryDao.save(history);
 	}
 }

@@ -157,7 +157,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			attach.setFileDate(now);
 			attach.setAppPath(false);
 			attach.setAuthor(this.getContext().getUserHistory());
-			attach.setExtension("jpg");
+			attach.setFormat("jpg");
 			attach.setPuid(puid);
 			attach.setPtype(ptype);
 			attach.setStatus(BCConstants.STATUS_ENABLED);
@@ -182,7 +182,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		}
 
 		// 获取原图
-		String extension = attach.getExtension();
+		String extension = attach.getFormat();
 
 		logger.debug("srcPath=" + srcPath);
 		File srcFile = new File(srcPath);
@@ -253,7 +253,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			extension = "jpg";
 			filepath = WebUtils.rootPath + empty;
 		}else{
-			extension = attach.getExtension();
+			extension = attach.getFormat();
 			if (attach.isAppPath())
 				filepath = WebUtils.rootPath + "/" + getText("app.data.subPath")
 						+ "/" + attach.getPath();

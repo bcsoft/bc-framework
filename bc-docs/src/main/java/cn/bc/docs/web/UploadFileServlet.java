@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import cn.bc.Context;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.util.WebUtils;
@@ -208,20 +209,22 @@ public class UploadFileServlet extends HttpServlet {
 					.getTime());
 
 			// 要保存的物理文件
-			String realFileDir;//所保存文件所在的目录的绝对路径名
-			String relativeFilePath;//所保存文件的相对路径名
-			String realFilePath;//所保存文件的绝对路径名
+			String realFileDir;// 所保存文件所在的目录的绝对路径名
+			String relativeFilePath;// 所保存文件的相对路径名
+			String realFilePath;// 所保存文件的绝对路径名
 			String fileName = ptype
 					+ (ptype.length() > 0 ? "_" : "")
 					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-							.getTime()) + "." + extension;//不含路径的文件名
+							.getTime()) + "." + extension;// 不含路径的文件名
 			relativeFilePath = subFolder + "/" + fileName;
 			if (absolute) {
 				realFileDir = appRealDir + "/" + subFolder;
 				fileUrl = request.getContextPath() + "/bc/attach/download";
 			} else {
-				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/" + subFolder;
-				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + relativeFilePath;
+				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/"
+						+ subFolder;
+				fileUrl = request.getContextPath() + "/" + appSubDir + "/"
+						+ relativeFilePath;
 			}
 			realFilePath = realFileDir + "/" + fileName;
 
@@ -235,8 +238,9 @@ public class UploadFileServlet extends HttpServlet {
 			}
 
 			// 保存一个附件记录
-			id = saveAttachLog(localFile, ptype, puid, context, extension,
-					size, now, relativeFilePath, absolute).getId().toString();
+			id = saveAttachLog(request, localFile, ptype, puid, context,
+					extension, size, now, relativeFilePath, absolute).getId()
+					.toString();
 			if (absolute) {
 				fileUrl += "?id=" + id;
 			}
@@ -255,9 +259,9 @@ public class UploadFileServlet extends HttpServlet {
 	}
 
 	// 保存一个附件记录
-	private Attach saveAttachLog(String localFile, String ptype, String puid,
-			SystemContext context, String extend, long size, Calendar now,
-			String path, boolean absolute) {
+	private Attach saveAttachLog(HttpServletRequest request, String localFile,
+			String ptype, String puid, SystemContext context, String extend,
+			long size, Calendar now, String path, boolean absolute) {
 		// 剔除文件名中的路径部分
 		int li = localFile.lastIndexOf("/");
 		if (li == -1)
@@ -265,17 +269,36 @@ public class UploadFileServlet extends HttpServlet {
 		if (li != -1)
 			localFile = localFile.substring(li + 1);
 
+		// 创建附件记录
 		Attach attach = new Attach();
 		attach.setAuthor(context.getUserHistory());
 		attach.setPtype(ptype);
 		attach.setPuid(puid);
-		attach.setExtension(extend);
+		attach.setFormat(extend);
 		attach.setFileDate(now);
 		attach.setPath(path);
 		attach.setSize(size);
 		attach.setSubject(localFile);
 		attach.setAppPath(!absolute);
-		return this.getAttachService().save(attach);
+		attach = this.getAttachService().save(attach);
+
+		// 创建附件上传日志
+		AttachHistory history = new AttachHistory();
+		history.setPtype(Attach.class.getSimpleName());
+		history.setPuid(attach.getId().toString());
+		history.setType(AttachHistory.TYPE_UPLOAD);
+		history.setAuthor(context.getUserHistory());
+		history.setFileDate(now);
+		history.setPath(path);
+		history.setAppPath(false);
+		history.setFormat(attach.getFormat());
+		history.setSubject(attach.getSubject());
+		String[] c = WebUtils.getClient(request);
+		history.setClientIp(c[0]);
+		history.setClientInfo(c[2]);
+		this.getAttachService().saveHistory(history);
+
+		return attach;
 	}
 
 	// 普通文件上传
@@ -328,7 +351,7 @@ public class UploadFileServlet extends HttpServlet {
 
 			// 获取xheditor上传的文件
 			FileItem uploadFile = (FileItem) fields.get("filedata");
-			
+
 			// 获取上传文件名
 			localFile = uploadFile.getName();
 
@@ -341,20 +364,22 @@ public class UploadFileServlet extends HttpServlet {
 					.getTime());
 
 			// 要保存的物理文件
-			String realFileDir;//所保存文件所在的目录的绝对路径名
-			String relativeFilePath;//所保存文件的相对路径名
-			String realFilePath;//所保存文件的绝对路径名
+			String realFileDir;// 所保存文件所在的目录的绝对路径名
+			String relativeFilePath;// 所保存文件的相对路径名
+			String realFilePath;// 所保存文件的绝对路径名
 			String fileName = ptype
 					+ (ptype.length() > 0 ? "_" : "")
 					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-							.getTime()) + "." + extension;//不含路径的文件名
+							.getTime()) + "." + extension;// 不含路径的文件名
 			relativeFilePath = subFolder + "/" + fileName;
 			if (absolute) {
 				realFileDir = appRealDir + "/" + subFolder;
 				fileUrl = request.getContextPath() + "/bc/attach/download";
 			} else {
-				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/" + subFolder;
-				fileUrl = request.getContextPath() + "/" + appSubDir + "/" + relativeFilePath;
+				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/"
+						+ subFolder;
+				fileUrl = request.getContextPath() + "/" + appSubDir + "/"
+						+ relativeFilePath;
 			}
 			realFilePath = realFileDir + "/" + fileName;
 
@@ -389,8 +414,9 @@ public class UploadFileServlet extends HttpServlet {
 			}
 
 			// 保存一个附件记录
-			id = saveAttachLog(localFile, ptype, puid, context, extension,
-					size, now, relativeFilePath, absolute).getId().toString();
+			id = saveAttachLog(request, localFile, ptype, puid, context,
+					extension, size, now, relativeFilePath, absolute).getId()
+					.toString();
 			if (absolute) {
 				fileUrl += "?id=" + id;
 			}

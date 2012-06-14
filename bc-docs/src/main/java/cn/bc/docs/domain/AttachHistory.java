@@ -3,6 +3,8 @@
  */
 package cn.bc.docs.domain;
 
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.FileEntityImpl;
+import cn.bc.core.EntityImpl;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 附件处理的痕迹记录
@@ -22,7 +25,7 @@ import cn.bc.identity.domain.FileEntityImpl;
  */
 @Entity
 @Table(name = "BC_DOCS_ATTACH_HISTORY")
-public class AttachHistory extends FileEntityImpl {
+public class AttachHistory extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 	/** 操作类型：下载 */
 	public static final int TYPE_DOWNLOAD = 0;
@@ -34,14 +37,44 @@ public class AttachHistory extends FileEntityImpl {
 	public static final int TYPE_CONVERT = 3;
 	/** 操作类型：删除 */
 	public static final int TYPE_DELETED = 4;
+	/** 操作类型：上传 */
+	public static final int TYPE_UPLOAD = 5;
 
 	private int type;// 操作类型,详见TYPE_常数
-	private Attach attach;// 对应的附件
+	private String ptype;// 所关联文档的分类,如果是Attach的操作记录，值为"Attach"
+	private String puid;// 所关联文档的UID,如果是Attach的操作记录，值为attach的id值
+	private Calendar fileDate;// 创建时间
+	private ActorHistory author;// 创建人
+	private String subject;// 标题
 	private String format;// 下载的文件格式或转换后的文件格式
 	private String memo;// 备注
 	private String clientIp; // 用户机器的IP地址
 	private String clientInfo; // 用户浏览器的信息：User-Agent
-	private String subject;// 标题
+	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
+	/**
+	 * path的值是相对于app.data.realPath目录下的路径还是相对于app.data.subPath目录下的路径：
+	 * false：相对于app.data.realPath目录下的路径， true：相对于app.data.subPath目录下的路径
+	 */
+	private boolean appPath;
+
+	@Column(name = "FILE_DATE")
+	public Calendar getFileDate() {
+		return fileDate;
+	}
+
+	public void setFileDate(Calendar fileDate) {
+		this.fileDate = fileDate;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+	public ActorHistory getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(ActorHistory author) {
+		this.author = author;
+	}
 
 	public String getSubject() {
 		return subject;
@@ -68,16 +101,6 @@ public class AttachHistory extends FileEntityImpl {
 		this.type = type;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "AID", referencedColumnName = "ID")
-	public Attach getAttach() {
-		return attach;
-	}
-
-	public void setAttach(Attach attach) {
-		this.attach = attach;
-	}
-
 	public String getMemo() {
 		return memo;
 	}
@@ -102,5 +125,37 @@ public class AttachHistory extends FileEntityImpl {
 
 	public void setClientInfo(String clientBrowser) {
 		this.clientInfo = clientBrowser;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public boolean isAppPath() {
+		return appPath;
+	}
+
+	public void setAppPath(boolean appPath) {
+		this.appPath = appPath;
+	}
+
+	public String getPtype() {
+		return ptype;
+	}
+
+	public void setPtype(String ptype) {
+		this.ptype = ptype;
+	}
+
+	public String getPuid() {
+		return puid;
+	}
+
+	public void setPuid(String euid) {
+		this.puid = euid;
 	}
 }

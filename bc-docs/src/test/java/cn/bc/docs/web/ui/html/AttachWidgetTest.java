@@ -16,7 +16,7 @@ public class AttachWidgetTest {
 		attach.setSubject("测试文档.doc");
 		attach.setPuid("puid");
 		attach.setPtype("ptype");
-		attach.setExtension("doc");
+		attach.setFormat("doc");
 		attach.setId(new Long(1));
 		attach.setPath("/bc/test/test.doc");
 		attachsUI.addAttach(attach);

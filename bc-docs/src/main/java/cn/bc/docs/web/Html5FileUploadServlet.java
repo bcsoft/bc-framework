@@ -27,7 +27,10 @@ import org.json.JSONObject;
 
 import cn.bc.Context;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
+import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.util.WebUtils;
 
 /**
  * Html5文件上传的实现.
@@ -43,6 +46,10 @@ public class Html5FileUploadServlet extends HttpServlet {
 	private static Log logger = LogFactory.getLog(Html5FileUploadServlet.class);
 	private static String extensions;// 上传类型限制，如 "jpg,jpeg,bmp,gif,png"，为空代表无限制
 	private static long maxSize;// 上传文件大小限制，单位为字节，默认10M
+
+	protected AttachService getAttachService() {
+		return WebUtils.getBean(AttachService.class);
+	}
 
 	public void init() throws ServletException {
 		// debug
@@ -161,6 +168,32 @@ public class Html5FileUploadServlet extends HttpServlet {
 				file.getParentFile().mkdirs();
 			}
 
+			// 根目录下的子路径名
+			String path = (subdir.length() > 0 ? subdir + "/" : "") + datedir
+					+ "/" + fileName;
+
+			// 创建文件上传日志
+			String ptype = request.getParameter("ptype");
+			String puid = request.getParameter("puid");
+			if (ptype != null && puid != null) {
+				AttachHistory history = new AttachHistory();
+				history.setPtype(ptype);
+				history.setPuid(puid);
+				history.setType(AttachHistory.TYPE_UPLOAD);
+				history.setAuthor(context.getUserHistory());
+				history.setFileDate(now);
+				history.setPath(path);
+				history.setAppPath(false);
+				history.setFormat(extension);
+				history.setSubject(source);
+				String[] c = WebUtils.getClient(request);
+				history.setClientIp(c[0]);
+				history.setClientInfo(c[2]);
+				this.getAttachService().saveHistory(history);
+			} else {
+				logger.warn("没有指定ptype、puid参数，不保存文件上传记录");
+			}
+
 			// 保存到文件
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(
 					realpath));
@@ -173,8 +206,7 @@ public class Html5FileUploadServlet extends HttpServlet {
 			json.put("rootdir", Attach.DATA_REAL_PATH);// 根目录名
 			json.put("subdir", subdir);// 子目录名
 			json.put("to", datedir + "/" + fileName);// 子目录下的子路径名
-			json.put("file", (subdir.length() > 0 ? subdir + "/" : "")
-					+ datedir + "/" + fileName);// 根目录下的子路径名
+			json.put("file", path);
 			json.put("source", source);// 用户原始的本地文件路径信息
 			writeReturnJson(response, json);
 		} catch (Exception e) {
