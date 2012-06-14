@@ -71,7 +71,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
+		sql.append("select t.id,t.uid_,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
 		sql.append(",t.category,a.code as typeCode,t.size_ as size,t.formatted");
@@ -90,6 +90,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
+				map.put("uid", rs[i++]);
 				map.put("orderNo", rs[i++]);
 				map.put("code", rs[i++]);
 				map.put("type", rs[i++]);
@@ -157,6 +158,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				getText("template.modifiedDate"), 130)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
+		columns.add(new HiddenColumn4MapKey("uid", "uid"));
 		return columns;
 	}
 
@@ -191,7 +193,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(850).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+				.setHeight(400).setMinHeight(300).setHelp("mubanguanli");
 	}
 
 	@Override
@@ -311,4 +313,5 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	
 	// ==高级搜索代码结束==
 
+	
 }

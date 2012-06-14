@@ -50,13 +50,14 @@ public class SqlObject<T extends Object> {
 
 		String t = "";
 		if (sql != null) {
+			String _sql = sql.replace("!!", "");
 			if (condition instanceof OrderCondition) {
-				t += sql + " order by " + expression;
+				t += _sql + " order by " + expression;
 			} else {
 				if (expression.startsWith("order by")) {
-					t += sql + " " + expression;
+					t += _sql + " " + expression;
 				} else {
-					t += sql + " where " + expression;
+					t += _sql + " where " + expression;
 				}
 			}
 		} else {// 根据select、where、orderBy拼凑出sql
@@ -104,8 +105,9 @@ public class SqlObject<T extends Object> {
 	 * @return
 	 */
 	public String getSql() {
-		if (sql != null)
-			return sql;
+		if (sql != null) {
+			return sql.replace("!!", "");
+		}
 
 		// 根据select、where、orderBy拼凑出sql
 		String t = "";
@@ -229,7 +231,7 @@ public class SqlObject<T extends Object> {
 			}
 			t = removeOrderBy(t);
 		}
-		return t;
+		return t.replace("!!", "");
 	}
 
 	/**
@@ -264,7 +266,7 @@ public class SqlObject<T extends Object> {
 				}
 			}
 		}
-		return t;
+		return t.replace("!!", "");
 	}
 
 	/**
@@ -275,15 +277,20 @@ public class SqlObject<T extends Object> {
 	 * @return 如果存在排序语句，则将排序语句剔除，否则返回原查询语句
 	 */
 	public static String removeOrderBy(String queryString) {
-		Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
-				Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(queryString);
-		StringBuffer sb = new StringBuffer();
-		while (m.find()) {
-			m.appendReplacement(sb, "");
+		int index = queryString.indexOf("!!order");
+		if (index != -1) {// 使用特殊的标记区分order by的位置
+			return queryString.substring(0, index);
+		} else {
+			Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
+					Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(queryString);
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, "");
+			}
+			m.appendTail(sb);
+			return sb.toString();
 		}
-		m.appendTail(sb);
-		return sb.toString();
 	}
 
 	/**
@@ -294,13 +301,18 @@ public class SqlObject<T extends Object> {
 	 * @return 如果存在选择语句，则将选择语句剔除，否则返回原查询语句
 	 */
 	public static String removeSelect(String queryString) {
-		queryString = queryString.replaceAll("[\\f\\n\\r\\t\\v]", " ");// 替换所有制表符、换页符、换行符、回车符为空格
-		String regex = "^select .* from ";
-		String[] ss = queryString.split(regex);
-		if (ss.length > 0) {
-			return "from " + ss[1];
+		int index = queryString.indexOf("!!from");
+		if (index != -1) {// 使用特殊的标记区分 from y的位置
+			return queryString.substring(index + 2);
 		} else {
-			return queryString;
+			queryString = queryString.replaceAll("[\\f\\n\\r\\t\\v]", " ");// 替换所有制表符、换页符、换行符、回车符为空格
+			String regex = "^select .* from ";
+			String[] ss = queryString.split(regex);
+			if (ss.length > 0) {
+				return "from " + ss[1];
+			} else {
+				return queryString;
+			}
 		}
 	}
 }

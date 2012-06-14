@@ -32,13 +32,19 @@ public class Attach extends FileEntityImpl {
 
 	private String puid;// 所关联文档的UID
 	private String ptype;// 所关联文档的分类
-	private String extension;// 附件扩展名：如png、doc、mp3等
+	private String format;// 附件类型：如png、doc、mp3等
 	private String path;// 物理文件保存的相对路径（相对于全局配置的app.data.realPath或app.data.subPath目录下的子路径，如"2011/bulletin/xxxx.doc"）
 	private long size;// 文件的大小(单位为byte)
 	private long count;// 文件的下载次数
 	private int status = BCConstants.STATUS_ENABLED;// 详见Entity中的STATUS_常数
 	private String subject;// 标题
 	private String icon;// 扩展字段
+
+	/**
+	 * path的值是相对于app.data.realPath目录下的路径还是相对于app.data.subPath目录下的路径：
+	 * false：相对于app.data.realPath目录下的路径， true：相对于app.data.subPath目录下的路径
+	 */
+	private boolean appPath = false;//
 
 	public void setDataRealPath(String dataRealPath) {
 		DATA_REAL_PATH = dataRealPath;
@@ -55,12 +61,6 @@ public class Attach extends FileEntityImpl {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-
-	/**
-	 * path的值是相对于app.data.realPath目录下的路径还是相对于app.data.subPath目录下的路径：
-	 * false：相对于app.data.realPath目录下的路径， true：相对于app.data.subPath目录下的路径
-	 */
-	private boolean appPath = false;//
 
 	public String getSubject() {
 		return subject;
@@ -131,13 +131,12 @@ public class Attach extends FileEntityImpl {
 		this.puid = euid;
 	}
 
-	@Column(name = "EXT")
-	public String getExtension() {
-		return extension;
+	public String getFormat() {
+		return format;
 	}
 
-	public void setExtension(String extension) {
-		this.extension = extension;
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	public String getPath() {

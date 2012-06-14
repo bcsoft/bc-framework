@@ -219,7 +219,7 @@ public class XhEditorUploadFileServlet extends HttpServlet {
 		attach.setAuthor(context.getUserHistory());
 		attach.setPtype(ptype);
 		attach.setPuid(puid);
-		attach.setExtension(extend);
+		attach.setFormat(extend);
 		attach.setFileDate(now);
 		attach.setPath(path);
 		attach.setSize(size);

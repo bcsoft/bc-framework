@@ -345,23 +345,13 @@ public class ReportTemplate extends FileEntityImpl {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		try {
 			// 解析sql
-			String sql = config.getString("sql");
 			Map<String, Object> params = buildParams(condition);
-			if (sql.startsWith("tpl:")) {
-				Template tpl = reportService.loadTemplate(sql.substring(4));
-				if (tpl != null) {
-					if (tpl.isPureText()) {
-						sqlObject.setSql(tpl.getContentEx(params).trim());
-					} else {
-						throw new CoreException(
-								"sql template is not pure text:sql=" + sql);
-					}
-				} else {
-					throw new CoreException("sql template is not exists:sql="
-							+ sql);
-				}
-			} else {
-				sqlObject.setSql(TemplateUtils.format(sql, params).trim());
+			Object sql = config.get("sql");
+			if (sql instanceof JSONObject) {// 使用特殊的 from、where、orderBy 分离配置
+				buildSqlWithJson(sqlObject, (JSONObject) sql);
+			} else {// 默认的整个sql字符串配置
+				buildSqlWithParams(reportService, sqlObject, (String) sql,
+						params);
 			}
 
 			// 注入参数
@@ -398,6 +388,62 @@ public class ReportTemplate extends FileEntityImpl {
 			}
 		});
 		return sqlObject;
+	}
+
+	private void buildSqlWithJson(SqlObject<Map<String, Object>> sqlObject,
+			JSONObject jsql) throws JSONException {
+		if (jsql.has("select")) {
+			sqlObject.setSelect(jsql.getString("select"));
+		}
+		if (jsql.has("from")) {
+			sqlObject.setFrom(jsql.getString("from"));
+		}
+		if (jsql.has("where")) {// where部分支持从模板中获取
+			sqlObject.setWhere(jsql.getString("where"));
+		}
+		if (jsql.has("orderBy")) {
+			sqlObject.setOrderBy(jsql.getString("orderBy"));
+		}
+	}
+
+	private void buildSqlWithParams(ReportService reportService,
+			SqlObject<Map<String, Object>> sqlObject, String sourceSql,
+			Map<String, Object> params) {
+		if (sourceSql.startsWith("tpl:")) {// 基于字符串模板的配置
+			Template tpl = reportService.loadTemplate(sourceSql.substring(4));
+			if (tpl != null) {
+				if (tpl.isPureText()) {
+					sqlObject.setSql(tpl.getContentEx(params).trim());
+				} else {
+					throw new CoreException(
+							"sql template is not pure text:sql=" + sourceSql);
+				}
+			} else {
+				throw new CoreException("sql template is not exists:sql="
+						+ sourceSql);
+			}
+		} else if (sourceSql.startsWith("json:tpl:")) {// 基于json模板(内容格式为{from:"...",where:"...",orderBy:"..."})的配置
+			Template tpl = reportService.loadTemplate(sourceSql.substring(9));
+			if (tpl != null) {
+				if (tpl.isPureText()) {
+					try {
+						JSONObject jsql = new JSONObject(tpl.getContentEx(
+								params).trim());
+						this.buildSqlWithJson(sqlObject, jsql);
+					} catch (JSONException e) {
+						throw new CoreException("JSONException", e);
+					}
+				} else {
+					throw new CoreException(
+							"sql template is not pure text:sql=" + sourceSql);
+				}
+			} else {
+				throw new CoreException("sql template is not exists:sql="
+						+ sourceSql);
+			}
+		} else {// 基于字符串的配置
+			sqlObject.setSql(TemplateUtils.format(sourceSql, params).trim());
+		}
 	}
 
 	public static Map<String, Object> buildParams(Condition condition) {

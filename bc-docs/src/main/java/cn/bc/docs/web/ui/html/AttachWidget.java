@@ -155,7 +155,7 @@ public class AttachWidget extends Div {
 		Tr tr = new Tr();
 		attachUI.addChild(tr);
 		tr.addChild(new Text("<td class=\"icon\"><span class=\"file-icon "
-				+ attach.getExtension() + "\"></span></td>"));
+				+ attach.getFormat() + "\"></span></td>"));
 		Td td = new Td();
 		tr.addChild(td);
 		td.addClazz("info").addChild(
