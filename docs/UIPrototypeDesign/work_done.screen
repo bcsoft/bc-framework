@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Image" id="18" x="857" y="879"/>
+  <widgets xsi:type="model:WidgetGroup" id="28" x="8" y="11" height="199" measuredWidth="793" measuredHeight="174">
+    <widgets xsi:type="model:Window" id="1" y="21" width="793" height="153" text="经办事项" measuredWidth="793" measuredHeight="153" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="5" y="74" width="793" height="51" text="(w:30). !,(w:30). 优先级,(w:30). 分类,(w:30). 工作事项,经办事项,(w:30). 发送人,(w:30). 发送时间,(w:30). 完成时间,(w:30). 确认时间,(w:30). 经办组织&#xA;1,正常,营运流程,车辆交车流程,确认交车日期,小明,2012-01-01 10:00,2012-01-02 12:30,2012-01-02 10:30,信息组" measuredWidth="793" measuredHeight="51" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="9" x="603" y="47" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="4" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="8" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="26" x="6" text="个人经办（按经办事项查看）：" measuredWidth="173" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="125" x="5" y="45" height="27" text="按工作事项查看" measuredWidth="106" measuredHeight="27" selection="1">
+      <font/>
+      <items x="0" y="0" width="105" height="27" text="按工作事项查看"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="126" x="8" y="192" height="174" measuredWidth="793" measuredHeight="174">
+    <widgets xsi:type="model:Window" id="127" y="21" width="793" height="153" text="经办事项" measuredWidth="793" measuredHeight="153" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="128" y="74" width="793" height="51" text="(w:30). !,(w:30). 分类,工作事项,(w:30). 发起人,(w:30). 发起时间,(w:30). 经办时间&#xA;1,营运流程,车辆交车流程,小明,2012-01-01 10:00,2012-01-02 12:30~2012-01-03 10:30" measuredWidth="793" measuredHeight="51" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="129" x="603" y="47" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="130" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="131" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="132" x="6" text="个人经办（按工作事项查看）：" measuredWidth="173" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="134" x="8" y="376" measuredWidth="289" measuredHeight="241">
+    <widgets xsi:type="model:Panel" id="135" y="24" width="289" height="217" measuredWidth="289" measuredHeight="217"/>
+    <widgets xsi:type="model:Button" id="136" x="10" y="200" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="137" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="138" x="273" y="26" width="13" measuredWidth="13" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Label" id="149" x="10" y="93" text="发送日期：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="150" x="136" y="115" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="151" x="152" y="115" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="152" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="153" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="154" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="155" x="10" y="115" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="156" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="157" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="158" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="159" x="10" y="141" text="完成日期：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="160" x="136" y="163" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="161" x="152" y="163" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="162" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="163" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="164" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="165" x="10" y="163" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="166" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="167" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="168" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="169" x="10" y="66" measuredWidth="271" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="170" width="271" measuredWidth="271" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="171" x="249" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="172" x="229" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="173" x="10" y="41" text="发送人：" measuredWidth="53" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="180" x="312" y="400" width="313" height="217" text="说明：&#xD;&#xA;1）点击&quot;按工作事项查看&quot;切换到&quot;个人经办（按工作事项查看）&quot;视图。" measuredWidth="313" measuredHeight="217" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
