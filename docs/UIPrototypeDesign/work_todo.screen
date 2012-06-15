@@ -3,18 +3,18 @@
   <widgets xsi:type="model:Image" id="18" x="857" y="879"/>
   <widgets xsi:type="model:WidgetGroup" id="28" x="8" y="11" height="199" measuredWidth="793" measuredHeight="190">
     <widgets xsi:type="model:Window" id="1" y="21" width="793" height="169" text="待办事项" measuredWidth="793" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:Table" id="5" y="77" width="793" height="100" text="(w:30). !,(w:30). 优先级,(w:30). 状态,(w:30). 待办类型,待办事项,(w:30). 分类,(w:30). 工作事项,(w:30). 发送人,(w:30). 发送时间,(w:30). 办理期限,(w:30). 认领时间&#xA;1,中,待认领,个人待办,确认交车日期,营运流程,车辆交车流程,小明,2012-01-01 10:00,2012-01-02 12:30&#xA;1,中,处理中,个人待办,修理厂检测,营运流程,车辆交车流程,小明,2012-01-01 10:00,,2012-01-02 12:30&#xA;1,中,待认领,岗位待办,注销合同,营运流程,车辆交车流程,小明,2012-01-01 10:00,2012-01-02 12:30" measuredWidth="793" measuredHeight="100" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" y="77" width="793" height="100" text="(w:30). !,(w:30). 优先级,待办事项,(w:30). 分类,(w:30). 工作事项,(w:30). 发送人,(w:30). 发送时间,(w:30). 办理期限,(w:30). 认领时间&#xA;1,中,{unchecked}{user} 确认交车日期,营运流程,车辆交车流程,小明,2012-01-01 10:00,2012-01-02 12:30&#xA;1,中,{checked}{user} 修理厂检测,营运流程,车辆交车流程,小明,2012-01-01 10:00,,2012-01-02 12:30&#xA;1,中,{unchecked}{usergroup} 注销合同,营运流程,车辆交车流程,小明,2012-01-01 10:00,2012-01-02 12:30" measuredWidth="793" measuredHeight="100" alternative="#eeeeee">
       <font/>
     </widgets>
     <widgets xsi:type="model:SearchField" id="4" x="603" y="47" width="183" measuredWidth="183" measuredHeight="24"/>
     <widgets xsi:type="model:Label" id="26" x="6" text="待办事项（个人）：" measuredWidth="113" measuredHeight="25">
       <font bold="true"/>
     </widgets>
-    <widgets xsi:type="model:ButtonBar" id="181" x="5" y="46" height="27" text="发起,认领,分派" measuredWidth="134" measuredHeight="27" selection="">
+    <widgets xsi:type="model:ButtonBar" id="181" x="5" y="46" height="27" text="认领,分派,发起" measuredWidth="134" measuredHeight="27" selection="">
       <font/>
-      <items x="0" y="0" width="45" height="27" text="发起"/>
-      <items x="45" y="0" width="44" height="27" text="认领"/>
-      <items x="89" y="0" width="45" height="27" text="分派"/>
+      <items x="0" y="0" width="45" height="27" text="认领"/>
+      <items x="45" y="0" width="44" height="27" text="分派"/>
+      <items x="89" y="0" width="45" height="27" text="发起"/>
     </widgets>
     <widgets xsi:type="model:ButtonBar" id="184" x="152" y="46" width="185" height="27" text="个人待办,组织待办,全部" measuredWidth="185" measuredHeight="27" selection="2">
       <font/>
@@ -32,7 +32,7 @@
     <widgets xsi:type="model:Label" id="132" x="6" text="待办事项（管理）：" measuredWidth="113" measuredHeight="25">
       <font bold="true"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="185" y="77" width="793" height="51" text="(w:30). !,(w:30). 优先级,(w:30). 状态,(w:30). 待办类型,(w:30). 待办人,待办事项,(w:30). 分类,(w:30). 工作事项,(w:30). 发送人,(w:30). 发送时间,(w:30). 办理期限,(w:30). 认领时间&#xA;1,中,处理中,个人待办,张三,确认交车日期,营运流程,车辆交车流程,小明,2012-01-01 10:00,,2012-01-02 10:30" measuredWidth="793" measuredHeight="51" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="185" y="77" width="793" height="51" text="(w:30). !,(w:30). 优先级,(w:30). 待办人,待办事项,(w:30). 分类,(w:30). 工作事项,(w:30). 发送人,(w:30). 发送时间,(w:30). 办理期限,(w:30). 认领时间&#xA;1,中,张三,{checked}{user} 确认交车日期,营运流程,车辆交车流程,小明,2012-01-01 10:00,,2012-01-02 10:30" measuredWidth="793" measuredHeight="51" alternative="#eeeeee">
       <font/>
     </widgets>
     <widgets xsi:type="model:ButtonBar" id="186" x="6" y="46" height="27" text="分派" measuredWidth="46" measuredHeight="27" selection="">
@@ -46,11 +46,8 @@
       <items x="113" y="0" width="48" height="27" text="全部"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="134" x="8" y="404" measuredWidth="289" measuredHeight="241">
-    <widgets xsi:type="model:Panel" id="135" y="24" width="289" height="217" measuredWidth="289" measuredHeight="217"/>
-    <widgets xsi:type="model:Button" id="136" x="10" y="200" text="查询" measuredWidth="44" measuredHeight="27">
-      <font/>
-    </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="134" x="8" y="404" measuredWidth="289" measuredHeight="261">
+    <widgets xsi:type="model:Panel" id="135" y="24" width="289" height="237" measuredWidth="289" measuredHeight="237"/>
     <widgets xsi:type="model:Label" id="137" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
       <font bold="true"/>
     </widgets>
@@ -95,18 +92,34 @@
       <widgets xsi:type="model:Icon" id="167" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
       <widgets xsi:type="model:Icon" id="168" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="169" x="10" y="66" measuredWidth="271" measuredHeight="25">
-      <widgets xsi:type="model:TextField" id="170" width="271" measuredWidth="271" measuredHeight="25">
+    <widgets xsi:type="model:WidgetGroup" id="169" x="10" y="66" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="170" width="127" measuredWidth="127" measuredHeight="25">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Icon" id="171" x="249" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
-      <widgets xsi:type="model:Icon" id="172" x="229" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+      <widgets xsi:type="model:Icon" id="171" x="107" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="172" x="87" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
     </widgets>
     <widgets xsi:type="model:Label" id="173" x="10" y="41" text="发送人：" measuredWidth="53" measuredHeight="25">
       <font/>
     </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="192" x="152" y="66" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="193" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="194" x="107" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="195" x="87" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="196" x="152" y="41" text="待办人：" measuredWidth="53" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="197" x="10" y="228" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Checkbox" id="199" x="10" y="196" text="到期未办理完的待办" measuredWidth="129" measuredHeight="25">
+      <font/>
+    </widgets>
   </widgets>
-  <widgets xsi:type="model:Note" id="180" x="312" y="428" width="313" height="217" text="说明：&#xD;&#xA;1）领取(claimTask)：领取分派给自己或者所在用户组的任务，已领取的任务不能重复领取；&#xD;&#xA;2）处理(doTask)：处理分派或自己领取的任务，如果任务分配到组且还没有人领取，则提示用户先进行领取再处理；&#xD;&#xA;3）分派(assignTask)：&#xD;&#xA;4）新建(createTask)：创建简单的任务，指定任务的候选人，默认任务的候选人为自己；&#xD;&#xA;5）发起流程(startProcess)：弹出流程选择对话框，选择后确认发起流程，根据流程的配置自动创建相应的任务；&#xD;&#xA;" measuredWidth="313" measuredHeight="217" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="180" x="312" y="432" width="417" height="233" text="说明：&#xD;&#xA;1）待办事项前面的小图标显示待办的类型和状态：&#xD;&#xA;     {checked}&#x9;&#x9;-- 状态为已认领处理中&#xD;&#xA;     {unchecked}&#x9;-- 状态为待认领&#xD;&#xA;     {user}&#x9;&#x9;&#x9;-- 个人待办&#xD;&#xA;     {usergroup}&#x9;-- 组织待办（岗位、部门、单位）&#xD;&#xA;2）认领：领取分派给自己或者所在组的任务，已认领的任务不能重复认领。&#xD;&#xA;3）分派：只有有权限的用户方可将分派到组的待办具体分派到人。&#xD;&#xA;4）发起：弹出流程选择对话框，选择后确认发起流程，根据流程的配置起草并生成待办；&#xD;&#xA;&#xD;&#xA;TODO：&#xD;&#xA;发起操作可以仅是发起一个简单的任务而不是流程。&#xD;&#xA;" measuredWidth="417" measuredHeight="233" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
   <hRuler/>
