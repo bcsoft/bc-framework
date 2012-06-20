@@ -45,6 +45,18 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	}
 
 	@Override
+	protected void afterCreate(Questionary entity) {
+		super.afterCreate(entity);
+		this.getE().setIssuer(null);
+	}
+
+	@Override
+	protected void beforeSave(Questionary entity) {
+		super.beforeSave(entity);
+		this.getE().setIssuer(null);
+	}
+
+	@Override
 	protected void afterEdit(Questionary entity) {
 		super.afterEdit(entity);
 
