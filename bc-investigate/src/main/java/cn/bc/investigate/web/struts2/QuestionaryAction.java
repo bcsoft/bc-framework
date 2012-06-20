@@ -14,6 +14,7 @@ import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.investigate.domain.Questionary;
 import cn.bc.investigate.service.QuestionaryService;
+import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 
 /**
@@ -41,6 +42,17 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(630)
 				.setMinWidth(320);
+
+	}
+
+	@Override
+	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+		pageOption.addButton(new ButtonOption(getText("label.save"), null,
+				"bc.questionaryForm.save"));
+		pageOption.addButton(new ButtonOption(getText("questionary.preview"),
+				null, null));
+		pageOption.addButton(new ButtonOption(getText("questionary.issue"),
+				null, null));
 
 	}
 

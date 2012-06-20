@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
-import cn.bc.identity.domain.RichFileEntityImpl;
+import cn.bc.identity.domain.FileEntityImpl;
 
 /**
  * 问卷
@@ -26,7 +26,7 @@ import cn.bc.identity.domain.RichFileEntityImpl;
  */
 @Entity
 @Table(name = "BC_IVG_QUESTIONARY")
-public class Questionary extends RichFileEntityImpl {
+public class Questionary extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	/** 类型:网上调查 */
@@ -41,6 +41,7 @@ public class Questionary extends RichFileEntityImpl {
 	/** 状态值:已归档，值为2 */
 	public static final int STATUS_END = 2;
 
+	private int status;// 状态
 	private int type; // 类型，见 TYPE_XXXX 常数的定义
 	private String subject; // 标题
 	private Calendar startDate; // 开始日期
@@ -54,6 +55,15 @@ public class Questionary extends RichFileEntityImpl {
 	private Calendar issueDate; // 发布时间
 	private ActorHistory pigeonholer; // 归档人
 	private Calendar pigeonholeDate; // 归档时间
+
+	@Column(name = "STATUS_")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	@Column(name = "TYPE_")
 	public int getType() {
@@ -129,7 +139,7 @@ public class Questionary extends RichFileEntityImpl {
 		this.endDate = endDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "ISSUER_ID", referencedColumnName = "ID")
 	public ActorHistory getIssuer() {
 		return issuer;
@@ -139,7 +149,7 @@ public class Questionary extends RichFileEntityImpl {
 		this.issuer = issuer;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "PIGEONHOLER_ID", referencedColumnName = "ID")
 	public ActorHistory getPigeonholer() {
 		return pigeonholer;
