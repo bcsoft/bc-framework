@@ -145,10 +145,13 @@ public class GridExporter implements Exporter {
 		// 表头
 		Collection<String> columnNames = new ArrayList<String>();
 		for (Column column : columns) {
-			if (column instanceof IdColumn)
+			if (column instanceof IdColumn) {
 				columnNames.add(idLabel != null ? idLabel : "序号");
-			else
+			} else if (column instanceof HiddenColumn) {
+				columnNames.add("");// 空白
+			} else {
 				columnNames.add(column.getLabel());
+			}
 		}
 		map.put("columnNames", columnNames);
 
@@ -169,8 +172,9 @@ public class GridExporter implements Exporter {
 							GridData.getValue(rowData,
 									column.getValueExpression(), parser),
 							column.getValueFormater());
-					//row.add(value == null || value.length() == 0 ? "" : value);
-					//System.out.println(value.getClass());
+					// row.add(value == null || value.length() == 0 ? "" :
+					// value);
+					// System.out.println(value.getClass());
 					row.add(value);
 				}
 			}
