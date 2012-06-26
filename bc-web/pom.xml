@@ -6,6 +6,7 @@
 		<version>0.9.8</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
+	<version>0.9.8.1</version>
 	<artifactId>bc-web</artifactId>
 	<dependencies>
 		<dependency>
@@ -16,7 +17,7 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-core</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 			<!-- <exclusions> <exclusion> <groupId>javax.persistence</groupId> <artifactId>persistence-api</artifactId> 
 				</exclusion> </exclusions> -->
 		</dependency>
