@@ -142,6 +142,18 @@
 				<param name="contentDisposition">inline</param>
 			</result>
 		</action>
+		<action name="userPortrait" class="imageAction" method="userPortrait">
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${contentType}</param>
+				<param name="contentLength">${contentLength}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">inline</param>
+			</result>
+		</action>
 	</package>
 
 	<!-- browser -->

@@ -30,6 +30,8 @@ import cn.bc.docs.service.AttachService;
 import cn.bc.docs.util.ImageUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.UserService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
@@ -50,6 +52,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	private static Log logger = LogFactory.getLog(ImageAction.class);
 	private static final long serialVersionUID = 1L;
 	private AttachService attachService;
+	private UserService userService;
 	public PageOption pageOption;// 页面的data-optio属性配置
 	public int cropSize = 400;// 图片操作区的宽度和高度
 	public int pageWidth = 545;// 对话框宽度
@@ -62,7 +65,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public String subpath = "images";// 图片附件处理后保存到的相对路径(相对于${app.data.realPath}目录下的路径)
 	public boolean absolute;
 	protected Map<String, Object> session;
-	public String extensions = getText("app.attachs.images");//图片扩展名的限制，用逗号连接多个
+	public String extensions = getText("app.attachs.images");// 图片扩展名的限制，用逗号连接多个
 
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -71,6 +74,11 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	@Autowired
 	public void setAttachService(AttachService attachService) {
 		this.attachService = attachService;
+	}
+
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	public AttachWidget attachsUI;
@@ -247,21 +255,22 @@ public class ImageAction extends ActionSupport implements SessionAware {
 				attach = this.attachService.loadByPtype(ptype, puid);
 			}
 		}
-		String filepath,extension;
-		if (attach == null){
-			//使用空白图片代替
+		String filepath, extension;
+		if (attach == null) {
+			// 使用空白图片代替
 			extension = "jpg";
 			filepath = WebUtils.rootPath + empty;
-		}else{
+		} else {
 			extension = attach.getFormat();
 			if (attach.isAppPath())
-				filepath = WebUtils.rootPath + "/" + getText("app.data.subPath")
-						+ "/" + attach.getPath();
+				filepath = WebUtils.rootPath + "/"
+						+ getText("app.data.subPath") + "/" + attach.getPath();
 			else
-				filepath = getText("app.data.realPath") + "/" + attach.getPath();
+				filepath = getText("app.data.realPath") + "/"
+						+ attach.getPath();
 		}
 
-		downloadAttach(filepath,extension);
+		downloadAttach(filepath, extension);
 		return SUCCESS;
 	}
 
@@ -271,11 +280,11 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public InputStream inputStream;
 	public long ts;// 时间戳
 
-	private void downloadAttach(String filepath,String extension) {
+	private void downloadAttach(String filepath, String extension) {
 		try {
 			contentType = AttachUtils.getContentType(extension);
-//			filename = WebUtils.encodeFileName(
-//					ServletActionContext.getRequest(), attach.getSubject());
+			// filename = WebUtils.encodeFileName(
+			// ServletActionContext.getRequest(), attach.getSubject());
 			File file = new File(filepath);
 			contentLength = file.length();
 			inputStream = new FileInputStream(file);
@@ -283,4 +292,37 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			logger.error(e.getMessage(), e);
 		}
 	}
+
+	public String code;// 用户帐号
+
+	// 获取用户图像
+	public String userPortrait() throws Exception {
+		// 加载附件
+		Attach attach = null;
+		if (code == null) {
+			throw new CoreException("code is null.");
+		} else {
+			Actor u = userService.loadByCode(code);
+			if (u != null)
+				attach = this.attachService.loadByPtype("portrait", u.getUid());
+		}
+		String filepath, extension;
+		if (attach == null) {
+			// 使用空白图片代替
+			extension = "jpg";
+			filepath = WebUtils.rootPath + empty;
+		} else {
+			extension = attach.getFormat();
+			if (attach.isAppPath())
+				filepath = WebUtils.rootPath + "/"
+						+ getText("app.data.subPath") + "/" + attach.getPath();
+			else
+				filepath = getText("app.data.realPath") + "/"
+						+ attach.getPath();
+		}
+
+		downloadAttach(filepath, extension);
+		return SUCCESS;
+	}
+
 }
