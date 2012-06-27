@@ -34,12 +34,12 @@ public class Questionary extends FileEntityImpl {
 	/** 类型:网上考试 */
 	public static final int TYPE_PAPER = 1;
 
-	/** 状态值:草稿，值为0 */
-	public static final int STATUS_DRAFT = 0;
-	/** 状态值:已发布，值为1 */
-	public static final int STATUS_ISSUE = 1;
-	/** 状态值:已归档，值为2 */
-	public static final int STATUS_END = 2;
+	/** 状态值:草稿，值为-1 */
+	public static final int STATUS_DRAFT = -1;
+	/** 状态值:已发布，值为0 */
+	public static final int STATUS_ISSUE = 0;
+	/** 状态值:已归档，值为1 */
+	public static final int STATUS_END = 1;
 
 	private int status;// 状态
 	private int type; // 类型，见 TYPE_XXXX 常数的定义

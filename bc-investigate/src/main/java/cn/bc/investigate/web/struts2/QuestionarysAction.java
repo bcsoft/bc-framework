@@ -24,7 +24,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.investigate.domain.Questionary;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.DateRangeFormater;
-import cn.bc.web.formater.EntityStatusFormater;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -106,8 +106,8 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("q.id", "id"));
 		columns.add(new TextColumn4MapKey("q.status_", "status_",
-				getText("questionary.status"), 40).setSortable(true)
-				.setValueFormater(new EntityStatusFormater()));
+				getText("questionary.status"), 60).setSortable(true)
+				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
 				getText("questionary.subject")).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -208,7 +208,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	}
 
 	/**
-	 * 状态值转换列表：待发布|已发布|已结束|全部
+	 * 状态值转换列表：待发布|已发布|已归档|全部
 	 * 
 	 * @return
 	 */
