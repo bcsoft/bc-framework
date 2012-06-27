@@ -356,6 +356,17 @@ public class DateUtils {
 	 */
 	public static String getWasteTime(Date startDate, Date endDate) {
 		long wt = endDate.getTime() - startDate.getTime();
+		return getWasteTime(wt);
+	}
+
+	/**
+	 * 计算指定时间范围内的耗时描述信息
+	 * 
+	 * @param wt
+	 *            毫秒值
+	 * @return
+	 */
+	public static String getWasteTime(long wt) {
 		if (wt < 1000) {
 			return wt + "ms";
 		} else if (wt < 60000) {
