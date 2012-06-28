@@ -45,7 +45,7 @@ import cn.bc.web.ui.json.Json;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class QuestionarysAction extends ViewAction<Map<String, Object>> {
+public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(Questionary.STATUS_ISSUE);
 
@@ -218,25 +218,25 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		if (this.isReadonly()) {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		} else {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除
-			tb.addButton(this.getDefaultDeleteToolbarButton());
-			// 如果是管理员,可以看到状态按钮组
+//		if (this.isReadonly()) {
+//			// 查看按钮
+//			tb.addButton(this.getDefaultOpenToolbarButton());
+//		} else {
+//			// 新建按钮
+//			tb.addButton(this.getDefaultCreateToolbarButton());
+//
+//			// 编辑按钮
+//			tb.addButton(this.getDefaultEditToolbarButton());
+//			// 删除
+//			tb.addButton(this.getDefaultDeleteToolbarButton());
+//			// 如果是管理员,可以看到状态按钮组
 			if (!this.isReadonly()) {
 				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
 						this.getBSStatuses(), "status", 1,
 						getText("title.click2changeSearchStatus")));
 
 			}
-		}
+//		}
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());

@@ -3,6 +3,11 @@
  */
 package cn.bc.investigate.dao.hibernate.jpa;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import cn.bc.investigate.dao.QuestionaryDao;
 import cn.bc.investigate.domain.Questionary;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
@@ -14,5 +19,13 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  */
 public class QuestionaryDaoImpl extends HibernateCrudJpaDao<Questionary>
 		implements QuestionaryDao {
-	//private static Log logger = LogFactory.getLog(QuestionaryDaoImpl.class);
+
+	@SuppressWarnings("unused")
+	private Object jdbcTemplate;
+
+	@Autowired
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
+
 }

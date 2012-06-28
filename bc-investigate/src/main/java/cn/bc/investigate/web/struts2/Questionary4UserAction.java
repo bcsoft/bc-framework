@@ -39,7 +39,7 @@ import cn.bc.web.ui.html.page.PageOption;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
+public class Questionary4UserAction extends FileEntityAction<Long, Questionary> {
 
 	private static final long serialVersionUID = 1L;
 	private QuestionaryService questionaryService;

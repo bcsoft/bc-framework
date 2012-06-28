@@ -12,5 +12,5 @@ import cn.bc.investigate.domain.Questionary;
  * @author zxr
  */
 public interface QuestionaryDao extends CrudDao<Questionary> {
-	
+
 }

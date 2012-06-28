@@ -3,8 +3,10 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 预览 -->
+	<!-- 问卷调查[管理员] -->
 	<package name="questionary" extends="bc-default" namespace="/bc/questionary">
+		<action name="issue" class="questionaryAction" method="issue" />
+		<action name="archiving" class="questionaryAction" method="archiving" />
 		<action name="preview" class="questionaryAction" method="preview">
 			<result name="form">/bc/questionary/preview.jsp</result>
 		</action>
@@ -12,12 +14,23 @@
 			<result name="form">/bc/questionary/form.jsp</result>
 		</action>		
 		<action name="open" class="questionaryAction" method="open">
-			<result name="formr">/bc/questionary/form.jsp</result>
+			<result name="formr">/bc/questionary/issue.jsp</result>
 		</action>
 		<action name="edit" class="questionaryAction" method="edit">
 			<result name="form">/bc/questionary/form.jsp</result>
 		</action>
 		<action name="save" class="questionaryAction" method="save"/>
 		<action name="delete" class="questionaryAction" method="delete" />
+	</package>	
+	
+	<!-- 问卷调查[用户] -->
+	<package name="questionary4User" extends="bc-default" namespace="/bc/questionary4User">
+		<action name="open" class="questionary4UserAction" method="open">
+			<result name="formr">/bc/questionary/issue.jsp</result>
+		</action>
+		<action name="edit" class="questionary4UserAction" method="edit">
+			<result name="form">/bc/questionary/form.jsp</result>
+		</action>
+		<action name="save" class="questionaryAction" method="save"/>
 	</package>
 </struts>
