@@ -19,6 +19,7 @@ public interface TemplateService extends CrudService<Template> {
 	 * 根据编码获取模板对象
 	 * 
 	 * @param code
+	 *            如果含字符":"，则进行分拆，前面部分为编码，后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本
 	 * @return 指定编码的模板对象
 	 */
 	public Template loadByCode(String code);
