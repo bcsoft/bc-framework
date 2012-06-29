@@ -48,6 +48,7 @@ import cn.bc.web.ui.json.Json;
 public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(Questionary.STATUS_ISSUE);
+	public String userId =String.valueOf(this);
 
 	@Override
 	public boolean isReadonly() {
@@ -164,7 +165,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getFormActionName() {
-		return "questionary";
+		return "questionary4User";
 	}
 
 	@Override
@@ -200,6 +201,10 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		if (this.status != null && this.status.trim().length() > 0) {
 			json.put("status", status);
 		}
+		// 用户条件
+		if (this.userId != null && this.userId.trim().length() > 0) {
+			json.put("status", status);
+		}
 
 	}
 
@@ -217,18 +222,6 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-
-//		if (this.isReadonly()) {
-//			// 查看按钮
-//			tb.addButton(this.getDefaultOpenToolbarButton());
-//		} else {
-//			// 新建按钮
-//			tb.addButton(this.getDefaultCreateToolbarButton());
-//
-//			// 编辑按钮
-//			tb.addButton(this.getDefaultEditToolbarButton());
-//			// 删除
-//			tb.addButton(this.getDefaultDeleteToolbarButton());
 //			// 如果是管理员,可以看到状态按钮组
 			if (!this.isReadonly()) {
 				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
@@ -236,7 +229,6 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						getText("title.click2changeSearchStatus")));
 
 			}
-//		}
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -259,17 +251,32 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 				getText("questionary.release.end"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
+	}	/**
+	 * 状态值转换列表：待发布|已发布|已归档|全部
+	 * 
+	 * @return
+	 */
+	protected Map<String, String> getUserId() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(Questionary.STATUS_DRAFT),
+				getText("questionary.release.wait"));
+		statuses.put(String.valueOf(Questionary.STATUS_ISSUE),
+				getText("questionary.release.already"));
+		statuses.put(String.valueOf(Questionary.STATUS_END),
+				getText("questionary.release.end"));
+		statuses.put("", getText("questionary.release.all"));
+		return statuses;
 	}
 
 	@Override
 	protected String getGridDblRowMethod() {
 		// 强制为只读表单
-		return "bc.questionaryView.dblclick";
+		return "bc.questionary4UserView.dblclick";
 	}
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getContextPath() + "/bc/questionary/view.js";
+		return this.getContextPath() + "/bc/questionary4User/view.js";
 	}
 
 	// ==高级搜索代码开始==

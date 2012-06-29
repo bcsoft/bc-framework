@@ -26,11 +26,11 @@
 	<!-- 问卷调查[用户] -->
 	<package name="questionary4User" extends="bc-default" namespace="/bc/questionary4User">
 		<action name="open" class="questionary4UserAction" method="open">
-			<result name="formr">/bc/questionary/issue.jsp</result>
+			<result name="formr">/bc/questionary4User/preview.jsp</result>
 		</action>
 		<action name="edit" class="questionary4UserAction" method="edit">
-			<result name="form">/bc/questionary/form.jsp</result>
+			<result name="form">/bc/questionary4User/form.jsp</result>
 		</action>
-		<action name="save" class="questionaryAction" method="save"/>
+		<action name="save" class="questionary4UserAction" method="save"/>
 	</package>
 </struts>
