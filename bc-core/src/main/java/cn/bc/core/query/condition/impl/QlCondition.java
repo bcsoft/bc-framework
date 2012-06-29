@@ -24,6 +24,10 @@ public class QlCondition implements Condition {
 	protected String ql;
 	protected List<Object> values;
 
+	public QlCondition(String ql) {
+		this.ql = ql;
+	}
+
 	public QlCondition(String ql, List<Object> values) {
 		this.ql = ql;
 		this.values = values;
