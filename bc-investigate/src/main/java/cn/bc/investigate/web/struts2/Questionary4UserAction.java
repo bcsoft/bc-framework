@@ -5,6 +5,7 @@ package cn.bc.investigate.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -106,7 +107,8 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 					null, "bc.questionaryForm.issue"));
 		}
 		// 提交答卷
-		if (this.getE().getStatus() == Questionary.STATUS_ISSUE) {
+		if (this.getE().getStatus() == Questionary.STATUS_ISSUE
+				&& this.IsExisUser(this.getE()) == false) {
 			pageOption.addButton(new ButtonOption(
 					getText("questionary4User.passed"), null,
 					"bc.questionary4UserForm.save"));
@@ -190,7 +192,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 			}
 			// }
 			if (respondResource.getAnswers() != null) {
-				respondResource.getAnswers().clear();
+				// respondResource.getAnswers().clear();
 				respondResource.getAnswers().addAll(answer);
 			} else {
 				respondResource.setAnswers(answer);
@@ -206,21 +208,81 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 		respond.add(respondResource);
 		if (questionary.getResponds() != null) {
-			questionary.getResponds().clear();
+			// questionary.getResponds().clear();
 			questionary.getResponds().addAll(respond);
 
 		} else {
 			questionary.setResponds(respond);
 		}
-		// if (this.getE().getQuestions() != null) {
-		// System.out.println("不为空！");
-		// this.getE().getQuestions().clear();
-		// //this.getE().setQuestions(this.getE().getQuestions());
-		// } else {
-		// this.getE().setQuestions(this.getE().getQuestions());
-		// }
-		//
-		// this.getE().setQuestions(new LinkedHashSet<Question>());
+	}
+
+	@Override
+	public String open() throws Exception {
+		Questionary e = this.questionaryService.load(this.getId());
+		this.setE(e);
+		// 强制表单只读
+		this.formPageOption = buildFormPageOption(false);
+		// 初始化表单的其他配置
+		this.initForm(false);
+		this.afterOpen(e);
+		boolean isExist = IsExisUser(e);
+		if (isExist) {
+			return "statistics";
+		} else {
+			return "formr";
+		}
+	}
+
+	/**
+	 * 用户是否答卷
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private boolean IsExisUser(Questionary e) {
+		SystemContext context = this.getSystyemContext();
+		Long userId = context.getUserHistory().getId();
+		Set<Respond> respond = e.getResponds();
+		Iterator<Respond> r = respond.iterator();
+		boolean isExist = false;
+		while (r.hasNext()) {
+			Respond oneRespond = r.next();
+			if (new Long(userId)
+					.equals(new Long(oneRespond.getAuthor().getId()))) {
+				isExist = true;
+			}
+
+		}
+		return isExist;
+	}
+
+	// 获取问题项的作答人数
+	public int getQuestItemRespondCount(Long questItemId) {
+		Set<Respond> respond = this.getE().getResponds();
+		QuestionItem item;
+		int i = 0;
+		Iterator<Respond> it = respond.iterator();
+		while (it.hasNext()) {
+			Respond re = (Respond) it.next();
+			Set<Answer> answer = re.getAnswers();
+			Iterator<Answer> an = answer.iterator();
+			while (an.hasNext()) {
+				Answer noeAnswer = an.next();
+				item = noeAnswer.getItem();
+				if (questItemId == item.getId()) {
+					i++;
+				}
+			}
+
+		}
+
+		return i;
+	}
+
+	// 获取参与人数
+	public int getJoinCount() {
+		Set<Respond> actor = this.getE().getResponds();
+		return actor.size();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ package cn.bc.investigate.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ import cn.bc.core.util.TemplateUtils;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
+import cn.bc.investigate.domain.Answer;
 import cn.bc.investigate.domain.Question;
 import cn.bc.investigate.domain.QuestionItem;
 import cn.bc.investigate.domain.Questionary;
@@ -107,9 +109,15 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	}
 
 	@Override
+	protected Questionary createEntity() {
+		Questionary questionary = super.createEntity();
+		questionary.setStatus(Questionary.STATUS_DRAFT);
+		return questionary;
+	}
+
+	@Override
 	protected void afterCreate(Questionary entity) {
 		super.afterCreate(entity);
-		this.getE().setStatus(Questionary.STATUS_DRAFT);
 		this.getE().setType(Questionary.TYPE_PAPER);
 		this.getE().setIssuer(null);
 	}
@@ -359,6 +367,35 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			}
 		}
 		return null;
+	}
+
+	// 获取问题项的作答人数
+	public int getQuestItemRespondCount(Long questItemId) {
+		Set<Respond> respond = this.getE().getResponds();
+		QuestionItem item;
+		int i = 0;
+		Iterator<Respond> it = respond.iterator();
+		while (it.hasNext()) {
+			Respond re = (Respond) it.next();
+			Set<Answer> answer = re.getAnswers();
+			Iterator<Answer> an = answer.iterator();
+			while (an.hasNext()) {
+				Answer noeAnswer = an.next();
+				item = noeAnswer.getItem();
+				if (questItemId == item.getId()) {
+					i++;
+				}
+			}
+
+		}
+
+		return i;
+	}
+
+	// 获取参与人数
+	public int getJoinCount() {
+		Set<Respond> actor = this.getE().getResponds();
+		return actor.size();
 	}
 
 	/**

@@ -48,7 +48,7 @@ import cn.bc.web.ui.json.Json;
 public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(Questionary.STATUS_ISSUE);
-	public String userId =String.valueOf(this);
+	public String userId = String.valueOf(this);
 
 	@Override
 	public boolean isReadonly() {
@@ -222,14 +222,14 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-//			// 如果是管理员,可以看到状态按钮组
-			if (!this.isReadonly()) {
-				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-						this.getBSStatuses(), "status", 1,
-						getText("title.click2changeSearchStatus")));
-
-			}
-
+		// // // 如果是管理员,可以看到状态按钮组
+		// if (!this.isReadonly()) {
+		// tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+		// this.getBSStatuses(), "status", 1,
+		// getText("title.click2changeSearchStatus")));
+		//
+		// }
+		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
@@ -251,7 +251,9 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 				getText("questionary.release.end"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
-	}	/**
+	}
+
+	/**
 	 * 状态值转换列表：待发布|已发布|已归档|全部
 	 * 
 	 * @return
@@ -270,6 +272,8 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getGridDblRowMethod() {
+		// 如果作答表里有用户的记录则证明该用户已经作答过
+
 		// 强制为只读表单
 		return "bc.questionary4UserView.dblclick";
 	}
