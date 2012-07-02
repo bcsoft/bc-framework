@@ -151,7 +151,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		// 状态：禁用
 		if (template.getStatus() != BCConstants.STATUS_ENABLED) {
 			this.beforeSave(template);
-			this.templateService.getCrudDao().save(template);
+			this.templateService.save(template);
 			this.afterSave(template);
 			return "saveSuccess";
 		}
