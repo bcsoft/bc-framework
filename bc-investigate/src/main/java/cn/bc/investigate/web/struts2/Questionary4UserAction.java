@@ -51,6 +51,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	public String topics;// 问卷中题目的json字符串
 	public String optionItemsValue;// 问题选项
 	public Map<String, String> statusesValue;
+	public Long userId;// 用户ID
 
 	@Override
 	public boolean isReadonly() {
@@ -218,6 +219,8 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	@Override
 	public String open() throws Exception {
+		SystemContext context = this.getSystyemContext();
+		userId = context.getUserHistory().getId();
 		Questionary e = this.questionaryService.load(this.getId());
 		this.setE(e);
 		// 强制表单只读
@@ -393,7 +396,6 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -408,7 +410,6 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 				if (marker.equals(config.getString("key")))
 					return config;
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

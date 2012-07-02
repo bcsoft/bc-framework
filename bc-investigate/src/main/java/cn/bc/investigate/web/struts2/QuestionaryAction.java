@@ -52,9 +52,9 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	@Override
 	public boolean isReadonly() {
-		// 问卷管理员或系统管理员
+		// 网上考试管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bs.driver"),
+		return !context.hasAnyRole(getText("key.role.bc.question.exam"),
 				getText("key.role.bc.admin"));
 	}
 
@@ -347,7 +347,6 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -362,7 +361,6 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 				if (marker.equals(config.getString("key")))
 					return config;
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
