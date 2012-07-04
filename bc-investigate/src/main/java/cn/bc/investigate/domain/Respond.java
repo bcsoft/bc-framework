@@ -28,6 +28,7 @@ public class Respond extends EntityImpl {
 	private Calendar fileDate;// 作答时间
 	private ActorHistory author;// 作答人
 	private Set<Answer> answers;// 答案集
+	private int score; // 分数（仅适用于网上考试）
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
@@ -66,4 +67,13 @@ public class Respond extends EntityImpl {
 	public void setAnswers(Set<Answer> answers) {
 		this.answers = answers;
 	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
 }
