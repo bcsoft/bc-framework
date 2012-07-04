@@ -344,6 +344,9 @@ public class DateUtils {
 	public static String getWasteTime(Date fromDate) {
 		return getWasteTime(fromDate, new Date());
 	}
+	public static String getWasteTimeCN(Date fromDate) {
+		return getWasteTimeCN(fromDate, new Date());
+	}
 
 	/**
 	 * 计算指定时间范围内的耗时描述信息
@@ -358,6 +361,10 @@ public class DateUtils {
 		long wt = endDate.getTime() - startDate.getTime();
 		return getWasteTime(wt);
 	}
+	public static String getWasteTimeCN(Date startDate, Date endDate) {
+		long wt = endDate.getTime() - startDate.getTime();
+		return getWasteTimeCN(wt);
+	}
 
 	/**
 	 * 计算指定时间范围内的耗时描述信息
@@ -367,15 +374,46 @@ public class DateUtils {
 	 * @return
 	 */
 	public static String getWasteTime(long wt) {
-		if (wt < 1000) {
+		if (wt < 1000) {// 小于1秒
 			return wt + "ms";
-		} else if (wt < 60000) {
+		} else if (wt < 60000) {// 小于1分钟
 			long ms = wt % 1000;
 			return ((wt - ms) / 1000) + "s " + ms + "ms";
-		} else {
+		} else {// 大于1分钟
+			if (wt < 3600000) {// 小于1小时
+				long ms = wt % 1000;
+				long s = ((wt - ms) % 60000);
+				return ((wt - ms - s) / 60000) + "m " + s + "s";
+			} else if (wt < 86400000) {// 小于1天
+				long m = (wt / 60000 % 60);
+				return (wt / 3600000) + "h " + m + "m";
+			} else {// 大于1天
+				long m = (wt / 60000 % 60);
+				long h = (wt / 3600000) % 24;
+				return (wt / 86400000) + "d " + h + "h " + m + "m";
+			}
+		}
+	}
+
+	public static String getWasteTimeCN(long wt) {
+		if (wt < 1000) {// 小于1秒
+			return wt + "毫秒";
+		} else if (wt < 60000) {// 小于1分钟
 			long ms = wt % 1000;
-			long s = (wt - ms) % 60;
-			return ((wt - s - ms) / 60000) + "m " + s + "s " + ms + "ms";
+			return ((wt - ms) / 1000) + "秒 " + ms + "毫秒";
+		} else {// 大于1分钟
+			if (wt < 3600000) {// 小于1小时
+				long ms = wt % 1000;
+				long s = ((wt - ms) % 60000);
+				return ((wt - ms - s) / 60000) + "分钟 " + s + "秒";
+			} else if (wt < 86400000) {// 小于1天
+				long m = (wt / 60000 % 60);
+				return (wt / 3600000) + "小时 " + m + "分钟";
+			} else {// 大于1天
+				long m = (wt / 60000 % 60);
+				long h = (wt / 3600000) % 24;
+				return (wt / 86400000) + "天 " + h + "小时 " + m + "分钟";
+			}
 		}
 	}
 
