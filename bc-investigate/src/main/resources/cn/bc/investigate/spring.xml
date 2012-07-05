@@ -20,6 +20,11 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="questionaryService" class="cn.bc.investigate.service.QuestionaryServiceImpl" 
 		p:crudDao-ref="questionaryDao"/>
+	<!-- question -->
+	<bean id="questionDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="questionService" class="cn.bc.investigate.service.QuestionServiceImpl" 
+		p:crudDao-ref="questionDao"/>
 	<!-- questionItem -->
 	<bean id="questionItemDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionItemDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />

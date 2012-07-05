@@ -72,6 +72,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select q.id,q.status_,q.subject,q.start_date,q.end_date");
 		sql.append(",(select count(*) from bc_ivg_question where pid = q.id) count,q.permitted");
+		sql.append(",(select count(*) from bc_ivg_respond where pid = q.id) answerNumber");
 		sql.append(",iss.actor_name issuer,q.issue_date,q.pigeonhole_date,pig.actor_name pigeonholer");
 		sql.append(",q.file_date,ad.actor_name author");
 		sql.append(" from bc_ivg_questionary q");
@@ -95,6 +96,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				map.put("end_date", rs[i++]);
 				map.put("count", rs[i++]);
 				map.put("permitted", rs[i++]);
+				map.put("answerNumber", rs[i++]);
 				map.put("issuer", rs[i++]);
 				map.put("issue_date", rs[i++]);
 				map.put("pigeonhole_date", rs[i++]);
@@ -130,6 +132,9 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				}));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "count",
 				getText("questionary.count"), 80).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("iss.actor_name", "answerNumber",
+				getText("questionary.answerNumber"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.permitted", "permitted",
 				getText("questionary.permitted"), 150).setSortable(true)

@@ -10,8 +10,8 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import cn.bc.core.EntityImpl;
 
@@ -103,16 +103,16 @@ public class QuestionItem extends EntityImpl {
 	 * @return
 	 */
 	@Transient
-	public JSONObject getConfigJson() {
+	public JSONArray getConfigJsonArray() {
 		if (config == null || config.length() == 0) {
-			return new JSONObject();
+			return new JSONArray();
 		}
 
 		try {
-			return new JSONObject(this.getConfig().replaceAll("\\s", " "));// 替换换行、回车等符号为空格
+			return new JSONArray(this.getConfig().replaceAll("\\s", " "));// 替换换行、回车等符号为空格
 		} catch (JSONException e) {
 			logger.error(e.getMessage(), e);
-			return new JSONObject();
+			return new JSONArray();
 		}
 	}
 }
