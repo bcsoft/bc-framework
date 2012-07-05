@@ -13,7 +13,7 @@ insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL
 	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '011500','网上考试', '/bc/questionary4Users/paging', 'i0206' from BC_IDENTITY_RESOURCE m where m.order_='010000';
 --考试管理入口
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '800508','考试管理', '/bc/questionarys/paging', 'i0004' from BC_IDENTITY_RESOURCE m where m.order_='800000';
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '040600','考试管理', '/bc/questionarys/paging', 'i0004' from BC_IDENTITY_RESOURCE m where m.order_='040000';
 
 --添加网上考试管理权限
 insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
@@ -21,7 +21,7 @@ insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME)
 
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_QUESTION_EXAM' 
-	and m.type_ > 1 and m.order_ in ('800508')
+	and m.type_ > 1 and m.order_ in ('040600')
 	order by m.order_;
 
 
@@ -36,7 +36,7 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 --超级管理员可访问网上考试管理资源
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_ADMIN' 
-	and m.type_ > 1 and m.order_ in ('800508')
+	and m.type_ > 1 and m.order_ in ('040600')
 	order by m.order_;
 
 

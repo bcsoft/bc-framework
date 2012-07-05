@@ -646,6 +646,25 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	}
 
 	/**
+	 * 获取用户简答题的作答结果
+	 * 
+	 * @param qid
+	 * @return
+	 */
+	public String formatJQuizValue(Long qid) {
+		Respond respond = getUserRespond();
+		Set<Answer> answer = respond.getAnswers();
+		Iterator<Answer> a = answer.iterator();
+		while (a.hasNext()) {
+			Answer oneAnswer = a.next();
+			if (oneAnswer.getItem().getId() == qid) {
+				return oneAnswer.getContent();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 状态值转换列表：待发布|已发布|已归档|全部
 	 * 
 	 * @return

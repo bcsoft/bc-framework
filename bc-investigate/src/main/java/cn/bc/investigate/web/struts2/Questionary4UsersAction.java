@@ -15,11 +15,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -47,8 +48,10 @@ import cn.bc.web.ui.json.Json;
 @Controller
 public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(Questionary.STATUS_ISSUE);
+	public String status = String.valueOf(Questionary.STATUS_ISSUE) + ","
+			+ String.valueOf(Questionary.STATUS_END);
 	public String userId = String.valueOf(this);
+	public String isResponse = "false";
 
 	@Override
 	public boolean isReadonly() {
@@ -182,6 +185,14 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		AndCondition andCondition = new AndCondition();
+		SystemContext context = (SystemContext) this.getContext();
+		// 保存的用户id键值集合
+		List<Object> ids = new ArrayList<Object>();
+		ids.add(context.getUserHistory().getId());
+		// 根据集合数量，生成的占位符字符串
+		String qlStr = "?";
+
 		// 状态条件
 		Condition statusCondition = null;
 		if (status != null && status.length() > 0) {
@@ -194,8 +205,25 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
+		// 作答
+		if (isResponse.equals("true")) {
+			andCondition.add(statusCondition, new QlCondition(
+					"q.id in (select pid from bc_ivg_respond where author_id ="
+							+ qlStr + ")", ids));
+		}
+		// 不作答
+		if (isResponse.equals("false")) {
+			andCondition.add(statusCondition, new QlCondition(
+					"q.id not in (select pid from bc_ivg_respond where author_id ="
+							+ qlStr + ")", ids));
+		}
 
-		return ConditionUtils.mix2AndCondition(statusCondition);
+		// 全部
+		if (isResponse == null || isResponse.length() == 0) {
+			andCondition.add(statusCondition);
+		}
+
+		return andCondition;
 	}
 
 	@Override
@@ -208,7 +236,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		}
 		// 用户条件
 		if (this.userId != null && this.userId.trim().length() > 0) {
-			json.put("status", status);
+			json.put("userId", userId);
 		}
 
 	}
@@ -224,17 +252,16 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		return "['subject']";
 	}
 
+
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-		// // // 如果是管理员,可以看到状态按钮组
-		// if (!this.isReadonly()) {
-		// tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-		// this.getBSStatuses(), "status", 1,
-		// getText("title.click2changeSearchStatus")));
-		//
-		// }
-		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+		// // 如果是管理员,可以看到状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+				this.getResponseValue(), "isResponse", 1,
+				getText("title.click2changeResponseStatus")));
+
+		//tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
@@ -263,14 +290,10 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getUserId() {
+	protected Map<String, String> getResponseValue() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(Questionary.STATUS_DRAFT),
-				getText("questionary.release.wait"));
-		statuses.put(String.valueOf(Questionary.STATUS_ISSUE),
-				getText("questionary.release.already"));
-		statuses.put(String.valueOf(Questionary.STATUS_END),
-				getText("questionary.release.end"));
+		statuses.put("true", getText("questionary.response.true"));
+		statuses.put("false", getText("questionary.response.false"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
 	}
