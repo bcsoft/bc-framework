@@ -100,6 +100,7 @@ public class LoginServiceImpl implements LoginService {
 							//history.setId(getActorHistoryId(actor.getId()));
 							history.setActorId(actor.getId());
 							history.setActorType(actor.getType());
+							history.setCode(actor.getCode());
 							history.setName(actor.getName());
 							history.setPcode(actor.getPcode());
 							history.setPname(actor.getPname());

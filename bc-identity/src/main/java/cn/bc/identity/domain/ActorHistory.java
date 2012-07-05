@@ -43,6 +43,7 @@ public class ActorHistory extends cn.bc.core.EntityImpl {
 	private int actorType;// 对应Actor的type
 	private Long actorId;// 对应Actor的id
 	private Long pid;// 对应旧记录的id
+	private String code;// 对应Actor的code
 	private String name;// 对应Actor的name
 	private Long upperId;// 所属直接上级
 	private String upperName;
@@ -110,6 +111,15 @@ public class ActorHistory extends cn.bc.core.EntityImpl {
 
 	public void setActorId(Long actorId) {
 		this.actorId = actorId;
+	}
+
+	@Column(name = "ACTOR_CODE")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Column(name = "ACTOR_NAME")
