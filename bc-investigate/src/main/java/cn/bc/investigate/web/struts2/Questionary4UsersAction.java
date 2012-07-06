@@ -50,7 +50,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(Questionary.STATUS_ISSUE) + ","
 			+ String.valueOf(Questionary.STATUS_END);
-	public String userId = String.valueOf(this);
+	// public String userId = String.valueOf("");
 	public String isResponse = "false";
 
 	@Override
@@ -75,6 +75,8 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select q.id,q.status_,q.subject,q.start_date,q.end_date");
+		sql.append(",(select score from bc_ivg_respond where pid = q.id and author_id ="
+				+ this.getUserId() + ") score");
 		sql.append(",(select count(*) from bc_ivg_question where pid = q.id) count,q.permitted");
 		sql.append(",(select count(*) from bc_ivg_respond where pid = q.id) answerNumber");
 		sql.append(",iss.actor_name issuer,q.issue_date,q.pigeonhole_date,pig.actor_name pigeonholer");
@@ -98,6 +100,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("start_date", rs[i++]);
 				map.put("end_date", rs[i++]);
+				map.put("score", rs[i++]);
 				map.put("count", rs[i++]);
 				map.put("permitted", rs[i++]);
 				map.put("answerNumber", rs[i++]);
@@ -118,11 +121,14 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("q.id", "id"));
+		columns.add(new TextColumn4MapKey("q.status_", "score",
+				getText("questionary.respondStatus"), 60).setSortable(true)
+				.setValueFormater(new RespondStausFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.status_", "status_",
 				getText("questionary.status"), 60).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
-				getText("questionary.subject")).setSortable(true)
+				getText("questionary.subject"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)
@@ -134,14 +140,17 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						return (Date) contract.get("end_date");
 					}
 				}));
+		columns.add(new TextColumn4MapKey("iss.actor_name", "score",
+				getText("questionary.score"), 50).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "count",
-				getText("questionary.count"), 80).setSortable(true)
+				getText("questionary.count"), 50).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "answerNumber",
 				getText("questionary.answerNumber"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.permitted", "permitted",
-				getText("questionary.permitted"), 150).setSortable(true)
+				getText("questionary.permitted"), 130).setSortable(true)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "issuer",
@@ -226,6 +235,16 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		return andCondition;
 	}
 
+	/**
+	 * 获取用户ID
+	 * 
+	 * @return
+	 */
+	public Long getUserId() {
+		SystemContext context = (SystemContext) this.getContext();
+		return context.getUserHistory().getId();
+	}
+
 	@Override
 	protected void extendGridExtrasData(Json json) {
 		super.extendGridExtrasData(json);
@@ -234,10 +253,10 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		if (this.status != null && this.status.trim().length() > 0) {
 			json.put("status", status);
 		}
-		// 用户条件
-		if (this.userId != null && this.userId.trim().length() > 0) {
-			json.put("userId", userId);
-		}
+		// // 用户条件
+		// if (this.userId != null && this.userId.trim().length() > 0) {
+		// json.put("userId", userId);
+		// }
 
 	}
 
@@ -252,7 +271,6 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		return "['subject']";
 	}
 
-
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
@@ -261,7 +279,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 				this.getResponseValue(), "isResponse", 1,
 				getText("title.click2changeResponseStatus")));
 
-		//tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+		// tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 

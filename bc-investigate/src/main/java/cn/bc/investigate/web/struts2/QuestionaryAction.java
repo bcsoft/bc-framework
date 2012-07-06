@@ -119,6 +119,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	protected void afterCreate(Questionary entity) {
 		super.afterCreate(entity);
 		this.getE().setType(Questionary.TYPE_PAPER);
+		this.getE().setPermitted(false);
 		this.getE().setIssuer(null);
 	}
 

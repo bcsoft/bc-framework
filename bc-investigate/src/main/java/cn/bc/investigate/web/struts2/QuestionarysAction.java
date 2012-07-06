@@ -115,10 +115,10 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("q.id", "id"));
 		columns.add(new TextColumn4MapKey("q.status_", "status_",
-				getText("questionary.status"), 60).setSortable(true)
+				getText("questionary.status"), 50).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
-				getText("questionary.subject")).setSortable(true)
+				getText("questionary.subject"),250).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)
@@ -131,13 +131,13 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 					}
 				}));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "count",
-				getText("questionary.count"), 80).setSortable(true)
+				getText("questionary.count"), 50).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "answerNumber",
 				getText("questionary.answerNumber"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.permitted", "permitted",
-				getText("questionary.permitted"), 150).setSortable(true)
+				getText("questionary.permitted"), 130).setSortable(true)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "issuer",
