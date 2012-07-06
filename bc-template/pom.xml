@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>bc-template</artifactId>
 	<description>模板管理</description>
+	<version>0.9.8.2</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
@@ -17,12 +18,12 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-orm-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -32,19 +33,19 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-docs</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-option</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 		</dependency>
 		
 		<!-- for test -->
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>
-			<version>${project.version}</version>
+			<version>0.9.8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
