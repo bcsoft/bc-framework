@@ -51,9 +51,10 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	public boolean isReadonly() {
-		// 调查问卷管理员或系统管理员
+		// 网上考试管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin"));
+		return !context.hasAnyRole(getText("key.role.bc.admin"),
+				getText("key.role.bc.question.exam"));
 
 	}
 
@@ -115,10 +116,10 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("q.id", "id"));
 		columns.add(new TextColumn4MapKey("q.status_", "status_",
-				getText("questionary.status"), 50).setSortable(true)
+				getText("questionary.status"), 60).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
-				getText("questionary.subject"),250).setSortable(true)
+				getText("questionary.subject"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)

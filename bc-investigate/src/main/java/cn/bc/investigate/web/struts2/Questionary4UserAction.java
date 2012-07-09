@@ -56,13 +56,13 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	public Long userId;// 用户ID
 	public int score4User;// 用户得分
 
-	@Override
-	public boolean isReadonly() {
-		// 问卷管理员或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bs.driver"),
-				getText("key.role.bc.admin"));
-	}
+	// @Override
+	// public boolean isReadonly() {
+	// // 问卷管理员或系统管理员
+	// SystemContext context = (SystemContext) this.getContext();
+	// return !context.hasAnyRole(getText("key.role.bs.driver"),
+	// getText("key.role.bc.admin"));
+	// }
 
 	@Autowired
 	public void setQuestionaryService(QuestionaryService questionaryService) {
@@ -83,15 +83,15 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(325)
 				.setHeight(500);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
-		boolean readonly = this.isReadonly();
-		if (editable && !readonly) {
-			pageOption.put("readonly", readonly);
+		// boolean readonly = this.isReadonly();
+		if (editable) {
+			pageOption.put("readonly", false);
 
 		} else {
-			pageOption.put("readonly", false);
+			pageOption.put("readonly", true);
 		}
 		// 添加按钮
 		buildFormPageButtons(pageOption, editable);
@@ -392,13 +392,14 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		userId = context.getUserHistory().getId();
 		Questionary e = this.questionaryService.load(this.getId());
 		this.setE(e);
-		// 强制表单只读
-		this.formPageOption = buildFormPageOption(false);
+		this.formPageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
 		this.initForm(false);
 		this.afterOpen(e);
 		boolean isExist = IsExisUser(e);
 		if (isExist) {
+			// 强制表单只读
+			this.formPageOption = buildFormPageOption(false);
 			score4User = this.getUserScore(userId, e);
 			return "statistics";
 		} else {

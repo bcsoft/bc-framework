@@ -72,7 +72,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(320)
 				.setHeight(500);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
@@ -155,10 +155,10 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 					// questionResource.setSeperateScore(true);
 					// 布局
 					// 选择题才有布局
-					if (type == 0 || type == 1) {
-						questionResource.setConfig("{layout_orientation:"
-								+ json.getString("config") + "}");
-					}
+//					if (type == 0 || type == 1) {
+//						questionResource.setConfig("{layout_orientation:"
+//								+ json.getString("config") + "}");
+//					}
 					// questionResource.setConfig(null);
 					questionResource.setSubject(json.getString("subject"));
 					questionResource.setScore(json.getInt("score"));
@@ -267,7 +267,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	}
 
 	protected PageOption buildPreviewFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(320)
 				.setHeight(550);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
@@ -275,14 +275,15 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			pageOption.put("readonly", false);
 
 		} else {
-			pageOption.put("readonly", false);
+			pageOption.put("readonly", true);
 		}
 		// 添加按钮
-		buildPreviewFormPageButtons(pageOption, editable);
+		// buildPreviewFormPageButtons(pageOption, editable);
 
 		return pageOption;
 	}
 
+	// 发布按钮
 	protected void buildPreviewFormPageButtons(PageOption pageOption,
 			boolean editable) {
 		pageOption.addButton(new ButtonOption(getText("questionary.issue"),
