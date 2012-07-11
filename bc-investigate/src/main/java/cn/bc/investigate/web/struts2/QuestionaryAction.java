@@ -155,10 +155,10 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 					// questionResource.setSeperateScore(true);
 					// 布局
 					// 选择题才有布局
-//					if (type == 0 || type == 1) {
-//						questionResource.setConfig("{layout_orientation:"
-//								+ json.getString("config") + "}");
-//					}
+					// if (type == 0 || type == 1) {
+					// questionResource.setConfig("{layout_orientation:"
+					// + json.getString("config") + "}");
+					// }
 					// questionResource.setConfig(null);
 					questionResource.setSubject(json.getString("subject"));
 					questionResource.setScore(json.getInt("score"));
@@ -396,6 +396,18 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	public int getJoinCount() {
 		Set<Respond> actor = this.getE().getResponds();
 		return actor.size();
+	}
+
+	// 获取试卷的总分
+	public int totalScore() {
+		int i = 0;
+		Set<Question> questions = this.getE().getQuestions();
+		Iterator<Question> q = questions.iterator();
+		while (q.hasNext()) {
+			Question question = q.next();
+			i += question.getScore();
+		}
+		return i;
 	}
 
 	/**

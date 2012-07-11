@@ -55,6 +55,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	public Map<String, String> statusesValue;
 	public Long userId;// 用户ID
 	public int score4User;// 用户得分
+	public Long pid;// 作答表关联试卷的Id
 
 	// @Override
 	// public boolean isReadonly() {
@@ -389,8 +390,16 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	@Override
 	public String open() throws Exception {
 		SystemContext context = this.getSystyemContext();
-		userId = context.getUserHistory().getId();
-		Questionary e = this.questionaryService.load(this.getId());
+		Questionary e;
+		if (userId == null) {
+			userId = context.getUserHistory().getId();
+		}
+		if (pid == null) {
+			e = this.questionaryService.load(this.getId());
+		} else {
+			e = this.questionaryService.load(pid);
+		}
+
 		this.setE(e);
 		this.formPageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
@@ -436,7 +445,9 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	 */
 	private boolean IsExisUser(Questionary e) {
 		SystemContext context = this.getSystyemContext();
-		Long userId = context.getUserHistory().getId();
+		if (userId == null) {
+			userId = context.getUserHistory().getId();
+		}
 		Set<Respond> respond = e.getResponds();
 		Iterator<Respond> r = respond.iterator();
 		boolean isExist = false;
