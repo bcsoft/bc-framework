@@ -20,6 +20,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContext;
@@ -425,6 +426,16 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 				getText("questionary.release.end"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
+	}
+
+	// 提示只能删除未作答过的试卷
+	@Override
+	protected String getDeleteExceptionMsg(Exception e) {
+		//
+		if (e instanceof PermissionDeniedException) {
+			return "只能删除删除未作答过的试卷！";
+		}
+		return super.getDeleteExceptionMsg(e);
 	}
 
 }

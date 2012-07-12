@@ -406,7 +406,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		this.initForm(false);
 		this.afterOpen(e);
 		boolean isExist = IsExisUser(e);
-		if (isExist) {
+		if (isExist || e.getStatus() == Questionary.STATUS_END) {
 			// 强制表单只读
 			this.formPageOption = buildFormPageOption(false);
 			score4User = this.getUserScore(userId, e);
@@ -434,6 +434,18 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 			}
 		}
 
+		return i;
+	}
+
+	// 获取试卷的总分
+	public int totalScore() {
+		int i = 0;
+		Set<Question> questions = this.getE().getQuestions();
+		Iterator<Question> q = questions.iterator();
+		while (q.hasNext()) {
+			Question question = q.next();
+			i += question.getScore();
+		}
 		return i;
 	}
 

@@ -48,8 +48,9 @@ import cn.bc.web.ui.json.Json;
 @Controller
 public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(Questionary.STATUS_ISSUE) + ","
-			+ String.valueOf(Questionary.STATUS_END);
+	public String status = String.valueOf(Questionary.STATUS_ISSUE);
+	// public String status = String.valueOf(Questionary.STATUS_ISSUE) + ","
+	// + String.valueOf(Questionary.STATUS_END);
 	// public String userId = String.valueOf("");
 	public String isResponse = "false";
 
@@ -201,6 +202,12 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		ids.add(context.getUserHistory().getId());
 		// 根据集合数量，生成的占位符字符串
 		String qlStr = "?";
+		// 作答与全部的状态条件
+		if (isResponse.equals("true")
+				|| (isResponse == null || isResponse.length() == 0)) {
+			status = String.valueOf(Questionary.STATUS_ISSUE) + ","
+					+ String.valueOf(Questionary.STATUS_END);
+		}
 
 		// 状态条件
 		Condition statusCondition = null;
