@@ -43,7 +43,7 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：创建日期
-		return new OrderCondition("r.file_date", Direction.Desc);
+		return new OrderCondition("r.file_date", Direction.Asc);
 
 	}
 
@@ -97,7 +97,7 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ad.actor_name", "r.score", };
+		return new String[] { "ad.actor_name" };
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(400).setMinWidth(100)
-				.setHeight(300).setMinHeight(100);
+				.setHeight(500).setMinHeight(100);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
-		return true;
+		return false;
 	}
 
 	// ==高级搜索代码结束==
