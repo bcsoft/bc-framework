@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
@@ -43,6 +44,7 @@ public class SelectUsersAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	private boolean history;// 是否选择ActorHistory信息
+	private String group;// 指定岗位的编码
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED) + ","
 			+ String.valueOf(BCConstants.STATUS_DISABLED); // 用户的状态，多个用逗号连接
 
@@ -52,6 +54,14 @@ public class SelectUsersAction extends
 
 	public void setHistory(boolean history) {
 		this.history = history;
+	}
+	
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	@Override
@@ -76,6 +86,10 @@ public class SelectUsersAction extends
 			sql.append("select a.id,a.status_,h.actor_name,h.upper_name,a.code ");
 			sql.append("from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
+		}
+		if(null != group && this.group.length() > 0){
+			sql.append(" left join bc_identity_actor_relation ar on ar.follower_id = a.id ");
+			sql.append(" left join bc_identity_actor g on ar.master_id = g.id ");
 		}
 		sqlObject.setSql(sql.toString());
 
@@ -171,17 +185,27 @@ public class SelectUsersAction extends
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		Condition statusCondition = null;
+		Condition groupCondition = null;
+		Condition aTypeCondition = null;
+		Condition gTypeCondition = null;
+		
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
 			if (ss.length == 1) {
-				return new EqualsCondition("a.status_", new Integer(ss[0]));
+				statusCondition =  new EqualsCondition("a.status_", new Integer(ss[0]));
 			} else {
-				return new InCondition("a.status_",
+				statusCondition = new InCondition("a.status_",
 						StringUtils.stringArray2IntegerArray(ss));
 			}
-		} else {
-			return null;
+		} 
+		if(null != group && this.group.length() > 0){//所属岗位的用户
+			groupCondition =  new EqualsCondition("g.code", this.group);
+			aTypeCondition =  new EqualsCondition("a.type_", 4);//岗位
+			gTypeCondition =  new EqualsCondition("g.type_", 3);//用户
 		}
+		return ConditionUtils.mix2AndCondition(statusCondition,groupCondition
+				,aTypeCondition,gTypeCondition);
 	}
 
 	@Override
@@ -192,6 +216,7 @@ public class SelectUsersAction extends
 			json.put("status", status);
 		}
 		json.put("history", history);
+		json.put("group", group);
 
 		return json.isEmpty() ? null : json;
 	}
