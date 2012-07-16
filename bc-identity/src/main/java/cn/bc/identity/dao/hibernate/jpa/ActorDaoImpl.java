@@ -145,12 +145,14 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 
 	public List<Actor> findFollower(Long masterId, Integer[] relationTypes,
 			Integer[] followerTypes) {
-		return this.findFollowerWithName(masterId, null, relationTypes, followerTypes);
+		return this.findFollowerWithName(masterId, null, relationTypes,
+				followerTypes, null);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Actor> findFollowerWithName(Long masterId, String followerName,
-			Integer[] relationTypes, Integer[] followerTypes) {
+			Integer[] relationTypes, Integer[] followerTypes,
+			Integer[] followerStatuses) {
 		if (masterId == null)
 			return new ArrayList<Actor>();
 
@@ -188,6 +190,22 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				for (int i = 1; i < followerTypes.length; i++) {
 					hql.append(",?");
 					args.add(followerTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的状态，对应Actor的status属性
+		if (followerStatuses != null && followerStatuses.length > 0) {
+			if (followerStatuses.length == 1) {
+				hql.append(" and f.status=?");
+				args.add(followerStatuses[0]);
+			} else {
+				hql.append(" and f.status in (?");
+				args.add(followerStatuses[0]);
+				for (int i = 1; i < followerStatuses.length; i++) {
+					hql.append(",?");
+					args.add(followerStatuses[i]);
 				}
 				hql.append(")");
 			}

@@ -70,10 +70,11 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 				followerTypes);
 	}
 
-	public List<Actor> findFollowerWithName(Long masterId, String followerName, Integer[] relationTypes,
-			Integer[] followerTypes) {
-		return this.actorDao.findFollowerWithName(masterId, followerName, relationTypes,
-				followerTypes);
+	public List<Actor> findFollowerWithName(Long masterId, String followerName,
+			Integer[] relationTypes, Integer[] followerTypes,
+			Integer[] followerStatuses) {
+		return this.actorDao.findFollowerWithName(masterId, followerName,
+				relationTypes, followerTypes, followerStatuses);
 	}
 
 	public List<Actor> findTopUnit() {
@@ -134,7 +135,8 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 		return this.actorDao.find(actorTypes, actorStatues);
 	}
 
-	public List<ActorHistory> findHistory(Integer[] actorTypes, Integer[] actorStatues) {
+	public List<ActorHistory> findHistory(Integer[] actorTypes,
+			Integer[] actorStatues) {
 		return this.actorDao.findHistory(actorTypes, actorStatues);
 	}
 
