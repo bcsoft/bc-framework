@@ -21,6 +21,7 @@ public class Answer extends EntityImpl {
 	private QuestionItem item; // 作答的问题项
 	private int score; // 得分（仅适用于网上考试）
 	private String content; // 问答题填写的内容
+	private boolean grade = false;// 标识该问题项是否已评分
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "RID", referencedColumnName = "ID")
@@ -57,4 +58,13 @@ public class Answer extends EntityImpl {
 	public void setScore(int score) {
 		this.score = score;
 	}
+
+	public boolean isGrade() {
+		return grade;
+	}
+
+	public void setGrade(boolean grade) {
+		this.grade = grade;
+	}
+
 }

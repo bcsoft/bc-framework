@@ -35,6 +35,7 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -224,25 +225,22 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		if (this.isReadonly()) {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		} else {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
+		// 查看按钮
+		//tb.addButton(this.getDefaultOpenToolbarButton());
+		// 新建按钮
+		tb.addButton(this.getDefaultCreateToolbarButton());
 
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除
-			tb.addButton(this.getDefaultDeleteToolbarButton());
-			// 如果是管理员,可以看到状态按钮组
-			if (!this.isReadonly()) {
-				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-						this.getBSStatuses(), "status", 1,
-						getText("title.click2changeSearchStatus")));
+		// 编辑按钮
+		tb.addButton(this.getDefaultEditToolbarButton());
+		// 删除
+		tb.addButton(this.getDefaultDeleteToolbarButton());
+		// 问答题评分按钮
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
+				.setText("问答题评分").setClick("bc.questionaryView.score"));
 
-			}
-		}
+		// 如果是管理员,可以看到状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getBSStatuses(),
+				"status", 1, getText("title.click2changeSearchStatus")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());

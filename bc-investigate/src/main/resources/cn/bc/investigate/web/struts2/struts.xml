@@ -34,4 +34,14 @@
 		</action>
 		<action name="save" class="questionary4UserAction" method="save"/>
 	</package>
+	<!-- 问答题评分 -->
+	<package name="score4Ques" extends="bc-default" namespace="/bc/score4Ques">
+		<action name="open" class="score4QuesAction" method="open">
+			<result name="formr">/bc/score4Ques/form.jsp</result>
+		</action>
+		<action name="edit" class="score4QuesAction" method="edit">
+			<result name="form">/bc/score4Ques/form.jsp</result>
+		</action>
+		<action name="save" class="score4QuesAction" method="save"/>
+	</package>
 </struts>

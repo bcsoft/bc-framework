@@ -29,6 +29,7 @@ public class Respond extends EntityImpl {
 	private ActorHistory author;// 作答人
 	private Set<Answer> answers;// 答案集
 	private int score; // 分数（仅适用于网上考试）
+	private boolean grade = false;// 标识该试卷是否已评分
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
@@ -74,6 +75,14 @@ public class Respond extends EntityImpl {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public boolean isGrade() {
+		return grade;
+	}
+
+	public void setGrade(boolean grade) {
+		this.grade = grade;
 	}
 
 }

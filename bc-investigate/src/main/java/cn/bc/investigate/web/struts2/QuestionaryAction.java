@@ -148,10 +148,16 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 					// 题型
 					int type = Integer.parseInt(json.getString("type"));
 					questionResource.setType(type);
-					// 填空题才有全选方得分的概念
-					if (type == 1) {
+					// 多选题才有全选方得分的概念
+					if (type == Question.TYPE_CHECKBOX) {
 						questionResource.setSeperateScore(Boolean.valueOf(json
 								.getString("seperateScore")));
+					}
+					// 问答题是否需要评分
+					if (type == Question.TYPE_QA) {
+						questionResource.setGrade(Boolean.valueOf(json
+								.getString("grade")));
+
 					}
 					// questionResource.setSeperateScore(true);
 					// 布局

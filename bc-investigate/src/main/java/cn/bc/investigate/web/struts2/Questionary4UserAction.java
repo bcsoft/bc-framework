@@ -202,14 +202,20 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 						if (questionJson.getInt("type") == Question.TYPE_QA) {
 							answerResource.setRespond(respondResource);
 							answerResource.setItem(questionItem);
-
 							answerResource.setContent(answerItem
 									.getString("subject"));
-							Question oneQuestion = getQuestionObject(questionJson
-									.getLong("questionId"));
-							int Jquizscore = oneQuestion.getScore();
-							answerResource.setScore(Jquizscore);
-							score += Jquizscore;
+							// 如果需要评分的不作计分处理
+							boolean grade = answerItem.getBoolean("grade");
+							if (!grade) {
+								Question oneQuestion = getQuestionObject(questionJson
+										.getLong("questionId"));
+								int Jquizscore = oneQuestion.getScore();
+								answerResource.setScore(Jquizscore);
+								score += Jquizscore;
+							} else {
+								answerResource.setGrade(grade);
+								respondResource.setGrade(grade);
+							}
 						}
 						// 填空题
 						if (questionJson.getInt("type") == Question.TYPE_FILL_IN) {
@@ -385,6 +391,17 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 			}
 		}
 		return resultArray;
+	}
+
+	// 获取问卷是否已评分
+	public boolean getIsNeedGrade() {
+
+		Respond respond = this.getUserRespond();
+		if (respond.isGrade()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
