@@ -505,6 +505,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			history.setActorId(follower.getId());
 			history.setActorType(follower.getType());
 			history.setName(follower.getName());
+			history.setCode(follower.getCode());
 			history.setCreateDate(now);
 			history.setCurrent(true);
 			history.setRank(0);
