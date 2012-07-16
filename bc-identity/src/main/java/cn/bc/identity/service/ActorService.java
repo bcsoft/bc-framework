@@ -75,6 +75,22 @@ public interface ActorService extends CrudService<Actor> {
 			Integer[] followerTypes);
 
 	/**
+	 * 获取隶属指定actor的所有子actor
+	 * 
+	 * @param masterId
+	 *            主控方id
+	 * @param relationTypes
+	 *            关联的类型，对应ActorRelation的type属性
+	 * @param followerTypes
+	 *            从属方的类型，对应Actor的type属性
+	 * @param followerName
+	 *            从属方的名称
+	 * @return
+	 */
+	List<Actor> findFollowerWithName(Long masterId, String followerName, Integer[] relationTypes,
+			Integer[] followerTypes);
+
+	/**
 	 * 获取顶层单位信息
 	 * 
 	 * @return
