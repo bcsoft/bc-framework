@@ -100,10 +100,10 @@ public abstract class AbstractActorsAction extends
 				getText("actor.pname")).setSortable(true).setUseTitleFromLabel(
 				true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("actor.name"), 80).setSortable(true)
+				getText("actor.name"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("actor.code"), 120).setSortable(true)
+				getText("actor.code"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("actor.order"), 100).setSortable(true)

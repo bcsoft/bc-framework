@@ -143,10 +143,16 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		return this.getJpaTemplate().find(hql.toString(), args.toArray());
 	}
 
-	@SuppressWarnings("unchecked")
-	//
 	public List<Actor> findFollower(Long masterId, Integer[] relationTypes,
 			Integer[] followerTypes) {
+		return this.findFollowerWithName(masterId, null, relationTypes,
+				followerTypes, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Actor> findFollowerWithName(Long masterId, String followerName,
+			Integer[] relationTypes, Integer[] followerTypes,
+			Integer[] followerStatuses) {
 		if (masterId == null)
 			return new ArrayList<Actor>();
 
@@ -187,6 +193,28 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				}
 				hql.append(")");
 			}
+		}
+
+		// 从属方的状态，对应Actor的status属性
+		if (followerStatuses != null && followerStatuses.length > 0) {
+			if (followerStatuses.length == 1) {
+				hql.append(" and f.status=?");
+				args.add(followerStatuses[0]);
+			} else {
+				hql.append(" and f.status in (?");
+				args.add(followerStatuses[0]);
+				for (int i = 1; i < followerStatuses.length; i++) {
+					hql.append(",?");
+					args.add(followerStatuses[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的名称，对应Actor的name属性
+		if (followerName != null && followerName.length() > 0) {
+			hql.append(" and f.name=?");
+			args.add(followerName);
 		}
 
 		// 排序
@@ -505,6 +533,7 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			history.setActorId(follower.getId());
 			history.setActorType(follower.getType());
 			history.setName(follower.getName());
+			history.setCode(follower.getCode());
 			history.setCreateDate(now);
 			history.setCurrent(true);
 			history.setRank(0);
