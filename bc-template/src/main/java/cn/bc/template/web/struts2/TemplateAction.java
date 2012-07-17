@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -34,6 +36,8 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.option.domain.OptionItem;
 import cn.bc.template.domain.Template;
+import cn.bc.template.domain.TemplateParam;
+import cn.bc.template.service.TemplateParamService;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.service.TemplateTypeService;
 import cn.bc.template.util.DocxUtils;
@@ -57,9 +61,14 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	private static final long serialVersionUID = 1L;
 	private TemplateService templateService;
 	private TemplateTypeService templateTypeService;
+	private TemplateParamService templateParamService;
 
 	// 模板类型集合
 	public List<Map<String, String>> typeList;
+	
+	//模板参数
+	public String templateParamIds;
+	public Set<TemplateParam> templateParams;
 
 	@Autowired
 	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
@@ -70,6 +79,11 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public void setTemplateService(TemplateService templateService) {
 		this.setCrudService(templateService);
 		this.templateService = templateService;
+	}
+	
+	@Autowired
+	public void setTemplateParamService(TemplateParamService templateParamService) {
+		this.templateParamService = templateParamService;
 	}
 
 	@Override
@@ -130,6 +144,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
 		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
 				.toString(), entity.getTemplateType().getName());
+		this.templateParams=entity.getParams();
 	}
 
 	@Override
@@ -138,6 +153,38 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
 		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
 				.toString(), entity.getTemplateType().getName());
+		this.templateParams=entity.getParams();
+	}
+	
+	
+	@Override
+	protected void beforeSave(Template entity) {
+		super.beforeSave(entity);
+		
+		Long[] ids = null;
+		if (this.templateParamIds != null && this.templateParamIds.length() > 0) {
+			String[] tpIds = this.templateParamIds.split(",");
+			ids = new Long[tpIds.length];
+			for (int i = 0; i < tpIds.length; i++) 
+				ids[i] = new Long(tpIds[i]);
+		}
+
+		if(ids!=null&&ids.length>0){
+			Set<TemplateParam> params=null;
+			TemplateParam templateParam=null;
+			for(int i=0;i<ids.length;i++){
+				if(i==0)
+					params=new HashSet<TemplateParam>();
+				templateParam=this.templateParamService.load(ids[i]);
+				params.add(templateParam);
+			}
+			if(this.getE().getParams()!=null){
+				this.getE().getParams().clear();
+				this.getE().getParams().addAll(params);
+			}else
+				this.getE().setParams(params);
+			
+		}
 	}
 
 	@Override

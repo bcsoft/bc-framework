@@ -66,10 +66,34 @@
 		<action name="loadOneByCode" class="templateTypeAction" method="loadOneByCode"/>
 	</package>
 	
+	<!-- 模板参数 -->
+	<package name="templateParam" extends="bc-default" namespace="/bc/templateParam">
+		<action name="create" class="templateParamAction" method="create">
+			<result name="form">/bc/template/param/form.jsp</result>
+		</action>
+		<action name="edit" class="templateParamAction" method="edit">
+			<result name="form">/bc/template/param/form.jsp</result>
+		</action>
+		<action name="open" class="templateParamAction" method="open">
+			<result name="formr">/bc/template/param/form.jsp</result>
+		</action>
+		<action name="save" class="templateParamAction" method="save"/>
+		<action name="delete" class="templateParamAction" method="delete"/>
+		<action name="list" class="templateParamAction" method="list"/>
+		<action name="data" class="templateParamAction" method="data"/>
+	</package>
+	
 	<!-- 选择模板 -->
 	<package name="selectTempalte" extends="bc-default" namespace="/bc/selectTempalte">
 		<action name="list" class="selectTempalteAction" method="list"/>
 		<action name="paging" class="selectTempalteAction" method="paging"/>
 		<action name="data" class="selectTempalteAction" method="data"/>
+	</package>
+	
+	<!-- 选择模板参数 -->
+	<package name="selectTempalteParam" extends="bc-default" namespace="/bc/selectTempalteParam">
+		<action name="list" class="selectTempalteParamAction" method="list"/>
+		<action name="paging" class="selectTempalteParamAction" method="paging"/>
+		<action name="data" class="selectTempalteParamAction" method="data"/>
 	</package>
 </struts>

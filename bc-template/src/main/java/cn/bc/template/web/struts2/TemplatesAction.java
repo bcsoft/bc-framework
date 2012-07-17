@@ -35,6 +35,7 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -225,10 +226,15 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 					.setClick("bc.templateList.inline"));
 			
 			if(code == null || code.length()==0){
+				// "更多"按钮
+				ToolbarMenuButton menuButton = new ToolbarMenuButton(
+						getText("template.config"))
+						.setChange("bc.templateList.config");
+				tb.addButton(menuButton.setIcon("ui-icon-wrench"));
 				// 配置模板类型
-				tb.addButton(new ToolbarButton().setIcon("ui-icon-wrench")
-						.setText(getText("template.config.type"))
-						.setClick("bc.templateList.configType"));
+				menuButton.addMenuItem(getText("template.config.type"), "type");
+				// 配置模板参数
+				menuButton.addMenuItem(getText("template.config.param"), "param");
 			}
 		}
 

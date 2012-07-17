@@ -14,12 +14,16 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -65,6 +69,19 @@ public class Template extends RichFileEntityImpl {
 	private TemplateType templateType;
 	private Long size;// 文件的大小(单位为字节) 默认0
 	private boolean formatted;// 格式化：模板是否允许格式化 默认否
+	private Set<TemplateParam> params;//模板所使用的参数
+	
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "BC_TEMPLATE_TEMPLATE_PARAM", joinColumns = @JoinColumn(name = "TID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PID", referencedColumnName = "ID"))
+	@OrderBy("orderNo asc")
+	public Set<TemplateParam> getParams() {
+		return params;
+	}
+
+	public void setParams(Set<TemplateParam> params) {
+		this.params = params;
+	}
 
 	@Column(name = "SIZE_")
 	public long getSize() {

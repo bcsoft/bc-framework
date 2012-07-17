@@ -13,6 +13,7 @@
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
+	<!-- 模板 -->
 	<bean id="templateDao" class="cn.bc.template.dao.hibernate.jpa.TemplateDaoImpl"
 		p:entityClass="cn.bc.template.domain.Template"
 		p:entityManagerFactory-ref="entityManagerFactory" />
@@ -21,11 +22,21 @@
 		p:templateDao-ref="templateDao"
 		/>
 		
+	<!-- 模板类型 -->
 	<bean id="templateTypeDao" class="cn.bc.template.dao.hibernate.jpa.TemplateTypeDaoImpl"
 		p:entityClass="cn.bc.template.domain.TemplateType"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
 		p:entityClass="cn.bc.template.domain.TemplateType" 
 		p:templateTypeDao-ref="templateTypeDao"
+		/>	
+		
+	<!-- 模板参数 -->
+	<bean id="templateParamDao" class="cn.bc.template.dao.hibernate.jpa.TemplateParamDaoImpl"
+		p:entityClass="cn.bc.template.domain.TemplateParam"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="templateParamService" class="cn.bc.template.service.TemplateParamServiceImpl"
+		p:entityClass="cn.bc.template.domain.TemplateParam" 
+		p:templateParamDao-ref="templateParamDao"
 		/>	
 </beans>
