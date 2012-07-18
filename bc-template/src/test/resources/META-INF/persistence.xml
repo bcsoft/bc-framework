@@ -21,6 +21,8 @@
 		<class>cn.bc.identity.domain.Duty</class>
 		
 		<class>cn.bc.template.domain.Template</class>
+		<class>cn.bc.template.domain.TemplateType</class>
+		<class>cn.bc.template.domain.TemplateParam</class>
 
 		<!-- 排除没有在这里声明的注解类 -->
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
