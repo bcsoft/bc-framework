@@ -393,7 +393,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		return resultArray;
 	}
 
-	// 获取问卷是否已评分
+	// 获取问卷是否已全部评分
 	public boolean getIsNeedGrade() {
 
 		Respond respond = this.getUserRespond();
@@ -402,6 +402,20 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		} else {
 			return false;
 		}
+	}
+
+	// 获取需要评分的问答题是否已经评分
+	public boolean isAlreadyScore(Long iid) {
+		Respond respond = getUserRespond();
+		Set<Answer> answer = respond.getAnswers();
+		Iterator<Answer> a = answer.iterator();
+		while (a.hasNext()) {
+			Answer oneAnswer = a.next();
+			if (iid.equals(oneAnswer.getItem().getId())) {
+				return oneAnswer.isGrade();
+			}
+		}
+		return true;
 	}
 
 	@Override

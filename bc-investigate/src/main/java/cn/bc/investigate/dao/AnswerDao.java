@@ -7,7 +7,7 @@ import cn.bc.core.dao.CrudDao;
 import cn.bc.investigate.domain.Answer;
 
 /**
- * 问题项的答案Dao
+ * 用户作答的内容Dao
  * 
  * @author zxr
  */

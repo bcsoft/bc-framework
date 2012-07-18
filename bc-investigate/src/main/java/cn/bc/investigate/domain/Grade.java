@@ -28,7 +28,7 @@ public class Grade extends EntityImpl {
 	private ActorHistory author;// 评分人
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "PID", referencedColumnName = "ID")
+	@JoinColumn(name = "ANSWER_ID", referencedColumnName = "ID")
 	public Answer getAnswer() {
 		return answer;
 	}

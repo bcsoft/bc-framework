@@ -21,10 +21,10 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.investigate.domain.Question;
-import cn.bc.investigate.domain.Questionary;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
@@ -40,10 +40,11 @@ import cn.bc.web.ui.json.Json;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class Score4QuessAction extends ViewAction<Map<String, Object>> {
+public class GradesAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public Long id;// 试卷ID
 	public String title;// 试卷标题
+	public String isGrades = "true";// 默认未评分
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
@@ -58,8 +59,9 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select q.id,q.subject testTitle,qs.subject questionTitle,ad.actor_name answer");
+		sql.append("select g.id,q.subject testTitle,qs.subject questionTitle,ad.actor_name answer");
 		sql.append(" ,r.file_date answerTime,a.content,ra.actor_name rating,g.file_date ratingTime");
+		sql.append(",a.id aid,r.id rid,qs.score,q.id qid");
 		sql.append(" from bc_ivg_questionary q");
 		sql.append(" left join bc_ivg_respond r on r.pid = q.id");
 		sql.append(" left join bc_ivg_question qs on qs.pid = q.id");
@@ -67,7 +69,7 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 		sql.append(" left join bc_ivg_answer a on (a.qid = i.id and a.rid = r.id)");
 		sql.append(" left join bc_ivg_grade g on g.answer_id = a.id");
 		sql.append(" left join bc_identity_actor_history ad on ad.id=r.author_id");
-		sql.append(" left join bc_identity_actor_history ra on ad.id=g.author_id");
+		sql.append(" left join bc_identity_actor_history ra on ra.id=g.author_id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -86,6 +88,10 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 				map.put("content", rs[i++]);
 				map.put("rating", rs[i++]);
 				map.put("ratingTime", rs[i++]);
+				map.put("aid", rs[i++]);
+				map.put("rid", rs[i++]);
+				map.put("score", rs[i++]);
+				map.put("qid", rs[i++]);
 				return map;
 			}
 		});
@@ -95,7 +101,7 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("q.id", "id"));
+		columns.add(new IdColumn4MapKey("g.id", "id"));
 		columns.add(new TextColumn4MapKey("ad.actor_name", "answer",
 				getText("checkRespond.answer"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -103,28 +109,34 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 				getText("checkRespond.submitTime"), 120).setSortable(true)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("qs.subject", "questionTitle",
-				getText("score4Ques.questionTitle"), 150).setSortable(true)
+				getText("grade.questionTitle"), 150).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.content", "content",
-				getText("score4Ques.answer"), 250).setSortable(true)
+				getText("grade.answer"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("ra.actor_name", "rating",
-				getText("score4Ques.rating"), 80).setSortable(true)
+				getText("grade.rating"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("g.file_date", "ratingTime",
-				getText("score4Ques.ratingTime"), 120).setSortable(true)
+				getText("grade.ratingTime"), 120).setSortable(true)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		// 评分表单的内容
+		columns.add(new HiddenColumn4MapKey("aid", "aid"));
+		columns.add(new HiddenColumn4MapKey("rid", "rid"));
+		columns.add(new HiddenColumn4MapKey("score", "score"));
+		columns.add(new HiddenColumn4MapKey("testTitle", "testTitle"));
+		columns.add(new HiddenColumn4MapKey("qid", "qid"));
 		return columns;
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ad.actor_name" };
+		return new String[] { "ad.actor_name","qs.subject" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "score4Ques";
+		return "grade";
 	}
 
 	@Override
@@ -146,7 +158,22 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 		// 题目类型
 		Condition typeCondition = null;
 		typeCondition = new EqualsCondition("qs.type_", Question.TYPE_QA);
-		return andCondition.add(idCondition, typeCondition);
+		andCondition.add(idCondition, typeCondition);
+		// 评分
+		if (isGrades.equals("false")) {
+			Condition gradesCondition = null;
+			gradesCondition = new EqualsCondition("a.grade", false);
+			andCondition.add(gradesCondition);
+		}
+		// 未评分
+		if (isGrades.equals("true")) {
+			Condition onGradesCondition = null;
+			onGradesCondition = new EqualsCondition("a.grade", true);
+			andCondition.add(onGradesCondition);
+		}
+		// 全部
+
+		return andCondition;
 	}
 
 	@Override
@@ -163,7 +190,7 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['subject']";
+		return "['questionTitle']";
 	}
 
 	// 视图的标题
@@ -177,15 +204,26 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 		// 问答题评分按钮
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
-				.setText("评分").setClick("bc.questionaryView.score"));
+				.setText("评分").setClick("bc.gradeView.score"));
 
 		// 如果是管理员,可以看到状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getBSStatuses(),
-				"status", 1, getText("title.click2changeSearchStatus")));
+				"isGrades", 1, getText("title.click2changeGradesStatus")));
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
+	}
+
+	@Override
+	protected String getGridDblRowMethod() {
+		// 强制为只读表单
+		return "bc.gradeView.dblclick";
+	}
+
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getContextPath() + "/bc/grade/view.js";
 	}
 
 	/**
@@ -195,12 +233,8 @@ public class Score4QuessAction extends ViewAction<Map<String, Object>> {
 	 */
 	protected Map<String, String> getBSStatuses() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(Questionary.STATUS_DRAFT),
-				getText("questionary.release.wait"));
-		statuses.put(String.valueOf(Questionary.STATUS_ISSUE),
-				getText("questionary.release.already"));
-		statuses.put(String.valueOf(Questionary.STATUS_END),
-				getText("questionary.release.end"));
+		statuses.put("false", getText("questionary.grades.false"));
+		statuses.put("true", getText("questionary.grades.true"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
 	}
