@@ -81,7 +81,7 @@ public class JsonUtils {
 	 * @throws com.google.gson.JsonParseException
 	 *             如果输入的字符串不是json数组格式将会抛出此异常
 	 */
-	public static Collection<Object> toCollection(String json) {
+	public static <T> Collection<T> toCollection(String json) {
 		return getGson().fromJson(json, new TypeToken<Collection<Object>>() {
 		}.getType());
 	}

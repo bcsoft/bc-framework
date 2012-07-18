@@ -3,9 +3,13 @@ package cn.bc.core.util;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import cn.bc.core.exception.CoreException;
 
 /**
  * 字符串辅助工具类
@@ -263,5 +267,53 @@ public class StringUtils {
 			return sizeInfoFormater.format(size / 1024) + "KB";
 		else
 			return sizeInfoFormater.format(size / 1024 / 1024) + "MB";
+	}
+
+	/**
+	 * 转换字符串值到指定的数据类型
+	 * 
+	 * @param type
+	 *            值类型："int"|"long"|"float"|"date"|"startDate"|"endDate"|
+	 *            "calendar"| "startCalendar"|"endCalendar"
+	 * @param value
+	 *            字符串值
+	 * @return
+	 */
+	public static Object convertValueByType(String type, String value) {
+		if (type == null || type.length() == 0)
+			return value;
+
+		if (type.equals("int")) {
+			return new Integer(value);
+		} else if (type.equals("string")) {
+			return value;
+		} else if (type.equals("long")) {
+			return new Long(value);
+		} else if (type.equals("float")) {
+			return new Float(value);
+		} else if (type.equals("date")) {
+			return DateUtils.getDate(value);
+		} else if (type.equals("startDate")) {
+			Date date = DateUtils.getDate(value);
+			DateUtils.setToZeroTime(date);
+			return date;
+		} else if (type.equals("endDate")) {
+			Date date = DateUtils.getDate(value);
+			DateUtils.setToMaxTime(date);
+			return date;
+		} else if (type.equals("calendar")) {
+			return DateUtils.getCalendar(value);
+		} else if (type.equals("startCalendar")) {
+			Calendar calendar = DateUtils.getCalendar(value);
+			DateUtils.setToZeroTime(calendar);
+			return calendar;
+		} else if (type.equals("endCalendar")) {
+			Calendar calendar = DateUtils.getCalendar(value);
+			DateUtils.setToMaxTime(calendar);
+			return calendar;
+		} else {
+			throw new CoreException("unsupport value type: type=" + type
+					+ ",value=" + value);
+		}
 	}
 }

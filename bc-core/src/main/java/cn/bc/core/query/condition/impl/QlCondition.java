@@ -4,15 +4,10 @@
 package cn.bc.core.query.condition.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
-
-import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.util.DateUtils;
+import cn.bc.core.util.StringUtils;
 
 /**
  * 基于查询语言的条件，如sql、hql
@@ -62,47 +57,13 @@ public class QlCondition implements Condition {
 
 	/**
 	 * @param type
-	 *            值类型："int"|"long"|"float"|"date"|"startDate"|"endDate"|"calendar"|
-	 *            "startCalendar"|"endCalendar"
+	 *            值类型："int"|"long"|"float"|"date"|"startDate"|"endDate"|
+	 *            "calendar"| "startCalendar"|"endCalendar"
 	 * @param value
 	 * @return
 	 */
 	public static Object convertValueByType(String type, String value) {
-		if (type == null || type.length() == 0)
-			return value;
-
-		if (type.equals("int")) {
-			return new Integer(value);
-		} else if (type.equals("string")) {
-			return value;
-		} else if (type.equals("long")) {
-			return new Long(value);
-		} else if (type.equals("float")) {
-			return new Float(value);
-		} else if (type.equals("date")) {
-			return DateUtils.getDate(value);
-		} else if (type.equals("startDate")) {
-			Date date = DateUtils.getDate(value);
-			DateUtils.setToZeroTime(date);
-			return date;
-		} else if (type.equals("endDate")) {
-			Date date = DateUtils.getDate(value);
-			DateUtils.setToMaxTime(date);
-			return date;
-		} else if (type.equals("calendar")) {
-			return DateUtils.getCalendar(value);
-		} else if (type.equals("startCalendar")) {
-			Calendar calendar = DateUtils.getCalendar(value);
-			DateUtils.setToZeroTime(calendar);
-			return calendar;
-		} else if (type.equals("endCalendar")) {
-			Calendar calendar = DateUtils.getCalendar(value);
-			DateUtils.setToMaxTime(calendar);
-			return calendar;
-		} else {
-			throw new CoreException("unsupport value type: type=" + type
-					+ ",value=" + value);
-		}
+		return StringUtils.convertValueByType(type, value);
 	}
 
 	@Override
@@ -110,7 +71,7 @@ public class QlCondition implements Condition {
 		return "ql="
 				+ this.getExpression()
 				+ ",args="
-				+ StringUtils
+				+ org.springframework.util.StringUtils
 						.collectionToCommaDelimitedString(this.getValues());
 	}
 }

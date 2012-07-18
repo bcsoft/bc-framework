@@ -344,6 +344,7 @@ public class DateUtils {
 	public static String getWasteTime(Date fromDate) {
 		return getWasteTime(fromDate, new Date());
 	}
+
 	public static String getWasteTimeCN(Date fromDate) {
 		return getWasteTimeCN(fromDate, new Date());
 	}
@@ -361,6 +362,7 @@ public class DateUtils {
 		long wt = endDate.getTime() - startDate.getTime();
 		return getWasteTime(wt);
 	}
+
 	public static String getWasteTimeCN(Date startDate, Date endDate) {
 		long wt = endDate.getTime() - startDate.getTime();
 		return getWasteTimeCN(wt);
@@ -382,8 +384,8 @@ public class DateUtils {
 		} else {// 大于1分钟
 			if (wt < 3600000) {// 小于1小时
 				long ms = wt % 1000;
-				long s = ((wt - ms) % 60000);
-				return ((wt - ms - s) / 60000) + "m " + s + "s";
+				long s = ((wt - ms) / 1000 % 60);
+				return ((wt - ms - s * 1000) / 60000) + "m " + s + "s";
 			} else if (wt < 86400000) {// 小于1天
 				long m = (wt / 60000 % 60);
 				return (wt / 3600000) + "h " + m + "m";
@@ -404,8 +406,8 @@ public class DateUtils {
 		} else {// 大于1分钟
 			if (wt < 3600000) {// 小于1小时
 				long ms = wt % 1000;
-				long s = ((wt - ms) % 60000);
-				return ((wt - ms - s) / 60000) + "分钟 " + s + "秒";
+				long s = ((wt - ms) / 1000 % 60);
+				return ((wt - ms - s * 1000) / 60000) + "分钟 " + s + "秒";
 			} else if (wt < 86400000) {// 小于1天
 				long m = (wt / 60000 % 60);
 				return (wt / 3600000) + "小时 " + m + "分钟";
