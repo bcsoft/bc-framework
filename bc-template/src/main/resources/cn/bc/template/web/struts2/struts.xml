@@ -18,9 +18,11 @@
 		<action name="list" class="templateAction" method="list"/>
 		<action name="data" class="templateAction" method="data"/>
 		<action name="isUniqueCodeAndVersion" class="templateAction" method="isUniqueCodeAndVersion"/>
-		<action name="isContent" class="templateAction" method="isContent"/>
 		<action name="loadTplConfigParam" class="templateAction" method="loadTplConfigParam"/>
-		<action name="download" class="templateAction" method="download">
+	</package>
+	
+	<package name="templatefile" extends="bc-default" namespace="/bc/templatefile">
+		<action name="download" class="templateFileAction" method="download">
 			<result name="success" type="stream">
 				<!-- 下载文件类型定义 -->
 				<param name="contentType">${contentType}</param>
@@ -32,7 +34,7 @@
 				<param name="contentDisposition">attachment; filename="${filename}"</param>
 			</result>
 		</action>
-		<action name="inline" class="templateAction" method="inline">
+		<action name="inline" class="templateFileAction" method="inline">
 			<result name="success" type="stream">
 				<!-- 下载文件类型定义 -->
 				<param name="contentType">${contentType}</param>

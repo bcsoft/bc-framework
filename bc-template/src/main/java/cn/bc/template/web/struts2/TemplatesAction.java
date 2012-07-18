@@ -75,7 +75,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		sql.append("select t.id,t.uid_,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category,a.code as typeCode,t.size_ as size,t.formatted");
+		sql.append(",t.category,a.code as typeCode,t.size_ as size,t.formatted,t.content");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
@@ -109,6 +109,13 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				map.put("typeCode", rs[i++]);
 				map.put("size", rs[i++]);
 				map.put("formatted", rs[i++]);
+				map.put("content", rs[i++]);
+				if(map.get("content")==null||map.get("content").toString().length()==0){
+					map.put("isContent", "empty");
+				}else{
+					map.put("isContent", "full");
+				}
+				
 				return map;
 			}
 		});
@@ -160,6 +167,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		columns.add(new HiddenColumn4MapKey("uid", "uid"));
+		columns.add(new HiddenColumn4MapKey("isContent", "isContent"));
 		return columns;
 	}
 

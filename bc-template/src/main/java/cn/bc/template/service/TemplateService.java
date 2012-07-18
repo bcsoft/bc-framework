@@ -103,5 +103,11 @@ public interface TemplateService extends CrudService<Template> {
 	 */
 	public List<Map<String, String>> findCategoryOption();
 
-	
+	/**
+	 * 返回模板参数的格式化对应的Map
+	 * @param id
+	 * @param mapFormatSql
+	 * @return
+	 */
+	Map<String,Object> getMapParams(Long id,Map<String,Object> mapFormatSql);
 }

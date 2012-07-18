@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.template.dao.TemplateDao;
 import cn.bc.template.domain.Template;
+import cn.bc.template.domain.TemplateParam;
 import cn.bc.template.util.DocxUtils;
 import cn.bc.template.util.XlsUtils;
 
@@ -133,5 +136,43 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
 	public List<Map<String, String>> findCategoryOption() {
 		return this.templateDao.findCategoryOption();
+	}
+	
+	private TemplateParamService templateParamService;
+	
+	@Autowired
+	public void setTemplateParamService(TemplateParamService templateParamService) {
+		this.templateParamService = templateParamService;
+	}
+
+	public Map<String,Object> getMapParams(Long id,Map<String,Object> mapFormatSql){
+		Template tpl=this.templateDao.load(id);
+		if(tpl == null)
+			throw new CoreException("template is not exists");
+		if(!tpl.isFormatted())
+			throw new CoreException("template Cannot format");
+		
+		//取参数集合
+		Set<TemplateParam> tplps = tpl.getParams();
+		//没配置模板参数处理
+		if(tplps == null || tplps.isEmpty())
+			return null;
+		
+		Map<String,Object> formattedMap = null;
+		Map<String,Object> tempMap = null;
+		//遍历模板参数集合获取格式化的替换参数
+		for(TemplateParam tp:tplps){
+			tempMap=templateParamService.getMapParams(tp, mapFormatSql);
+			if(tempMap == null || tempMap.isEmpty())
+				continue;
+			if(formattedMap == null || formattedMap.isEmpty()){
+				formattedMap = tempMap;
+			}
+			
+			Set<String> tempSet = tempMap.keySet();
+			for(String key:tempSet)
+				formattedMap.put(key, tempMap.get(key));
+		}
+		return formattedMap;
 	}
 }
