@@ -4,6 +4,7 @@
 package cn.bc.identity.web.struts2.select;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -79,11 +80,19 @@ public class SelectUsersAction extends
 		StringBuffer sql = new StringBuffer();
 		// 是否选择ActorHistory信息
 		if (this.history) {
-			sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code ");
+			if(null != group && this.group.length() > 0){
+				sql.append("select distinct h.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
+			}else{
+				sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
+			}
 			sql.append("from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
 		} else {
-			sql.append("select a.id,a.status_,h.actor_name,h.upper_name,a.code ");
+			if(null != group && this.group.length() > 0){
+				sql.append("select distinct a.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
+			}else{
+				sql.append("select a.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
+			}
 			sql.append("from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
 		}
@@ -200,7 +209,8 @@ public class SelectUsersAction extends
 			}
 		} 
 		if(null != group && this.group.length() > 0){//所属岗位的用户
-			groupCondition =  new EqualsCondition("g.code", this.group);
+			List<String> list = Arrays.asList(group.split(","));
+			groupCondition =  new InCondition("g.code", list);
 			aTypeCondition =  new EqualsCondition("a.type_", 4);//岗位
 			gTypeCondition =  new EqualsCondition("g.type_", 3);//用户
 		}
@@ -216,7 +226,6 @@ public class SelectUsersAction extends
 			json.put("status", status);
 		}
 		json.put("history", history);
-		json.put("group", group);
 
 		return json.isEmpty() ? null : json;
 	}
