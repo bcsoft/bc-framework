@@ -44,6 +44,7 @@ public class GradeAction extends EntityAction<Long, Grade> {
 	public int score;// 分数
 	public int amount;// 计分
 	public Long gid;// 评分表的Id
+	public int status;// 试卷的状态
 
 	@Override
 	public boolean isReadonly() {
@@ -88,9 +89,10 @@ public class GradeAction extends EntityAction<Long, Grade> {
 			pageOption.put("readonly", true);
 		}
 		// 添加按钮
-		pageOption.addButton(new ButtonOption(getText("label.ok"), null,
-				"bc.gradeForm.grade"));
-
+		if (this.status == Questionary.STATUS_ISSUE) {
+			pageOption.addButton(new ButtonOption(getText("label.ok"), null,
+					"bc.gradeForm.grade"));
+		}
 		return pageOption;
 	}
 
@@ -115,7 +117,7 @@ public class GradeAction extends EntityAction<Long, Grade> {
 	// 问答题评分
 	public String testGrade() {
 		SystemContext context = (SystemContext) this.getContext();
-		json = this.gradeService.dograde(qid, aid, rid, amount, context,gid);
+		json = this.gradeService.dograde(qid, aid, rid, amount, context, gid);
 		return "json";
 	}
 

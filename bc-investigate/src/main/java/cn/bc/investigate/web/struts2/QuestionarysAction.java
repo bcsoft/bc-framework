@@ -77,6 +77,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		sql.append(",(select count(*) from bc_ivg_respond where pid = q.id) answerNumber");
 		sql.append(",iss.actor_name issuer,q.issue_date,q.pigeonhole_date,pig.actor_name pigeonholer");
 		sql.append(",q.file_date,ad.actor_name author");
+		sql.append(",(select 1 from bc_ivg_respond where pid = q.id and grade = true limit 1) is_grade");
 		sql.append(" from bc_ivg_questionary q");
 		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY ad on ad.id=q.author_id");
 		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY iss on iss.id=q.issuer_id");
@@ -105,6 +106,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				map.put("pigeonholer", rs[i++]);
 				map.put("file_date", rs[i++]);
 				map.put("author", rs[i++]);
+				map.put("is_grade", rs[i++]);
 
 				return map;
 			}
@@ -122,6 +124,9 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
 				getText("questionary.subject"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("q.status_", "is_grade",
+				getText("questionary.isGrade"), 80).setSortable(true)
+				.setValueFormater(new IsGradeFormater()));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)
 				.setValueFormater(new DateRangeFormater("yyyy-MM-dd") {
@@ -226,7 +231,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		// 查看按钮
-		//tb.addButton(this.getDefaultOpenToolbarButton());
+		// tb.addButton(this.getDefaultOpenToolbarButton());
 		// 新建按钮
 		tb.addButton(this.getDefaultCreateToolbarButton());
 

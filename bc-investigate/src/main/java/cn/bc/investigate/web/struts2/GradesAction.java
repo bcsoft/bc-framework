@@ -61,7 +61,7 @@ public class GradesAction extends ViewAction<Map<String, Object>> {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select g.id,q.subject testTitle,qs.subject questionTitle,ad.actor_name answer");
 		sql.append(" ,r.file_date answerTime,a.content,ra.actor_name rating,g.file_date ratingTime");
-		sql.append(",a.id aid,r.id rid,qs.score,q.id qid");
+		sql.append(",a.id aid,r.id rid,qs.score,q.id qid,q.status_");
 		sql.append(" from bc_ivg_questionary q");
 		sql.append(" left join bc_ivg_respond r on r.pid = q.id");
 		sql.append(" left join bc_ivg_question qs on qs.pid = q.id");
@@ -92,6 +92,7 @@ public class GradesAction extends ViewAction<Map<String, Object>> {
 				map.put("rid", rs[i++]);
 				map.put("score", rs[i++]);
 				map.put("qid", rs[i++]);
+				map.put("status", rs[i++]);
 				return map;
 			}
 		});
@@ -126,12 +127,13 @@ public class GradesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new HiddenColumn4MapKey("score", "score"));
 		columns.add(new HiddenColumn4MapKey("testTitle", "testTitle"));
 		columns.add(new HiddenColumn4MapKey("qid", "qid"));
+		columns.add(new HiddenColumn4MapKey("status", "status"));
 		return columns;
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ad.actor_name","qs.subject" };
+		return new String[] { "ad.actor_name", "qs.subject" };
 	}
 
 	@Override
@@ -184,7 +186,7 @@ public class GradesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(700).setMinWidth(100)
+		return super.getHtmlPageOption().setWidth(900).setMinWidth(100)
 				.setHeight(500).setMinHeight(100);
 	}
 

@@ -33,6 +33,7 @@ import cn.bc.investigate.domain.Respond;
 import cn.bc.investigate.service.QuestionaryService;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 调查问卷的Action
@@ -104,7 +105,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 		if (this.getE().getStatus() == Questionary.STATUS_ISSUE) {
 			pageOption.addButton(new ButtonOption(
 					getText("questionary.archiving"), null,
-					"bc.questionaryForm.archiving"));
+					"bc.questionaryForm.checkIsGrade"));
 		}
 
 	}
@@ -415,6 +416,26 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			i += question.getScore();
 		}
 		return i;
+	}
+
+	// 归档前检查该试卷用户的考卷是否全部评分
+	public String checkIsGrade() {
+		Json json = new Json();
+		Questionary q = this.questionaryService.load(this.getId());
+		Set<Respond> respond = q.getResponds();
+		Iterator<Respond> r = respond.iterator();
+		while (r.hasNext()) {
+			Respond oneRespond = r.next();
+			if (oneRespond.isGrade()) {
+				json.put("success", false);
+				json.put("msg", "该试卷存在需要评分的答卷,如果归档将无法继续对答卷进行评分,是否归档？");
+				this.json = json.toString();
+				return "json";
+			}
+		}
+		json.put("success", true);
+		this.json = json.toString();
+		return "json";
 	}
 
 	/**

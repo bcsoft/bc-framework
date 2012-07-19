@@ -21,6 +21,7 @@
 		</action>
 		<action name="save" class="questionaryAction" method="save"/>
 		<action name="delete" class="questionaryAction" method="delete" />
+		<action name="checkIsGrade" class="questionaryAction" method="checkIsGrade"/>
 	</package>	
 	
 	<!-- 问卷调查[用户] -->
