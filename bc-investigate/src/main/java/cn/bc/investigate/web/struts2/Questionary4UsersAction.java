@@ -19,6 +19,7 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.StringUtils;
@@ -238,6 +239,36 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		if (isResponse == null || isResponse.length() == 0) {
 			andCondition.add(statusCondition);
 		}
+		// SystemContext context = (SystemContext) this.getContext();
+
+		// 用户是否有该试卷的考试权限
+		// 保存的用户id键值集合
+		List<Object> actorIds = new ArrayList<Object>();
+		actorIds.add(context.getUser().getId());
+		Long[] aids = context.getAttr(SystemContext.KEY_ANCESTORS);
+		for (Long id : aids) {
+			actorIds.add(id);
+		}
+		// 根据集合数量，生成的占位符字符串
+		String qlStr4Actor = "";
+		for (int i = 0; i < actorIds.size(); i++) {
+			if (i + 1 != actorIds.size()) {
+				qlStr4Actor += "?,";
+			} else {
+				qlStr4Actor += "?";
+			}
+		}
+		andCondition
+				.add(new OrCondition(
+						// 如果不配置使用人，则所有人都有权限使用
+						new QlCondition(
+								"q.id not in(select r.qid from  bc_ivg_questionary_actor r)",
+								new Object[] {}),
+						// 试卷的作答人
+						new QlCondition(
+								"q.id in (select r.qid from  bc_ivg_questionary_actor r where r.aid in ("
+										+ qlStr4Actor + "))", actorIds))
+						.setAddBracket(true));
 
 		return andCondition;
 	}

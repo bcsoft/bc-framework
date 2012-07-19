@@ -5,6 +5,7 @@ package cn.bc.investigate.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.investigate.domain.Answer;
@@ -47,10 +49,12 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	private static final long serialVersionUID = 1L;
 	private QuestionaryService questionaryService;
+	public String assignUserIds;// 分配的用户id，多个id用逗号连接
 	public Set<Actor> ownedUsers;// 已分配的用户
 	public String topics;// 问卷中题目的json字符串
 	public String optionItemsValue;// 问题选项
 	public Map<String, String> statusesValue;
+	private ActorService actorService;
 
 	@Override
 	public boolean isReadonly() {
@@ -58,6 +62,11 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 		SystemContext context = (SystemContext) this.getContext();
 		return !context.hasAnyRole(getText("key.role.bc.question.exam"),
 				getText("key.role.bc.admin"));
+	}
+
+	@Autowired
+	public void setActorService(ActorService actorService) {
+		this.actorService = actorService;
 	}
 
 	@Autowired
@@ -246,6 +255,38 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			}
 		}
 		this.getE().setResponds(new LinkedHashSet<Respond>());
+		// 保存用户
+
+		// 处理分配的用户
+		Long[] userIds = null;
+		if (this.assignUserIds != null && this.assignUserIds.length() > 0) {
+			String[] uIds = this.assignUserIds.split(",");
+			userIds = new Long[uIds.length];
+			for (int i = 0; i < uIds.length; i++) {
+				userIds[i] = new Long(uIds[i]);
+			}
+		}
+
+		if (userIds != null && userIds.length > 0) {
+			Set<Actor> users = null;
+			Actor user = null;
+			for (int i = 0; i < userIds.length; i++) {
+				if (i == 0) {
+					users = new HashSet<Actor>();
+				}
+				user = this.actorService.load(userIds[i]);
+				users.add(user);
+			}
+
+			if (this.getE().getActors() != null) {
+				this.getE().getActors().clear();
+				this.getE().getActors().addAll(users);
+			} else {
+				this.getE().setActors(users);
+			}
+
+		}
+
 	}
 
 	@Override
