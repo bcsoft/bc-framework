@@ -21,6 +21,7 @@
 		</action>
 		<action name="save" class="questionaryAction" method="save"/>
 		<action name="delete" class="questionaryAction" method="delete" />
+		<action name="checkIsGrade" class="questionaryAction" method="checkIsGrade"/>
 	</package>	
 	
 	<!-- 问卷调查[用户] -->
@@ -33,5 +34,16 @@
 			<result name="form">/bc/questionary4User/form.jsp</result>
 		</action>
 		<action name="save" class="questionary4UserAction" method="save"/>
+	</package>
+	<!-- 问答题评分 -->
+	<package name="grade" extends="bc-default" namespace="/bc/grade">
+		<action name="open" class="gradeAction" method="open">
+			<result name="formr">/bc/grade/form.jsp</result>
+		</action>
+		<action name="edit" class="gradeAction" method="edit">
+			<result name="form">/bc/grade/form.jsp</result>
+		</action>
+		<action name="save" class="gradeAction" method="save"/>
+		<action name="testGrade" class="gradeAction" method="testGrade"/>
 	</package>
 </struts>

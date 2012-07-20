@@ -50,10 +50,11 @@ public class Question extends EntityImpl {
 	private Questionary questionary; // 所属调查表
 	private int type; // 类型:见 TYPE_XXX 常数的定义
 	private String subject; // 标题
-	private int orderNo; // 排序号 
+	private int orderNo; // 排序号
 	private boolean required = true; // 是否为必选题，默认为是
 	private int score; // 分数（仅适用于网上考试）
 	private boolean seperateScore = false; // (仅适用于网上考试的多选题)是否各个选项独立给分，默认为是，但答错任何一个选项将为0分
+	private boolean grade = false;// 标识该问题管理是否需要进行评分
 
 	/**
 	 * 特殊配置，使用json格式，如控制选项水平、垂直、多行布局，控制问答题输入框的默认大小等
@@ -147,6 +148,14 @@ public class Question extends EntityImpl {
 
 	public String getConfig() {
 		return config;
+	}
+
+	public boolean isGrade() {
+		return grade;
+	}
+
+	public void setGrade(boolean grade) {
+		this.grade = grade;
 	}
 
 	/**

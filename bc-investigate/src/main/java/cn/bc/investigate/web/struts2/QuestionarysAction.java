@@ -35,6 +35,7 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -51,9 +52,10 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	public boolean isReadonly() {
-		// 调查问卷管理员或系统管理员
+		// 网上考试管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin"));
+		return !context.hasAnyRole(getText("key.role.bc.admin"),
+				getText("key.role.bc.question.exam"));
 
 	}
 
@@ -75,6 +77,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		sql.append(",(select count(*) from bc_ivg_respond where pid = q.id) answerNumber");
 		sql.append(",iss.actor_name issuer,q.issue_date,q.pigeonhole_date,pig.actor_name pigeonholer");
 		sql.append(",q.file_date,ad.actor_name author");
+		sql.append(",(select 1 from bc_ivg_respond where pid = q.id and grade = true limit 1) is_grade");
 		sql.append(" from bc_ivg_questionary q");
 		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY ad on ad.id=q.author_id");
 		sql.append(" left join BC_IDENTITY_ACTOR_HISTORY iss on iss.id=q.issuer_id");
@@ -103,6 +106,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				map.put("pigeonholer", rs[i++]);
 				map.put("file_date", rs[i++]);
 				map.put("author", rs[i++]);
+				map.put("is_grade", rs[i++]);
 
 				return map;
 			}
@@ -118,8 +122,11 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 				getText("questionary.status"), 60).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
-				getText("questionary.subject")).setSortable(true)
+				getText("questionary.subject"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("q.status_", "is_grade",
+				getText("questionary.isGrade"), 80).setSortable(true)
+				.setValueFormater(new IsGradeFormater()));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)
 				.setValueFormater(new DateRangeFormater("yyyy-MM-dd") {
@@ -131,13 +138,13 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 					}
 				}));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "count",
-				getText("questionary.count"), 80).setSortable(true)
+				getText("questionary.count"), 50).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "answerNumber",
 				getText("questionary.answerNumber"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.permitted", "permitted",
-				getText("questionary.permitted"), 150).setSortable(true)
+				getText("questionary.permitted"), 130).setSortable(true)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "issuer",
@@ -223,25 +230,22 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		if (this.isReadonly()) {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		} else {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
+		// 查看按钮
+		// tb.addButton(this.getDefaultOpenToolbarButton());
+		// 新建按钮
+		tb.addButton(this.getDefaultCreateToolbarButton());
 
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除
-			tb.addButton(this.getDefaultDeleteToolbarButton());
-			// 如果是管理员,可以看到状态按钮组
-			if (!this.isReadonly()) {
-				tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-						this.getBSStatuses(), "status", 1,
-						getText("title.click2changeSearchStatus")));
+		// 编辑按钮
+		tb.addButton(this.getDefaultEditToolbarButton());
+		// 删除
+		tb.addButton(this.getDefaultDeleteToolbarButton());
+		// 问答题评分按钮
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
+				.setText("问答题评分").setClick("bc.questionaryView.score"));
 
-			}
-		}
+		// 如果是管理员,可以看到状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getBSStatuses(),
+				"status", 1, getText("title.click2changeSearchStatus")));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());

@@ -55,14 +55,15 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	public Map<String, String> statusesValue;
 	public Long userId;// 用户ID
 	public int score4User;// 用户得分
+	public Long pid;// 作答表关联试卷的Id
 
-	@Override
-	public boolean isReadonly() {
-		// 问卷管理员或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bs.driver"),
-				getText("key.role.bc.admin"));
-	}
+	// @Override
+	// public boolean isReadonly() {
+	// // 问卷管理员或系统管理员
+	// SystemContext context = (SystemContext) this.getContext();
+	// return !context.hasAnyRole(getText("key.role.bs.driver"),
+	// getText("key.role.bc.admin"));
+	// }
 
 	@Autowired
 	public void setQuestionaryService(QuestionaryService questionaryService) {
@@ -83,15 +84,15 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(325)
 				.setHeight(500);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
-		boolean readonly = this.isReadonly();
-		if (editable && !readonly) {
-			pageOption.put("readonly", readonly);
+		// boolean readonly = this.isReadonly();
+		if (editable) {
+			pageOption.put("readonly", false);
 
 		} else {
-			pageOption.put("readonly", false);
+			pageOption.put("readonly", true);
 		}
 		// 添加按钮
 		buildFormPageButtons(pageOption, editable);
@@ -201,14 +202,20 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 						if (questionJson.getInt("type") == Question.TYPE_QA) {
 							answerResource.setRespond(respondResource);
 							answerResource.setItem(questionItem);
-
 							answerResource.setContent(answerItem
 									.getString("subject"));
-							Question oneQuestion = getQuestionObject(questionJson
-									.getLong("questionId"));
-							int Jquizscore = oneQuestion.getScore();
-							answerResource.setScore(Jquizscore);
-							score += Jquizscore;
+							// 如果需要评分的不作计分处理
+							boolean grade = answerItem.getBoolean("grade");
+							if (!grade) {
+								Question oneQuestion = getQuestionObject(questionJson
+										.getLong("questionId"));
+								int Jquizscore = oneQuestion.getScore();
+								answerResource.setScore(Jquizscore);
+								score += Jquizscore;
+							} else {
+								answerResource.setGrade(grade);
+								respondResource.setGrade(grade);
+							}
 						}
 						// 填空题
 						if (questionJson.getInt("type") == Question.TYPE_FILL_IN) {
@@ -386,19 +393,53 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		return resultArray;
 	}
 
+	// 获取问卷是否已全部评分
+	public boolean getIsNeedGrade() {
+
+		Respond respond = this.getUserRespond();
+		if (respond.isGrade()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 获取需要评分的问答题是否已经评分
+	public boolean isAlreadyScore(Long iid) {
+		Respond respond = getUserRespond();
+		Set<Answer> answer = respond.getAnswers();
+		Iterator<Answer> a = answer.iterator();
+		while (a.hasNext()) {
+			Answer oneAnswer = a.next();
+			if (iid.equals(oneAnswer.getItem().getId())) {
+				return oneAnswer.isGrade();
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public String open() throws Exception {
 		SystemContext context = this.getSystyemContext();
-		userId = context.getUserHistory().getId();
-		Questionary e = this.questionaryService.load(this.getId());
+		Questionary e;
+		if (userId == null) {
+			userId = context.getUserHistory().getId();
+		}
+		if (pid == null) {
+			e = this.questionaryService.load(this.getId());
+		} else {
+			e = this.questionaryService.load(pid);
+		}
+
 		this.setE(e);
-		// 强制表单只读
-		this.formPageOption = buildFormPageOption(false);
+		this.formPageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
 		this.initForm(false);
 		this.afterOpen(e);
 		boolean isExist = IsExisUser(e);
-		if (isExist) {
+		if (isExist || e.getStatus() == Questionary.STATUS_END) {
+			// 强制表单只读
+			this.formPageOption = buildFormPageOption(false);
 			score4User = this.getUserScore(userId, e);
 			return "statistics";
 		} else {
@@ -427,6 +468,18 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		return i;
 	}
 
+	// 获取试卷的总分
+	public int totalScore() {
+		int i = 0;
+		Set<Question> questions = this.getE().getQuestions();
+		Iterator<Question> q = questions.iterator();
+		while (q.hasNext()) {
+			Question question = q.next();
+			i += question.getScore();
+		}
+		return i;
+	}
+
 	/**
 	 * 用户是否答卷
 	 * 
@@ -435,7 +488,9 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	 */
 	private boolean IsExisUser(Questionary e) {
 		SystemContext context = this.getSystyemContext();
-		Long userId = context.getUserHistory().getId();
+		if (userId == null) {
+			userId = context.getUserHistory().getId();
+		}
 		Set<Respond> respond = e.getResponds();
 		Iterator<Respond> r = respond.iterator();
 		boolean isExist = false;
@@ -640,6 +695,25 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 			Question oneQuestion = qu.next();
 			if (qid == oneQuestion.getId()) {
 				return oneQuestion;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 获取用户简答题的作答结果
+	 * 
+	 * @param qid
+	 * @return
+	 */
+	public String formatJQuizValue(Long qid) {
+		Respond respond = getUserRespond();
+		Set<Answer> answer = respond.getAnswers();
+		Iterator<Answer> a = answer.iterator();
+		while (a.hasNext()) {
+			Answer oneAnswer = a.next();
+			if (oneAnswer.getItem().getId() == qid) {
+				return oneAnswer.getContent();
 			}
 		}
 		return null;

@@ -5,6 +5,7 @@ package cn.bc.investigate.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -20,8 +21,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.investigate.domain.Answer;
@@ -32,6 +35,7 @@ import cn.bc.investigate.domain.Respond;
 import cn.bc.investigate.service.QuestionaryService;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 调查问卷的Action
@@ -45,10 +49,12 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	private static final long serialVersionUID = 1L;
 	private QuestionaryService questionaryService;
+	public String assignUserIds;// 分配的用户id，多个id用逗号连接
 	public Set<Actor> ownedUsers;// 已分配的用户
 	public String topics;// 问卷中题目的json字符串
 	public String optionItemsValue;// 问题选项
 	public Map<String, String> statusesValue;
+	private ActorService actorService;
 
 	@Override
 	public boolean isReadonly() {
@@ -56,6 +62,11 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 		SystemContext context = (SystemContext) this.getContext();
 		return !context.hasAnyRole(getText("key.role.bc.question.exam"),
 				getText("key.role.bc.admin"));
+	}
+
+	@Autowired
+	public void setActorService(ActorService actorService) {
+		this.actorService = actorService;
 	}
 
 	@Autowired
@@ -72,7 +83,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(320)
 				.setHeight(500);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
@@ -103,7 +114,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 		if (this.getE().getStatus() == Questionary.STATUS_ISSUE) {
 			pageOption.addButton(new ButtonOption(
 					getText("questionary.archiving"), null,
-					"bc.questionaryForm.archiving"));
+					"bc.questionaryForm.checkIsGrade"));
 		}
 
 	}
@@ -119,6 +130,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	protected void afterCreate(Questionary entity) {
 		super.afterCreate(entity);
 		this.getE().setType(Questionary.TYPE_PAPER);
+		this.getE().setPermitted(false);
 		this.getE().setIssuer(null);
 	}
 
@@ -146,18 +158,24 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 					// 题型
 					int type = Integer.parseInt(json.getString("type"));
 					questionResource.setType(type);
-					// 填空题才有全选方得分的概念
-					if (type == 1) {
+					// 多选题才有全选方得分的概念
+					if (type == Question.TYPE_CHECKBOX) {
 						questionResource.setSeperateScore(Boolean.valueOf(json
 								.getString("seperateScore")));
+					}
+					// 问答题是否需要评分
+					if (type == Question.TYPE_QA) {
+						questionResource.setGrade(Boolean.valueOf(json
+								.getString("grade")));
+
 					}
 					// questionResource.setSeperateScore(true);
 					// 布局
 					// 选择题才有布局
-					if (type == 0 || type == 1) {
-						questionResource.setConfig("{layout_orientation:"
-								+ json.getString("config") + "}");
-					}
+					// if (type == 0 || type == 1) {
+					// questionResource.setConfig("{layout_orientation:"
+					// + json.getString("config") + "}");
+					// }
 					// questionResource.setConfig(null);
 					questionResource.setSubject(json.getString("subject"));
 					questionResource.setScore(json.getInt("score"));
@@ -237,6 +255,38 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			}
 		}
 		this.getE().setResponds(new LinkedHashSet<Respond>());
+		// 保存用户
+
+		// 处理分配的用户
+		Long[] userIds = null;
+		if (this.assignUserIds != null && this.assignUserIds.length() > 0) {
+			String[] uIds = this.assignUserIds.split(",");
+			userIds = new Long[uIds.length];
+			for (int i = 0; i < uIds.length; i++) {
+				userIds[i] = new Long(uIds[i]);
+			}
+		}
+
+		if (userIds != null && userIds.length > 0) {
+			Set<Actor> users = null;
+			Actor user = null;
+			for (int i = 0; i < userIds.length; i++) {
+				if (i == 0) {
+					users = new HashSet<Actor>();
+				}
+				user = this.actorService.load(userIds[i]);
+				users.add(user);
+			}
+
+			if (this.getE().getActors() != null) {
+				this.getE().getActors().clear();
+				this.getE().getActors().addAll(users);
+			} else {
+				this.getE().setActors(users);
+			}
+
+		}
+
 	}
 
 	@Override
@@ -266,7 +316,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	}
 
 	protected PageOption buildPreviewFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setWidth(640).setMinWidth(320)
+		PageOption pageOption = new PageOption().setWidth(645).setMinWidth(320)
 				.setHeight(550);
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
@@ -274,14 +324,15 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			pageOption.put("readonly", false);
 
 		} else {
-			pageOption.put("readonly", false);
+			pageOption.put("readonly", true);
 		}
 		// 添加按钮
-		buildPreviewFormPageButtons(pageOption, editable);
+		// buildPreviewFormPageButtons(pageOption, editable);
 
 		return pageOption;
 	}
 
+	// 发布按钮
 	protected void buildPreviewFormPageButtons(PageOption pageOption,
 			boolean editable) {
 		pageOption.addButton(new ButtonOption(getText("questionary.issue"),
@@ -396,6 +447,38 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 		return actor.size();
 	}
 
+	// 获取试卷的总分
+	public int totalScore() {
+		int i = 0;
+		Set<Question> questions = this.getE().getQuestions();
+		Iterator<Question> q = questions.iterator();
+		while (q.hasNext()) {
+			Question question = q.next();
+			i += question.getScore();
+		}
+		return i;
+	}
+
+	// 归档前检查该试卷用户的考卷是否全部评分
+	public String checkIsGrade() {
+		Json json = new Json();
+		Questionary q = this.questionaryService.load(this.getId());
+		Set<Respond> respond = q.getResponds();
+		Iterator<Respond> r = respond.iterator();
+		while (r.hasNext()) {
+			Respond oneRespond = r.next();
+			if (oneRespond.isGrade()) {
+				json.put("success", false);
+				json.put("msg", "该试卷存在需要评分的答卷,如果归档将无法继续对答卷进行评分,是否归档？");
+				this.json = json.toString();
+				return "json";
+			}
+		}
+		json.put("success", true);
+		this.json = json.toString();
+		return "json";
+	}
+
 	/**
 	 * 状态值转换列表：待发布|已发布|已归档|全部
 	 * 
@@ -411,6 +494,16 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 				getText("questionary.release.end"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
+	}
+
+	// 提示只能删除未作答过的试卷
+	@Override
+	protected String getDeleteExceptionMsg(Exception e) {
+		//
+		if (e instanceof PermissionDeniedException) {
+			return "只能删除删除未作答过的试卷！";
+		}
+		return super.getDeleteExceptionMsg(e);
 	}
 
 }

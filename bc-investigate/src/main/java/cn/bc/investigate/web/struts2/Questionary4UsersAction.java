@@ -4,6 +4,7 @@
 package cn.bc.investigate.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,11 +16,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.GreaterThanOrEqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.LessThanOrEqualsCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -48,7 +53,10 @@ import cn.bc.web.ui.json.Json;
 public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(Questionary.STATUS_ISSUE);
-	public String userId = String.valueOf(this);
+	// public String status = String.valueOf(Questionary.STATUS_ISSUE) + ","
+	// + String.valueOf(Questionary.STATUS_END);
+	// public String userId = String.valueOf("");
+	public String isResponse = "false";
 
 	@Override
 	public boolean isReadonly() {
@@ -72,6 +80,8 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select q.id,q.status_,q.subject,q.start_date,q.end_date");
+		sql.append(",(select score from bc_ivg_respond where pid = q.id and author_id ="
+				+ this.getUserId() + ") score");
 		sql.append(",(select count(*) from bc_ivg_question where pid = q.id) count,q.permitted");
 		sql.append(",(select count(*) from bc_ivg_respond where pid = q.id) answerNumber");
 		sql.append(",iss.actor_name issuer,q.issue_date,q.pigeonhole_date,pig.actor_name pigeonholer");
@@ -95,6 +105,7 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("start_date", rs[i++]);
 				map.put("end_date", rs[i++]);
+				map.put("score", rs[i++]);
 				map.put("count", rs[i++]);
 				map.put("permitted", rs[i++]);
 				map.put("answerNumber", rs[i++]);
@@ -115,11 +126,14 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("q.id", "id"));
+		columns.add(new TextColumn4MapKey("q.status_", "score",
+				getText("questionary.respondStatus"), 60).setSortable(true)
+				.setValueFormater(new RespondStausFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.status_", "status_",
 				getText("questionary.status"), 60).setSortable(true)
 				.setValueFormater(new KeyValueFormater(getBSStatuses())));
 		columns.add(new TextColumn4MapKey("q.subject", "subject",
-				getText("questionary.subject")).setSortable(true)
+				getText("questionary.subject"), 250).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.start_date", "start_date",
 				getText("questionary.Deadline"), 180)
@@ -131,14 +145,17 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						return (Date) contract.get("end_date");
 					}
 				}));
+		columns.add(new TextColumn4MapKey("iss.actor_name", "score",
+				getText("questionary.score"), 50).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "count",
-				getText("questionary.count"), 80).setSortable(true)
+				getText("questionary.count"), 50).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "answerNumber",
 				getText("questionary.answerNumber"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("q.permitted", "permitted",
-				getText("questionary.permitted"), 150).setSortable(true)
+				getText("questionary.permitted"), 130).setSortable(true)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("iss.actor_name", "issuer",
@@ -182,6 +199,22 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		AndCondition andCondition = new AndCondition();
+		AndCondition andTimeCondition = new AndCondition();
+		OrCondition orCondition = new OrCondition();
+		SystemContext context = (SystemContext) this.getContext();
+		// 保存的用户id键值集合
+		List<Object> ids = new ArrayList<Object>();
+		ids.add(context.getUserHistory().getId());
+		// 根据集合数量，生成的占位符字符串
+		String qlStr = "?";
+		// 作答与全部的状态条件
+		if (isResponse.equals("true")
+				|| (isResponse == null || isResponse.length() == 0)) {
+			status = String.valueOf(Questionary.STATUS_ISSUE) + ","
+					+ String.valueOf(Questionary.STATUS_END);
+		}
+
 		// 状态条件
 		Condition statusCondition = null;
 		if (status != null && status.length() > 0) {
@@ -194,8 +227,86 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
+		// 并且当前时间小于等于试卷的结束时间
+		// 结束时间
+		Condition endTimeCondition = null;
+		endTimeCondition = new GreaterThanOrEqualsCondition("q.end_date",
+				Calendar.getInstance());
 
-		return ConditionUtils.mix2AndCondition(statusCondition);
+		// 开始时间
+		Condition stratTimeCondition = null;// 当前时间
+		stratTimeCondition = new LessThanOrEqualsCondition("q.start_date",
+				Calendar.getInstance());
+
+		// 已作答
+		if (isResponse.equals("true")) {
+			andCondition.add(statusCondition, new QlCondition(
+					"q.id in (select pid from bc_ivg_respond where author_id ="
+							+ qlStr + ")", ids));
+		}
+		// 未作答
+		if (isResponse.equals("false")) {
+			// 试卷不在作答表
+			andCondition.add(statusCondition, new QlCondition(
+					"q.id not in (select pid from bc_ivg_respond where author_id ="
+							+ qlStr + ")", ids));
+			andCondition.add(endTimeCondition, stratTimeCondition);
+		}
+
+		// 全部
+		if (isResponse == null || isResponse.length() == 0) {
+			andCondition.add(
+					statusCondition,
+					orCondition.add(
+							andTimeCondition.add(endTimeCondition,
+									stratTimeCondition),
+							new QlCondition(
+									"q.id in (select pid from bc_ivg_respond where author_id ="
+											+ qlStr + ")", ids)).setAddBracket(
+							true));
+		}
+		// SystemContext context = (SystemContext) this.getContext();
+
+		// 用户是否有该试卷的考试权限
+		// 保存的用户id键值集合
+		List<Object> actorIds = new ArrayList<Object>();
+		actorIds.add(context.getUser().getId());
+		Long[] aids = context.getAttr(SystemContext.KEY_ANCESTORS);
+		for (Long id : aids) {
+			actorIds.add(id);
+		}
+		// 根据集合数量，生成的占位符字符串
+		String qlStr4Actor = "";
+		for (int i = 0; i < actorIds.size(); i++) {
+			if (i + 1 != actorIds.size()) {
+				qlStr4Actor += "?,";
+			} else {
+				qlStr4Actor += "?";
+			}
+		}
+		andCondition
+				.add(new OrCondition(
+						// 如果不配置使用人，则所有人都有权限使用
+						new QlCondition(
+								"q.id not in(select r.qid from  bc_ivg_questionary_actor r)",
+								new Object[] {}),
+						// 试卷的作答人
+						new QlCondition(
+								"q.id in (select r.qid from  bc_ivg_questionary_actor r where r.aid in ("
+										+ qlStr4Actor + "))", actorIds))
+						.setAddBracket(true));
+
+		return andCondition;
+	}
+
+	/**
+	 * 获取用户ID
+	 * 
+	 * @return
+	 */
+	public Long getUserId() {
+		SystemContext context = (SystemContext) this.getContext();
+		return context.getUserHistory().getId();
 	}
 
 	@Override
@@ -206,10 +317,10 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 		if (this.status != null && this.status.trim().length() > 0) {
 			json.put("status", status);
 		}
-		// 用户条件
-		if (this.userId != null && this.userId.trim().length() > 0) {
-			json.put("status", status);
-		}
+		// // 用户条件
+		// if (this.userId != null && this.userId.trim().length() > 0) {
+		// json.put("userId", userId);
+		// }
 
 	}
 
@@ -227,14 +338,12 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-		// // // 如果是管理员,可以看到状态按钮组
-		// if (!this.isReadonly()) {
-		// tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
-		// this.getBSStatuses(), "status", 1,
-		// getText("title.click2changeSearchStatus")));
-		//
-		// }
-		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+		// // 如果是管理员,可以看到状态按钮组
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+				this.getResponseValue(), "isResponse", 1,
+				getText("title.click2changeResponseStatus")));
+
+		// tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
@@ -263,14 +372,10 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	 * 
 	 * @return
 	 */
-	protected Map<String, String> getUserId() {
+	protected Map<String, String> getResponseValue() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(Questionary.STATUS_DRAFT),
-				getText("questionary.release.wait"));
-		statuses.put(String.valueOf(Questionary.STATUS_ISSUE),
-				getText("questionary.release.already"));
-		statuses.put(String.valueOf(Questionary.STATUS_END),
-				getText("questionary.release.end"));
+		statuses.put("true", getText("questionary.response.true"));
+		statuses.put("false", getText("questionary.response.false"));
 		statuses.put("", getText("questionary.release.all"));
 		return statuses;
 	}
