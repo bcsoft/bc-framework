@@ -4,6 +4,7 @@
 package cn.bc.investigate.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,7 +19,9 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.GreaterThanOrEqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.LessThanOrEqualsCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
@@ -197,6 +200,8 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Condition getGridSpecalCondition() {
 		AndCondition andCondition = new AndCondition();
+		AndCondition andTimeCondition = new AndCondition();
+		OrCondition orCondition = new OrCondition();
 		SystemContext context = (SystemContext) this.getContext();
 		// 保存的用户id键值集合
 		List<Object> ids = new ArrayList<Object>();
@@ -222,22 +227,43 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
-		// 作答
+		// 并且当前时间小于等于试卷的结束时间
+		// 结束时间
+		Condition endTimeCondition = null;
+		endTimeCondition = new GreaterThanOrEqualsCondition("q.end_date",
+				Calendar.getInstance());
+
+		// 开始时间
+		Condition stratTimeCondition = null;// 当前时间
+		stratTimeCondition = new LessThanOrEqualsCondition("q.start_date",
+				Calendar.getInstance());
+
+		// 已作答
 		if (isResponse.equals("true")) {
 			andCondition.add(statusCondition, new QlCondition(
 					"q.id in (select pid from bc_ivg_respond where author_id ="
 							+ qlStr + ")", ids));
 		}
-		// 不作答
+		// 未作答
 		if (isResponse.equals("false")) {
+			// 试卷不在作答表
 			andCondition.add(statusCondition, new QlCondition(
 					"q.id not in (select pid from bc_ivg_respond where author_id ="
 							+ qlStr + ")", ids));
+			andCondition.add(endTimeCondition, stratTimeCondition);
 		}
 
 		// 全部
 		if (isResponse == null || isResponse.length() == 0) {
-			andCondition.add(statusCondition);
+			andCondition.add(
+					statusCondition,
+					orCondition.add(
+							andTimeCondition.add(endTimeCondition,
+									stratTimeCondition),
+							new QlCondition(
+									"q.id in (select pid from bc_ivg_respond where author_id ="
+											+ qlStr + ")", ids)).setAddBracket(
+							true));
 		}
 		// SystemContext context = (SystemContext) this.getContext();
 
