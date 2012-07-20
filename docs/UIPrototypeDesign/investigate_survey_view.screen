@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="13" x="8" y="8" measuredWidth="745" measuredHeight="201">
+    <widgets xsi:type="model:Window" id="1" y="24" width="745" height="177" text="网上调查信息" measuredWidth="745" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="86" width="665" measuredWidth="665" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="10" y="53" text="新建, 编辑, 删除" measuredWidth="134" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="新建"/>
+      <items x="45" y="0" width="44" height="30" text="编辑"/>
+      <items x="89" y="0" width="45" height="30" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" y="88" width="745" text="(w:30). ,(w:40). 状态,调查主题,(w:60).调查期限,(w:40). 题目数,(w:60). 已参与人数,(w:60). 提交前允许查看统计&#xA;,已发布,网络基础条件调查表,2012-02-01~2012-03-31,3,5,是" measuredWidth="745" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="14" x="152" y="53" width="217" text="待发布,已发布,已归档,全部" measuredWidth="217" measuredHeight="30" selection="1">
+      <font/>
+      <items x="0" y="0" width="57" height="30" text="待发布"/>
+      <items x="57" y="0" width="56" height="30" text="已发布"/>
+      <items x="113" y="0" width="56" height="30" text="已归档"/>
+      <items x="169" y="0" width="48" height="30" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="15" x="552" y="56" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="16" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="17" x="156" y="7" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="111" text="网上调查视图(管理员)：" measuredWidth="135" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="586" y="142" width="545" text="(w:30). ,(w:60). 发布人,(w:60). 发布时间,(w:60). 归档人,(w:60). 归档时间,(w:60). 创建人,(w:60). 创建时间&#xA;,小明,2012-01-01 08:00,小明,2012-03-01 08:00,小强,2012-02-01 08:00" measuredWidth="545" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="102" x="8" y="224" measuredWidth="745" measuredHeight="201">
+    <widgets xsi:type="model:Window" id="103" y="24" width="745" height="177" text="网上调查信息" measuredWidth="745" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="107" x="10" y="53" width="159" text="未参与,已参与,全部" measuredWidth="159" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="57" height="30" text="未参与"/>
+      <items x="57" y="0" width="56" height="30" text="已参与"/>
+      <items x="113" y="0" width="46" height="30" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="108" x="552" y="56" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="109" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="110" x="156" y="7" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="112" text="网上调查视图(一般答卷人)：" measuredWidth="159" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="587" y="90" width="745" text="(w:30). ,(w:40). 状态,(w:60). 参与时间,调查主题,(w:60).调查期限,(w:40). 题目数,(w:60). 已参与人数,(w:60). 提交前允许查看统计&#xA;,已参与,2012-01-01 09:00,网络基础条件调查表,2012-02-01~2012-03-31,3,5,是" measuredWidth="745" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="588" y="144" width="377" text="(w:30). ,(w:60). 发布人,(w:60). 发布时间,(w:60). 归档人,(w:60). 归档时间&#xA;,小明,2012-01-01 08:00,小明,2012-03-01 08:00" measuredWidth="377" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="520" x="8" y="440" measuredWidth="289" measuredHeight="233">
+    <widgets xsi:type="model:Panel" id="521" y="24" width="289" height="209" measuredWidth="289" measuredHeight="209"/>
+    <widgets xsi:type="model:Button" id="522" x="10" y="196" text="查询" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="523" x="6" text="高级查询：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="524" x="273" y="26" width="13" measuredWidth="13" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Label" id="526" x="10" y="34" text="发布日期：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="527" x="136" y="56" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="532" x="152" y="56" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="533" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="534" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="535" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="536" x="10" y="56" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="537" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="538" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="539" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="565" x="10" y="84" text="调查期限(开始日期)：" measuredWidth="121" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="566" x="136" y="106" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="567" x="152" y="106" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="568" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="569" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="570" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="571" x="10" y="106" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="572" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="573" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="574" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="575" x="10" y="138" text="调查期限(结束日期)：" measuredWidth="121" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="576" x="136" y="160" text="～" measuredWidth="17" measuredHeight="25" textAlignment="Center">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="577" x="152" y="160" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="578" width="127" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="579" x="108" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="580" x="88" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="581" x="10" y="160" measuredWidth="127" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="582" width="127" text="2012-01-01" measuredWidth="127" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="583" x="106" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="584" x="86" y="5" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="585" x="304" y="464" width="393" height="161" text="说明：&#xD;&#xA;1）从管理端视图双击打开记录时，若问卷未发布，打开&quot;问卷编辑&quot;界面；若问卷已发布或已归档，打开&quot;问卷统计&quot;界面，但不对自己的答案高亮显示。&#xD;&#xA;2）从一般答卷人视图双击打开记录时，若未参与，打开&quot;问卷作答&quot;界面；若已参与，打开&quot;问卷统计&quot;界面，并对自己的答案高亮显示。&#xD;&#xA;3）管理端视图中的&quot;编辑&quot;、&quot;删除&quot;操作只能针对未发布的问卷，已发布、已归档的问卷不允许编辑和删除。" measuredWidth="393" measuredHeight="161" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

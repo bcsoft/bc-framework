@@ -153,8 +153,15 @@ public class FileAction extends ActionSupport {
 
 			if (this.from == null || this.from.length() == 0)
 				this.from = extension;
-			if (this.to == null || this.to.length() == 0)
-				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+			if (this.to == null || this.to.length() == 0) {
+				if ("xls".equalsIgnoreCase(this.from)
+						|| "xlsx".equalsIgnoreCase(this.from)) {
+					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+				} else {
+					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+				}
+			}
+
 			// convert
 			OfficeUtils.convert(inputStream, this.from, outputStream, this.to);
 			if (logger.isDebugEnabled()) {
