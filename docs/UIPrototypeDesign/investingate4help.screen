@@ -63,6 +63,28 @@
   <widgets xsi:type="model:TextField" id="44" x="728" y="1299" text="删除题目按钮" measuredWidth="82" measuredHeight="25" background="#f9f993">
     <font/>
   </widgets>
+  <widgets xsi:type="model:Image" id="45" x="206" y="1608" measuredWidth="785" measuredHeight="325" src="investingate4help_image4grade.png"/>
+  <widgets xsi:type="model:Arrow" id="46" x="334" y="1622" width="67" height="9" measuredWidth="67" measuredHeight="9" annotation="true" foreground="#0000ff" left="false" right="true"/>
+  <widgets xsi:type="model:TextField" id="47" x="405" y="1612" text="试卷标题" measuredWidth="58" measuredHeight="25" background="#f9f993">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="48" x="470" y="1664" width="25" height="41" measuredWidth="25" measuredHeight="41" annotation="true" foreground="#0000ff" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:TextField" id="49" x="478" y="1639" text="要评分的题目" measuredWidth="82" measuredHeight="25" background="#f9f993">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="50" x="656" y="1664" width="16" height="41" measuredWidth="16" measuredHeight="41" annotation="true" foreground="#0000ff" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:TextField" id="51" x="624" y="1639" text="答卷人作答内容" measuredWidth="94" measuredHeight="25" background="#f9f993">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Image" id="52" x="352" y="1984" measuredWidth="461" measuredHeight="351" src="investingate4help_image4gradeForm.png"/>
+  <widgets xsi:type="model:Arrow" id="53" x="589" y="2070" width="85" height="27" measuredWidth="85" measuredHeight="27" annotation="true" foreground="#0000ff" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:TextField" id="54" x="673" y="2056" text="滑动条" measuredWidth="46" measuredHeight="25" background="#f9f993">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="55" x="765" y="2066" width="17" height="27" measuredWidth="17" measuredHeight="27" annotation="true" foreground="#0000ff" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:TextField" id="56" x="738" y="2038" text="分数显示区" measuredWidth="70" measuredHeight="25" background="#f9f993">
+    <font/>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font/>
