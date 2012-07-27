@@ -156,9 +156,10 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("pig.actor_name", "pigeonholer",
 				getText("questionary.pigeonholer"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("q.pigeonhole_date", "pigeonhole_date",
-				getText("questionary.pigeonholeDate"), 140).setSortable(true)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("q.pigeonhole_date",
+				"pigeonhole_date", getText("questionary.pigeonholeDate"), 140)
+				.setSortable(true).setValueFormater(
+						new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("ad.actor_name", "author",
 				getText("questionary.author"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -218,7 +219,7 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(900).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
+				.setHeight(400).setMinHeight(300).setHelp("kaoshiguanli");
 	}
 
 	@Override
