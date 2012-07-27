@@ -52,13 +52,13 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam> 
 	 * 		-- 与类型[List<list<Object>>]情况一样。
 	 * 
 	 * {type:"Json2Map",sql:"...",key:"key"}		
-	 * 		-- 与类型[Map]情况一样。
+	 * 		-- 与类型[Map]情况一样，sql必须返回只有一个字符串值
 	 * {type:"Json2ListMap",sql:"...",key:"key"}		
-	 * 		-- 与类型[List<Map<String,Object>>]情况一样。
+	 * 		-- 与类型[List<Map<String,Object>>]，sql必须返回只有一个字符串值
 	 * {type:"Json2Array",sql:"...",key:"key"}		
-	 * 		-- 与类型[List<Object>]情况一样。
+	 * 		-- 与类型[List<Object>]，sql必须返回只有一个字符串值
 	 * {type:"Json2List",sql:"...",key:"key"}		
-	 * 		-- 与类型[List<Object>]情况一样。
+	 * 		-- 与类型[List<Object>]，sql必须返回只有一个字符串值
 	 * 
 	 * @param templateParam 模板参数
 	 * 
@@ -80,9 +80,9 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam> 
 				String type=jo.getString("type").toString();
 				//格式化后的sql
 				String formattedSql=TemplateUtils.format(jo.get("sql").toString(), mapFormatSql);
-				if(type.equals("Map")||type.equals("Json2Map")){
+				if("Map".equals(type)||"Json2Map".equals(type)){
 					Map<String,Object> m;
-					if(type.equals("Json2Map")){
+					if("Json2Map".equals(type)){
 						m = JsonUtils.toMap(this.templateParamDao.getJsonsString(formattedSql));
 					}else
 						m = this.templateParamDao.getMap(formattedSql);
@@ -97,7 +97,7 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam> 
 						for(String key:tempSet)
 							mapParams.put(key, m.get(key));
 					}
-				}else if(type.equals("List<Object>")||type.equals("Object[]")||type.equals("Json2List")||type.equals("Json2Array")){
+				}else if("List<Object>".equals(type)||"Object[]".equals(type)||"Json2List".equals(type)||"Json2Array".equals(type)){
 					List<Object> list;
 					if(type.equals("Json2List")||type.equals("Json2Array")){
 						list=(List<Object>) JsonUtils.toCollection(this.templateParamDao.getJsonsString(formattedSql));
@@ -108,9 +108,9 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam> 
 					if(mapParams == null || mapParams.isEmpty())
 						mapParams = new HashMap<String, Object>();
 					mapParams.put(jo.get("key").toString(), list);
-				}else if(type.equals("List<Map<String,Object>>")||type.equals("Json2ListMap")){
+				}else if("List<Map<String,Object>>".equals(type)||"Json2ListMap".equals(type)){
 					List<Map<String,Object>> list ;
-					if(type.equals("Json2ListMap")){
+					if("Json2ListMap".equals(type)){
 						List<Object> lo=(List<Object>) JsonUtils.toCollection(this.templateParamDao.getJsonsString(formattedSql));
 						list=new ArrayList<Map<String,Object>>();
 						for(Object o:lo){
@@ -124,7 +124,7 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam> 
 					if(mapParams == null || mapParams.isEmpty())
 						mapParams = new HashMap<String, Object>();
 					mapParams.put(jo.get("key").toString(), list);
-				}else if(type.equals("List<list<Object>>")||type.equals("List<Object[]>")){
+				}else if("List<list<Object>>".equals(type)||"List<Object[]>".equals(type)){
 					List<List<Object>> list = this.templateParamDao.getListIncludeList(formattedSql);
 					if(list.size()==0)
 						continue;
