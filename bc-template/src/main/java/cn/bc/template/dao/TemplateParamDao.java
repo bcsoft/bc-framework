@@ -48,4 +48,13 @@ public interface TemplateParamDao extends CrudDao<TemplateParam> {
 	 * @throws Exception
 	 */
 	List<List<Object>> getListIncludeList(String sql) throws Exception;
+	
+	/**
+	 * 返回一行一列的数据，且此数据为JSON格式的字符串
+	 * 
+	 * @param sql
+	 * @return
+	 * @throws Exception
+	 */
+	String getJsonsString(String sql) throws Exception;
 }

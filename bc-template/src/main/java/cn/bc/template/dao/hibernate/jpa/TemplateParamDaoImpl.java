@@ -10,6 +10,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cn.bc.db.jdbc.RowMapper;
@@ -65,6 +67,21 @@ public class TemplateParamDaoImpl extends HibernateCrudJpaDao<TemplateParam> imp
 					return list;
 				}
 		});
+	}
+	
+	public String getJsonsString(String sql) throws Exception {
+		try{	
+			return jdbcTemplate.queryForObject(sql, String.class);
+		}catch (EmptyResultDataAccessException erde) {	
+			logger.warn("sql="+sql+",查询无返回结果."+erde.getStackTrace());
+			return null;
+		}catch (IncorrectResultSetColumnCountException irscce){
+			logger.error("sql="+sql+",查询返回多列结果."+irscce.getStackTrace());
+			return null;
+		}catch (IncorrectResultSizeDataAccessException irsdae){
+			logger.error("sql="+sql+",查询返回多行结果."+irsdae.getStackTrace());
+			return null;
+		}
 	}
 	
 }
