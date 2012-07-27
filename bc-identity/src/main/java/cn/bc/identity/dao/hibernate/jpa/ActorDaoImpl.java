@@ -830,4 +830,24 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 					}
 				});
 	}
+
+	public String loadActorNameByCode(String actorCode) {
+		if (actorCode == null || actorCode.length() == 0)
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select name from bc_identity_actor where code = ?");
+		args.add(actorCode);
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<Object[]> r = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), null);
+		if (r == null || r.isEmpty())
+			return actorCode;// 找不到就返回原始的帐号信息
+		else
+			return (String) r.get(0)[0];
+	}
 }

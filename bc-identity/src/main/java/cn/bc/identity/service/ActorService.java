@@ -261,4 +261,13 @@ public interface ActorService extends CrudService<Actor> {
 	 */
 	List<Map<String, String>> findHistory4option(Integer[] actorTypes,
 			Integer[] actorStatues);
+
+	/**
+	 * 根据用户帐号获取用户的姓名
+	 * 
+	 * @param userCode
+	 *            用户帐号
+	 * @return
+	 */
+	String loadActorNameByCode(String userCode);
 }
