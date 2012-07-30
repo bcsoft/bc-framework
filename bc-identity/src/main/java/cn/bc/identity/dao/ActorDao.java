@@ -89,8 +89,9 @@ public interface ActorDao extends CrudDao<Actor> {
 	 *            从属方的状态，对应Actor的status属性
 	 * @return
 	 */
-	List<Actor> findFollowerWithName(Long masterId, String followerName, Integer[] relationTypes,
-			Integer[] followerTypes, Integer[] followerStatuses);
+	List<Actor> findFollowerWithName(Long masterId, String followerName,
+			Integer[] relationTypes, Integer[] followerTypes,
+			Integer[] followerStatuses);
 
 	/**
 	 * 获取顶层单位信息
@@ -263,4 +264,13 @@ public interface ActorDao extends CrudDao<Actor> {
 	 */
 	List<Map<String, String>> findHistory4option(Integer[] actorTypes,
 			Integer[] actorStatues);
+
+	/**
+	 * 根据用户帐号获取用户的姓名
+	 * 
+	 * @param userCode
+	 *            用户帐号
+	 * @return
+	 */
+	String loadActorNameByCode(String actorCode);
 }
