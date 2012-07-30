@@ -139,12 +139,6 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 				args.addAll(values);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args)
-					+ ";hql=" + hql);
-		}
-
 		return executeNativeSql(jpaTemplate, hql, args.toArray(),
 				sqlObject.getRowMapper());
 	}
