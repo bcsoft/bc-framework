@@ -95,4 +95,8 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 	public ActorHistory loadByCode(String actorCode) {
 		return actorHistoryDao.loadByCode(actorCode);
 	}
+
+	public List<String> findNames(List<String> actorCode) {
+		return actorHistoryDao.findNames(actorCode);
+	}
 }

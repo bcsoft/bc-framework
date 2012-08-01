@@ -1,5 +1,7 @@
 package cn.bc.identity.service;
 
+import java.util.List;
+
 import cn.bc.core.service.CrudService;
 import cn.bc.identity.domain.ActorHistory;
 
@@ -17,7 +19,7 @@ public interface ActorHistoryService extends CrudService<ActorHistory> {
 	 * @return
 	 */
 	ActorHistory loadCurrent(Long actorId);
-	
+
 	/**
 	 * 根据编码获取，如用户历史
 	 * 
@@ -25,4 +27,12 @@ public interface ActorHistoryService extends CrudService<ActorHistory> {
 	 * @return
 	 */
 	ActorHistory loadByCode(String actorCode);
+
+	/**
+	 * 获取指定编码的姓名信息
+	 * 
+	 * @param actorCode
+	 * @return
+	 */
+	List<String> findNames(List<String> actorCode);
 }
