@@ -848,6 +848,59 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		if (r == null || r.isEmpty())
 			return actorCode;// 找不到就返回原始的帐号信息
 		else
-			return  r.get(0);
+			return r.get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Actor> findByName(String actorName, Integer[] actorTypes,
+			Integer[] actorStatuses) {
+		if (actorName == null)
+			return new ArrayList<Actor>();
+
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("from Actor a where a.name=?");
+		args.add(actorName);
+
+		// 类型，对应Actor的type属性
+		if (actorTypes != null && actorTypes.length > 0) {
+			if (actorTypes.length == 1) {
+				hql.append(" and a.type=?");
+				args.add(actorTypes[0]);
+			} else {
+				hql.append(" and a.type in (?");
+				args.add(actorTypes[0]);
+				for (int i = 1; i < actorTypes.length; i++) {
+					hql.append(",?");
+					args.add(actorTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 状态，对应Actor的status属性
+		if (actorStatuses != null && actorStatuses.length > 0) {
+			if (actorStatuses.length == 1) {
+				hql.append(" and a.status=?");
+				args.add(actorStatuses[0]);
+			} else {
+				hql.append(" and a.status in (?");
+				args.add(actorStatuses[0]);
+				for (int i = 1; i < actorStatuses.length; i++) {
+					hql.append(",?");
+					args.add(actorStatuses[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 排序
+		hql.append(" order by a.type,a.orderNo");
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql.toString());
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
+		return this.getJpaTemplate().find(hql.toString(), args.toArray());
 	}
 }

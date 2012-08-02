@@ -270,4 +270,18 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	String loadActorNameByCode(String userCode);
+	
+	/**
+	 * 获取指定名称的Actor信息
+	 * 
+	 * @param actorName
+	 *            Actor的名称
+	 * @param actorTypes
+	 *            类型列表
+	 * @param actorStatues
+	 *            状态列表
+	 * @return
+	 */
+	List<Actor> findByName(String actorName, Integer[] actorTypes,
+			Integer[] actorStatues);
 }

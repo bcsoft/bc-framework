@@ -1,5 +1,6 @@
 package cn.bc.identity.dao.hibernate.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.persistence.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.jpa.JpaCallback;
+import org.springframework.util.StringUtils;
 
 import cn.bc.core.exception.CoreException;
 import cn.bc.identity.dao.ActorHistoryDao;
@@ -53,9 +55,10 @@ public class ActorHistoryDaoImpl extends HibernateCrudJpaDao<ActorHistory>
 	}
 
 	public ActorHistory loadByCode(String actorCode) {
-		String hql = "select ah from ActorHistory ah, Actor a where a.id=ah.actorId and a.code=?";
+		String hql = "from ActorHistory h where h.code=? and h.current=?";
 		@SuppressWarnings("rawtypes")
-		List all = this.getJpaTemplate().find(hql, actorCode);
+		List all = this.getJpaTemplate()
+				.find(hql, actorCode, new Boolean(true));
 		if (all == null || all.isEmpty())
 			return null;
 		else if (all.size() == 1)
@@ -63,5 +66,43 @@ public class ActorHistoryDaoImpl extends HibernateCrudJpaDao<ActorHistory>
 		else
 			throw new CoreException("return more than one result! actorCode="
 					+ actorCode);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> findNames(List<String> actorCodes) {
+		if (actorCodes == null || actorCodes.isEmpty())
+			return new ArrayList<String>();
+		final List<Object> args = new ArrayList<Object>();
+		final StringBuffer hql = new StringBuffer(
+				"select a.name from Actor a where");
+		if (actorCodes.size() == 1) {
+			hql.append(" a.code=?");
+			args.add(actorCodes.get(0));
+		} else {
+			hql.append(" a.code in (?,");
+			args.add(actorCodes.get(0));
+			for (int i = 1; i < actorCodes.size(); i++) {
+				hql.append(",?");
+				args.add(actorCodes.get(i));
+			}
+			hql.append(")");
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql);
+			logger.debug("codes="
+					+ StringUtils.collectionToCommaDelimitedString(actorCodes));
+		}
+		return this.getJpaTemplate().execute(new JpaCallback<List<String>>() {
+			public List<String> doInJpa(EntityManager em)
+					throws PersistenceException {
+				Query queryObject = em.createQuery(hql.toString());
+				if (args != null) {
+					for (int i = 0; i < args.size(); i++) {
+						queryObject.setParameter(i + 1, args.get(i));
+					}
+				}
+				return queryObject.getResultList();
+			}
+		});
 	}
 }
