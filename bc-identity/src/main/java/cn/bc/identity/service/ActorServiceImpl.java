@@ -153,4 +153,9 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 	public String loadActorNameByCode(String actorCode) {
 		return this.actorDao.loadActorNameByCode(actorCode);
 	}
+
+	public List<Actor> findByName(String actorName, Integer[] actorTypes,
+			Integer[] actorStatues) {
+		return this.actorDao.findByName(actorName, actorTypes, actorStatues);
+	}
 }
