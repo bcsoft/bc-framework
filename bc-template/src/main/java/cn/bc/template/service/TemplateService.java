@@ -105,8 +105,9 @@ public interface TemplateService extends CrudService<Template> {
 
 	/**
 	 * 返回模板参数的格式化对应的Map
-	 * @param id
-	 * @param mapFormatSql
+	 * @param id 模板id
+	 * @param mapFormatSql 格式化此模板参数详细配置sql中的占位符
+	 * 			格式为{占位名称:需要替换的值}
 	 * @return
 	 */
 	Map<String,Object> getMapParams(Long id,Map<String,Object> mapFormatSql);

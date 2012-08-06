@@ -3,6 +3,7 @@ package cn.bc.template.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,21 +159,14 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if(tplps == null || tplps.isEmpty())
 			return null;
 		
-		Map<String,Object> formattedMap = null;
-		Map<String,Object> tempMap = null;
+		Map<String,Object> formattedMap = new HashMap<String,Object>();
+		Map<String,Object> tempMap;
 		//遍历模板参数集合获取格式化的替换参数
 		for(TemplateParam tp:tplps){
 			tempMap=templateParamService.getMapParams(tp, mapFormatSql);
-			if(tempMap == null || tempMap.isEmpty())
-				continue;
-			if(formattedMap == null || formattedMap.isEmpty()){
-				formattedMap = tempMap;
-			}
-			
-			Set<String> tempSet = tempMap.keySet();
-			for(String key:tempSet)
-				formattedMap.put(key, tempMap.get(key));
+			if(tempMap != null )
+			formattedMap.putAll(tempMap);
 		}
-		return formattedMap;
+		return formattedMap.isEmpty()?null:formattedMap;
 	}
 }
