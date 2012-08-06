@@ -57,6 +57,8 @@ public class TemplateParam extends FileEntityImpl {
 	 * {type:"Json2List",sql:"...",key:"key"}		
 	 * 		-- 与类型[List<Object>]，sql必须返回只有一个字符串值
 	 * 
+	 * {type:"spel",sql:"...",key:"key"}根据spring表达式返回集合
+	 *
 	 * @param templateParam 模板参数
 	 * 
 	 * @param mapFormatSql 格式化sql上的占位符，sql集合的集合
