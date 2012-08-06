@@ -34,6 +34,7 @@ import cn.bc.core.util.TemplateUtils;
  */
 public class DocxUtils {
 	protected static Log logger = LogFactory.getLog(DocxUtils.class);
+	private static boolean useFreeMarker = true;
 
 	private DocxUtils() {
 	}
@@ -124,7 +125,10 @@ public class DocxUtils {
 		for (String k : markerValues.keySet()) {
 			if (i > 0)
 				pattern += "|";
-			pattern += "(?<=\\$\\{)" + k + "(?=\\})";
+			pattern += "(?<=\\$\\{)" + k;
+			if (!useFreeMarker) {
+				pattern += "(?=\\})";
+			}
 			i++;
 		}
 		if (logger.isDebugEnabled())
@@ -192,6 +196,7 @@ public class DocxUtils {
 			Map<String, Object> markerValues, Pattern p) {
 		Matcher m;
 		String k;
+		String target;
 		for (XWPFRun run : paragraph.getRuns()) {
 			// System.out.println("run=" + run.toString());
 			for (CTText t : run.getCTR().getTList()) {
@@ -201,10 +206,16 @@ public class DocxUtils {
 					k = m.group();
 					if (logger.isDebugEnabled())
 						logger.debug("k=" + k + ",s=" + t.getStringValue());
-					t.setStringValue(t.getStringValue().replaceAll(
-							"\\$\\{" + k + "\\}",
-							markerValues.get(k) != null ? markerValues.get(k)
-									.toString() : ""));
+					if (useFreeMarker) {
+						target = FreeMarkerUtils.format(t.getStringValue(),
+								markerValues);
+					} else {
+						target = t.getStringValue().replaceAll(
+								"\\$\\{" + k + "\\}",
+								markerValues.get(k) != null ? markerValues.get(
+										k).toString() : "");
+					}
+					t.setStringValue(target);
 				}
 				if (m.find()) {
 					logger.warn("formatParagraph TODO: more than one matcher.");
