@@ -10,7 +10,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
@@ -32,10 +36,16 @@ import cn.bc.template.domain.TemplateParam;
  * 
  */
 public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam>
-		implements TemplateParamService {
+		implements TemplateParamService, ApplicationContextAware {
 	protected final Log logger = LogFactory.getLog(getClass());
 	private TemplateParamDao templateParamDao;
 	private ExpressionParser expressionParser;
+	private ApplicationContext applicationContext;
+
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 	@Autowired
 	public void setTemplateParamDao(TemplateParamDao templateParamDao) {
@@ -165,13 +175,18 @@ public class TemplateParamServiceImpl extends DefaultCrudService<TemplateParam>
 						expressionParser = new SpelExpressionParser();
 					Expression exp = expressionParser
 							.parseExpression(formattedSql);
-					EvaluationContext context = new StandardEvaluationContext(
-							mapFormatSql);
+					StandardEvaluationContext context = new StandardEvaluationContext();
+					context.setBeanResolver(new BeanFactoryResolver(
+							this.applicationContext));
+					context.setVariables(mapFormatSql);
 					try {
 						Map<String, Object> map = (Map<String, Object>) exp
 								.getValue(context);
-						if (map != null)
+						if (map != null) {
+							if (mapParams == null)
+								mapParams = new HashMap<String, Object>();
 							mapParams.putAll(map);
+						}
 					} catch (EvaluationException e) {
 						logger.warn(e.getMessage());
 						throw e;
