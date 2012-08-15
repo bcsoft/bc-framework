@@ -23,6 +23,9 @@
 			<result>/bc/option/optionGroup/select.jsp</result>
 		</action>
 	</package>
+	<package name="selectOptionGroupByKey" extends="bc-default" namespace="/bc" >
+		<action name="selectOptionGroupByKey" class="selectOptionGroupByKeyAction" method="selectOptionGroup"/>
+	</package>
 	<package name="optionItem" extends="bc-default" namespace="/bc/optionItem">
 		<action name="create" class="optionItemAction" method="create">
 			<result name="form">/bc/option/optionItem/form.jsp</result>
