@@ -82,6 +82,14 @@ public class SelectTemplateAction extends
 				map.put("formatted", rs[i++]);
 				map.put("size", rs[i++]);
 				map.put("desc_", rs[i++]);
+				//取最后‘/’之后的信息
+				String category=map.get("category").toString();
+				int index=category.lastIndexOf("/");
+				if(index==-1||index==0||(index+1)==category.length()){
+					map.put("categoryEx",category);
+				}else{
+					map.put("categoryEx",category.substring(index+1));
+				}
 				return map;
 			}
 		});
@@ -92,6 +100,8 @@ public class SelectTemplateAction extends
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("t.id", "id"));
+		columns.add(new TextColumn4MapKey("t.category", "categoryEx",
+				getText("template.category"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
@@ -103,8 +113,6 @@ public class SelectTemplateAction extends
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
 				getText("template.type"), 150).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.category", "category",
-				getText("template.category"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.size_", "size",
 				getText("template.file.size"),110).setUseTitleFromLabel(true)
 				.setValueFormater(new FileSizeFormater()));
