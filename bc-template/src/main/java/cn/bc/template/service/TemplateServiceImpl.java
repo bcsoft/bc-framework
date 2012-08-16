@@ -150,8 +150,6 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		Template tpl=this.templateDao.load(id);
 		if(tpl == null)
 			throw new CoreException("template is not exists");
-		if(!tpl.isFormatted())
-			throw new CoreException("template Cannot format");
 		
 		//取参数集合
 		Set<TemplateParam> tplps = tpl.getParams();
