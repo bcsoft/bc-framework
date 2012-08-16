@@ -52,7 +52,9 @@ public class QlCondition implements Condition {
 
 	public static Object convertValue(String type, String value,
 			boolean toLikeValue) {
-		return convertValueByType(type, toLikeValue ? "%" + value + "%" : value);
+		return convertValueByType(type,
+				toLikeValue ? (value.indexOf("%") == -1 ? "%" + value + "%"
+						: value) : value);
 	}
 
 	/**
