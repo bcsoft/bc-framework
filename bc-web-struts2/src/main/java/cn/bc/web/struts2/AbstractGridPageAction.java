@@ -619,12 +619,47 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				} else {// 单个值的字符串
 					c = StringUtils.countMatches(ql, "?");
 					values = new Object[c];
-					value = QlCondition.convertValue(type, (String) value,
-							isLike);// 转换值为指定的类型
-					for (int j = 0; j < values.length; j++) {
-						values[j] = value;// 如果查询语句中有多个?号，就将值复制出多个来
+					String likeType = json.has("likeType") ? json
+							.getString("likeType") : null;
+
+					// 多个值用空格分开
+					String[] vs = ((String) value).split(" ");
+
+					if (vs.length == 1) {
+						// 自定义like类型
+						if (isLike)
+							value = convertByLikeType(likeType, (String) value);
+						
+						// 转换值为指定的类型
+						value = QlCondition.convertValue(type, (String) value,
+								isLike);
+						
+						// 如果查询语句中有多个?号，就将值复制出多个来
+						for (int j = 0; j < values.length; j++) {
+							values[j] = value;
+						}
+						and.add(new QlCondition(ql, values));
+					} else if (vs.length > 1) {
+						OrCondition or = new OrCondition();
+						or.setAddBracket(true);
+						for (String v : vs) {
+							// 自定义like类型
+							if (isLike)
+								v = convertByLikeType(likeType, v);
+							
+							// 转换值为指定的类型
+							v = (String) QlCondition.convertValue(type,
+									v, isLike);
+							
+							// 如果查询语句中有多个?号，就将值复制出多个来
+							values = new Object[c];
+							for (int j = 0; j < values.length; j++) {
+								values[j] = v;
+							}
+							or.add(new QlCondition(ql, values));
+						}
+						and.add(or);
 					}
-					and.add(new QlCondition(ql, values));
 				}
 			}
 
@@ -637,6 +672,18 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 					+ this.search4advance);
 			logger.error(e.getMessage(), e);
 			return null;
+		}
+	}
+
+	private String convertByLikeType(String likeType, String value) {
+		if (value == null || value.length() == 0)
+			return value;
+		if ("right".equalsIgnoreCase(likeType)) {
+			return "%" + value;
+		} else if ("left".equalsIgnoreCase(likeType)) {
+			return value + "%";
+		} else {
+			return value;
 		}
 	}
 
