@@ -17,6 +17,7 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.LikeLeftCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -103,7 +104,7 @@ public class SelectTemplateAction extends
 		columns.add(new TextColumn4MapKey("t.category", "categoryEx",
 				getText("template.category"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject"), 200).setUseTitleFromLabel(true));
+				getText("template.tfsubject"), 300).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
 				getText("template.desc")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.version_", "version",
@@ -164,7 +165,7 @@ public class SelectTemplateAction extends
 		
 		if(category!=null&&category.length()>0){
 			if(category.indexOf(",")==-1){
-				andCondition.add(new EqualsCondition("t.category", category));
+				andCondition.add(new LikeLeftCondition("t.category", category));
 			}else{
 				andCondition.add(new InCondition("t.category", category.split(",")));
 			}

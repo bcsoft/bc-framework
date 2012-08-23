@@ -41,9 +41,9 @@ public class SimpleCondition implements Condition {
 		} else if (operator == QueryOperator.Like) {
 			this.values.add("%" + String.valueOf(value) + "%");
 		} else if (operator == QueryOperator.LikeLeft) {
-			this.values.add("%" + String.valueOf(value));
-		} else if (operator == QueryOperator.LikeRight) {
 			this.values.add(String.valueOf(value) + "%");
+		} else if (operator == QueryOperator.LikeRight) {
+			this.values.add("%" + String.valueOf(value));
 		} else if (operator == QueryOperator.IsNull
 				|| operator == QueryOperator.IsNotNull) {
 
