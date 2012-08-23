@@ -172,6 +172,12 @@ public class DateUtils {
 			df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		} else if (dateTime.length() == "yyyy-MM-dd".length()) {
 			df = new SimpleDateFormat("yyyy-MM-dd");
+		} else if (dateTime.length() == "yyyy-M-d".length()) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+		} else if (dateTime.length() == "yyyy-MM-d".length()) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+		} else if (dateTime.length() == "yyyy-M-dd".length()) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
 		} else {
 			return null;
 		}
