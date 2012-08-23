@@ -38,6 +38,10 @@
 		<module>bc-placeorigin</module>
 		<module>bc-template</module>
 		<module>bc-investigate</module>
+
+		<module>bc-remoting-common</module>
+		<module>bc-remoting-client</module>
+		<module>bc-remoting-server</module>
 	</modules>
 	<scm>
 		<connection>scm:git:git://github.com/rongjihuang/bc-framework.git</connection>

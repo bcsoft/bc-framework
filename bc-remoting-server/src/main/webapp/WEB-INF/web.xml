@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="bcConvertWAC" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>BC Converter</display-name>
+    <description>BC Converter</description>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+	<session-config>
+		<!-- session超时设置，设为不大于0的数将永远不过时，单位为分钟 -->
+		<session-timeout>60</session-timeout>
+	</session-config>
+
+	<!-- Log4j -->
+	<servlet>
+		<servlet-name>log4jConfig</servlet-name>
+		<servlet-class>cn.bc.web.servlet.Log4jConfigServlet</servlet-class>
+		<init-param>
+			<param-name>log4jConfigLocation</param-name>
+			<param-value>/WEB-INF/classes/log4j.xml</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+
+	<!-- 配置Spring加载哪些配置文件，多个文件用逗号连接，可使用通配符， 如/WEB-INF/applicationContext-*.xml,classpath*:applicationContext-*.xml -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring.xml</param-value>
+	</context-param>
+
+	<!-- 配置Spring的监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+</web-app>

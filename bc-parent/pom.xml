@@ -711,6 +711,13 @@
 				<artifactId>httpclient</artifactId>
 				<version>4.0.3</version>
 			</dependency>
+
+			<!-- jacob -->
+			<dependency>
+				<groupId>net.sf.jacob-project</groupId>
+				<artifactId>jacob</artifactId>
+				<version>1.16.1</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
