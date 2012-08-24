@@ -37,7 +37,7 @@ public class ClientMain {
 		System.out.println("result:test=" + result);
 
 		// 字节测试
-		//testBytes(service);
+		testBytes(service);
 
 		// 文件测试
 		testFile(service);

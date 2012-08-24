@@ -7,7 +7,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 
+import org.springframework.util.FileCopyUtils;
+
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.util.SpringUtils;
+import cn.bc.remoting.msoffice.WordSaveFormat;
+import cn.bc.remoting.service.WordService;
 
 import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
 import com.artofsolving.jodconverter.DocumentConverter;
@@ -26,6 +31,12 @@ public class OfficeUtils {
 	private static OpenOfficeConnection connection;
 	private static DocumentConverter converter;
 	private static DocumentFormatRegistry formaters;
+	private static boolean useRemotingService;
+	private static WordService wordService;
+
+	public static void setUseRemotingService(boolean useRemotingService) {
+		OfficeUtils.useRemotingService = useRemotingService;
+	}
 
 	/**
 	 * 转换文档类型
@@ -40,19 +51,30 @@ public class OfficeUtils {
 	public static void convert(InputStream is, String fromType,
 			OutputStream os, String toType) {
 		try {
-			// 打开连接
-			if (!getConnection().isConnected())
-				getConnection().connect();
+			if (useRemotingService) {// 使用远程服务执行转换
+				if (wordService == null){
+					wordService = SpringUtils.getBean(WordService.class);
+				}
+				byte[] result = wordService.convertFormat("bcsystem",
+						FileCopyUtils.copyToByteArray(is), WordSaveFormat.get(fromType),
+						WordSaveFormat.get(toType));
 
-			// 执行转换
-			getConverter().convert(is,
-					getFormaters().getFormatByFileExtension(fromType), os,
-					getFormaters().getFormatByFileExtension(toType));
+				FileCopyUtils.copy(result, os);
+			} else {// 使用OpenOffice执行转换
+				// 打开连接
+				if (!getConnection().isConnected())
+					getConnection().connect();
 
-			// 关闭连接
-			if (getConnection().isConnected())
-				getConnection().disconnect();
-		} catch (ConnectException e) {
+				// 执行转换
+				getConverter().convert(is,
+						getFormaters().getFormatByFileExtension(fromType), os,
+						getFormaters().getFormatByFileExtension(toType));
+
+				// 关闭连接
+				if (getConnection().isConnected())
+					getConnection().disconnect();
+			}
+		} catch (Exception e) {
 			throw new CoreException(e);
 		}
 	}

@@ -86,7 +86,7 @@ public class WordServiceImpl implements WordService {
 		}
 		File from = new File(fromFile);
 		if (!from.exists()) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException("fromFile=" + fromFile);
 		}
 
 		// 创建目标文件所在的目录
@@ -206,6 +206,8 @@ public class WordServiceImpl implements WordService {
 		// 打开word应用程序
 		ActiveXComponent wordApp = null;
 		try {
+			if (logger.isInfoEnabled())
+				logger.info("----Try Start Word----");
 			wordApp = new ActiveXComponent("Word.Application");
 
 			// 设置word不可见

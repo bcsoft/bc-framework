@@ -24,6 +24,14 @@
 			<artifactId>bc-orm-hibernate</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<!-- 远程服务 -->
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-remoting-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
