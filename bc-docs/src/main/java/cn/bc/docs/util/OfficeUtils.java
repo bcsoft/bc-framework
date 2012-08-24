@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileCopyUtils;
 
 import cn.bc.core.exception.CoreException;
@@ -28,13 +30,14 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
  * 
  */
 public class OfficeUtils {
+	private static Log logger = LogFactory.getLog(OfficeUtils.class);
 	private static OpenOfficeConnection connection;
 	private static DocumentConverter converter;
 	private static DocumentFormatRegistry formaters;
 	private static boolean useRemotingService;
 	private static WordService wordService;
 
-	public static void setUseRemotingService(boolean useRemotingService) {
+	public void setUseRemotingService(boolean useRemotingService) {
 		OfficeUtils.useRemotingService = useRemotingService;
 	}
 
@@ -51,12 +54,17 @@ public class OfficeUtils {
 	public static void convert(InputStream is, String fromType,
 			OutputStream os, String toType) {
 		try {
-			if (useRemotingService) {// 使用远程服务执行转换
-				if (wordService == null){
+			if (useRemotingService
+					&& (fromType.equalsIgnoreCase("doc") || fromType
+							.equalsIgnoreCase("docx"))) {// 使用远程服务执行转换:暂时只支持doc和docx文档
+				if(logger.isInfoEnabled())
+					logger.info("--use wordService--");
+				if (wordService == null) {
 					wordService = SpringUtils.getBean(WordService.class);
 				}
 				byte[] result = wordService.convertFormat("bcsystem",
-						FileCopyUtils.copyToByteArray(is), WordSaveFormat.get(fromType),
+						FileCopyUtils.copyToByteArray(is),
+						WordSaveFormat.get(fromType),
 						WordSaveFormat.get(toType));
 
 				FileCopyUtils.copy(result, os);

@@ -38,6 +38,7 @@ import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
+import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.identity.service.ActorHistoryService;
@@ -45,13 +46,6 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
-
-import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
-import com.artofsolving.jodconverter.DocumentConverter;
-import com.artofsolving.jodconverter.DocumentFormatRegistry;
-import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
 
 /**
  * 基于Attach的附件处理Action
@@ -452,6 +446,7 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 	// 支持在线打开文档查看的文件下载
 	public String inline() throws Exception {
+		Date startTime = new Date();
 		Attach attach = this.getCrudService().load(this.getId());
 		String path;
 		if (attach.isAppPath())
@@ -463,45 +458,32 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 					+ attach.getPath();
 
 		if (isConvertFile(attach.getFormat())) {
-			// 调用jodconvert将附件转换为pdf文档后再下载
+			// 转换附件格式后再下载
 			FileInputStream inputStream = new FileInputStream(new File(path));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
 					BUFFER);
-
-			// connect to an OpenOffice.org instance running on port 8100
-			OpenOfficeConnection connection = new SocketOpenOfficeConnection(
-					getText("jodconverter.soffice.host"),
-					Integer.parseInt(getText("jodconverter.soffice.port")));
-			connection.connect();
-
-			DocumentFormatRegistry formaters = new DefaultDocumentFormatRegistry();
+			if (this.to == null || this.to.length() == 0) {
+				if ("xls".equalsIgnoreCase(attach.getFormat())
+						|| "xlsx".equalsIgnoreCase(attach.getFormat())) {
+					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+				} else {
+					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+				}
+			}
 
 			// convert
-			DocumentConverter converter = new OpenOfficeDocumentConverter(
-					connection);
-			String from = attach.getFormat();
-			// if("docx".equalsIgnoreCase(from))
-			// from = "doc";
-			// else if("xlsx".equalsIgnoreCase(from))
-			// from = "xls";
-			// else if("pptx".equalsIgnoreCase(from))
-			// from = "ppt";
-			if (this.to == null || this.to.length() == 0)
-				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-			converter.convert(inputStream,
-					formaters.getFormatByFileExtension(from), outputStream,
-					formaters.getFormatByFileExtension(this.to));
-
-			// close the connection
-			connection.disconnect();
-			byte[] bs = outputStream.toByteArray();
-			this.inputStream = new ByteArrayInputStream(bs);
-
-			inputStream.close();
+			OfficeUtils.convert(inputStream, attach.getFormat(), outputStream,
+					this.to);
+			if (logger.isDebugEnabled()) {
+				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
+			}
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
-			contentType = AttachUtils.getContentType(this.to);
-			contentLength = bs.length;
+			byte[] bs = outputStream.toByteArray();
+			this.inputStream = new ByteArrayInputStream(bs);
+			this.inputStream.close();
+			this.contentType = AttachUtils.getContentType(this.to);
+			this.contentLength = bs.length;
 			this.filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), attach.getSubject()
 							+ "." + this.to);

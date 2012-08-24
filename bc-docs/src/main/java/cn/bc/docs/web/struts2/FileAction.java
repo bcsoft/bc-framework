@@ -146,7 +146,7 @@ public class FileAction extends ActionSupport {
 		}
 
 		if (isConvertFile(extension)) {
-			// 调用jodconvert将附件转换为pdf文档后再下载
+			// 转换附件格式后再下载
 			FileInputStream inputStream = new FileInputStream(new File(path));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
 					BUFFER);
