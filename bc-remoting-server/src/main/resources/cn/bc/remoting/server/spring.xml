@@ -11,18 +11,27 @@
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!-- 属性配置文件 -->
+	<context:property-placeholder location="classpath:global.properties" />
 
 	<!-- 定义服务类 -->
-	<bean id="wordService" class="cn.bc.remoting.service.impl.WordServiceImpl" />
+	<bean id="wordService" class="cn.bc.remoting.service.impl.WordServiceImpl" >
+		<!-- 来源文件的根路径 -->
+		<property name="fromRootDir" value="${app.fromRootDir}" />
+		<!-- 转换后文件保存的根路径 -->
+		<property name="toRootDir" value="${app.toRootDir}" />
+		<!-- 临时目录 -->
+		<property name="tempDir" value="${app.tempDir}" />
+	</bean>
 
 	<!-- 远程服务配置：通过 rmi://[serverIp]:[serverPort]/[serviceName]访问 -->
 	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<!-- 定义远程服务的名称：RmiServiceExporter 对服务名没有特殊要求 -->
-		<property name="serviceName" value="word" />
+		<property name="serviceName" value="${app.wordService.name}" />
 
 		<!-- 避免与默认的RMI注册端口1099冲突，因此修改为1199 -->
-		<property name="registryPort" value="1199" />
-		<property name="servicePort" value="1200"/>
+		<property name="registryPort" value="${app.wordService.port}" />
+		<!-- <property name="servicePort" value="1200"/> -->
 
 		<property name="service" ref="wordService" />
 		<property name="serviceInterface" value="cn.bc.remoting.service.WordService" />

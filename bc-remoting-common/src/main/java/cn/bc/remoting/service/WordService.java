@@ -1,6 +1,7 @@
 package cn.bc.remoting.service;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import cn.bc.remoting.msoffice.WordSaveFormat;
 
@@ -17,9 +18,9 @@ public interface WordService extends CommonService {
 	 * @param token
 	 *            执行令牌
 	 * @param fromFile
-	 *            原始文档的相对路径，开头不要字符"/"
+	 *            原始文档的相对路径，开头不要字符"/"，父路径由服务端的配置决定
 	 * @param toFile
-	 *            转换后文档存放的相对路径，开头不要字符"/"
+	 *            转换后文档存放的相对路径，开头不要字符"/"，父路径由服务端的配置决定
 	 * @return 成功返回true
 	 * @throws IOException
 	 */
@@ -42,5 +43,5 @@ public interface WordService extends CommonService {
 	 */
 	byte[] convertFormat(String token, byte[] source,
 			WordSaveFormat fromFormat, WordSaveFormat toFormat)
-			throws IOException;
+			throws RemoteException;
 }

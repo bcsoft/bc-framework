@@ -12,7 +12,7 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<!-- 获取接口的远程服务实现 -->
+	<!-- 获取Word远程服务实现 -->
 	<bean id="wordService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
 		<property name="serviceUrl" value="rmi://localhost:1199/word" />
 		<property name="serviceInterface" value="cn.bc.remoting.service.WordService" />

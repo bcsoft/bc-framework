@@ -13,6 +13,16 @@
 	
 	<properties>
 		<app.debug>false</app.debug>
+		<!-- 临时目录 -->
+		<app.tempDir>/temp</app.tempDir>
+		<!-- 来源文件的根路径 -->
+		<app.fromRootDir>E:/</app.fromRootDir>
+		<!-- 转换后文件保存的根路径 -->
+		<app.toRootDir>F:/</app.toRootDir>
+		
+		<!-- RMI服务的访问名和端口配置：客户端通过 rmi://[serverIp]:[app.wordService.port]/[app.wordService.name]访问 -->
+		<app.wordService.name>word</app.wordService.name>
+		<app.wordService.port>1199</app.wordService.port>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,6 +57,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
 					<archive>
 						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
@@ -108,9 +119,22 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>empty</id>
+			<id>test</id>
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
+				<app.debug>true</app.debug>
+				<app.tempDir>D:/t/data_rmi/temp</app.tempDir>
+				<app.fromRootDir>D:/t/data_rmi/source</app.fromRootDir>
+				<app.toRootDir>D:/t/data_rmi/convert</app.toRootDir>
+			</properties>
+		</profile>
+		<profile>
+			<id>product</id>
+			<properties>
+				<app.debug>false</app.debug>
+				<app.tempDir>F:/temp</app.tempDir>
+				<app.fromRootDir>E:</app.fromRootDir>
+				<app.toRootDir>F:</app.toRootDir>
 			</properties>
 		</profile>
 	</profiles>
