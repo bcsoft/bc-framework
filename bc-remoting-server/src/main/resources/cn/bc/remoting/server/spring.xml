@@ -16,6 +16,8 @@
 
 	<!-- 定义服务类 -->
 	<bean id="wordService" class="cn.bc.remoting.service.impl.WordServiceImpl" >
+		<!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007)不支持，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
+		<property name="compatible" value="${app.compatible}" />
 		<!-- 来源文件的根路径 -->
 		<property name="fromRootDir" value="${app.fromRootDir}" />
 		<!-- 转换后文件保存的根路径 -->
