@@ -208,6 +208,7 @@ public class Html5FileUploadServlet extends HttpServlet {
 			json.put("to", datedir + "/" + fileName);// 子目录下的子路径名
 			json.put("file", path);
 			json.put("source", source);// 用户原始的本地文件路径信息
+			json.put("size", size);// 文件大小
 			writeReturnJson(response, json);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
