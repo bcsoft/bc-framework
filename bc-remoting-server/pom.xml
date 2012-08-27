@@ -13,6 +13,8 @@
 	
 	<properties>
 		<app.debug>false</app.debug>
+		<!-- 默认的jetty端口配置 -->
+		<jetty.port>8083</jetty.port>
 		<!-- 临时目录 -->
 		<app.tempDir>/temp</app.tempDir>
 		<!-- 来源文件的根路径 -->
