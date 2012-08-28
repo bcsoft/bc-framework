@@ -18,6 +18,9 @@ public enum WordSaveFormat {
 	/** Word 2007+ 文档 (*.docx) */
 	DOCX("docx", 12),
 
+	/** Word 2007+ 启用宏的文档 (*.docm) */
+	DOCM("docm", 13),
+
 	/** Word 2007+ XML 文档 (*.xml) */
 	XML_2007PLUS("xml", 19),
 
@@ -86,6 +89,8 @@ public enum WordSaveFormat {
 			return WordSaveFormat.PDF;
 		} else if (key.equalsIgnoreCase(WordSaveFormat.DOC.getKey())) {
 			return WordSaveFormat.DOC;
+		} else if (key.equalsIgnoreCase(WordSaveFormat.DOCM.getKey())) {
+			return WordSaveFormat.DOCM;
 		} else if (key.equalsIgnoreCase(WordSaveFormat.TXT.getKey())) {
 			return WordSaveFormat.TXT;
 		} else if (key.equalsIgnoreCase(WordSaveFormat.RTF.getKey())) {
@@ -94,6 +99,8 @@ public enum WordSaveFormat {
 			return WordSaveFormat.HTML;
 		} else if (key.equalsIgnoreCase(WordSaveFormat.MHT.getKey())) {
 			return WordSaveFormat.MHT;
+		} else if (key.equalsIgnoreCase(WordSaveFormat.TXT.getKey())) {
+			return WordSaveFormat.TXT;
 		} else if (key.equalsIgnoreCase(WordSaveFormat.XML_2007PLUS.getKey())) {
 			return WordSaveFormat.XML_2007PLUS;
 		} else {

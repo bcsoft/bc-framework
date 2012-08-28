@@ -3,7 +3,6 @@ package cn.bc.remoting.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +17,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
+import cn.bc.remoting.msoffice.ExcelSaveFormat;
 import cn.bc.remoting.msoffice.WordSaveFormat;
 import cn.bc.remoting.service.WordService;
 
@@ -71,10 +71,10 @@ public class WordServiceImpl implements WordService {
 		Assert.hasText(toFile, "toFile could not be null.");
 
 		// 根据文件名获取文件格式
-		WordSaveFormat fromFormat = WordSaveFormat.get(StringUtils
-				.getFilenameExtension(fromFile));
-		WordSaveFormat toFormat = WordSaveFormat.get(StringUtils
-				.getFilenameExtension(toFile));
+		String fromFormat = StringUtils.getFilenameExtension(fromFile)
+				.toLowerCase();
+		String toFormat = StringUtils.getFilenameExtension(toFile)
+				.toLowerCase();
 
 		// 检测来源文件必须存在，否则抛出异常
 		fromFile = FROM_ROOT_DIR + "/" + fromFile;
@@ -86,7 +86,7 @@ public class WordServiceImpl implements WordService {
 		}
 		File from = new File(fromFile);
 		if (!from.exists()) {
-			throw new FileNotFoundException("fromFile=" + fromFile);
+			throw new RemoteException("FileNotFound:fromFile=" + fromFile);
 		}
 
 		// 创建目标文件所在的目录
@@ -96,11 +96,14 @@ public class WordServiceImpl implements WordService {
 		}
 
 		// 根据来源文件格式调用相应的方法进行文档格式转换
-		if (fromFormat == WordSaveFormat.DOC
-				|| fromFormat == WordSaveFormat.DOCX
-				|| fromFormat == WordSaveFormat.TXT
-				|| fromFormat == WordSaveFormat.RTF) {// Word文档格式转换
-			convertByWord(fromFile, toFile, toFormat.getValue());
+		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
+				|| "txt".equals(fromFormat) || "rtf".equals(fromFormat)) {// Word文档格式转换
+			convertByWord(fromFile, toFile, WordSaveFormat.get(toFormat)
+					.getValue());
+		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
+				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat)) {// Excel文档格式转换
+			convertByExcel(fromFile, toFile, ExcelSaveFormat.get(toFormat)
+					.getValue());
 		} else {
 			throw new RemoteException("unsupport file type: fromFormat="
 					+ fromFormat);
@@ -203,11 +206,11 @@ public class WordServiceImpl implements WordService {
 	 * @param toFormat
 	 */
 	private void convertByWord(String fromFile, String toFile, int toFormat) {
-		// 打开word应用程序
 		ActiveXComponent wordApp = null;
 		try {
 			if (logger.isInfoEnabled())
-				logger.info("----Try Start Word----");
+				logger.info("----Word: Start----");
+			// 打开word应用程序
 			wordApp = new ActiveXComponent("Word.Application");
 
 			// 设置word不可见
@@ -236,12 +239,12 @@ public class WordServiceImpl implements WordService {
 				// Office 2007+ 调用ExportAsFixedFormat:目标文件不能存在，否则报错
 				// (2007需要按装插件才能支持此方法：http://www.microsoft.com/zh-cn/download/details.aspx?id=7)
 				if (logger.isDebugEnabled())
-					logger.debug("----Start ExportAsFixedFormat----");
+					logger.debug("----Word: ExportAsFixedFormat----");
 				Dispatch.call(doc, "ExportAsFixedFormat", toFile, toFormat);
 			} else {
 				// Office 2010 调用Document对象的SaveAs2方法:目标文件不能存在，否则报错
 				if (logger.isDebugEnabled())
-					logger.debug("----Start SaveAs2----");
+					logger.debug("----Word: SaveAs2----");
 				Dispatch.call(doc, "SaveAs2", toFile, toFormat);
 			}
 
@@ -254,8 +257,74 @@ public class WordServiceImpl implements WordService {
 			if (wordApp != null) {
 				try {
 					if (logger.isInfoEnabled())
-						logger.info("----Try Quit Word----");
+						logger.info("----Word: Quit----");
 					wordApp.invoke("Quit", 0);
+				} catch (Exception e) {
+					logger.debug(e.getMessage(), e);
+				}
+			}
+		}
+	}
+
+	private void convertByExcel(String fromFile, String toFile, int toFormat) {
+		ActiveXComponent excelApp = null;
+		try {
+			if (logger.isInfoEnabled()) {
+				logger.info("----Excel: Start----");
+				logger.info("fromFile=" + fromFile);
+				logger.info("toFile=" + toFile);
+				logger.info("toFormat=" + toFormat);
+			}
+			// 打开Excel应用程序
+			excelApp = new ActiveXComponent("Excel.Application");
+
+			// 设置Excel不可见
+			excelApp.setProperty("Visible", false);
+
+			// 调用Application对象的Documents属性，获得Documents对象
+			Dispatch workbooks = excelApp.getProperty("Workbooks").toDispatch();
+
+			// 调用Documents对象中Open方法打开文档，并返回打开的文档对象Document
+			Dispatch workbook = Dispatch.call(workbooks, "Open",// 调用Documents对象的Open方法
+					fromFile,// 输入文件路径全名
+					false,// UpdateLinks
+					true// ReadOnly
+					).toDispatch();
+
+//			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();// 获取Workbook对象的ActiveSheet属性
+
+			// 检测目标文件是否存在，存在就先删除
+			File f = new File(toFile);
+			if (f.exists()) {
+				if (logger.isWarnEnabled())
+					logger.warn("file exists, delete it first: file=" + toFile);
+				f.delete();
+			}
+
+			if (this.compatible || toFormat == ExcelSaveFormat.PDF.getValue()) {
+				// Office 2007+ 调用ExportAsFixedFormat:目标文件不能存在，否则报错
+				// (2007需要按装插件才能支持此方法：http://www.microsoft.com/zh-cn/download/details.aspx?id=7)
+				if (logger.isDebugEnabled())
+					logger.debug("----Excel: ExportAsFixedFormat----");
+				Dispatch.call(workbook, "ExportAsFixedFormat", toFormat, toFile);
+			} else {
+				// Office 2010 调用Document对象的SaveAs方法:目标文件不能存在，否则报错
+				if (logger.isDebugEnabled())
+					logger.debug("----Excel: SaveAs----");
+				Dispatch.call(workbook, "SaveAs", toFile, toFormat);
+			}
+
+			// 关闭文档
+			Dispatch.call(workbook, "Close", false);
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e);
+		} finally {
+			if (excelApp != null) {
+				try {
+					if (logger.isInfoEnabled())
+						logger.info("----Excel: Quit----");
+					excelApp.invoke("Quit");
 				} catch (Exception e) {
 					logger.debug(e.getMessage(), e);
 				}

@@ -3,8 +3,6 @@
  */
 package cn.bc.docs.web.struts2;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -146,37 +144,32 @@ public class FileAction extends ActionSupport {
 		}
 
 		if (isConvertFile(extension)) {
-			// 转换附件格式后再下载
-			FileInputStream inputStream = new FileInputStream(new File(path));
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-					BUFFER);
-
 			if (this.from == null || this.from.length() == 0)
 				this.from = extension;
 			if (this.to == null || this.to.length() == 0) {
-				if ("xls".equalsIgnoreCase(this.from)
-						|| "xlsx".equalsIgnoreCase(this.from)) {
-					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
-				} else {
-					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-				}
+				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+//				if ("xls".equalsIgnoreCase(this.from)
+//						|| "xlsx".equalsIgnoreCase(this.from)
+//				|| "xlsm".equalsIgnoreCase(attach.getFormat())) {
+//					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+//				} else {
+//					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+//				}
 			}
 
-			// convert
-			OfficeUtils.convert(inputStream, this.from, outputStream, this.to);
-			if (logger.isDebugEnabled()) {
-				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
-			}
+			// 转换文档
+			this.inputStream = OfficeUtils.convert(this.f, this.to, true);
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
-			byte[] bs = outputStream.toByteArray();
-			this.inputStream = new ByteArrayInputStream(bs);
-			this.inputStream.close();
 			this.contentType = AttachUtils.getContentType(this.to);
-			this.contentLength = bs.length;
+			this.contentLength = this.inputStream.available();
 			this.filename = WebUtils.encodeFileName(ServletActionContext
 					.getRequest(), this.n == null ? "bc" : this.n + "."
 					+ this.to);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
+			}
 		} else {
 			// 设置下载文件的参数
 			this.contentType = AttachUtils.getContentType(extension);

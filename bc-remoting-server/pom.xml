@@ -127,9 +127,9 @@
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
 				<app.debug>true</app.debug>
-				<app.tempDir>D:/t/data_rmi/temp</app.tempDir>
-				<app.fromRootDir>D:/t/data_rmi/source</app.fromRootDir>
-				<app.toRootDir>D:/t/data_rmi/convert</app.toRootDir>
+				<app.tempDir>D:/bcdata/temp</app.tempDir>
+				<app.fromRootDir>D:/bcdata</app.fromRootDir>
+				<app.toRootDir>D:/bcdata/convert</app.toRootDir>
 			</properties>
 		</profile>
 		<profile>

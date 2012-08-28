@@ -458,32 +458,42 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 					+ attach.getPath();
 
 		if (isConvertFile(attach.getFormat())) {
-			// 转换附件格式后再下载
-			FileInputStream inputStream = new FileInputStream(new File(path));
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-					BUFFER);
 			if (this.to == null || this.to.length() == 0) {
-				if ("xls".equalsIgnoreCase(attach.getFormat())
-						|| "xlsx".equalsIgnoreCase(attach.getFormat())) {
-					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
-				} else {
-					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-				}
+				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+//				if ("xls".equalsIgnoreCase(attach.getFormat())
+//						|| "xlsx".equalsIgnoreCase(attach.getFormat())
+//						|| "xlsm".equalsIgnoreCase(attach.getFormat())) {
+//					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+//				} else {
+//					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
+//				}
 			}
 
-			// convert
-			OfficeUtils.convert(inputStream, attach.getFormat(), outputStream,
-					this.to);
+			if (attach.isAppPath()) {
+				// 转换附件格式后再下载
+				FileInputStream inputStream = new FileInputStream(
+						new File(path));
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
+						BUFFER);
+
+				// convert
+				OfficeUtils.convert(inputStream, attach.getFormat(),
+						outputStream, this.to);
+
+				byte[] bs = outputStream.toByteArray();
+				this.inputStream = new ByteArrayInputStream(bs);
+			} else {// 转换文档
+				this.inputStream = OfficeUtils.convert(attach.getPath(),
+						this.to, true);
+			}
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
 			}
 
 			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
-			byte[] bs = outputStream.toByteArray();
-			this.inputStream = new ByteArrayInputStream(bs);
-			this.inputStream.close();
 			this.contentType = AttachUtils.getContentType(this.to);
-			this.contentLength = bs.length;
+			this.contentLength = this.inputStream.available();
 			this.filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), attach.getSubject()
 							+ "." + this.to);
