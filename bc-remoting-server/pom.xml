@@ -13,12 +13,16 @@
 	
 	<properties>
 		<app.debug>false</app.debug>
+		<!-- 默认的jetty端口配置 -->
+		<jetty.port>8083</jetty.port>
 		<!-- 临时目录 -->
 		<app.tempDir>/temp</app.tempDir>
 		<!-- 来源文件的根路径 -->
 		<app.fromRootDir>E:/</app.fromRootDir>
 		<!-- 转换后文件保存的根路径 -->
 		<app.toRootDir>F:/</app.toRootDir>
+		<!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007不支持)，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
+		<app.compatible>false</app.compatible>
 		
 		<!-- RMI服务的访问名和端口配置：客户端通过 rmi://[serverIp]:[app.wordService.port]/[app.wordService.name]访问 -->
 		<app.wordService.name>word</app.wordService.name>
