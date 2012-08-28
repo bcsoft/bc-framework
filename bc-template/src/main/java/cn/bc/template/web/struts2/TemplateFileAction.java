@@ -31,6 +31,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
@@ -74,6 +75,7 @@ public class TemplateFileAction extends ActionSupport {
 	}
 
 	public Long id;// 模板id
+	public String code; // 模板编码
 	public String filename;
 	public String contentType;
 	public long contentLength;
@@ -90,8 +92,17 @@ public class TemplateFileAction extends ActionSupport {
 	
 	// 下载附件
 	public String download() throws Exception {
+		Template template;
+		
 		// 加载一个流程附件对象
-		Template template = templateService.load(id);
+		if( id != null ){
+			template = templateService.load(id);
+		}else if( code != null && code.length()>0){
+			template = templateService.loadByCode(code);
+		}else{
+			throw new CoreException("id or code is null!");
+		}
+		
 		typeCode=template.getTemplateType().getCode();
 		Date startTime = new Date();
 		// 自定义文本下载处理
@@ -223,8 +234,15 @@ public class TemplateFileAction extends ActionSupport {
 
 	// 支持在线打开文档查看的文件下载
 	public String inline() throws Exception {
+		Template template;
 		// 加载一个流程附件对象
-		Template template = templateService.load(id);
+		if( id != null ){
+			template = templateService.load(id);
+		}else if( code != null && code.length()>0){
+			template = templateService.loadByCode(code);
+		}else{
+			throw new CoreException("id or code is null!");
+		}
 		typeCode=template.getTemplateType().getCode();
 		Date startTime = new Date();
 
@@ -387,7 +405,7 @@ public class TemplateFileAction extends ActionSupport {
 	
 	public String markerValueJsons;//格式化测试中的格式化参数列的json字符串
 
-	public String formatSqlJsons;//格式化模板参数sql的json字符串
+	public String formatSqlJsons;//格式化模板参数sql的json字符串 [{"key":"id","value":123123}]
 	
 	// 获取替换参数
 	private Map<String,Object> getParams(Template template) throws Exception{

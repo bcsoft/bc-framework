@@ -1,37 +1,18 @@
 package cn.bc.template.web.struts2;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.struts2.ServletActionContext;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
-import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.TemplateUtils;
-import cn.bc.docs.util.OfficeUtils;
-import cn.bc.docs.web.AttachUtils;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.option.domain.OptionItem;
@@ -41,12 +22,10 @@ import cn.bc.template.service.TemplateParamService;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.service.TemplateTypeService;
 import cn.bc.template.util.DocxUtils;
-import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
-import cn.bc.web.util.WebUtils;
 
 /**
  * 模板表单Action
@@ -267,7 +246,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				&& extension.equals("docx")) {
 			markers = DocxUtils.findMarkers(is);
 			json.put("value", this.getParamStr(markers));
-		}
+		} 
 		is.close();
 		this.json = json.toString();
 		return "json";
@@ -286,210 +265,4 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	}
 
 	// ---- 加载配置参数 ---结束--
-
-	public String filename;
-	public String contentType;
-	public long contentLength;
-	public InputStream inputStream;
-
-	// 下载自定义文本
-	public String download() throws Exception {
-		Template coustText = this.templateService.load(tid);
-		if (coustText.getTemplateType().getCode().equals("custom")
-				&& content != null && content.length() > 0) {
-			coustText.setContent(content);
-		}
-
-		Date startTime = new Date();
-		// 附件的扩展名
-		String extension = "txt";
-		// debug
-		if (logger.isDebugEnabled()) {
-			logger.debug("extension=" + extension);
-		}
-		// 设置下载文件的参数
-		this.contentType = AttachUtils.getContentType(extension);
-		this.filename = WebUtils.encodeFileName(
-				ServletActionContext.getRequest(), coustText.getSubject() + "."
-						+ extension);
-		this.contentLength = coustText.getContent().length();
-		this.inputStream = coustText.getInputStream();
-		if (logger.isDebugEnabled()) {
-			logger.debug("download:" + DateUtils.getWasteTime(startTime));
-		}
-		return SUCCESS;
-	}
-
-	private static final int BUFFER = 4096;
-	public String from;// 指定原始文件的类型，默认为文件扩展名
-	public String to;// 预览时转换到的文件类型，默认为pdf
-	public String f;// 要下载的文件，相对于Attach.DATA_REAL_PATH下的子路径，前后均不带/
-	public String n;// [可选]指定下载为的文件名
-	public String markerValueJsons;
-
-	// 在线查看
-	public String inline() throws Exception {
-		Template template = this.templateService.load(tid);
-		if (template.getTemplateType().getCode().equals("custom")
-				&& content != null && content.length() > 0) {
-			template.setContent(content);
-		}
-
-		Date startTime = new Date();
-
-		// 附件的扩展名
-		String extension = template.getTemplateType().getExtension();
-
-		// debug
-		if (logger.isDebugEnabled()) {
-			logger.debug("path=" + template.getPath());
-			logger.debug("extension=" + extension);
-			logger.debug("n=" + template.getSubject());
-			logger.debug("to=" + to);
-		}
-
-		this.n = StringUtils.getFilename(template.getSubject());
-		if (isConvertFile(extension) || template.isPureText()) {
-			// 解释需要配置参数替换为指定的值。
-			Map<String, Object> markerValues = null;
-			JSONArray jsons = null;
-			if (this.markerValueJsons != null
-					&& this.markerValueJsons.length() > 0) {
-				markerValues = new HashMap<String, Object>();
-				jsons = new JSONArray(this.markerValueJsons);
-				JSONObject json;
-				Object v;
-				for (int i = 0; i < jsons.length(); i++) {
-					json = jsons.getJSONObject(i);
-					v = json.get("value");
-					if (v instanceof JSONArray) {
-						v = convert2Collection((JSONArray) v);
-					} else if (v instanceof JSONObject) {
-						v = convert2Map((JSONObject) v);
-					}
-					markerValues.put(json.getString("key"), v);
-				}
-			}
-			InputStream is;
-			if (template.getTemplateType().getCode().equals("word-docx")
-					&& extension.equals("docx")) {
-				XWPFDocument docx = DocxUtils.format(template.getInputStream(),
-						markerValues);
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				docx.write(out);
-				is = new ByteArrayInputStream(out.toByteArray());
-				out.close();
-			} else if (template.getTemplateType().getCode().equals("xls")
-					&& extension.equals("xls")) {
-				HSSFWorkbook xls = XlsUtils.format(template.getInputStream(),
-						markerValues);
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				xls.write(out);
-				is = new ByteArrayInputStream(out.toByteArray());
-				out.close();
-			} else if (template.isPureText()) {
-				if (markerValues != null && !markerValues.isEmpty()) {
-					if (template.getTemplateType().getCode().equals("custom")) {
-						String format = FreeMarkerUtils.format(
-								template.getContent(), markerValues);
-						template.setContent(format);
-						is = template.getInputStream();
-					} else {
-						is = new ByteArrayInputStream(template.getContentEx(
-								markerValues).getBytes());
-					}
-				} else {
-					is = template.getInputStream();
-				}
-
-				if (extension == null)
-					extension = "txt";
-			} else {
-				is = template.getInputStream();
-			}
-
-			if (this.from == null || this.from.length() == 0)
-				this.from = extension;
-			if (this.to == null || this.to.length() == 0)
-				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-
-			// 调用jodconvert将附件转换为pdf文档后再下载
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-					BUFFER);
-			OfficeUtils.convert(is, this.from, outputStream, this.to);
-			is.close();
-			if (logger.isDebugEnabled()) {
-				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
-			}
-
-			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
-			byte[] bs = outputStream.toByteArray();
-			this.inputStream = new ByteArrayInputStream(bs);
-			this.contentType = AttachUtils.getContentType(this.to);
-			this.contentLength = bs.length;
-			this.filename = WebUtils.encodeFileName(ServletActionContext
-					.getRequest(), this.n == null ? "bc" : this.n + "."
-					+ this.to);
-		} else {
-			// 设置下载文件的参数
-			this.filename = WebUtils.encodeFileName(
-					ServletActionContext.getRequest(), this.n);
-			this.contentType = AttachUtils.getContentType(extension);
-			// 无需转换的文档直接下载处理
-			File file = new File(template.getPath());
-			this.contentLength = file.length();
-			this.inputStream = new FileInputStream(file);
-		}
-
-		return SUCCESS;
-	}
-
-	private Map<String, Object> convert2Map(JSONObject json)
-			throws JSONException {
-		Map<String, Object> map = new HashMap<String, Object>();
-		Object v;
-		String k;
-		@SuppressWarnings("unchecked")
-		Iterator<String> itor = json.keys();
-		while (itor.hasNext()) {
-			k = itor.next();
-			v = json.get(k);
-			if (v instanceof JSONArray) {
-				map.put(k, convert2Collection((JSONArray) v));
-			} else if (v instanceof JSONObject) {
-				map.put(k, convert2Map((JSONObject) v));
-			} else {
-				map.put(k, v);
-			}
-		}
-		return map;
-	}
-
-	private Collection<Object> convert2Collection(JSONArray jsons)
-			throws JSONException {
-		List<Object> list = new ArrayList<Object>();
-		Object v;
-		for (int i = 0; i < jsons.length(); i++) {
-			v = jsons.get(i);
-			if (v instanceof JSONArray) {
-				list.add(convert2Collection((JSONArray) v));
-			} else if (v instanceof JSONObject) {
-				list.add(convert2Map((JSONObject) v));
-			} else {
-				list.add(v);
-			}
-		}
-		return list;
-	}
-
-	// 判断指定的扩展名是否为配置的要转换的文件类型
-	private boolean isConvertFile(String extension) {
-		String[] extensions = getText("jodconverter.from.extensions")
-				.split(",");
-		for (String ext : extensions) {
-			if (ext.equalsIgnoreCase(extension))
-				return true;
-		}
-		return false;
-	}
 }
