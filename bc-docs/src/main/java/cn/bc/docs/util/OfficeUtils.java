@@ -103,12 +103,7 @@ public class OfficeUtils {
 
 			String fromType = StringUtils.getFilenameExtension(fromFile)
 					.toLowerCase();
-			if (useRemotingService
-					&& (fromType.equals("doc") || fromType.equals("docx")
-							|| fromType.equals("docm")
-							|| fromType.equals("xls")
-							|| fromType.equals("xlsx") || fromType
-								.equals("xlsm"))) {// 使用远程服务执行转换:暂时只支持doc、docx、docm、xls、xlsx、xlsm文档
+			if (useMSOfficeService(fromType)) {// 使用远程服务执行转换:暂时只支持doc、docx、docm、xls、xlsx、xlsm文档
 				if (logger.isInfoEnabled())
 					logger.info("--use wordService--");
 				getWordService()
@@ -147,6 +142,20 @@ public class OfficeUtils {
 	}
 
 	/**
+	 * 是否使用MSOffice的文档转换服务
+	 * 
+	 * @param fromType
+	 * @return
+	 */
+	private static boolean useMSOfficeService(String fromType) {
+		// 使用远程服务执行转换:暂时只支持Word和Excel文档
+		return useRemotingService
+				&& (fromType.equals("doc") || fromType.equals("docx")
+						|| fromType.equals("docm") || fromType.equals("xls")
+						|| fromType.equals("xlsx") || fromType.equals("xlsm"));
+	}
+
+	/**
 	 * 转换文档类型
 	 * 
 	 * @param is
@@ -159,9 +168,7 @@ public class OfficeUtils {
 	public static void convert(InputStream is, String fromType,
 			OutputStream os, String toType) {
 		try {
-			if (useRemotingService
-					&& (fromType.equalsIgnoreCase("doc") || fromType
-							.equalsIgnoreCase("docx"))) {// 使用远程服务执行转换:暂时只支持doc和docx文档
+			if (useMSOfficeService(fromType)) {// 使用远程服务执行转换
 				if (logger.isInfoEnabled())
 					logger.info("--use wordService--");
 				if (wordService == null) {
