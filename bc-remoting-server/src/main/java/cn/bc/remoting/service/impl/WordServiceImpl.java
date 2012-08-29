@@ -173,12 +173,12 @@ public class WordServiceImpl implements WordService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("convert:toFile=" + toFile);
 		}
-
-		if (fromFormat == WordSaveFormat.DOC
-				|| fromFormat == WordSaveFormat.DOCX
-				|| fromFormat == WordSaveFormat.TXT
-				|| fromFormat == WordSaveFormat.RTF) {
+		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
+				|| "txt".equals(fromFormat) || "rtf".equals(fromFormat)) {// Word文档格式转换
 			convertByWord(fromFile, toFile, toFormat.getValue());
+		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
+				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat)) {// Excel文档格式转换
+			convertByExcel(fromFile, toFile, toFormat.getValue());
 		} else {
 			throw new RemoteException("unsupport file type: fromFormat="
 					+ fromFormat);
@@ -291,7 +291,8 @@ public class WordServiceImpl implements WordService {
 					true// ReadOnly
 					).toDispatch();
 
-//			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();// 获取Workbook对象的ActiveSheet属性
+			// Dispatch sheet = Dispatch.get(workbook,
+			// "ActiveSheet").toDispatch();// 获取Workbook对象的ActiveSheet属性
 
 			// 检测目标文件是否存在，存在就先删除
 			File f = new File(toFile);
