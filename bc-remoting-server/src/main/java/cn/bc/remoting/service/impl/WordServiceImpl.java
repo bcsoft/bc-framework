@@ -97,7 +97,8 @@ public class WordServiceImpl implements WordService {
 
 		// 根据来源文件格式调用相应的方法进行文档格式转换
 		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
-				|| "txt".equals(fromFormat) || "rtf".equals(fromFormat)) {// Word文档格式转换
+				|| "docm".equals(fromFormat) || "txt".equals(fromFormat)
+				|| "rtf".equals(fromFormat)) {// Word文档格式转换
 			convertByWord(fromFile, toFile, WordSaveFormat.get(toFormat)
 					.getValue());
 		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
@@ -174,7 +175,8 @@ public class WordServiceImpl implements WordService {
 			logger.debug("convert:toFile=" + toFile);
 		}
 		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
-				|| "txt".equals(fromFormat) || "rtf".equals(fromFormat)) {// Word文档格式转换
+				|| "docm".equals(fromFormat) || "txt".equals(fromFormat)
+				|| "rtf".equals(fromFormat)) {// Word文档格式转换
 			convertByWord(fromFile, toFile, toFormat.getValue());
 		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
 				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat)) {// Excel文档格式转换
