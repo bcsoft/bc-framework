@@ -49,8 +49,8 @@ public class ClientMain {
 	 */
 	private static void testFile(WordService service) throws IOException {
 		Date now = new Date();
-		boolean result = service
-				.convertFormat("test", "test.docx", "test_file.pdf");
+		boolean result = service.convertFormat("test", "test.docx",
+				"test_file.pdf");
 		System.out.println("testFile:result=" + result);
 		System.out.println("--finished:testFile--"
 				+ DateUtils.getWasteTime(now));
@@ -62,15 +62,14 @@ public class ClientMain {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	protected static void testBytes(WordService service)
-			throws FileNotFoundException, IOException {
+	protected static void testBytes(WordService service) throws Exception {
 		Date now = new Date();
 		// 字节测试;
 		InputStream source = new FileInputStream("/t/data_rmi/source/test.docx");
 		System.out.println("testBytes:source=" + source);
 		byte[] bs = service.convertFormat("testBytes",
-				FileCopyUtils.copyToByteArray(source), WordSaveFormat.DOCX,
-				WordSaveFormat.PDF);
+				FileCopyUtils.copyToByteArray(source),
+				WordSaveFormat.DOCX.getKey(), WordSaveFormat.PDF.getKey());
 
 		// 转换后的文件保存
 		File toFile = new File("/t/data_rmi/convert/test_bytes.pdf");

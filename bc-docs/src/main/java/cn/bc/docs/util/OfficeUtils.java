@@ -19,7 +19,6 @@ import org.springframework.util.StringUtils;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.SpringUtils;
 import cn.bc.docs.domain.Attach;
-import cn.bc.remoting.msoffice.WordSaveFormat;
 import cn.bc.remoting.service.WordService;
 
 import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
@@ -174,10 +173,8 @@ public class OfficeUtils {
 				if (wordService == null) {
 					wordService = SpringUtils.getBean(WordService.class);
 				}
-				byte[] result = wordService.convertFormat("bcsystem",
-						FileCopyUtils.copyToByteArray(is),
-						WordSaveFormat.get(fromType),
-						WordSaveFormat.get(toType));
+				byte[] result = wordService.convertFormat(REMOTING_TOKEN,
+						FileCopyUtils.copyToByteArray(is), fromType, toType);
 
 				FileCopyUtils.copy(result, os);
 			} else {// 使用OpenOffice执行转换
