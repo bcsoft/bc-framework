@@ -55,7 +55,7 @@ public class WordServiceImpl implements WordService {
 		this.compatible = compatible;
 	}
 
-	public boolean test(String token) {
+	public boolean test(String token) throws RemoteException {
 		Assert.hasText(token, "token could not be null.");
 		if (logger.isDebugEnabled()) {
 			logger.debug("test:token=" + token);
@@ -64,7 +64,7 @@ public class WordServiceImpl implements WordService {
 	}
 
 	public boolean convertFormat(String token, String fromFile, String toFile)
-			throws IOException {
+			throws RemoteException {
 		// 参数验证
 		Assert.notNull(token, "token could not be null.");
 		Assert.hasText(fromFile, "fromFile could not be null.");
@@ -96,13 +96,10 @@ public class WordServiceImpl implements WordService {
 		}
 
 		// 根据来源文件格式调用相应的方法进行文档格式转换
-		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
-				|| "docm".equals(fromFormat) || "txt".equals(fromFormat)
-				|| "rtf".equals(fromFormat)) {// Word文档格式转换
+		if (isWordFormat(fromFormat)) {// Word文档格式转换
 			convertByWord(fromFile, toFile, WordSaveFormat.get(toFormat)
 					.getValue());
-		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
-				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat)) {// Excel文档格式转换
+		} else if (isExcelFormat(fromFormat)) {// Excel文档格式转换
 			convertByExcel(fromFile, toFile, ExcelSaveFormat.get(toFormat)
 					.getValue());
 		} else {
@@ -110,19 +107,43 @@ public class WordServiceImpl implements WordService {
 					+ fromFormat);
 		}
 
+		// 记录一条转换日志
+		if (logger.isFatalEnabled()) {
+			logger.fatal("convert:token=" + token + ",fromFile=" + fromFile
+					+ ",toFile=" + toFile);
+		}
 		return true;
 	}
 
 	/**
-	 * 转换字节流
+	 * 判断是否是 Excel 可以打开的文档格式
+	 * 
+	 * @param fromFormat
+	 * @return
 	 */
-	public byte[] convertFormat(String token, byte[] source,
-			WordSaveFormat fromFormat, WordSaveFormat toFormat)
-			throws RemoteException {
+	private boolean isExcelFormat(String fromFormat) {
+		return "xls".equals(fromFormat) || "xlsx".equals(fromFormat)
+				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat);
+	}
+
+	/**
+	 * 判断是否是 Word 可以打开的文档格式
+	 * 
+	 * @param fromFormat
+	 * @return
+	 */
+	private boolean isWordFormat(String fromFormat) {
+		return "doc".equals(fromFormat) || "docx".equals(fromFormat)
+				|| "docm".equals(fromFormat) || "txt".equals(fromFormat)
+				|| "rtf".equals(fromFormat);
+	}
+
+	public byte[] convertFormat(String token, byte[] source, String fromFormat,
+			String toFormat) throws RemoteException {
+		Assert.notNull(source, "source could not be null.");
+		InputStream t = convert(token, new ByteArrayInputStream(source),
+				fromFormat, toFormat);
 		try {
-			Assert.notNull(source, "source could not be null.");
-			InputStream t = convert(token, new ByteArrayInputStream(source),
-					fromFormat, toFormat);
 			return FileCopyUtils.copyToByteArray(t);
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
@@ -141,61 +162,64 @@ public class WordServiceImpl implements WordService {
 	 * @throws IOException
 	 */
 	private InputStream convert(String token, InputStream source,
-			WordSaveFormat fromFormat, WordSaveFormat toFormat)
-			throws IOException {
-		Assert.hasText(token, "token could not be null.");
-		Assert.notNull(source, "source could not be null.");
-		Assert.notNull(fromFormat, "fromFormat could not be null.");
-		Assert.notNull(toFormat, "toFormat could not be null.");
-		if (logger.isDebugEnabled()) {
-			logger.debug("convert:token=" + token);
-			logger.debug("convert:fromFormat=" + fromFormat.getKey());
-			logger.debug("convert:toFormat=" + toFormat.getKey());
-		}
-		Date now = new Date();
+			String fromFormat, String toFormat) throws RemoteException {
+		try {
+			Assert.hasText(token, "token could not be null.");
+			Assert.notNull(source, "source could not be null.");
+			Assert.notNull(fromFormat, "fromFormat could not be null.");
+			Assert.notNull(toFormat, "toFormat could not be null.");
+			if (logger.isDebugEnabled()) {
+				logger.debug("convert:token=" + token);
+				logger.debug("convert:fromFormat=" + fromFormat);
+				logger.debug("convert:toFormat=" + toFormat);
+			}
+			Date now = new Date();
 
-		String dateDir = df4yearMonth.format(now);
-		String fileName = df4fileName.format(now);
-		// 将原始文件流保存为临时文件
-		String tempDir = TEMP_DIR + "/" + dateDir + "/";
-		File dir = new File(tempDir);
-		if (!dir.exists())
-			dir.mkdirs();
-		String fromName = fileName + "." + fromFormat.getKey();
-		String fromFile = tempDir + fromName;
-		if (logger.isDebugEnabled()) {
-			logger.debug("convert:fromFile=" + fromFile);
-		}
-		FileCopyUtils.copy(source, new FileOutputStream(fromFile));
+			String dateDir = df4yearMonth.format(now);
+			String fileName = df4fileName.format(now);
+			// 将原始文件流保存为临时文件
+			String tempDir = TEMP_DIR + "/" + dateDir + "/";
+			File dir = new File(tempDir);
+			if (!dir.exists())
+				dir.mkdirs();
+			String fromName = fileName + "." + fromFormat;
+			String fromFile = tempDir + fromName;
+			if (logger.isDebugEnabled()) {
+				logger.debug("convert:fromFile=" + fromFile);
+			}
+			FileCopyUtils.copy(source, new FileOutputStream(fromFile));
 
-		// 转换后的文件保存到的路径
-		String toName = fileName + ".to." + toFormat.getKey();
-		String toFile = tempDir + toName;
-		if (logger.isDebugEnabled()) {
-			logger.debug("convert:toFile=" + toFile);
-		}
-		if ("doc".equals(fromFormat) || "docx".equals(fromFormat)
-				|| "docm".equals(fromFormat) || "txt".equals(fromFormat)
-				|| "rtf".equals(fromFormat)) {// Word文档格式转换
-			convertByWord(fromFile, toFile, toFormat.getValue());
-		} else if ("xls".equals(fromFormat) || "xlsx".equals(fromFormat)
-				|| "xlsm".equals(fromFormat) || "csv".equals(fromFormat)) {// Excel文档格式转换
-			convertByExcel(fromFile, toFile, toFormat.getValue());
-		} else {
-			throw new RemoteException("unsupport file type: fromFormat="
-					+ fromFormat);
-		}
+			// 转换后的文件保存到的路径
+			String toName = fileName + ".to." + toFormat;
+			String toFile = tempDir + toName;
+			if (logger.isDebugEnabled()) {
+				logger.debug("convert:toFile=" + toFile);
+			}
+			if (isWordFormat(fromFormat)) {// Word文档格式转换
+				convertByWord(fromFile, toFile, WordSaveFormat.get(toFormat)
+						.getValue());
+			} else if (isExcelFormat(fromFormat)) {// Excel文档格式转换
+				convertByExcel(fromFile, toFile, ExcelSaveFormat.get(toFormat)
+						.getValue());
+			} else {
+				throw new RemoteException("unsupport file type: fromFormat="
+						+ fromFormat);
+			}
 
-		// 检测转换后的文件是否存在
-		File target = new File(toFile);
-		if (!target.exists()) {
-			throw new RemoteException("convert failed: fromFormat="
-					+ fromFormat.getKey() + ",toFile=" + toFile);
-		}
+			// 检测转换后的文件是否存在
+			File target = new File(toFile);
+			if (!target.exists()) {
+				throw new RemoteException("convert failed: fromFormat="
+						+ fromFormat + ",toFile=" + toFile);
+			}
 
-		// 返回文件流
-		InputStream t = new FileInputStream(target);
-		return t;
+			// 返回文件流
+			InputStream t = new FileInputStream(target);
+			return t;
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			throw new RemoteException(e.getMessage(), e);
+		}
 	}
 
 	/**
