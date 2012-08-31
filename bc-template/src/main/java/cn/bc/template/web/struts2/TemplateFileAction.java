@@ -97,8 +97,12 @@ public class TemplateFileAction extends ActionSupport {
 		// 加载一个流程附件对象
 		if( id != null ){
 			template = templateService.load(id);
+			if(template==null)
+				throw new CoreException("id:\""+id+"\",not found template!");
 		}else if( code != null && code.length()>0){
 			template = templateService.loadByCode(code);
+			if(template==null)
+				throw new CoreException("code:\""+code+"\",not found template!");
 		}else{
 			throw new CoreException("id or code is null!");
 		}
@@ -235,14 +239,20 @@ public class TemplateFileAction extends ActionSupport {
 	// 支持在线打开文档查看的文件下载
 	public String inline() throws Exception {
 		Template template;
+		
 		// 加载一个流程附件对象
 		if( id != null ){
 			template = templateService.load(id);
+			if(template==null)
+				throw new CoreException("id:\""+id+"\",not found template!");
 		}else if( code != null && code.length()>0){
 			template = templateService.loadByCode(code);
+			if(template==null)
+				throw new CoreException("code:\""+code+"\",not found template!");
 		}else{
 			throw new CoreException("id or code is null!");
 		}
+		
 		typeCode=template.getTemplateType().getCode();
 		Date startTime = new Date();
 
@@ -323,9 +333,9 @@ public class TemplateFileAction extends ActionSupport {
 			this.contentLength = bs.length;
 			this.filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(),
-					template.getSubject().lastIndexOf(".") == -1 ? template
+					(template.getSubject().lastIndexOf(".") == -1 ? template
 							.getSubject() + "." + template.getTemplateType().getExtension()
-							: template.getSubject());
+							: template.getSubject())+"."+this.to);
 		} else {
 			// 设置下载文件的参数
 			this.contentType = AttachUtils.getContentType(template.getTemplateType().getExtension());
