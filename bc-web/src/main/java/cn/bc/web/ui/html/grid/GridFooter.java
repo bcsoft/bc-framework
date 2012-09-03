@@ -28,16 +28,16 @@ public class GridFooter extends Ul {
 
 	/** 排序方式切换按钮 */
 	public static FooterButton getDefaultSortButton(boolean remoteSort,
-			String remoteSortText, String localSortText) {
+			String click2remoteSortText, String click2localSortText) {
 		FooterButton fb = new FooterButton();
 		fb.setIcon("ui-icon-transferthick-e-w");
 		fb.setAction("changeSortType");
-		fb.setAttr("title4clickToRemoteSort", remoteSortText);
-		fb.setAttr("title4clickToLocalSort", localSortText);
+		fb.setAttr("title4clickToRemoteSort", click2remoteSortText);
+		fb.setAttr("title4clickToLocalSort", click2localSortText);
 		if (remoteSort) {// 远程排序
-			fb.setTitle(remoteSortText).addClazz("ui-state-active");
+			fb.setTitle(click2localSortText).addClazz("ui-state-active");
 		} else {// 本地排序
-			fb.setTitle(localSortText);
+			fb.setTitle(click2remoteSortText);
 		}
 		return fb;
 	}
