@@ -124,7 +124,7 @@ public class DocxUtils {
 
 		String pattern;
 		if (useFreeMarker) {
-			pattern = BCConstants.COMMON_PATTERN;
+			pattern = BCConstants.PATTERN_FIND_SPEC_KEYS;
 		} else {
 			pattern = "";
 			int i = 0;

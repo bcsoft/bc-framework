@@ -139,7 +139,7 @@ public class TemplateUtils {
 		List<String> markers = new ArrayList<String>();
 		if (source == null)
 			return markers;
-		String pattern = BCConstants.COMMON_PATTERN;
+		String pattern = BCConstants.PATTERN_FIND_SPEC_KEYS;
 		if (logger.isDebugEnabled()) {
 			logger.debug("pattern=" + pattern);
 		}
