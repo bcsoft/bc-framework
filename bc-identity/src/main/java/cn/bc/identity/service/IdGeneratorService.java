@@ -9,7 +9,7 @@ package cn.bc.identity.service;
  */
 public interface IdGeneratorService {
 	/**
-	 * 获取下一个值，改值是经过格式化后的值
+	 * 获取下一个值，该值是经过格式化后的值
 	 * 
 	 * @param type
 	 *            类型

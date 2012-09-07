@@ -72,4 +72,18 @@ public interface OptionDao {
 	 */
 	Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
 			String[] optionGroupKeys);
+
+	/**
+	 * 批量查找指定分类的正常状态的选项条目列表
+	 * 
+	 * @param optionGroupKeys
+	 *            所属分类，对应OptionGroup属性Key的值
+	 * @return 
+	 *         返回结果的key为对应的OptionGroup的Key值，value为对应该key的OptionItem的Map列表，Map格式为：
+	 *         <p>
+	 *         key -- optionItem的key value -- optionItem的value
+	 *         </p>
+	 */
+	Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
+			String[] optionGroupKeys);
 }

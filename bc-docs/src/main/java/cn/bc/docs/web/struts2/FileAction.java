@@ -44,6 +44,7 @@ public class FileAction extends ActionSupport {
 
 	public String filename;
 	public String contentType;
+	public String ct;// 用户自定义的contentType
 	public long contentLength;
 	public InputStream inputStream;
 	public String path;
@@ -78,7 +79,11 @@ public class FileAction extends ActionSupport {
 		}
 
 		// 设置下载文件的参数
-		this.contentType = AttachUtils.getContentType(extension);
+		if (ct != null && ct.length() > 0) {
+			this.contentType = this.ct;
+		} else {
+			this.contentType = AttachUtils.getContentType(extension);
+		}
 		this.filename = WebUtils.encodeFileName(
 				ServletActionContext.getRequest(), this.n);
 		File file = new File(path);
@@ -126,7 +131,7 @@ public class FileAction extends ActionSupport {
 	public String inline() throws Exception {
 		Date startTime = new Date();
 		// 附件的绝对路径名
-		String path = Attach.DATA_REAL_PATH + File.separator + this.f;
+		String path = Attach.DATA_REAL_PATH + "/" + this.f;
 
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(path);
@@ -148,13 +153,14 @@ public class FileAction extends ActionSupport {
 				this.from = extension;
 			if (this.to == null || this.to.length() == 0) {
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-//				if ("xls".equalsIgnoreCase(this.from)
-//						|| "xlsx".equalsIgnoreCase(this.from)
-//				|| "xlsm".equalsIgnoreCase(attach.getFormat())) {
-//					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
-//				} else {
-//					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-//				}
+				// if ("xls".equalsIgnoreCase(this.from)
+				// || "xlsx".equalsIgnoreCase(this.from)
+				// || "xlsm".equalsIgnoreCase(attach.getFormat())) {
+				// this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+				// } else {
+				// this.to = getText("jodconverter.to.extension");//
+				// 没有指定就是用系统默认的配置转换为pdf
+				// }
 			}
 
 			// 转换文档
@@ -172,7 +178,11 @@ public class FileAction extends ActionSupport {
 			}
 		} else {
 			// 设置下载文件的参数
-			this.contentType = AttachUtils.getContentType(extension);
+			if (ct != null && ct.length() > 0) {
+				this.contentType = this.ct;
+			} else {
+				this.contentType = AttachUtils.getContentType(extension);
+			}
 			this.filename = WebUtils.encodeFileName(
 					ServletActionContext.getRequest(), this.n);
 

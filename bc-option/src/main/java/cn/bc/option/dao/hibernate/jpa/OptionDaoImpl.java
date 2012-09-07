@@ -17,6 +17,7 @@ import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.util.StringUtils;
 
+import cn.bc.BCConstants;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.option.dao.OptionDao;
 import cn.bc.option.domain.OptionGroup;
@@ -150,35 +151,63 @@ public class OptionDaoImpl implements OptionDao {
 	}
 
 	public Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
+			String[] optionGroupValues) {
+		return this.findOptionItemByGroupKeys(optionGroupValues, (int[]) null);
+	}
+
+	public Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
 			String[] optionGroupKeys) {
+		return this.findOptionItemByGroupKeys(optionGroupKeys,
+				new int[] { BCConstants.STATUS_ENABLED });
+	}
+
+	private Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
+			String[] optionGroupKeys, int[] statuses) {
 		if (optionGroupKeys == null || optionGroupKeys.length == 0)
 			return null;
 
 		String hql = "select g.key_ as gkey,i.key_ as key,i.value_ as value,i.id as id from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
 		hql += " where g.key_";
-		Object[] args;
+		List<Object> args = new ArrayList<Object>();
+
+		// 分组
 		if (optionGroupKeys.length == 1) {
 			hql += " = ?";
-			args = new Object[1];
-			args[0] = optionGroupKeys[0];
+			args.add(optionGroupKeys[0]);
 		} else {
-			args = new Object[optionGroupKeys.length];
-			args[0] = optionGroupKeys[0];
+			args.add(optionGroupKeys[0]);
 			hql += " in (?";
 			for (int i = 1; i < optionGroupKeys.length; i++) {
 				hql += ",?";
-				args[i] = optionGroupKeys[i];
+				args.add(optionGroupKeys[i]);
 			}
 			hql += ")";
 		}
+
+		// 状态
+		if (statuses != null && statuses.length > 0) {
+			if (statuses.length == 1) {
+				hql += " and i.status_=?";
+				args.add(statuses[0]);
+			} else {
+				args.add(statuses[0]);
+				hql += " and i.status_ in (?";
+				for (int i = 1; i < statuses.length; i++) {
+					hql += ",?";
+					args.add(statuses[i]);
+				}
+				hql += ")";
+			}
+		}
+
 		hql += " order by g.order_,i.order_";
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql);
 			logger.debug("args="
-					+ StringUtils.arrayToCommaDelimitedString(args));
+					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
 		List<Map<String, String>> all = HibernateJpaNativeQuery
-				.executeNativeSql(jpaTemplate, hql, args,
+				.executeNativeSql(jpaTemplate, hql, args.toArray(),
 						new RowMapper<Map<String, String>>() {
 							public Map<String, String> mapRow(Object[] rs,
 									int rowNum) {

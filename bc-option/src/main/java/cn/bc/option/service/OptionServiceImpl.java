@@ -70,4 +70,9 @@ public class OptionServiceImpl implements OptionService {
 			String[] optionGroupKeys) {
 		return optionDao.findOptionItemByGroupKeys(optionGroupKeys);
 	}
+
+	public Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
+			String[] optionGroupKeys) {
+		return optionDao.findActiveOptionItemByGroupKeys(optionGroupKeys);
+	}
 }
