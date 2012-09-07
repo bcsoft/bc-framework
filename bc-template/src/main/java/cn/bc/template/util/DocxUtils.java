@@ -122,20 +122,21 @@ public class DocxUtils {
 			return null;
 		}
 
-		String pattern = "";
-		int i = 0;
-		for (String k : markerValues.keySet()) {
-			if (i > 0)
-				pattern += "|";
-			pattern += "(?<=\\$\\{)" + k;
-			if (!useFreeMarker) {
-				pattern += "(?=\\})";
-			}
-			i++;
-		}
-		
+		String pattern;
 		if(useFreeMarker){
 			pattern = BCConstants.COMMON_PATTERN;
+		}else{
+			pattern = "";
+			int i = 0;
+			for (String k : markerValues.keySet()) {
+				if (i > 0)
+					pattern += "|";
+				pattern += "(?<=\\$\\{)" + k;
+				if (!useFreeMarker) {
+					pattern += "(?=\\})";
+				}
+				i++;
+			}
 		}
 		
 		if (logger.isDebugEnabled())
