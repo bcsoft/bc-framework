@@ -89,7 +89,7 @@ public class DocxUtils {
 		if (is == null)
 			return null;
 		return TemplateUtils.findMarkers(loadText(is));
-		
+
 	}
 
 	/**
@@ -123,9 +123,9 @@ public class DocxUtils {
 		}
 
 		String pattern;
-		if(useFreeMarker){
+		if (useFreeMarker) {
 			pattern = BCConstants.COMMON_PATTERN;
-		}else{
+		} else {
 			pattern = "";
 			int i = 0;
 			for (String k : markerValues.keySet()) {
@@ -138,7 +138,7 @@ public class DocxUtils {
 				i++;
 			}
 		}
-		
+
 		if (logger.isDebugEnabled())
 			logger.debug("pattern=" + pattern);
 		Pattern _pattern = Pattern.compile(pattern);
@@ -166,9 +166,22 @@ public class DocxUtils {
 		}
 
 		// 内嵌表格的处理
-		Iterator<XWPFTable> tables = document.getTablesIterator();
-		while (tables.hasNext()) {
-			XWPFTable table = tables.next();
+		formatTables(document.getTables(), markerValues, _pattern);
+
+		return document;
+	}
+
+	/**
+	 * @param document
+	 * @param markerValues
+	 * @param _pattern
+	 */
+	private static void formatTables(List<XWPFTable> tables,
+			Map<String, Object> markerValues, Pattern _pattern) {
+		if (tables == null || tables.isEmpty())
+			return;
+
+		for (XWPFTable table : tables) {
 			// System.out.println("table=" + table.getText());
 			for (XWPFTableRow row : table.getRows()) {
 				// System.out.println("row=" + row.toString());
@@ -179,11 +192,15 @@ public class DocxUtils {
 						// paragraph.getText());
 						formatParagraph(paragraph, markerValues, _pattern);
 					}
+
+					// 单元格中再嵌套表格的处理
+					List<XWPFTable> cellTables = cell.getTables();
+					if (cellTables != null && !cellTables.isEmpty()) {
+						formatTables(cellTables, markerValues, _pattern);
+					}
 				}
 			}
 		}
-
-		return document;
 	}
 
 	// 加载文档
