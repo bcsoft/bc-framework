@@ -38,4 +38,33 @@ public class FreeMarkerUtilsTest {
 		Assert.assertEquals("2012-01-01 12:10:05",
 				FreeMarkerUtils.format(tpl, args));
 	}
+	
+	// 
+	@Test
+	public void testFormat() {
+		String tpl = "${bsType?string('承包□合作□挂靠√','123')}";
+		//String tpl = "${bsType == 3 ? \"承包□合作□挂靠√\":\"123\"}";
+
+		// Date类型,不支持Calendar类型
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("bsType",true);
+		Assert.assertEquals("承包□合作□挂靠√",
+				FreeMarkerUtils.format(tpl, args));
+	}
+	
+	// 
+	@Test
+	public void testFormatByIfElse() {
+		String tpl = "<#if logoutReason == \"转蓝\">√<#else>□</#if>";
+		//String tpl = "&lt;#if vs.logoutReason == \"转蓝\"&gt;√&lt;#else&gt;□&lt;/#if&gt;";
+		//String tpl = "&lt;#if logoutOwner??&gt;${logoutOwner}&lt;#else&gt;123&lt;/#if&gt;";
+		//String tpl = "${bsType == 3 ? \"承包□合作□挂靠√\":\"123\"}";
+
+		// Date类型,不支持Calendar类型
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("logoutReason","转蓝");
+		args.put("logoutOwner","公司");
+		Assert.assertEquals("√",
+				FreeMarkerUtils.format(tpl, args));
+	}
 }
