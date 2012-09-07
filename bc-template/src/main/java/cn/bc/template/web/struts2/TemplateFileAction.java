@@ -422,73 +422,18 @@ public class TemplateFileAction extends ActionSupport {
 		if(!template.isFormatted())
 			return null;
 		// 声明格式化参数
-		Map<String, Object> params=null;
+		Map<String, Object> params = new HashMap<String, Object>();
 		// 声明格式化参数
-		Map<String, Object> mapFormatSql=null;
-		
-		// 获取文件中的${XXXX}占位标记的键名列表
-		List<String> markers=null;
-		
-		JSONArray jsons = null;
+		Map<String, Object> mapFormatSql=new HashMap<String, Object>();
 		// 获取替换参数
 		if(formatSqlJsons!=null&&formatSqlJsons.length()>0){
-			mapFormatSql = new HashMap<String, Object>();
-			jsons = new JSONArray(this.formatSqlJsons);
-			JSONObject json;	
-			Object v;
-			for (int i = 0; i < jsons.length(); i++) {
-				json = jsons.getJSONObject(i);
-				v = json.get("value");
-				if (v instanceof JSONArray) {
-					v = convert2Collection((JSONArray) v);
-				} else if (v instanceof JSONObject) {
-					v = convert2Map((JSONObject) v);
-				}
-				mapFormatSql.put(json.getString("key"), v);
-			}
-			params=templateService.getMapParams(template.getId(), mapFormatSql);		
+			mapFormatSql = convert2Map(new JSONObject(this.formatSqlJsons));
+			Map<String, Object> p =templateService.getMapParams(template.getId(), mapFormatSql);
+			if(p!=null)
+			params.putAll(p);
 		}else if(markerValueJsons!=null&&markerValueJsons.length()>0){
-			params = new HashMap<String, Object>();
-			jsons = new JSONArray(this.markerValueJsons);
-			JSONObject json;	
-			Object v;
-			for (int i = 0; i < jsons.length(); i++) {
-				json = jsons.getJSONObject(i);
-				v = json.get("value");
-				if (v instanceof JSONArray) {
-					v = convert2Collection((JSONArray) v);
-				} else if (v instanceof JSONObject) {
-					v = convert2Map((JSONObject) v);
-				}
-				params.put(json.getString("key"), v);
-			}
-		}
-		
-		if (params == null || params.size() == 0)
-			params = new HashMap<String, Object>();
-		
-		//docx
-		if (typeCode.equals("word-docx")) {
-			markers = DocxUtils.findMarkers(template.getInputStream());
-		//xls
-		} else if (typeCode.equals("xls")) {
-			markers = XlsUtils.findMarkers(template.getInputStream());
-		
-		//xlsx
-		} else if (typeCode.equals("xlsx")) {
-			markers = XlsUtils.findMarkers(template.getInputStream());
-			
-		//custom
-		} else if (typeCode.equals("custom")){
-			markers = TemplateUtils.findMarkers(template.getContent());
-		}else
-			return null;
-		
-		// 占位符列表与参数列表匹配,当占位符列表值没出现在参数列表key值时，增加此key值
-		for (String key : markers) {
-			if (!params.containsKey(key))
-				params.put(key, "　");
-		}
+			params=convert2Map(new JSONObject(this.markerValueJsons));
+		}		
 		
 		return params;
 	}

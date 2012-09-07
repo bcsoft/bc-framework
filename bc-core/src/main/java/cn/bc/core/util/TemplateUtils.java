@@ -16,6 +16,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.commontemplate.tools.TemplateRenderer;
 
+import cn.bc.BCConstants;
+
 /**
  * 使用commontemplate的模板工具类
  * 
@@ -137,7 +139,7 @@ public class TemplateUtils {
 		List<String> markers = new ArrayList<String>();
 		if (source == null)
 			return markers;
-		String pattern = "(?<=\\$\\{)([\\w\u4e00-\u9fa5]+)(?=\\})";
+		String pattern = BCConstants.COMMON_PATTERN;
 		if (logger.isDebugEnabled()) {
 			logger.debug("pattern=" + pattern);
 		}

@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 
+import cn.bc.BCConstants;
 import cn.bc.core.util.TemplateUtils;
 
 /**
@@ -88,6 +89,7 @@ public class DocxUtils {
 		if (is == null)
 			return null;
 		return TemplateUtils.findMarkers(loadText(is));
+		
 	}
 
 	/**
@@ -131,6 +133,11 @@ public class DocxUtils {
 			}
 			i++;
 		}
+		
+		if(useFreeMarker){
+			pattern = BCConstants.COMMON_PATTERN;
+		}
+		
 		if (logger.isDebugEnabled())
 			logger.debug("pattern=" + pattern);
 		Pattern _pattern = Pattern.compile(pattern);
