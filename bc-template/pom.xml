@@ -39,6 +39,11 @@
 			<artifactId>bc-option</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- mustache模板引擎 -->
+		<dependency>
+		  <groupId>com.github.spullara.mustache.java</groupId>
+		  <artifactId>compiler</artifactId>
+		</dependency>
 		
 		<!-- for test -->
 		<dependency>

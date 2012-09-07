@@ -718,6 +718,13 @@
 				<artifactId>jacob</artifactId>
 				<version>1.16.1</version>
 			</dependency>
+
+			<!-- mustache模板引擎 -->
+			<dependency>
+			  <groupId>com.github.spullara.mustache.java</groupId>
+			  <artifactId>compiler</artifactId>
+			  <version>0.8.6</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
