@@ -42,6 +42,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	private TemplateTypeService templateTypeService;
 	private TemplateParamService templateParamService;
 
+
 	// 模板类型集合
 	public List<Map<String, String>> typeList;
 	
@@ -64,6 +65,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	public void setTemplateParamService(TemplateParamService templateParamService) {
 		this.templateParamService = templateParamService;
 	}
+
 
 	@Override
 	public boolean isReadonly() {
@@ -173,17 +175,8 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				.getTemplateType().getId()));
 		// 设置保存文件大小 获取文件大小
 		template.setSize(template.getSizeEx());
-
-		// 状态：禁用
-		if (template.getStatus() != BCConstants.STATUS_ENABLED) {
-			this.beforeSave(template);
-			this.templateService.save(template);
-			this.afterSave(template);
-			return "saveSuccess";
-		}
-		// 状态：正常
 		this.beforeSave(template);
-		this.templateService.saveTpl(template);
+		this.templateService.save(template);
 		this.afterSave(template);
 		return "saveSuccess";
 	}
