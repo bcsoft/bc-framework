@@ -21,4 +21,7 @@ public class BCConstants {
 
 	/** 流水号连接符 */
 	public static final String SN_SPLIT_SYMBOL = "-";
+	
+	/**查找key通用正则表达式*/
+	public static final String COMMON_PATTERN="(?<=\\$\\{)([\\w\u4e00-\u9fa5]+(\\.?[\\w\u4e00-\u9fa5]*)*)(?=\\!|\\?|\\})|(?<=\\<\\#if\\s)([\\w\u4e00-\u9fa5]+(\\.?[\\w\u4e00-\u9fa5]*)*)(?=\\?\\?|\\=\\=|\\>)";
 }
