@@ -845,6 +845,34 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
 				getJpaTemplate(), hql.toString(), args.toArray(), null);
+		
+		if (r == null || r.isEmpty())
+			return actorCode;// 找不到就返回原始的帐号信息
+		else
+			return r.get(0);
+	}
+	
+	public String loadActorFullNameByCode(String actorCode) {
+		if (actorCode == null || actorCode.length() == 0)
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select name,pname from bc_identity_actor where code = ?");
+		args.add(actorCode);
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), new RowMapper<String>() {
+					public String mapRow(Object[] rs, int rowNum) {
+						int i = 0;
+						Object name =rs[i++];
+						Object pname=rs[i++];
+						return pname == null?name.toString():pname.toString()+"/"+name.toString();
+					}
+				});
 		if (r == null || r.isEmpty())
 			return actorCode;// 找不到就返回原始的帐号信息
 		else
