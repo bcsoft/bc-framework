@@ -313,6 +313,12 @@ public class StringUtils {
 			return calendar;
 		} else if (type.equals("boolean")) {
 			return new Boolean(value);
+		} else if (type.equals("list")) {
+			return JsonUtils.toCollection(value);
+		} else if (type.equals("map")) {
+			return JsonUtils.toMap(value);
+		} else if (type.equals("array")) {
+			return JsonUtils.toArray(value);
 		} else {
 			throw new CoreException("unsupport value type: type=" + type
 					+ ",value=" + value);
