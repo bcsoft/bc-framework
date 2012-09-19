@@ -50,6 +50,14 @@ public class GridFooter extends Ul {
 		return fb;
 	}
 
+	/** 导入按钮 */
+	public static FooterButton getDefaultImportButton(String text) {
+		FooterButton fb = new FooterButton();
+		fb.setIcon("ui-icon-arrowthickstop-1-n").setAction("import")
+				.setTitle(text);
+		return fb;
+	}
+
 	/** 打印按钮 */
 	public static FooterButton getDefaultPrintButton(String text) {
 		FooterButton fb = new FooterButton();
