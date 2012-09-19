@@ -136,13 +136,14 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
 	protected FooterButton getGridFooterImportButton() {
 		// 获取默认的导入按钮设置
 		FooterButton fb = this.getDefaultGridFooterImportButton();
-		
+
 		// 配置特殊参数
 		JsonObject cfg = new JsonObject();
 		cfg.addProperty("tplCode", "IMPORT_OPTION");// 模板编码
-		cfg.addProperty("importAction", "bc/option/import");// 导入数据的action路径
+		cfg.addProperty("importAction", "bc/option/import");// 导入数据的action路径(使用相对路径)
+		cfg.addProperty("headerRowIndex", 1);// 列标题所在行的索引号(0-based)
 		fb.setAttr("data-cfg", cfg.toString());
-		
+
 		// 返回导入按钮
 		return fb;
 	}

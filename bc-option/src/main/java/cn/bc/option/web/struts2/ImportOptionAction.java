@@ -9,6 +9,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.google.gson.JsonObject;
+
 import cn.bc.docs.web.struts2.ImportDataAction;
 
 /**
@@ -25,10 +27,10 @@ public class ImportOptionAction extends ImportDataAction {
 			.getLog(ImportOptionAction.class);
 
 	@Override
-	protected void importData(List<Map<String, Object>> data) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("ImportOptionAction");
-		}
+	protected void importData(List<Map<String, Object>> data, JsonObject json,
+			String fileType) {
+		// TODO
+		json.addProperty("msg", "TODO: 成功导入" + data.size() + "条数据！");
+		logger.fatal("TODO: ImportOptionAction.importData");
 	}
-
 }

@@ -1,7 +1,6 @@
 package cn.bc.docs.web.struts2;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,10 +8,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.StringUtils;
 
 import cn.bc.core.exception.CoreException;
@@ -33,7 +33,7 @@ public abstract class ImportDataAction extends ActionSupport {
 
 	public String file;// 用户上传数据文件的路径，相对于 Attach.DATA_REAL_PATH 目录下的子路径
 	public String json;
-	public int hr = 0;// 标题行的行号
+	public int headerRowIndex = 0;// 列标题所在行的索引号，默认为第一行
 
 	@Override
 	public String execute() throws Exception {
@@ -44,15 +44,32 @@ public abstract class ImportDataAction extends ActionSupport {
 				logger.info("file=" + fileName);
 			}
 			String ext = StringUtils.getFilenameExtension(file);
+
+			// 读取第一个工作表
+			Sheet sheet = null;
 			if ("xls".equalsIgnoreCase(ext)) {// Excel 2003 文件的处理
-				executeXls(fileName);
+				sheet = new HSSFWorkbook(new FileInputStream(fileName))
+						.getSheetAt(0);
 			} else if ("xlsx".equalsIgnoreCase(ext)) {// Excel 2007+ 文件的处理
-				executeXlsx(fileName);
+				sheet = new XSSFWorkbook(new FileInputStream(fileName))
+						.getSheetAt(0);
 			} else {// 不支持的文件类型
 				throw new CoreException("unsupport file type: file=" + file);
 			}
-			json.addProperty("success", true);
-			json.addProperty("msg", "数据导入成功！");
+
+			// 解析工作表，获取数据
+			List<Map<String, Object>> data = getSheetData(sheet, ext);
+
+			// 导入数据
+			importData(data, json, ext);
+
+			// 设置默认的处理结果
+			if (!json.has("success"))
+				json.addProperty("success", true);
+			if (!json.has("msg"))
+				json.addProperty("msg", "成功导入" + data.size() + "条数据！");
+			if (!json.has("totalCount"))
+				json.addProperty("totalCount", data.size());
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
 			json.addProperty("success", false);
@@ -64,59 +81,59 @@ public abstract class ImportDataAction extends ActionSupport {
 	}
 
 	/**
-	 * 从 Excel2007+ 版文件导入数据
-	 * 
-	 * @param fileName
-	 *            文件全路径名
-	 * @throws Exception
-	 */
-	protected void executeXlsx(String fileName) throws Exception {
-		throw new CoreException("xlsx did not support now.");
-	}
-
-	/**
 	 * 从 Excel2003 版文件导入数据
 	 * 
-	 * @param fileName
-	 *            文件全路径名
+	 * @param sheet
+	 *            包含数据的工作表
+	 * @param fileType
+	 *            Excel文件类型：xls或xlsx
 	 * @throws Exception
 	 */
-	protected void executeXls(String fileName) throws Exception {
-		InputStream is = new FileInputStream(fileName);
-		HSSFWorkbook workbook = new HSSFWorkbook(is);
-		HSSFSheet sheet = workbook.getSheetAt(0);// 仅处理第一个工作表
-
-		// 获取标题行
-		HSSFRow row = sheet.getRow(hr);
-		int columnNum = row.getLastCellNum();// 1-based
-		if (logger.isInfoEnabled())
-			logger.info("columnCount=" + columnNum);
-		String[] columnNames = new String[columnNum];// 列标题的值列表：单元格的字符串值
+	protected List<Map<String, Object>> getSheetData(Sheet sheet,
+			String fileType) throws Exception {
+		// 获取标题行：从该行第一个单元格开始搜索直到单元格值为空止，从而确定最大的列数
+		Row row = sheet.getRow(headerRowIndex);
+		List<String> columnNames = new ArrayList<String>();// 列标题的值列表：单元格的字符串值
 		Cell cell;
-		for (int i = 0; i < columnNum; i++) {
+		int i = 0;
+		String columnName;
+		boolean hasData;
+		do {
 			cell = row.getCell(i);
-			if (cell == null) {
-				throw new CoreException("标题行不允许出现空的单元格!index=" + i);
+			if (cell != null) {
+				columnName = cell.getStringCellValue();
+				hasData = (columnName != null && columnName.length() > 0);
+				if (hasData)
+					columnNames.add(columnName);
+			} else {
+				hasData = false;
 			}
-			columnNames[i] = cell.getStringCellValue();
-		}
-
-		// 获取数据行
-		int maxRowNum = sheet.getLastRowNum();// 0-based
+			i++;
+		} while (hasData);
 		if (logger.isInfoEnabled())
-			logger.info("rowCount=" + (maxRowNum + 1));
-		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-		for (int rowNum = hr + 1; rowNum <= maxRowNum; rowNum++) {
-			data.add(getXlsRowData(sheet.getRow(rowNum), columnNames));
-		}
+			logger.info("columnCount=" + columnNames.size());
 
-		// 处理数据
+		// 获取数据行：从该行开始搜索直到空行为空止，从而确定最大的行数
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		Map<String, Object> rowData;
+		i = headerRowIndex + 1;
+		do {
+			rowData = getRowData(sheet.getRow(i), columnNames, fileType);
+			if (rowData != null) {
+				data.add(rowData);
+			}
+			i++;
+		} while (rowData != null);
+		if (logger.isInfoEnabled())
+			logger.info("dataCount=" + data.size());
+
+		// 返回获取的数据
 		if (logger.isInfoEnabled())
 			logger.info("columns="
-					+ StringUtils.arrayToCommaDelimitedString(columnNames));
+					+ StringUtils.collectionToCommaDelimitedString(columnNames));
 		if (logger.isDebugEnabled())
 			logger.debug("data=" + data);
-		this.importData(data);
+		return data;
 	}
 
 	/**
@@ -124,21 +141,36 @@ public abstract class ImportDataAction extends ActionSupport {
 	 * 
 	 * @param row
 	 *            要处理的行
-	 * @param heads
+	 * @param columnNames
 	 *            列标题
+	 * @param fileType
+	 *            Excel文件类型：xls或xlsx
 	 * @return
 	 */
-	private Map<String, Object> getXlsRowData(HSSFRow row, String[] heads) {
-		int maxCellIndex = heads.length - 1;// row.getLastCellNum();
+	private Map<String, Object> getRowData(Row row, List<String> columnNames,
+			String fileType) {
+		if (row == null)
+			return null;
 		Map<String, Object> rowData = new LinkedHashMap<String, Object>();// 值为单元格的值
 		Cell cell;
-		for (int i = 0; i <= maxCellIndex; i++) {
+		Object cellValue;
+		for (int i = 0; i < columnNames.size(); i++) {
 			cell = row.getCell(i);
 			if (cell == null) {
-				rowData.put(heads[i], null);
+				rowData.put(columnNames.get(i), null);
 				continue;
+			} else {
+				cellValue = getCellValue(cell, columnNames.get(i), fileType);
+				if (i == 0) {// 首个单元格为空就当成是数据行的结束行而退出
+					if (cellValue == null
+							|| (cellValue instanceof String && cellValue
+									.toString().isEmpty())) {
+						return null;
+					}
+				} else {
+					rowData.put(columnNames.get(i), cellValue);
+				}
 			}
-			rowData.put(heads[i], this.getXlsCellValue(cell, heads[i]));
 		}
 		return rowData;
 	}
@@ -150,9 +182,11 @@ public abstract class ImportDataAction extends ActionSupport {
 	 *            单元格
 	 * @param columnName
 	 *            单元格所在列的标题名称
+	 * @param fileType
+	 *            Excel文件类型：xls或xlsx
 	 * @return
 	 */
-	protected Object getXlsCellValue(Cell cell, String columnName) {
+	protected Object getCellValue(Cell cell, String columnName, String fileType) {
 		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 字符串
 			return cell.getStringCellValue();
 		} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {// 布尔
@@ -175,6 +209,9 @@ public abstract class ImportDataAction extends ActionSupport {
 	 * 
 	 * @param data
 	 *            要处理的数据
+	 * @param json
+	 *            [可选]返回结果信息的包装，用户可以自定义进行控制
 	 */
-	abstract protected void importData(List<Map<String, Object>> data);
+	abstract protected void importData(List<Map<String, Object>> data,
+			JsonObject json, String fileType);
 }
