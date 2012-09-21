@@ -273,7 +273,7 @@ public class StringUtils {
 	 * 转换字符串值到指定的数据类型
 	 * 
 	 * @param type
-	 *            值类型："int"|"long"|"float"|"date"|"startDate"|"endDate"|
+	 *            值类型："int"|"long"|"Long"|"float"|"date"|"startDate"|"endDate"|
 	 *            "calendar"| "startCalendar"|"endCalendar"
 	 * @param value
 	 *            字符串值
@@ -289,7 +289,11 @@ public class StringUtils {
 			return value;
 		} else if (type.equals("long")) {
 			return new Long(value);
-		} else if (type.equals("float")) {
+		} else if (type.equals("Long")) {
+			if(value==null||value.length()==0)
+				return null;
+			return new Long(value);
+		}else if (type.equals("float")) {
 			return new Float(value);
 		} else if (type.equals("date")) {
 			return DateUtils.getDate(value);
