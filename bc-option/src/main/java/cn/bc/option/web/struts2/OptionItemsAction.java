@@ -20,9 +20,12 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
+
+import com.google.gson.JsonObject;
 
 /**
  * 选项条目视图Action
@@ -119,13 +122,29 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "g.key_",  "g.value_", "i.order_", "i.value_", "i.key_",
-				"i.icon" };
+		return new String[] { "g.key_", "g.value_", "i.order_", "i.value_",
+				"i.key_", "i.icon" };
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
 		return super.getHtmlPageOption().setWidth(650).setHeight(350)
 				.setMinWidth(200).setMinHeight(200);
+	}
+
+	@Override
+	protected FooterButton getGridFooterImportButton() {
+		// 获取默认的导入按钮设置
+		FooterButton fb = this.getDefaultGridFooterImportButton();
+
+		// 配置特殊参数
+		JsonObject cfg = new JsonObject();
+		cfg.addProperty("tplCode", "IMPORT_OPTION");// 模板编码
+		cfg.addProperty("importAction", "bc/option/import");// 导入数据的action路径(使用相对路径)
+		cfg.addProperty("headerRowIndex", 1);// 列标题所在行的索引号(0-based)
+		fb.setAttr("data-cfg", cfg.toString());
+
+		// 返回导入按钮
+		return fb;
 	}
 }

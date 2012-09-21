@@ -16,6 +16,7 @@ import org.apache.struts2.ServletActionContext;
 
 import cn.bc.core.util.DateUtils;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.GridExporter;
 import cn.bc.web.ui.html.grid.GridFooter;
 import cn.bc.web.ui.html.grid.IdColumn;
@@ -102,8 +103,10 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	/**
 	 * 构建一个表格导出器
 	 * 
-	 * @param title 标题
-	 * @param idLabel id列的标题名称
+	 * @param title
+	 *            标题
+	 * @param idLabel
+	 *            id列的标题名称
 	 * @return
 	 */
 	protected GridExporter buileGridExporter(String title, String idLabel) {
@@ -166,7 +169,28 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		gridFooter.addButton(GridFooter
 				.getDefaultExportButton(getText("label.export")));
 
+		// 导入按钮
+		gridFooter.addButton(this.getGridFooterImportButton());
+
 		// 打印按钮
 		// gridFooter.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));
+	}
+
+	/**
+	 * 获取导入按钮的配置，默认没有导入按钮
+	 * 
+	 * @return
+	 */
+	protected FooterButton getGridFooterImportButton() {
+		return null;
+	}
+
+	/**
+	 * 获取导入按钮的配置，默认没有导入按钮
+	 * 
+	 * @return
+	 */
+	protected FooterButton getDefaultGridFooterImportButton() {
+		return GridFooter.getDefaultImportButton(getText("label.import"));
 	}
 }
