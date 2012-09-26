@@ -545,7 +545,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @param value
 	 * @return
 	 */
-	protected LikeCondition getGridSearchCondition4OneField(String field,
+	protected Condition getGridSearchCondition4OneField(String field,
 			String value) {
 		return new LikeCondition(field, value);
 	}
