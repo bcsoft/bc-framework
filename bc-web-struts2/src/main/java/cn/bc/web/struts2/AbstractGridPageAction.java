@@ -25,6 +25,8 @@ import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.LikeCondition;
+import cn.bc.core.query.condition.impl.LikeLeftCondition;
+import cn.bc.core.query.condition.impl.LikeRightCondition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -545,9 +547,30 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @param value
 	 * @return
 	 */
-	protected LikeCondition getGridSearchCondition4OneField(String field,
+	protected Condition getGridSearchCondition4OneField(String field,
 			String value) {
-		return new LikeCondition(field, value);
+		return buildDefaultLikeCondition(field, value);
+	}
+
+	/**
+	 * 自动根据值是否在首末包含%符号来生成相应的Like条件
+	 * 
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	protected Condition buildDefaultLikeCondition(String field, String value) {
+		if (value == null || value.length() == 0)
+			return null;
+		boolean s = value.startsWith("%");
+		boolean e = value.endsWith("%");
+		if (s && !e) {
+			return new LikeRightCondition(field, "%" + value);
+		} else if (!s && e) {
+			return new LikeLeftCondition(field, value + "%");
+		} else {
+			return new LikeCondition(field, value);
+		}
 	}
 
 	/**
@@ -629,11 +652,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 						// 自定义like类型
 						if (isLike)
 							value = convertByLikeType(likeType, (String) value);
-						
+
 						// 转换值为指定的类型
 						value = QlCondition.convertValue(type, (String) value,
 								isLike);
-						
+
 						// 如果查询语句中有多个?号，就将值复制出多个来
 						for (int j = 0; j < values.length; j++) {
 							values[j] = value;
@@ -646,11 +669,11 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 							// 自定义like类型
 							if (isLike)
 								v = convertByLikeType(likeType, v);
-							
+
 							// 转换值为指定的类型
-							v = (String) QlCondition.convertValue(type,
-									v, isLike);
-							
+							v = (String) QlCondition.convertValue(type, v,
+									isLike);
+
 							// 如果查询语句中有多个?号，就将值复制出多个来
 							values = new Object[c];
 							for (int j = 0; j < values.length; j++) {
