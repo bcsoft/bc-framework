@@ -60,6 +60,9 @@ public class SelectTemplateAction extends
 		StringBuffer sql = new StringBuffer();
 		sql.append("select t.id,t.code,a.name as type,t.subject,t.path");
 		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size,t.desc_");
+		sql.append(",(select string_agg(b.pid||'',',') from  bc_template_template_param b " +
+				"where b.tid=t.id" +
+				") as params");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sqlObject.setSql(sql.toString());
@@ -83,6 +86,7 @@ public class SelectTemplateAction extends
 				map.put("formatted", rs[i++]);
 				map.put("size", rs[i++]);
 				map.put("desc_", rs[i++]);
+				map.put("params", rs[i++]);
 				//取最后‘/’之后的信息
 				String category=map.get("category").toString();
 				int index=category.lastIndexOf("/");
@@ -122,6 +126,7 @@ public class SelectTemplateAction extends
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		columns.add(new HiddenColumn4MapKey("path", "path"));
+		columns.add(new HiddenColumn4MapKey("params", "params"));
 		return columns;
 	}
 	
