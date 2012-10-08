@@ -43,7 +43,7 @@ public class TemplateTypeDaoImpl extends HibernateCrudJpaDao<TemplateType> imple
 	}
 
 	public List<Map<String, String>> findTemplateTypeOption(boolean isEnabled) {
-		String hql="SELECT a.id,a.name";
+		String hql="SELECT a.id,a.ext,a.name";
 		   hql+=" FROM bc_template_type a";
 		   if(isEnabled){
 			   hql+=" WHERE a.status_="+BCConstants.STATUS_ENABLED;
@@ -53,9 +53,13 @@ public class TemplateTypeDaoImpl extends HibernateCrudJpaDao<TemplateType> imple
 		 	,new RowMapper<Map<String, String>>() {
 				public Map<String, String> mapRow(Object[] rs, int rowNum) {
 					Map<String, String> oi = new HashMap<String, String>();
-					int i = 0;
-					oi.put("key", rs[i++].toString());
-					oi.put("value", rs[i++].toString());
+					//int i = 0;
+					if(rs[1]!=null){
+						oi.put("key", rs[0].toString()+","+rs[1].toString());
+					}else{
+						oi.put("key", rs[0].toString());
+					}
+					oi.put("value", rs[2].toString());
 					return oi;
 				}
 		});
