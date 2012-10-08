@@ -198,6 +198,7 @@ public class SelectUsersAction extends
 		Condition groupCondition = null;
 		Condition aTypeCondition = null;
 		Condition gTypeCondition = null;
+		Condition aCurrentCondition = null;
 		
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
@@ -214,8 +215,12 @@ public class SelectUsersAction extends
 			aTypeCondition =  new EqualsCondition("a.type_", 4);//岗位
 			gTypeCondition =  new EqualsCondition("g.type_", 3);//用户
 		}
+		
+
+		aCurrentCondition =new EqualsCondition("h.current", true);
+		
 		return ConditionUtils.mix2AndCondition(statusCondition,groupCondition
-				,aTypeCondition,gTypeCondition);
+				,aTypeCondition,gTypeCondition,aCurrentCondition);
 	}
 
 	@Override
