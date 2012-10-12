@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="32" measuredWidth="777" measuredHeight="255">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="777" measuredHeight="255">
     <widgets xsi:type="model:Window" id="1" width="777" height="255" text="网络硬盘" measuredWidth="777" measuredHeight="255" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
     <widgets xsi:type="model:ButtonBar" id="3" y="26" width="441" text="上传文件,上传文件夹,共享,整理,删除,预览,下载,新建文件夹" measuredWidth="441" measuredHeight="30" selection="">
@@ -37,7 +37,7 @@
       <items x="113" y="0" width="40" height="30" text="全部"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="384" measuredWidth="329" measuredHeight="177">
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="272" measuredWidth="329" measuredHeight="177">
     <widgets xsi:type="model:Window" id="100" width="329" height="177" text="新建文件夹" measuredWidth="329" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="101" y="128" width="329" measuredWidth="329" measuredHeight="6"/>
     <widgets xsi:type="model:Button" id="102" x="261" y="140" width="56" text="创建" measuredWidth="56" measuredHeight="27">
@@ -63,10 +63,10 @@
     </widgets>
     <widgets xsi:type="model:Icon" id="219" x="296" y="66" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
   </widgets>
-  <widgets xsi:type="model:Note" id="223" x="8" y="296" width="369" height="81" text="视图说明：&#xD;&#xA;1）点击上传文件或上传文件夹窗口后直接弹出选择窗口&#xD;&#xA;2）&quot;整理&quot;功能用于修改名称、排序号和所属文件夹信息&#xD;&#xA;3）&quot;共享&quot;功能用于控制文件、文件夹的访问权限" measuredWidth="369" measuredHeight="81" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="223" x="8" y="640" width="369" height="81" text="视图说明：&#xD;&#xA;1）点击上传文件或上传文件夹窗口后直接弹出选择窗口&#xD;&#xA;2）&quot;整理&quot;功能用于修改名称、排序号和所属文件夹信息&#xD;&#xA;3）&quot;共享&quot;功能用于控制文件、文件夹的访问权限" measuredWidth="369" measuredHeight="81" annotation="true" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="226" x="8" y="568" measuredWidth="329" measuredHeight="177">
+  <widgets xsi:type="model:WidgetGroup" id="226" x="8" y="456" measuredWidth="329" measuredHeight="177">
     <widgets xsi:type="model:Window" id="227" width="329" height="177" text="整理文件夹/整理文件" measuredWidth="329" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="228" y="128" width="329" measuredWidth="329" measuredHeight="6"/>
     <widgets xsi:type="model:Button" id="229" x="261" y="140" width="56" text="确定" measuredWidth="56" measuredHeight="27">
@@ -93,7 +93,7 @@
     <widgets xsi:type="model:Icon" id="236" x="296" y="66" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
     <widgets xsi:type="model:Icon" id="282" x="277" y="66" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="249" x="344" y="384" measuredWidth="329" measuredHeight="345">
+  <widgets xsi:type="model:WidgetGroup" id="249" x="344" y="272" measuredWidth="329" measuredHeight="345">
     <widgets xsi:type="model:Window" id="250" width="329" height="345" text="共享设置" measuredWidth="329" measuredHeight="345" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:Button" id="252" x="267" y="309" width="56" text="确定" measuredWidth="56" measuredHeight="27">
       <font/>
