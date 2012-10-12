@@ -1,101 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="777" measuredHeight="153">
-    <widgets xsi:type="model:Window" id="1" y="24" width="777" height="129" text="网络硬盘" measuredWidth="777" measuredHeight="129" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:HLine" id="2" y="83" width="625" measuredWidth="625" measuredHeight="6"/>
-    <widgets xsi:type="model:ButtonBar" id="3" y="50" width="401" text="上传,共享,移动,删除,预览,重命名,下载,新建文件夹" measuredWidth="401" measuredHeight="30" selection="">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="32" measuredWidth="777" measuredHeight="255">
+    <widgets xsi:type="model:Window" id="1" width="777" height="255" text="网络硬盘" measuredWidth="777" measuredHeight="255" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" y="26" width="441" text="上传文件,上传文件夹,共享,整理,删除,预览,下载,新建文件夹" measuredWidth="441" measuredHeight="30" selection="">
       <font/>
-      <items x="0" y="0" width="45" height="30" text="上传"/>
-      <items x="45" y="0" width="44" height="30" text="共享"/>
-      <items x="89" y="0" width="44" height="30" text="移动"/>
-      <items x="133" y="0" width="44" height="30" text="删除"/>
-      <items x="177" y="0" width="44" height="30" text="预览"/>
-      <items x="221" y="0" width="56" height="30" text="重命名"/>
-      <items x="277" y="0" width="44" height="30" text="下载"/>
-      <items x="321" y="0" width="80" height="30" text="新建文件夹"/>
+      <items x="0" y="0" width="69" height="30" text="上传文件"/>
+      <items x="69" y="0" width="80" height="30" text="上传文件夹"/>
+      <items x="149" y="0" width="44" height="30" text="共享"/>
+      <items x="193" y="0" width="44" height="30" text="整理"/>
+      <items x="237" y="0" width="44" height="30" text="删除"/>
+      <items x="281" y="0" width="44" height="30" text="预览"/>
+      <items x="325" y="0" width="44" height="30" text="下载"/>
+      <items x="369" y="0" width="72" height="30" text="新建文件夹"/>
     </widgets>
-    <widgets xsi:type="model:Table" id="5" y="85" width="777" text="(w:30). !,(w:30). 状态,文件名,(w:30). 文件夹,(w:30). 大小,(w:30). 所有者,(w:30). 上传时间,(w:30). 上次修改时间,(w:30). 查阅&#xA;1,使用中,20121001通讯录,通讯录,1MB,张三,2012-10-01 09:00,2012-10-01 10:00,76" measuredWidth="777" measuredHeight="50" alternative="#eeeeee">
+    <widgets xsi:type="model:Table" id="5" x="127" y="61" width="650" height="68" text="(w:30).   !,(w:30). 状态,(w:30). 排序号,文件名,(w:30). 大小,(w:30). 所有者,(w:30). 上传时间,(w:30). 上次修改时间&#xA;1,使用中,0000,20121001通讯录,1MB,张三,2012-10-01 09:00,2012-10-01 10:00&#xA;2,使用中,0010,20121001通讯录,1MB,张三,2012-10-01 09:00,2012-10-01 10:00" measuredWidth="650" measuredHeight="68" alternative="#eeeeee">
       <font/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="6" x="624" y="53" measuredWidth="148" measuredHeight="24">
+    <widgets xsi:type="model:WidgetGroup" id="6" x="624" y="29" measuredWidth="148" measuredHeight="24">
       <widgets xsi:type="model:SearchField" id="7" width="148" measuredWidth="148" measuredHeight="24"/>
     </widgets>
-    <widgets xsi:type="model:Label" id="216" text="视图：" measuredWidth="41" measuredHeight="25">
-      <font bold="true"/>
+    <widgets xsi:type="model:Tree" id="237" y="61" width="129" text="v 我的文件&#xA;-v 工作计划&#xA;--[>] 年度计划&#xA;--[>] 月度计划&#xA;-[>] 临时&#xA;v 共享文件&#xA;-[>] 通讯录&#xA;-[>] 规章制度" measuredWidth="129" measuredHeight="194">
+      <items x="0" y="5" width="129" height="23" text="v 我的文件"/>
+      <items x="0" y="28" width="129" height="23" text="-v 工作计划"/>
+      <items x="0" y="51" width="129" height="23" text="--[>] 年度计划"/>
+      <items x="0" y="74" width="129" height="23" text="--[>] 月度计划"/>
+      <items x="0" y="97" width="129" height="23" text="-[>] 临时"/>
+      <items x="0" y="120" width="129" height="23" text="v 共享文件"/>
+      <items x="0" y="143" width="129" height="23" text="-[>] 通讯录"/>
+      <items x="0" y="166" width="129" height="23" text="-[>] 规章制度"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="281" x="448" y="26" width="153" text="使用中,已删除,全部" measuredWidth="153" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="57" height="30" text="使用中"/>
+      <items x="57" y="0" width="56" height="30" text="已删除"/>
+      <items x="113" y="0" width="40" height="30" text="全部"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="344" measuredWidth="626" measuredHeight="444">
-    <widgets xsi:type="model:Window" id="100" y="24" width="625" height="420" text="报表任务信息" measuredWidth="625" measuredHeight="420" minimizeButton="true" maximizeButton="true"/>
-    <widgets xsi:type="model:HLine" id="101" x="1" y="400" width="625" measuredWidth="625" measuredHeight="6"/>
-    <widgets xsi:type="model:Button" id="102" x="563" y="410" width="56" text="保存" measuredWidth="56" measuredHeight="27">
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="384" measuredWidth="329" measuredHeight="177">
+    <widgets xsi:type="model:Window" id="100" width="329" height="177" text="新建文件夹" measuredWidth="329" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="101" y="128" width="329" measuredWidth="329" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="102" x="261" y="140" width="56" text="创建" measuredWidth="56" measuredHeight="27">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="114" x="6" text="表单：" measuredWidth="41" measuredHeight="25">
-      <font bold="true"/>
-    </widgets>
-    <widgets xsi:type="model:TextArea" id="115" x="73" y="175" width="542" height="73" measuredWidth="542" measuredHeight="73" verticalScrollbar="true">
-      <font italic="true"/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="119" x="6" y="56" text="*任务名称：" measuredWidth="70" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="119" x="6" y="32" text="*文件夹名称：" measuredWidth="82" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="121" x="73" y="56" width="542" measuredWidth="542" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="121" x="87" y="32" width="230" text="通讯录" measuredWidth="230" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="129" x="35" y="177" text="备注：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="137" x="11" y="60" text="所属文件夹：" measuredWidth="77" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="137" x="6" y="84" text="*所用模板：" measuredWidth="70" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:TextField" id="154" x="87" y="61" width="230" measuredWidth="230" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Label" id="141" x="321" y="115" text="开始时间：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+    <widgets xsi:type="model:Label" id="167" x="35" y="91" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="154" x="73" y="85" width="542" text="营运系统/发票统计/发票销售统计表(按年)" measuredWidth="542" measuredHeight="25">
+    <widgets xsi:type="model:TextField" id="169" x="87" y="91" width="230" measuredWidth="230" measuredHeight="25">
       <font/>
     </widgets>
-    <widgets xsi:type="model:TextField" id="159" x="385" y="115" width="230" measuredWidth="230" measuredHeight="25">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="165" x="232" y="380" text="状态：已启动，创建：张三(2011-01-01)，最后修改：李四(2011-01-02)" measuredWidth="393" measuredHeight="25" textAlignment="Right" foreground="#999999">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="167" x="18" y="115" text="*表达式：" measuredWidth="58" measuredHeight="25" textAlignment="Right">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:TextField" id="169" x="73" y="115" width="230" text="0 0 12 * * ?" measuredWidth="230" measuredHeight="25">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Icon" id="170" x="282" y="119" measuredWidth="16" measuredHeight="16" icon="wrench (small)"/>
-    <widgets xsi:type="model:Button" id="178" x="465" y="410" width="88" text="查看调度历史" measuredWidth="88" measuredHeight="27">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:TextArea" id="181" x="7" y="271" width="608" height="100" text="如配置默认条件、标题格式等" measuredWidth="608" measuredHeight="100" verticalScrollbar="true">
-      <font italic="true"/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="182" x="11" y="247" text="默认配置：" measuredWidth="65" measuredHeight="25" textAlignment="Right">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="217" x="23" y="145" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:TextField" id="218" x="73" y="145" width="231" measuredWidth="231" measuredHeight="25">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Icon" id="219" x="592" y="90" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
-    <widgets xsi:type="model:RadioButton" id="220" x="385" y="145" text="否" measuredWidth="32" measuredHeight="25" selected="true">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:RadioButton" id="221" x="424" y="145" text="是" measuredWidth="32" measuredHeight="25">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Label" id="222" x="321" y="145" text="忽略异常：" measuredWidth="65" measuredHeight="25">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Icon" id="224" x="592" y="119" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    <widgets xsi:type="model:Icon" id="219" x="296" y="66" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
   </widgets>
-  <widgets xsi:type="model:Note" id="223" x="8" y="168" width="626" height="161" text="视图说明：&#xD;&#xA;1）只有管理员方可进行相关操作处理。&#xD;&#xA;2）&quot;启动/重置任务&quot;操作将导致相应报表任务被启动（如果原来已停止）或重置（如果原来已启动）。&#xD;&#xA;3）&quot;停止任务&quot;操作将导致相应启动中的报表任务被停止，状态设为&quot;已停止&quot;。&#xD;&#xA;4）启动中的任务，如果碰到异常，将根据&quot;忽略异常&quot;的配置确定是否继续调度下去。&#xD;&#xA;&#xD;&#xA;表单说明：&#xD;&#xA;1）新建保存后默认状态为&quot;已停止&quot;，需要在视图中执行&quot;启动/重置任务&quot;操作方可启动任务。&#xD;&#xA;" measuredWidth="626" measuredHeight="161" annotation="true" textAlignment="Left">
+  <widgets xsi:type="model:Note" id="223" x="8" y="296" width="369" height="81" text="视图说明：&#xD;&#xA;1）点击上传文件或上传文件夹窗口后直接弹出选择窗口&#xD;&#xA;2）&quot;整理&quot;功能用于修改名称、排序号和所属文件夹信息&#xD;&#xA;3）&quot;共享&quot;功能用于控制文件、文件夹的访问权限" measuredWidth="369" measuredHeight="81" annotation="true" textAlignment="Left">
     <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="226" x="8" y="568" measuredWidth="329" measuredHeight="177">
+    <widgets xsi:type="model:Window" id="227" width="329" height="177" text="整理文件夹/整理文件" measuredWidth="329" measuredHeight="177" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="228" y="128" width="329" measuredWidth="329" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="229" x="261" y="140" width="56" text="确定" measuredWidth="56" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="230" x="42" y="32" text="*名称：" measuredWidth="46" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="231" x="87" y="32" width="230" text="通讯录/20121001通讯录.xls" measuredWidth="230" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="232" x="11" y="60" text="所属文件夹：" measuredWidth="77" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="233" x="87" y="61" width="230" text="通讯录" measuredWidth="230" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="234" x="35" y="91" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="235" x="87" y="91" width="230" measuredWidth="230" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="236" x="296" y="66" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
+    <widgets xsi:type="model:Icon" id="282" x="277" y="66" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="249" x="344" y="384" measuredWidth="329" measuredHeight="345">
+    <widgets xsi:type="model:Window" id="250" width="329" height="345" text="共享设置" measuredWidth="329" measuredHeight="345" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Button" id="252" x="267" y="309" width="56" text="确定" measuredWidth="56" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="253" x="11" y="29" text="要共享的文件：通讯录/20121001通讯录.xls" measuredWidth="240" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="255" x="11" y="179" text="谁有权访问：" measuredWidth="77" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="262" y="203" width="329" height="99" text="(w:30).   !,(w:30). 访问者,(w:30). 访问权限&#xA;,宝城总部, {unchecked}编辑 {checked}查看 {checked}评论&#xA;,张三, {checked}编辑 {unchecked}查看 ~{checked}评论~&#xA;,李四, {checked}编辑 {unchecked}查看 ~{checked}评论~" measuredWidth="329" measuredHeight="99" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="268" x="10" y="53" text="共享设置： " measuredWidth="69" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="269" x="10" y="79" text="编辑者可以添加访问者和更改权限" measuredWidth="200" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="270" y="74" width="329" measuredWidth="329" measuredHeight="6"/>
+    <widgets xsi:type="model:RadioButton" id="272" x="11" y="136" text="只有拥有者才能更改权限" measuredWidth="152" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="273" x="30" y="155" text="编辑者无法添加或删除访问者，或者更改其访问权限。" measuredWidth="293" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Text" id="276" x="30" y="100" width="299" height="33" text="编辑者对于添加和删除访问者以及更改其访问权限具有完全控制权。" measuredWidth="299" measuredHeight="33" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="277" x="307" y="184" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
+    <widgets xsi:type="model:Icon" id="278" x="289" y="184" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
   </widgets>
   <hRuler/>
   <vRuler/>
