@@ -214,7 +214,6 @@ public class SelectUsersAction extends
 		}
 		if (null != group && this.group.length() > 0) {// 所属岗位的用户
 			List<String> list = Arrays.asList(group.split(","));
-			System.out.println("list: " + list.get(0));
 			groupCondition = new InCondition("g.code", list);
 			aTypeCondition = new EqualsCondition("a.type_", Actor.TYPE_USER);// 用户
 			// gTypeCondition = new EqualsCondition("g.type_", 3);// 用户
