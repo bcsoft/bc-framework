@@ -198,10 +198,10 @@ public class SelectUsersAction extends
 		Condition statusCondition = null;
 		Condition groupCondition = null;
 		Condition aTypeCondition = null;
-		Condition gTypeCondition = null;
+		// Condition gTypeCondition = null;
 
 		Condition aCurrentCondition = null;
-		
+
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
 			if (ss.length == 1) {
@@ -219,14 +219,11 @@ public class SelectUsersAction extends
 			aTypeCondition = new EqualsCondition("a.type_", Actor.TYPE_USER);// 用户
 			// gTypeCondition = new EqualsCondition("g.type_", 3);// 用户
 		}
-		return ConditionUtils.mix2AndCondition(statusCondition, groupCondition,
-				aTypeCondition, gTypeCondition);
-		
 
-		aCurrentCondition =new EqualsCondition("h.current", true);
-		
-		return ConditionUtils.mix2AndCondition(statusCondition,groupCondition
-				,aTypeCondition,gTypeCondition,aCurrentCondition);
+		aCurrentCondition = new EqualsCondition("h.current", true);
+
+		return ConditionUtils.mix2AndCondition(statusCondition, groupCondition,
+				aTypeCondition, aCurrentCondition);
 	}
 
 	@Override
