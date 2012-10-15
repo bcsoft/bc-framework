@@ -587,9 +587,16 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		// TODO 多个隶属关系的处理
 		ActorHistory actorHistory = this.actorHistoryDao.loadCurrent(follower
 				.getId());
-		actorHistory.setCurrent(false);
-		actorHistory.setEndDate(endDate);
-		this.actorHistoryDao.save(actorHistory);
+		if (actorHistory != null) {
+			actorHistory.setCurrent(false);
+			actorHistory.setEndDate(endDate);
+			this.actorHistoryDao.save(actorHistory);
+		} else {
+			String msg = "have no actorHistory: actor.id=" + follower.getId()
+					+ ",type=" + follower.getName();
+			logger.warn(msg);
+			throw new CoreException(msg);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -845,13 +852,13 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
 				getJpaTemplate(), hql.toString(), args.toArray(), null);
-		
+
 		if (r == null || r.isEmpty())
 			return actorCode;// 找不到就返回原始的帐号信息
 		else
 			return r.get(0);
 	}
-	
+
 	public String loadActorFullNameByCode(String actorCode) {
 		if (actorCode == null || actorCode.length() == 0)
 			return null;
@@ -865,12 +872,14 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 					+ ";hql=" + hql.toString());
 		}
 		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
-				getJpaTemplate(), hql.toString(), args.toArray(), new RowMapper<String>() {
+				getJpaTemplate(), hql.toString(), args.toArray(),
+				new RowMapper<String>() {
 					public String mapRow(Object[] rs, int rowNum) {
 						int i = 0;
-						Object name =rs[i++];
-						Object pname=rs[i++];
-						return pname == null?name.toString():pname.toString()+"/"+name.toString();
+						Object name = rs[i++];
+						Object pname = rs[i++];
+						return pname == null ? name.toString() : pname
+								.toString() + "/" + name.toString();
 					}
 				});
 		if (r == null || r.isEmpty())
