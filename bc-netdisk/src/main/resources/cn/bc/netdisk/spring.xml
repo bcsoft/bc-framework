@@ -19,6 +19,6 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="netdiskFileService" class="cn.bc.netdisk.service.NetdiskFileServiceImpl"
 		p:entityClass="cn.bc.netdisk.domain.NetdiskFile" 
-		p:templateDao-ref="netdiskFileDao" />
+		p:netdiskFileDao-ref="netdiskFileDao" />
 
 </beans>

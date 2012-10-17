@@ -25,6 +25,7 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 
 /**
  * 模板参数视图Action
@@ -110,17 +111,6 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		return columns;
 	}
 
-	// 状态键值转换
-	private Map<String, String> getStatuses() {
-		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
-				getText("template.status.normal"));
-		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
-				getText("template.status.disabled"));
-		statuses.put("", getText("template.status.all"));
-		return statuses;
-	}
-
 	@Override
 	protected String getGridRowLabelExpression() {
 		return "['name']";
@@ -138,7 +128,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(900).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -147,22 +137,49 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		if (!this.isReadonly()) {
-//			new ToolbarButton().setIcon("ui-icon-document").setText(text)
-//			.setAction("create");
-			//上传文件
-			//上传文件夹
-			//共享
-			//整理
-			//删除
-			//预览
-			//下载
-			//新建文件夹
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 删除按钮
+			// 上传操作
+			tb.addButton(new ToolbarMenuButton("上传")
+					.addMenuItem("上传文件", "shangchuanwenjian")
+					.addMenuItem("上传文件夹", "shangchuanwenjianjia")
+					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
+			// // 上传文件
+			// tb.addButton(new ToolbarButton()
+			// .setIcon("ui-icon-arrowthickstop-1-n").setText("上传文件")
+			// .setAction("create"));
+			// // 上传文件夹
+			// tb.addButton(new ToolbarButton()
+			// .setIcon("ui-icon-arrowthickstop-1-n").setText("上传文件夹")
+			// .setAction("create"));
+			// 共享
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-person")
+					.setText("共享").setClick("bc.netdiskFileView.share"));
+			// 整理
+			tb.addButton(new ToolbarButton()
+					.setIcon("ui-icon-folder-collapsed").setText("整理")
+					.setClick("bc.netdiskFileView.clearUp"));
+			// 删除
 			tb.addButton(this.getDefaultDeleteToolbarButton());
+			// 预览
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
+					.setText("预览").setAction("create"));
+			// 其他操作
+			tb.addButton(new ToolbarMenuButton("其他")
+					.addMenuItem("下载", "xiazai")
+					.addMenuItem("新建文件夹", "xinjianwenjianjia")
+					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
+			// // 下载
+			// tb.addButton(new ToolbarButton()
+			// .setIcon("ui-icon-arrowthickstop-1-s").setText("下载")
+			// .setAction("create"));
+			// // 新建文件夹
+			// tb.addButton(new ToolbarButton().setIcon("ui-icon-document")
+			// .setText("新建文件夹").setAction("create"));
+			// tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
+			// this.getStatuses(), "status", 0,
+			// getText("title.click2changeSearchStatus")));
+
+			// // 编辑按钮
+			// tb.addButton(this.getDefaultEditToolbarButton());
 		} else {
 			tb.addButton(this.getDefaultOpenToolbarButton());
 		}
@@ -171,6 +188,26 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
+	}
+
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getContextPath() + "/bc/netdiskFile/view.js";
+	}
+
+	/**
+	 * 状态值转换列表：使用中|已删除|全部
+	 * 
+	 * @return
+	 */
+	protected Map<String, String> getStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
+				getText("netdiskFile.enabled"));
+		statuses.put(String.valueOf(BCConstants.STATUS_DELETED),
+				getText("entity.status.deleted"));
+		statuses.put("", getText("bc.status.all"));
+		return statuses;
 	}
 
 }
