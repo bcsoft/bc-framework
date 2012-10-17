@@ -64,4 +64,23 @@ public class TemplateTypeDaoImpl extends HibernateCrudJpaDao<TemplateType> imple
 				}
 		});
 	}
+	
+	public List<Map<String, String>> findTemplateTypeOptionRtnId(boolean isEnabled) {
+		String hql="SELECT a.id,a.name";
+		   hql+=" FROM bc_template_type a";
+		   if(isEnabled){
+			   hql+=" WHERE a.status_="+BCConstants.STATUS_ENABLED;
+		   }
+		   hql+=" ORDER BY a.order_";
+		 return	HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(), hql,null
+		 	,new RowMapper<Map<String, String>>() {
+				public Map<String, String> mapRow(Object[] rs, int rowNum) {
+					Map<String, String> oi = new HashMap<String, String>();
+					int i = 0;
+					oi.put("key", rs[i++].toString());
+					oi.put("value", rs[i++].toString());
+					return oi;
+				}
+		});
+	}
 }

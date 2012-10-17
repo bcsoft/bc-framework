@@ -38,8 +38,17 @@ public interface TemplateTypeDao extends CrudDao<TemplateType> {
 	 * 
 	 * @param isEnabled 查找状态正常的模板类型：是，否
 	 * 
-	 * @return
+	 * @return key:id,code 和 value:name
 	 */
 	public List<Map<String,String>> findTemplateTypeOption(boolean isEnabled);
+	
+	/**
+	 * 查找模板类型
+	 * 
+	 * @param isEnabled 查找状态正常的模板类型：是，否
+	 * 
+	 * @return key:id和 value:name
+	 */
+	public List<Map<String, String>> findTemplateTypeOptionRtnId(boolean isEnabled);
 
 }
