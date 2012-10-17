@@ -112,13 +112,13 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 	public void delete(Serializable id) {
 		super.delete(id);
 		// 同时删除认证信息
-		this.authDataDao.delete((Long) id);
+		// this.authDataDao.delete((Long) id);
 	}
 
 	@Override
 	public void delete(Serializable[] ids) {
 		super.delete(ids);
 		// 同时删除认证信息
-		this.authDataDao.delete((Long[]) ids);
+		// this.authDataDao.delete((Long[]) ids);
 	}
 }
