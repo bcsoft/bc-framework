@@ -69,8 +69,8 @@ public class SelectUsersAction extends
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：状态|创建时间
-		return new OrderCondition("a.status_", Direction.Asc).add(
-				"h.create_date", Direction.Desc);
+		return new OrderCondition("a.status_", Direction.Asc).add("a.order_",
+				Direction.Desc).add("h.create_date", Direction.Desc);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class SelectUsersAction extends
 			} else {
 				sql.append("select h.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
 			}
-			sql.append("from bc_identity_actor_history h");
+			sql.append(",a.order_ from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
 		} else {
 			if (null != group && this.group.length() > 0) {
@@ -94,7 +94,7 @@ public class SelectUsersAction extends
 			} else {
 				sql.append("select a.id,a.status_,h.actor_name,h.upper_name,a.code,h.create_date ");
 			}
-			sql.append("from bc_identity_actor_history h");
+			sql.append(",a.order_ from bc_identity_actor_history h");
 			sql.append(" left join bc_identity_actor a on a.id=h.actor_id ");
 		}
 		if (null != group && this.group.length() > 0) {
@@ -215,10 +215,9 @@ public class SelectUsersAction extends
 		if (null != group && this.group.length() > 0) {// 所属岗位的用户
 			List<String> list = Arrays.asList(group.split(","));
 			groupCondition = new InCondition("g.code", list);
-			aTypeCondition = new EqualsCondition("a.type_", Actor.TYPE_USER);// 用户
 			// gTypeCondition = new EqualsCondition("g.type_", 3);// 用户
 		}
-
+		aTypeCondition = new EqualsCondition("a.type_", Actor.TYPE_USER);// 用户
 		aCurrentCondition = new EqualsCondition("h.current", true);
 
 		return ConditionUtils.mix2AndCondition(statusCondition, groupCondition,
@@ -233,6 +232,7 @@ public class SelectUsersAction extends
 			json.put("status", status);
 		}
 		json.put("history", history);
+		json.put("group", group);
 
 		return json.isEmpty() ? null : json;
 	}
