@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.5</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>bc-option</artifactId>
