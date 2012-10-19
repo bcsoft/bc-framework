@@ -19,9 +19,11 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
@@ -63,7 +65,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,order_,name,size_,a.actor_name,file_date,modified_date");
-		sql.append(" from bc_netdisk_file f");
+		sql.append(",f.path from bc_netdisk_file f");
 		sql.append(" inner join bc_identity_actor_history a on a.id=f.author_id");
 		sqlObject.setSql(sql.toString());
 
@@ -83,6 +85,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 				map.put("actor_name", rs[i++]);
 				map.put("file_date", rs[i++]);
 				map.put("modified_date", rs[i++]);
+				map.put("path", rs[i++]);
 				return map;
 			}
 		});
@@ -99,17 +102,19 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("f.order_", "orderNo",
 				getText("netdisk.order"), 80).setSortable(true));
 		columns.add(new TextColumn4MapKey("f.name", "name",
-				getText("netdisk.name"), 180).setUseTitleFromLabel(true));
+				getText("netdisk.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f.size_", "size",
-				getText("netdisk.size"), 60).setUseTitleFromLabel(true));
+				getText("netdisk.size"), 80).setUseTitleFromLabel(true)
+				.setValueFormater(new FileSizeFormater()));
 		columns.add(new TextColumn4MapKey("a.actor_name", "actor_name",
 				getText("netdisk.author"), 80));
 		columns.add(new TextColumn4MapKey("f.file_date", "file_date",
-				getText("netdisk.fileDate"), 130)
+				getText("netdisk.fileDate"), 120)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new TextColumn4MapKey("f.modified_date", "modified_date",
-				getText("netdisk.modifiedDate"), 130)
+				getText("netdisk.modifiedDate"), 120)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new HiddenColumn4MapKey("path", "path"));
 		return columns;
 	}
 
@@ -176,7 +181,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 			tb.addButton(this.getDefaultDeleteToolbarButton());
 			// 预览
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
-					.setText("预览").setAction("create"));
+					.setText("预览").setClick("bc.netdiskFileView.preview"));
 			// 其他操作
 			tb.addButton(new ToolbarMenuButton("其他")
 					.addMenuItem("下载", "xiazai")
