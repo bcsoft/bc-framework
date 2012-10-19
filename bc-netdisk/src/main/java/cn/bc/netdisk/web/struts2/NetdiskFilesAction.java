@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -137,9 +139,22 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		if (!this.isReadonly()) {
+			JSONObject json = new JSONObject();
+			try {
+				json.put("callback", "bc.netdiskFileForm.afterUploadfile");
+				json.put("subdir", "netdisk");
+				json.put("ptype", "Netdisk");
+				json.put("puid", "Netdisk1");
+			} catch (JSONException e) {
+			}
 			// 上传操作
 			tb.addButton(new ToolbarMenuButton("上传")
-					.addMenuItem("上传文件", "shangchuanwenjian")
+					.addMenuItem(
+							"<div style=\"position:relative;width:100%;height:100%;\">上传文件<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFile\" name=\"uploadFile\" title=\"点击上传文件\""
+									+ " data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
+									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
+							"shangchuanwenjian")
 					.addMenuItem("上传文件夹", "shangchuanwenjianjia")
 					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
 			// // 上传文件
@@ -192,7 +207,8 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getContextPath() + "/bc/netdiskFile/view.js";
+		return this.getContextPath() + "/bc/netdiskFile/view.js,"
+				+ this.getContextPath() + "/bc/netdiskFile/form.js";
 	}
 
 	/**

@@ -24,7 +24,9 @@
 		<action name="share" class="netdiskFileAction" method="share">
 			<result name="form">/bc/netdiskFile/shareForm.jsp</result>
 		</action>
+		<!-- 上传 -->
+		<action name="uploadfile" class="netdiskFileAction" method="uploadfile">
+		</action>
 	</package>
-
 
 </struts>

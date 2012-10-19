@@ -7,7 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.RichFileEntityImpl;
+import cn.bc.BCConstants;
+import cn.bc.identity.domain.FileEntityImpl;
 
 /**
  * 网络文件
@@ -16,13 +17,13 @@ import cn.bc.identity.domain.RichFileEntityImpl;
  */
 @Entity
 @Table(name = "BC_NETDISK_FILE")
-public class NetdiskFile extends RichFileEntityImpl {
+public class NetdiskFile extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 	// private static Log logger = LogFactory.getLog(NetdiskFile.class);
 	public static final String ATTACH_TYPE = NetdiskFile.class.getSimpleName();
 	/** 模板存储的子路径，开头末尾不要带"/" */
 	public static String DATA_SUB_PATH = "netdisk";
-
+	private int status = BCConstants.STATUS_ENABLED;
 	private Long pid;// 所在文件夹ID
 	private int type;// 类型 : 0-文件夹,1-文件
 	private String name;// 名称 : (不带路径的部分)
@@ -31,6 +32,15 @@ public class NetdiskFile extends RichFileEntityImpl {
 	private String orderNo;// 排序号
 	private String path;// 保存路径 : 相对于[NETDISK]目录下的子路径,开头不要带符号/,仅适用于文件类型'
 	private int editRole;// 编辑权限 : 0-编辑者可修改,1-只有拥有者可修改
+
+	@Column(name = "STATUS_")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	public Long getPid() {
 		return pid;
