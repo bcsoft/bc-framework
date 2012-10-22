@@ -81,8 +81,8 @@ public class MenuItem extends Li {
 
 	public StringBuffer render(StringBuffer main) {
 		// 清空环境
-		if (this.children != null)
-			this.children.clear();
+//		if (this.children != null)
+//			this.children.clear();
 
 		// 创建链接
 		A a = new A();

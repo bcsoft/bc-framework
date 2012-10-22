@@ -308,7 +308,7 @@ public class LoginServiceImpl implements LoginService {
 	public List<Map<String, String>> findShortcuts(Long[] actorIds,
 			Long[] resourceIds) {
 		StringBuffer hql = new StringBuffer();
-		hql.append("select s.aid,s.sid,s.id,s.standalone,s.name,s.url,s.iconclass,s.order_");
+		hql.append("select s.aid,s.sid,s.id,s.standalone,s.name,s.url,s.iconclass,s.order_,s.cfg");
 		hql.append(" from bc_desktop_shortcut s");
 		hql.append(" where s.aid in (?");
 		List<Object> args = new ArrayList<Object>();
@@ -356,6 +356,8 @@ public class LoginServiceImpl implements LoginService {
 						i++;
 						s.put("orderNo", rs[i] != null ? rs[i].toString()
 								: null);
+						i++;
+						s.put("cfg", rs[i] != null ? rs[i].toString() : null);
 						return s;
 					}
 				});
