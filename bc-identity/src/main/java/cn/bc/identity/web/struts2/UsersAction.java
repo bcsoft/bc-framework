@@ -129,7 +129,7 @@ public class UsersAction extends AbstractActorsAction {
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("actor.order"), 100).setSortable(true)
-				.setDir(Direction.Asc).setUseTitleFromLabel(true));
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.phone", "phone",
 				getText("user.phone"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));

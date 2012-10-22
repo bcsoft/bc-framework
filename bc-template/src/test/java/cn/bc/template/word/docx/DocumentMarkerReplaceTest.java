@@ -38,7 +38,8 @@ public class DocumentMarkerReplaceTest {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("name", "1111");
-		map.put("age", "30");
+		map.put("age", "301");
+		map.put("comment", "comment\\r\\ncomment\n?comment\r\ncomment\rcomment\ncomment\tcomment<br>tcomment<br />tcomment");
 
 		// 替换占位符
 		this.replaceMarker(docx, map);

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="363" x="8" y="640" measuredWidth="537" measuredHeight="457">
+    <widgets xsi:type="model:Window" id="364" width="537" height="457" text="【信息发布界面】" measuredWidth="537" measuredHeight="457" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:WidgetGroup" id="382" x="6" y="24" measuredWidth="526" measuredHeight="121">
+      <widgets xsi:type="model:Panel" id="428" width="526" height="121" measuredWidth="526" measuredHeight="121" foreground="#cccccc"/>
+      <widgets xsi:type="model:Label" id="385" x="12" y="6" text="*信息标题：" measuredWidth="70" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:TextField" id="386" x="78" y="6" width="442" text="传苹果下周与iPad mini同时发布新Mac mini" measuredWidth="442" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="399" x="12" y="62" text="*信息来源：" measuredWidth="70" measuredHeight="25">
+        <font bold="false"/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="413" x="78" y="62" measuredWidth="179" measuredHeight="25">
+        <widgets xsi:type="model:TextField" id="414" width="179" measuredWidth="179" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="415" x="159" y="4" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Label" id="416" x="8" text="行政办公室" measuredWidth="65" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Label" id="459" x="12" y="34" text="*发布日期：" measuredWidth="70" measuredHeight="25">
+        <font bold="false"/>
+      </widgets>
+      <widgets xsi:type="model:TextField" id="460" x="78" y="34" width="179" text="2011-01-15" measuredWidth="179" measuredHeight="25" state="disabled">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="495" x="16" y="90" text="发布范围：" measuredWidth="65" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="497" x="78" y="90" measuredWidth="441" measuredHeight="26">
+        <widgets xsi:type="model:TextField" id="498" width="441" measuredWidth="441" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="499" x="420" y="5" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+        <widgets xsi:type="model:Label" id="500" x="5" y="1" text="行政办公室 {delete}" measuredWidth="85" measuredHeight="25">
+          <font underline="true"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="501" x="89" y="1" text="人力资源部 {delete}" measuredWidth="85" measuredHeight="25">
+          <font underline="true"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Label" id="537" x="274" y="34" text="结束日期：" measuredWidth="65" measuredHeight="25">
+        <font bold="false"/>
+      </widgets>
+      <widgets xsi:type="model:TextField" id="538" x="338" y="34" width="182" text="2013-01-15" measuredWidth="182" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="543" x="269" y="62" measuredWidth="209" measuredHeight="25">
+        <widgets xsi:type="model:Label" id="539" text="*信息类型：" measuredWidth="70" measuredHeight="25">
+          <font bold="false"/>
+        </widgets>
+        <widgets xsi:type="model:RadioButton" id="540" x="69" text="公告" measuredWidth="44" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:RadioButton" id="541" x="117" text="通知" measuredWidth="44" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:RadioButton" id="542" x="165" text="提醒" measuredWidth="44" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="429" x="10" y="336" measuredWidth="283" measuredHeight="73">
+      <widgets xsi:type="model:Label" id="430" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="431" x="114" text="添加附件" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="432" x="173" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="433" x="232" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="434" y="25" measuredWidth="48" measuredHeight="48" icon="word (xlarge)"/>
+      <widgets xsi:type="model:Label" id="435" x="54" y="24" text="测试附件1.docx" measuredWidth="91" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="436" x="54" y="48" text="50KB" measuredWidth="35" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="437" x="88" y="48" text="在线查看" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="438" x="146" y="48" text="下载" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="441" x="178" y="48" text="删除" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="464" x="6" y="149" measuredWidth="526" measuredHeight="177">
+      <widgets xsi:type="model:Image" id="422" width="525" height="25" measuredWidth="525" measuredHeight="25" src="assets/editor.png"/>
+      <widgets xsi:type="model:Text" id="456" x="10" y="32" width="505" height="137" text="　　新浪科技讯 北京时间10月16日早间消息，最新传闻显示，苹果将在下周的iPad mini发布会上同时发布新款Mac mini。&#xD;&#xA;　　美国科技博客9to5mac报道称，苹果Mac mini产品线仍将保持两款产品，分别针对消费类市场和服务器市场。苹果将在发布会结束后立即开售这两款产品。&#xD;&#xA;　　苹果上一次升级Mac mini还是在2011年7月，当时主要引入了英特尔Sandy Bridge平台，增加了Thunderbolt接口，并移除了光驱。&#xD;&#xA;　　根据最新传闻，苹果将在10月23日的发布会上发布iPad mini，以及带视网膜显示屏的13英寸MacBook Pro。这些产品预计将于今年圣诞节假期前面市，从而瞄准圣诞节购物市场。" measuredWidth="505" measuredHeight="137">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Panel" id="457" width="526" height="177" measuredWidth="526" measuredHeight="177" alpha="0" foreground="#cccccc"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="465" x="491" y="424" width="41" text="保存" measuredWidth="41" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="466" y="416" width="537" measuredWidth="537" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="467" x="392" y="424" width="41" text="预览" measuredWidth="41" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="468" x="441" y="424" width="41" text="发布" measuredWidth="41" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="494" x="560" y="640" width="377" height="353" text="信息组件：&#xD;&#xA;1) 信息类型包括公告(0)、通知(1)、提醒(2);&#xD;&#xA;2) 信息可以控制发布范围，如果没有配置，则任何人均可访问；&#xD;&#xA;3) 用户每查阅一次增加一条查阅记录；&#xD;&#xA;4) 有&quot;信息查阅历史浏览&quot;权限的用户，可以通过点击&quot;已阅XXX次&quot;链接，查看信息的查阅历史记录。&#xD;&#xA;&#xD;&#xA;角色权限：&#xD;&#xA;1）信息管理 - 可以发布、修改任意类型的信息&#xD;&#xA;2）公告管理 - 可以发布、修改公告信息&#xD;&#xA;3）通知管理 - 可以发布、修改通知信息&#xD;&#xA;4）提醒管理 - 可以发布、修改提醒信息&#xD;&#xA;5）信息查阅记录查看 - 查看信息的查阅历史记录&#xD;&#xA;&#xD;&#xA;视图：&#xD;&#xA;1）信息查阅&#xD;&#xA;查看自己有权限查看的所有信息&#xD;&#xA;2）信息管理&#xD;&#xA;管理员发布、修改信息&#xD;&#xA;" measuredWidth="377" measuredHeight="353" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="544" x="8" y="296" measuredWidth="937" measuredHeight="337">
+    <widgets xsi:type="model:WidgetGroup" id="283" measuredWidth="537" measuredHeight="337">
+      <widgets xsi:type="model:Window" id="284" width="537" height="337" text="【信息查阅界面】" measuredWidth="537" measuredHeight="337" minimizeButton="true" maximizeButton="true"/>
+      <widgets xsi:type="model:WidgetGroup" id="286" y="31" measuredWidth="537" measuredHeight="61">
+        <widgets xsi:type="model:Label" id="287" x="120" y="35" text="2012年10月16日 08:00  新浪科技" measuredWidth="188" measuredHeight="25" foreground="#666666">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="288" width="537" text="传苹果下周与iPad mini同时发布新Mac mini" measuredWidth="537" measuredHeight="36" textAlignment="Center" foreground="#351c75">
+          <font size="16"/>
+        </widgets>
+        <widgets xsi:type="model:HLine" id="289" x="10" y="55" width="512" measuredWidth="512" measuredHeight="6" foreground="#cfe2f3"/>
+        <widgets xsi:type="model:Label" id="491" x="312" y="35" text="已阅100次" measuredWidth="62" measuredHeight="25" foreground="#666666">
+          <font underline="false"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Text" id="335" x="16" y="104" width="505" height="145" text="　　新浪科技讯 北京时间10月16日早间消息，最新传闻显示，苹果将在下周的iPad mini发布会上同时发布新款Mac mini。&#xD;&#xA;　　美国科技博客9to5mac报道称，苹果Mac mini产品线仍将保持两款产品，分别针对消费类市场和服务器市场。苹果将在发布会结束后立即开售这两款产品。&#xD;&#xA;　　苹果上一次升级Mac mini还是在2011年7月，当时主要引入了英特尔Sandy Bridge平台，增加了Thunderbolt接口，并移除了光驱。&#xD;&#xA;　　根据最新传闻，苹果将在10月23日的发布会上发布iPad mini，以及带视网膜显示屏的13英寸MacBook Pro。这些产品预计将于今年圣诞节假期前面市，从而瞄准圣诞节购物市场。" measuredWidth="505" measuredHeight="145">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="336" x="16" y="256" measuredWidth="173" measuredHeight="73">
+        <widgets xsi:type="model:Label" id="337" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+          <font bold="true" underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Icon" id="341" y="25" measuredWidth="48" measuredHeight="48" icon="word (xlarge)"/>
+        <widgets xsi:type="model:Label" id="342" x="54" y="24" text="测试附件1.docx" measuredWidth="91" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="343" x="54" y="48" text="50KB" measuredWidth="35" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="344" x="88" y="48" text="在线查看" measuredWidth="51" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="345" x="146" y="48" text="下载" measuredWidth="27" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="470" x="560" y="11" measuredWidth="273" measuredHeight="70">
+      <widgets xsi:type="model:Panel" id="471" y="29" width="273" height="41" measuredWidth="273" measuredHeight="41" foreground="#999999" border="dashed-rounded"/>
+      <widgets xsi:type="model:Tooltip" id="486" x="121" text="来源" measuredWidth="34" measuredHeight="42" background="#00ff00" position="bottomRight">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Tooltip" id="487" x="164" text="信息被查阅次数" measuredWidth="94" measuredHeight="42" background="#00ff00" position="bottomRight">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Tooltip" id="488" x="55" text="发布时间" measuredWidth="58" measuredHeight="42" background="#00ff00">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="492" x="12" y="37" text="2012年10月16日 08:00  新浪科技" measuredWidth="188" measuredHeight="25" foreground="#666666">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="493" x="204" y="37" text="已阅100次" measuredWidth="62" measuredHeight="25" foreground="#666666">
+        <font underline="true"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="502" x="544" y="108" measuredWidth="393" measuredHeight="122">
+      <widgets xsi:type="model:Window" id="503" width="393" height="122" text="【信息查阅记录界面】" measuredWidth="393" measuredHeight="122" minimizeButton="true" maximizeButton="true"/>
+      <widgets xsi:type="model:Table" id="506" y="49" width="393" text="(w:30). !,(w:200). 标题,(w:30). 查阅人,(w:30). 查阅时间&#xA;1,测试信息1,张三,2012-10-01 10:10&#xA;2,测试信息2,李四,2012-10-01 10:00&#xA;" measuredWidth="393" measuredHeight="73" alternative="#eeeeee">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="507" x="241" y="23" measuredWidth="148" measuredHeight="24">
+        <widgets xsi:type="model:SearchField" id="508" width="148" measuredWidth="148" measuredHeight="24"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="511" x="376" y="64" width="185" height="22" measuredWidth="185" measuredHeight="22" annotation="true" foreground="#999999" left="false" right="true" direction="bottom"/>
+    <widgets xsi:type="model:Arrow" id="512" x="776" y="64" width="25" height="45" measuredWidth="25" measuredHeight="45" annotation="true" foreground="#999999" direction="bottom"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="513" x="8" y="8" measuredWidth="751" measuredHeight="134">
+    <widgets xsi:type="model:Window" id="514" width="751" height="134" text="【信息管理界面 - 管理员】" measuredWidth="751" measuredHeight="134" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="516" x="4" y="26" width="197" text="新建,编辑,禁用,删除" measuredWidth="197" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="49" height="30" text="新建"/>
+      <items x="49" y="0" width="48" height="30" text="编辑"/>
+      <items x="97" y="0" width="48" height="30" text="禁用"/>
+      <items x="145" y="0" width="52" height="30" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="517" y="61" width="751" text="(w:30). !,(w:30). 状态,(w:30). 类别,(w:100). 标题,(w:30). 来源,(w:30). 发布日期,(w:30). 到期日期,(w:30). 发布范围,[创建、修改人信息...]&#xA;1,草稿,公告,测试信息1,行政办公室,2012-10-01,2013-10-01,宝城&#xA;2,已发布,通知,测试信息2,行政办公室,2012-10-01,,【全系统】&#xA;" measuredWidth="751" measuredHeight="73" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="518" x="599" y="29" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="519" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="520" x="208" y="26" width="201" text="草稿,已发布,已禁用,全部" measuredWidth="201" measuredHeight="30" selection="1">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="草稿"/>
+      <items x="45" y="0" width="56" height="30" text="已发布"/>
+      <items x="101" y="0" width="56" height="30" text="已禁用"/>
+      <items x="157" y="0" width="44" height="30" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="522" x="416" y="26" width="177" text="公告,通知,提醒,全部" measuredWidth="177" measuredHeight="30" selection="3">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="公告"/>
+      <items x="45" y="0" width="44" height="30" text="通知"/>
+      <items x="89" y="0" width="44" height="30" text="提醒"/>
+      <items x="133" y="0" width="44" height="30" text="全部"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="523" x="8" y="152" measuredWidth="489" measuredHeight="134">
+    <widgets xsi:type="model:Window" id="524" width="489" height="134" text="【信息查阅界面 - 普通用户】" measuredWidth="489" measuredHeight="134" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="526" y="61" width="489" text="(w:30). !,(w:30). 状态,(w:30). 类别,(w:100). 标题,(w:30). 来源,(w:30). 发布日期,(w:30). 发布人,发布范围&#xA;1,未阅,公告,测试信息1,行政办公室,2012-10-01,张三,宝城&#xA;2,已阅,通知,测试信息2,行政办公室,2012-10-01,张三,【全系统】&#xA;" measuredWidth="489" measuredHeight="73" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="527" x="336" y="29" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="528" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="529" x="10" y="26" width="135" text="未阅,已阅,全部" measuredWidth="135" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="未阅"/>
+      <items x="45" y="0" width="44" height="30" text="已阅"/>
+      <items x="89" y="0" width="46" height="30" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="530" x="152" y="26" width="177" text="公告,通知,提醒,全部" measuredWidth="177" measuredHeight="30" selection="2">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="公告"/>
+      <items x="45" y="0" width="44" height="30" text="通知"/>
+      <items x="89" y="0" width="44" height="30" text="提醒"/>
+      <items x="133" y="0" width="44" height="30" text="全部"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
