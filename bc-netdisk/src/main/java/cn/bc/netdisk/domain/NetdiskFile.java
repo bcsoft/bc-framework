@@ -23,6 +23,11 @@ public class NetdiskFile extends FileEntityImpl {
 	public static final String ATTACH_TYPE = NetdiskFile.class.getSimpleName();
 	/** 模板存储的子路径，开头末尾不要带"/" */
 	public static String DATA_SUB_PATH = "netdisk";
+	/** 类型：文件 */
+	public static final int TYPE_FILE = 1;
+	/** 类型：文件夹 */
+	public static final int TYPE_FOLDER = 0;
+
 	private int status = BCConstants.STATUS_ENABLED;
 	private Long pid;// 所在文件夹ID
 	private int type;// 类型 : 0-文件夹,1-文件

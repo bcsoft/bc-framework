@@ -16,13 +16,18 @@
 		</action>
 		<action name="save" class="netdiskFileAction" method="save" />
 		<action name="delete" class="netdiskFileAction" method="delete" />
+		<!-- 新建对话框 -->
+		<action name="createDialog" class="netdiskFileAction" method="createDialog">
+			<!-- 整理 -->
+			<result name="zhengliwenjian">/bc/netdiskFile/clearUpForm.jsp</result>
+			<!-- 共享 -->
+			<result name="gongxiang">/bc/netdiskFile/shareForm.jsp</result>
+		</action>
 		<!-- 整理 -->
 		<action name="clearUp" class="netdiskFileAction" method="clearUp">
-			<result name="form">/bc/netdiskFile/clearUpForm.jsp</result>
 		</action>
 		<!-- 共享 -->
 		<action name="share" class="netdiskFileAction" method="share">
-			<result name="form">/bc/netdiskFile/shareForm.jsp</result>
 		</action>
 		<!-- 上传 -->
 		<action name="uploadfile" class="netdiskFileAction" method="uploadfile">

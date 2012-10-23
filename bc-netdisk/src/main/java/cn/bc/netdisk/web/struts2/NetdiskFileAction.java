@@ -31,6 +31,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	private static final long serialVersionUID = 1L;
 	private NetdiskFileService netdiskFileService;
 	public String fileInfo;// 文件信息
+	public String dialogType;// 新建对话框的类型
+	public String title;// 文件名
+	public String order;// 排序号
+	public String pid;// 所属文件夹Id
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -53,10 +57,32 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 				.setMinHeight(100).setMinWidth(350).setHeight(200);
 	}
 
+	@Override
+	protected void afterCreate(NetdiskFile entity) {
+		super.afterCreate(entity);
+		entity.setStatus(BCConstants.STATUS_ENABLED);
+		entity.setType(NetdiskFile.TYPE_FOLDER);
+		entity.setSize(new Long(0));
+
+	}
+
+	public String createDialog() {
+		// 初始化表单的配置信息
+		this.formPageOption = buildFormPageOption(true);
+
+		if (dialogType.equals("zhengliwenjian")) {
+			return "zhengliwenjian";
+		} else {
+			return "gongxiang";
+		}
+
+	}
+
 	// 整理
 	public String clearUp() {
+		NetdiskFile netdiskFile = this.netdiskFileService.load(this.getId());
 		// 初始化E
-		this.setE(createEntity());
+		this.setE(netdiskFile);
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
@@ -65,7 +91,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.afterCreate(this.getE());
 		return "form";
 	}
 
@@ -73,8 +98,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String share() {
 		// 初始化E
 		this.setE(createEntity());
-		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
 		try {
 			this.initForm(true);
@@ -99,9 +122,11 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 				JSONObject json1;
 				for (int i = 0; i < jsons.length(); i++) {
 					json1 = jsons.getJSONObject(i);
-					netdiskFile.setName(json1.getString("name"));
+					String name = json1.getString("name");
+					netdiskFile.setName(name);
 					netdiskFile.setSize(json1.getLong("size"));
 					netdiskFile.setPath(json1.getString("path"));
+					netdiskFile.setExt(name.substring(name.lastIndexOf(".")));
 				}
 
 			} catch (JSONException e) {
@@ -109,6 +134,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			}
 		}
 		netdiskFile.setStatus(BCConstants.STATUS_ENABLED);
+		netdiskFile.setType(NetdiskFile.TYPE_FILE);
 		SystemContext context = this.getSystyemContext();
 		// 设置创建人信息
 		netdiskFile.setFileDate(Calendar.getInstance());
