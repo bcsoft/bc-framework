@@ -107,7 +107,7 @@ public abstract class AbstractActorsAction extends
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("actor.order"), 100).setSortable(true)
-				.setDir(Direction.Asc).setUseTitleFromLabel(true));
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.phone", "phone",
 				getText("actor.phone"), 100).setUseTitleFromLabel(true));
 
