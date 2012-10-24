@@ -1,6 +1,8 @@
 package cn.bc.netdisk.web.struts2;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +37,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String title;// 文件名
 	public String order;// 排序号
 	public String pid;// 所属文件夹Id
+	public String folder;// 所属文件夹名
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -78,22 +81,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 	}
 
-	// 整理
-	public String clearUp() {
-		NetdiskFile netdiskFile = this.netdiskFileService.load(this.getId());
-		// 初始化E
-		this.setE(netdiskFile);
-		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
-		// 初始化表单的其他配置
-		try {
-			this.initForm(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "form";
-	}
-
 	// 共享
 	public String share() {
 		// 初始化E
@@ -109,10 +96,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	}
 
 	public String json;
+	Json jsonObject = new Json();
 
 	// 上传文件
 	public String uploadfile() {
-		Json json = new Json();
 		NetdiskFile netdiskFile = new NetdiskFile();
 		// 文件信息
 		if (this.fileInfo != null && this.fileInfo.length() > 0) {
@@ -140,11 +127,23 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		netdiskFile.setFileDate(Calendar.getInstance());
 		netdiskFile.setAuthor(context.getUserHistory());
 		this.netdiskFileService.save(netdiskFile);
-		json.put("success", true);
-		json.put("msg", "上传成功！");
-
-		this.json = json.toString();
+		jsonObject.put("success", true);
+		jsonObject.put("msg", "上传成功！");
+		this.json = jsonObject.toString();
 		return "json";
 
+	}
+
+	// 整理
+	public String clearUp() {
+		Map<String, Object> updateInfo = new HashMap<String, Object>();
+		updateInfo.put("pid", new Long(pid));
+		updateInfo.put("orderNo", order);
+		updateInfo.put("name", title);
+		this.netdiskFileService.update(this.getId(), updateInfo);
+		jsonObject.put("success", true);
+		jsonObject.put("msg", "保存成功！");
+		this.json = jsonObject.toString();
+		return "json";
 	}
 }
