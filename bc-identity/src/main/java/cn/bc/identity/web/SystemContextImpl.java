@@ -57,11 +57,23 @@ public class SystemContextImpl implements SystemContext {
 		return hasAny((List<String>) this.getAttr(SystemContext.KEY_ROLES),
 				roles);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean hasAnyOneRole(String roles) {
+		return hasAny((List<String>) this.getAttr(SystemContext.KEY_ROLES),
+				roles.split(","));
+	}
 
 	@SuppressWarnings("unchecked")
 	public boolean hasAnyGroup(String... groups) {
 		return hasAny((List<String>) this.getAttr(SystemContext.KEY_GROUPS),
 				groups);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean hasAnyOneGroup(String groups) {
+		return hasAny((List<String>) this.getAttr(SystemContext.KEY_GROUPS),
+				groups.split(","));
 	}
 
 	private boolean hasAny(List<String> _roles, String[] roles) {

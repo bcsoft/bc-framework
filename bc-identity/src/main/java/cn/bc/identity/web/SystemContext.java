@@ -65,9 +65,23 @@ public interface SystemContext extends Context{
 	boolean hasAnyRole(String... roles);
 	
 	/**
+	 * 判断用户是否拥有指定角色中的任一个
+	 * @param roles 角色的标识符，通常为角色的编码,多个逗号链接
+	 * @return
+	 */
+	boolean hasAnyOneRole(String roles);
+	
+	/**
 	 * 判断用户是否拥有指定岗位中的任一个
 	 * @param groups 岗位的标识符，通常为岗位的编码
 	 * @return
 	 */
 	boolean hasAnyGroup(String... groups);
+	
+	/**
+	 * 判断用户是否拥有指定岗位中的任一个
+	 * @param groups 岗位的标识符，通常为岗位的编码,多个逗号链接
+	 * @return
+	 */
+	boolean hasAnyOneGroup(String groups);
 }
