@@ -134,6 +134,114 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 	}
 
+	// 上传文件夹
+	public String uploadfolder() {
+		// 文件夹信息
+		String fileNo = null;// 标识是否同一文件夹的文件
+
+		if (this.fileInfo != null && this.fileInfo.length() > 0) {
+			JSONArray jsons;
+			try {
+				jsons = new JSONArray(this.fileInfo);
+				JSONObject json1;
+				NetdiskFile pNetdiskFile = null;
+				for (int i = 0; i < jsons.length(); i++) {
+					json1 = jsons.getJSONObject(i);
+					// 先判断是否有父级文件夹，如果没有就创建
+					String relativePath = json1.getString("relativePath");
+					// 如果是文件夹就去掉路径名的最后一个点
+					if (json1.getBoolean("isDir")) {
+						relativePath = relativePath.replace(".", "");
+					}
+					String[] ss = relativePath.split("/");
+					// 再判断父级下是否有文件，如果没有就创建
+					for (String s : ss) {
+						NetdiskFile netdiskFile = new NetdiskFile();
+						// 如果pNetdiskFile为空则为第一层目录
+						// 如果fileNo与batchNo相等则证明是同一批的文件夹的文件
+						if (pNetdiskFile == null
+								&& !json1.getString("batchNo").equals(fileNo)) {
+							fileNo = json1.getString("batchNo");
+							NetdiskFile cNetdiskFile = this.netdiskFileService
+									.findNetdiskFileByName(s, null,
+											NetdiskFile.TYPE_FOLDER);
+							// 如果不存在应该文件就新建
+							if (cNetdiskFile == null) {
+								netdiskFile.setName(s);
+							} else {
+								// 如果存在就在名称后加(1)
+								netdiskFile.setName(s + "(1)");
+							}
+							netdiskFile.setStatus(BCConstants.STATUS_ENABLED);
+							netdiskFile.setType(NetdiskFile.TYPE_FOLDER);
+							netdiskFile.setSize(new Long(0));
+							SystemContext context = this.getSystyemContext();
+							// 设置创建人信息
+							netdiskFile.setFileDate(Calendar.getInstance());
+							netdiskFile.setAuthor(context.getUserHistory());
+							pNetdiskFile = this.netdiskFileService
+									.save(netdiskFile);
+						} else {
+							// 下一层目录
+							// 判断同一级目录下是否存在相同文件
+							NetdiskFile gNetdiskFile = this.netdiskFileService
+									.findNetdiskFileByName(s,
+											pNetdiskFile.getId(), null);
+							// 如果gNetdiskFile等于空就创建新的文件夹
+							if (gNetdiskFile == null) {
+								netdiskFile.setName(s);
+								netdiskFile
+										.setStatus(BCConstants.STATUS_ENABLED);
+								// 判断是否为文件夹类型
+								if (json1.getBoolean("isDir")) {
+									netdiskFile
+											.setType(NetdiskFile.TYPE_FOLDER);
+									netdiskFile.setSize(new Long(0));
+								} else {
+									netdiskFile.setType(NetdiskFile.TYPE_FILE);
+									System.out.println("文件名：" + relativePath+"  "+json1.getBoolean("isDir"));
+									netdiskFile.setExt(s.substring(s
+											.lastIndexOf(".")));
+									netdiskFile.setSize(json1.getLong("size"));
+									netdiskFile
+											.setPath(json1.getString("path"));
+								}
+								SystemContext context = this
+										.getSystyemContext();
+								// 设置创建人信息
+								netdiskFile.setFileDate(Calendar.getInstance());
+								netdiskFile.setAuthor(context.getUserHistory());
+								pNetdiskFile = this.netdiskFileService
+										.save(netdiskFile);
+							} else {
+								pNetdiskFile = gNetdiskFile;
+							}
+
+						}
+					}
+					System.out.println(json1.getBoolean("isDir"));
+					System.out.println("1@@ " + json1.getString("batchNo"));
+
+					// String name = json1.getString("name");
+					// netdiskFile.setName(name);
+					// if (!json1.getBoolean("isDir")) {
+					// netdiskFile.setPath(json1.getString("path"));
+					// netdiskFile.setSize(json1.getLong("size"));
+					// }
+					// netdiskFile.setExt(name.substring(name.lastIndexOf(".")));
+				}
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		jsonObject.put("success", true);
+		jsonObject.put("msg", "上传成功！");
+		this.json = jsonObject.toString();
+		return "json";
+
+	}
+
 	// 整理
 	public String clearUp() {
 		Map<String, Object> updateInfo = new HashMap<String, Object>();

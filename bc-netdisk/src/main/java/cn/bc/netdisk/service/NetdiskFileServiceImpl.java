@@ -16,13 +16,17 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 		implements NetdiskFileService {
 	// private static Log logger = LogFactory.getLog(NetdiskServiceImpl.class);
 
-	@SuppressWarnings("unused")
 	private NetdiskFileDao netdiskFileDao;
 
 	@Autowired
 	public void setNetdiskFileDao(NetdiskFileDao netdiskFileDao) {
 		this.netdiskFileDao = netdiskFileDao;
 		this.setCrudDao(netdiskFileDao);
+	}
+
+	public NetdiskFile findNetdiskFileByName(String name, Long pid,
+			Object typeFolder) {
+		return this.netdiskFileDao.findNetdiskFileByName(name, pid, typeFolder);
 	}
 
 }

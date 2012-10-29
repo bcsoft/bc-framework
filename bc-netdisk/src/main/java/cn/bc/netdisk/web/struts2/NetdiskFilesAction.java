@@ -180,7 +180,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 							"shangchuanwenjian")
 					.addMenuItem(
 							"<div style=\"position:relative;width:100%;height:100%;\">上传文件夹<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFolder\" name=\"uploadFolder\" title=\"点击上传文件夹\""
-									+ "multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+									+ "multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfolder&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
 									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
 									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
 							"shangchuanwenjianjia")

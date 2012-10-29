@@ -29,8 +29,11 @@
 		<!-- 共享 -->
 		<action name="share" class="netdiskFileAction" method="share">
 		</action>
-		<!-- 上传 -->
+		<!-- 上传 文件 -->
 		<action name="uploadfile" class="netdiskFileAction" method="uploadfile">
+		</action>
+		<!-- 上传 文件夹 -->
+		<action name="uploadfolder" class="netdiskFileAction" method="uploadfolder">
 		</action>
 	</package>
 
