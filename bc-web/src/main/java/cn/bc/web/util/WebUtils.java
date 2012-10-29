@@ -283,6 +283,47 @@ public class WebUtils implements ServletContextAware {
 		return client;
 	}
 
+	// 判断客户端的ip是否是外网访问IP
+	public static boolean isOuterNet(String ip) {
+		return !(ip.startsWith("192.168.") || ip.startsWith("10.0.")
+				|| ip.startsWith("127.0.") || ip.startsWith("localhost"));
+	}
+
+	/**
+	 * 判断浏览器的用户代理是否是移动设备
+	 * 
+	 * @param userAgent
+	 * @return
+	 */
+	public static boolean isMobile(String userAgent) {
+		if (userAgent == null || userAgent.isEmpty())
+			return false;
+
+		String ua = userAgent.toLowerCase();
+		for (String m : mobiles) {
+			if (ua.indexOf(m) != -1)
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * 移动设备标识符
+	 */
+	private static String[] mobiles = new String[] { "android", "x11",
+			"iphone", "iPod", "webos", "midp", "j2me", "avant", "docomo",
+			"novarra", "palmos", "palmsource", "240x320", "opwv", "chtml",
+			"pda", "windows ce", "mmp/", "blackberry", "mib/", "symbian",
+			"wireless", "nokia", "hand", "mobi", "phone", "cdm", "up.b",
+			"audio", "sie-", "sec-", "samsung", "htc", "mot-", "mitsu",
+			"sagem", "sony", "alcatel", "lg", "eric", "vx", "NEC", "philips",
+			"mmm", "xx", "panasonic", "sharp", "wap", "sch", "rover", "pocket",
+			"benq", "java", "pt", "pg", "vox", "amoi", "bird", "compal", "kg",
+			"voda", "sany", "kdd", "dbt", "sendo", "sgh", "gradi", "jb",
+			"dddi", "moto", "incognito", "webmate", "dream", "cupcake",
+			"s8000", "bada", "googlebot-mobile" };
+
 	/**
 	 * 获取Server IP地址信息
 	 * 
