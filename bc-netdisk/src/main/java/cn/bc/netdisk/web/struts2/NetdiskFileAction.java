@@ -137,7 +137,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	// 上传文件夹
 	public String uploadfolder() {
 		// 文件夹信息
-		String fileNo = null;// 标识是否同一文件夹的文件
 
 		if (this.fileInfo != null && this.fileInfo.length() > 0) {
 			JSONArray jsons;
@@ -159,39 +158,46 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 						NetdiskFile netdiskFile = new NetdiskFile();
 						// 如果pNetdiskFile为空则为第一层目录
 						// 如果fileNo与batchNo相等则证明是同一批的文件夹的文件
-						if (pNetdiskFile == null
-								&& !json1.getString("batchNo").equals(fileNo)) {
-							fileNo = json1.getString("batchNo");
+						if (pNetdiskFile == null) {
 							NetdiskFile cNetdiskFile = this.netdiskFileService
 									.findNetdiskFileByName(s, null,
-											NetdiskFile.TYPE_FOLDER);
+											NetdiskFile.TYPE_FOLDER,
+											json1.getString("batchNo"));
 							// 如果不存在应该文件就新建
 							if (cNetdiskFile == null) {
 								netdiskFile.setName(s);
+								netdiskFile
+										.setStatus(BCConstants.STATUS_ENABLED);
+								netdiskFile.setType(NetdiskFile.TYPE_FOLDER);
+								netdiskFile.setSize(new Long(0));
+								netdiskFile.setBatchNo(json1
+										.getString("batchNo"));
+								SystemContext context = this
+										.getSystyemContext();
+								// 设置创建人信息
+								netdiskFile.setFileDate(Calendar.getInstance());
+								netdiskFile.setAuthor(context.getUserHistory());
+								pNetdiskFile = this.netdiskFileService
+										.save(netdiskFile);
+
 							} else {
-								// 如果存在就在名称后加(1)
-								netdiskFile.setName(s + "(1)");
+								pNetdiskFile = cNetdiskFile;
 							}
-							netdiskFile.setStatus(BCConstants.STATUS_ENABLED);
-							netdiskFile.setType(NetdiskFile.TYPE_FOLDER);
-							netdiskFile.setSize(new Long(0));
-							SystemContext context = this.getSystyemContext();
-							// 设置创建人信息
-							netdiskFile.setFileDate(Calendar.getInstance());
-							netdiskFile.setAuthor(context.getUserHistory());
-							pNetdiskFile = this.netdiskFileService
-									.save(netdiskFile);
 						} else {
 							// 下一层目录
 							// 判断同一级目录下是否存在相同文件
 							NetdiskFile gNetdiskFile = this.netdiskFileService
 									.findNetdiskFileByName(s,
-											pNetdiskFile.getId(), null);
+											pNetdiskFile.getId(), null,
+											pNetdiskFile.getBatchNo());
 							// 如果gNetdiskFile等于空就创建新的文件夹
 							if (gNetdiskFile == null) {
 								netdiskFile.setName(s);
 								netdiskFile
 										.setStatus(BCConstants.STATUS_ENABLED);
+								netdiskFile.setBatchNo(json1
+										.getString("batchNo"));
+								netdiskFile.setPid(pNetdiskFile.getId());
 								// 判断是否为文件夹类型
 								if (json1.getBoolean("isDir")) {
 									netdiskFile
@@ -199,9 +205,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 									netdiskFile.setSize(new Long(0));
 								} else {
 									netdiskFile.setType(NetdiskFile.TYPE_FILE);
-									System.out.println("文件名：" + relativePath+"  "+json1.getBoolean("isDir"));
-									netdiskFile.setExt(s.substring(s
-											.lastIndexOf(".")));
+									if (s.indexOf(".") != -1) {
+										netdiskFile.setExt(s.substring(s
+												.lastIndexOf(".")));
+									}
 									netdiskFile.setSize(json1.getLong("size"));
 									netdiskFile
 											.setPath(json1.getString("path"));
@@ -219,16 +226,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 						}
 					}
-					System.out.println(json1.getBoolean("isDir"));
-					System.out.println("1@@ " + json1.getString("batchNo"));
-
-					// String name = json1.getString("name");
-					// netdiskFile.setName(name);
-					// if (!json1.getBoolean("isDir")) {
-					// netdiskFile.setPath(json1.getString("path"));
-					// netdiskFile.setSize(json1.getLong("size"));
-					// }
-					// netdiskFile.setExt(name.substring(name.lastIndexOf(".")));
 				}
 
 			} catch (JSONException e) {

@@ -25,7 +25,6 @@ import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
-import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
@@ -105,26 +104,26 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("f.id", "id"));
-		columns.add(new TextColumn4MapKey("f.status_", "status",
-				getText("netdisk.status"), 40).setSortable(true)
-				.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		columns.add(new TextColumn4MapKey("f.order_", "orderNo",
-				getText("netdisk.order"), 80).setSortable(true));
+//		columns.add(new TextColumn4MapKey("f.status_", "status",
+//				getText("netdisk.status"), 40).setSortable(true)
+//				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("f.name", "name",
 				getText("netdisk.name")).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("f2.name", "folder",
+				getText("netdisk.folder"), 80));
 		columns.add(new TextColumn4MapKey("f.size_", "size",
 				getText("netdisk.size"), 80).setUseTitleFromLabel(true)
 				.setValueFormater(new FileSizeFormater()));
 		columns.add(new TextColumn4MapKey("a.actor_name", "actor_name",
 				getText("netdisk.author"), 80));
-		columns.add(new TextColumn4MapKey("f2.name", "folder",
-				getText("netdisk.folder"), 80));
+		columns.add(new TextColumn4MapKey("f.order_", "orderNo",
+				getText("netdisk.order"), 80).setSortable(true));
 		columns.add(new TextColumn4MapKey("f.file_date", "file_date",
 				getText("netdisk.fileDate"), 120)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("f.modified_date", "modified_date",
-				getText("netdisk.modifiedDate"), 120)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		// columns.add(new TextColumn4MapKey("f.modified_date", "modified_date",
+		// getText("netdisk.modifiedDate"), 120)
+		// .setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("path", "path"));
 		columns.add(new HiddenColumn4MapKey("pid", "pid"));
 		return columns;
@@ -147,7 +146,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(900).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(730).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -239,6 +238,10 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 	protected String getHtmlPageJs() {
 		return this.getContextPath() + "/bc/netdiskFile/view.js,"
 				+ this.getContextPath() + "/bc/netdiskFile/form.js";
+	}
+	/** 页面加载后调用的js初始化方法 */
+	protected String getHtmlPageInitMethod() {
+		return "bc.netdiskFileView.init";
 	}
 
 	/**

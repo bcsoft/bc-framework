@@ -19,7 +19,10 @@ public interface NetdiskFileService extends CrudService<NetdiskFile> {
 	 *            如果为null时忽略类型
 	 * @param pid
 	 *            如果为null时忽略pid
+	 * @param batchNo
+	 *            批号
 	 * @return
 	 */
-	NetdiskFile findNetdiskFileByName(String name, Long pid, Object typeFolder);
+	NetdiskFile findNetdiskFileByName(String name, Long pid, Object typeFolder,
+			String batchNo);
 }

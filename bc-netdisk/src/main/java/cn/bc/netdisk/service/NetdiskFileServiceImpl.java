@@ -25,8 +25,9 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 	}
 
 	public NetdiskFile findNetdiskFileByName(String name, Long pid,
-			Object typeFolder) {
-		return this.netdiskFileDao.findNetdiskFileByName(name, pid, typeFolder);
+			Object typeFolder, String batchNo) {
+		return this.netdiskFileDao.findNetdiskFileByName(name, pid, typeFolder,
+				batchNo);
 	}
 
 }

@@ -37,6 +37,7 @@ public class NetdiskFile extends FileEntityImpl {
 	private String orderNo;// 排序号
 	private String path;// 保存路径 : 相对于[NETDISK]目录下的子路径,开头不要带符号/,仅适用于文件类型'
 	private int editRole;// 编辑权限 : 0-编辑者可修改,1-只有拥有者可修改
+	private String batchNo;// 批号:标识是否是上传文件夹时到一批上传的文件
 
 	@Column(name = "STATUS_")
 	public int getStatus() {
@@ -114,4 +115,14 @@ public class NetdiskFile extends FileEntityImpl {
 	public void setEditRole(int editRole) {
 		this.editRole = editRole;
 	}
+
+	@Column(name = "BATCH_NO")
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+
 }

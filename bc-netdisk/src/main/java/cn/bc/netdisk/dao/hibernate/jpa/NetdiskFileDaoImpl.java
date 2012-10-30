@@ -20,24 +20,26 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	public NetdiskFile findNetdiskFileByName(String name, Long pid,
-			Object typeFolder) {
+			Object typeFolder, String batchNo) {
 
 		NetdiskFile netdiskFile = null;
 		List<?> list = null;
 		if (typeFolder == null && pid != null) {
-			String hql = "select n from NetdiskFile n where n.name=? and n.pid=?";
-			list = this.getJpaTemplate().find(hql, new Object[] { name, pid });
+			String hql = "select n from NetdiskFile n where n.name=? and n.pid=? and n.batchNo=?";
+			list = this.getJpaTemplate().find(hql,
+					new Object[] { name, pid, batchNo });
 		} else if (pid == null && typeFolder != null) {
-			String hql = "select n from NetdiskFile n where n.name=? and n.type=?";
+			String hql = "select n from NetdiskFile n where n.name=? and n.type=? and n.batchNo=?";
 			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, typeFolder });
+					new Object[] { name, typeFolder, batchNo });
 		} else if (pid == null && typeFolder == null) {
-			String hql = "select n from NetdiskFile n where n.name=?";
-			list = this.getJpaTemplate().find(hql, new Object[] { name });
-		} else {
-			String hql = "select n from NetdiskFile n where n.name=? and n.pid=? and n.type=?";
+			String hql = "select n from NetdiskFile n where n.name=? and n.batchNo=?";
 			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, pid, typeFolder });
+					new Object[] { name, batchNo });
+		} else {
+			String hql = "select n from NetdiskFile n where n.name=? and n.pid=? and n.type=? and n.batchNo=?";
+			list = this.getJpaTemplate().find(hql,
+					new Object[] { name, pid, typeFolder, batchNo });
 		}
 		if (list.size() == 1) {
 			netdiskFile = (NetdiskFile) list.get(0);
