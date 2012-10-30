@@ -28,6 +28,7 @@ import cn.bc.identity.domain.Actor;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.HtmlPage;
@@ -136,12 +137,13 @@ public class SelectUsersAction extends
 		columns.add(new TextColumn4MapKey("h.actor_name", "actor_name",
 				getText("user.name"), 40).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("user.code"), 40).setSortable(true)
-				.setUseTitleFromLabel(true));
+		// columns.add(new TextColumn4MapKey("a.code", "code",
+		// getText("user.code"), 40).setSortable(true)
+		// .setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("h.upper_name", "upper_name",
 				getText("user.department"), 40).setSortable(true)
 				.setUseTitleFromLabel(true));
+		columns.add(new HiddenColumn4MapKey("code", "code"));
 		return columns;
 	}
 
