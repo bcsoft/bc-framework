@@ -653,13 +653,13 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	 */
 	private Respond getUserRespond() {
 		Respond oneRespond;
-		SystemContext context = this.getSystyemContext();
-		long userId = context.getUserHistory().getId();
+		// SystemContext context = this.getSystyemContext();
+		// long userId = context.getUserHistory().getId();
 		Set<Respond> respond = this.getE().getResponds();
 		Iterator<Respond> r = respond.iterator();
 		while (r.hasNext()) {
 			oneRespond = r.next();
-			if (userId == oneRespond.getAuthor().getId()) {
+			if (userId.equals(oneRespond.getAuthor().getId())) {
 				return oneRespond;
 
 			}
