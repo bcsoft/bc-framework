@@ -35,6 +35,9 @@
 		<!-- 上传 文件夹 -->
 		<action name="uploadfolder" class="netdiskFileAction" method="uploadfolder">
 		</action>
+		<!-- 删除 -->
+		<action name="delete" class="netdiskFileAction" method="delete">
+		</action>
 	</package>
 
 </struts>

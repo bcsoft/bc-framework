@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
@@ -38,6 +39,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String order;// 排序号
 	public String pid;// 所属文件夹Id
 	public String folder;// 所属文件夹名
+	public boolean isRelevanceDelete = false;// 是否删除文件夹下的所有文件
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -72,7 +74,8 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String createDialog() {
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
-
+		NetdiskFile e = this.netdiskFileService.load(this.getId());
+		this.setE(e);
 		if (dialogType.equals("zhengliwenjian")) {
 			return "zhengliwenjian";
 		} else {
@@ -113,7 +116,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 					netdiskFile.setName(name);
 					netdiskFile.setSize(json1.getLong("size"));
 					netdiskFile.setPath(json1.getString("path"));
-					netdiskFile.setExt(name.substring(name.lastIndexOf(".")));
+					if (name.indexOf(".") != -1) {
+						netdiskFile
+								.setExt(name.substring(name.lastIndexOf(".")));
+					}
 				}
 
 			} catch (JSONException e) {
@@ -251,4 +257,36 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		this.json = jsonObject.toString();
 		return "json";
 	}
+
+	// 删除
+	public String delete() {
+		try {
+			if (this.getIds() != null && this.getIds().length() > 0) {
+				Long[] ids = cn.bc.core.util.StringUtils
+						.stringArray2LongArray(this.getIds().split(","));
+				this.netdiskFileService.delete(ids, isRelevanceDelete);
+			} else {
+				this.netdiskFileService.delete(this.getId(), isRelevanceDelete);
+			}
+			jsonObject.put("success", true);
+			jsonObject.put("msg", "删除成功！");
+		} catch (DataIntegrityViolationException e) {
+			jsonObject.put("msg", getDeleteExceptionMsg(e));
+			jsonObject.put("e", e.getClass().getSimpleName());
+			jsonObject.put("success", false);
+		}
+		this.json = jsonObject.toString();
+		return "json";
+	}
+
+	// 提示文件下存在子文件不能删除
+	@Override
+	protected String getDeleteExceptionMsg(Exception e) {
+		//
+		if (e instanceof DataIntegrityViolationException) {
+			return "该文件夹下存在子文件！不能删除！";
+		}
+		return super.getDeleteExceptionMsg(e);
+	}
+
 }

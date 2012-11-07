@@ -70,7 +70,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.order_,f.name,f.size_,a.actor_name,f.file_date,f.modified_date");
-		sql.append(",f.path,f.pid,f2.name folder from bc_netdisk_file f");
+		sql.append(",f.path,f.pid,f2.name folder,f.type_ from bc_netdisk_file f");
 		sql.append(" inner join bc_identity_actor_history a on a.id=f.author_id");
 		sql.append(" left join bc_netdisk_file f2 on f.pid = f2.id");
 		sqlObject.setSql(sql.toString());
@@ -94,6 +94,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 				map.put("path", rs[i++]);
 				map.put("pid", rs[i++]);
 				map.put("folder", rs[i++]);
+				map.put("type", rs[i++]);
 				return map;
 			}
 		});
@@ -104,9 +105,9 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("f.id", "id"));
-//		columns.add(new TextColumn4MapKey("f.status_", "status",
-//				getText("netdisk.status"), 40).setSortable(true)
-//				.setValueFormater(new KeyValueFormater(this.getStatuses())));
+		// columns.add(new TextColumn4MapKey("f.status_", "status",
+		// getText("netdisk.status"), 40).setSortable(true)
+		// .setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("f.name", "name",
 				getText("netdisk.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f2.name", "folder",
@@ -126,6 +127,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		// .setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("path", "path"));
 		columns.add(new HiddenColumn4MapKey("pid", "pid"));
+		columns.add(new HiddenColumn4MapKey("type", "type"));
 		return columns;
 	}
 
@@ -192,7 +194,8 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 					.setIcon("ui-icon-folder-collapsed").setText("整理")
 					.setClick("bc.netdiskFileView.clearUp"));
 			// 删除
-			tb.addButton(this.getDefaultDeleteToolbarButton());
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
+					.setText("删除").setClick("bc.netdiskFileView.remove"));
 			// 预览
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 					.setText("预览").setClick("bc.netdiskFileView.preview"));
@@ -201,9 +204,6 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 					.addMenuItem("下载", "xiazai")
 					.addMenuItem("新建文件夹", "xinjianwenjianjia")
 					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
-
-			// // 编辑按钮
-			// tb.addButton(this.getDefaultEditToolbarButton());
 		} else {
 			tb.addButton(this.getDefaultOpenToolbarButton());
 		}
@@ -239,6 +239,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		return this.getContextPath() + "/bc/netdiskFile/view.js,"
 				+ this.getContextPath() + "/bc/netdiskFile/form.js";
 	}
+
 	/** 页面加载后调用的js初始化方法 */
 	protected String getHtmlPageInitMethod() {
 		return "bc.netdiskFileView.init";

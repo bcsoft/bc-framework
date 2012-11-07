@@ -25,4 +25,20 @@ public interface NetdiskFileService extends CrudService<NetdiskFile> {
 	 */
 	NetdiskFile findNetdiskFileByName(String name, Long pid, Object typeFolder,
 			String batchNo);
+
+	/**
+	 * 删除文件
+	 * 
+	 * @param id
+	 * @param isRelevanceDelete
+	 */
+	void delete(Long id, boolean isRelevanceDelete);
+
+	/**
+	 * 批量删除文件
+	 * 
+	 * @param ids
+	 * @param isRelevanceDelete
+	 */
+	void delete(Long[] ids, boolean isRelevanceDelete);
 }

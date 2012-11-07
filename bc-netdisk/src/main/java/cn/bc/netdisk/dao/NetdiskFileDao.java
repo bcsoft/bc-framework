@@ -1,5 +1,7 @@
 package cn.bc.netdisk.dao;
 
+import java.io.Serializable;
+
 import cn.bc.core.dao.CrudDao;
 import cn.bc.netdisk.domain.NetdiskFile;
 
@@ -24,4 +26,12 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 */
 	NetdiskFile findNetdiskFileByName(String name, Long pid, Object typeFolder,
 			String batchNo);
+
+	/**
+	 * 通过id查找指定文件夹以及指定文件夹以下的所有文件的id
+	 * 
+	 * @param id 文件夹id
+	 * @return
+	 */
+	Serializable[] getChildIdsById(Long id);
 }
