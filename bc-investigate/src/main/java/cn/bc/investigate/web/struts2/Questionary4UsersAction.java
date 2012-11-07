@@ -338,6 +338,9 @@ public class Questionary4UsersAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
+		// 查看按钮
+		tb.addButton(this.getDefaultOpenToolbarButton());
+
 		// // 如果是管理员,可以看到状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(
 				this.getResponseValue(), "isResponse", 1,
