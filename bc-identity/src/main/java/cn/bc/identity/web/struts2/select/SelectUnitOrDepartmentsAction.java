@@ -52,7 +52,7 @@ public class SelectUnitOrDepartmentsAction extends
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：状态|创建时间
-		return new OrderCondition("a.status_", Direction.Asc);
+		return new OrderCondition("a.status_", Direction.Asc).add("a.order_",Direction.Asc);
 	}
 
 	@Override

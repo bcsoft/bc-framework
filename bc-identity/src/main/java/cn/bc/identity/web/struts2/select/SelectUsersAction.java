@@ -70,7 +70,7 @@ public class SelectUsersAction extends
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：状态|创建时间
 		return new OrderCondition("a.status_", Direction.Asc).add("a.order_",
-				Direction.Desc).add("h.create_date", Direction.Desc);
+				Direction.Asc);
 	}
 
 	@Override
