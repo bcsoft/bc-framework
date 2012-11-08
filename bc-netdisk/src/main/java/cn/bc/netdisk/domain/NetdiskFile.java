@@ -3,8 +3,14 @@
  */
 package cn.bc.netdisk.domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import cn.bc.BCConstants;
@@ -38,6 +44,7 @@ public class NetdiskFile extends FileEntityImpl {
 	private String path;// 保存路径 : 相对于[NETDISK]目录下的子路径,开头不要带符号/,仅适用于文件类型'
 	private int editRole;// 编辑权限 : 0-编辑者可修改,1-只有拥有者可修改
 	private String batchNo;// 批号:标识是否是上传文件夹时到一批上传的文件
+	private Set<NetdiskShare> fileVisitors;// 遗失证照
 
 	@Column(name = "STATUS_")
 	public int getStatus() {
@@ -123,6 +130,16 @@ public class NetdiskFile extends FileEntityImpl {
 
 	public void setBatchNo(String batchNo) {
 		this.batchNo = batchNo;
+	}
+
+	@OneToMany(mappedBy = "netdiskFile", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy(value = "orderNo asc")
+	public Set<NetdiskShare> getFileVisitors() {
+		return fileVisitors;
+	}
+
+	public void setFileVisitors(Set<NetdiskShare> fileVisitors) {
+		this.fileVisitors = fileVisitors;
 	}
 
 }

@@ -78,7 +78,6 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 	public void delete(Long[] ids, boolean isRelevanceDelete) {
 		for (Long id : ids) {
 			NetdiskFile netdiskFile = this.netdiskFileDao.load(id);
-			System.out.println("id: "+id);
 			if (netdiskFile.getType() == NetdiskFile.TYPE_FOLDER
 					&& isRelevanceDelete) {
 				this.delete(id, true);

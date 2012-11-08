@@ -2,7 +2,9 @@ package cn.bc.netdisk.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,9 +16,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
 import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
@@ -33,6 +38,7 @@ import cn.bc.web.ui.json.Json;
 public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	private static final long serialVersionUID = 1L;
 	private NetdiskFileService netdiskFileService;
+	private ActorService actorService;
 	public String fileInfo;// 文件信息
 	public String dialogType;// 新建对话框的类型
 	public String title;// 文件名
@@ -40,11 +46,18 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String pid;// 所属文件夹Id
 	public String folder;// 所属文件夹名
 	public boolean isRelevanceDelete = false;// 是否删除文件夹下的所有文件
+	public int editRole;// 共享设置
+	public String visitors;// 访问者
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
 		this.setCrudService(netdiskFileService);
 		this.netdiskFileService = netdiskFileService;
+	}
+
+	@Autowired
+	public void setActorService(ActorService actorService) {
+		this.actorService = actorService;
 	}
 
 	@Override
@@ -82,20 +95,6 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			return "gongxiang";
 		}
 
-	}
-
-	// 共享
-	public String share() {
-		// 初始化E
-		this.setE(createEntity());
-		// 初始化表单的其他配置
-		try {
-			this.initForm(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		this.afterCreate(this.getE());
-		return "form";
 	}
 
 	public String json;
@@ -289,4 +288,69 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		return super.getDeleteExceptionMsg(e);
 	}
 
+	// 共享
+	public String share() {
+		// 获取原对象
+		NetdiskFile netdiskFile = this.netdiskFileService.load(this.getId());
+		// 整理访问者
+
+		try {
+			Set<NetdiskShare> netdiskShares = null;
+			if (this.visitors != null && this.visitors.length() > 0) {
+				netdiskShares = new LinkedHashSet<NetdiskShare>();
+				NetdiskShare resource;
+				JSONArray jsons = new JSONArray(this.visitors);
+				JSONObject json;
+				for (int i = 0; i < jsons.length(); i++) {
+					json = jsons.getJSONObject(i);
+					resource = new NetdiskShare();
+					if (json.has("id"))
+						resource.setId(json.getLong("id"));
+					resource.setOrderNo(i);
+					resource.setNetdiskFile(netdiskFile);
+					resource.setRole(json.getString("role"));
+					resource.setAid(Long.valueOf(json.getString("aid")));
+					netdiskShares.add(resource);
+				}
+			}
+			if (netdiskFile.getFileVisitors() != null) {
+				netdiskFile.getFileVisitors().clear();
+				netdiskFile.getFileVisitors().addAll(netdiskShares);
+
+			} else {
+				netdiskFile.setFileVisitors(netdiskShares);
+			}
+		} catch (JSONException e) {
+			logger.error(e.getMessage(), e);
+			e.printStackTrace();
+		}
+		// 共享设置
+		netdiskFile.setEditRole(editRole);
+		this.netdiskFileService.save(netdiskFile);
+		jsonObject.put("success", true);
+		jsonObject.put("msg", "共享成功！");
+
+		this.json = jsonObject.toString();
+		return "json";
+	}
+
+	// 获取访问者的姓名
+	public String getVisitorName(Long aid) {
+		String name = null;
+		Actor actor = this.actorService.load(aid);
+		if (actor != null) {
+			name = actor.getName();
+		}
+		return name;
+	}
+
+	public boolean haveAuthority(String role, int i) {
+		boolean authority = false;
+		String number = null;
+		number = role.substring(i, i + 1);
+		if (number.endsWith("1")) {
+			authority = true;
+		}
+		return authority;
+	}
 }
