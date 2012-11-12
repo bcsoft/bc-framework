@@ -112,3 +112,56 @@ ALTER TABLE BC_NETDISK_VISIT ADD CONSTRAINT BCFK_ND_FILE_VISIT FOREIGN KEY (PID)
 	REFERENCES BC_NETDISK_FILE (ID) ON UPDATE NO ACTION ON DELETE CASCADE;
 ALTER TABLE BC_NETDISK_VISIT ADD CONSTRAINT BCFK_ND_VISIT_AID FOREIGN KEY (AID)
 	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
+
+	
+	
+	
+	
+	
+	
+	
+	--##网络硬盘模块的 postgresql 自定义函数和存储过程##
+
+
+--通过当前文件夹id查找指定文件夹以及指定文件夹以下的所有文件的id
+--参数fid文件夹id
+CREATE OR REPLACE FUNCTION getMyselfAndChildFileId(fid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id = fid union select f.* from bc_netdisk_file f,n where f.pid=n.id) 
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
+--通过当前文件id查找指定文件以及指定文件以上的所有文件夹的id
+--参数fid文件id
+CREATE OR REPLACE FUNCTION getMyselfAndParentsFileId(fid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id = fid union select f.* from bc_netdisk_file f,n where f.id=n.pid) 
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--通过用户id查找其可以访问指定文件夹以及指定文件以下的所有文件的id
+--参数uid用户id
+CREATE OR REPLACE FUNCTION getUserSharFileId(uid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id in(select pid from bc_netdisk_share where aid = uid) union select f.* from bc_netdisk_file f,n where f.pid=n.id)
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
