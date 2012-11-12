@@ -3,6 +3,8 @@
  */
 package cn.bc.netdisk.domain;
 
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,6 +28,9 @@ public class NetdiskShare extends EntityImpl {
 						// 用4为数字表示(wrfd:w-编辑,r-查看,f-评论,d-下载),每位数的值为0或1,1代表拥有此权限'
 	private Long aid;// 访问人id
 	private int orderNo;// 排序号
+	private Calendar fileDate;// 创建时间
+	private Long authorId;// 添加人
+
 	private NetdiskFile netdiskFile;// 网络硬盘文件
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -63,5 +68,37 @@ public class NetdiskShare extends EntityImpl {
 	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
 	}
+
+	@Column(name = "FILE_DATE")
+	public Calendar getFileDate() {
+		return fileDate;
+	}
+
+	public void setFileDate(Calendar fileDate) {
+		this.fileDate = fileDate;
+	}
+
+	@Column(name = "AUTHOR_ID")
+	public Long getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
+	}
+
+	// @ManyToOne(fetch = FetchType.EAGER, optional = false)
+	// @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+	// public ActorHistory getAuthor() {
+	// return author;
+	// }
+	//
+	// public void setAuthor(ActorHistory author) {
+	// this.author = author;
+	// }
+	//
+	// public void setAuthor(Long author) {
+	// this.author = author;
+	// }
 
 }

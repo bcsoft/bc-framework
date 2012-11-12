@@ -30,8 +30,27 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	/**
 	 * 通过id查找指定文件夹以及指定文件夹以下的所有文件的id
 	 * 
-	 * @param id 文件夹id
+	 * @param id
+	 *            文件夹id
 	 * @return
 	 */
 	Serializable[] getChildIdsById(Long id);
+
+	/**
+	 * 获取当前的文件和父级文件id
+	 * 
+	 * @param id
+	 *            当前文件Id
+	 * @return
+	 */
+	Serializable[] getMyselfAndParentsFileId(Long id);
+
+	/**
+	 * 通过用户id查找其可以访问指定文件夹以及指定文件以下的所有文件的id
+	 * 
+	 * @param id
+	 *            用户id
+	 * @return
+	 */
+	Serializable[] getUserSharFileId(Long id);
 }

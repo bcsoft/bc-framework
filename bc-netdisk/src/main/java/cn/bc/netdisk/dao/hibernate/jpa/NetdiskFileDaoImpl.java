@@ -72,15 +72,42 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 	}
 
 	public Serializable[] getChildIdsById(Long id) {
-		String sql = "with recursive n as("
-				+ " select * from bc_netdisk_file where id =" + id + " union"
-				+ " select f.* from bc_netdisk_file f,n where f.pid=n.id"
-				+ " ) select string_agg(id||'',',') from n";
+		// String sql = "with recursive n as("
+		// + " select * from bc_netdisk_file where id =" + id + " union"
+		// + " select f.* from bc_netdisk_file f,n where f.pid=n.id"
+		// + " ) select string_agg(id||'',',') from n";
+
+		String sql = "select getMyselfAndChildFileId(" + id + ")";
 		logger.debug("sql" + sql + " id: " + id);
 		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
-		String ids = fileIds.get(0).get("string_agg").toString();
+		String ids = fileIds.get(0).get("getMyselfAndChildFileId").toString();
 		return cn.bc.core.util.StringUtils
 				.stringArray2LongArray(ids.split(","));
 
+	}
+
+	public Serializable[] getMyselfAndParentsFileId(Long id) {
+		// String sql = "with recursive n as("
+		// + " select * from bc_netdisk_file where id =" + id + " union"
+		// + " select f.* from bc_netdisk_file f,n where f.id=n.pid"
+		// + " ) select string_agg(id||'',',') from n";
+		String sql = "select getMyselfAndParentsFileId(" + id + ")";
+		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
+		String ids = fileIds.get(0).get("getMyselfAndParentsFileId").toString();
+		return cn.bc.core.util.StringUtils
+				.stringArray2LongArray(ids.split(","));
+
+	}
+
+	public Serializable[] getUserSharFileId(Long id) {
+		String sql = "select getUserSharFileId(" + id + ")";
+		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
+		if (fileIds.get(0).get("getUserSharFileId") == null) {
+			return null;
+		} else {
+			String ids = fileIds.get(0).get("getUserSharFileId").toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
+					.split(","));
+		}
 	}
 }

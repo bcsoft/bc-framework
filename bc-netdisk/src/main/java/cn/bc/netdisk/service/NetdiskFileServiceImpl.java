@@ -34,12 +34,6 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 				batchNo);
 	}
 
-	@Override
-	public void delete(Serializable[] ids) {
-		// TODO Auto-generated method stub
-		super.delete(ids);
-	}
-
 	public void delete(Long id, boolean isRelevanceDelete) {
 		NetdiskFile netdiskFile = this.netdiskFileDao.load(id);
 		// 如果是文件就删除物理文件
@@ -85,5 +79,13 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 				this.delete(id, false);
 			}
 		}
+	}
+
+	public Serializable[] getMyselfAndParentsFileId(Long id) {
+		return this.netdiskFileDao.getMyselfAndParentsFileId(id);
+	}
+
+	public Serializable[] getUserSharFileId(Long id) {
+		return this.netdiskFileDao.getUserSharFileId(id);
 	}
 }

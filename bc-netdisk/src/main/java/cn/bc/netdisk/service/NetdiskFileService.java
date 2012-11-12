@@ -1,5 +1,7 @@
 package cn.bc.netdisk.service;
 
+import java.io.Serializable;
+
 import cn.bc.core.service.CrudService;
 import cn.bc.netdisk.domain.NetdiskFile;
 
@@ -41,4 +43,20 @@ public interface NetdiskFileService extends CrudService<NetdiskFile> {
 	 * @param isRelevanceDelete
 	 */
 	void delete(Long[] ids, boolean isRelevanceDelete);
+
+	/**
+	 * 获取当前的文件和父级文件id
+	 * 
+	 * @param id当前文件的id
+	 * @return
+	 */
+	Serializable[] getMyselfAndParentsFileId(Long id);
+
+	/**
+	 * 通过用户id查找其可以访问指定文件夹以及指定文件以下的所有文件的id
+	 * 
+	 * @param id用户id
+	 * @return
+	 */
+	Serializable[] getUserSharFileId(Long id);
 }

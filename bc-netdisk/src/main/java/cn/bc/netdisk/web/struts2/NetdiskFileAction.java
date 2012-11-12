@@ -1,7 +1,9 @@
 package cn.bc.netdisk.web.struts2;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +18,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.util.DateUtils;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
+import cn.bc.identity.service.ActorHistoryService;
 import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
@@ -39,6 +44,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	private static final long serialVersionUID = 1L;
 	private NetdiskFileService netdiskFileService;
 	private ActorService actorService;
+	private ActorHistoryService actorHistoryService;
 	public String fileInfo;// 文件信息
 	public String dialogType;// 新建对话框的类型
 	public String title;// 文件名
@@ -48,6 +54,8 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public boolean isRelevanceDelete = false;// 是否删除文件夹下的所有文件
 	public int editRole;// 共享设置
 	public String visitors;// 访问者
+	public boolean isEditRole = false;// 是否编辑共享设置(只有拥有都才有编辑)
+	public boolean isEditVisitorsAuthority = false;// 编辑访问者权限
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -58,6 +66,11 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	@Autowired
 	public void setActorService(ActorService actorService) {
 		this.actorService = actorService;
+	}
+
+	@Autowired
+	public void setActorHistoryService(ActorHistoryService actorHistoryService) {
+		this.actorHistoryService = actorHistoryService;
 	}
 
 	@Override
@@ -85,6 +98,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	}
 
 	public String createDialog() {
+		SystemContext context = this.getSystyemContext();
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
 		NetdiskFile e = this.netdiskFileService.load(this.getId());
@@ -92,6 +106,42 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		if (dialogType.equals("zhengliwenjian")) {
 			return "zhengliwenjian";
 		} else {
+			// 判断是否可以编辑共享设置(拥有者才能编辑)
+			if (e.getAuthor().getId().equals(context.getUserHistory().getId())) {
+				isEditRole = true;
+				isEditVisitorsAuthority = true;// 拥有都可以访问者
+			} else {
+				// 非拥有者
+				// 如果设置了只有拥有都有有权限编辑访问者则其他用户不能添加或删除应该文件的访问者
+				// 如果设置了编辑者可以添加访问者和更改权限则要判断添加的用户是否拥有编辑权限
+				if (e.getEditRole() == NetdiskFile.ROLE_REVISABILITY) {
+
+					// 获取当前的文件和父级文件
+					Serializable[] ids = this.netdiskFileService
+							.getMyselfAndParentsFileId(this.getId());
+					// 判断当前文件或父级文件夹该用户是否拥有编辑权限
+					for (Serializable id : ids) {
+						NetdiskFile nf = this.netdiskFileService.load(id);
+						Set<NetdiskShare> netdiskShare = nf.getFileVisitors();
+						if (!netdiskShare.isEmpty()) {
+							Iterator<NetdiskShare> n = netdiskShare.iterator();
+							while (n.hasNext()) {
+								NetdiskShare ns = n.next();
+								if (ns.getAid().equals(
+										context.getUser().getId())) {
+									if (haveAuthority(ns.getRole(), 0)) {
+										isEditVisitorsAuthority = true;
+										break;
+									}
+								}
+							}
+							if (isEditVisitorsAuthority) {
+								break;
+							}
+						}
+					}
+				}
+			}
 			return "gongxiang";
 		}
 
@@ -290,6 +340,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 	// 共享
 	public String share() {
+		SystemContext context = this.getSystyemContext();
 		// 获取原对象
 		NetdiskFile netdiskFile = this.netdiskFileService.load(this.getId());
 		// 整理访问者
@@ -310,6 +361,22 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 					resource.setNetdiskFile(netdiskFile);
 					resource.setRole(json.getString("role"));
 					resource.setAid(Long.valueOf(json.getString("aid")));
+					// 添加者
+					if (json.getString("authorId").equals("")) {
+						resource.setAuthorId(context.getUserHistory().getId());
+					} else {
+						resource.setAuthorId(Long.valueOf(json
+								.getString("authorId")));
+					}
+					// 添加时间
+					if (("").equals(json.getString("fileDate"))) {
+						resource.setFileDate(Calendar.getInstance());
+					} else {
+						new DateUtils();
+						resource.setFileDate(DateUtils.getCalendar(json
+								.getString("fileDate")));
+					}
+
 					netdiskShares.add(resource);
 				}
 			}
@@ -334,7 +401,13 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		return "json";
 	}
 
-	// 获取访问者的姓名
+	/**
+	 * 获取访问者的姓名
+	 * 
+	 * @param aid
+	 *            访问者Id
+	 * @return
+	 */
 	public String getVisitorName(Long aid) {
 		String name = null;
 		Actor actor = this.actorService.load(aid);
@@ -344,6 +417,15 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		return name;
 	}
 
+	/**
+	 * 判断访问的权限
+	 * 
+	 * @param role
+	 *            访问者拥有的权限 如：‘0101’(wrfd:w-编辑,r-查看,f-评论,d-下载)1表示是0表示否
+	 * @param i
+	 *            第0位表是编辑权限，第1位表示查看
+	 * @return
+	 */
 	public boolean haveAuthority(String role, int i) {
 		boolean authority = false;
 		String number = null;
@@ -352,5 +434,21 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			authority = true;
 		}
 		return authority;
+	}
+
+	/**
+	 * 获取添加者姓名
+	 * 
+	 * @param authorId
+	 *            添加者的Id
+	 * @return
+	 */
+	public String getAuthorName(Long authorId) {
+		String name = null;
+		ActorHistory actorHistory = this.actorHistoryService.load(authorId);
+		if (actorHistory != null) {
+			name = actorHistory.getName();
+		}
+		return name;
 	}
 }

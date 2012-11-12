@@ -1,5 +1,6 @@
 package cn.bc.netdisk.web.struts2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -18,11 +20,14 @@ import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -47,14 +52,21 @@ import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
+	private NetdiskFileService netdiskFileService;
+
+	@Autowired
+	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
+		this.netdiskFileService = netdiskFileService;
+	}
 
 	@Override
 	public boolean isReadonly() {
 		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
-		return !context.hasAnyRole(getText("key.role.bc.netdisk"),
-				getText("key.role.bc.admin"));
+		// return !context.hasAnyRole(getText("key.role.bc.netdisk"),
+		// getText("key.role.bc.admin"));
+		return false;
 	}
 
 	@Override
@@ -216,9 +228,13 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		OrCondition orCondition = new OrCondition();
+		// 状态条件
 		Condition statusCondition = null;
-		Condition typeCondition = null;
-
+		// Condition typeCondition = null;
+		Condition userCondition = null;
+		Condition authorityCondition = null;
+		// 状态
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
 			if (ss.length == 1) {
@@ -229,9 +245,34 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
+		// 当前用户只能查看自己上传的文件
+		SystemContext context = (SystemContext) this.getContext();
+		// List<Object> userid = new ArrayList<Object>();
+		// userid.add(context.getUser().getId());
+		// userid.add(context.getUser().getId());
+		userCondition = new EqualsCondition("f.author_id", context
+				.getUserHistory().getId());
 		// typeCondition = new EqualsCondition("f.type_",
 		// NetdiskFile.TYPE_FILE);
-		return ConditionUtils.mix2AndCondition(statusCondition, typeCondition);
+		// 当前用户有权限查看的文件
+		Serializable[] ids = this.netdiskFileService.getUserSharFileId(context
+				.getUser().getId());
+		String qlStr4File = "";
+		if (ids != null) {
+			for (int i = 0; i < ids.length; i++) {
+				if (i + 1 != ids.length) {
+					qlStr4File += "?,";
+				} else {
+					qlStr4File += "?";
+				}
+			}
+		}
+		authorityCondition = orCondition.add(
+				userCondition,
+				(ids != null ? new QlCondition("f.id in (" + qlStr4File + ")",
+						ids) : null)).setAddBracket(true);
+		return ConditionUtils.mix2AndCondition(statusCondition,
+				authorityCondition);
 	}
 
 	@Override

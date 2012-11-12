@@ -34,6 +34,11 @@ public class NetdiskFile extends FileEntityImpl {
 	/** 类型：文件夹 */
 	public static final int TYPE_FOLDER = 0;
 
+	/** 编辑权限：编辑者可修改 */
+	public static final int ROLE_REVISABILITY = 0;
+	/** 编辑权限：只有拥有者可修改 */
+	public static final int ROLE_UNCHANGEABLE = 1;
+
 	private int status = BCConstants.STATUS_ENABLED;
 	private Long pid;// 所在文件夹ID
 	private int type;// 类型 : 0-文件夹,1-文件
