@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import cn.bc.core.dao.CrudDao;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
 
 /**
  * 网络文件Dao接口
@@ -53,4 +54,13 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 * @return
 	 */
 	Serializable[] getUserSharFileId(Long id);
+
+	/**
+	 * 根据当前用户ID和文件Id查找权限信息
+	 * 
+	 * @param aid
+	 * @param pid
+	 * @return
+	 */
+	NetdiskShare getNetdiskShare(Long aid, Long pid);
 }

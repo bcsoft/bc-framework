@@ -56,6 +56,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String visitors;// 访问者
 	public boolean isEditRole = false;// 是否编辑共享设置(只有拥有都才有编辑)
 	public boolean isEditVisitorsAuthority = false;// 编辑访问者权限
+	public boolean isClearUp = false;// 文件整理权限
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -103,19 +104,30 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		this.formPageOption = buildFormPageOption(true);
 		NetdiskFile e = this.netdiskFileService.load(this.getId());
 		this.setE(e);
-		if (dialogType.equals("zhengliwenjian")) {
-			return "zhengliwenjian";
+		// 判断是否可以编辑共享设置(拥有者才能编辑)
+		if (e.getAuthor().getId().equals(context.getUserHistory().getId())) {
+			// 共享界面权限
+			isEditRole = true;
+			isEditVisitorsAuthority = true;// 拥有都可以访问者
+			// 整理界面权限
+			isClearUp = true;
 		} else {
-			// 判断是否可以编辑共享设置(拥有者才能编辑)
-			if (e.getAuthor().getId().equals(context.getUserHistory().getId())) {
-				isEditRole = true;
-				isEditVisitorsAuthority = true;// 拥有都可以访问者
-			} else {
-				// 非拥有者
-				// 如果设置了只有拥有都有有权限编辑访问者则其他用户不能添加或删除应该文件的访问者
-				// 如果设置了编辑者可以添加访问者和更改权限则要判断添加的用户是否拥有编辑权限
-				if (e.getEditRole() == NetdiskFile.ROLE_REVISABILITY) {
-
+			// 非拥有者
+			// 如果设置了只有拥有都有有权限编辑访问者则其他用户不能添加或删除应该文件的访问者
+			// 如果设置了编辑者可以添加访问者和更改权限则要判断添加的用户是否拥有编辑权限
+			if (e.getEditRole() == NetdiskFile.ROLE_REVISABILITY) {
+				// 查看当前文件是否设置访问权限，如果有就根据当前的权限来判断
+				NetdiskShare myNetdiskShare = this.netdiskFileService
+						.getNetdiskShare(context.getUser().getId(),
+								this.getId());
+				if (myNetdiskShare != null) {
+					if (haveAuthority(myNetdiskShare.getRole(), 0)) {
+						// 共享界面权限
+						isEditVisitorsAuthority = true;
+						// 整理界面权限
+						isClearUp = true;
+					}
+				} else {
 					// 获取当前的文件和父级文件
 					Serializable[] ids = this.netdiskFileService
 							.getMyselfAndParentsFileId(this.getId());
@@ -130,7 +142,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 								if (ns.getAid().equals(
 										context.getUser().getId())) {
 									if (haveAuthority(ns.getRole(), 0)) {
+										// 共享界面权限
 										isEditVisitorsAuthority = true;
+										// 整理界面权限
+										isClearUp = true;
 										break;
 									}
 								}
@@ -142,6 +157,13 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 					}
 				}
 			}
+		}
+		// 页面中跳转
+		if (dialogType.equals("zhengliwenjian")) {
+
+			return "zhengliwenjian";
+		} else {
+
 			return "gongxiang";
 		}
 
@@ -297,7 +319,11 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	// 整理
 	public String clearUp() {
 		Map<String, Object> updateInfo = new HashMap<String, Object>();
-		updateInfo.put("pid", new Long(pid));
+		if (pid.length() == 0 || pid.equals("")) {
+			updateInfo.put("pid", (Integer)null);
+		} else {
+			updateInfo.put("pid", new Long(pid));
+		}
 		updateInfo.put("orderNo", order);
 		updateInfo.put("name", title);
 		this.netdiskFileService.update(this.getId(), updateInfo);

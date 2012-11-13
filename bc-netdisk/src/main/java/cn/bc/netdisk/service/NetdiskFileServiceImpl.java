@@ -9,6 +9,7 @@ import cn.bc.core.service.DefaultCrudService;
 import cn.bc.docs.domain.Attach;
 import cn.bc.netdisk.dao.NetdiskFileDao;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
 
 /**
  * 网络文件接口的实现
@@ -87,5 +88,9 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 
 	public Serializable[] getUserSharFileId(Long id) {
 		return this.netdiskFileDao.getUserSharFileId(id);
+	}
+
+	public NetdiskShare getNetdiskShare(Long aid, Long pid) {
+		return this.netdiskFileDao.getNetdiskShare(aid, pid);
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import cn.bc.netdisk.dao.NetdiskFileDao;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 
 /**
@@ -108,6 +109,20 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			String ids = fileIds.get(0).get("getUserSharFileId").toString();
 			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
 					.split(","));
+		}
+	}
+
+	public NetdiskShare getNetdiskShare(Long aid, Long pid) {
+		NetdiskShare netdiskShare = null;
+		List<?> list = null;
+		String hql = "select n from NetdiskShare n where n.aid=? and n.netdiskFile.id=?";
+		logger.debug("hql" + hql + " aid: " + aid + " pid： " + pid);
+		list = this.getJpaTemplate().find(hql, new Object[] { aid, pid });
+		if (list.size() > 0) {
+			netdiskShare = (NetdiskShare) list.get(0);
+			return netdiskShare;
+		} else {
+			return netdiskShare;
 		}
 	}
 }
