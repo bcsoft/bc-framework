@@ -151,6 +151,9 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 		// 设置关联的资源
 		shortcut.setResourceId(resource.getId());
 
+		// 设置关联的扩展配置
+		shortcut.setCfg(resource.getOption());
+
 		// 设置属于当前用户
 		shortcut.setActorId(((SystemContext) this.getContext()).getUser()
 				.getId());

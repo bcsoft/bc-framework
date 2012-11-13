@@ -37,6 +37,4 @@ public abstract class RichFileEntityImpl extends FileEntityImpl implements
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
-
 }

@@ -45,13 +45,14 @@ import cn.bc.web.ui.json.Json;
 public class SelectUnitOrDepartmentsAction extends
 		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
+	public boolean history = false;// 是否选择ActorHistory信息默认不选
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED) + ","
 			+ String.valueOf(BCConstants.STATUS_DISABLED); // 用户的状态，多个用逗号连接
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：状态|创建时间
-		return new OrderCondition("a.status_", Direction.Asc);
+		return new OrderCondition("a.status_", Direction.Asc).add("a.order_",Direction.Asc);
 	}
 
 	@Override
@@ -60,9 +61,18 @@ public class SelectUnitOrDepartmentsAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.status_,a.type_,a.code,case when a.pname is null then a.name else");
-		sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname");
-		sql.append(" from BC_IDENTITY_ACTOR a");
+		// 查看历史的信息
+		if (this.history) {
+			sql.append("select h.id,a.status_,a.type_,a.code,case when a.pname is null then a.name else");
+			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname");
+			sql.append(" from bc_identity_actor_history h");
+			sql.append(" inner join bc_identity_actor a on a.id=h.actor_id");
+
+		} else {
+			sql.append("select a.id,a.status_,a.type_,a.code,case when a.pname is null then a.name else");
+			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname");
+			sql.append(" from BC_IDENTITY_ACTOR a");
+		}
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -90,7 +100,11 @@ public class SelectUnitOrDepartmentsAction extends
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("a.id", "id"));
+		if (history) {
+			columns.add(new IdColumn4MapKey("h.id", "id"));
+		} else {
+			columns.add(new IdColumn4MapKey("a.id", "id"));
+		}
 		columns.add(new TextColumn4MapKey("a.status_", "status",
 				getText("actor.status"), 2).setSortable(true).setValueFormater(
 				new EntityStatusFormater(getBCStatuses())));
@@ -157,6 +171,7 @@ public class SelectUnitOrDepartmentsAction extends
 	protected Condition getGridSpecalCondition() {
 		Condition statusCondition = null;
 		Condition typeCondition = null;
+		Condition historyCondition = null;
 
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
@@ -172,7 +187,11 @@ public class SelectUnitOrDepartmentsAction extends
 				String.valueOf(Actor.TYPE_DEPARTMENT) };
 		typeCondition = new InCondition("a.type_",
 				StringUtils.stringArray2IntegerArray(type));
-		return ConditionUtils.mix2AndCondition(statusCondition, typeCondition);
+		if (history) {
+			historyCondition = new EqualsCondition("h.current", true);
+		}
+		return ConditionUtils.mix2AndCondition(statusCondition, typeCondition,
+				historyCondition);
 	}
 
 	@Override
@@ -182,7 +201,8 @@ public class SelectUnitOrDepartmentsAction extends
 		if (this.status != null || this.status.length() != 0) {
 			json.put("status", status);
 		}
-
+		// 历史条件
+		json.put("history", history);
 		return json.isEmpty() ? null : json;
 	}
 

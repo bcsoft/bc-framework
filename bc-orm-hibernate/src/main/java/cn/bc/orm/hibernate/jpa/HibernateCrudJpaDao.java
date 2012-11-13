@@ -200,12 +200,21 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 
 		// set
 		int i = 0;
+		Object value;
 		for (String key : attributes.keySet()) {
-			if (i > 0)
-				hql.append(",_alias." + key + "=?");
-			else
-				hql.append(" set _alias." + key + "=?");
-			args.add(attributes.get(key));
+			value = attributes.get(key);
+			if (value != null) {
+				if (i > 0)
+					hql.append(",_alias." + key + "=?");
+				else
+					hql.append(" set _alias." + key + "=?");
+				args.add(attributes.get(key));
+			}else{
+				if (i > 0)
+					hql.append(",_alias." + key + "=null");
+				else
+					hql.append(" set _alias." + key + "=null");
+			}
 			i++;
 		}
 

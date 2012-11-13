@@ -52,7 +52,7 @@ public class LoginServiceImpl implements LoginService {
 
 	public Map<String, Object> loadActorByCode(final String actorCode) {
 		final StringBuffer hql = new StringBuffer(
-				"select a.id as id,a.uid_ as uid_,a.type_ as type_,a.code as code,a.name as name");
+				"select a.id as id,a.status_ as status,a.uid_ as uid_,a.type_ as type_,a.code as code,a.name as name");
 		hql.append(",a.pcode as pcode,a.pname as pname,t.password as password,h.id as hid");
 		hql.append(" from bc_identity_actor as a");
 		hql.append(" inner join bc_identity_auth as t on t.id=a.id");
@@ -82,6 +82,7 @@ public class LoginServiceImpl implements LoginService {
 							// actor
 							Actor actor = new Actor();
 							actor.setId(new Long(rs[i++].toString()));
+							actor.setStatus(new Integer(rs[i++].toString()));
 							actor.setUid(rs[i++].toString());
 							actor.setType(Integer.parseInt(rs[i++].toString()));
 							actor.setCode(rs[i++].toString());
@@ -97,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
 							// history
 							ActorHistory history = new ActorHistory();
 							history.setId(new Long(rs[i++].toString()));
-							//history.setId(getActorHistoryId(actor.getId()));
+							// history.setId(getActorHistoryId(actor.getId()));
 							history.setActorId(actor.getId());
 							history.setActorType(actor.getType());
 							history.setCode(actor.getCode());
@@ -307,7 +308,7 @@ public class LoginServiceImpl implements LoginService {
 	public List<Map<String, String>> findShortcuts(Long[] actorIds,
 			Long[] resourceIds) {
 		StringBuffer hql = new StringBuffer();
-		hql.append("select s.aid,s.sid,s.id,s.standalone,s.name,s.url,s.iconclass,s.order_");
+		hql.append("select s.aid,s.sid,s.id,s.standalone,s.name,s.url,s.iconclass,s.order_,s.cfg");
 		hql.append(" from bc_desktop_shortcut s");
 		hql.append(" where s.aid in (?");
 		List<Object> args = new ArrayList<Object>();
@@ -355,6 +356,8 @@ public class LoginServiceImpl implements LoginService {
 						i++;
 						s.put("orderNo", rs[i] != null ? rs[i].toString()
 								: null);
+						i++;
+						s.put("cfg", rs[i] != null ? rs[i].toString() : null);
 						return s;
 					}
 				});

@@ -38,4 +38,9 @@ public class TemplateTypeServiceImpl extends DefaultCrudService<TemplateType> im
 	public TemplateType loadByCode(String code) {
 		return this.templateTypeDao.loadByCode(code);
 	}
+
+	public List<Map<String, String>> findTemplateTypeOptionRtnId(
+			boolean isEnabled) {
+		return this.templateTypeDao.findTemplateTypeOptionRtnId(isEnabled);
+	}
 }

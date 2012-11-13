@@ -20,15 +20,16 @@ import org.springframework.util.StringUtils;
 import cn.bc.core.SetEntityClass;
 import cn.bc.core.dao.CrudDao;
 
-
 /**
  * CrudDao的SpringHibernate实现
+ * 
  * @author dragon
- *
+ * 
  * @param <T>
  * @param <PK>
  */
-public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityClass<T> {
+public class HibernateCrudDao<T extends Object> implements CrudDao<T>,
+		SetEntityClass<T> {
 	protected final Log logger = LogFactory.getLog(getClass());
 	protected Class<T> entityClass;
 	protected String pkName = "id";// 主键名称
@@ -56,7 +57,7 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityC
 				this.entityClass = (Class<T>) type;
 		}
 	}
-	
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.hibernateTemplate = new HibernateTemplate(sessionFactory);
 	}
@@ -104,13 +105,13 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityC
 	}
 
 	private Session getSession() {
-		//从HibernateDaoSupport抄过来的方法
-		return (!this.hibernateTemplate.isAllowCreate() ?
-			    SessionFactoryUtils.getSession(this.hibernateTemplate.getSessionFactory(), false) :
-					SessionFactoryUtils.getSession(
-							this.hibernateTemplate.getSessionFactory(),
-							this.hibernateTemplate.getEntityInterceptor(),
-							this.hibernateTemplate.getJdbcExceptionTranslator()));
+		// 从HibernateDaoSupport抄过来的方法
+		return (!this.hibernateTemplate.isAllowCreate() ? SessionFactoryUtils
+				.getSession(this.hibernateTemplate.getSessionFactory(), false)
+				: SessionFactoryUtils.getSession(
+						this.hibernateTemplate.getSessionFactory(),
+						this.hibernateTemplate.getEntityInterceptor(),
+						this.hibernateTemplate.getJdbcExceptionTranslator()));
 	}
 
 	public void delete(Serializable pk) {
@@ -166,7 +167,7 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityC
 	public void update(Serializable pk, Map<String, Object> attributes) {
 		if (pk == null || attributes == null || attributes.isEmpty())
 			return;
-		this.update(new Serializable[]{pk}, attributes);
+		this.update(new Serializable[] { pk }, attributes);
 	}
 
 	public void update(Serializable[] pks, Map<String, Object> attributes) {
@@ -180,12 +181,22 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityC
 
 		// set
 		int i = 0;
+		Object value;
 		for (String key : attributes.keySet()) {
-			if (i > 0)
-				hql.append(",_alias." + key + "=?");
-			else
-				hql.append(" set _alias." + key + "=?");
-			args.add(attributes.get(key));
+			value = attributes.get(key);
+			if (value != null) {
+				if (i > 0)
+					hql.append(",_alias." + key + "=?");
+				else
+					hql.append(" set _alias." + key + "=?");
+				args.add(attributes.get(key));
+			} else {
+				if (i > 0)
+					hql.append(",_alias." + key + "=null");
+				else
+					hql.append(" set _alias." + key + "=null");
+			}
+
 			i++;
 		}
 
@@ -217,9 +228,10 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,SetEntityC
 	 * @return 构建好的查询对象
 	 */
 	protected Query createQuery(String hql, Object[] args) {
-		if(logger.isDebugEnabled()){
+		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql);
-			logger.debug("args=" + StringUtils.arrayToCommaDelimitedString(args));
+			logger.debug("args="
+					+ StringUtils.arrayToCommaDelimitedString(args));
 		}
 		Query queryObj = this.getSession().createQuery(hql);
 		if (null != args && args.length > 0) {

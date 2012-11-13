@@ -115,14 +115,14 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		// uid
 		entity.setUid(this.getIdGeneratorService().next(Template.ATTACH_TYPE));
 
-		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+		this.typeList = this.templateTypeService.findTemplateTypeOptionRtnId(true);
 	}
 
 	@Override
 	protected void afterEdit(Template entity) {
 		super.afterEdit(entity);
 
-		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+		this.typeList = this.templateTypeService.findTemplateTypeOptionRtnId(true);
 		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
 				.toString(), entity.getTemplateType().getName());
 		this.templateParams=entity.getParams();
@@ -131,7 +131,7 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void afterOpen(Template entity) {
 		super.afterOpen(entity);
-		this.typeList = this.templateTypeService.findTemplateTypeOption(true);
+		this.typeList = this.templateTypeService.findTemplateTypeOptionRtnId(true);
 		OptionItem.insertIfNotExist(typeList, entity.getTemplateType().getId()
 				.toString(), entity.getTemplateType().getName());
 		this.templateParams=entity.getParams();
