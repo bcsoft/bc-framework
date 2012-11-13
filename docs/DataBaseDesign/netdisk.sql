@@ -120,7 +120,7 @@ ALTER TABLE BC_NETDISK_VISIT ADD CONSTRAINT BCFK_ND_VISIT_AID FOREIGN KEY (AID)
 	
 	
 	
-	--##网络硬盘模块的 postgresql 自定义函数和存储过程##
+--##网络硬盘模块的 postgresql 自定义函数和存储过程##
 
 
 --通过当前文件夹id查找指定文件夹以及指定文件夹以下的所有文件的id
@@ -165,3 +165,14 @@ BEGIN
 	return fileId;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--在我的事务中插入网络硬盘入口数据
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '040700','网络硬盘', '/bc/netdiskFiles/paging', 'i0408' from BC_IDENTITY_RESOURCE m where m.order_='040000';
+
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_COMMON' 
+	and m.type_ > 1 and m.name='网络硬盘'
+	order by m.order_;
+
