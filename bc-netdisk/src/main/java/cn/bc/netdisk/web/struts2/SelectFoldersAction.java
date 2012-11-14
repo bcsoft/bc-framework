@@ -3,9 +3,11 @@ package cn.bc.netdisk.web.struts2;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.Page;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
@@ -27,6 +30,7 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
 import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
@@ -138,11 +142,11 @@ public class SelectFoldersAction extends
 		// 状态条件
 		Condition statusCondition = null;
 		Condition typeCondition = null;
-		Condition userCondition = null;
+		// Condition userCondition = null;
 		Condition authorityCondition = null;
 		Condition eliminateCondition = null;
-		Condition tierCondition = null;
-		
+		// Condition tierCondition = null;
+
 		// 状态
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
@@ -158,34 +162,134 @@ public class SelectFoldersAction extends
 		typeCondition = new EqualsCondition("f.type_", NetdiskFile.TYPE_FOLDER);
 		// 当前用户只能查看自己上传的文件
 		SystemContext context = (SystemContext) this.getContext();
-		userCondition = new EqualsCondition("f.author_id", context
-				.getUserHistory().getId());
-		// 当前用户有权限查看的文件
-		Serializable[] ids = this.netdiskFileService.getUserSharFileId(context
-				.getUser().getId());
-		String qlStr4File = "";
-		if (ids != null) {
-			for (int i = 0; i < ids.length; i++) {
-				if (i + 1 != ids.length) {
-					qlStr4File += "?,";
-				} else {
-					qlStr4File += "?";
-				}
-			}
-		}
-		authorityCondition = orCondition.add(
-				userCondition,
-				(ids != null ? new QlCondition("f.id in (" + qlStr4File + ")",
-						ids) : null)).setAddBracket(true);
+		// userCondition = new EqualsCondition("f.author_id", context
+		// .getUserHistory().getId());
+
 		// 文件夹不能隶属于自己
 		if (folderId != null) {
 			eliminateCondition = new NotEqualsCondition("f.id", folderId);
 		}
-		//父级文件夹不能隶属子级
-		
-		
-		return ConditionUtils.mix2AndCondition(statusCondition, typeCondition,
-				eliminateCondition, authorityCondition);
+		// 父级文件夹不能隶属子级
+		// 当前用户有权限查看的文件
+		Serializable[] ids = this.netdiskFileService
+				.getUserSharFileId2All(context.getUser().getId());
+		System.out.println("userId:  " + context.getUserHistory().getId());
+		System.out.println("folderId:  " + folderId);
+		// 查找当前文件的父级
+		// 可以操作的文件夹id
+		List<Object> operateId = new ArrayList<Object>();
+		if (folderId != null) {
+			Serializable[] myselfAndChildId = this.netdiskFileService
+					.getMyselfAndChildFileId(folderId);
+			// 排除自己与子文件id后来的数组
+			List<Object> eliminateId = new ArrayList<Object>();
+			if (ids != null) {
+				for (Serializable id : ids) {
+					boolean isIn = false;
+					for (Serializable pid : myselfAndChildId) {
+						if (id.equals(pid)) {
+							isIn = true;
+							break;
+						}
+					}
+					if (!isIn) {
+						eliminateId.add(id);
+					}
+				}
+				// 找出可操作的id
+				if (!eliminateId.isEmpty()) {
+					for (int i = 0; i < eliminateId.size(); i++) {
+						// 查看当前文件是否设置访问权限，如果有就根据当前的权限来判断
+						NetdiskShare myNetdiskShare = this.netdiskFileService
+								.getNetdiskShare(context.getUser().getId(),
+										Long.valueOf(eliminateId.get(i)
+												.toString()));
+						// 如果是自己的建的文件夹也操作
+						NetdiskFile netdiskFile = this.netdiskFileService
+								.load(Long.valueOf(eliminateId.get(i)
+										.toString()));
+						if (netdiskFile.getAuthor().getId()
+								.equals(context.getUserHistory().getId())) {
+							operateId.add(eliminateId.get(i));
+						} else if (myNetdiskShare != null) {
+							if (haveAuthority(myNetdiskShare.getRole(), 0)) {
+								// 如果有权限就添加
+								operateId.add(eliminateId.get(i));
+							}
+						} else {
+							// 获取当前的文件和父级文件
+							Serializable[] ParentIds = this.netdiskFileService
+									.getMyselfAndParentsFileId(Long
+											.valueOf(eliminateId.get(i)
+													.toString()));
+							// 判断当前文件或父级文件夹该用户是否拥有编辑权限
+							for (Serializable pid : ParentIds) {
+								boolean isOwer = false;
+								NetdiskFile nf = this.netdiskFileService
+										.load(pid);
+								Set<NetdiskShare> netdiskShare = nf
+										.getFileVisitors();
+								if (!netdiskShare.isEmpty()) {
+									Iterator<NetdiskShare> n = netdiskShare
+											.iterator();
+									while (n.hasNext()) {
+										NetdiskShare ns = n.next();
+										if (ns.getAid().equals(
+												context.getUser().getId())) {
+											if (haveAuthority(ns.getRole(), 0)) {
+												// 如果有权限就添加
+												operateId.add(eliminateId
+														.get(i));
+												isOwer = true;
+												break;
+											}
+										}
+									}
+									if (isOwer) {
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// 组装条件
+			String qlStr4File = "";
+			if (operateId.size() != 0) {
+				for (int i = 0; i < operateId.size(); i++) {
+					if (i + 1 != operateId.size()) {
+						qlStr4File += "?,";
+					} else {
+						qlStr4File += "?";
+					}
+				}
+			}
+			authorityCondition = orCondition.add(
+					(operateId.size() != 0 ? new QlCondition("f.id in ("
+							+ qlStr4File + ")", operateId) : null))
+					.setAddBracket(true);
+
+		}
+		// 可以操作的文件夹不为空
+		if (operateId.size() != 0) {
+			return ConditionUtils.mix2AndCondition(statusCondition,
+					typeCondition, eliminateCondition, authorityCondition);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	protected Page<Map<String, Object>> findPage() {
+		// 如果返回为null则不进行查询
+		if (this.getGridSpecalCondition() != null) {
+			return super.findPage();
+		} else {
+			return new Page<Map<String, Object>>(1, 1, 0,
+					new ArrayList<Map<String, Object>>());
+		}
 	}
 
 	@Override
@@ -232,4 +336,24 @@ public class SelectFoldersAction extends
 	protected String getHtmlPageNamespace() {
 		return this.getContextPath() + "/bc";
 	}
+
+	/**
+	 * 判断访问的权限
+	 * 
+	 * @param role
+	 *            访问者拥有的权限 如：‘0101’(wrfd:w-编辑,r-查看,f-评论,d-下载)1表示是0表示否
+	 * @param i
+	 *            第0位表是编辑权限，第1位表示查看
+	 * @return
+	 */
+	public boolean haveAuthority(String role, int i) {
+		boolean authority = false;
+		String number = null;
+		number = role.substring(i, i + 1);
+		if (number.endsWith("1")) {
+			authority = true;
+		}
+		return authority;
+	}
+
 }

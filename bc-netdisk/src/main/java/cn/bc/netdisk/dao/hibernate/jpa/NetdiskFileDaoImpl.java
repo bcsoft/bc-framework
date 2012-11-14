@@ -72,7 +72,7 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 
 	}
 
-	public Serializable[] getChildIdsById(Long id) {
+	public Serializable[] getMyselfAndChildFileId(Long id) {
 		// String sql = "with recursive n as("
 		// + " select * from bc_netdisk_file where id =" + id + " union"
 		// + " select f.* from bc_netdisk_file f,n where f.pid=n.id"
@@ -81,9 +81,14 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		String sql = "select getMyselfAndChildFileId(" + id + ")";
 		logger.debug("sql" + sql + " id: " + id);
 		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
-		String ids = fileIds.get(0).get("getMyselfAndChildFileId").toString();
-		return cn.bc.core.util.StringUtils
-				.stringArray2LongArray(ids.split(","));
+		if (fileIds.get(0).get("getMyselfAndChildFileId") == null) {
+			return null;
+		} else {
+			String ids = fileIds.get(0).get("getMyselfAndChildFileId")
+					.toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
+					.split(","));
+		}
 
 	}
 
@@ -94,9 +99,14 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		// + " ) select string_agg(id||'',',') from n";
 		String sql = "select getMyselfAndParentsFileId(" + id + ")";
 		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
-		String ids = fileIds.get(0).get("getMyselfAndParentsFileId").toString();
-		return cn.bc.core.util.StringUtils
-				.stringArray2LongArray(ids.split(","));
+		if (fileIds.get(0).get("getMyselfAndParentsFileId") == null) {
+			return null;
+		} else {
+			String ids = fileIds.get(0).get("getMyselfAndParentsFileId")
+					.toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
+					.split(","));
+		}
 
 	}
 
@@ -123,6 +133,18 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			return netdiskShare;
 		} else {
 			return netdiskShare;
+		}
+	}
+
+	public Serializable[] getUserSharFileId2All(Long userId) {
+		String sql = "select getUserSharFileId2All(" + userId + ")";
+		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
+		if (fileIds.get(0).get("getUserSharFileId2All") == null) {
+			return null;
+		} else {
+			String ids = fileIds.get(0).get("getUserSharFileId2All").toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
+					.split(","));
 		}
 	}
 }
