@@ -166,6 +166,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--通过用户id查找其可以访问指定文件夹以及指定文件以下的所有文件的id
+--参数uid用户id
+CREATE OR REPLACE FUNCTION getUserSharFileId2All(uid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(
+		select * from bc_netdisk_file where id in(select pid from bc_netdisk_share where aid = uid) 
+			or id in(select id from bc_netdisk_file where author_id in (select id from bc_identity_actor_history where actor_id = uid)) union select f.* from bc_netdisk_file f,n where f.pid=n.id
+			)
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
 
 --在我的事务中插入网络硬盘入口数据
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
