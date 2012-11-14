@@ -1,11 +1,13 @@
 package cn.bc.netdisk.web.struts2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,18 +18,23 @@ import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.NotEqualsCondition;
+import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.AbstractSelectPageAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 选择视图Action
@@ -38,9 +45,17 @@ import cn.bc.web.ui.html.page.PageOption;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Object>> {
+public class SelectFoldersAction extends
+		AbstractSelectPageAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
+	public Long folderId;// 文件夹不能隶属于自己
+	private NetdiskFileService netdiskFileService;
+
+	@Autowired
+	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
+		this.netdiskFileService = netdiskFileService;
+	}
 
 	@Override
 	public boolean isReadonly() {
@@ -63,9 +78,8 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select f.id,f.status_,order_,name,size_,a.actor_name,file_date,modified_date");
-		sql.append(",f.path from bc_netdisk_file f");
-		sql.append(" inner join bc_identity_actor_history a on a.id=f.author_id");
+		sql.append("select f.id,f.status_,f.name");
+		sql.append(" from bc_netdisk_file f");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -78,13 +92,7 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 				int i = 0;
 				map.put("id", rs[i++]);
 				map.put("status", rs[i++]);
-				map.put("orderNo", rs[i++]);
 				map.put("name", rs[i++]);
-				map.put("size", rs[i++]);
-				map.put("actor_name", rs[i++]);
-				map.put("file_date", rs[i++]);
-				map.put("modified_date", rs[i++]);
-				map.put("path", rs[i++]);
 				return map;
 			}
 		});
@@ -100,20 +108,6 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("f.name", "name",
 				getText("netdisk.name")).setUseTitleFromLabel(true));
-		// columns.add(new TextColumn4MapKey("f.order_", "orderNo",
-		// getText("netdisk.order"), 80).setSortable(true));
-		// columns.add(new TextColumn4MapKey("f.size_", "size",
-		// getText("netdisk.size"), 80).setUseTitleFromLabel(true)
-		// .setValueFormater(new FileSizeFormater()));
-		// columns.add(new TextColumn4MapKey("a.actor_name", "actor_name",
-		// getText("netdisk.author"), 80));
-		// columns.add(new TextColumn4MapKey("f.file_date", "file_date",
-		// getText("netdisk.fileDate"), 120)
-		// .setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		// columns.add(new TextColumn4MapKey("f.modified_date", "modified_date",
-		// getText("netdisk.modifiedDate"), 120)
-		// .setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		// columns.add(new HiddenColumn4MapKey("path", "path"));
 		return columns;
 	}
 
@@ -129,7 +123,7 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 
 	@Override
 	protected String getFormActionName() {
-		return "netdiskFile";
+		return "selectFolder";
 	}
 
 	@Override
@@ -139,10 +133,17 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		OrCondition orCondition = new OrCondition();
+		// AndCondition andCondition = new AndCondition();
+		// 状态条件
 		Condition statusCondition = null;
 		Condition typeCondition = null;
-		Condition powerCondition = null;
-
+		Condition userCondition = null;
+		Condition authorityCondition = null;
+		Condition eliminateCondition = null;
+		Condition tierCondition = null;
+		
+		// 状态
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
 			if (ss.length == 1) {
@@ -153,15 +154,53 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
-		// 类型
+		// 文件夹类型
 		typeCondition = new EqualsCondition("f.type_", NetdiskFile.TYPE_FOLDER);
-		// 选择用户所创建的文件夹
+		// 当前用户只能查看自己上传的文件
 		SystemContext context = (SystemContext) this.getContext();
-		powerCondition = new EqualsCondition("f.author_id", context
+		userCondition = new EqualsCondition("f.author_id", context
 				.getUserHistory().getId());
-
+		// 当前用户有权限查看的文件
+		Serializable[] ids = this.netdiskFileService.getUserSharFileId(context
+				.getUser().getId());
+		String qlStr4File = "";
+		if (ids != null) {
+			for (int i = 0; i < ids.length; i++) {
+				if (i + 1 != ids.length) {
+					qlStr4File += "?,";
+				} else {
+					qlStr4File += "?";
+				}
+			}
+		}
+		authorityCondition = orCondition.add(
+				userCondition,
+				(ids != null ? new QlCondition("f.id in (" + qlStr4File + ")",
+						ids) : null)).setAddBracket(true);
+		// 文件夹不能隶属于自己
+		if (folderId != null) {
+			eliminateCondition = new NotEqualsCondition("f.id", folderId);
+		}
+		//父级文件夹不能隶属子级
+		
+		
 		return ConditionUtils.mix2AndCondition(statusCondition, typeCondition,
-				powerCondition);
+				eliminateCondition, authorityCondition);
+	}
+
+	@Override
+	protected void extendGridExtrasData(Json json) {
+		super.extendGridExtrasData(json);
+
+		// 状态条件
+		if (this.status != null && this.status.trim().length() > 0) {
+			json.put("status", status);
+		}
+
+		if (folderId != null) {
+			json.put("folderId", folderId);
+		}
+
 	}
 
 	@Override
@@ -186,7 +225,8 @@ public class SelectFoldersAction extends AbstractSelectPageAction<Map<String, Ob
 
 	@Override
 	protected String getClickOkMethod() {
-		return "bc.folderSelectDialog.clickOk";	}
+		return "bc.folderSelectDialog.clickOk";
+	}
 
 	@Override
 	protected String getHtmlPageNamespace() {
