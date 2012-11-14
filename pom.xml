@@ -38,6 +38,7 @@
 		<module>bc-placeorigin</module>
 		<module>bc-template</module>
 		<module>bc-investigate</module>
+		<module>bc-netdisk</module>
 
 		<module>bc-remoting-common</module>
 		<module>bc-remoting-client</module>

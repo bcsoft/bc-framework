@@ -16,6 +16,7 @@ CREATE TABLE BC_NETDISK_FILE(
 	ORDER_ VARCHAR(100),
 	PATH VARCHAR(500),
 	EDIT_ROLE INT DEFAULT 0 NOT NULL,
+	BATCH_NO VARCHAR(500), 
 	AUTHOR_ID INT NOT NULL,
 	FILE_DATE TIMESTAMP NOT NULL,
 	MODIFIER_ID INT,
@@ -33,12 +34,13 @@ COMMENT ON COLUMN BC_NETDISK_FILE.EXT IS '扩展名 : 仅适用于文件类型';
 COMMENT ON COLUMN BC_NETDISK_FILE.ORDER_ IS '排序号';
 COMMENT ON COLUMN BC_NETDISK_FILE.PATH IS '保存路径 : 相对于[NETDISK]目录下的子路径,开头不要带符号/,仅适用于文件类型';
 COMMENT ON COLUMN BC_NETDISK_FILE.EDIT_ROLE IS '编辑权限 : 0-编辑者可修改,1-只有拥有者可修改';
+COMMENT ON COLUMN BC_NETDISK_FILE.BATCH_NO IS '批号:标识是否是上传文件夹时到一批上传的文件';
 COMMENT ON COLUMN BC_NETDISK_FILE.AUTHOR_ID IS '创建人ID';
 COMMENT ON COLUMN BC_NETDISK_FILE.FILE_DATE IS '创建时间';
 COMMENT ON COLUMN BC_NETDISK_FILE.MODIFIER_ID IS '最后修改人ID';
 COMMENT ON COLUMN BC_NETDISK_FILE.MODIFIED_DATE IS '最后修改时间';
 ALTER TABLE BC_NETDISK_FILE ADD CONSTRAINT BCFK_ND_FILE_PID FOREIGN KEY (PID)
-	REFERENCES BC_NETDISK_FILE (ID) ON UPDATE NO ACTION ON DELETE CASCADE;
+	REFERENCES BC_NETDISK_FILE (ID) ON UPDATE NO ACTION ;
 ALTER TABLE BC_NETDISK_FILE ADD CONSTRAINT BCFK_ND_FILE_AUTHOR FOREIGN KEY (AUTHOR_ID)
 	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
 ALTER TABLE BC_NETDISK_FILE ADD CONSTRAINT BCFK_ND_FILE_MODIFIER FOREIGN KEY (MODIFIER_ID)
@@ -49,18 +51,27 @@ CREATE TABLE BC_NETDISK_SHARE(
 	ID INT NOT NULL,
 	PID INT DEFAULT 0 NOT NULL,
 	ROLE_ VARCHAR(4) NOT NULL,
+	ORDER_ INT,
 	AID INT NOT NULL,
+	AUTHOR_ID INT NOT NULL,
+	FILE_DATE TIMESTAMP NOT NULL,
 	CONSTRAINT BCPK_ND_SHARE PRIMARY KEY (ID)
 );
 COMMENT ON TABLE BC_NETDISK_SHARE IS '网络文件访问权限';
 COMMENT ON COLUMN BC_NETDISK_SHARE.ID IS 'ID';
 COMMENT ON COLUMN BC_NETDISK_SHARE.PID IS '文件ID';
 COMMENT ON COLUMN BC_NETDISK_SHARE.ROLE_ IS '访问权限 : 用4为数字表示(wrfd:w-编辑,r-查看,f-评论,d-下载),每位数的值为0或1,1代表拥有此权限';
+COMMENT ON COLUMN BC_NETDISK_SHARE.ORDER_ IS '排序号';
 COMMENT ON COLUMN BC_NETDISK_SHARE.AID IS '访问人ID';
+COMMENT ON COLUMN BC_NETDISK_SHARE.AUTHOR_ID IS '添加人ID';
+COMMENT ON COLUMN BC_NETDISK_SHARE.FILE_DATE IS '添加时间';
 ALTER TABLE BC_NETDISK_SHARE ADD CONSTRAINT BCFK_ND_FILE_SHARE FOREIGN KEY (PID)
 	REFERENCES BC_NETDISK_FILE (ID) ON UPDATE NO ACTION ON DELETE CASCADE;
 ALTER TABLE BC_NETDISK_SHARE ADD CONSTRAINT BCFK_ND_SHARE_AID FOREIGN KEY (AID)
 	REFERENCES BC_IDENTITY_ACTOR (ID);
+ALTER TABLE BC_NETDISK_SHARE ADD CONSTRAINT BCFK_ND_SHARE_AUTHOR FOREIGN KEY (AUTHOR_ID)
+	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
+
 
 -- 网络文件评论
 CREATE TABLE BC_NETDISK_COMMENT(
@@ -101,3 +112,67 @@ ALTER TABLE BC_NETDISK_VISIT ADD CONSTRAINT BCFK_ND_FILE_VISIT FOREIGN KEY (PID)
 	REFERENCES BC_NETDISK_FILE (ID) ON UPDATE NO ACTION ON DELETE CASCADE;
 ALTER TABLE BC_NETDISK_VISIT ADD CONSTRAINT BCFK_ND_VISIT_AID FOREIGN KEY (AID)
 	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
+
+	
+	
+	
+	
+	
+	
+	
+--##网络硬盘模块的 postgresql 自定义函数和存储过程##
+
+
+--通过当前文件夹id查找指定文件夹以及指定文件夹以下的所有文件的id
+--参数fid文件夹id
+CREATE OR REPLACE FUNCTION getMyselfAndChildFileId(fid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id = fid union select f.* from bc_netdisk_file f,n where f.pid=n.id) 
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
+--通过当前文件id查找指定文件以及指定文件以上的所有文件夹的id
+--参数fid文件id
+CREATE OR REPLACE FUNCTION getMyselfAndParentsFileId(fid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id = fid union select f.* from bc_netdisk_file f,n where f.id=n.pid) 
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--通过用户id查找其可以访问指定文件夹以及指定文件以下的所有文件的id
+--参数uid用户id
+CREATE OR REPLACE FUNCTION getUserSharFileId(uid IN integer) RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where id in(select pid from bc_netdisk_share where aid = uid) union select f.* from bc_netdisk_file f,n where f.pid=n.id)
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--在我的事务中插入网络硬盘入口数据
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '040700','网络硬盘', '/bc/netdiskFiles/paging', 'i0408' from BC_IDENTITY_RESOURCE m where m.order_='040000';
+
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_COMMON' 
+	and m.type_ > 1 and m.name='网络硬盘'
+	order by m.order_;
+
