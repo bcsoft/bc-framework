@@ -201,7 +201,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		listPage.addChild(getHtmlPageHeader());
 
 		// 附加Grid
-		listPage.addChild(getHtmlPageGrid());
+		listPage.addChild(getHtmlPageCenter());
 
 		// 附加页脚信息
 		listPage.addChild(getHtmlPageFooter());
@@ -218,6 +218,12 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	protected Component getHtmlPageHeader() {
 		// 默认为工具条
 		return getHtmlPageToolbar();
+	}
+
+	/** 附加中间信息 */
+	protected Component getHtmlPageCenter() {
+		// 默认为Grid
+		return getHtmlPageGrid();
 	}
 
 	/** 附加页脚信息 */

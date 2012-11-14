@@ -95,7 +95,7 @@ public abstract class AbstractHtmlPageAction extends ActionSupport implements
 				.setOption(getHtmlPageOption().toString()).setBeautiful(true)
 				.addClazz("bc-page");
 
-		// 附件工具条
+		// 附加工具条
 		htmlPage.addChild(getHtmlPageToolbar());
 
 		return htmlPage;

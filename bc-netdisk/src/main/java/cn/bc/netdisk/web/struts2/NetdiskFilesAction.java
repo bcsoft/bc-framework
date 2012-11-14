@@ -30,7 +30,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.TreeViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -39,6 +39,8 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
+import cn.bc.web.ui.html.tree.Tree;
+import cn.bc.web.ui.html.tree.TreeNode;
 
 /**
  * 网络文件Action
@@ -49,7 +51,7 @@ import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
+public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 	private NetdiskFileService netdiskFileService;
@@ -301,4 +303,31 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		return statuses;
 	}
 
+	// 构建左侧的导航树
+	@Override
+	protected Tree getHtmlPageTree() {
+		Tree tree = super.getHtmlPageTree();
+
+		// 创建"我的硬盘"节点
+		TreeNode mineNode = new TreeNode("mine", "我的硬盘");
+		mineNode.setLeaf(false);
+		mineNode.setOpen(true);
+		tree.addSubNode(mineNode);
+
+		// 创建"与我共享"节点
+		TreeNode shareNode = new TreeNode("mine", "与我共享");
+		shareNode.setLeaf(false);
+		shareNode.setOpen(true);
+		tree.addSubNode(shareNode);
+
+		// 创建"我的硬盘"节点的子节点
+		mineNode.addSubNode(new TreeNode("m1", "子节点m1", true));
+		mineNode.addSubNode(new TreeNode("m2", "子节点m2", true));
+
+		// 创建"与我共享"节点的子节点
+		shareNode.addSubNode(new TreeNode("s1", "子节点s1", true));
+		shareNode.addSubNode(new TreeNode("s2", "子节点s2", true));
+
+		return tree;
+	}
 }

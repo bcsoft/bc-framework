@@ -30,6 +30,20 @@ public class TreeNode extends Td {
 	 *            节点的ID值
 	 * @param label
 	 *            节点名称
+	 * @param leaf
+	 *            是否是叶子节点
+	 */
+	public TreeNode(String nodeId, String label, boolean leaf) {
+		this.nodeId = nodeId;
+		this.label = label;
+		this.leaf = leaf;
+	}
+
+	/**
+	 * @param nodeId
+	 *            节点的ID值
+	 * @param label
+	 *            节点名称
 	 */
 	public TreeNode(String nodeId, String label) {
 		this.nodeId = nodeId;
@@ -154,6 +168,7 @@ public class TreeNode extends Td {
 		List<TreeNode> subNodes = getSubNodes();
 		if (subNodes != null && !subNodes.isEmpty()) {
 			Table table = new Table();
+			table.addClazz("nodes");
 			Tbody tbody = new Tbody();
 			table.addChild(tbody);
 			Tr tr;
@@ -182,8 +197,8 @@ public class TreeNode extends Td {
 				+ "<span class=\"type-icon ui-icon "
 				+ (getIcon() != null ? getIcon()
 						: (isLeaf() ? "ui-icon-document"
-								: (isOpen() ? "ui-icon-triangle-1-se"
-										: "ui-icon-triangle-1-e")))
+								: (isOpen() ? "ui-icon-folder-open"
+										: "ui-icon-folder-collapsed")))
 				+ "\"></span>" + "<span class=\"text\">" + this.getLabel()
 				+ "</span></div>");
 		this.addChild(item);
