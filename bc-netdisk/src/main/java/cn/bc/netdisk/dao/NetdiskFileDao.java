@@ -35,7 +35,7 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 *            文件夹id
 	 * @return
 	 */
-	Serializable[] getChildIdsById(Long id);
+	Serializable[] getMyselfAndChildFileId(Long id);
 
 	/**
 	 * 获取当前的文件和父级文件id
@@ -63,4 +63,12 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 * @return
 	 */
 	NetdiskShare getNetdiskShare(Long aid, Long pid);
+
+	/**
+	 * 查找当前用户能查看的所有文件(自建与别人分享)
+	 * 
+	 * @param userId用户ID
+	 * @return
+	 */
+	Serializable[] getUserSharFileId2All(Long userId);
 }

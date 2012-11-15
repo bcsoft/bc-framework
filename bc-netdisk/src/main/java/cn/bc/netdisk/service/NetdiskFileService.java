@@ -69,4 +69,21 @@ public interface NetdiskFileService extends CrudService<NetdiskFile> {
 	 * @return
 	 */
 	NetdiskShare getNetdiskShare(Long aid, Long pid);
+
+	/**
+	 * 通过id查找指定文件夹以及指定文件夹以下的所有文件的id
+	 * 
+	 * @param id
+	 *            文件夹id
+	 * @return
+	 */
+	Serializable[] getMyselfAndChildFileId(Long id);
+
+	/**
+	 * 查找当前用户能查看的所有文件(自建与别人分享)
+	 * 
+	 * @param userId用户ID
+	 * @return
+	 */
+	Serializable[] getUserSharFileId2All(Long userId);
 }

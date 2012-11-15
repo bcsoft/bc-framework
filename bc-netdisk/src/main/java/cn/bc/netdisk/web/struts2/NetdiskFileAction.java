@@ -47,10 +47,11 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	private ActorHistoryService actorHistoryService;
 	public String fileInfo;// 文件信息
 	public String dialogType;// 新建对话框的类型
-	public String title;// 文件名
+	public String title;// 整理对话框的标题
 	public String order;// 排序号
 	public String pid;// 所属文件夹Id
 	public String folder;// 所属文件夹名
+	public String name;// 文件名
 	public boolean isRelevanceDelete = false;// 是否删除文件夹下的所有文件
 	public int editRole;// 共享设置
 	public String visitors;// 访问者
@@ -160,6 +161,12 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		}
 		// 页面中跳转
 		if (dialogType.equals("zhengliwenjian")) {
+
+			if (e.getType() == NetdiskFile.TYPE_FOLDER) {
+				title = getText("folder");
+			} else {
+				title = getText("file");
+			}
 
 			return "zhengliwenjian";
 		} else {
@@ -320,12 +327,12 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String clearUp() {
 		Map<String, Object> updateInfo = new HashMap<String, Object>();
 		if (pid.length() == 0 || pid.equals("")) {
-			updateInfo.put("pid", (Integer)null);
+			updateInfo.put("pid", (Integer) null);
 		} else {
 			updateInfo.put("pid", new Long(pid));
 		}
 		updateInfo.put("orderNo", order);
-		updateInfo.put("name", title);
+		updateInfo.put("name", name);
 		this.netdiskFileService.update(this.getId(), updateInfo);
 		jsonObject.put("success", true);
 		jsonObject.put("msg", "保存成功！");

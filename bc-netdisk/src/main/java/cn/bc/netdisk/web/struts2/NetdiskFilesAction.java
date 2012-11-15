@@ -39,6 +39,7 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
+import cn.bc.web.ui.json.Json;
 import cn.bc.web.ui.html.tree.Tree;
 import cn.bc.web.ui.html.tree.TreeNode;
 
@@ -64,7 +65,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	@Override
 	public boolean isReadonly() {
 		// 模板管理员或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
+	//	SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
 		// return !context.hasAnyRole(getText("key.role.bc.netdisk"),
 		// getText("key.role.bc.admin"));
@@ -122,23 +123,23 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// columns.add(new TextColumn4MapKey("f.status_", "status",
 		// getText("netdisk.status"), 40).setSortable(true)
 		// .setValueFormater(new KeyValueFormater(this.getStatuses())));
-		columns.add(new TextColumn4MapKey("f.name", "name",
-				getText("netdisk.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f2.name", "folder",
 				getText("netdisk.folder"), 80));
+		columns.add(new TextColumn4MapKey("f.name", "name",
+				getText("netdisk.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f.size_", "size",
 				getText("netdisk.size"), 80).setUseTitleFromLabel(true)
 				.setValueFormater(new FileSizeFormater()));
 		columns.add(new TextColumn4MapKey("a.actor_name", "actor_name",
 				getText("netdisk.author"), 80));
-		columns.add(new TextColumn4MapKey("f.order_", "orderNo",
-				getText("netdisk.order"), 80).setSortable(true));
 		columns.add(new TextColumn4MapKey("f.file_date", "file_date",
 				getText("netdisk.fileDate"), 120)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		// columns.add(new TextColumn4MapKey("f.modified_date", "modified_date",
 		// getText("netdisk.modifiedDate"), 120)
 		// .setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		columns.add(new TextColumn4MapKey("f.order_", "orderNo",
+				getText("netdisk.order"), 80).setSortable(true));
 		columns.add(new HiddenColumn4MapKey("path", "path"));
 		columns.add(new HiddenColumn4MapKey("pid", "pid"));
 		columns.add(new HiddenColumn4MapKey("type", "type"));
@@ -188,14 +189,14 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 			// 上传操作
 			tb.addButton(new ToolbarMenuButton("上传")
 					.addMenuItem(
-							"<div style=\"position:relative;width:100%;height:100%;\">上传文件<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFile\" name=\"uploadFile\" title=\"点击上传文件\""
-									+ "multiple=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+							"<div style=\"position:relative;width:100%;height:100%;white-space:nowrap;\">上传文件<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFile\" name=\"uploadFile\" title=\"点击上传文件\""
+									+ " multiple=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
 									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
 									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
 							"shangchuanwenjian")
 					.addMenuItem(
-							"<div style=\"position:relative;width:100%;height:100%;\">上传文件夹<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFolder\" name=\"uploadFolder\" title=\"点击上传文件夹\""
-									+ "multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfolder&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+							"<div style=\"position:relative;width:100%;height:100%;white-space:nowrap;\">上传文件夹<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFolder\" name=\"uploadFolder\" title=\"点击上传文件夹\""
+									+ " multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfolder&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
 									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
 									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
 							"shangchuanwenjianjia")
@@ -212,9 +213,9 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 					.setText("删除").setClick("bc.netdiskFileView.remove"));
 			// 预览
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
-					.setText("预览").setClick("bc.netdiskFileView.preview"));
+					.setText("查看").setClick("bc.netdiskFileView.preview"));
 			// 其他操作
-			tb.addButton(new ToolbarMenuButton("其他")
+			tb.addButton(new ToolbarMenuButton("更多")
 					.addMenuItem("下载", "xiazai")
 					.addMenuItem("新建文件夹", "xinjianwenjianjia")
 					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
@@ -249,13 +250,8 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		}
 		// 当前用户只能查看自己上传的文件
 		SystemContext context = (SystemContext) this.getContext();
-		// List<Object> userid = new ArrayList<Object>();
-		// userid.add(context.getUser().getId());
-		// userid.add(context.getUser().getId());
 		userCondition = new EqualsCondition("f.author_id", context
 				.getUserHistory().getId());
-		// typeCondition = new EqualsCondition("f.type_",
-		// NetdiskFile.TYPE_FILE);
 		// 当前用户有权限查看的文件
 		Serializable[] ids = this.netdiskFileService.getUserSharFileId(context
 				.getUser().getId());
@@ -275,6 +271,17 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 						ids) : null)).setAddBracket(true);
 		return ConditionUtils.mix2AndCondition(statusCondition,
 				authorityCondition);
+	}
+
+	@Override
+	protected void extendGridExtrasData(Json json) {
+		super.extendGridExtrasData(json);
+
+		// 状态条件
+		if (this.status != null && this.status.trim().length() > 0) {
+			json.put("status", status);
+		}
+
 	}
 
 	@Override
