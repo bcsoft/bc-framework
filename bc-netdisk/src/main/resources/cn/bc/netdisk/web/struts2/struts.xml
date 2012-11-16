@@ -39,5 +39,10 @@
 		<action name="delete" class="netdiskFileAction" method="delete">
 		</action>
 	</package>
-
+	<package name="netdiskFiles" extends="bc-default" namespace="/bc/netdiskFiles">
+		<action name="list" class="netdiskFilesAction" method="list" />
+		<action name="paging" class="netdiskFilesAction" method="paging" />
+		<action name="data" class="netdiskFilesAction" method="data" />
+		<action name="loadTreeData" class="netdiskFilesAction" method="loadTreeData" />
+	</package>
 </struts>

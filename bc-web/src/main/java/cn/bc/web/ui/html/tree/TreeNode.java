@@ -50,6 +50,14 @@ public class TreeNode extends Td {
 		this.label = label;
 	}
 
+	public int getLevel() {
+		if (this.getParent() == null) {
+			return 0;
+		} else {
+			return this.getParent().getLevel() + 1;
+		}
+	}
+
 	public String getNodeId() {
 		return nodeId;
 	}
@@ -119,11 +127,18 @@ public class TreeNode extends Td {
 		return subNodes;
 	}
 
-	public void addSubNode(TreeNode subNode) {
+	public TreeNode addSubNode(TreeNode subNode) {
 		if (this.subNodes == null)
 			this.subNodes = new ArrayList<TreeNode>();
+
+		if (subNode == null)
+			return this;
+
+		subNode.setParent(this);
 		this.subNodes.add(subNode);
 		this.leaf = false;
+		return this;
+
 	}
 
 	@Override
@@ -159,13 +174,26 @@ public class TreeNode extends Td {
 				this.addClazz("folder collapsed");// 折叠的文件夹
 			}
 		}
+		
+		// 子节点的嵌套级别
+		int level = this.getLevel();
+		this.setAttr("data-level", String.valueOf(level));
 	}
 
 	/**
 	 * 渲染节点的子节点列表
 	 */
 	protected void renderSubNodes(StringBuffer main) {
-		List<TreeNode> subNodes = getSubNodes();
+		Table table = buildSubNodes(getSubNodes());
+		if (table != null) {
+			this.addChild(table);
+		}
+	}
+
+	/**
+	 * 构建子节点列表DOM
+	 */
+	public static Table buildSubNodes(List<TreeNode> subNodes) {
 		if (subNodes != null && !subNodes.isEmpty()) {
 			Table table = new Table();
 			table.addClazz("nodes");
@@ -177,7 +205,9 @@ public class TreeNode extends Td {
 				tr.addChild(n);
 				tbody.addChild(tr);
 			}
-			this.addChild(table);
+			return table;
+		} else {
+			return null;
 		}
 	}
 

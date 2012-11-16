@@ -1,6 +1,8 @@
 package cn.bc.netdisk.dao.hibernate.jpa;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +13,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cn.bc.db.jdbc.RowMapper;
+import cn.bc.db.jdbc.SqlObject;
 import cn.bc.netdisk.dao.NetdiskFileDao;
 import cn.bc.netdisk.domain.NetdiskFile;
 import cn.bc.netdisk.domain.NetdiskShare;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
 
 /**
  * 网络文件DAO接口的实现
@@ -146,5 +151,48 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
 					.split(","));
 		}
+	}
+
+	public List<Map<String, Object>> findOwnerFolder(Long ownerId, Long pid) {
+		if (ownerId == null)
+			return new ArrayList<Map<String, Object>>();
+
+		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+		sql.append(" where f.type_ = ? and f.author_id = ?");
+		args.add(NetdiskFile.TYPE_FOLDER);
+		args.add(ownerId);
+		if (pid == null) {
+			sql.append(" and f.pid is null");
+		} else {
+			sql.append(" and f.pid = ?");
+			args.add(pid);
+		}
+		sql.append(" order by f.status_,f.order_,f.file_date desc");
+		sqlObject.setSql(sql.toString());
+		sqlObject.setArgs(args);// 注入参数
+
+		// 数据映射器
+		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				int i = 0;
+				m.put("id", rs[i++]);
+				m.put("status", rs[i++]);
+				m.put("pid", rs[i++]);
+				m.put("type", rs[i++]);
+				m.put("name", rs[i++]);
+				return m;
+			}
+		});
+		return new HibernateJpaNativeQuery<Map<String, Object>>(
+				getJpaTemplate(), sqlObject).list();
+	}
+
+	public List<Map<String, Object>> findShareRootFolders(Long sharerId) {
+		return new ArrayList<Map<String, Object>>();
 	}
 }
