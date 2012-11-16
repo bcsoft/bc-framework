@@ -173,8 +173,6 @@ public class SelectFoldersAction extends
 		// 当前用户有权限查看的文件
 		Serializable[] ids = this.netdiskFileService
 				.getUserSharFileId2All(context.getUser().getId());
-		System.out.println("userId:  " + context.getUserHistory().getId());
-		System.out.println("folderId:  " + folderId);
 		// 查找当前文件的父级
 		// 可以操作的文件夹id
 		List<Object> operateId = new ArrayList<Object>();
