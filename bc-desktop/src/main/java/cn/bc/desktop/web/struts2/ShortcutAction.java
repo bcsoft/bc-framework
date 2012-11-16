@@ -97,7 +97,8 @@ public class ShortcutAction extends EntityAction<Long, Shortcut> implements
 	@Override
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(600).setMinWidth(200)
-				.setHeight(400).setMinHeight(200);
+				.setHeight(400).setMinHeight(200).setMaximizable(true)
+				.setMinimizable(true);
 	}
 
 	@Override
