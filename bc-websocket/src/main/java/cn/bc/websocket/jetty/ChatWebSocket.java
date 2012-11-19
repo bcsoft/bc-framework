@@ -1,6 +1,7 @@
 package cn.bc.websocket.jetty;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,7 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 	private String clientIp;// 客户端的ip地址
 	private String sid;// 客户端的会话session id
 	private Object client;// 客户端的详细对象信息
+	private List<String> ignoreOnlineRemindUserIds;// 忽略上下线提醒的帐号的ID列表
 	private Connection connection;
 	private ChatWebSocketService webSocketService = WebUtils
 			.getBean(ChatWebSocketService.class);
@@ -72,6 +74,15 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		return clientId;
 	}
 
+	public List<String> getIgnoreOnlineRemindUserIds() {
+		return ignoreOnlineRemindUserIds;
+	}
+
+	public void setIgnoreOnlineRemindUserIds(
+			List<String> ignoreOnlineRemindUserIds) {
+		this.ignoreOnlineRemindUserIds = ignoreOnlineRemindUserIds;
+	}
+
 	public String getClientName() {
 		return clientName;
 	}
@@ -95,9 +106,12 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		this.webSocketService.addMember(this);
 
 		// 向其它用户发送上线信息
-		String msg = this.clientName + "上线了！";
-		this.webSocketService.sendMessageToOtherClient(this.sid, TYPE_ONLINE,
-				msg);
+		if (ignoreOnlineRemindUserIds == null
+				|| !ignoreOnlineRemindUserIds.contains(this.clientId)) {
+			String msg = this.clientName + "上线了！";
+			this.webSocketService.sendMessageToOtherClient(this.sid,
+					TYPE_ONLINE, msg);
+		}
 	}
 
 	public void onClose(int code, String message) {
@@ -107,8 +121,11 @@ public class ChatWebSocket implements WebSocket.OnTextMessage {
 		// 向其它用户发送下线信息
 		String msg = this.clientName + "下线了！";
 		try {
-			this.webSocketService.sendMessageToOtherClient(this.sid,
-					TYPE_OFFLINE, msg);
+			if (ignoreOnlineRemindUserIds == null
+					|| !ignoreOnlineRemindUserIds.contains(this.clientId)) {
+				this.webSocketService.sendMessageToOtherClient(this.sid,
+						TYPE_OFFLINE, msg);
+			}
 			if (logger.isDebugEnabled())
 				logger.debug("onClose1");
 
