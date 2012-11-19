@@ -65,7 +65,8 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	public long pid = PID_ROOT;// 上级节点的ID:0-代表根节点,-1-我创建的,-2-共享给我的
 	private static final long PID_ROOT = 0;// 根节点
 	private static final long PID_MINE = -1;// 我创建的
-	private static final long PID_SHARE = -2;// 共享硬盘
+	private static final long PID_PUBLIC = -2;// 公共硬盘
+	private static final long PID_SHARE = -3;// 共享硬盘
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -365,9 +366,15 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
 			mineNode.addSubNode(node);
 		}
+		
+		// 创建"共享硬盘"节点
+		TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
+		publicNode.setLeaf(false);
+		publicNode.setOpen(false);
+		tree.addSubNode(publicNode);
 
 		// 创建"共享硬盘"节点
-		TreeNode shareNode = new TreeNode(PID_SHARE + "", "共享硬盘");
+		TreeNode shareNode = new TreeNode(PID_SHARE + "", "共享给我的");
 		shareNode.setLeaf(false);
 		shareNode.setOpen(true);
 		tree.addSubNode(shareNode);
