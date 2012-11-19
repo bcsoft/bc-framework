@@ -189,8 +189,7 @@ public abstract class ImportDataAction extends ActionSupport {
 	protected Object getCellValue(Cell cell, String columnName, String fileType) {
 		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 字符串
 			// 列名去空格
-			if (cell.getStringCellValue().length() != 0
-					|| cell.getStringCellValue() != null) {
+			if (cell.getStringCellValue() != null) {
 				return cell.getStringCellValue().trim();
 			} else {
 				return cell.getStringCellValue();
