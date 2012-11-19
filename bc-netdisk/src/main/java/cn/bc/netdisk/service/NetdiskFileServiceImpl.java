@@ -2,6 +2,8 @@ package cn.bc.netdisk.service;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -103,5 +105,13 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 
 	public Serializable[] getUserSharFileId2All(Long userId) {
 		return this.netdiskFileDao.getUserSharFileId2All(userId);
+	}
+
+	public List<Map<String,Object>> findOwnerFolder(Long ownerId, Long pid) {
+		return this.netdiskFileDao.findOwnerFolder(ownerId, pid);
+	}
+
+	public List<Map<String,Object>> findShareRootFolders(Long sharerId) {
+		return this.netdiskFileDao.findShareRootFolders(sharerId);
 	}
 }

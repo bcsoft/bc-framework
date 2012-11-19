@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,12 @@ import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.SystemContextHolder;
+import cn.bc.netdisk.domain.NetdiskFile;
 import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
-import cn.bc.web.struts2.ViewAction;
+import cn.bc.web.struts2.TreeViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -39,6 +43,8 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
+import cn.bc.web.ui.html.tree.Tree;
+import cn.bc.web.ui.html.tree.TreeNode;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -50,10 +56,17 @@ import cn.bc.web.ui.json.Json;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
+public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
+	private final static Log logger = LogFactory
+			.getLog(NetdiskFilesAction.class);
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 	private NetdiskFileService netdiskFileService;
+	public long pid = PID_ROOT;// 上级节点的ID:0-代表根节点,-1-我创建的,-2-共享给我的
+	private static final long PID_ROOT = 0;// 根节点
+	private static final long PID_MINE = -1;// 我创建的
+	private static final long PID_PUBLIC = -2;// 公共硬盘
+	private static final long PID_SHARE = -3;// 共享硬盘
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -63,7 +76,7 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	public boolean isReadonly() {
 		// 模板管理员或系统管理员
-	//	SystemContext context = (SystemContext) this.getContext();
+		// SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
 		// return !context.hasAnyRole(getText("key.role.bc.netdisk"),
 		// getText("key.role.bc.admin"));
@@ -229,13 +242,10 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		SystemContext context = (SystemContext) this.getContext();
 		OrCondition orCondition = new OrCondition();
 		// 状态条件
 		Condition statusCondition = null;
-		// Condition typeCondition = null;
-		Condition userCondition = null;
-		Condition authorityCondition = null;
-		// 状态
 		if (status != null && status.length() > 0) {
 			String[] ss = status.split(",");
 			if (ss.length == 1) {
@@ -246,29 +256,44 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 						StringUtils.stringArray2IntegerArray(ss));
 			}
 		}
-		// 当前用户只能查看自己上传的文件
-		SystemContext context = (SystemContext) this.getContext();
-		userCondition = new EqualsCondition("f.author_id", context
-				.getUserHistory().getId());
+
+		// 当前用户自己上传的文件
+		Condition userCondition = null;
+		if (pid == PID_ROOT || pid == PID_MINE) {
+			userCondition = new EqualsCondition("f.author_id", context
+					.getUserHistory().getId());
+		}
+
 		// 当前用户有权限查看的文件
-		Serializable[] ids = this.netdiskFileService.getUserSharFileId(context
-				.getUser().getId());
-		String qlStr4File = "";
-		if (ids != null) {
-			for (int i = 0; i < ids.length; i++) {
-				if (i + 1 != ids.length) {
-					qlStr4File += "?,";
-				} else {
-					qlStr4File += "?";
+		Condition shareCondition = null;
+		if (pid == PID_ROOT || pid == PID_SHARE) {
+			Serializable[] ids = this.netdiskFileService
+					.getUserSharFileId(context.getUser().getId());
+			String qlStr4File = "";
+			if (ids != null) {
+				for (int i = 0; i < ids.length; i++) {
+					if (i + 1 != ids.length) {
+						qlStr4File += "?,";
+					} else {
+						qlStr4File += "?";
+					}
 				}
 			}
+			shareCondition = (ids != null ? new QlCondition("f.id in ("
+					+ qlStr4File + ")", ids) : null);
 		}
-		authorityCondition = orCondition.add(
-				userCondition,
-				(ids != null ? new QlCondition("f.id in (" + qlStr4File + ")",
-						ids) : null)).setAddBracket(true);
+
+		// 合并
+		orCondition.add(userCondition, shareCondition).setAddBracket(true);
+
+		// 指定节点条件
+		Condition parentCondition = null;
+		if (this.pid > 0) {
+			parentCondition = new EqualsCondition("f.pid", this.pid);
+		}
+
 		return ConditionUtils.mix2AndCondition(statusCondition,
-				authorityCondition);
+				parentCondition, orCondition.isEmpty() ? null : orCondition);
 	}
 
 	@Override
@@ -280,6 +305,8 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 			json.put("status", status);
 		}
 
+		// 父节点条件
+		json.put("pid", this.pid);
 	}
 
 	@Override
@@ -308,4 +335,93 @@ public class NetdiskFilesAction extends ViewAction<Map<String, Object>> {
 		return statuses;
 	}
 
+	// 构建左侧的导航树
+	@Override
+	protected Tree getHtmlPageTree() {
+		Tree tree = new Tree();
+		tree.setNodeId(PID_ROOT + "");
+		TreeNode node;
+
+		// 获取树数据的url
+		tree.setUrl(this.getContextPath() + "/bc/netdiskFiles/loadTreeData");
+
+		// 树的特殊配置参数
+		Json cfg = new Json();
+		cfg.put("clickNode", "bc.netdiskFileView.clickTreeNode");
+		tree.setCfg(cfg);
+
+		// 创建"我的硬盘"节点
+		TreeNode mineNode = new TreeNode(PID_MINE + "", "我的硬盘");
+		mineNode.setLeaf(false);
+		mineNode.setOpen(true);
+		tree.addSubNode(mineNode);
+
+		// 创建"我的硬盘"节点的子节点
+		List<Map<String, Object>> ownerFiles = this.netdiskFileService
+				.findOwnerFolder(SystemContextHolder.get().getUserHistory()
+						.getId(), this.pid > 0 ? new Long(pid) : null);
+		for (Map<String, Object> f : ownerFiles) {
+			node = new TreeNode(f.get("id").toString(), f.get("name")
+					.toString(), f.get("type").toString()
+					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+			mineNode.addSubNode(node);
+		}
+		
+		// 创建"共享硬盘"节点
+		TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
+		publicNode.setLeaf(false);
+		publicNode.setOpen(false);
+		tree.addSubNode(publicNode);
+
+		// 创建"共享硬盘"节点
+		TreeNode shareNode = new TreeNode(PID_SHARE + "", "共享给我的");
+		shareNode.setLeaf(false);
+		shareNode.setOpen(true);
+		tree.addSubNode(shareNode);
+
+		// 创建"共享硬盘"节点的子节点
+		// shareNode.addSubNode(new TreeNode("s1", "子节点s1", true));
+		// shareNode.addSubNode(new TreeNode("s2", "子节点s2", true));
+		List<Map<String, Object>> shareRootFolders = this.netdiskFileService
+				.findShareRootFolders(SystemContextHolder.get().getUserHistory()
+						.getId());
+		for (Map<String, Object> f : shareRootFolders) {
+			node = new TreeNode(f.get("id").toString(), f.get("name")
+					.toString(), f.get("type").toString()
+					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+			shareNode.addSubNode(node);
+		}
+
+		return tree;
+	}
+
+	// 导出表格的数据为excel文件
+	public String loadTreeData() throws Exception {
+		JSONObject json = new JSONObject();
+		try {
+			List<Map<String, Object>> ownerFiles = this.netdiskFileService
+					.findOwnerFolder(SystemContextHolder.get().getUserHistory()
+							.getId(), this.pid);
+
+			List<TreeNode> subNodes = new ArrayList<TreeNode>();
+			TreeNode node;
+			for (Map<String, Object> f : ownerFiles) {
+				node = new TreeNode(f.get("id").toString(), f.get("name")
+						.toString(), f.get("type").toString()
+						.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+				subNodes.add(node);
+			}
+
+			json.put("success", true);
+			json.put("subNodesCount", ownerFiles.size());// 子节点的数量
+			json.put("html", TreeNode.buildSubNodes(subNodes));// 子节点的html代码
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			json.put("success", false);
+			json.put("msg", e.getMessage());
+		}
+
+		this.json = json.toString();
+		return "json";
+	}
 }

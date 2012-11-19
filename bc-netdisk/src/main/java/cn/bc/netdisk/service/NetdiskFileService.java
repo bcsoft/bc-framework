@@ -1,6 +1,8 @@
 package cn.bc.netdisk.service;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import cn.bc.core.service.CrudService;
 import cn.bc.netdisk.domain.NetdiskFile;
@@ -86,4 +88,24 @@ public interface NetdiskFileService extends CrudService<NetdiskFile> {
 	 * @return
 	 */
 	Serializable[] getUserSharFileId2All(Long userId);
+
+	/**
+	 * 获取属主用户创建的节点信息
+	 * 
+	 * @param ownerId
+	 *            创建者的ID，对应ActorHistory的ID
+	 * @param pid
+	 *            上级节点的ID，为空代表根节点
+	 * @return
+	 */
+	List<Map<String, Object>> findOwnerFolder(Long ownerId, Long pid);
+
+	/**
+	 * 获取分享给指定用户的根节点信息
+	 * 
+	 * @param sharerId
+	 *            指定用户的ID，对应Actor的ID
+	 * @return
+	 */
+	List<Map<String, Object>> findShareRootFolders(Long sharerId);
 }
