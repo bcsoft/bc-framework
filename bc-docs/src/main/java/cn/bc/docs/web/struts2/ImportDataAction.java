@@ -188,7 +188,13 @@ public abstract class ImportDataAction extends ActionSupport {
 	 */
 	protected Object getCellValue(Cell cell, String columnName, String fileType) {
 		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 字符串
-			return cell.getStringCellValue();
+			// 列名去空格
+			if (cell.getStringCellValue().length() != 0
+					|| cell.getStringCellValue() != null) {
+				return cell.getStringCellValue().trim();
+			} else {
+				return cell.getStringCellValue();
+			}
 		} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {// 布尔
 			return cell.getBooleanCellValue();
 		} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {// 数字
