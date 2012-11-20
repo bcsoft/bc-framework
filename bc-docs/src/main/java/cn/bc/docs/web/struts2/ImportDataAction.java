@@ -104,7 +104,7 @@ public abstract class ImportDataAction extends ActionSupport {
 				columnName = cell.getStringCellValue();
 				hasData = (columnName != null && columnName.length() > 0);
 				if (hasData)
-					columnNames.add(columnName);
+					columnNames.add(columnName.replaceAll("\\r\\n|\\r|\\n", ""));
 			} else {
 				hasData = false;
 			}

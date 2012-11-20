@@ -113,7 +113,13 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		GridExporter exporter = new GridExporter();
 		exporter.setColumns(this.getExportColumns()).setTitle(title)
 				.setData(this.es).setIdLabel(idLabel);
+
+		exporter.setTemplateFile(getExportTemplate());
 		return exporter;
+	}
+
+	protected InputStream getExportTemplate() {
+		return null;
 	}
 
 	/**
@@ -166,14 +172,22 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	@Override
 	protected void extendGridFooterButton(GridFooter gridFooter) {
 		// 导出按钮
-		gridFooter.addButton(GridFooter
-				.getDefaultExportButton(getText("label.export")));
+		gridFooter.addButton(getDefaultExportButton());
 
 		// 导入按钮
 		gridFooter.addButton(this.getGridFooterImportButton());
 
 		// 打印按钮
 		// gridFooter.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));
+	}
+
+	/**
+	 * 默认的导出按钮
+	 * 
+	 * @return
+	 */
+	protected FooterButton getDefaultExportButton() {
+		return GridFooter.getDefaultExportButton(getText("label.export"));
 	}
 
 	/**
