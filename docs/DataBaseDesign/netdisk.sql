@@ -193,3 +193,6 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 	and m.type_ > 1 and m.name='网络硬盘'
 	order by m.order_;
 
+-- 插入公共硬盘管理角色数据
+insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(NEXTVAL('CORE_SEQUENCE'), 0, false,  0,'0147', 'BC_NETDISK_PUBLIC','公共硬盘管理');
