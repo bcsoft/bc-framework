@@ -185,6 +185,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--查找所有公共文件
+CREATE OR REPLACE FUNCTION getPublicFileId() RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where folder_type = 1 union select f.* from bc_netdisk_file f,n where f.pid=n.id)
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
 
 --在我的事务中插入网络硬盘入口数据
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
