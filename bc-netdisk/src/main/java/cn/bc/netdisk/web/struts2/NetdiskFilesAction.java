@@ -351,9 +351,9 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// 指定节点条件
 		Condition parentCondition = null;
 		if (this.pid > 0) {
-			parentCondition = new QlCondition("( f.pid =" + this.pid
-					+ " or f.id=" + this.pid + ")");
-			// new EqualsCondition("f.pid", this.pid);
+			// parentCondition = new QlCondition("( f.pid =" + this.pid
+			// + " or f.id=" + this.pid + ")");
+			parentCondition = new EqualsCondition("f.pid", this.pid);
 		}
 		// 如果当前用户有权限查看的文件和公共硬盘条件都为空就返回空
 		if (orCondition.isEmpty() && publicCondition.isEmpty()
