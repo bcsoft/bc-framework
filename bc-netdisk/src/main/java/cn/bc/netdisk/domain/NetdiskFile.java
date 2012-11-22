@@ -34,6 +34,11 @@ public class NetdiskFile extends FileEntityImpl {
 	/** 类型：文件夹 */
 	public static final int TYPE_FOLDER = 0;
 
+	/** 文件夹类型：个人 */
+	public static final int FOLDER_TYPE_PERSONAL = 0;
+	/** 文件夹类型：公共 */
+	public static final int FOLDER_TYPE_PUBLIC = 1;
+
 	/** 编辑权限：编辑者可修改 */
 	public static final int ROLE_REVISABILITY = 0;
 	/** 编辑权限：只有拥有者可修改 */
@@ -42,6 +47,7 @@ public class NetdiskFile extends FileEntityImpl {
 	private int status = BCConstants.STATUS_ENABLED;
 	private Long pid;// 所在文件夹ID
 	private int type;// 类型 : 0-文件夹,1-文件
+	private int folderType;// 文件夹类型 : 0-个人,1-公共
 	private String name;// 名称 : (不带路径的部分)
 	private Long size;// 大小 : 字节单位,文件大小或文件夹的总大小
 	private String ext;// 扩展名 : 仅适用于文件类型
@@ -75,6 +81,15 @@ public class NetdiskFile extends FileEntityImpl {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	@Column(name = "FOLDER_TYPE")
+	public int getFolderType() {
+		return folderType;
+	}
+
+	public void setFolderType(int folderType) {
+		this.folderType = folderType;
 	}
 
 	public String getName() {

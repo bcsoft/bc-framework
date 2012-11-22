@@ -162,9 +162,10 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
-		sql.append(" where f.type_ = ? and f.author_id = ?");
+		sql.append(" where f.type_ = ? and f.author_id = ? and f.folder_type = ?");
 		args.add(NetdiskFile.TYPE_FOLDER);
 		args.add(ownerId);
+		args.add(NetdiskFile.FOLDER_TYPE_PERSONAL);
 		if (pid == null) {
 			sql.append(" and f.pid is null");
 		} else {
@@ -193,6 +194,112 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 	}
 
 	public List<Map<String, Object>> findShareRootFolders(Long sharerId) {
-		return new ArrayList<Map<String, Object>>();
+		if (sharerId == null)
+			return new ArrayList<Map<String, Object>>();
+
+		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+		sql.append(" where f.type_ = ? and f.id in(select pid from bc_netdisk_share where aid =?)");
+		sql.append(" and not exists(select 1 from bc_netdisk_file f1 where f.id=f1.id and f1.pid in (select pid from bc_netdisk_share where aid =?))");
+		args.add(NetdiskFile.TYPE_FOLDER);
+		args.add(sharerId);
+		args.add(sharerId);
+		sql.append(" order by f.status_,f.order_,f.file_date desc");
+		sqlObject.setSql(sql.toString());
+		sqlObject.setArgs(args);// 注入参数
+
+		// 数据映射器
+		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				int i = 0;
+				m.put("id", rs[i++]);
+				m.put("status", rs[i++]);
+				m.put("pid", rs[i++]);
+				m.put("type", rs[i++]);
+				m.put("name", rs[i++]);
+				return m;
+			}
+		});
+		return new HibernateJpaNativeQuery<Map<String, Object>>(
+				getJpaTemplate(), sqlObject).list();
+	}
+
+	public Long[] getUserPublicFileId() {
+		String sql = "select getPublicFileId()";
+		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
+		if (fileIds.get(0).get("getPublicFileId") == null) {
+			return null;
+		} else {
+			String ids = fileIds.get(0).get("getPublicFileId").toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
+					.split(","));
+		}
+	}
+
+	public List<Map<String, Object>> findChildFolder(Long pid) {
+		if (pid == null)
+			return new ArrayList<Map<String, Object>>();
+
+		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+		sql.append(" where f.type_ = ? and f.pid = ?");
+		args.add(NetdiskFile.TYPE_FOLDER);
+		args.add(pid);
+		sql.append(" order by f.status_,f.order_,f.file_date desc");
+		sqlObject.setSql(sql.toString());
+		sqlObject.setArgs(args);// 注入参数
+
+		// 数据映射器
+		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				int i = 0;
+				m.put("id", rs[i++]);
+				m.put("status", rs[i++]);
+				m.put("pid", rs[i++]);
+				m.put("type", rs[i++]);
+				m.put("name", rs[i++]);
+				return m;
+			}
+		});
+		return new HibernateJpaNativeQuery<Map<String, Object>>(
+				getJpaTemplate(), sqlObject).list();
+	}
+
+	public List<Map<String, Object>> findPublicRootFolder() {
+		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+		sql.append(" where f.type_ = ? and f.folder_type = ? and pid is null");
+		args.add(NetdiskFile.TYPE_FOLDER);
+		args.add(NetdiskFile.FOLDER_TYPE_PUBLIC);
+		sql.append(" order by f.status_,f.order_,f.file_date desc");
+		sqlObject.setSql(sql.toString());
+		sqlObject.setArgs(args);// 注入参数
+
+		// 数据映射器
+		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				int i = 0;
+				m.put("id", rs[i++]);
+				m.put("status", rs[i++]);
+				m.put("pid", rs[i++]);
+				m.put("type", rs[i++]);
+				m.put("name", rs[i++]);
+				return m;
+			}
+		});
+		return new HibernateJpaNativeQuery<Map<String, Object>>(
+				getJpaTemplate(), sqlObject).list();
 	}
 }
