@@ -55,6 +55,10 @@ public class AttachUtils {
 			return "application/vnd.android.package-archive";
 		} else if ("exe".equalsIgnoreCase(extend)) {
 			return "application/x-msdownload";//application/x-msdos-program
+		} else if ("mp3".equalsIgnoreCase(extend)) {
+			return "audio/mp3";
+		} else if ("wav".equalsIgnoreCase(extend)) {
+			return "audio/wav";
 		} else {
 			return "application/octet-stream";
 		}
