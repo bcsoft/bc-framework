@@ -93,4 +93,26 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 * @return
 	 */
 	List<Map<String, Object>> findShareRootFolders(Long sharerId);
+
+	/**
+	 * 查找公共硬盘所有文件
+	 * 
+	 * @return
+	 */
+	Long[] getUserPublicFileId();
+
+	/**
+	 * 获取指定文件夹下的子文件夹
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	List<Map<String, Object>> findChildFolder(Long pid);
+
+	/**
+	 * 获取公共的根节点信息
+	 * 
+	 * @return
+	 */
+	List<Map<String, Object>> findPublicRootFolder();
 }

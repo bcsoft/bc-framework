@@ -17,11 +17,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.core.Page;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.core.query.condition.impl.IsNullCondition;
+import cn.bc.core.query.condition.impl.NotEqualsCondition;
 import cn.bc.core.query.condition.impl.OrCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
@@ -75,12 +79,18 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 	@Override
 	public boolean isReadonly() {
-		// 模板管理员或系统管理员
-		// SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：模板管理员
-		// return !context.hasAnyRole(getText("key.role.bc.netdisk"),
-		// getText("key.role.bc.admin"));
+		// 默认为false个人硬盘管理权限
 		return false;
+	}
+
+	// 公共硬盘管理权限
+	public boolean isPublicHardDiskManagement() {
+		// 模板管理员或系统管理员
+		SystemContext context = (SystemContext) this.getContext();
+		// 配置权限：公共管理员
+		return context.hasAnyRole(getText("key.role.bc.netdisk.public"),
+				getText("key.role.bc.admin"));
+
 	}
 
 	@Override
@@ -226,10 +236,20 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 					.setText("查看").setClick("bc.netdiskFileView.preview"));
 			// 其他操作
-			tb.addButton(new ToolbarMenuButton("更多")
-					.addMenuItem("下载", "xiazai")
-					.addMenuItem("新建文件夹", "xinjianwenjianjia")
-					.setChange("bc.netdiskFileView.selectMenuButtonItem"));
+			// 如果拥有公共硬盘管理权限才能新建公共文件夹
+			if (this.isPublicHardDiskManagement()) {
+				tb.addButton(new ToolbarMenuButton("更多")
+						.addMenuItem("下载", "xiazai")
+						.addMenuItem("新建个人文件夹", "xinjiangerenwenjianjia")
+						.addMenuItem("新建公共文件夹", "xinjiangonggongwenjianjia")
+						.setChange("bc.netdiskFileView.selectMenuButtonItem"));
+			} else {
+				tb.addButton(new ToolbarMenuButton("更多")
+						.addMenuItem("下载", "xiazai")
+						.addMenuItem("新建个人文件夹", "xinjiangerenwenjianjia")
+						.setChange("bc.netdiskFileView.selectMenuButtonItem"));
+			}
+
 		} else {
 			tb.addButton(this.getDefaultOpenToolbarButton());
 		}
@@ -244,6 +264,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		SystemContext context = (SystemContext) this.getContext();
 		OrCondition orCondition = new OrCondition();
+		AndCondition andCondition = new AndCondition();
 		// 状态条件
 		Condition statusCondition = null;
 		if (status != null && status.length() > 0) {
@@ -264,6 +285,17 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 					.getUserHistory().getId());
 		}
 
+		// 点击我的硬盘||共公硬盘时只查询子文件
+		Condition nodeCondition = null;
+		if (pid == PID_MINE || pid == PID_PUBLIC) {
+			nodeCondition = new IsNullCondition("f.pid");
+		}
+		// 点击我的硬盘不应该看到我新建的公共文件
+		Condition notPublic2MeCondition = null;
+		if (pid == PID_MINE) {
+			notPublic2MeCondition = new NotEqualsCondition("f.folder_type",
+					NetdiskFile.FOLDER_TYPE_PUBLIC);
+		}
 		// 当前用户有权限查看的文件
 		Condition shareCondition = null;
 		if (pid == PID_ROOT || pid == PID_SHARE) {
@@ -286,14 +318,76 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// 合并
 		orCondition.add(userCondition, shareCondition).setAddBracket(true);
 
+		// 公共硬盘
+		OrCondition publicCondition = new OrCondition();
+		if (pid == PID_ROOT || pid == PID_PUBLIC) {
+			Long[] publicFileIds = this.netdiskFileService
+					.getUserPublicFileId();
+			String qlStr4File4Public = "";
+			if (publicFileIds != null) {
+				for (int i = 0; i < publicFileIds.length; i++) {
+					if (i + 1 != publicFileIds.length) {
+						qlStr4File4Public += "?,";
+					} else {
+						qlStr4File4Public += "?";
+					}
+				}
+			}
+			publicCondition.add(
+					(publicFileIds != null ? new QlCondition("f.id in ("
+							+ qlStr4File4Public + ")", publicFileIds) : null))
+					.setAddBracket(true);
+		}
+		// 共享给我的硬盘
+		Condition share2meCondition = null;
+		if (pid == PID_SHARE) {
+			share2meCondition = new QlCondition(
+					"f.id in ( select pid from bc_netdisk_share where aid ="
+							+ context.getUser().getId()
+							+ "  and not exists(select 1 from bc_netdisk_file f1 where f.id=f1.id and f1.pid in (select pid from bc_netdisk_share where aid ="
+							+ context.getUser().getId() + ")))");
+		}
+
 		// 指定节点条件
 		Condition parentCondition = null;
 		if (this.pid > 0) {
+			// parentCondition = new QlCondition("( f.pid =" + this.pid
+			// + " or f.id=" + this.pid + ")");
 			parentCondition = new EqualsCondition("f.pid", this.pid);
 		}
+		// 如果当前用户有权限查看的文件和公共硬盘条件都为空就返回空
+		if (orCondition.isEmpty() && publicCondition.isEmpty()
+				&& !(this.pid > 0)) {
+			return null;
+			// 公共硬盘查询条件
+		} else if (pid == PID_PUBLIC) {
+			return ConditionUtils.mix2AndCondition(
+					(publicCondition.isEmpty() ? null : publicCondition),
+					nodeCondition);
+		} // 节点的查询条件
+		else if (this.pid > 0) {
+			return ConditionUtils.mix2AndCondition(parentCondition,
+					statusCondition);
+		} else {
+			return ConditionUtils.mix2OrCondition(
+					andCondition.add(statusCondition, parentCondition,
+							nodeCondition, share2meCondition,
+							notPublic2MeCondition,
+							orCondition.isEmpty() ? null : orCondition)
+							.setAddBracket(true),
+					(publicCondition.isEmpty() ? null : publicCondition));
+		}
+	}
 
-		return ConditionUtils.mix2AndCondition(statusCondition,
-				parentCondition, orCondition.isEmpty() ? null : orCondition);
+	@Override
+	protected Page<Map<String, Object>> findPage() {
+		// 如果返回为null则不进行查询
+		if (this.getGridSpecalCondition() != null) {
+			return super.findPage();
+		} else {
+			return new Page<Map<String, Object>>(1, 1, 0,
+					new ArrayList<Map<String, Object>>());
+		}
 	}
 
 	@Override
@@ -366,12 +460,21 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
 			mineNode.addSubNode(node);
 		}
-		
-		// 创建"共享硬盘"节点
+
+		// 创建"公共硬盘"节点
 		TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
 		publicNode.setLeaf(false);
-		publicNode.setOpen(false);
+		publicNode.setOpen(true);
 		tree.addSubNode(publicNode);
+		// 创建"公共硬盘"节点的子节点
+		List<Map<String, Object>> publcRootFiles = this.netdiskFileService
+				.findPublicRootFolder();
+		for (Map<String, Object> f : publcRootFiles) {
+			node = new TreeNode(f.get("id").toString(), f.get("name")
+					.toString(), f.get("type").toString()
+					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+			publicNode.addSubNode(node);
+		}
 
 		// 创建"共享硬盘"节点
 		TreeNode shareNode = new TreeNode(PID_SHARE + "", "共享给我的");
@@ -383,7 +486,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// shareNode.addSubNode(new TreeNode("s1", "子节点s1", true));
 		// shareNode.addSubNode(new TreeNode("s2", "子节点s2", true));
 		List<Map<String, Object>> shareRootFolders = this.netdiskFileService
-				.findShareRootFolders(SystemContextHolder.get().getUserHistory()
+				.findShareRootFolders(SystemContextHolder.get().getUser()
 						.getId());
 		for (Map<String, Object> f : shareRootFolders) {
 			node = new TreeNode(f.get("id").toString(), f.get("name")
@@ -398,11 +501,27 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	// 导出表格的数据为excel文件
 	public String loadTreeData() throws Exception {
 		JSONObject json = new JSONObject();
+		List<Map<String, Object>> ownerFiles = null;
 		try {
-			List<Map<String, Object>> ownerFiles = this.netdiskFileService
-					.findOwnerFolder(SystemContextHolder.get().getUserHistory()
-							.getId(), this.pid);
-
+			// 如果点击我的硬盘pid条件为
+			if (this.pid == PID_MINE) {
+				ownerFiles = this.netdiskFileService.findOwnerFolder(
+						SystemContextHolder.get().getUserHistory().getId(),
+						null);
+				// 如果点击共享硬盘pid条件为
+			} else if (this.pid == PID_SHARE) {
+				ownerFiles = this.netdiskFileService
+						.findShareRootFolders(SystemContextHolder.get()
+								.getUser().getId());
+				// 如果点击公共硬盘pid条件为
+			} else if (this.pid == PID_PUBLIC) {
+				ownerFiles = this.netdiskFileService.findPublicRootFolder();
+			} else {
+				ownerFiles = this.netdiskFileService.findChildFolder(this.pid);
+				// ownerFiles = this.netdiskFileService.findOwnerFolder(
+				// SystemContextHolder.get().getUserHistory().getId(),
+				// this.pid);
+			}
 			List<TreeNode> subNodes = new ArrayList<TreeNode>();
 			TreeNode node;
 			for (Map<String, Object> f : ownerFiles) {
