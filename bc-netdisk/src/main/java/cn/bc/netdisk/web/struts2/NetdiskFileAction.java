@@ -58,6 +58,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public boolean isEditRole = false;// 是否编辑共享设置(只有拥有都才有编辑)
 	public boolean isEditVisitorsAuthority = false;// 编辑访问者权限
 	public boolean isClearUp = false;// 文件整理权限
+	public boolean isDel = false;// 文件删除权限
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -77,11 +78,17 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 	@Override
 	public boolean isReadonly() {
+		return false;
+	}
+
+	// 公共硬盘管理权限
+	public boolean isPublicHardDiskManagement() {
 		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：模板管理员
-		return !context.hasAnyRole(getText("key.role.bc.template"),
+		// 配置权限：公共管理员
+		return context.hasAnyRole(getText("key.role.bc.netdisk.public"),
 				getText("key.role.bc.admin"));
+
 	}
 
 	@Override
@@ -93,6 +100,16 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	@Override
 	protected void afterCreate(NetdiskFile entity) {
 		super.afterCreate(entity);
+		// 新建个人文件夹
+		if (dialogType.equals("xinjiangerenwenjianjia")) {
+			title = getText("netdisk.xinjiangerenwenjianjia");
+			entity.setFolderType(NetdiskFile.FOLDER_TYPE_PERSONAL);
+		} else {
+			// 新建公共文件夹
+			title = getText("netdisk.xinjiangonggongwenjianjia");
+			entity.setFolderType(NetdiskFile.FOLDER_TYPE_PUBLIC);
+
+		}
 		entity.setStatus(BCConstants.STATUS_ENABLED);
 		entity.setType(NetdiskFile.TYPE_FOLDER);
 		entity.setSize(new Long(0));
@@ -100,11 +117,37 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	}
 
 	public String createDialog() {
-		SystemContext context = this.getSystyemContext();
+
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
 		NetdiskFile e = this.netdiskFileService.load(this.getId());
 		this.setE(e);
+		// 判断是否拥有删除，整理，共享权限
+		isWonerDelAndClearAndShare4Power(e);
+		// 页面中跳转
+		if (dialogType.equals("zhengliwenjian")) {
+
+			if (e.getType() == NetdiskFile.TYPE_FOLDER) {
+				title = getText("folder");
+			} else {
+				title = getText("file");
+			}
+
+			return "zhengliwenjian";
+		} else {
+
+			return "gongxiang";
+		}
+
+	}
+
+	/**
+	 * 判断是否拥有删除，整理，共享权限
+	 * 
+	 * @param e
+	 */
+	private void isWonerDelAndClearAndShare4Power(NetdiskFile e) {
+		SystemContext context = this.getSystyemContext();
 		// 判断是否可以编辑共享设置(拥有者才能编辑)
 		if (e.getAuthor().getId().equals(context.getUserHistory().getId())) {
 			// 共享界面权限
@@ -112,6 +155,8 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			isEditVisitorsAuthority = true;// 拥有都可以访问者
 			// 整理界面权限
 			isClearUp = true;
+			// 文件删除
+			isDel = true;
 		} else {
 			// 非拥有者
 			// 如果设置了只有拥有都有有权限编辑访问者则其他用户不能添加或删除应该文件的访问者
@@ -127,6 +172,8 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 						isEditVisitorsAuthority = true;
 						// 整理界面权限
 						isClearUp = true;
+						// 文件删除
+						isDel = true;
 					}
 				} else {
 					// 获取当前的文件和父级文件
@@ -147,6 +194,8 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 										isEditVisitorsAuthority = true;
 										// 整理界面权限
 										isClearUp = true;
+										// 文件删除
+										isDel = true;
 										break;
 									}
 								}
@@ -158,22 +207,32 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 					}
 				}
 			}
-		}
-		// 页面中跳转
-		if (dialogType.equals("zhengliwenjian")) {
-
-			if (e.getType() == NetdiskFile.TYPE_FOLDER) {
-				title = getText("folder");
-			} else {
-				title = getText("file");
+			// 公共文件权限判断
+			// 先判断整理我共享的文件是否有权限修改再判断该文件是否为公共文件
+			if (!isEditVisitorsAuthority) {
+				// 获取当前的文件和父级文件
+				Serializable[] ids = this.netdiskFileService
+						.getMyselfAndParentsFileId(this.getId());
+				// 判断当前文件或父级文件夹该用户是否拥有编辑权限
+				for (Serializable id : ids) {
+					NetdiskFile nf = this.netdiskFileService.load(id);
+					if (nf != null) {
+						// 如果该文件为公共文件并且当前用户拥有公共硬盘管理权限
+						// 就可以共享或管理该文件
+						if (nf.getFolderType() == NetdiskFile.FOLDER_TYPE_PUBLIC
+								&& this.isPublicHardDiskManagement()) {
+							// 共享界面权限
+							isEditVisitorsAuthority = true;
+							// 整理界面权限
+							isClearUp = true;
+							// 文件删除
+							isDel = true;
+							break;
+						}
+					}
+				}
 			}
-
-			return "zhengliwenjian";
-		} else {
-
-			return "gongxiang";
 		}
-
 	}
 
 	public String json;
@@ -342,20 +401,51 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 
 	// 删除
 	public String delete() {
-		try {
-			if (this.getIds() != null && this.getIds().length() > 0) {
-				Long[] ids = cn.bc.core.util.StringUtils
-						.stringArray2LongArray(this.getIds().split(","));
-				this.netdiskFileService.delete(ids, isRelevanceDelete);
-			} else {
-				this.netdiskFileService.delete(this.getId(), isRelevanceDelete);
+		// 判断是否有删除权限
+		if (this.getIds() != null && this.getIds().length() > 0) {
+			Long[] ids = cn.bc.core.util.StringUtils.stringArray2LongArray(this
+					.getIds().split(","));
+			for (int i = 0; i < ids.length; i++) {
+				NetdiskFile e = this.netdiskFileService.load(ids[i]);
+				this.setId(ids[i]);
+				// 判断是否拥有删除，整理，共享权限
+				isWonerDelAndClearAndShare4Power(e);
+				// 如果没有删除权限就提示
+				if (!isDel) {
+					jsonObject.put("success", false);
+					jsonObject.put("msg", "你没有删除" + e.getName() + "的权限！");
+					break;
+				}
 			}
-			jsonObject.put("success", true);
-			jsonObject.put("msg", "删除成功！");
-		} catch (DataIntegrityViolationException e) {
-			jsonObject.put("msg", getDeleteExceptionMsg(e));
-			jsonObject.put("e", e.getClass().getSimpleName());
-			jsonObject.put("success", false);
+
+		} else {
+			NetdiskFile e = this.netdiskFileService.load(this.getId());
+			// 判断是否拥有删除，整理，共享权限
+			isWonerDelAndClearAndShare4Power(e);
+			// 如果没有删除权限就提示
+			if (!isDel) {
+				jsonObject.put("success", false);
+				jsonObject.put("msg", "你没有删除“" + e.getName() + "”的权限！");
+			}
+		}
+		// 正常删除
+		if (isDel) {
+			try {
+				if (this.getIds() != null && this.getIds().length() > 0) {
+					Long[] ids = cn.bc.core.util.StringUtils
+							.stringArray2LongArray(this.getIds().split(","));
+					this.netdiskFileService.delete(ids, isRelevanceDelete);
+				} else {
+					this.netdiskFileService.delete(this.getId(),
+							isRelevanceDelete);
+				}
+				jsonObject.put("success", true);
+				jsonObject.put("msg", "删除成功！");
+			} catch (DataIntegrityViolationException e) {
+				jsonObject.put("msg", getDeleteExceptionMsg(e));
+				jsonObject.put("e", e.getClass().getSimpleName());
+				jsonObject.put("success", false);
+			}
 		}
 		this.json = jsonObject.toString();
 		return "json";

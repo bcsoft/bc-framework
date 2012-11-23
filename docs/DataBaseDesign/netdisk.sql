@@ -10,6 +10,7 @@ CREATE TABLE BC_NETDISK_FILE(
 	PID INT,
 	STATUS_ INT DEFAULT 0 NOT NULL,
 	TYPE_ INT DEFAULT 0 NOT NULL,
+	FOLDER_TYPE INT DEFAULT 0 NOT NULL,
 	NAME VARCHAR(500) NOT NULL,
 	SIZE_ INT DEFAULT 0 NOT NULL,
 	EXT VARCHAR(10),
@@ -28,6 +29,7 @@ COMMENT ON COLUMN BC_NETDISK_FILE.ID IS 'ID';
 COMMENT ON COLUMN BC_NETDISK_FILE.PID IS '所在文件夹ID';
 COMMENT ON COLUMN BC_NETDISK_FILE.STATUS_ IS '状态 : 0-正常,1-已删除';
 COMMENT ON COLUMN BC_NETDISK_FILE.TYPE_ IS '类型 : 0-文件夹,1-文件';
+COMMENT ON COLUMN BC_NETDISK_FILE.FOLDER_TYPE IS '文件夹类型 : 0-个人,1-公共';
 COMMENT ON COLUMN BC_NETDISK_FILE.NAME IS '名称 : (不带路径的部分)';
 COMMENT ON COLUMN BC_NETDISK_FILE.SIZE_ IS '大小 : 字节单位,文件大小或文件夹的总大小';
 COMMENT ON COLUMN BC_NETDISK_FILE.EXT IS '扩展名 : 仅适用于文件类型';
@@ -183,6 +185,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--查找所有公共文件
+CREATE OR REPLACE FUNCTION getPublicFileId() RETURNS varchar AS $$
+DECLARE
+	--定义变量
+	fileId varchar(4000);
+BEGIN
+	with recursive n as(select * from bc_netdisk_file where folder_type = 1 union select f.* from bc_netdisk_file f,n where f.pid=n.id)
+	select string_agg(id||'',',') into fileId from n;
+
+	return fileId;
+END;
+$$ LANGUAGE plpgsql;
+
 
 --在我的事务中插入网络硬盘入口数据
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
@@ -193,3 +208,6 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 	and m.type_ > 1 and m.name='网络硬盘'
 	order by m.order_;
 
+-- 插入公共硬盘管理角色数据
+insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(NEXTVAL('CORE_SEQUENCE'), 0, false,  0,'0147', 'BC_NETDISK_PUBLIC','公共硬盘管理');

@@ -19,6 +19,7 @@ import cn.bc.core.Page;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.NotEqualsCondition;
@@ -61,13 +62,22 @@ public class SelectFoldersAction extends
 		this.netdiskFileService = netdiskFileService;
 	}
 
-	@Override
-	public boolean isReadonly() {
+	// @Override
+	// public boolean isReadonly() {
+	// // 模板管理员或系统管理员
+	// SystemContext context = (SystemContext) this.getContext();
+	// // 配置权限：模板管理员
+	// return !context.hasAnyRole(getText("key.role.bc.netdisk"),
+	// getText("key.role.bc.admin"));
+	// }
+	// 公共硬盘管理权限
+	public boolean isPublicHardDiskManagement() {
 		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：模板管理员
-		return !context.hasAnyRole(getText("key.role.bc.netdisk"),
+		// 配置权限：公共管理员
+		return context.hasAnyRole(getText("key.role.bc.netdisk.public"),
 				getText("key.role.bc.admin"));
+
 	}
 
 	@Override
@@ -138,7 +148,8 @@ public class SelectFoldersAction extends
 	@Override
 	protected Condition getGridSpecalCondition() {
 		OrCondition orCondition = new OrCondition();
-		// AndCondition andCondition = new AndCondition();
+		AndCondition operateFoldersCondition = new AndCondition();
+		AndCondition publicFoldersCondition = new AndCondition();
 		// 状态条件
 		Condition statusCondition = null;
 		Condition typeCondition = null;
@@ -270,10 +281,32 @@ public class SelectFoldersAction extends
 					.setAddBracket(true);
 
 		}
-		// 可以操作的文件夹不为空
-		if (operateId.size() != 0) {
-			return ConditionUtils.mix2AndCondition(statusCondition,
-					typeCondition, eliminateCondition, authorityCondition);
+		// 如果是公共硬盘管理员可以选择公共硬盘的文件夹
+		Condition publicCondition = null;
+		if (this.isPublicHardDiskManagement()) {
+			publicCondition = new EqualsCondition("f.folder_type",
+					NetdiskFile.FOLDER_TYPE_PUBLIC);
+
+		}
+
+		// 可以操作的文件夹不为空和有权限的
+		if (operateId.size() != 0 && publicCondition != null) {
+			return ConditionUtils
+					.mix2OrCondition(
+							operateFoldersCondition.add(statusCondition,
+									typeCondition, eliminateCondition,
+									authorityCondition).setAddBracket(true),
+							publicFoldersCondition.add(statusCondition,
+									publicCondition, typeCondition)
+									.setAddBracket(true));
+			// 没有公共硬盘管理权限的
+		} else if (operateId.size() != 0 && publicCondition == null) {
+			return operateFoldersCondition.add(statusCondition, typeCondition,
+					eliminateCondition, authorityCondition);
+			// 没有可以操作的文件但有公共权限的
+		} else if (operateId.size() == 0 && publicCondition != null) {
+			return publicFoldersCondition.add(statusCondition, publicCondition,
+					typeCondition);
 		} else {
 			return null;
 		}
