@@ -425,7 +425,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			// 如果没有删除权限就提示
 			if (!isDel) {
 				jsonObject.put("success", false);
-				jsonObject.put("msg", "你没有删除" + e.getName() + "的权限！");
+				jsonObject.put("msg", "你没有删除“" + e.getName() + "”的权限！");
 			}
 		}
 		// 正常删除
