@@ -273,7 +273,7 @@ public interface ActorDao extends CrudDao<Actor> {
 	 * @return
 	 */
 	String loadActorNameByCode(String actorCode);
-	
+
 	/**
 	 * 根据用户帐号获取用户的全名称
 	 * 
@@ -296,4 +296,17 @@ public interface ActorDao extends CrudDao<Actor> {
 	 */
 	List<Actor> findByName(String actorName, Integer[] actorTypes,
 			Integer[] actorStatues);
+
+	/**
+	 * 判断code是否已被占用
+	 * 
+	 * @param id
+	 *            要使用此编码的Actor的ID
+	 * @param code
+	 *            编码
+	 * @param type
+	 *            Actor的类型
+	 * @return code可用返回true，已被占用就返回false
+	 */
+	boolean isUnique(Long id, String code, int type);
 }

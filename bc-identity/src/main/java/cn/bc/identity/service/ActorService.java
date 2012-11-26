@@ -89,8 +89,9 @@ public interface ActorService extends CrudService<Actor> {
 	 *            从属方的状态，对应Actor的status属性
 	 * @return
 	 */
-	List<Actor> findFollowerWithName(Long masterId, String followerName, Integer[] relationTypes,
-			Integer[] followerTypes, Integer[] followerStatuses);
+	List<Actor> findFollowerWithName(Long masterId, String followerName,
+			Integer[] relationTypes, Integer[] followerTypes,
+			Integer[] followerStatuses);
 
 	/**
 	 * 获取顶层单位信息
@@ -270,7 +271,7 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	String loadActorNameByCode(String userCode);
-	
+
 	/**
 	 * 根据用户帐号获取用户的全名称
 	 * 
@@ -279,7 +280,7 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	String loadActorFullNameByCode(String userCode);
-	
+
 	/**
 	 * 获取指定名称的Actor信息
 	 * 
@@ -293,4 +294,17 @@ public interface ActorService extends CrudService<Actor> {
 	 */
 	List<Actor> findByName(String actorName, Integer[] actorTypes,
 			Integer[] actorStatues);
+
+	/**
+	 * 判断code是否已被占用
+	 * 
+	 * @param id
+	 *            要使用此编码的Actor的ID
+	 * @param code
+	 *            编码
+	 * @param type
+	 *            Actor的类型
+	 * @return code可用返回true，已被占用就返回false
+	 */
+	boolean isUnique(Long id, String code, int type);
 }

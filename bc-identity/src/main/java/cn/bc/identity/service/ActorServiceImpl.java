@@ -162,4 +162,8 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 			Integer[] actorStatues) {
 		return this.actorDao.findByName(actorName, actorTypes, actorStatues);
 	}
+
+	public boolean isUnique(Long id, String code, int type) {
+		return this.actorDao.isUnique(id, code, type);
+	}
 }
