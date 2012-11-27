@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -91,11 +92,39 @@ public abstract class AbstractActorAction extends EntityAction<Long, Actor> {
 
 	@Override
 	public String save() throws Exception {
-		// 处理分配的角色
-		dealRoles4Save();
+		JSONObject json = new JSONObject();
 
-		this.getActorService().save4belong(this.getE(), this.buildBelongIds());
-		return "saveSuccess";
+		try {
+			// 编码的唯一性检测
+			if (!this.getActorService().isUnique(this.getE().getId(),
+					this.getE().getCode(), this.getE().getType())) {
+				json.put("success", false);
+				json.put("id", this.getE().getId());
+				if (this.getE().getType() == Actor.TYPE_USER) {
+					json.put("msg", "登录名已被其他用户占用，请重新修改！");
+				} else {
+					json.put("msg", "输入的编码已被占用，请重新修改！");
+				}
+			} else {
+				// 处理分配的角色
+				dealRoles4Save();
+
+				// 处理隶属关系
+				this.getActorService().save4belong(this.getE(),
+						this.buildBelongIds());
+
+				json.put("success", true);
+				json.put("id", this.getE().getId());
+				json.put("msg", this.getText("form.save.success"));
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			json.put("success", false);
+			json.put("msg", e.getMessage());
+		}
+
+		this.json = json.toString();
+		return "json";
 	}
 
 	protected Long[] buildBelongIds() {

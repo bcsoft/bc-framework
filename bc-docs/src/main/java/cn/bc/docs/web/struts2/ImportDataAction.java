@@ -104,7 +104,8 @@ public abstract class ImportDataAction extends ActionSupport {
 				columnName = cell.getStringCellValue();
 				hasData = (columnName != null && columnName.length() > 0);
 				if (hasData)
-					columnNames.add(columnName.replaceAll("\\r\\n|\\r|\\n", ""));
+					columnNames
+							.add(columnName.replaceAll("\\r\\n|\\r|\\n", ""));
 			} else {
 				hasData = false;
 			}
@@ -156,20 +157,13 @@ public abstract class ImportDataAction extends ActionSupport {
 		Object cellValue;
 		for (int i = 0; i < columnNames.size(); i++) {
 			cell = row.getCell(i);
-			if (cell == null) {
-				rowData.put(columnNames.get(i), null);
-				continue;
-			} else {
-				cellValue = getCellValue(cell, columnNames.get(i), fileType);
-				if (i == 0) {// 首个单元格为空就当成是数据行的结束行而退出
-					if (cellValue == null
-							|| (cellValue instanceof String && cellValue
-									.toString().isEmpty())) {
-						return null;
-					}
-				} else {
-					rowData.put(columnNames.get(i), cellValue);
+			cellValue = getCellValue(cell, columnNames.get(i), fileType);
+			if (i == 0) {// 首个单元格为空就当成是数据行的结束行而退出
+				if (cellValue == null || cellValue.toString().trim().isEmpty()) {
+					return null;
 				}
+			} else {
+				rowData.put(columnNames.get(i), cellValue);
 			}
 		}
 		return rowData;
@@ -187,6 +181,8 @@ public abstract class ImportDataAction extends ActionSupport {
 	 * @return
 	 */
 	protected Object getCellValue(Cell cell, String columnName, String fileType) {
+		if (cell == null)
+			return null;
 		if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 字符串
 			// 列名去空格
 			if (cell.getStringCellValue() != null) {

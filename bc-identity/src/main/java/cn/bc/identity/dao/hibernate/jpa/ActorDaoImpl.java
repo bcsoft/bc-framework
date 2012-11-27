@@ -940,4 +940,27 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		}
 		return this.getJpaTemplate().find(hql.toString(), args.toArray());
 	}
+
+	public boolean isUnique(Long id, String code, int type) {
+		if (code == null)
+			return false;
+
+		Object[] args;
+		String hql = "select id,code from BC_IDENTITY_ACTOR where type_ = ? and code = ?";
+		if (id != null) {
+			hql += " and id != ?";
+			args = new Object[] { type, code, id };
+		} else {
+			args = new Object[] { type, code };
+		}
+
+		List<Object[]> o = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql, args, new RowMapper<Object[]>() {
+					public Object[] mapRow(Object[] rs, int rowNum) {
+						return rs;
+					}
+				});
+
+		return o == null || o.isEmpty();
+	}
 }

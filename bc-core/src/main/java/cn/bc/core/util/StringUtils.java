@@ -11,6 +11,8 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.bc.core.exception.CoreException;
 
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+
 /**
  * 字符串辅助工具类
  * 
@@ -230,6 +232,19 @@ public class StringUtils {
 		return "\"" + str + "\"";
 	}
 
+	public static HtmlCompressor compressor = new HtmlCompressor();
+
+	/**
+	 * 压缩Html代码
+	 * 
+	 * @param html
+	 *            要压缩Html代码
+	 * @return
+	 */
+	public static String compressHtml(String html) {
+		return compressor.compress(html);
+	}
+
 	/**
 	 * 计算子串出现的次数
 	 * 
@@ -290,10 +305,10 @@ public class StringUtils {
 		} else if (type.equals("long")) {
 			return new Long(value);
 		} else if (type.equals("Long")) {
-			if(value==null||value.length()==0)
+			if (value == null || value.length() == 0)
 				return null;
 			return new Long(value);
-		}else if (type.equals("float")) {
+		} else if (type.equals("float")) {
 			return new Float(value);
 		} else if (type.equals("date")) {
 			return DateUtils.getDate(value);
