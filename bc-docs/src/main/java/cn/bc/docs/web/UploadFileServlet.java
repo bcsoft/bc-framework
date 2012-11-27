@@ -312,6 +312,9 @@ public class UploadFileServlet extends HttpServlet {
 		if (ptype == null)
 			ptype = "";
 		String puid = request.getParameter("puid");// 所隶属文档的uid
+		String fieldName = request.getParameter("fn");// file控件的名称
+		if (fieldName == null || fieldName.isEmpty())
+			fieldName = "filedata";
 		boolean absolute = "1".equals(request.getParameter("a"));
 		try {
 			// 检测请求是否是文件上传类型
@@ -350,7 +353,7 @@ public class UploadFileServlet extends HttpServlet {
 			}
 
 			// 获取xheditor上传的文件
-			FileItem uploadFile = (FileItem) fields.get("filedata");
+			FileItem uploadFile = (FileItem) fields.get(fieldName);
 
 			// 获取上传文件名
 			localFile = uploadFile.getName();
@@ -360,8 +363,14 @@ public class UploadFileServlet extends HttpServlet {
 
 			// 文件存储的相对路径（年月），避免超出目录内文件数的限制
 			Calendar now = Calendar.getInstance();
-			String subFolder = new SimpleDateFormat("yyyyMM").format(now
-					.getTime());
+			String subFolder = request.getParameter("sp");// 附加的子路径名
+			if (subFolder == null) {
+				subFolder = "";
+			}
+			if (subFolder.length() > 0 && !subFolder.endsWith("/")) {
+				subFolder += "/";
+			}
+			subFolder += new SimpleDateFormat("yyyyMM").format(now.getTime());
 
 			// 要保存的物理文件
 			String realFileDir;// 所保存文件所在的目录的绝对路径名
@@ -374,7 +383,8 @@ public class UploadFileServlet extends HttpServlet {
 			relativeFilePath = subFolder + "/" + fileName;
 			if (absolute) {
 				realFileDir = appRealDir + "/" + subFolder;
-				fileUrl = request.getContextPath() + "/bc/attach/download";
+				// fileUrl = request.getContextPath() + "/bc/attach/download";
+				fileUrl = "bc/attach/inline";
 			} else {
 				realFileDir = WebUtils.rootPath + "/" + appSubDir + "/"
 						+ subFolder;
@@ -457,9 +467,9 @@ public class UploadFileServlet extends HttpServlet {
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		out.println("{\"err\":\"" + err + "\",\"msg\":{\"url\":\"" + fileUrl
-				+ "\",\"localfile\":\"" + localFile + "\",\"id\":\"" + id
-				+ "\"}}");
+		out.println("{\"filelink\":\"" + fileUrl + "\",\"err\":\"" + err
+				+ "\",\"msg\":{\"url\":\"" + fileUrl + "\",\"localfile\":\""
+				+ localFile + "\",\"id\":\"" + id + "\"}}");
 		out.flush();
 		out.close();
 	}
