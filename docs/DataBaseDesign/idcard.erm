@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2012-06-08 10:14:54</creation_date>
-			<updated_date>2012-11-27 18:22:42</updated_date>
+			<updated_date>2012-11-30 11:23:25</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -185,15 +185,15 @@
 		</word>
 		<word>
 			<id>3</id>
-			<length>255</length>
+			<length>20</length>
 			<decimal>null</decimal>
 			<array>false</array>
 			<array_dimension>null</array_dimension>
 			<unsigned>false</unsigned>
 			<args></args>
 			<description></description>
-			<logical_name>签发机关</logical_name>
-			<physical_name>DEP</physical_name>
+			<logical_name>身份证号</logical_name>
+			<physical_name>CODE</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
@@ -244,12 +244,25 @@
 			<unsigned>false</unsigned>
 			<args></args>
 			<description></description>
+			<logical_name>签发机关</logical_name>
+			<physical_name>ISSUE</physical_name>
+			<type>varchar(n)</type>
+		</word>
+		<word>
+			<id>8</id>
+			<length>255</length>
+			<decimal>null</decimal>
+			<array>false</array>
+			<array_dimension>null</array_dimension>
+			<unsigned>false</unsigned>
+			<args></args>
+			<description></description>
 			<logical_name>姓名</logical_name>
 			<physical_name>NAME</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
-			<id>8</id>
+			<id>9</id>
 			<length>500</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -259,19 +272,6 @@
 			<description></description>
 			<logical_name>最新住址</logical_name>
 			<physical_name>NEW_ADDRESS</physical_name>
-			<type>varchar(n)</type>
-		</word>
-		<word>
-			<id>9</id>
-			<length>20</length>
-			<decimal>null</decimal>
-			<array>false</array>
-			<array_dimension>null</array_dimension>
-			<unsigned>false</unsigned>
-			<args></args>
-			<description></description>
-			<logical_name>身份证号</logical_name>
-			<physical_name>NUM_</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
@@ -518,7 +518,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>9</word_id>
+					<word_id>3</word_id>
 					<id>4</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -550,7 +550,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>7</word_id>
+					<word_id>8</word_id>
 					<id>5</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -678,7 +678,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>3</word_id>
+					<word_id>7</word_id>
 					<id>9</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -806,7 +806,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>8</word_id>
+					<word_id>9</word_id>
 					<id>13</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -817,7 +817,7 @@
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>
 					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
+					<not_null>false</not_null>
 					<primary_key>false</primary_key>
 					<unique_key>false</unique_key>
 					<character_set></character_set>
