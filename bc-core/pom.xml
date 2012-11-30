@@ -19,5 +19,11 @@
 			<groupId>org.commontemplate</groupId>
 			<artifactId>commontemplate</artifactId>
 		</dependency>
+
+		<!-- Html代码压缩 -->
+		<dependency>
+		    <groupId>com.googlecode.htmlcompressor</groupId>
+		    <artifactId>htmlcompressor</artifactId>
+		</dependency>
 	</dependencies>
 </project>

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.struts2.ServletActionContext;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -103,22 +104,46 @@ public class UserAction extends AbstractActorAction {
 
 	@Override
 	public String save() throws Exception {
-		// 处理分配的角色
-		dealRoles4Save();
+		JSONObject json = new JSONObject();
 
-		// 处理分派的岗位
-		Long[] groupIds = null;
-		if (this.assignGroupIds != null && this.assignGroupIds.length() > 0) {
-			String[] gids = this.assignGroupIds.split(",");
-			groupIds = new Long[gids.length];
-			for (int i = 0; i < gids.length; i++) {
-				groupIds[i] = new Long(gids[i]);
+		try {
+			// 编码的唯一性检测
+			if (!this.getActorService().isUnique(this.getE().getId(),
+					this.getE().getCode(), this.getE().getType())) {
+				json.put("success", false);
+				json.put("id", this.getE().getId());
+				json.put("msg", "登录名已被其他用户占用，请重新修改！");
+			} else {
+				// 处理分配的角色
+				dealRoles4Save();
+
+				// 处理分派的岗位
+				Long[] groupIds = null;
+				if (this.assignGroupIds != null
+						&& this.assignGroupIds.length() > 0) {
+					String[] gids = this.assignGroupIds.split(",");
+					groupIds = new Long[gids.length];
+					for (int i = 0; i < gids.length; i++) {
+						groupIds[i] = new Long(gids[i]);
+					}
+				}
+
+				// 保存
+				this.userService.save(this.getE(), this.buildBelongIds(),
+						groupIds);
+
+				json.put("success", true);
+				json.put("id", this.getE().getId());
+				json.put("msg", this.getText("form.save.success"));
 			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			json.put("success", false);
+			json.put("msg", e.getMessage());
 		}
 
-		// 保存
-		this.userService.save(this.getE(), this.buildBelongIds(), groupIds);
-		return "saveSuccess";
+		this.json = json.toString();
+		return "json";
 	}
 
 	public List<Duty> duties;// 可选的职务列表

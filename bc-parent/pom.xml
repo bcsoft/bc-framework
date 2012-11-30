@@ -719,6 +719,13 @@
 				<version>1.16.1</version>
 			</dependency>
 
+			<!-- Html代码压缩：http://code.google.com/p/htmlcompressor/ -->
+			<dependency>
+			    <groupId>com.googlecode.htmlcompressor</groupId>
+			    <artifactId>htmlcompressor</artifactId>
+			    <version>1.5.2</version>
+			</dependency>
+
 			<!-- mustache模板引擎 -->
 			<dependency>
 			  <groupId>com.github.spullara.mustache.java</groupId>
