@@ -594,7 +594,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 	// 选择文件夹
 	public String selectFolders() {
-		tree4SelectFolder = this.getHtmlPageTree().toString();
+		tree4SelectFolder = this.getHtmlPageTree().addStyle("border", "0").toString();
 		return "foldersTree";
 	}
 }

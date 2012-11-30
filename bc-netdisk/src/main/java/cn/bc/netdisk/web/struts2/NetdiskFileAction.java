@@ -387,6 +387,10 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		Map<String, Object> updateInfo = new HashMap<String, Object>();
 		if (pid.length() == 0 || pid.equals("") || pid.equals("-1")) {
 			updateInfo.put("pid", (Integer) null);
+		} else if (pid.equals("-2")) {
+			// 将文件整理到公共硬盘根目录下
+			updateInfo.put("pid", (Integer) null);
+			updateInfo.put("folderType", 1);
 		} else {
 			updateInfo.put("pid", new Long(pid));
 		}
