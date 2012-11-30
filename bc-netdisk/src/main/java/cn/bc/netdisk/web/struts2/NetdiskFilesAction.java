@@ -71,6 +71,8 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	private static final long PID_MINE = -1;// 我创建的
 	private static final long PID_PUBLIC = -2;// 公共硬盘
 	private static final long PID_SHARE = -3;// 共享硬盘
+	public boolean isSelectFolders = false;// 是否选择文件夹 默认为否
+	public String tree4SelectFolder;// 选择文件夹界面的树
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -401,6 +403,9 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 		// 父节点条件
 		json.put("pid", this.pid);
+
+		// 是否是调用选择文件夹方法
+		json.put("isSelectFolders", isSelectFolders);
 	}
 
 	@Override
@@ -437,11 +442,19 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		TreeNode node;
 
 		// 获取树数据的url
-		tree.setUrl(this.getContextPath() + "/bc/netdiskFiles/loadTreeData");
-
+		// 选择文件夹界面的url
+		if (isSelectFolders) {
+			tree.setUrl(this.getContextPath()
+					+ "/bc/netdiskFiles/loadTreeData4selectFolder");
+		} else {
+			tree.setUrl(this.getContextPath() + "/bc/netdiskFiles/loadTreeData");
+		}
 		// 树的特殊配置参数
 		Json cfg = new Json();
-		cfg.put("clickNode", "bc.netdiskFileView.clickTreeNode");
+		// 点击视图中节点调用的js
+		if (!isSelectFolders) {
+			cfg.put("clickNode", "bc.netdiskFileView.clickTreeNode");
+		}
 		tree.setCfg(cfg);
 
 		// 创建"我的硬盘"节点
@@ -461,19 +474,39 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 			mineNode.addSubNode(node);
 		}
 
-		// 创建"公共硬盘"节点
-		TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
-		publicNode.setLeaf(false);
-		publicNode.setOpen(true);
-		tree.addSubNode(publicNode);
-		// 创建"公共硬盘"节点的子节点
-		List<Map<String, Object>> publcRootFiles = this.netdiskFileService
-				.findPublicRootFolder();
-		for (Map<String, Object> f : publcRootFiles) {
-			node = new TreeNode(f.get("id").toString(), f.get("name")
-					.toString(), f.get("type").toString()
-					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
-			publicNode.addSubNode(node);
+		// 如果调用的是选择文件夹方法就要根据是否拥有公共文件夹权限来创建
+		if (isSelectFolders) {
+			if (isPublicHardDiskManagement()) {
+				// 创建"公共硬盘"节点
+				TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
+				publicNode.setLeaf(false);
+				publicNode.setOpen(true);
+				tree.addSubNode(publicNode);
+				// 创建"公共硬盘"节点的子节点
+				List<Map<String, Object>> publcRootFiles = this.netdiskFileService
+						.findPublicRootFolder();
+				for (Map<String, Object> f : publcRootFiles) {
+					node = new TreeNode(f.get("id").toString(), f.get("name")
+							.toString(), f.get("type").toString()
+							.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+					publicNode.addSubNode(node);
+				}
+			}
+		} else {
+			// 创建"公共硬盘"节点
+			TreeNode publicNode = new TreeNode(PID_PUBLIC + "", "公共硬盘");
+			publicNode.setLeaf(false);
+			publicNode.setOpen(true);
+			tree.addSubNode(publicNode);
+			// 创建"公共硬盘"节点的子节点
+			List<Map<String, Object>> publcRootFiles = this.netdiskFileService
+					.findPublicRootFolder();
+			for (Map<String, Object> f : publcRootFiles) {
+				node = new TreeNode(f.get("id").toString(), f.get("name")
+						.toString(), f.get("type").toString()
+						.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
+				publicNode.addSubNode(node);
+			}
 		}
 
 		// 创建"共享硬盘"节点
@@ -481,20 +514,23 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		shareNode.setLeaf(false);
 		shareNode.setOpen(true);
 		tree.addSubNode(shareNode);
-
+		List<Map<String, Object>> shareRootFolders = null;
 		// 创建"共享硬盘"节点的子节点
-		// shareNode.addSubNode(new TreeNode("s1", "子节点s1", true));
-		// shareNode.addSubNode(new TreeNode("s2", "子节点s2", true));
-		List<Map<String, Object>> shareRootFolders = this.netdiskFileService
-				.findShareRootFolders(SystemContextHolder.get().getUser()
-						.getId());
+		// 选择文件夹时查找有编辑权限的
+		if (isSelectFolders) {
+			shareRootFolders = this.netdiskFileService.findShareRootFolders(
+					SystemContextHolder.get().getUser().getId(), true);
+
+		} else {
+			shareRootFolders = this.netdiskFileService.findShareRootFolders(
+					SystemContextHolder.get().getUser().getId(), false);
+		}
 		for (Map<String, Object> f : shareRootFolders) {
 			node = new TreeNode(f.get("id").toString(), f.get("name")
 					.toString(), f.get("type").toString()
 					.equals(String.valueOf(NetdiskFile.TYPE_FILE)));
 			shareNode.addSubNode(node);
 		}
-
 		return tree;
 	}
 
@@ -510,17 +546,29 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 						null);
 				// 如果点击共享硬盘pid条件为
 			} else if (this.pid == PID_SHARE) {
-				ownerFiles = this.netdiskFileService
-						.findShareRootFolders(SystemContextHolder.get()
-								.getUser().getId());
+				// 选择文件夹时查找有编辑权限的
+				if (isSelectFolders) {
+					ownerFiles = this.netdiskFileService.findShareRootFolders(
+							SystemContextHolder.get().getUser().getId(), true);
+
+				} else {
+					ownerFiles = this.netdiskFileService.findShareRootFolders(
+							SystemContextHolder.get().getUser().getId(), false);
+				}
 				// 如果点击公共硬盘pid条件为
 			} else if (this.pid == PID_PUBLIC) {
 				ownerFiles = this.netdiskFileService.findPublicRootFolder();
 			} else {
-				ownerFiles = this.netdiskFileService.findChildFolder(this.pid);
-				// ownerFiles = this.netdiskFileService.findOwnerFolder(
-				// SystemContextHolder.get().getUserHistory().getId(),
-				// this.pid);
+				// 选择文件夹时查找有编辑权限的
+				if (isSelectFolders) {
+					ownerFiles = this.netdiskFileService.findChildFolder(
+							this.pid, true, SystemContextHolder.get().getUser()
+									.getId());
+				} else {
+					ownerFiles = this.netdiskFileService.findChildFolder(
+							this.pid, false, null);
+				}
+
 			}
 			List<TreeNode> subNodes = new ArrayList<TreeNode>();
 			TreeNode node;
@@ -542,5 +590,11 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 		this.json = json.toString();
 		return "json";
+	}
+
+	// 选择文件夹
+	public String selectFolders() {
+		tree4SelectFolder = this.getHtmlPageTree().addStyle("border", "0").toString();
+		return "foldersTree";
 	}
 }

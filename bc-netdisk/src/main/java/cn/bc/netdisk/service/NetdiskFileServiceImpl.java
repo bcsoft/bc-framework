@@ -111,19 +111,21 @@ public class NetdiskFileServiceImpl extends DefaultCrudService<NetdiskFile>
 		return this.netdiskFileDao.findOwnerFolder(ownerId, pid);
 	}
 
-	public List<Map<String, Object>> findShareRootFolders(Long sharerId) {
-		return this.netdiskFileDao.findShareRootFolders(sharerId);
-	}
-
 	public Long[] getUserPublicFileId() {
 		return this.netdiskFileDao.getUserPublicFileId();
 	}
 
-	public List<Map<String, Object>> findChildFolder(Long pid) {
-		return this.netdiskFileDao.findChildFolder(pid);
+	public List<Map<String, Object>> findChildFolder(Long pid, boolean isEdit,
+			Long userId) {
+		return this.netdiskFileDao.findChildFolder(pid, isEdit, userId);
 	}
 
 	public List<Map<String, Object>> findPublicRootFolder() {
 		return this.netdiskFileDao.findPublicRootFolder();
+	}
+
+	public List<Map<String, Object>> findShareRootFolders(Long sharerId,
+			boolean isEdit) {
+		return this.netdiskFileDao.findShareRootFolders(sharerId, isEdit);
 	}
 }
