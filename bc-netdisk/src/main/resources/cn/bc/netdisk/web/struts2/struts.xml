@@ -44,5 +44,12 @@
 		<action name="paging" class="netdiskFilesAction" method="paging" />
 		<action name="data" class="netdiskFilesAction" method="data" />
 		<action name="loadTreeData" class="netdiskFilesAction" method="loadTreeData" />
+		<action name="loadTreeData4selectFolder" class="netdiskFilesAction" method="loadTreeData" >
+			<param name="isSelectFolders">true</param>
+		</action>
+		<action name="selectFolders" class="netdiskFilesAction" method="selectFolders">
+			<param name="isSelectFolders">true</param>
+			<result name="foldersTree">/bc/netdiskFile/selectFolderForm.jsp</result>
+		</action>
 	</package>
 </struts>
