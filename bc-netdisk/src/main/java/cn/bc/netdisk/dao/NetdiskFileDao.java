@@ -90,9 +90,11 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 * 
 	 * @param sharerId
 	 *            指定用户的ID，对应Actor的ID
+	 * @param isEdit
+	 *            拥有编辑权限
 	 * @return
 	 */
-	List<Map<String, Object>> findShareRootFolders(Long sharerId);
+	List<Map<String, Object>> findShareRootFolders(Long sharerId, boolean isEdit);
 
 	/**
 	 * 查找公共硬盘所有文件
@@ -105,9 +107,14 @@ public interface NetdiskFileDao extends CrudDao<NetdiskFile> {
 	 * 获取指定文件夹下的子文件夹
 	 * 
 	 * @param pid
+	 * @param isEdit
+	 *            拥有编辑权限
+	 * @param userId
+	 *            用户id
 	 * @return
 	 */
-	List<Map<String, Object>> findChildFolder(Long pid);
+	List<Map<String, Object>> findChildFolder(Long pid, boolean isEdit,
+			Long userId);
 
 	/**
 	 * 获取公共的根节点信息
