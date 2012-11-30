@@ -385,7 +385,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	// 整理
 	public String clearUp() {
 		Map<String, Object> updateInfo = new HashMap<String, Object>();
-		if (pid.length() == 0 || pid.equals("")) {
+		if (pid.length() == 0 || pid.equals("") || pid.equals("-1")) {
 			updateInfo.put("pid", (Integer) null);
 		} else {
 			updateInfo.put("pid", new Long(pid));
@@ -393,6 +393,11 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		updateInfo.put("orderNo", order);
 		updateInfo.put("name", name);
 		this.netdiskFileService.update(this.getId(), updateInfo);
+		if (pid.length() == 0 || pid.equals("") || pid.equals("-1")) {
+			jsonObject.put("pid", -1);
+		} else {
+			jsonObject.put("pid", pid);
+		}
 		jsonObject.put("success", true);
 		jsonObject.put("msg", "保存成功！");
 		this.json = jsonObject.toString();
