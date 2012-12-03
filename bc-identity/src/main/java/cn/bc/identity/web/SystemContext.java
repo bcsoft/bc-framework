@@ -32,6 +32,10 @@ public interface SystemContext extends Context{
 	public static final String KEY_GROUPS = "groups";
 	/** 系统上下文内保存用户的祖先信息的键值 */
 	public static final String KEY_ANCESTORS = "ancestors";
+	/** 系统上下文路径信息的键值 */
+	public static final String KEY_HTMLPAGENAMESPACE = "htmlPageNamespace";
+	/** 时间戳 */
+	public static final String KEY_APPTS = "appTs";
 	
 	/**
 	 * 获取当前登录的用户

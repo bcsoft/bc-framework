@@ -193,7 +193,8 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 				getJpaTemplate(), sqlObject).list();
 	}
 
-	public List<Map<String, Object>> findShareRootFolders(Long sharerId) {
+	public List<Map<String, Object>> findShareRootFolders(Long sharerId,
+			boolean isEdit) {
 		if (sharerId == null)
 			return new ArrayList<Map<String, Object>>();
 
@@ -202,7 +203,13 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
-		sql.append(" where f.type_ = ? and f.id in(select pid from bc_netdisk_share where aid =?)");
+		sql.append(" where f.type_ = ?");
+		// 查询有编辑权限的文件夹
+		if (isEdit) {
+			sql.append(" and f.id in(select pid from bc_netdisk_share where aid =? and substring(role_ from 1 for 1)='1')");
+		} else {
+			sql.append(" and f.id in(select pid from bc_netdisk_share where aid =?)");
+		}
 		sql.append(" and not exists(select 1 from bc_netdisk_file f1 where f.id=f1.id and f1.pid in (select pid from bc_netdisk_share where aid =?))");
 		args.add(NetdiskFile.TYPE_FOLDER);
 		args.add(sharerId);
@@ -240,7 +247,8 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		}
 	}
 
-	public List<Map<String, Object>> findChildFolder(Long pid) {
+	public List<Map<String, Object>> findChildFolder(Long pid, boolean isEdit,
+			Long userId) {
 		if (pid == null)
 			return new ArrayList<Map<String, Object>>();
 
@@ -248,14 +256,24 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
-		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
-		sql.append(" where f.type_ = ? and f.pid = ?");
-		args.add(NetdiskFile.TYPE_FOLDER);
-		args.add(pid);
+		// 选择有编辑权限的文件夹
+		if (isEdit) {
+			sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+			sql.append(" where f.type_ = ? and f.pid = ? and");
+			sql.append(" not exists(select 1 from bc_netdisk_file f1 where f1.id in(");
+			sql.append(" select pid from bc_netdisk_share s where s.pid=f.id and s.aid=? and substring(s.role_ from 1 for 1)='0'))");
+			args.add(NetdiskFile.TYPE_FOLDER);
+			args.add(pid);
+			args.add(userId);
+		} else {
+			sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
+			sql.append(" where f.type_ = ? and f.pid = ?");
+			args.add(NetdiskFile.TYPE_FOLDER);
+			args.add(pid);
+		}
 		sql.append(" order by f.status_,f.order_,f.file_date desc");
 		sqlObject.setSql(sql.toString());
 		sqlObject.setArgs(args);// 注入参数
-
 		// 数据映射器
 		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
 			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
