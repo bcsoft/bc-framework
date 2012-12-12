@@ -191,7 +191,7 @@ select * from bs_temp_driver order by file_date desc;
 select * from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
 update bc_idcard set code='440121222211113333' where id=1;
 update bc_idcard_check set file_date='2012-12-13 00:00:01' where id=10156238;
-update bc_docs_attach set modified_date='2012-12-13 00:00:00' where id=10156312;
+update bc_docs_attach set modified_date='2012-12-13 00:00:00' where ptype='portrait' and puid='tempDriver.auid.10156240';
 update bc_idcard_pic set file_date='2012-12-13 00:00:03' where id=1860;
 delete from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
 update bc_idcard set modified_date=file_date,modifier_id=author_id;
