@@ -55,15 +55,21 @@ ALTER TABLE BC_IDCARD ADD CONSTRAINT BCFK_IDCARD_MODIFIER FOREIGN KEY (MODIFIER_
 	REFERENCES BC_IDENTITY_ACTOR (ID) ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE INDEX BCIDX_IDCARD_CODE ON BC_IDCARD (TYPE_, CODE, ISNEW);
 
--- ALTER TABLE bc_idcard DROP COLUMN pic;
+-- 身份证图像
 CREATE TABLE BC_IDCARD_PIC(
 	ID INT NOT NULL,
+	TYPE_ VARCHAR(5) NOT NULL,
+	PID INT NOT NULL,
+	FILE_DATE TIMESTAMP NOT NULL,
 	DATA_ BYTEA,
 	CONSTRAINT BCPK_IDCARD_PIC PRIMARY KEY (ID)
 );
 COMMENT ON TABLE BC_IDCARD_PIC IS '身份证图像';
+COMMENT ON COLUMN BC_IDCARD_PIC.TYPE_ IS '图片类型：如png、bmp';
+COMMENT ON COLUMN BC_IDCARD_PIC.PID IS '所属身份证的ID';
+COMMENT ON COLUMN BC_IDCARD_PIC.FILE_DATE IS '创建日期';
 COMMENT ON COLUMN BC_IDCARD_PIC.DATA_ IS '图像的二进制数据';
-ALTER TABLE BC_IDCARD_PIC ADD CONSTRAINT BCFK_IDCARD_PIC FOREIGN KEY (ID)
+ALTER TABLE BC_IDCARD_PIC ADD CONSTRAINT BCFK_IDCARD_PIC FOREIGN KEY (PID)
 	REFERENCES BC_IDCARD (ID) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 CREATE TABLE BC_IDCARD_CHECK(
@@ -96,6 +102,13 @@ insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
     select 0,am.id,af.id from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af 
 	where am.code='IDCARD_USERS' and af.code in ('admin','ghy','xu','hrj','lubaojin','zxr')
 	and not exists (select 0 from BC_IDENTITY_ACTOR_RELATION ar where ar.TYPE_=0 and ar.MASTER_ID=am.id and ar.FOLLOWER_ID=af.id); 
+
+-- 插入同步司机照片的定时任务
+INSERT INTO bc_sd_job(id, status_, name, groupn, cron, bean, method, order_, memo_, ignore_error)
+    select NEXTVAL('hibernate_sequence'), 1,'同步身份证刷卡器的照片到司机招聘库','bc'
+	,'0 1 0 * * ? *','tempDriverService','doSyncPortrait','0002'
+    ,'', false from bc_dual
+    where not exists (select 0 from bc_sd_job where bean='tempDriverService' and method='doSyncPortrait');
 
 -- 创建触发器
 CREATE or Replace FUNCTION antoInsertTempDriver() RETURNS trigger AS $$  
@@ -141,6 +154,7 @@ BEGIN
 	return null;
 END;
 $$ LANGUAGE plpgsql;  
+DROP TRIGGER IF EXISTS trigger_antoInsertTempDriver on BC_IDCARD;
 DROP TRIGGER IF EXISTS trigger_antoInsertTempDriver on BC_IDCARD_CHECK;
 CREATE TRIGGER trigger_antoInsertTempDriver AFTER INSERT ON BC_IDCARD_CHECK  
     FOR EACH ROW EXECUTE PROCEDURE antoInsertTempDriver();
@@ -169,6 +183,30 @@ delete from bs_temp_driver where id=10150592;
 -- update bs_temp_driver set valid_start_date = null;
 
 -- 查询
-SELECT b.*,a.* FROM bc_idcard a left join bc_idcard_check b on b.pid=a.id;
-select * from bc_idcard_pic;
+SELECT b.*,a.* FROM bc_idcard a left join bc_idcard_check b on b.pid=a.id order by b.file_date desc;
+SELECT b.*,a.* FROM bc_idcard a left join bc_idcard_pic b on b.pid=a.id order by b.file_date desc;
+SELECT * FROM bc_idcard_pic b order by b.file_date desc;
+select octet_length(p.data_), p.* from bc_idcard_pic p;
 select * from bs_temp_driver order by file_date desc;
+select * from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
+update bc_idcard set code='440121222211113333' where id=1;
+update bc_idcard_check set file_date='2012-12-13 00:00:01' where id=10156238;
+update bc_docs_attach set modified_date='2012-12-13 00:00:00' where id=10156312;
+update bc_idcard_pic set file_date='2012-12-13 00:00:03' where id=1860;
+delete from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
+update bc_idcard set modified_date=file_date,modifier_id=author_id;
+
+-- 查询需要同步照片的最新刷卡信息:有身份证图片但司机招聘中的图片较旧的就同步图片
+select p.file_date p_file_date,p.type_ p_type,p.data_ p_data
+	,c.code d_code,c.name as d_name,d.id d_id,d.uid_ d_uid,a.id as attach_id,a.path attach_path
+	,(select h.id from bc_identity_actor_history h where h.current=true and h.actor_id=c.MODIFIER_ID) hid
+	from bc_idcard_pic p
+	inner join bc_idcard c on c.id=p.pid
+	inner join bs_temp_driver d on d.cert_identity=c.code
+	left join bc_docs_attach a on a.puid=d.uid_
+	where (a.id is null or (a.ptype='portrait' and a.modified_date < p.file_date))
+	and not exists (
+		select 0 from bc_idcard_pic p1 inner join bc_idcard c1 on c1.id=p1.pid
+		where p1.pid = p.pid and p1.file_date > p.file_date
+	)
+	order by p.file_date asc;
