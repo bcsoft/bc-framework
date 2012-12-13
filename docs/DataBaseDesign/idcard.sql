@@ -132,18 +132,20 @@ BEGIN
 				,register_date=guy.FILE_DATE
 				,modifier_id=(select id from bc_identity_actor_history where current=true and actor_id=guy.author_id)
 				,modified_date=NEW.FILE_DATE
+				,origin=getplaceoriginbycertidentity(guy.code)
 				where id=driver_id;
 			return null; 
 		Else   -- 司机不存在：插入新的信息
 			INSERT INTO bs_temp_driver(id,uid_,status_,name
 				,sex,nation,birthdate,address
 				,cert_identity,issue,valid_start_date,valid_end_date,register_date
-				,file_date,author_id,modified_date,modifier_id,region_)
+				,file_date,author_id,modified_date,modifier_id,origin,region_)
 				VALUES (NEXTVAL('hibernate_sequence'),'tempDriver.auid.'||NEXTVAL('hibernate_sequence'),0,guy.name
 				,to_number(guy.sex,'FM999'),guy.FOLK,guy.BIRTHDATE,guy.ADDRESS
 				,guy.code,guy.ISSUE,guy.START_DATE,guy.END_DATE,guy.FILE_DATE
 				,guy.FILE_DATE,(select id from bc_identity_actor_history where current=true and actor_id=guy.author_id)
 				,guy.FILE_DATE,(select id from bc_identity_actor_history where current=true and actor_id=guy.author_id)
+				,getplaceoriginbycertidentity(guy.code)
 				,CASE WHEN guy.address like '%广州%' THEN 1 
 					WHEN guy.address like '%广东%' THEN 2 
 					WHEN guy.CODE like '44%' THEN 2 
@@ -177,7 +179,7 @@ select * from bc_identity_actor u
 delete from bc_idcard_check;
 delete from bc_idcard_pic;
 delete from bc_idcard;
-delete from bs_temp_driver;
+delete from bs_temp_driver where id in (10159034,10159032);
 delete from bs_temp_driver_workflow;
 delete from bs_temp_driver where id=10150592;
 -- update bs_temp_driver set valid_start_date = null;
@@ -187,7 +189,7 @@ SELECT b.*,a.* FROM bc_idcard a left join bc_idcard_check b on b.pid=a.id order 
 SELECT b.*,a.* FROM bc_idcard a left join bc_idcard_pic b on b.pid=a.id order by b.file_date desc;
 SELECT * FROM bc_idcard_pic b order by b.file_date desc;
 select octet_length(p.data_), p.* from bc_idcard_pic p;
-select * from bs_temp_driver order by file_date desc;
+select * from bs_temp_driver order by modified_date desc;
 select * from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
 update bc_idcard set code='440121222211113333' where id=1;
 update bc_idcard_check set file_date='2012-12-13 00:00:01' where id=10156238;
@@ -195,6 +197,11 @@ update bc_docs_attach set modified_date='2012-12-13 00:00:00' where ptype='portr
 update bc_idcard_pic set file_date='2012-12-13 00:00:03' where id=1860;
 delete from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10156240';
 update bc_idcard set modified_date=file_date,modifier_id=author_id;
+
+select * from bs_temp_driver order by modified_date desc;
+SELECT * FROM bc_idcard_pic b order by b.file_date desc;
+select * from bc_docs_attach where ptype='portrait' and puid='tempDriver.auid.10152673';
+
 
 -- 查询需要同步照片的最新刷卡信息:有身份证图片但司机招聘中的图片较旧的就同步图片
 select p.file_date p_file_date,p.type_ p_type,p.data_ p_data
