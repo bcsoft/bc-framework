@@ -469,7 +469,10 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 //				}
 			}
 
-			if (attach.isAppPath()) {
+			if(attach.getFormat().equals("html")){//html不需要转pdf查看
+				this.to="html";
+				this.inputStream = new FileInputStream(new File(path));
+			}else if (attach.isAppPath()) {
 				// 转换附件格式后再下载
 				FileInputStream inputStream = new FileInputStream(
 						new File(path));
@@ -482,7 +485,8 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 				byte[] bs = outputStream.toByteArray();
 				this.inputStream = new ByteArrayInputStream(bs);
-			} else {// 转换文档
+			
+			}else {// 转换文档
 				this.inputStream = OfficeUtils.convert(attach.getPath(),
 						this.to, true);
 			}
