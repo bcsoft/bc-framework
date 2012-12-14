@@ -40,6 +40,7 @@ import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.RichFileEntityImpl;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.util.DocxUtils;
+import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
 
@@ -372,6 +373,12 @@ public class Template extends RichFileEntityImpl {
 						params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				xlsx.write(out);
+				out.close();
+			} else if ("html".equalsIgnoreCase(this.getTemplateType()
+					.getExtension())) {// html
+				String s = FreeMarkerUtils.format(TemplateUtils.loadText(this.getInputStream()),params);
+				FileOutputStream out = new FileOutputStream(realpath);
+				out.write(s.getBytes());
 				out.close();
 			} else if (this.getTemplateType().isPureText()) {// 纯文本
 				String s = this.getContentEx(params);

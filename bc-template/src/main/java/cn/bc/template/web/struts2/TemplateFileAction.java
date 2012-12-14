@@ -43,6 +43,7 @@ import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.util.DocxUtils;
+import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
 import cn.bc.web.util.WebUtils;
@@ -284,7 +285,12 @@ public class TemplateFileAction extends ActionSupport {
 				this.from = template.getTemplateType().getExtension();
 			if (this.to == null || this.to.length() == 0)
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-
+			
+			// 声明下载文件的参数
+			byte[] bs = null;
+			
+			// 声明文件转换服务的控制 默认使用
+			boolean officeConvert=true;
 			// 声明需要转换的流
 			InputStream is = null;
 			// 声明格式化参数
@@ -314,19 +320,31 @@ public class TemplateFileAction extends ActionSupport {
 					xlsx.write(out);
 					is=new ByteArrayInputStream(out.toByteArray());
 					out.close();
+				//html
+				} else if (typeCode.equals("html")) {
+					this.to=template.getTemplateType().getExtension();
+					params=getParams(template);
+					bs=FreeMarkerUtils.format(TemplateUtils.loadText(inputStream),params).getBytes();
+					// 不使用office转换服务
+					officeConvert=false;
 				}else
 					is = inputStream;
 			}else
 				is = inputStream;
 			
-			// convert
-			OfficeUtils.convert(is, this.from, outputStream, this.to);
+			
+			if(officeConvert){
+				// convert
+				OfficeUtils.convert(is, this.from, outputStream, this.to);
+				// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
+				bs = outputStream.toByteArray();
+			}
+			
 
 			if (logger.isDebugEnabled())
 				logger.debug("convert:" + DateUtils.getWasteTime(startTime));
 
-			// 设置下载文件的参数（设置不对的话，浏览器是不会直接打开的）
-			byte[] bs = outputStream.toByteArray();
+			
 			this.inputStream = new ByteArrayInputStream(bs);
 			this.inputStream.close();
 			this.contentType = AttachUtils.getContentType(this.to);
@@ -433,7 +451,7 @@ public class TemplateFileAction extends ActionSupport {
 			params.putAll(p);
 		}else if(markerValueJsons!=null&&markerValueJsons.length()>0){
 			params=convert2Map(new JSONObject(this.markerValueJsons));
-		}		
+		}
 		
 		return params;
 	}
