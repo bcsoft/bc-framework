@@ -147,7 +147,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// getText("netdisk.status"), 40).setSortable(true)
 		// .setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("f2.name", "folder",
-				getText("netdisk.folder"), 80));
+				getText("netdisk.folder"), 80).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f.name", "name",
 				getText("netdisk.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f.size_", "size",
@@ -594,7 +594,8 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 	// 选择文件夹
 	public String selectFolders() {
-		tree4SelectFolder = this.getHtmlPageTree().addStyle("border", "0").toString();
+		tree4SelectFolder = this.getHtmlPageTree().addStyle("border", "0")
+				.toString();
 		return "foldersTree";
 	}
 }
