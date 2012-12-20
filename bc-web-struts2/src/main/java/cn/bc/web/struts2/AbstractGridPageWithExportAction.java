@@ -13,8 +13,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.util.StringUtils;
 
 import cn.bc.core.util.DateUtils;
+import cn.bc.web.struts2.event.ExportViewDataEvent;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.GridExporter;
@@ -29,10 +33,12 @@ import cn.bc.web.util.WebUtils;
  * 
  */
 public abstract class AbstractGridPageWithExportAction<T extends Object>
-		extends AbstractGridPageAction<T> {
+		extends AbstractGridPageAction<T> implements
+		ApplicationEventPublisherAware {
 	private static final long serialVersionUID = 1L;
 	private final static Log logger = LogFactory
 			.getLog("cn.bc.web.struts2.AbstractGridPageWithExportAction");
+	private ApplicationEventPublisher eventPublisher;
 
 	// 导出视图数据需要的变量
 	public boolean exporting;// 标记当前处于导出状态
@@ -43,6 +49,11 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	public int bufferSize = 4096;
 	public String inputName = "inputStream";// 文件输出流定义
 	public String contentDisposition;// 下载文件处理方法
+
+	public void setApplicationEventPublisher(
+			ApplicationEventPublisher applicationEventPublisher) {
+		this.eventPublisher = applicationEventPublisher;
+	}
 
 	// 导出表格的数据为excel文件
 	public String export() throws Exception {
@@ -87,7 +98,13 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		exporter.exportTo(out);
 		if (logger.isDebugEnabled())
 			logger.debug("3:" + DateUtils.getWasteTime(startTime));
-		this.inputStream = new ByteArrayInputStream(out.toByteArray());
+		byte[] data = out.toByteArray();
+		this.inputStream = new ByteArrayInputStream(data);
+
+		// 发布用户导出数据事件
+		ExportViewDataEvent event = new ExportViewDataEvent(this,
+				getModuleType(), "0", title, "xls", data);
+		this.eventPublisher.publishEvent(event);
 
 		return "export";
 
@@ -98,6 +115,15 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 		// 163下载.html：text/html
 		// 163下载.rar|.reg：application/octet-stream
 		// application/x-msdownload
+	}
+
+	/**
+	 * 获取模块的标识字符串，通常为Domain的类名
+	 * 
+	 * @return
+	 */
+	protected String getModuleType() {
+		return StringUtils.capitalize(this.getFormActionName());
 	}
 
 	/**

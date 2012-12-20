@@ -40,6 +40,8 @@ public class OperateLog extends BaseLog {
 	public static final String OPERATE_UPDATE = "update";
 	/** 操作分类：删除 */
 	public static final String OPERATE_DELETE = "delete";
+	/** 操作分类：导出数据 */
+	public static final String OPERATE_EXPORT = "export";
 
 	private String uid;
 	private String pid;// 文档标识，通常使用文档的id、uid或批号

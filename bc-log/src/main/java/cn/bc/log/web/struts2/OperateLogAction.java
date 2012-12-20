@@ -113,7 +113,7 @@ public class OperateLogAction extends EntityAction<Long, OperateLog> {
 
 	private AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 		// 构建附件控件
-		String ptype = "operateLog.main";
+		String ptype = OperateLog.class.getSimpleName();
 		AttachWidget attachsUI = new AttachWidget();
 		attachsUI.setFlashUpload(isFlashUpload());
 		attachsUI.addClazz("formAttachs");
