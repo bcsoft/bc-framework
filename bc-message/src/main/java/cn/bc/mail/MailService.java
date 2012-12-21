@@ -12,13 +12,9 @@ public interface MailService {
 	/**
 	 * 发送邮件
 	 * 
-	 * @param subject
-	 *            邮件标题
-	 * @param content
-	 *            邮件内容
-	 * @param to
-	 *            主送人
+	 * @param mail
+	 *            邮件
 	 * @throws MailException
 	 */
-	void send(String subject, String content, String to) throws MailException;
+	void send(Mail mail) throws MailException;
 }

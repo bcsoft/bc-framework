@@ -20,10 +20,10 @@ public class MailServiceImplTest {
 
 	@Test
 	public void testSend() {
-		String subject = "[BC: mail test]";
-		String content = "[BC:Content]";
-		String to = "rongjih@163.com";
-
-		this.mailService.send(subject, content, to);
+		Mail mail = new Mail();
+		mail.setSubject("[BCMail:测试标题]");
+		mail.setContent("[BCMail:测试内容]\r\nreturn 换行测试！");
+		mail.setTo(new String[] { "rongjih@163.com", "rongjihuang@gmail.com" });
+		this.mailService.send(mail);
 	}
 }
