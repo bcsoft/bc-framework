@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- 邮件服务配置范例 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.139.com" />
+		<property name="port" value="25" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="javaMailProperties">
+			<props>
+				<!-- 是否需要auth认证 -->
+				<prop key="mail.smtp.auth">true</prop>
+				<!-- 超时设置 -->
+				<prop key="mail.smtp.timeout">25000</prop>
+
+				<prop key="mail.transport.protocol">smtp</prop>
+
+				<!-- Use TLS to encrypt communication with SMTP server -->
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+		<property name="username" value="xxx@139.com" />
+		<property name="password" value="xxx" />
+	</bean>
+	<!-- this is a template message that we can pre-load with default state -->
+	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="xxx@139.com" />
+		<property name="subject" value="[BC系统邮件]" />
+	</bean>
+	<bean id="mailService" class="cn.bc.mail.MailServiceImpl">
+		<property name="mailSender" ref="mailSender" />
+		<property name="templateMessage" ref="templateMessage" />
+		<!-- 是否使用异步方式发送邮件 -->
+		<property name="async" value="true" />
+	</bean>
+
+</beans>
