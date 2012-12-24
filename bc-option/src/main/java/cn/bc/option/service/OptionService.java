@@ -96,4 +96,13 @@ public interface OptionService {
 	 */
 	Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
 			String[] optionGroupKeys);
+
+	/**
+	 * 查找指定分类的正常状态的选项条目列表
+	 * 
+	 * @param optionGroupKey
+	 *            所属分类，对应OptionGroup属性Key的值
+	 * @return 返回结果的key为OptionItem的Key值，value为OptionItem的Value值
+	 */
+	Map<String, String> findActiveOptionItemByGroupKey(String optionGroupKey);
 }
