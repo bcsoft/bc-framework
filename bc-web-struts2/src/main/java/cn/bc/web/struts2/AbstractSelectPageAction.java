@@ -34,18 +34,28 @@ public abstract class AbstractSelectPageAction<T extends Object> extends
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super
-				.getHtmlPageOption()
-				.setWidth(400)
-				.setMinWidth(260)
-				.setHeight(450)
-				.setMinHeight(220)
-				.setModal(true)
-				.setMinimizable(false)
-				.setMaximizable(false)
-				.addButton(
-						new ButtonOption(getText("label.ok"), null,
-								getClickOkMethod()));
+		return super.getHtmlPageOption().setWidth(400).setMinWidth(260)
+				.setHeight(450).setMinHeight(220).setModal(true)
+				.setMinimizable(false).setMaximizable(false)
+				.addButton(buildOkButton());
+	}
+
+	/**
+	 * 创建对话框的确认按钮
+	 * 
+	 * @return
+	 */
+	protected ButtonOption buildOkButton() {
+		return new ButtonOption(getOkButtonLabel(), null, getClickOkMethod());
+	}
+
+	/**
+	 * 对话框确认按钮显示的文字
+	 * 
+	 * @return
+	 */
+	protected String getOkButtonLabel() {
+		return getText("label.ok");
 	}
 
 	@Override

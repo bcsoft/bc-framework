@@ -166,4 +166,12 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 	public boolean isUnique(Long id, String code, int type) {
 		return this.actorDao.isUnique(id, code, type);
 	}
+
+	public String[] findMailAddressByGroup(List<String> groupCodes) {
+		return this.actorDao.findMailAddressByGroup(groupCodes);
+	}
+
+	public String[] findMailAddressByUser(String[] userCodes) {
+		return this.actorDao.findMailAddressByUser(userCodes);
+	}
 }

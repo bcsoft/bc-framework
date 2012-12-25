@@ -963,4 +963,37 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 
 		return o == null || o.isEmpty();
 	}
+
+	public String[] findMailAddressByGroup(List<String> groupCodes) {
+		if (groupCodes == null || groupCodes.isEmpty())
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct u.email from bc_identity_actor u");
+		hql.append(" inner join bc_identity_actor_relation r on r.follower_id=u.id");
+		hql.append(" inner join bc_identity_actor g on g.id=r.master_id");
+		hql.append(" where u.type_=" + Actor.TYPE_USER + " and r.type_="
+				+ ActorRelation.TYPE_BELONG + " and g.type_="
+				+ Actor.TYPE_GROUP);
+		hql.append(" and g.code in ('chaojiguanligang')");
+		hql.append(" and u.email is not null and u.email != ''");
+		args.add(actorCode);
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), null);
+
+		if (r == null || r.isEmpty())
+			return actorCode;// 找不到就返回原始的帐号信息
+		else
+			return r.get(0);
+	}
+
+	public String[] findMailAddressByUser(String[] userCodes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
