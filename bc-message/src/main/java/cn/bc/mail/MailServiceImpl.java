@@ -14,6 +14,7 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.util.StringUtils;
 
 import cn.bc.option.service.OptionService;
 
@@ -70,6 +71,18 @@ public class MailServiceImpl implements MailService {
 			}
 		}
 
+		// log
+		if (logger.isDebugEnabled()) {
+			logger.debug("subject=" + mail.getSubject());
+			logger.debug("content=" + mail.getContent());
+			logger.debug("to="
+					+ StringUtils.arrayToCommaDelimitedString(mail.getTo()));
+			logger.debug("cc="
+					+ StringUtils.arrayToCommaDelimitedString(mail.getCc()));
+			logger.debug("bcc="
+					+ StringUtils.arrayToCommaDelimitedString(mail.getBcc()));
+		}
+
 		if (this.async) { // 异步发送
 			this.sendByAsynchronousMode(mail);
 		} else { // 同步发送
@@ -123,7 +136,8 @@ public class MailServiceImpl implements MailService {
 			javaMailSender.setPassword(mailConfig.get("password"));
 		if (mailConfig.containsKey("javaMailProperties")) {
 			try {
-				JSONObject json = new JSONObject(mailConfig.get("javaMailProperties"));
+				JSONObject json = new JSONObject(
+						mailConfig.get("javaMailProperties"));
 				Properties ps = javaMailSender.getJavaMailProperties();
 				@SuppressWarnings("unchecked")
 				Iterator<String> itor = json.keys();
