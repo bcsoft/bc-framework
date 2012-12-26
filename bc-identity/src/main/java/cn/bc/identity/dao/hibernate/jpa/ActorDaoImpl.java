@@ -969,31 +969,74 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 			return null;
 		ArrayList<Object> args = new ArrayList<Object>();
 		StringBuffer hql = new StringBuffer();
-		hql.append("select distinct u.email from bc_identity_actor u");
+		hql.append("select distinct email from (");
+		hql.append("select u.email as email from bc_identity_actor u");
 		hql.append(" inner join bc_identity_actor_relation r on r.follower_id=u.id");
 		hql.append(" inner join bc_identity_actor g on g.id=r.master_id");
 		hql.append(" where u.type_=" + Actor.TYPE_USER + " and r.type_="
 				+ ActorRelation.TYPE_BELONG + " and g.type_="
 				+ Actor.TYPE_GROUP);
-		hql.append(" and g.code in ('chaojiguanligang')");
-		hql.append(" and u.email is not null and u.email != ''");
-		args.add(actorCode);
+		hql.append(" and u.email like '%@%'");
+		if (groupCodes.size() == 1) {
+			hql.append(" and g.code=?");
+			args.add(groupCodes.get(0));
+		} else {
+			hql.append(" and g.code in (");
+			for (int i = 0; i < groupCodes.size(); i++) {
+				if (i == 0)
+					hql.append("?");
+				else
+					hql.append(",?");
+				args.add(groupCodes.get(i));
+			}
+			hql.append(")");
+		}
+		hql.append(" order by u.code");
+		hql.append(") as emails");
 		if (logger.isDebugEnabled()) {
 			logger.debug("args="
 					+ StringUtils.collectionToCommaDelimitedString(args)
 					+ ";hql=" + hql.toString());
 		}
-		List<String> r = HibernateJpaNativeQuery.executeNativeSql(
+		List<String> result = HibernateJpaNativeQuery.executeNativeSql(
 				getJpaTemplate(), hql.toString(), args.toArray(), null);
 
-		if (r == null || r.isEmpty())
-			return actorCode;// 找不到就返回原始的帐号信息
-		else
-			return r.get(0);
+		return result.toArray(new String[0]);
 	}
 
 	public String[] findMailAddressByUser(String[] userCodes) {
-		// TODO Auto-generated method stub
-		return null;
+		if (userCodes == null || userCodes.length == 0)
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct email from (");
+		hql.append("select u.email as email from bc_identity_actor u");
+		hql.append(" where u.type_=" + Actor.TYPE_USER);
+		hql.append(" and u.email like '%@%'");
+		if (userCodes.length  == 1) {
+			hql.append(" and u.code=?");
+			args.add(userCodes[0]);
+		} else {
+			hql.append(" and u.code in (");
+			for (int i = 0; i < userCodes.length ; i++) {
+				if (i == 0)
+					hql.append("?");
+				else
+					hql.append(",?");
+				args.add(userCodes[i]);
+			}
+			hql.append(")");
+		}
+		hql.append(" order by u.code");
+		hql.append(") as emails");
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<String> result = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), null);
+
+		return result.toArray(new String[0]);
 	}
 }
