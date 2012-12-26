@@ -481,7 +481,6 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getFormActionName() {
-		// 没有表单处理
-		return null;
+		return "Report";
 	}
 }
