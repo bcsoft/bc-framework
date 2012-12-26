@@ -963,4 +963,80 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 
 		return o == null || o.isEmpty();
 	}
+
+	public String[] findMailAddressByGroup(List<String> groupCodes) {
+		if (groupCodes == null || groupCodes.isEmpty())
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct email from (");
+		hql.append("select u.email as email from bc_identity_actor u");
+		hql.append(" inner join bc_identity_actor_relation r on r.follower_id=u.id");
+		hql.append(" inner join bc_identity_actor g on g.id=r.master_id");
+		hql.append(" where u.type_=" + Actor.TYPE_USER + " and r.type_="
+				+ ActorRelation.TYPE_BELONG + " and g.type_="
+				+ Actor.TYPE_GROUP);
+		hql.append(" and u.email like '%@%'");
+		if (groupCodes.size() == 1) {
+			hql.append(" and g.code=?");
+			args.add(groupCodes.get(0));
+		} else {
+			hql.append(" and g.code in (");
+			for (int i = 0; i < groupCodes.size(); i++) {
+				if (i == 0)
+					hql.append("?");
+				else
+					hql.append(",?");
+				args.add(groupCodes.get(i));
+			}
+			hql.append(")");
+		}
+		hql.append(" order by u.code");
+		hql.append(") as emails");
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<String> result = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), null);
+
+		return result.toArray(new String[0]);
+	}
+
+	public String[] findMailAddressByUser(String[] userCodes) {
+		if (userCodes == null || userCodes.length == 0)
+			return null;
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select distinct email from (");
+		hql.append("select u.email as email from bc_identity_actor u");
+		hql.append(" where u.type_=" + Actor.TYPE_USER);
+		hql.append(" and u.email like '%@%'");
+		if (userCodes.length  == 1) {
+			hql.append(" and u.code=?");
+			args.add(userCodes[0]);
+		} else {
+			hql.append(" and u.code in (");
+			for (int i = 0; i < userCodes.length ; i++) {
+				if (i == 0)
+					hql.append("?");
+				else
+					hql.append(",?");
+				args.add(userCodes[i]);
+			}
+			hql.append(")");
+		}
+		hql.append(" order by u.code");
+		hql.append(") as emails");
+		if (logger.isDebugEnabled()) {
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args)
+					+ ";hql=" + hql.toString());
+		}
+		List<String> result = HibernateJpaNativeQuery.executeNativeSql(
+				getJpaTemplate(), hql.toString(), args.toArray(), null);
+
+		return result.toArray(new String[0]);
+	}
 }

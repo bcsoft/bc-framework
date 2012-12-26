@@ -307,4 +307,20 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return code可用返回true，已被占用就返回false
 	 */
 	boolean isUnique(Long id, String code, int type);
+
+	/**
+	 * 获取岗位内所有用户的可用电子邮件地址列表
+	 * 
+	 * @param groupCodes
+	 * @return
+	 */
+	String[] findMailAddressByGroup(List<String> groupCodes);
+
+	/**
+	 * 获取用户的可用电子邮件地址列表
+	 * 
+	 * @param userCodes
+	 * @return
+	 */
+	String[] findMailAddressByUser(String[] userCodes);
 }

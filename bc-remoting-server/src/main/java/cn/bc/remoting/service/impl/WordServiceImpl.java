@@ -79,11 +79,16 @@ public class WordServiceImpl implements WordService {
 		// 检测来源文件必须存在，否则抛出异常
 		fromFile = FROM_ROOT_DIR + "/" + fromFile;
 		toFile = TO_ROOT_DIR + "/" + toFile;
+
+		// 转换路径中的/为\避免Windows打开保存文件的路径错误
+		fromFile = fromFile.replaceAll("/", "\\\\");
+		toFile = toFile.replaceAll("/", "\\\\");
 		if (logger.isDebugEnabled()) {
 			logger.debug("convertFormat:token=" + token);
 			logger.debug("convertFormat:fromFile=" + fromFile);
 			logger.debug("convertFormat:toFile=" + toFile);
 		}
+
 		File from = new File(fromFile);
 		if (!from.exists()) {
 			throw new RemoteException("FileNotFound:fromFile=" + fromFile);
@@ -184,6 +189,7 @@ public class WordServiceImpl implements WordService {
 				dir.mkdirs();
 			String fromName = fileName + "." + fromFormat;
 			String fromFile = tempDir + fromName;
+			fromFile = fromFile.replaceAll("/", "\\\\");// 转换路径中的/为\避免Windows打开保存文件的路径错误
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:fromFile=" + fromFile);
 			}
@@ -192,9 +198,11 @@ public class WordServiceImpl implements WordService {
 			// 转换后的文件保存到的路径
 			String toName = fileName + ".to." + toFormat;
 			String toFile = tempDir + toName;
+			toFile = toFile.replaceAll("/", "\\\\");// 转换路径中的/为\避免Windows打开保存文件的路径错误
 			if (logger.isDebugEnabled()) {
 				logger.debug("convert:toFile=" + toFile);
 			}
+
 			if (isWordFormat(fromFormat)) {// Word文档格式转换
 				convertByWord(fromFile, toFile, WordSaveFormat.get(toFormat)
 						.getValue());
@@ -236,6 +244,7 @@ public class WordServiceImpl implements WordService {
 		try {
 			if (logger.isInfoEnabled())
 				logger.info("----Word: Start----");
+
 			// 打开word应用程序
 			wordApp = new ActiveXComponent("Word.Application");
 
@@ -301,6 +310,7 @@ public class WordServiceImpl implements WordService {
 				logger.info("toFile=" + toFile);
 				logger.info("toFormat=" + toFormat);
 			}
+
 			// 打开Excel应用程序
 			excelApp = new ActiveXComponent("Excel.Application");
 

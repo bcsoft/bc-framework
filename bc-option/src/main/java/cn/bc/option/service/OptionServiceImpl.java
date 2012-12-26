@@ -1,5 +1,6 @@
 package cn.bc.option.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,5 +75,16 @@ public class OptionServiceImpl implements OptionService {
 	public Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
 			String[] optionGroupKeys) {
 		return optionDao.findActiveOptionItemByGroupKeys(optionGroupKeys);
+	}
+
+	public Map<String, String> findActiveOptionItemByGroupKey(
+			String optionGroupKey) {
+		Map<String, List<Map<String, String>>> map = findActiveOptionItemByGroupKeys(new String[] { optionGroupKey });
+		List<Map<String, String>> list = map.get(optionGroupKey);
+		Map<String, String> oi = new LinkedHashMap<String, String>();
+		for (Map<String, String> m : list) {
+			oi.put(m.get("key"), m.get("value"));
+		}
+		return oi;
 	}
 }
