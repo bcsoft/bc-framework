@@ -7,11 +7,20 @@ package cn.bc.mail;
  * 
  */
 public class Mail {
+	private boolean html;// 是否是纯文本内容的邮件
 	private String subject;// 标题
 	private String content;// 内容
 	private String[] to;// 主送
 	private String[] cc;// 抄送
 	private String[] bcc;// 密送
+
+	public boolean isHtml() {
+		return html;
+	}
+
+	public void setHtml(boolean html) {
+		this.html = html;
+	}
 
 	public String getSubject() {
 		return subject;

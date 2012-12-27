@@ -7,16 +7,23 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.MailException;
+import org.springframework.mail.MailMessage;
+import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
 
 import cn.bc.identity.domain.ActorHistory;
@@ -38,7 +45,7 @@ public class MailServiceImpl implements MailService {
 	private OperateLogService operateLogService;
 	private IdGeneratorService idGeneratorService;
 	private OptionService optionService;
-	private MailSender mailSender;
+	private JavaMailSender mailSender;
 	private SimpleMailMessage templateMessage;
 	private TaskExecutor taskExecutor;// Spring异步执行器
 	private Map<String, String> mailConfig;// 邮件配置
@@ -55,7 +62,7 @@ public class MailServiceImpl implements MailService {
 		this.idGeneratorService = idGeneratorService;
 	}
 
-	public void setMailSender(MailSender mailSender) {
+	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 
@@ -112,30 +119,19 @@ public class MailServiceImpl implements MailService {
 	// 同步发送邮件
 	private void sendBySynchronousMode(Mail mail,
 			ActorHistory currentUserHistory) throws MailException {
-		// 复制一个线程安全的邮件消息
-		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-		if (mailConfig != null) {
-			if (mailConfig.containsKey("username")) {
-				msg.setFrom(mailConfig.get("username"));// 邮件发送人
-			}
-			if (mailConfig.containsKey("subject")) {// 默认邮件标题
-				msg.setSubject(mailConfig.get("subject"));
-			}
-		}
-
-		msg.setSubject(mail.getSubject()); // 标题
-		msg.setText(mail.getContent()); // 内容
-
-		msg.setTo(mail.getTo()); // 主送
-		msg.setCc(mail.getCc()); // 抄送
-		msg.setBcc(mail.getBcc()); // 密送
+		// 构建邮件消息
+		MailMessage msg = createMailMessage(mail);
 
 		// 根据选项配置初始化邮件发送器
 		this.initMailSender();
 
-		// 发送邮件
 		try {
-			this.mailSender.send(msg);
+			// 发送邮件
+			if (msg instanceof SimpleMailMessage) {
+				this.mailSender.send((SimpleMailMessage) msg);
+			} else if (msg instanceof MimeMailMessage) {
+				this.mailSender.send(((MimeMailMessage) msg).getMimeMessage());
+			}
 
 			// 记录发送成功日志
 			String subject = "发送邮件成功：主送"
@@ -176,6 +172,70 @@ public class MailServiceImpl implements MailService {
 			content += "\r\n\r\n========异常信息========\r\n" + sw.toString();
 			this.saveWorkLog(currentUserHistory, subject, content);
 		}
+	}
+
+	private MailMessage createMailMessage(Mail mail) throws MailException {
+		if (mail.isHtml()) {
+			return createMimeMailMessage(mail);
+		} else {
+			return createSimpleMailMessage(mail);
+		}
+	}
+
+	// 创建html邮件
+	private MimeMailMessage createMimeMailMessage(Mail mail)
+			throws MailException {
+		MimeMessage javaMailMessage = mailSender.createMimeMessage();
+		MimeMessageHelper messageHelper = new MimeMessageHelper(javaMailMessage);
+		MimeMailMessage msg = new MimeMailMessage(messageHelper);
+
+		if (mailConfig != null) {
+			if (mailConfig.containsKey("username")) {
+				msg.setFrom(mailConfig.get("username"));// 邮件发送人
+			}
+			if (mailConfig.containsKey("subject")) {// 默认邮件标题
+				msg.setSubject(mailConfig.get("subject"));
+			}
+		}
+
+		msg.setSubject(mail.getSubject()); // 标题
+		try {
+			messageHelper.setText(mail.getContent(), true);// html 内容
+		} catch (MessagingException e) {
+			throw new MailParseException(e.getMessage(), e);
+		}
+
+		msg.setTo(mail.getTo()); // 主送
+		if (mail.getCc() != null && mail.getCc().length > 0)
+			msg.setCc(mail.getCc()); // 抄送
+		if (mail.getBcc() != null && mail.getBcc().length > 0)
+			msg.setBcc(mail.getBcc()); // 密送
+		return msg;
+	}
+
+	// 创建纯文本邮件
+	private SimpleMailMessage createSimpleMailMessage(Mail mail) {
+		// 复制一个线程安全的邮件消息
+		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
+
+		if (mailConfig != null) {
+			if (mailConfig.containsKey("username")) {
+				msg.setFrom(mailConfig.get("username"));// 邮件发送人
+			}
+			if (mailConfig.containsKey("subject")) {// 默认邮件标题
+				msg.setSubject(mailConfig.get("subject"));
+			}
+		}
+
+		msg.setSubject(mail.getSubject()); // 标题
+		msg.setText(mail.getContent()); // 内容
+
+		msg.setTo(mail.getTo()); // 主送
+		if (mail.getCc() != null && mail.getCc().length > 0)
+			msg.setCc(mail.getCc()); // 抄送
+		if (mail.getBcc() != null && mail.getBcc().length > 0)
+			msg.setBcc(mail.getBcc()); // 密送
+		return msg;
 	}
 
 	private OperateLog saveWorkLog(ActorHistory author, String subject,
