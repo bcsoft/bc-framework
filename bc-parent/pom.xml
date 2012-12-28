@@ -732,6 +732,18 @@
 			  <artifactId>compiler</artifactId>
 			  <version>0.8.6</version>
 			</dependency>
+			
+			<!-- javamail -->
+			<dependency>
+			    <groupId>javax.mail</groupId>
+			    <artifactId>mail</artifactId>
+			    <version>1.4.5</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.geronimo.specs</groupId>
+			    <artifactId>geronimo-javamail_1.4_spec</artifactId>
+			    <version>1.7.1</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
