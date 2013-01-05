@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.util.StringUtils;
 
+import cn.bc.Context;
 import cn.bc.core.util.DateUtils;
 import cn.bc.web.struts2.event.ExportViewDataEvent;
 import cn.bc.web.ui.html.grid.Column;
@@ -198,13 +199,31 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	@Override
 	protected void extendGridFooterButton(GridFooter gridFooter) {
 		// 导出按钮
-		gridFooter.addButton(getDefaultExportButton());
+		if (this.canExport())
+			gridFooter.addButton(getDefaultExportButton());
 
 		// 导入按钮
 		gridFooter.addButton(this.getGridFooterImportButton());
 
 		// 打印按钮
 		// gridFooter.addButton(GridFooter.getDefaultPrintButton(getText("label.print")));
+	}
+
+	/**
+	 * 判断用户能否导出数据：非移动设备默认可以导出，对移动设备只有岗位"在移动设备中下载数据"内的人可以导出
+	 * 
+	 * @return
+	 */
+	protected boolean canExport() {
+		Context c = this.getContext();
+		if (new Boolean(true).equals(c.getAttr("mobile"))) {// 移动设备
+			@SuppressWarnings("unchecked")
+			List<String> groups = (List<String>) c.getAttr("groups");
+			if (groups == null)
+				return false;
+			return groups.contains("DownloadFromMobile");
+		}
+		return true;
 	}
 
 	/**
