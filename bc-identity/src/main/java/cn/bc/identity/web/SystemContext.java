@@ -34,6 +34,9 @@ public interface SystemContext extends Context{
 	public static final String KEY_ANCESTORS = "ancestors";
 	/** 系统上下文路径信息的键值 */
 	public static final String KEY_HTMLPAGENAMESPACE = "htmlPageNamespace";
+	/** 系统完整的URl访问路径*/
+	public static final String KEY_SYSURL = "sysurl";
+	public static final String KEY_SYSURL_OUTERNET = "sysurl_outernnet";
 	/** 时间戳 */
 	public static final String KEY_APPTS = "appTs";
 	
