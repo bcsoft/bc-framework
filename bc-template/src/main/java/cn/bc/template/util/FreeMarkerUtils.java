@@ -44,8 +44,8 @@ public class FreeMarkerUtils {
 	public static String format(String tpl, Map<String, Object> args) {
 		if (tpl == null || tpl.length() == 0)
 			return "";
-		if (null == args || args.isEmpty())
-			return tpl;
+//		if (null == args || args.isEmpty())
+//			return tpl;
 
 		// 构建模板
 		try {

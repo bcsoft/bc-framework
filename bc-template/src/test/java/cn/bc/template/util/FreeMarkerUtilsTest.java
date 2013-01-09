@@ -30,13 +30,36 @@ public class FreeMarkerUtilsTest {
 	// 日期格式化
 	@Test
 	public void testFormatDate() {
-		String tpl = "${d?string(\"yyyy-MM-dd HH:mm:ss\")}";
+		String tpl = "${d?string('yyyy-MM-dd HH:mm:ss')}";
 
 		// Date类型,不支持Calendar类型
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("d", DateUtils.getDate("2012-01-01 12:10:05"));
 		Assert.assertEquals("2012-01-01 12:10:05",
 				FreeMarkerUtils.format(tpl, args));
+	}
+
+	// 日期格式化
+	@Test
+	public void testFormatDateUnExists() {
+		String tpl = "a${(d?string('yyyy-MM-dd HH:mm:ss'))!}";
+
+		// Date类型,不支持Calendar类型
+		Map<String, Object> args = new HashMap<String, Object>();
+		//args.put("t", "");
+		//args.put("d", DateUtils.getDate("2012-01-01 12:10:05"));
+		Assert.assertEquals("a", FreeMarkerUtils.format(tpl, null));
+	}
+
+	// 不存在的值
+	@Test
+	public void testUnExists() {
+		String tpl = "${a!}-${a!'1'}-${a!\"2\"}";
+
+		// Date类型,不支持Calendar类型
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("t", "");
+		Assert.assertEquals("-1-2", FreeMarkerUtils.format(tpl, args));
 	}
 
 	//
