@@ -128,8 +128,23 @@ public class SqlObject<T extends Object> {
 	}
 
 	public SqlObject<T> setSql(String sql) {
-		this.sql = sql != null ? sql.toLowerCase() : null;
+		this.sql = innerDealSql(sql);
 		return this;
+	}
+
+	/**
+	 * 将sql中的关键字select、from、where和order by不区分大小写转换为小写
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	private String innerDealSql(String sql) {
+		if (sql == null)
+			return sql;
+		return sql.replaceAll("(?i)select", "select")
+				.replaceAll("(?i)from", "from")
+				.replaceAll("(?i)where", "where")
+				.replaceAll("(?i)order by", "order by");
 	}
 
 	public List<Object> getArgs() {
@@ -151,22 +166,22 @@ public class SqlObject<T extends Object> {
 	}
 
 	public SqlObject<T> setSelect(String select) {
-		this.select = select != null ? select.toLowerCase() : null;
+		this.select = innerDealSql(select);
 		return this;
 	}
 
 	public SqlObject<T> setFrom(String from) {
-		this.from = from != null ? from.toLowerCase() : null;
+		this.from = innerDealSql(from);
 		return this;
 	}
 
 	public SqlObject<T> setWhere(String where) {
-		this.where = where != null ? where.toLowerCase() : null;
+		this.where = innerDealSql(where);
 		return this;
 	}
 
 	public SqlObject<T> setOrderBy(String orderBy) {
-		this.orderBy = orderBy != null ? orderBy.toLowerCase() : null;
+		this.orderBy = innerDealSql(orderBy);
 		return this;
 	}
 

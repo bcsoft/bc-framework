@@ -47,4 +47,29 @@ public class SqlObjectTest {
 		String sql = "$$order";
 		Assert.assertEquals("order", sql.replace("$$", ""));
 	}
+
+	@Test
+	public void testIgnoreReplace() {
+		String right = "select * from AA where B=1 and a=true order by C";
+		String sql = "SELECT * FROM AA WHERE B=1 and a=true ORDER BY C";
+		Assert.assertEquals(right, innerDealSql(sql));
+
+		sql = "Select * frOm AA whEre B=1 and a=true orDer bY C";
+		Assert.assertEquals(right, innerDealSql(sql));
+	}
+
+	/**
+	 * 将sql中的关键字select、from、where和order by不区分大小写转换为小写
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	private String innerDealSql(String sql) {
+		if (sql == null)
+			return sql;
+		return sql.replaceAll("(?i)select", "select")
+				.replaceAll("(?i)from", "from")
+				.replaceAll("(?i)where", "where")
+				.replaceAll("(?i)order by", "order by");
+	}
 }
