@@ -38,13 +38,23 @@
 		<!-- 删除 -->
 		<action name="delete" class="netdiskFileAction" method="delete">
 		</action>
+		<!-- 检查是否拥有“公共硬盘”管理权限 -->
+		<action name="checkPublicHardDiskPower" class="netdiskFileAction"
+			method="checkPublicHardDiskPower">
+		</action>
+		<!-- 检查是否拥有选中节点的管理权限 -->
+		<action name="checkSelectNodePower" class="netdiskFileAction"
+			method="checkSelectNodePower">
+		</action>
 	</package>
 	<package name="netdiskFiles" extends="bc-default" namespace="/bc/netdiskFiles">
+		<action name="export" class="netdiskFilesAction" method="export" />
 		<action name="list" class="netdiskFilesAction" method="list" />
 		<action name="paging" class="netdiskFilesAction" method="paging" />
 		<action name="data" class="netdiskFilesAction" method="data" />
 		<action name="loadTreeData" class="netdiskFilesAction" method="loadTreeData" />
-		<action name="loadTreeData4selectFolder" class="netdiskFilesAction" method="loadTreeData" >
+		<action name="loadTreeData4selectFolder" class="netdiskFilesAction"
+			method="loadTreeData">
 			<param name="isSelectFolders">true</param>
 		</action>
 		<action name="selectFolders" class="netdiskFilesAction" method="selectFolders">
