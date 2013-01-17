@@ -38,6 +38,7 @@ import cn.bc.netdisk.domain.NetdiskFile;
 import cn.bc.netdisk.service.NetdiskFileService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
+import cn.bc.web.formater.LinkFormater;
 import cn.bc.web.struts2.TreeViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
@@ -108,7 +109,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.order_,f.name,f.size_,a.actor_name,f.file_date,f.modified_date");
-		sql.append(",f.path,f.pid,f2.name folder,f.type_ from bc_netdisk_file f");
+		sql.append(",f.path,f.pid,f2.name folder,f.type_,f.ext from bc_netdisk_file f");
 		sql.append(" inner join bc_identity_actor_history a on a.id=f.author_id");
 		sql.append(" left join bc_netdisk_file f2 on f.pid = f2.id");
 		sqlObject.setSql(sql.toString());
@@ -133,6 +134,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 				map.put("pid", rs[i++]);
 				map.put("folder", rs[i++]);
 				map.put("type", rs[i++]);
+				map.put("ext", rs[i++]);
 				return map;
 			}
 		});
@@ -149,7 +151,45 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("f2.name", "folder",
 				getText("netdisk.folder"), 80).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("f.name", "name",
-				getText("netdisk.name")).setUseTitleFromLabel(true));
+				getText("netdisk.name")).setUseTitleFromLabel(true)
+				.setValueFormater(new LinkFormater() {
+
+					@Override
+					public String format(Object context, Object value) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> file = (Map<String, Object>) context;
+
+						if (file.get("type").equals(NetdiskFile.TYPE_FOLDER)) {// 显示图片标识为文件夹
+							return "<div title=\""
+									+ file.get("name")
+									+ "\">"
+									+ "<span style=\"float: left;\" title=\"文件夹\" class=\"ui-icon ui-icon-folder-collapsed\"></span>"
+									+ file.get("name") + "</div>";
+						} else {
+							return (String) file.get("name");
+						}
+					}
+
+					@Override
+					public String getLinkText(Object context, Object value) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						if (map.get("name") != null) {
+							return map.get("name").toString();
+						} else {
+							return "";
+						}
+					}
+
+					@Override
+					public Object[] getParams(Object context, Object value) {
+						// TODO Auto-generated method stub
+						return null;
+					}
+
+				}));
+		columns.add(new TextColumn4MapKey("f.ext", "ext",
+				getText("netdisk.ext"), 50));
 		columns.add(new TextColumn4MapKey("f.size_", "size",
 				getText("netdisk.size"), 80).setUseTitleFromLabel(true)
 				.setValueFormater(new FileSizeFormater()));
@@ -186,7 +226,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(730).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(900).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -213,13 +253,13 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 			tb.addButton(new ToolbarMenuButton("上传")
 					.addMenuItem(
 							"<div style=\"position:relative;width:100%;height:100%;white-space:nowrap;\">上传文件<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFile\" name=\"uploadFile\" title=\"点击上传文件\""
-									+ " multiple=\"true\" data-cfg=\"{&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+									+ " multiple=\"true\" data-cfg=\"{&quot;beforeUploadFileIsAsync&quot;:true,&quot;beforeUploadFile&quot;:&quot;bc.netdiskFileForm.beforeUploadfile&quot;,&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfile&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
 									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
 									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
 							"shangchuanwenjian")
 					.addMenuItem(
 							"<div style=\"position:relative;width:100%;height:100%;white-space:nowrap;\">上传文件夹<input type=\"file\" class=\"auto uploadFile\" id=\"uploadFolder\" name=\"uploadFolder\" title=\"点击上传文件夹\""
-									+ " multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;needConfirm&quot;:true,&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfolder&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
+									+ " multiple=\"true\" directory=\"true\" webkitdirectory=\"true\" data-cfg=\"{&quot;beforeUploadFileIsAsync&quot;:true,&quot;beforeUploadFile&quot;:&quot;bc.netdiskFileForm.beforeUploadfile&quot;,&quot;needConfirm&quot;:true,&quot;callback&quot;:&quot;bc.netdiskFileForm.afterUploadfolder&quot;,&quot;subdir&quot;:&quot;netdisk&quot;"
 									+ ",&quot;ptype&quot;:&quot;Netdisk&quot;,&quot;puid&quot;:&quot;Template.mt.6378&quot;}\" style=\"position: absolute;"
 									+ " left: 0;top: 0;width: 100%;height: 100%;filter: alpha(opacity = 10);opacity: 0;cursor: pointer;\"/></div>",
 							"shangchuanwenjianjia")

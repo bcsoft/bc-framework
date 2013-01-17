@@ -59,6 +59,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public boolean isEditVisitorsAuthority = false;// 编辑访问者权限
 	public boolean isClearUp = false;// 文件整理权限
 	public boolean isDel = false;// 文件删除权限
+	public String selectNodeId;// 所选中节点的ID
 
 	@Autowired
 	public void setNetdiskFileService(NetdiskFileService netdiskFileService) {
@@ -121,6 +122,9 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
 		NetdiskFile e = this.netdiskFileService.load(this.getId());
+		if (e.getPid() != null) {
+			folder = this.netdiskFileService.load(e.getPid()).getName();
+		}
 		this.setE(e);
 		// 判断是否拥有删除，整理，共享权限
 		isWonerDelAndClearAndShare4Power(e);
@@ -164,8 +168,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			if (e.getEditRole() == NetdiskFile.ROLE_REVISABILITY) {
 				// 查看当前文件是否设置访问权限，如果有就根据当前的权限来判断
 				NetdiskShare myNetdiskShare = this.netdiskFileService
-						.getNetdiskShare(context.getUser().getId(),
-								this.getId());
+						.getNetdiskShare(context.getUser().getId(), e.getId());
 				if (myNetdiskShare != null) {
 					if (haveAuthority(myNetdiskShare.getRole(), 0)) {
 						// 共享界面权限
@@ -178,7 +181,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 				} else {
 					// 获取当前的文件和父级文件
 					Serializable[] ids = this.netdiskFileService
-							.getMyselfAndParentsFileId(this.getId());
+							.getMyselfAndParentsFileId(e.getId());
 					// 判断当前文件或父级文件夹该用户是否拥有编辑权限
 					for (Serializable id : ids) {
 						NetdiskFile nf = this.netdiskFileService.load(id);
@@ -212,7 +215,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 			if (!isEditVisitorsAuthority) {
 				// 获取当前的文件和父级文件
 				Serializable[] ids = this.netdiskFileService
-						.getMyselfAndParentsFileId(this.getId());
+						.getMyselfAndParentsFileId(e.getId());
 				// 判断当前文件或父级文件夹该用户是否拥有编辑权限
 				for (Serializable id : ids) {
 					NetdiskFile nf = this.netdiskFileService.load(id);
@@ -241,6 +244,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	// 上传文件
 	public String uploadfile() {
 		NetdiskFile netdiskFile = new NetdiskFile();
+
 		// 文件信息
 		if (this.fileInfo != null && this.fileInfo.length() > 0) {
 			JSONArray jsons;
@@ -249,19 +253,60 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 				JSONObject json1;
 				for (int i = 0; i < jsons.length(); i++) {
 					json1 = jsons.getJSONObject(i);
-					String name = json1.getString("name");
-					netdiskFile.setName(name);
-					netdiskFile.setSize(json1.getLong("size"));
-					netdiskFile.setPath(json1.getString("path"));
-					if (name.indexOf(".") != -1) {
-						netdiskFile
-								.setExt(name.substring(name.lastIndexOf(".")));
+					// 设置要目录
+					Long selectNodeId = json1.getLong("selectNodeId");// 选择节点的id
+					if (selectNodeId != null) {
+						// 我的硬盘的根目录
+						if (selectNodeId.equals(new Long(-1))) {
+							saveFile(json1, netdiskFile);
+						} else if (selectNodeId.equals(new Long(-2))) {
+							// 公共硬盘
+							// 设置为公共文件类型
+							netdiskFile
+									.setFolderType(NetdiskFile.FOLDER_TYPE_PUBLIC);
+							saveFile(json1, netdiskFile);
+						} else if (selectNodeId.equals(new Long(-3))) {
+							// 共享给我的
+							// 一能上传文件到共享给我的根目录，否则目录结构会乱
+						} else {
+							// 设置文件的所属文件夹
+							netdiskFile.setPid(selectNodeId);
+							saveFile(json1, netdiskFile);
+						}
+					} else {
+						// 如果没有选择节点默认上传到“我的硬盘”的根目录下
+						// saveFile(json1, netdiskFile);
 					}
 				}
 
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}
+		return "json";
+	}
+
+	/**
+	 * 保存一份文件
+	 * 
+	 * @param json1
+	 *            前台返回的文件数据
+	 * @param netdiskFile
+	 *            文件对象
+	 * @return
+	 */
+	public void saveFile(JSONObject json1, NetdiskFile netdiskFile) {
+		String name;
+		try {
+			name = json1.getString("name");
+			netdiskFile.setName(name);
+			netdiskFile.setSize(json1.getLong("size"));
+			netdiskFile.setPath(json1.getString("path"));
+			if (name.indexOf(".") != -1) {
+				netdiskFile.setExt(name.substring(name.lastIndexOf(".")));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		netdiskFile.setStatus(BCConstants.STATUS_ENABLED);
 		netdiskFile.setType(NetdiskFile.TYPE_FILE);
@@ -273,8 +318,41 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 		jsonObject.put("success", true);
 		jsonObject.put("msg", "上传成功！");
 		this.json = jsonObject.toString();
-		return "json";
 
+	}
+
+	// 判断是否有“公共硬盘”管理权限
+	public String checkPublicHardDiskPower() {
+
+		if (this.isPublicHardDiskManagement()) {
+			jsonObject.put("success", true);
+		} else {
+			jsonObject.put("success", false);
+			jsonObject.put("msg", "你没有上传文件到“公共硬盘”的权限！");
+		}
+		this.json = jsonObject.toString();
+		return "json";
+	}
+
+	// 检查是否拥有选中节点的管理权限
+	public String checkSelectNodePower() {
+		if (selectNodeId != null) {
+			// 先判断所选择的文件夹是否有权限编辑
+			NetdiskFile e = this.netdiskFileService.load(Long
+					.valueOf(selectNodeId));
+			// 判断是否拥有删除，整理，共享权限
+			isWonerDelAndClearAndShare4Power(e);
+
+			// isDel标识是否能删除，如果isDel为false不能删除，即为不能对该文件夹进行管理，上传
+			if (!isDel) {
+				jsonObject.put("success", false);
+				jsonObject.put("msg", "你没有上传文件到“" + e.getName() + "”的权限！");
+			} else {
+				jsonObject.put("success", true);
+			}
+		}
+		this.json = jsonObject.toString();
+		return "json";
 	}
 
 	// 上传文件夹
@@ -308,6 +386,31 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 											json1.getString("batchNo"));
 							// 如果不存在应该文件就新建
 							if (cNetdiskFile == null) {
+								// 设置要目录
+								Long selectNodeId = json1
+										.getLong("selectNodeId");// 选择节点的id
+								if (selectNodeId != null) {
+									// 我的硬盘的根目录
+									if (selectNodeId.equals(new Long(-1))) {
+										// 不用设置所属文件夹
+									} else if (selectNodeId
+											.equals(new Long(-2))) {
+										// 公共硬盘
+										// 不用设置所属文件夹
+										// 设置为公共文件类型
+										netdiskFile
+												.setFolderType(NetdiskFile.FOLDER_TYPE_PUBLIC);
+									} else if (selectNodeId
+											.equals(new Long(-3))) {
+										// 共享给我的
+										// 一能上传文件到共享给我的根目录，否则目录结构会乱
+									} else {
+										// 选择其他节点时
+										// 设置文件的所属文件夹
+										netdiskFile.setPid(selectNodeId);
+									}
+								}
+
 								netdiskFile.setName(s);
 								netdiskFile
 										.setStatus(BCConstants.STATUS_ENABLED);
