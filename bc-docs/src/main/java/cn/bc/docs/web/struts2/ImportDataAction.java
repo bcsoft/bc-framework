@@ -2,6 +2,8 @@ package cn.bc.docs.web.struts2;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.StringUtils;
 
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
 
 import com.google.gson.JsonObject;
@@ -215,4 +218,34 @@ public abstract class ImportDataAction extends ActionSupport {
 	 */
 	abstract protected void importData(List<Map<String, Object>> data,
 			JsonObject json, String fileType);
+
+	/**
+	 * 获取单元格的日期值
+	 * 
+	 * @param cell
+	 * @return
+	 */
+	protected Calendar getCellCalendar(Cell cell) {
+		if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {// xls中为日期类型时，jxls对应数字类型
+			Date d = cell.getDateCellValue();
+			if (d != null) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(cell.getDateCellValue());
+				return c;
+			} else {
+				return null;
+			}
+		} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 将字符串转换为数字
+			String d = cell.getStringCellValue();
+			if (d != null && !d.isEmpty()) {
+				Calendar c = DateUtils.getCalendar(d);
+				return c;
+			} else {
+				return null;
+			}
+		} else {
+			logger.warn("Error format to Calendar:" + cell);
+			return null;
+		}
+	}
 }
