@@ -330,7 +330,9 @@ public class GridData extends Div {
 				if (column.isUseTitleFromLabel()) {
 					if (column.getValueFormater() instanceof LinkFormater) {
 						if (srcCellValue != null)
-							td.setTitle(srcCellValue.toString());
+							td.setTitle(((LinkFormater) column
+									.getValueFormater()).getLinkText(rowData,
+											srcCellValue));
 					} else {
 						td.setTitle(StringUtils.null2Empty(cellValue));
 					}
