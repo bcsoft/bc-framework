@@ -1,5 +1,6 @@
 package cn.bc.mail;
 
+
 /**
  * 邮件信息封装
  * 
@@ -60,5 +61,23 @@ public class Mail {
 
 	public void setBcc(String[] bcc) {
 		this.bcc = bcc;
+	}
+
+	public void addTo(String[] to) {
+		if (to == null || to.length == 0)
+			return;
+
+		if (this.to != null) {
+			String[] newTo = new String[this.to.length + to.length];
+			for (int i = 0; i < this.to.length; i++) {
+				newTo[i] = this.to[i];
+			}
+			for (int i = 0; i < to.length; i++) {
+				newTo[this.to.length + i] = to[i];
+			}
+			this.to = newTo;
+		} else {
+			this.to = to;
+		}
 	}
 }
