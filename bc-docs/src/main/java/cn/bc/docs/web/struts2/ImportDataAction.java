@@ -15,13 +15,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.domain.Attach;
 
-import com.google.gson.JsonObject;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -40,7 +41,7 @@ public abstract class ImportDataAction extends ActionSupport {
 
 	@Override
 	public String execute() throws Exception {
-		JsonObject json = new JsonObject();
+		JSONObject json = new JSONObject();
 		try {
 			String fileName = Attach.DATA_REAL_PATH + "/" + file;
 			if (logger.isInfoEnabled()) {
@@ -68,15 +69,15 @@ public abstract class ImportDataAction extends ActionSupport {
 
 			// 设置默认的处理结果
 			if (!json.has("success"))
-				json.addProperty("success", true);
+				json.put("success", true);
 			if (!json.has("msg"))
-				json.addProperty("msg", "成功导入" + data.size() + "条数据！");
+				json.put("msg", "成功导入" + data.size() + "条数据！");
 			if (!json.has("totalCount"))
-				json.addProperty("totalCount", data.size());
+				json.put("totalCount", data.size());
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
-			json.addProperty("success", false);
-			json.addProperty("msg", e.getMessage());
+			json.put("success", false);
+			json.put("msg", e.getMessage());
 		}
 
 		this.json = json.toString();
@@ -160,7 +161,8 @@ public abstract class ImportDataAction extends ActionSupport {
 		Object cellValue;
 		for (int i = 0; i < columnNames.size(); i++) {
 			cell = row.getCell(i);
-			cellValue = getCellValue(cell, columnNames.get(i), fileType);
+			cellValue = (cell == null ? null : getCellValue(cell,
+					columnNames.get(i), fileType));
 			if (i == 0) {// 首个单元格为空就当成是数据行的结束行而退出
 				if (cellValue == null || cellValue.toString().trim().isEmpty()) {
 					return null;
@@ -217,7 +219,7 @@ public abstract class ImportDataAction extends ActionSupport {
 	 *            [可选]返回结果信息的包装，用户可以自定义进行控制
 	 */
 	abstract protected void importData(List<Map<String, Object>> data,
-			JsonObject json, String fileType);
+			JSONObject json, String fileType) throws JSONException;
 
 	/**
 	 * 获取单元格的日期值
@@ -247,5 +249,15 @@ public abstract class ImportDataAction extends ActionSupport {
 			logger.warn("Error format to Calendar:" + cell);
 			return null;
 		}
+	}
+
+	/**
+	 * 显示导入处理的详细异常信息
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String showDetail() throws Exception {
+		return SUCCESS;
 	}
 }
