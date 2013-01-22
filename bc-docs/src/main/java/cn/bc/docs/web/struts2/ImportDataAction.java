@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +16,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.util.StringUtils;
@@ -64,6 +66,15 @@ public abstract class ImportDataAction extends ActionSupport {
 			// 解析工作表，获取数据
 			List<Map<String, Object>> data = getSheetData(sheet, ext);
 
+			// 记录列名
+			if (!data.isEmpty()) {
+				JSONArray columnNames = new JSONArray();
+				for (String key : data.get(0).keySet()) {
+					columnNames.put(key);
+				}
+				json.put("columnNames", columnNames);
+			}
+			
 			// 导入数据
 			importData(data, json, ext);
 
@@ -167,9 +178,8 @@ public abstract class ImportDataAction extends ActionSupport {
 				if (cellValue == null || cellValue.toString().trim().isEmpty()) {
 					return null;
 				}
-			} else {
-				rowData.put(columnNames.get(i), cellValue);
 			}
+			rowData.put(columnNames.get(i), cellValue);
 		}
 		return rowData;
 	}
@@ -259,5 +269,62 @@ public abstract class ImportDataAction extends ActionSupport {
 	 */
 	public String showDetail() throws Exception {
 		return SUCCESS;
+	}
+
+	// 创建导入数据异常的详细信息
+	protected void addErrorDetail(JSONObject json,
+			List<Map<String, Object>> error) throws JSONException {
+		if (!error.isEmpty()) {
+			JSONArray ejs = new JSONArray();
+			for (Map<String, Object> m : error) {
+				ejs.put(convertErrorItem2Json(m));
+			}
+			json.put("detail", ejs);
+			if (logger.isDebugEnabled()) {
+				logger.debug("error:" + ejs.toString());
+			}
+		}
+
+	}
+
+	/**
+	 * 转换异常信息对象为json对象
+	 * 
+	 * @param m
+	 * @return
+	 * @throws JSONException
+	 */
+	protected JSONObject convertErrorItem2Json(Map<String, Object> m)
+			throws JSONException {
+		JSONObject ej;
+		ej = new JSONObject();
+		for (Entry<String, Object> entry : m.entrySet()) {
+			ej.put((String) entry.getKey(),
+					formatErrorItemValue((String) entry.getKey(),
+							entry.getValue()));
+		}
+		return ej;
+	}
+
+	/**
+	 * 格式化指定的值
+	 * 
+	 * @param key
+	 *            键
+	 * @param value
+	 *            值
+	 * @return
+	 */
+	protected Object formatErrorItemValue(String key, Object value) {
+		return value;
+	}
+
+	// 添加一条导入数据异常的信息
+	protected void addErrorItem(List<Map<String, Object>> error,
+			Map<String, Object> map, int index, String msg) {
+		map.put("index", index);// 索引号
+		map.put("msg", msg);
+		// map.put("seq", map.containsKey("序号") ? map.get("序号") : "");
+		error.add(map);
 	}
 }
