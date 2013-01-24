@@ -250,7 +250,7 @@ public abstract class ImportDataAction extends ActionSupport {
 		} else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 将字符串转换为数字
 			String d = cell.getStringCellValue();
 			if (d != null && !d.isEmpty()) {
-				Calendar c = DateUtils.getCalendar(d);
+				Calendar c = DateUtils.getCalendarEx(d);
 				return c;
 			} else {
 				return null;
