@@ -398,8 +398,16 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	public String deleteAll() {
 		Json _json = new Json();
 		try {
-			List<Attach> attachs = this.getCrudService().createQuery()
-					.condition(new EqualsCondition("ptype", ptype)).list();
+			List<Attach> attachs = this
+					.getCrudService()
+					.createQuery()
+					.condition(
+							new AndCondition()
+									.add(new EqualsCondition("ptype", ptype))
+									.add(new EqualsCondition("puid", puid))
+									.add(new EqualsCondition("status",
+											BCConstants.STATUS_ENABLED)))
+					.list();
 			// String path;
 			// Long[] ids = new Long[attachs.size()];
 			List<AttachHistory> ahs = new ArrayList<AttachHistory>();
@@ -460,19 +468,20 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 		if (isConvertFile(attach.getFormat())) {
 			if (this.to == null || this.to.length() == 0) {
 				this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-//				if ("xls".equalsIgnoreCase(attach.getFormat())
-//						|| "xlsx".equalsIgnoreCase(attach.getFormat())
-//						|| "xlsm".equalsIgnoreCase(attach.getFormat())) {
-//					this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
-//				} else {
-//					this.to = getText("jodconverter.to.extension");// 没有指定就是用系统默认的配置转换为pdf
-//				}
+				// if ("xls".equalsIgnoreCase(attach.getFormat())
+				// || "xlsx".equalsIgnoreCase(attach.getFormat())
+				// || "xlsm".equalsIgnoreCase(attach.getFormat())) {
+				// this.to = "html";// excel默认转换为html格式（因为转pdf的A4纸张导致大报表换页乱了）
+				// } else {
+				// this.to = getText("jodconverter.to.extension");//
+				// 没有指定就是用系统默认的配置转换为pdf
+				// }
 			}
 
-			if(attach.getFormat().equals("html")){//html不需要转pdf查看
-				this.to="html";
+			if (attach.getFormat().equals("html")) {// html不需要转pdf查看
+				this.to = "html";
 				this.inputStream = new FileInputStream(new File(path));
-			}else if (attach.isAppPath()) {
+			} else if (attach.isAppPath()) {
 				// 转换附件格式后再下载
 				FileInputStream inputStream = new FileInputStream(
 						new File(path));
@@ -485,8 +494,8 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 
 				byte[] bs = outputStream.toByteArray();
 				this.inputStream = new ByteArrayInputStream(bs);
-			
-			}else {// 转换文档
+
+			} else {// 转换文档
 				this.inputStream = OfficeUtils.convert(attach.getPath(),
 						this.to, true);
 			}
