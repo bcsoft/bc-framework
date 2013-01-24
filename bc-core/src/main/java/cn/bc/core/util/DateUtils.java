@@ -5,9 +5,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import cn.bc.core.exception.CoreException;
 
 /**
  * 时间日期处理帮助类
@@ -152,8 +158,12 @@ public class DateUtils {
 	public static Calendar getCalendar(String dateTime) {
 		Date date = getDate(dateTime);
 		Calendar to = Calendar.getInstance();
-		to.setTime(date);
-		return to;
+		if (date != null) {
+			to.setTime(date);
+			return to;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -185,10 +195,85 @@ public class DateUtils {
 		try {
 			return df.parse(dateTime);
 		} catch (ParseException pe) {
-			logger.error("can't parse to date,return null:dateTime=" + dateTime
-					+ ",error=" + pe.getMessage());
-			return null;
+			logger.error("Unparseable date: dateTime=" + dateTime + ",error="
+					+ pe.getMessage());
+			throw new CoreException("Unparseable date: " + dateTime, pe);
 		}
+	}
+
+	public static Map<String, String> dateFormats;
+	static {
+		dateFormats = new LinkedHashMap<String, String>();
+		dateFormats.put("yyyy-MM-dd HH:mm:ss",
+				"^\\d{4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy-MM-dd HH:mm",
+				"^\\d{4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy-MM-dd", "^\\d{4}-\\d{1,2}-\\d{1,2}$");
+
+		dateFormats.put("yyyy/MM/dd HH:mm:ss",
+				"^\\d{4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy/MM/dd HH:mm",
+				"^\\d{4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy/MM/dd", "^\\d{4}/\\d{1,2}/\\d{1,2}$");
+
+		dateFormats.put("yyyy.MM.dd HH:mm:ss",
+				"^\\d{4}.\\d{1,2}.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy.MM.dd HH:mm",
+				"^\\d{4}.\\d{1,2}.\\d{1,2} \\d{1,2}:\\d{1,2}$");
+		dateFormats.put("yyyy.MM.dd", "^\\d{4}.\\d{1,2}.\\d{1,2}$");
+
+		dateFormats.put("yyyy年MM月dd日", "^\\d{4}年\\d{1,2}月\\d{1,2}日$");
+	}
+
+	private static SimpleDateFormat df4ex = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss");
+
+	/**
+	 * 指定的字符串时间转换成Date
+	 * <p>
+	 * yyyy-MM-dd HH:mm:ss|yyyy.MM.dd HH:mm:ss|yyyy年MM月dd日
+	 * </p>
+	 * 
+	 * @param dateTime
+	 *            所要转换的时间
+	 */
+	public static Date getDateEx(String dateTime) {
+		if (dateTime == null)
+			return null;
+		dateTime = dateTime.trim();
+		if (dateTime.isEmpty())
+			return null;
+
+		for (Entry<String, String> e : dateFormats.entrySet()) {
+			if (Pattern.matches(e.getValue(), dateTime)) {
+				df4ex.applyPattern(e.getKey());
+				try {
+					return df4ex.parse(dateTime);
+				} catch (ParseException e1) {
+					logger.warn("Unparseable date: dateTime=" + dateTime
+							+ ",error=" + e1.getMessage());
+					throw new CoreException("Unparseable date: " + dateTime, e1);
+				}
+			}
+		}
+		logger.warn("can't parse this string to date: " + dateTime);
+		throw new CoreException("can't parse this string to Date: " + dateTime);
+	}
+
+	/**
+	 * 指定的字符串时间转换成Calendar
+	 * <p>
+	 * yyyy-MM-dd HH:mm:ss|yyyy.MM.dd HH:mm:ss|yyyy年MM月dd日
+	 * </p>
+	 * 
+	 * @param dateTime
+	 *            所要转换的时间
+	 */
+	public static Calendar getCalendarEx(String dateTime) {
+		Date date = getDateEx(dateTime);
+		Calendar to = Calendar.getInstance();
+		to.setTime(date);
+		return to;
 	}
 
 	/**

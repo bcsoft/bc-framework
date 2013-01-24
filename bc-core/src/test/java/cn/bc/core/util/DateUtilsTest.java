@@ -12,6 +12,69 @@ public class DateUtilsTest {
 	SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Test
+	public void testGetDateEx() throws ParseException {
+		//-- yyyy-MM-dd HH:mm:ss
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013-01-21 01:02:03")));
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013-1-21 1:2:3")));
+		
+		// yyyy-MM-dd HH:mm
+		Assert.assertEquals("2013-01-21 01:02:00",
+				formater.format(DateUtils.getDateEx("2013-01-21 01:02")));
+		Assert.assertEquals("2013-01-02 01:02:00",
+				formater.format(DateUtils.getDateEx("2013-1-2 1:2")));
+		
+		// yyyy-MM-dd
+		Assert.assertEquals("2013-01-21 00:00:00",
+				formater.format(DateUtils.getDateEx("2013-01-21")));
+		Assert.assertEquals("2013-01-02 00:00:00",
+				formater.format(DateUtils.getDateEx("2013-1-2")));
+		
+		//-- yyyy/MM/dd HH:mm:ss
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013/01/21 01:02:03")));
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013/1/21 1:2:3")));
+		
+		// yyyy/MM/dd HH:mm
+		Assert.assertEquals("2013-01-21 01:02:00",
+				formater.format(DateUtils.getDateEx("2013/01/21 01:02")));
+		Assert.assertEquals("2013-01-02 01:02:00",
+				formater.format(DateUtils.getDateEx("2013/1/2 1:2")));
+		
+		// yyyy/MM/dd
+		Assert.assertEquals("2013-01-21 00:00:00",
+				formater.format(DateUtils.getDateEx("2013/01/21")));
+		Assert.assertEquals("2013-01-02 00:00:00",
+				formater.format(DateUtils.getDateEx("2013/1/2")));
+		
+		//-- yyyy.MM.dd HH:mm:ss
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013.01.21 01:02:03")));
+		Assert.assertEquals("2013-01-21 01:02:03",
+				formater.format(DateUtils.getDateEx("2013.1.21 1:2:3")));
+		
+		// yyyy.MM.dd HH:mm
+		Assert.assertEquals("2013-01-21 01:02:00",
+				formater.format(DateUtils.getDateEx("2013.01.21 01:02")));
+		Assert.assertEquals("2013-01-02 01:02:00",
+				formater.format(DateUtils.getDateEx("2013.1.2 1:2")));
+		
+		// yyyy.MM.dd
+		Assert.assertEquals("2013-01-21 00:00:00",
+				formater.format(DateUtils.getDateEx("2013.01.21")));
+		Assert.assertEquals("2013-01-02 00:00:00",
+				formater.format(DateUtils.getDateEx("2013.1.2")));
+		
+		//- yyyy年MM月dd日
+		Assert.assertEquals("2013-01-21 00:00:00",
+				formater.format(DateUtils.getDateEx("2013年01月21日")));
+		Assert.assertEquals("2013-01-02 00:00:00",
+				formater.format(DateUtils.getDateEx("2013年1月2日")));
+	}
+
+	@Test
 	public void testSetToZeroTime() throws ParseException {
 		Calendar date = DateUtils.getCalendar("2011-11-01 10:20:30");
 		DateUtils.setToZeroTime(date);
