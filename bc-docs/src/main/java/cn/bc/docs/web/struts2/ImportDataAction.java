@@ -74,17 +74,27 @@ public abstract class ImportDataAction extends ActionSupport {
 				}
 				json.put("columnNames", columnNames);
 			}
-			
+
 			// 导入数据
 			importData(data, json, ext);
+
+			// 记录详细的异常处理信息
+			addErrorDetail(json);
 
 			// 设置默认的处理结果
 			if (!json.has("success"))
 				json.put("success", true);
-			if (!json.has("msg"))
-				json.put("msg", "成功导入" + data.size() + "条数据！");
+			int totalCount = data.size();
 			if (!json.has("totalCount"))
-				json.put("totalCount", data.size());
+				json.put("totalCount", totalCount);
+
+			// 处理结果的描述信息
+			if (!json.has("msg")) {
+				json.put(
+						"msg",
+						buildImportMessage(totalCount, this.updateCount,
+								errorItems != null ? errorItems.size() : 0));
+			}
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
 			json.put("success", false);
@@ -93,6 +103,40 @@ public abstract class ImportDataAction extends ActionSupport {
 
 		this.json = json.toString();
 		return "json";
+	}
+
+	/**
+	 * 构建处理结果的描述信息
+	 * 
+	 * @param totalCount
+	 *            总处理数
+	 * @param updateCount
+	 *            更新的条目数
+	 * @param errorCount
+	 *            错误条目数
+	 * @return
+	 */
+	protected String buildImportMessage(int totalCount, int updateCount,
+			int errorCount) {
+		String msg = "总共" + totalCount + "条数据";
+		if (errorCount > 0) {
+			if (updateCount > 0) {
+				msg += "，成功导入" + (totalCount - updateCount - errorCount)
+						+ "条新数据，更新" + updateCount + "条现有数据，" + errorCount
+						+ "条数据存在异常没有导入！";
+			} else {
+				msg += "，成功导入" + (totalCount - errorCount) + "条新数据，"
+						+ errorCount + "条数据存在异常没有导入！";
+			}
+		} else {
+			if (updateCount > 0) {
+				msg += "，成功导入" + (totalCount - updateCount) + "条新数据，更新"
+						+ updateCount + "条现有数据！";
+			} else {
+				msg += "，成功导入" + totalCount + "条新数据！";
+			}
+		}
+		return msg;
 	}
 
 	/**
@@ -272,11 +316,10 @@ public abstract class ImportDataAction extends ActionSupport {
 	}
 
 	// 创建导入数据异常的详细信息
-	protected void addErrorDetail(JSONObject json,
-			List<Map<String, Object>> error) throws JSONException {
-		if (!error.isEmpty()) {
+	protected void addErrorDetail(JSONObject json) throws JSONException {
+		if (errorItems != null && !errorItems.isEmpty()) {
 			JSONArray ejs = new JSONArray();
-			for (Map<String, Object> m : error) {
+			for (Map<String, Object> m : errorItems) {
 				ejs.put(convertErrorItem2Json(m));
 			}
 			json.put("detail", ejs);
@@ -319,12 +362,28 @@ public abstract class ImportDataAction extends ActionSupport {
 		return value;
 	}
 
-	// 添加一条导入数据异常的信息
-	protected void addErrorItem(List<Map<String, Object>> error,
-			Map<String, Object> map, int index, String msg) {
+	/**
+	 * 数据更新的条目数
+	 */
+	protected int updateCount = 0;
+	/**
+	 * 错误的数据处理条目
+	 */
+	protected List<Map<String, Object>> errorItems = new ArrayList<Map<String, Object>>();
+
+	/**
+	 * 添加一条导入数据异常的信息
+	 * 
+	 * @param map
+	 *            要处理的数据条目
+	 * @param index
+	 *            数据条目的索引号
+	 * @param msg
+	 *            指定的处理异常信息
+	 */
+	protected void addErrorItem(Map<String, Object> map, int index, String msg) {
 		map.put("index", index);// 索引号
 		map.put("msg", msg);
-		// map.put("seq", map.containsKey("序号") ? map.get("序号") : "");
-		error.add(map);
+		errorItems.add(map);
 	}
 }
