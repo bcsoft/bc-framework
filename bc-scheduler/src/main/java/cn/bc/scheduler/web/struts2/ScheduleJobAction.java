@@ -78,7 +78,8 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	@Override
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(700).setMinWidth(300)
-				.setHeight(400).setMinHeight(300);
+				.setHeight(400).setMinHeight(300).setMaximizable(true)
+				.setMinimizable(true);
 	}
 
 	@Override
@@ -149,7 +150,8 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 
 	@Override
 	protected OrderCondition getDefaultOrderCondition() {
-		return new OrderCondition("status", Direction.Asc).add("orderNo", Direction.Asc);
+		return new OrderCondition("status", Direction.Asc).add("orderNo",
+				Direction.Asc);
 	}
 
 	@Override
