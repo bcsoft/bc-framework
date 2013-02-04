@@ -69,7 +69,8 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 	@Override
 	protected PageOption buildListPageOption() {
 		return super.buildListPageOption().setWidth(680).setMinWidth(300)
-				.setMinHeight(300).setHeight(450);
+				.setMinHeight(300).setHeight(450).setMaximizable(true)
+				.setMinimizable(true);
 	}
 
 	@Override
