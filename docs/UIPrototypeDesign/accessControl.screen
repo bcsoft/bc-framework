@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="673" measuredHeight="128">
+    <widgets xsi:type="model:Window" id="1" width="673" height="128" text="访问控制" measuredWidth="673" measuredHeight="128" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="4" y="23" width="149" text="新建,编辑,删除" measuredWidth="149" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="49" height="30" text="新建"/>
+      <items x="49" y="0" width="48" height="30" text="编辑"/>
+      <items x="97" y="0" width="52" height="30" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" y="55" width="673" text="(w:30). !,文档类型,(w:60). 文档ID,(w:30). 访问方式,(w:30). 访问者,(w:30). 排序号,(w:30). 添加者,(w:30). 添加日期&#xA;1,xxx处理流程,1234,查阅,测试员1,0,dragon,2013-01-01&#xA;2,xxx处理流程,1234,查阅,测试员2,1,dragon,2013-01-01&#xA;" measuredWidth="673" measuredHeight="73" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="192" x="483" y="26" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="193" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="194" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="99" x="8" y="152" measuredWidth="329" measuredHeight="241">
+    <widgets xsi:type="model:Window" id="100" width="329" height="241" text="访问控制配置" measuredWidth="329" measuredHeight="241" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Button" id="102" x="268" y="209" width="56" text="保存" measuredWidth="56" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="121" x="72" y="56" width="251" text="1234" measuredWidth="251" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="137" x="10" y="29" text="*文档类型：" measuredWidth="70" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="154" x="72" y="29" width="251" text="xxx处理流程" measuredWidth="251" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="195" x="21" y="56" text="*文档ID：" measuredWidth="59" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="253" y="107" width="329" height="99" text="(w:30).   !,(w:30). 访问者,访问权限,(w:30). 添加者,(w:30). 添加日期&#xA;,宝城, {checked}查阅 {unchecked}编辑,dragon,2013-01-01&#xA;,张三, {checked}查阅 {unchecked}编辑,dragon,2013-01-01&#xA;,李四, {checked}查阅 {unchecked}编辑,dragon,2013-01-01" measuredWidth="329" measuredHeight="99" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="254" x="10" y="83" text="谁有权访问：" measuredWidth="77" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="255" x="307" y="88" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
+    <widgets xsi:type="model:Icon" id="256" x="289" y="88" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+    <widgets xsi:type="model:Icon" id="257" x="272" y="88" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="258" x="256" y="88" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+  </widgets>
+  <widgets xsi:type="model:Note" id="180" x="8" y="400" width="465" height="65" text="1）角色：访问控制管理&#xD;&#xA;2）&quot;访问控制配置&quot;表单界面为访问控制管理员在访问控制视图中打开条目的配置界面&#xD;&#xA;3）&quot;【XXX】监控配置&quot;表单界面适用于需要访问控制的模块内的配置界面" measuredWidth="465" measuredHeight="65" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="237" x="352" y="152" measuredWidth="329" measuredHeight="201">
+    <widgets xsi:type="model:Window" id="238" width="329" height="201" text="【XXX】监控配置" measuredWidth="329" measuredHeight="201" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Button" id="239" x="267" y="168" width="56" text="确定" measuredWidth="56" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="240" x="11" y="22" text="要监控的对象：xxx处理流程" measuredWidth="155" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="242" y="65" width="329" height="99" text="(w:30).   !,(w:30). 访问者,访问权限,(w:30). 添加者,(w:30). 添加日期&#xA;,宝城,查阅,dragon,2013-01-01&#xA;,张三,查阅,dragon,2013-01-01&#xA;,李四,查阅,dragon,2013-01-01" measuredWidth="329" measuredHeight="99" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="243" x="10" y="41" text="谁有权访问：" measuredWidth="77" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="249" x="307" y="46" measuredWidth="16" measuredHeight="16" icon="error (small)"/>
+    <widgets xsi:type="model:Icon" id="250" x="289" y="46" measuredWidth="16" measuredHeight="16" icon="circled-plus (small)"/>
+    <widgets xsi:type="model:Icon" id="251" x="272" y="46" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="252" x="256" y="46" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
