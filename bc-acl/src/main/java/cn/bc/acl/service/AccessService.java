@@ -2,6 +2,7 @@ package cn.bc.acl.service;
 
 import java.util.List;
 
+import cn.bc.acl.domain.AccessActor;
 import cn.bc.acl.domain.AccessHistory;
 import cn.bc.identity.domain.Actor;
 
@@ -11,7 +12,7 @@ import cn.bc.identity.domain.Actor;
  * @author dragon
  * 
  */
-public interface AccessService {
+public interface AccessService{
 	/**
 	 * 创建访问控制
 	 * 
@@ -113,4 +114,20 @@ public interface AccessService {
 	 * @return [0]-访问人数，[1]-总访问次数
 	 */
 	int[] visitedCount(Long docId, int docType, int accessType);
+	
+	
+	/**
+	 * 获取访问者对象
+	 * @param actor 访问人
+	 * @return
+	 */
+	List<AccessActor> find(Actor actor);
+	
+	/**
+	 * 获取访问者对象
+	 * @param actor访问人
+	 * @param docType 文档类型
+	 * @return
+	 */
+	List<AccessActor> find(Actor actor,String docType);
 }
