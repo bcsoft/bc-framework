@@ -182,17 +182,4 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 		return this.getHtmlPageNamespace() + "/acl/control/view.js";
 	}
 
-	// ==高级搜索代码开始==
-	@Override
-	protected boolean useAdvanceSearch() {
-		return true;
-	}
-
-	@Override
-	protected void initConditionsFrom() throws Exception {
-
-	}
-
-	// ==高级搜索代码结束==
-
 }
