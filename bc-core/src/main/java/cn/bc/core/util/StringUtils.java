@@ -343,4 +343,15 @@ public class StringUtils {
 					+ ",value=" + value);
 		}
 	}
+	
+	/**
+	 * 字符串反转
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static String reverse(String s) {
+		return new StringBuffer(s).reverse().toString();
+	}
+
 }
