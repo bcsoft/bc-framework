@@ -2,6 +2,7 @@ package cn.bc.acl.web.struts2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,8 @@ import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
+import cn.bc.option.OptionConstants;
+import cn.bc.option.service.OptionService;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
@@ -40,11 +43,21 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	private AccessDocService accessDocService;
 	private AccessActorService accessActorService;
 	private ActorService actorService;
+	private OptionService optionService;
 
 	public List<AccessActor> accessActor4List;// 访问者集合
 	public String accessActors;// 保存访问者json字符串
 	public Boolean isFromDoc = false;// 判断是否从对象中创建的配置
+	public String showRole;//权限显示的配置 如"01"只显示查阅，"11"显示查阅和编辑按钮
+	
+	public List<Map<String, String>> categoryList;//所属模块可选列
+	
 
+	@Autowired
+	public void setOptionService(OptionService optionService) {
+		this.optionService = optionService;
+	}
+	
 	@Autowired
 	public void setAccessDocService(AccessDocService accessDocService) {
 		this.setCrudService(accessDocService);
@@ -100,6 +113,12 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 			this.accessActor4List = this.accessActorService.find(this
 					.getE().getId());
 		}
+		
+		// 批量加载可选项列表
+		Map<String, List<Map<String, String>>> optionItems = optionService
+				.findOptionItemByGroupKeys(new String[] {OptionConstants.OPERATELOG_PTYPE});
+		
+		categoryList = optionItems.get(OptionConstants.OPERATELOG_PTYPE);
 	}
 
 	// 解释访问者字符串为对象

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,11 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.option.OptionConstants;
+import cn.bc.option.domain.OptionItem;
+import cn.bc.option.service.OptionService;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -38,6 +44,13 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(AccessControlsAction.class);
 
+	private OptionService optionService;
+	
+	@Autowired
+	public void setOptionService(OptionService optionService) {
+		this.optionService = optionService;
+	}
+	
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
@@ -103,7 +116,8 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("b.doc_type", "docType",
 				getText("accessControl.docType"), 150)
-				.setUseTitleFromLabel(true));
+				.setUseTitleFromLabel(true)
+				.setValueFormater(new KeyValueFormater(getCategorys())));
 		columns.add(new TextColumn4MapKey("b.doc_id", "docId",
 				getText("accessControl.docId"), 80).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("", "accessactors",
@@ -122,10 +136,14 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		return columns;
 	}
+	
+	private Map<String, String> getCategorys() {
+		return optionService.findActiveOptionItemByGroupKey(OptionConstants.OPERATELOG_PTYPE);
+	}
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['docType']+'的监控配置'";
+		return "['docName']+'的监控配置'";
 	}
 
 	@Override
@@ -181,5 +199,26 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 	protected String getHtmlPageJs() {
 		return this.getHtmlPageNamespace() + "/acl/control/view.js";
 	}
+	
+	// ==高级搜索代码开始==
+	@Override
+	protected boolean useAdvanceSearch() {
+		return true;
+	}
+	
+	public JSONArray categorys;// 所属模块
+
+	@Override
+	protected void initConditionsFrom() throws Exception {
+		// 批量加载可选项列表
+		Map<String, List<Map<String, String>>> optionItems = optionService
+				.findOptionItemByGroupKeys(new String[] {OptionConstants.OPERATELOG_PTYPE});
+		
+		categorys = OptionItem.toLabelValues(optionItems.get(OptionConstants.OPERATELOG_PTYPE));
+	}
+	
+	
+
+	// ==高级搜索代码结束==
 
 }
