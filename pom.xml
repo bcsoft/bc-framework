@@ -19,6 +19,7 @@
 		<module>bc-scheduler</module>
 		<module>bc-websocket</module>
 		<module>bc-chat</module>
+		<module>bc-acl</module>
 
 		<module>bc-web</module>
 		<module>bc-web-struts</module>

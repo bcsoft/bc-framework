@@ -25,22 +25,22 @@ import cn.bc.identity.domain.ActorHistory;
 @Table(name = "BC_ACL_HISTORY")
 public class AccessHistory extends EntityImpl {
 	private static final long serialVersionUID = 1L;
-	private AccessWay accessWay;// 访问方式
+	private AccessDoc accessDoc;// 访问方式
 	private ActorHistory actorHistory;// 访问者
 	private Calendar accessDate;// 访问时间
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "WAY_ID", referencedColumnName = "ID")
-	public AccessWay getAccessWay() {
-		return accessWay;
+	@JoinColumn(name = "PID", referencedColumnName = "ID")
+	public AccessDoc getAccessDoc() {
+		return accessDoc;
 	}
 
-	public void setAccessWay(AccessWay accessWay) {
-		this.accessWay = accessWay;
+	public void setAccessDoc(AccessDoc accessDoc) {
+		this.accessDoc = accessDoc;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "ACTOR_HID", referencedColumnName = "ID")
+	@JoinColumn(name = "AHID", referencedColumnName = "ID")
 	public ActorHistory getActorHistory() {
 		return actorHistory;
 	}
