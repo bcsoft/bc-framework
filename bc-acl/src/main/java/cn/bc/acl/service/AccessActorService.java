@@ -29,7 +29,7 @@ public interface AccessActorService extends CrudService<AccessActor> {
 	 * @param pid 访问对象id1
 	 * @return
 	 */
-	List<AccessActor> find(Long pid);
+	List<AccessActor> findByPid(Long pid);
 	
 	
 	/**

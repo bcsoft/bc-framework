@@ -21,14 +21,9 @@ public class AccessHistoryDaoImpl extends HibernateCrudJpaDao<AccessHistory> imp
 	public List<AccessHistory> findByDoc(Long pid) {
 		Assert.notNull(pid);
 		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("accessDoc.id", pid));
+		condition.add(new EqualsCondition("pid", pid));
 		return this.createQuery().condition(condition).list();
 	}
 
-	public void delete(List<AccessHistory> accessHistorys) {
-		if (accessHistorys != null)
-			for (AccessHistory ah : accessHistorys)
-				this.getJpaTemplate().remove(ah);
-	}
 
 }

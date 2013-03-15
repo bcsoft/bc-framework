@@ -20,7 +20,6 @@ import cn.bc.core.service.DefaultCrudService;
 public class AccessDocServiceImpl extends DefaultCrudService<AccessDoc> implements AccessDocService {
 	private AccessDocDao accessDocDao;
 	private AccessActorService accessActorService;
-	private AccessHistoryService accessHistoryService;
 
 	@Autowired
 	public void setAccessDocDao(AccessDocDao accessDocDao) {
@@ -32,11 +31,6 @@ public class AccessDocServiceImpl extends DefaultCrudService<AccessDoc> implemen
 	public void setAccessActorService(AccessActorService accessActorService) {
 		this.accessActorService = accessActorService;
 	}
-	
-	@Autowired
-	public void setAccessHistoryService(AccessHistoryService accessHistoryService) {
-		this.accessHistoryService = accessHistoryService;
-	}
 
 	public AccessDoc save4AccessActors(AccessDoc entity,List<AccessActor> accessActors) {
 		if(entity==null)throw new CoreException("entity is null!");
@@ -44,7 +38,7 @@ public class AccessDocServiceImpl extends DefaultCrudService<AccessDoc> implemen
 		
 		if(!entity.isNew())
 			//先清空已保存的访问者
-			this.accessActorService.delete(this.accessActorService.find(entity.getId()));
+			this.accessActorService.delete(this.accessActorService.findByPid(entity.getId()));
 		
 		//保存对象
 		AccessDoc e=this.accessDocDao.save(entity);
@@ -62,9 +56,7 @@ public class AccessDocServiceImpl extends DefaultCrudService<AccessDoc> implemen
 	public void delete(Serializable id) {
 		AccessDoc e=this.accessDocDao.load(id);
 		//先清空已保存的访问者
-		this.accessActorService.delete(this.accessActorService.find(e.getId()));
-		//清空司机访问者
-		this.accessHistoryService.delete(this.accessHistoryService.findByDoc(e.getId()));
+		this.accessActorService.delete(this.accessActorService.findByPid(e.getId()));
 		//删除对象
 		this.accessDocDao.delete(id);
 	}

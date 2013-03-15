@@ -22,11 +22,8 @@ public class AccessHistoryServiceImpl extends DefaultCrudService<AccessHistory> 
 		this.setCrudDao(accessHistoryDao);
 		this.accessHistoryDao = accessHistoryDao;
 	}
-
-	public void delete(List<AccessHistory> accessHistorys) {
-		this.accessHistoryDao.delete(accessHistorys);
-	}
-
+	
+	
 	public List<AccessHistory> findByDoc(Long pid) {
 		return this.accessHistoryDao.findByDoc(pid);
 	}

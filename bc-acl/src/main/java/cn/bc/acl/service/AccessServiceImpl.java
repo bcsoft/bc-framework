@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.acl.dao.AccessActorDao;
 import cn.bc.acl.domain.AccessActor;
-import cn.bc.acl.domain.AccessHistory;
-import cn.bc.core.exception.CoreException;
-import cn.bc.identity.domain.Actor;
 
 /**
  * 访问控制Service接口的默认实现
@@ -17,7 +14,6 @@ import cn.bc.identity.domain.Actor;
  * 
  */
 public class AccessServiceImpl implements AccessService {
-	
 	private AccessActorDao accessActorDao;
 	
 	@Autowired
@@ -25,47 +21,26 @@ public class AccessServiceImpl implements AccessService {
 		this.accessActorDao = accessActorDao;
 	}
 
-	public void doAccessControl(Long docId, int docType, int accessType,
-			Long[] visitorIDs) {
-		throw new CoreException("unimplement method");
+	
+	public List<AccessActor> findByAid(Long id){
+		return this.accessActorDao.findByAid(id);
+	}
+	
+	public List<AccessActor> findByDocType(Long id,String docType){
+		return this.accessActorDao.findByDocType(id,docType);
 	}
 
-	public void saveAccessHistory(Long docId, int docType, int accessType,
-			Long visitorHID) {
-		// throw new CoreException("unimplement method");
+
+	public List<AccessActor> findByDocId(Long id, String docId) {
+		return this.accessActorDao.findByDocId(id, docId);
 	}
 
-	public List<Actor> findVisitor(Long docId, int docType, int accessType) {
-		throw new CoreException("unimplement method");
-	}
 
-	public List<AccessHistory> findVisitHistory(Long docId, int docType,
-			int accessType, Long visitorHID) {
-		throw new CoreException("unimplement method");
-	}
-
-	public boolean canVisit(Long docId, int docType, int accessType,
-			Long visitorID) {
-		throw new CoreException("unimplement method");
-	}
-
-	public boolean hadVisit(Long docId, int docType, int accessType,
-			Long visitorID) {
-		throw new CoreException("unimplement method");
-	}
-
-	public int[] visitedCount(Long docId, int docType, int accessType) {
-		// TODO Auto-generated method stub
-		return new int[] { 0, 0 };
+	public List<AccessActor> findByDocIdType(Long id, String docId,
+			String docType) {
+		return this.accessActorDao.findByDocIdType(id, docId, docType);
 	}
 	
 	
-	public List<AccessActor> find(Actor actor){
-		return this.accessActorDao.find(actor);
-	}
-	
-	public List<AccessActor> find(Actor actor,String docType){
-		return this.accessActorDao.find(actor,docType);
-	}
 	
 }

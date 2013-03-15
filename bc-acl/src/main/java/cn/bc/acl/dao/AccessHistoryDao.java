@@ -21,9 +21,4 @@ public interface AccessHistoryDao extends CrudDao<AccessHistory> {
 	 */
 	List<AccessHistory> findByDoc(Long pid);
 	
-	/**
-	 * CRUD'D:删除对象
-	 * @param accessActors 对象
-	 */
-	void delete(List<AccessHistory> accessHistorys);
 }

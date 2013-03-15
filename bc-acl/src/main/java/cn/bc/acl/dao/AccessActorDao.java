@@ -4,7 +4,6 @@ import java.util.List;
 
 import cn.bc.acl.domain.AccessActor;
 import cn.bc.core.dao.CrudDao;
-import cn.bc.identity.domain.Actor;
 
 /**
  * 访问者Dao接口
@@ -26,10 +25,10 @@ public interface AccessActorDao extends CrudDao<AccessActor> {
 	/**
 	 * 获取某一访问对象中的全部访问者
 	 * 
-	 * @param pid 访问对象id1
+	 * @param id 访问对象id1
 	 * @return
 	 */
-	List<AccessActor> find(Long pid);
+	List<AccessActor> findByPid(Long id);
 	
 	/**
 	 * CRUD'D:删除对象
@@ -45,16 +44,33 @@ public interface AccessActorDao extends CrudDao<AccessActor> {
 	
 	/**
 	 * 获取访问者对象
-	 * @param actor 访问人
+	 * @param actor 访问人id
 	 * @return
 	 */
-	List<AccessActor> find(Actor actor);
+	List<AccessActor> findByAid(Long id);
 	
 	/**
 	 * 获取访问者对象
-	 * @param actor访问人
+	 * @param actor访问人id
 	 * @param docType 文档类型
 	 * @return
 	 */
-	List<AccessActor> find(Actor actor,String docType);
+	List<AccessActor> findByDocType(Long id,String docType);
+	
+	/**
+	 * 获取访问者对象
+	 * @param actor访问人id
+	 * @param docId 文档Id
+	 * @return
+	 */
+	List<AccessActor> findByDocId(Long id,String docId);
+	
+	/**
+	 * 获取访问者对象
+	 * @param actor访问人id
+	 * @param docId 文档Id
+	 * @param docType 文档类型
+	 * @return
+	 */
+	List<AccessActor> findByDocIdType(Long id,String docId,String docType);
 }

@@ -110,7 +110,7 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	protected void initForm(boolean editable) throws Exception {
 		super.initForm(editable);
 		if (!this.getE().isNew()) {
-			this.accessActor4List = this.accessActorService.find(this
+			this.accessActor4List = this.accessActorService.findByPid(this
 					.getE().getId());
 		}
 		

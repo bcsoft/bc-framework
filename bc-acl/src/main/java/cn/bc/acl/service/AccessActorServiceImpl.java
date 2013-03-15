@@ -29,8 +29,8 @@ public class AccessActorServiceImpl extends DefaultCrudService<AccessActor> impl
 	}
 
 
-	public List<AccessActor> find(Long pid) {
-		return this.accessActorDao.find(pid);
+	public List<AccessActor> findByPid(Long pid) {
+		return this.accessActorDao.findByPid(pid);
 	}
 
 
