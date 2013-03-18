@@ -38,7 +38,7 @@
 		<action name="data" class="accessHistorysAction" method="data" />
 		<!-- 高级搜索条件窗口 -->
 		<action name="conditions" class="accessHistorysAction" method="conditions">
-			<result name="success">/bc/acl/History/conditions.jsp</result>
+			<result name="success">/bc/acl/history/conditions.jsp</result>
 		</action>
 	</package>
 </struts>

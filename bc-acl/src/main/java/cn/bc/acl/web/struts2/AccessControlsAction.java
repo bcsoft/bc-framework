@@ -148,7 +148,7 @@ public class AccessControlsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "b.doc_id", "b.doc_type", "b.doc_name", "c.name",
+		return new String[] { "b.doc_id", "b.doc_type", "b.doc_name", 
 				"e.actor_name", "f.actor_name", "getaccessactors4pid(b.id)" };
 	}
 

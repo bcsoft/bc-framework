@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,9 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.option.OptionConstants;
+import cn.bc.option.domain.OptionItem;
+import cn.bc.option.service.OptionService;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -27,6 +32,7 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -45,6 +51,13 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 	public Long ahid;//历史对象问题
 	public Boolean isFromDoc=false;//判断是否从对象中查询
 	
+	private OptionService optionService;
+	
+	@Autowired
+	public void setOptionService(OptionService optionService) {
+		this.optionService = optionService;
+	}
+	
 	
 	@Override
 	protected OrderCondition getGridOrderCondition() {
@@ -57,10 +70,12 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,b.doc_id,b.doc_type,b.doc_name,c.actor_name,a.role,a.access_date");
+		sql.append("select a.id,a.doc_id h_doc_id,a.doc_type h_doc_type,a.doc_name h_doc_name,a.access_date,a.src,a.url,a.role");
+		sql.append(",b.actor_name h_actor");
+		sql.append(",c.doc_id,c.doc_type,c.doc_name");
 		sql.append(" from bc_acl_history a");
-		sql.append(" inner join bc_acl_doc b on b.id=a.pid");
-		sql.append(" inner join bc_identity_actor_history c on c.id=a.ahid");
+		sql.append(" inner join bc_identity_actor_history b on b.id=a.ahid");
+		sql.append(" left join bc_acl_doc c on c.id=a.pid");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -72,12 +87,17 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
+				map.put("hDocId", rs[i++]);
+				map.put("hDocType", rs[i++]);
+				map.put("hDocName", rs[i++]);
+				map.put("accessDate", rs[i++]);
+				map.put("source", rs[i++]);
+				map.put("url", rs[i++]);
+				map.put("role", rs[i++]);
+				map.put("hActor", rs[i++]);
 				map.put("docId", rs[i++]);
 				map.put("docType", rs[i++]);
 				map.put("docName", rs[i++]);
-				map.put("actor", rs[i++]);
-				map.put("role", rs[i++]);
-				map.put("accessDate", rs[i++]);
 				return map;
 			}
 		});
@@ -87,26 +107,33 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
+ 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
-		
-		if(!this.isFromDoc){
-			columns.add(new TextColumn4MapKey("b.doc_name", "docName",
-					getText("accessControl.docName"),250).setUseTitleFromLabel(true));
-			columns.add(new TextColumn4MapKey("b.doc_type", "docType",
-					getText("accessControl.docType"),150).setUseTitleFromLabel(true));
-			columns.add(new TextColumn4MapKey("b.doc_id", "docId",
-					getText("accessControl.docId"), 80).setUseTitleFromLabel(true));	
-			columns.add(new TextColumn4MapKey("c.actor_name", "actor",
-					getText("accessControl.accessActor"), 60).setUseTitleFromLabel(true));
-		}
-		
+		columns.add(new TextColumn4MapKey("a.doc_name", "hDocName",
+				getText("accessHistroy.docName"),250).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.doc_type", "hDocType",
+				getText("accessHistroy.docType"),150).setUseTitleFromLabel(true)
+				.setValueFormater(new KeyValueFormater(getCategorys())));
+		columns.add(new TextColumn4MapKey("a.doc_id", "hDocId",
+				getText("accessHistroy.docId"), 80).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("b.actor_name", "hActor",
+				getText("accessHistroy.actor"), 60).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.access_date", "accessDate",
+				getText("accessHistroy.accessTime"),120)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm"))
+				.setUseTitleFromLabel(true));	
+		columns.add(new TextColumn4MapKey("a.src", "source",
+				getText("accessHistroy.source"), 60).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("a.url", "url",
+				getText("accessHistroy.url")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.role", "role",
 				getText("accessHistroy.ownRole"), 60).setUseTitleFromLabel(true)
 				.setValueFormater(new KeyValueFormater(){
+					
+					@SuppressWarnings("unchecked")
 					@Override
 					public Object format(Object context, Object value) {
-						@SuppressWarnings("unchecked")
+						if(((Map<String, Object>)context).get("role")==null)return null;
 						String role = ((Map<String, Object>)context).get("role").toString();
 						String _role = "";
 						if(AccessActor.ROLE_TRUE.equals(role.substring(role.length()-1))){
@@ -121,12 +148,20 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 							_role += getRoleValues().get("2");
 						}
 						
-						return super.format(context, value);
+						return _role;
 					}
 				}));
-		columns.add(new TextColumn4MapKey("a.access_date", "accessDate",
-				getText("accessHistroy.accessTime"))
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+		
+		if(!this.isFromDoc){
+			columns.add(new TextColumn4MapKey("c.doc_name", "docName",
+					getText("accessHistroy.aclDocName"),250).setUseTitleFromLabel(true));
+			columns.add(new TextColumn4MapKey("c.doc_type", "docType",
+					getText("accessHistroy.aclDocType"),150).setUseTitleFromLabel(true)
+					.setValueFormater(new KeyValueFormater(getCategorys())));
+			columns.add(new TextColumn4MapKey("c.doc_id", "docId",
+					getText("accessHistroy.aclDocId"), 80).setUseTitleFromLabel(true));	
+		}
+		
 		return columns;
 	}
 	
@@ -136,20 +171,20 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 		m.put("2",getText("accessControl.way.edit"));
 		return m;
 	}
+	
+	private Map<String, String> getCategorys() {
+		return optionService.findActiveOptionItemByGroupKey(OptionConstants.OPERATELOG_PTYPE);
+	}
 
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "";
+		return null;
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		if(!this.isFromDoc){
-			return new String[] { "b.doc_id","b.doc_type","b.doc_name", "c.actor_name"};
-		}else{
-			return new String[] { "c.actor_name"};
-		}
+		return new String[] { "a.src","a.doc_id","a.doc_type","a.doc_name","c.doc_id","c.doc_type","c.doc_name", "b.actor_name"};
 	}
 
 	@Override
@@ -171,6 +206,8 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
+		tb.addButton(new ToolbarButton()
+				.setText(getText("label.read")));
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 		return tb;
@@ -212,6 +249,17 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected boolean useAdvanceSearch() {
 		return true;
+	}
+	
+	public JSONArray categorys;// 所属模块
+
+	@Override
+	protected void initConditionsFrom() throws Exception {
+		// 批量加载可选项列表
+		Map<String, List<Map<String, String>>> optionItems = optionService
+				.findOptionItemByGroupKeys(new String[] {OptionConstants.OPERATELOG_PTYPE});
+		
+		categorys = OptionItem.toLabelValues(optionItems.get(OptionConstants.OPERATELOG_PTYPE));
 	}
 
 	// ==高级搜索代码结束==
