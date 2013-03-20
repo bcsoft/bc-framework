@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="523" x="8" y="8" measuredWidth="537" measuredHeight="151">
+    <widgets xsi:type="model:Window" id="524" width="537" height="151" text="【普通用户 - 收件箱】" measuredWidth="537" measuredHeight="151" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="526" y="55" width="537" text="(w:30). !,(w:30). 状态,(w:30). 发件人,主题,(w:30). 日期&#xA;1,未读,张三,(无主题),2012-10-03 10:00&#xA;2,已读,李四,无附件的邮件主题,2012-10-02 11:01&#xA;2,已读,李四,{attachment}含附件的邮件主题,2012-10-01 11:02&#xA;" measuredWidth="537" measuredHeight="96" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="527" x="384" y="26" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="528" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="529" x="4" y="23" width="61" text="{edit}写邮件" measuredWidth="61" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="60" height="30" text="{edit}写邮件"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="552" x="193" y="23" width="57" text="更多{desc}" measuredWidth="57" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="56" height="30" text="更多{desc}"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="901" x="67" y="23" width="61" text="{shopping-cart}发件箱" measuredWidth="61" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="60" height="30" text="{shopping-cart}发件箱"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="902" x="130" y="23" width="61" text="{trash}垃圾箱" measuredWidth="61" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="60" height="30" text="{trash}垃圾箱"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="553" x="8" y="168" measuredWidth="537" measuredHeight="151">
+    <widgets xsi:type="model:Window" id="554" width="537" height="151" text="【普通用户 - 发件箱】" measuredWidth="537" measuredHeight="151" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="555" y="55" width="537" text="(w:30). !,(w:30). 收件人,主题,(w:30). 日期&#xA;1,张三，李四,(无主题),2012-10-03 10:00&#xA;2,李四,无附件的邮件主题,2012-10-02 11:01&#xA;2,李四,{attachment} 含附件的邮件主题,2012-10-01 11:02&#xA;" measuredWidth="537" measuredHeight="96" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="556" x="384" y="26" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="557" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="558" x="4" y="23" width="61" text="{edit}写邮件" measuredWidth="61" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="60" height="30" text="{edit}写邮件"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="560" x="67" y="23" width="57" text="{arrow-right} 转发" measuredWidth="57" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="56" height="30" text="{arrow-right} 转发"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="891" x="126" y="23" width="57" text="{trash} 删除" measuredWidth="57" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="56" height="30" text="{trash} 删除"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="626" x="552" y="8" measuredWidth="113" measuredHeight="206">
+    <widgets xsi:type="model:Popup" id="621" y="28" width="113" text="{open} 标记为已读&#xA;{closed} 标记为未读&#xA;---&#xA;{curved-arrow-left} 回复&#xA;{arrow-right} 转发&#xA;---&#xA;{trash} 移至垃圾箱&#xA;{delete} 彻底删除" measuredWidth="113" measuredHeight="178">
+      <items x="0" y="2" width="113" height="25" text="{open} 标记为已读"/>
+      <items x="0" y="27" width="113" height="25" text="{closed} 标记为未读"/>
+      <items x="0" y="52" width="113" height="12" text="---"/>
+      <items x="0" y="64" width="113" height="25" text="{curved-arrow-left} 回复"/>
+      <items x="0" y="89" width="113" height="25" text="{arrow-right} 转发"/>
+      <items x="0" y="114" width="113" height="12" text="---"/>
+      <items x="0" y="126" width="113" height="25" text="{trash} 移至垃圾箱"/>
+      <items x="0" y="151" width="113" height="25" text="{delete} 彻底删除"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="623" width="49" text="更多{desc}" measuredWidth="49" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="48" height="30" text="更多{desc}"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="882" x="56" y="2" text="(收件箱)" measuredWidth="49" measuredHeight="25">
+      <font underline="false"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="647" x="8" y="488" measuredWidth="449" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="648" width="449" height="377" text="【新邮件】" measuredWidth="449" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="651" x="8" y="24" text="收件人：" measuredWidth="53" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="667" x="10" y="256" measuredWidth="283" measuredHeight="73">
+      <widgets xsi:type="model:Label" id="668" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="669" x="114" text="添加附件" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="670" x="173" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="671" x="232" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="672" y="25" measuredWidth="48" measuredHeight="48" icon="word (xlarge)"/>
+      <widgets xsi:type="model:Label" id="673" x="54" y="24" text="测试附件1.docx" measuredWidth="91" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="674" x="54" y="48" text="50KB" measuredWidth="35" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="675" x="88" y="48" text="在线查看" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="676" x="146" y="48" text="下载" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="677" x="178" y="48" text="删除" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Text" id="681" x="8" y="96" width="410" height="81" text="【在这里填写邮件详细内容，文本使用 Redactor 的 Air 编辑模式】" measuredWidth="410" measuredHeight="81" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="682" x="278" y="344" width="50" text="预览" measuredWidth="50" measuredHeight="27">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="683" y="336" width="449" measuredWidth="449" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="684" x="392" y="344" width="50" text="发送" measuredWidth="50" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="691" x="335" y="344" width="50" text="存草稿" measuredWidth="50" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="784" x="2" y="50" width="447" measuredWidth="447" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Rectangle" id="786" x="60" y="24" width="61" height="25" text="用户1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="787" x="126" y="24" width="61" height="25" text="用户2 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="788" x="192" y="24" width="61" height="25" text="岗位1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="789" x="417" y="24" text="密送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="790" x="388" y="24" text="抄送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="794" x="20" y="57" text="主题：" measuredWidth="41" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="795" x="2" y="82" width="446" measuredWidth="446" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Label" id="797" x="60" y="57" text="邮件测试主题" measuredWidth="77" measuredHeight="25">
+      <font underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="798" x="2" y="248" width="447" measuredWidth="447" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:VScrollbar" id="802" x="432" y="84" height="168" measuredWidth="17" measuredHeight="168"/>
+    <widgets xsi:type="model:Image" id="892" x="78" y="128" measuredWidth="307" measuredHeight="34" src="assets/redactor-air.png"/>
+  </widgets>
+  <widgets xsi:type="model:Note" id="692" x="672" y="8" width="241" height="317" text="电子邮箱组件：&#xD;&#xA;1) &quot;收件人、抄送、密送&quot;可以直接输入下拉选择;&#xD;&#xA;2) &quot;收件人、抄送、密送&quot;可以为用户、岗位、部门或单位，如发送到岗位则岗位内的所有人都可以收到该邮件；&#xD;&#xA;3）执行&quot;回复&quot;操作时，自动在原标题前附加&quot;Re:&quot;前缀；&#xD;&#xA;4）执行&quot;转发&quot;操作时，自动在原标题前附加&quot;Fw:&quot;前缀；&#xD;&#xA;5）当有密送时，密送人仅在已发送文件夹显示，对发件人可见；主送和抄送人打开邮件时不能看到密送人信息。对于转发和回复操作也不允许复制密送人的任何信息。&#xD;&#xA;&#xD;&#xA;角色权限：&#xD;&#xA;1）电子邮箱 - 管理自己的邮件&#xD;&#xA;" measuredWidth="241" measuredHeight="317" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="693" x="464" y="488" measuredWidth="460" measuredHeight="337">
+    <widgets xsi:type="model:Window" id="694" width="449" height="337" text="【查看邮件】" measuredWidth="449" measuredHeight="337" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="704" x="16" y="24" text="企业可以实现对用户不同数据的直观浏览和分析？" measuredWidth="357" measuredHeight="30">
+      <font size="12" bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Text" id="737" x="16" y="53" text="发件人：张三&#xD;&#xA;收件人：李四, 办公室&#xD;&#xA;日   期：2012-11-01 08:00 (星期四)" measuredWidth="197" measuredHeight="51">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="716" x="10" y="255" measuredWidth="283" measuredHeight="73">
+      <widgets xsi:type="model:Label" id="717" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="718" x="114" text="添加附件" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="719" x="173" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="720" x="232" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="721" y="25" measuredWidth="48" measuredHeight="48" icon="word (xlarge)"/>
+      <widgets xsi:type="model:Label" id="722" x="54" y="24" text="测试附件1.docx" measuredWidth="91" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="723" x="54" y="48" text="50KB" measuredWidth="35" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="724" x="88" y="48" text="在线查看" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="725" x="146" y="48" text="下载" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="726" x="178" y="48" text="删除" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="727" x="16" y="108" width="423" measuredWidth="423" measuredHeight="131">
+      <widgets xsi:type="model:Text" id="730" width="423" height="131" text="      数据发现是商业智能市场中新兴的热点区域。无需大量 IT 支持或广泛的数据建模，数据发现就可以实现对数据的直观浏览。随着各种数据的激增，决策者希望能够将数据仓库中的数据与非结构化内容（如客户意见、简历、微博和博客）结合起来。这些数据的结合远非传统的 BI 功能能够实现。 &#xD;&#xA;      参加本次网上讲座，了解数据发现如何实现企业用户对不同数据的直观浏览和分析，使他们能够提出并回答以前从未考虑过的新问题。最值得一提的是，数据发现无需广泛的数据建模也无需构建预定义查询。 " measuredWidth="423" measuredHeight="131">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="740" x="10" y="103" width="429" measuredWidth="429" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:HLine" id="741" x="10" y="248" width="429" measuredWidth="429" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Icon" id="872" x="396" y="24" measuredWidth="24" measuredHeight="24" icon="curved-arrow-left (medium)"/>
+    <widgets xsi:type="model:Icon" id="873" x="421" y="24" measuredWidth="24" measuredHeight="24" icon="arrow-right (medium)"/>
+    <widgets xsi:type="model:Tooltip" id="874" x="426" y="47" text="转发" measuredWidth="34" measuredHeight="42" background="#00ff00" position="topLeft">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Tooltip" id="875" x="378" y="47" text="回复" measuredWidth="34" measuredHeight="42" background="#00ff00" position="topRight">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="805" x="8" y="872" measuredWidth="449" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="806" width="449" height="377" text="【转发邮件】" measuredWidth="449" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="807" x="8" y="24" text="收件人：" measuredWidth="53" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="808" x="10" y="256" measuredWidth="283" measuredHeight="73">
+      <widgets xsi:type="model:Label" id="809" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="810" x="114" text="添加附件" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="811" x="173" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="812" x="232" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="813" y="25" measuredWidth="48" measuredHeight="48" icon="word (xlarge)"/>
+      <widgets xsi:type="model:Label" id="814" x="54" y="24" text="测试附件1.docx" measuredWidth="91" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="815" x="54" y="48" text="50KB" measuredWidth="35" measuredHeight="25">
+        <font underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="816" x="88" y="48" text="在线查看" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="817" x="146" y="48" text="下载" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="818" x="178" y="48" text="删除" measuredWidth="27" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Text" id="819" x="8" y="96" width="417" height="145" text="【空两行，光标聚焦到此，Redactor 的 Air 编辑模式】&#xD;&#xA;&#xD;&#xA;－－－－  转发邮件信息 －－－－&#xD;&#xA;发件人：张三&#xD;&#xA;收件人：李四, 办公室&#xD;&#xA;日   期：2012-11-01 08:00 (星期四)&#xD;&#xA;主   题：【原邮件主题】&#xD;&#xA;【原邮件内容】" measuredWidth="417" measuredHeight="145">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="820" x="278" y="344" width="50" text="预览" measuredWidth="50" measuredHeight="27">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="821" y="336" width="449" measuredWidth="449" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="822" x="392" y="344" width="50" text="发送" measuredWidth="50" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="823" x="335" y="344" width="50" text="存草稿" measuredWidth="50" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="824" y="50" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Rectangle" id="825" x="60" y="24" width="61" height="25" text="用户1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="826" x="126" y="24" width="61" height="25" text="用户2 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="827" x="192" y="24" width="61" height="25" text="岗位1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="828" x="417" y="24" text="密送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="829" x="388" y="24" text="抄送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="830" x="20" y="57" text="主题：" measuredWidth="41" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="831" y="82" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Label" id="832" x="60" y="57" text="Fw: 【原邮件主题】" measuredWidth="111" measuredHeight="25">
+      <font underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="833" y="248" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:VScrollbar" id="834" x="432" y="84" height="168" measuredWidth="17" measuredHeight="168"/>
+    <widgets xsi:type="model:Tooltip" id="836" x="304" y="264" text="复制原邮件的附件" measuredWidth="106" measuredHeight="42" background="#00ff00">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="837" x="464" y="872" measuredWidth="449" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="838" width="449" height="377" text="【回复邮件】" measuredWidth="449" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="839" x="8" y="24" text="收件人：" measuredWidth="53" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="840" x="10" y="256" measuredWidth="283" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="841" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="842" x="114" text="添加附件" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="843" x="173" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="844" x="232" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Text" id="851" x="8" y="96" width="417" height="145" text="【空两行，光标聚焦到此，Redactor 的 Air 编辑模式】&#xD;&#xA;&#xD;&#xA;在 2012-11-01 08:00，张三写道：&#xD;&#xA; 【原邮件内容】" measuredWidth="417" measuredHeight="145">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="852" x="278" y="344" width="50" text="预览" measuredWidth="50" measuredHeight="27">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="853" y="336" width="449" measuredWidth="449" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="854" x="392" y="344" width="50" text="发送" measuredWidth="50" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="855" x="335" y="344" width="50" text="存草稿" measuredWidth="50" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="856" y="50" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Rectangle" id="857" x="60" y="24" width="133" height="25" text="【原邮件的发件人】 X" measuredWidth="133" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="860" x="417" y="24" text="密送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="861" x="388" y="24" text="抄送" measuredWidth="29" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="862" x="20" y="57" text="主题：" measuredWidth="41" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="863" y="82" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Label" id="864" x="60" y="57" text="Re: 【原邮件主题】" measuredWidth="111" measuredHeight="25">
+      <font underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="865" y="248" width="449" measuredWidth="449" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:VScrollbar" id="866" x="432" y="84" height="168" measuredWidth="17" measuredHeight="168"/>
+    <widgets xsi:type="model:Tooltip" id="867" x="304" y="264" text="不复制原邮件的附件" measuredWidth="118" measuredHeight="42" background="#00ff00">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:VLine" id="868" x="10" y="149" height="103" measuredWidth="6" measuredHeight="103" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Tooltip" id="869" x="15" y="171" text="在原邮件内容左侧增加一条特殊的&#xD;&#xA;竖线，以便与回复内容明显区分开" measuredWidth="190" measuredHeight="59" background="#00ff00" position="topLeft">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="893" x="8" y="328" measuredWidth="537" measuredHeight="151">
+    <widgets xsi:type="model:Window" id="894" width="537" height="151" text="【普通用户 - 垃圾箱】" measuredWidth="537" measuredHeight="151" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="895" y="55" width="537" text="(w:30). !,(w:30). 来源,主题,(w:30). 日期&#xA;1,收件箱,(无主题),2012-10-03 10:00&#xA;2,发件箱,无附件的邮件主题,2012-10-02 11:01&#xA;2,收件箱,{attachment} 含附件的邮件主题,2012-10-01 11:02&#xA;" measuredWidth="537" measuredHeight="96" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="896" x="384" y="26" measuredWidth="148" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="897" width="148" measuredWidth="148" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="898" x="4" y="23" width="61" text="{edit}还原" measuredWidth="61" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="60" height="30" text="{edit}还原"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="899" x="67" y="23" width="57" text="{delete} 删除" measuredWidth="57" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="56" height="30" text="{delete} 删除"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="900" x="126" y="23" width="57" text="{warning} 清空" measuredWidth="57" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="56" height="30" text="{warning} 清空"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
