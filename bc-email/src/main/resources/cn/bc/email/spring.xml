@@ -16,7 +16,9 @@
 
 	<!-- email -->
 	<bean id="emailDao" class="cn.bc.email.dao.hibernate.jpa.EmailDaoImpl"
+		p:entityClass="cn.bc.email.domain.Email"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="emailService" class="cn.bc.email.service.EmailServiceImpl"
-		p:crudDao-ref="emailDao" />
+		p:entityClass="cn.bc.email.domain.Email"
+		p:emailDao-ref="emailDao" />
 </beans>

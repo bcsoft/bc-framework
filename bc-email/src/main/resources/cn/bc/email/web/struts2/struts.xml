@@ -3,5 +3,54 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<!-- 收件箱  -->
+	<package name="emailTos" extends="bc-default" namespace="/bc/emailTos">
+		<action name="export" class="emailTosAction" method="export" />
+		<action name="list" class="emailTosAction" method="list" />
+		<action name="paging" class="emailTosAction" method="paging" />
+		<action name="data" class="emailTosAction" method="data" />
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="emailTosAction" method="conditions">
+			<result name="success">/bc/email/to/conditions.jsp</result>
+		</action>
+	</package>
+	
+	 <!-- 发件箱  -->
+	<package name="EmailSends" extends="bc-default" namespace="/bc/emailSends">
+		<action name="export" class="emailSendsAction" method="export" />
+		<action name="list" class="emailSendsAction" method="list" />
+		<action name="paging" class="emailSendsAction" method="paging" />
+		<action name="data" class="emailSendsAction" method="data" />
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="EmailSendsAction" method="conditions">
+			<result name="success">/bc/acl/email/send/conditions.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 垃圾箱  -->
+	<package name="emailTrashs" extends="bc-default" namespace="/bc/emailTrashs">
+		<action name="export" class="emailTrashsAction" method="export" />
+		<action name="list" class="emailTrashsAction" method="list" />
+		<action name="paging" class="emailTrashsAction" method="paging" />
+		<action name="data" class="emailTrashsAction" method="data" />
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="emailTrashsAction" method="conditions">
+			<result name="success">/bc/email/trash/conditions.jsp</result>
+		</action>
+	</package>
+	
+	<package name="email" extends="bc-default" namespace="/bc/email">
+		<action name="create" class="emailAction" method="create">
+			<result name="form">/bc/email/form.jsp</result>
+		</action>
+		<action name="edit" class="emailAction" method="edit">
+			<result name="form">/bc/email/form.jsp</result>
+		</action>
+		<action name="open" class="emailAction" method="open">
+			<result name="formr">/bc/email/form.jsp</result>
+		</action>
+		<action name="save" class="emailAction" method="save"/>
+		<action name="delete" class="emailAction" method="delete"/>
+	</package>
 
 </struts>

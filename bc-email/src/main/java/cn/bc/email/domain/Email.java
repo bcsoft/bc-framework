@@ -38,6 +38,8 @@ public class Email extends RichEntityImpl {
 	public static final int TYPE_REPLY = 1;
 	/** 类型：转发 */
 	public static final int TYPE_FORWARD = 2;
+	
+	public static final String ATTACH_TYPE = Email.class.getSimpleName()+".main";
 
 	private int type;// 类型 : 0-新邮件,1-回复,2-转发
 	private Email email;// 所属邮件
