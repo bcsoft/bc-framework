@@ -81,4 +81,5 @@ public class EmailTo extends EntityImpl {
 	public void setReceiver(Actor receiver) {
 		this.receiver = receiver;
 	}
+
 }

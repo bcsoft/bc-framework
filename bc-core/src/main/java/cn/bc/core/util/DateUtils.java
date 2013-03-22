@@ -598,4 +598,35 @@ public class DateUtils {
 		}
 		return detail;
 	}
+	
+	/**
+	 * 计算指定时间为星期几
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String getWeekCN(Calendar date){
+		if(date == null)
+			date = Calendar.getInstance();
+		
+		int week = date.get(Calendar.DAY_OF_WEEK);	
+		
+		if(week == Calendar.MONDAY){
+			return "星期一";
+		}else if(week == Calendar.TUESDAY){
+			return "星期二";
+		}else if(week == Calendar.WEDNESDAY){
+			return "星期三";
+		}else if(week == Calendar.THURSDAY){
+			return "星期四";
+		}else if(week == Calendar.FRIDAY){
+			return "星期五";
+		}else if(week == Calendar.SATURDAY){
+			return "星期六";
+		}else if(week == Calendar.SUNDAY){
+			return "星期日";
+		}
+		
+		return null;
+	}
 }

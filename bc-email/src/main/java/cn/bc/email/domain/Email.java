@@ -49,6 +49,7 @@ public class Email extends RichEntityImpl {
 	private Set<EmailTo> to;// 收件人列表
 	private Calendar fileDate;// 创建时间
 	private Actor sender;// 发件人
+	private Calendar sendDate;//发送日期
 
 	@Column(name = "TYPE_")
 	public int getType() {
@@ -112,5 +113,14 @@ public class Email extends RichEntityImpl {
 
 	public void setSender(Actor sender) {
 		this.sender = sender;
+	}
+	
+	@Column(name = "SEND_DATE")
+	public Calendar getSendDate() {
+		return sendDate;
+	}
+
+	public void setSendDate(Calendar sendDate) {
+		this.sendDate = sendDate;
 	}
 }

@@ -11,10 +11,14 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -76,18 +80,14 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("e.id", "id"));
 		columns.add(new TextColumn4MapKey("", "receiver",
-				getText("email.receiver"), 150)
-				.setUseTitleFromLabel(true));
+				getText("email.receiver"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
-				getText("email.subject"))
-				.setUseTitleFromLabel(true));
+				getText("email.subject")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
 				getText("email.date"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		return columns;
 	}
-	
-
 
 	@Override
 	protected String getGridRowLabelExpression() {
@@ -119,8 +119,6 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
 
-		
-
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
@@ -129,16 +127,27 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/send/view.js"
-				+","+this.getHtmlPageNamespace() + "/email/view.js";
+		return this.getHtmlPageNamespace() + "/email/send/view.js" + ","
+				+ this.getHtmlPageNamespace() + "/email/view.js";
 	}
-	
+
+	@Override
+	protected Condition getGridSpecalCondition() {
+		// 状态条件
+		AndCondition ac = new AndCondition();
+
+		SystemContext context = (SystemContext) this.getContext();
+
+		ac.add(new EqualsCondition("e.sender_id", context.getUser().getId()));
+
+		return ac;
+	}
+
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
 		return true;
 	}
-	
 
 	// ==高级搜索代码结束==
 

@@ -49,6 +49,9 @@
 		<action name="open" class="emailAction" method="open">
 			<result name="formr">/bc/email/form.jsp</result>
 		</action>
+		<action name="preview" class="emailAction" method="preview">
+			<result name="formr">/bc/email/formr.jsp</result>
+		</action>
 		<action name="save" class="emailAction" method="save"/>
 		<action name="delete" class="emailAction" method="delete"/>
 	</package>

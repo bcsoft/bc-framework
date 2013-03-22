@@ -11,10 +11,15 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -48,7 +53,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.subject,e.send_date,t.id to_id,a.name");
+		sql.append("select e.id,e.subject,e.send_date,t.id to_id,t.read_,a.name");
 		sql.append(" from bc_email_to t");
 		sql.append(" inner join bc_email e on e.id=t.pid");
 		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
@@ -66,6 +71,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("sendDate", rs[i++]);
 				map.put("toId", rs[i++]);
+				map.put("read", rs[i++]);
 				map.put("name", rs[i++]);
 				return map;
 			}
@@ -77,18 +83,33 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
+		columns.add(new TextColumn4MapKey("t.read_", "read",
+				getText("email.status"), 35).setSortable(true)
+				.setValueFormater(new BooleanFormater() {
+					@Override
+					public String format(Object context, Object value) {
+						if (value == null)
+							return null;
+						if (value instanceof Boolean)
+							return ((Boolean) value).booleanValue() ? getText("email.status.read")
+									: getText("email.status.unread");
+						else if (value instanceof String)
+							return "true".equalsIgnoreCase((String) value) ? getText("email.status.read")
+									: getText("email.status.unread");
+						else
+							return value.toString();
+					}
+				}));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("email.sender"), 150)
-				.setUseTitleFromLabel(true));
+				getText("email.sender"), 150).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
-				getText("email.subject"))
-				.setUseTitleFromLabel(true));
+				getText("email.subject")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
 				getText("email.date"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		return columns;
 	}
-	
+
 	@Override
 	protected String getGridRowLabelExpression() {
 		return "['subject']";
@@ -96,7 +117,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "e.subject","a.name" };
+		return new String[] { "e.subject", "a.name" };
 	}
 
 	@Override
@@ -127,10 +148,22 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/to/view.js"
-				+","+this.getHtmlPageNamespace() + "/email/view.js";
+		return this.getHtmlPageNamespace() + "/email/to/view.js" + ","
+				+ this.getHtmlPageNamespace() + "/email/view.js";
 	}
-	
+
+	@Override
+	protected Condition getGridSpecalCondition() {
+		// 状态条件
+		AndCondition ac = new AndCondition();
+
+		SystemContext context = (SystemContext) this.getContext();
+
+		ac.add(new EqualsCondition("t.receiver_id", context.getUser().getId()));
+
+		return ac;
+	}
+
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
