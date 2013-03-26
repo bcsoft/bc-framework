@@ -18,6 +18,7 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.email.domain.Email;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
@@ -139,6 +140,10 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
+		//回复
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowreturnthick-1-w")
+				.setText(getText("email.reply"))
+				.setClick("bc.emailViewBase.reply"));
 		
 		//转发
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthick-1-e")
@@ -164,6 +169,8 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 		SystemContext context = (SystemContext) this.getContext();
 
+		//状态必须为已发邮件
+		ac.add(new EqualsCondition("e.status_", Email.STATUS_SENDED));
 		ac.add(new EqualsCondition("t.receiver_id", context.getUser().getId()));
 
 		return ac;

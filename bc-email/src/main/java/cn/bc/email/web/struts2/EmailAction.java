@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.util.DateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.email.domain.Email;
@@ -39,7 +40,7 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class EmailAction extends EntityAction<Long, Email> {
 	private static final long serialVersionUID = 1L;
-	public Integer type = 0;//0：新邮件，1：回复，2：转发
+	public Integer type = 0;//0：新邮件
 	public Integer openType = 0;//类型 0：表示查看已发邮件 1：表示查看已收邮件
 	public String receivers;//邮件接收人
 	
@@ -87,41 +88,6 @@ public class EmailAction extends EntityAction<Long, Email> {
 		this.attachsUI=this.buildAttachsUI(true,false);
 	}
 	
-	@Override
-	protected void afterEdit(Email entity) {
-		super.afterEdit(entity);
-		
-		//回复
-		if(this.type == 1){
-			entity.setId(null);
-			//设置标题Re前序
-			entity.setSubject("Re:"+entity.getSubject());
-			entity.setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
-			
-			//清除原收件人
-			entity.getTo().clear();
-			//设置收件人为发送人
-			
-			
-			//重置全局的实体
-			this.setE(entity);
-			this.attachsUI=this.buildAttachsUI(true,false);
-		}
-		
-		if(this.type == 2){
-			entity.setId(null);
-			//取得新的puid
-			String newPuid=this.idGeneratorService.next(Email.ATTACH_TYPE);
-			//复制附件的处理
-			this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(), Email.ATTACH_TYPE, newPuid, false);
-			entity.setUid(newPuid);
-			//重置全局的实体
-			this.setE(entity);
-			this.attachsUI=this.buildAttachsUI(false,false);
-		}
-		
-	}
-	
 	//回复邮件
 	public String reply() throws Exception {
 		if(this.getId() == null) throw new CoreException("id is null!");
@@ -132,11 +98,14 @@ public class EmailAction extends EntityAction<Long, Email> {
 		this.setE(createEntity());
 		// 初始化表单的配置信息
 		this.formPageOption = buildFormPageOption(true);
-		// 初始化表单的其他配置
-		this.initForm(true);
+		this.getE().setStatus(Email.STATUS_DRAFT);
+		this.getE().setType(Email.TYPE_REPLY);
 		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+		this.getE().setFileDate(Calendar.getInstance());
+		SystemContext context = (SystemContext) this.getContext();
+		this.getE().setSender(context.getUser());
 		//设置回复的主题
-		this.getE().setSubject("Re:"+entity.getSubject());
+		this.getE().setSubject(getText("email.reply")+"："+entity.getSubject());
 		
 		//回复的发送人
 		Actor sender=entity.getSender();
@@ -149,12 +118,88 @@ public class EmailAction extends EntityAction<Long, Email> {
 		ets.add(et);
 		this.getE().setTo(ets);
 		
+		
 		//设置回复的内容
-		
-		
+		String content="<div>&nbsp;</div><div>&nbsp;</div>";
+		content+="<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content+="－－－－&nbsp;回复邮件信息&nbsp;－－－－<br>";
+		content+="<b>发件人</b>："+entity.getSender().getName()+"<br>";
+		content+="<b>日期</b>："+DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content+="&nbsp;("+DateUtils.getWeekCN(entity.getSendDate())+")<br>";
+		content+="<b>主题</b>："+entity.getSubject()+"<br>";
+		content+="</span></p>";
+		content+=entity.getContent();
+		this.getE().setContent(content);
 		
 		this.attachsUI=this.buildAttachsUI(true,false);
-		return "formRe";
+		return "form";
+	}
+	
+	//转发
+	public String forward() throws Exception {
+		if(this.getId() == null) throw new CoreException("id is null!");
+		//需要转发的邮件
+		Email entity=this.emailService.load(this.getId());
+		// 初始化E
+		this.setE(createEntity());
+		// 初始化表单的配置信息
+		this.formPageOption = buildFormPageOption(true);
+		this.getE().setStatus(Email.STATUS_DRAFT);
+		this.getE().setType(Email.TYPE_FORWARD);
+		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+		this.getE().setFileDate(Calendar.getInstance());
+		SystemContext context = (SystemContext) this.getContext();
+		this.getE().setSender(context.getUser());
+		
+		//设置转发的主题
+		this.getE().setSubject(getText("email.forwoard")+"："+entity.getSubject());
+		//设置转发的内容
+		String content="<div>&nbsp;</div><div>&nbsp;</div>";
+		content+="<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content+="－－－－&nbsp;转发邮件信息&nbsp;－－－－<br>";
+		content+="<b>发件人</b>："+entity.getSender().getName()+"<br>";
+		
+		//收件人信息
+		String receiver="";
+		//抄送信息
+		String cc="";
+
+		int i = 0;
+		int j = 0;
+		for(EmailTo et:entity.getTo()){
+			//收件人的信息
+			if(et.getType()==EmailTo.TYPE_TO){
+				if(i >0) receiver+="、";
+				receiver+=et.getReceiver().getName();
+				i++;
+			}
+			//抄送信息
+			if(et.getType()==EmailTo.TYPE_CC){
+				if(j >0) cc+="、";
+				cc+=et.getReceiver().getName();
+				j++;
+			}
+		}
+		
+		if(receiver.length()>0)content+="<b>收件人</b>："+receiver+"<br>";
+		
+		if(cc.length()>0)content+="<b>抄送</b>："+cc+"<br>";
+		
+		
+		if(receiver.length()==0 && cc.length()==0)content+="<b>收件人</b>："+"<br>";
+		
+		content+="<b>日期</b>："+DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content+="&nbsp;("+DateUtils.getWeekCN(entity.getSendDate())+")<br>";
+		content+="<b>主题</b>："+entity.getSubject()+"<br>";
+		content+="</span></p>";
+		content+=entity.getContent();
+		
+		this.getE().setContent(content);
+		
+		//复制附件的处理
+		this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(), Email.ATTACH_TYPE, this.getE().getUid(), false);
+		this.attachsUI=this.buildAttachsUI(false,false);
+		return "form";
 	}
 	
 	

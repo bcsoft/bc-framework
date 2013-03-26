@@ -146,7 +146,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 	
 	@Override
 	protected String getGridDblRowMethod() {
-		return "bc.emailViewBase.open";
+		return "bc.emailSendView.open";
 	}
 
 	// ==高级搜索代码开始==

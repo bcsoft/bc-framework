@@ -49,6 +49,13 @@
 		<action name="open" class="emailAction" method="open">
 			<result name="formr">/bc/email/formr.jsp</result>
 		</action>
+		<action name="reply" class="emailAction" method="reply">
+			<result name="form">/bc/email/form.jsp</result>
+		</action>
+		<action name="forward" class="emailAction" method="forward">
+			<result name="form">/bc/email/form.jsp</result>
+		</action>
+		
 		<action name="preview" class="emailAction" method="preview">
 			<result name="formr">/bc/email/formr.jsp</result>
 		</action>
