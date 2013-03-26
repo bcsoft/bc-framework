@@ -139,6 +139,11 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
+		
+		//转发
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthick-1-e")
+				.setText(getText("email.forwoard"))
+				.setClick("bc.emailViewBase.forwoard"));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -162,6 +167,13 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		ac.add(new EqualsCondition("t.receiver_id", context.getUser().getId()));
 
 		return ac;
+	}
+	
+	
+
+	@Override
+	protected String getGridDblRowMethod() {
+		return "bc.emailToView.open";
 	}
 
 	// ==高级搜索代码开始==

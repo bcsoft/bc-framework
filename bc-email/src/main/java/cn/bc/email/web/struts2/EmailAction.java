@@ -2,6 +2,7 @@ package cn.bc.email.web.struts2;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -12,11 +13,14 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.email.domain.Email;
 import cn.bc.email.domain.EmailTo;
 import cn.bc.email.service.EmailService;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.service.ActorService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
@@ -35,7 +39,8 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class EmailAction extends EntityAction<Long, Email> {
 	private static final long serialVersionUID = 1L;
-	public Integer type = 0;
+	public Integer type = 0;//0：新邮件，1：回复，2：转发
+	public Integer openType = 0;//类型 0：表示查看已发邮件 1：表示查看已收邮件
 	public String receivers;//邮件接收人
 	
 
@@ -81,11 +86,89 @@ public class EmailAction extends EntityAction<Long, Email> {
 		
 		this.attachsUI=this.buildAttachsUI(true,false);
 	}
+	
+	@Override
+	protected void afterEdit(Email entity) {
+		super.afterEdit(entity);
+		
+		//回复
+		if(this.type == 1){
+			entity.setId(null);
+			//设置标题Re前序
+			entity.setSubject("Re:"+entity.getSubject());
+			entity.setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+			
+			//清除原收件人
+			entity.getTo().clear();
+			//设置收件人为发送人
+			
+			
+			//重置全局的实体
+			this.setE(entity);
+			this.attachsUI=this.buildAttachsUI(true,false);
+		}
+		
+		if(this.type == 2){
+			entity.setId(null);
+			//取得新的puid
+			String newPuid=this.idGeneratorService.next(Email.ATTACH_TYPE);
+			//复制附件的处理
+			this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(), Email.ATTACH_TYPE, newPuid, false);
+			entity.setUid(newPuid);
+			//重置全局的实体
+			this.setE(entity);
+			this.attachsUI=this.buildAttachsUI(false,false);
+		}
+		
+	}
+	
+	//回复邮件
+	public String reply() throws Exception {
+		if(this.getId() == null) throw new CoreException("id is null!");
+		//需要回复的邮件
+		Email entity=this.emailService.load(this.getId());
+		
+		// 初始化E
+		this.setE(createEntity());
+		// 初始化表单的配置信息
+		this.formPageOption = buildFormPageOption(true);
+		// 初始化表单的其他配置
+		this.initForm(true);
+		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+		//设置回复的主题
+		this.getE().setSubject("Re:"+entity.getSubject());
+		
+		//回复的发送人
+		Actor sender=entity.getSender();
+		EmailTo et=new EmailTo();
+		et.setRead(false);
+		et.setOrderNo(0);
+		et.setReceiver(sender);
+		et.setType(EmailTo.TYPE_TO);
+		Set<EmailTo> ets=new HashSet<EmailTo>();
+		ets.add(et);
+		this.getE().setTo(ets);
+		
+		//设置回复的内容
+		
+		
+		
+		this.attachsUI=this.buildAttachsUI(true,false);
+		return "formRe";
+	}
+	
+	
+
+	@Override
+	protected void afterOpen(Email entity) {
+		super.afterOpen(entity);
+		this.attachsUI=this.buildAttachsUI(false,true);
+	}
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(660)
-				.setMinHeight(200).setMinWidth(450).setMaxHeight(800);
+		return super.buildFormPageOption(editable).setWidth(670)
+				.setMinHeight(200).setHeight(460);
 	}
 	
 	
@@ -94,8 +177,8 @@ public class EmailAction extends EntityAction<Long, Email> {
 		// 非编辑状态没有任何操作按钮
 		if (!editable)return;
 		
-		pageOption.addButton(new ButtonOption(getText("label.preview"), null,
-				"bc.emailForm.preview"));
+		//pageOption.addButton(new ButtonOption(getText("label.preview"), null,
+				//"bc.emailForm.preview"));
 		
 		pageOption
 		.addButton(new ButtonOption(getText("email.send"), null,
@@ -126,20 +209,66 @@ public class EmailAction extends EntityAction<Long, Email> {
 		}
 		
 		Set<EmailTo> emailTos =new HashSet<EmailTo>();
+		Set<EmailTo> del_emailTos =new HashSet<EmailTo>();
 		try {
 			if (this.receivers != null && this.receivers.length() > 0) {
-				EmailTo et;
 				JSONArray jsons = new JSONArray(this.receivers);
 				JSONObject json;
+				EmailTo et;
+				Actor upper;
+				Actor receiver;
+				List<Actor> lis;
+				int j=0;
 				for (int i = 0; i < jsons.length(); i++) {
 					json = jsons.getJSONObject(i);
-					et=new EmailTo();
-					et.setEmail(entity);
-					et.setRead(false);
-					et.setReceiver(this.actorService.load(json.getLong("id")));
-					et.setType(json.getInt("type"));
-					et.setOrderNo(i);
-					emailTos.add(et);
+					//已添加的用户
+					if(json.getInt("type")==4){
+						receiver=this.actorService.load(json.getLong("id"));
+						//检测待添加的收件人是否与带上级中的重复。
+						for(EmailTo to:emailTos){
+							if(to.getReceiver().equals(receiver)&&to.getUpper()!=null){
+								del_emailTos.add(to);
+							}
+						}
+						//删除带岗位的收件人，优先保存不带岗位的
+						for(EmailTo to:del_emailTos){
+								emailTos.remove(to);
+						}
+						
+						et=new EmailTo();
+						et.setEmail(entity);
+						et.setRead(false);
+						et.setReceiver(receiver);
+						et.setType(json.getInt("toType"));
+						et.setOrderNo(i+j);
+						emailTos.add(et);
+					}else{
+						//部门或岗位
+						upper=this.actorService.load(json.getLong("id"));
+						lis=this.actorService.findFollower(json.getLong("id")
+								,new Integer[] { ActorRelation.TYPE_BELONG }
+								, new Integer[]{Actor.TYPE_USER});
+						for(Actor a:lis){
+							boolean _save=true;
+							//已保存的接收人不再进行保存
+							for(EmailTo to:emailTos){
+								if(to.getReceiver().equals(a)){
+									_save=false;
+								}
+							}
+							
+							if(_save){
+								et=new EmailTo();
+								et.setEmail(entity);
+								et.setRead(false);
+								et.setReceiver(a);
+								et.setUpper(upper);
+								et.setType(json.getInt("toType"));
+								et.setOrderNo(i+j);
+								emailTos.add(et);
+							}
+						}
+					}
 				}
 			}
 			

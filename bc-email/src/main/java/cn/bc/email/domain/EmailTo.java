@@ -34,6 +34,7 @@ public class EmailTo extends EntityImpl {
 	private int orderNo;// 排序号 : 针对同一发送类型的不同收件人之间的排序
 	private boolean read;// 已阅标记
 	private Actor receiver;// 收件人
+	private Actor upper;//接收人所属的部门或岗位
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
@@ -81,5 +82,17 @@ public class EmailTo extends EntityImpl {
 	public void setReceiver(Actor receiver) {
 		this.receiver = receiver;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "UPPER_ID", referencedColumnName = "ID")
+	public Actor getUpper() {
+		return upper;
+	}
+
+	public void setUpper(Actor upper) {
+		this.upper = upper;
+	}
+	
+	
 
 }

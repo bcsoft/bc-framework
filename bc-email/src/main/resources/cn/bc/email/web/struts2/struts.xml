@@ -47,7 +47,7 @@
 			<result name="form">/bc/email/form.jsp</result>
 		</action>
 		<action name="open" class="emailAction" method="open">
-			<result name="formr">/bc/email/form.jsp</result>
+			<result name="formr">/bc/email/formr.jsp</result>
 		</action>
 		<action name="preview" class="emailAction" method="preview">
 			<result name="formr">/bc/email/formr.jsp</result>

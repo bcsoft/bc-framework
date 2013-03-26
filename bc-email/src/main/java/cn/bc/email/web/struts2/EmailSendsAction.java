@@ -52,7 +52,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.subject,e.send_date,getemailreceiver(e.id)");
+		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver(e.id)");
 		sql.append(" from bc_email e");
 		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
 		sqlObject.setSql(sql.toString());
@@ -66,6 +66,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
+				map.put("status", rs[i++]);
 				map.put("subject", rs[i++]);
 				map.put("sendDate", rs[i++]);
 				map.put("receiver", rs[i++]);
@@ -141,6 +142,11 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 		ac.add(new EqualsCondition("e.sender_id", context.getUser().getId()));
 
 		return ac;
+	}
+	
+	@Override
+	protected String getGridDblRowMethod() {
+		return "bc.emailViewBase.open";
 	}
 
 	// ==高级搜索代码开始==
