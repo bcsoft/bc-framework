@@ -16,19 +16,23 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.email.domain.Email;
+import cn.bc.email.domain.EmailTrash;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
+import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 
 /**
  * 邮件收件箱视图Action
@@ -74,6 +78,8 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 				map.put("toId", rs[i++]);
 				map.put("read", rs[i++]);
 				map.put("name", rs[i++]);
+				map.put("source", EmailTrash.SOURCE_TO);
+				map.put("openType", 2);//查看邮件 1-发件箱查看，2-收件箱查看，3-垃圾箱查看
 				return map;
 			}
 		});
@@ -108,6 +114,8 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
 				getText("email.date"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+		columns.add(new HiddenColumn4MapKey("source", "source"));
+		columns.add(new HiddenColumn4MapKey("openType", "openType"));
 		return columns;
 	}
 
@@ -128,7 +136,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(550).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(600).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -140,15 +148,38 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
-		//回复
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowreturnthick-1-w")
-				.setText(getText("email.reply"))
-				.setClick("bc.emailViewBase.reply"));
 		
-		//转发
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthick-1-e")
-				.setText(getText("email.forwoard"))
-				.setClick("bc.emailViewBase.forwoard"));
+		//垃圾箱
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
+				.setText(getText("emailTrash"))
+				.setClick("bc.emailViewBase.trashBox"));
+		
+		// "更多"按钮
+		ToolbarMenuButton menuButton = new ToolbarMenuButton(
+				getText("label.operate"))
+				.setChange("bc.emailToView.selectMenuButtonItem");
+		tb.addButton(menuButton);
+		// --标记为已读
+		menuButton.addMenuItem(getText("email.mark.read"),
+				"markRead");
+		// --标记为未读
+		menuButton.addMenuItem(getText("email.mark.unread"),
+				"markUnread");
+		// --全部标记为已读
+		menuButton.addMenuItem("全部"+getText("email.mark.read"),
+				"markReadAll");
+		// --回复
+		menuButton.addMenuItem(getText("email.reply"),
+				"reply");
+		// --转发
+		menuButton.addMenuItem(getText("email.forwoard"),
+				"forwoard");
+		// --移至垃圾箱
+		menuButton.addMenuItem(getText("email.moveTrash"),
+				"moveTrash");
+		// --彻底删除
+		menuButton.addMenuItem(getText("email.shiftDelete"),
+				"shiftDelete");
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -173,6 +204,11 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		ac.add(new EqualsCondition("e.status_", Email.STATUS_SENDED));
 		ac.add(new EqualsCondition("t.receiver_id", context.getUser().getId()));
 
+		//去掉垃圾箱已关联的此邮件
+		String sql="not exists(select 1 from bc_email_trash t_e where t_e.pid=e.id";
+		sql+=" and t_e.owner_id=t.receiver_id and t_e.src="+EmailTrash.SOURCE_TO+")";
+		ac.add(new QlCondition(sql));
+		
 		return ac;
 	}
 	
@@ -180,7 +216,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getGridDblRowMethod() {
-		return "bc.emailToView.open";
+		return "bc.emailViewBase.open";
 	}
 
 	// ==高级搜索代码开始==

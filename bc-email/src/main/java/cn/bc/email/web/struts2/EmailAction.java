@@ -28,6 +28,7 @@ import cn.bc.identity.web.SystemContext;
 import cn.bc.web.struts2.EntityAction;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 邮件表单Action
@@ -40,16 +41,15 @@ import cn.bc.web.ui.html.page.PageOption;
 @Controller
 public class EmailAction extends EntityAction<Long, Email> {
 	private static final long serialVersionUID = 1L;
-	public Integer type = 0;//0：新邮件
-	public Integer openType = 0;//类型 0：表示查看已发邮件 1：表示查看已收邮件
-	public String receivers;//邮件接收人
-	
+	public Integer type = 0;// 0：新邮件
+	public Integer openType = 0;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
+	public String receivers;// 邮件接收人
 
 	private EmailService emailService;
 	private AttachService attachService;
 	private IdGeneratorService idGeneratorService;
 	private ActorService actorService;
-	
+
 	@Autowired
 	public void setActorService(ActorService actorService) {
 		this.actorService = actorService;
@@ -84,16 +84,17 @@ public class EmailAction extends EntityAction<Long, Email> {
 
 		SystemContext context = (SystemContext) this.getContext();
 		entity.setSender(context.getUser());
-		
-		this.attachsUI=this.buildAttachsUI(true,false);
+
+		this.attachsUI = this.buildAttachsUI(true, false);
 	}
-	
-	//回复邮件
+
+	// 回复邮件
 	public String reply() throws Exception {
-		if(this.getId() == null) throw new CoreException("id is null!");
-		//需要回复的邮件
-		Email entity=this.emailService.load(this.getId());
-		
+		if (this.getId() == null)
+			throw new CoreException("must set property id!");
+		// 需要回复的邮件
+		Email entity = this.emailService.load(this.getId());
+
 		// 初始化E
 		this.setE(createEntity());
 		// 初始化表单的配置信息
@@ -104,42 +105,45 @@ public class EmailAction extends EntityAction<Long, Email> {
 		this.getE().setFileDate(Calendar.getInstance());
 		SystemContext context = (SystemContext) this.getContext();
 		this.getE().setSender(context.getUser());
-		//设置回复的主题
-		this.getE().setSubject(getText("email.reply")+"："+entity.getSubject());
-		
-		//回复的发送人
-		Actor sender=entity.getSender();
-		EmailTo et=new EmailTo();
+		// 设置回复的主题
+		this.getE().setSubject(
+				getText("email.reply") + "：" + entity.getSubject());
+
+		// 回复的发送人
+		Actor sender = entity.getSender();
+		EmailTo et = new EmailTo();
 		et.setRead(false);
 		et.setOrderNo(0);
 		et.setReceiver(sender);
 		et.setType(EmailTo.TYPE_TO);
-		Set<EmailTo> ets=new HashSet<EmailTo>();
+		Set<EmailTo> ets = new HashSet<EmailTo>();
 		ets.add(et);
 		this.getE().setTo(ets);
-		
-		
-		//设置回复的内容
-		String content="<div>&nbsp;</div><div>&nbsp;</div>";
-		content+="<p><span style=\"background-color: rgb(238, 236, 225);\">";
-		content+="－－－－&nbsp;回复邮件信息&nbsp;－－－－<br>";
-		content+="<b>发件人</b>："+entity.getSender().getName()+"<br>";
-		content+="<b>日期</b>："+DateUtils.formatCalendar2Minute(entity.getSendDate());
-		content+="&nbsp;("+DateUtils.getWeekCN(entity.getSendDate())+")<br>";
-		content+="<b>主题</b>："+entity.getSubject()+"<br>";
-		content+="</span></p>";
-		content+=entity.getContent();
+
+		// 设置回复的内容
+		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
+		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content += "－－－－&nbsp;回复邮件信息&nbsp;－－－－<br>";
+		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
+		content += "<b>日期</b>："
+				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
+				+ ")<br>";
+		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
+		content += "</span></p>";
+		content += entity.getContent();
 		this.getE().setContent(content);
-		
-		this.attachsUI=this.buildAttachsUI(true,false);
+
+		this.attachsUI = this.buildAttachsUI(true, false);
 		return "form";
 	}
-	
-	//转发
+
+	// 转发
 	public String forward() throws Exception {
-		if(this.getId() == null) throw new CoreException("id is null!");
-		//需要转发的邮件
-		Email entity=this.emailService.load(this.getId());
+		if (this.getId() == null)
+			throw new CoreException("must set property id!");
+		// 需要转发的邮件
+		Email entity = this.emailService.load(this.getId());
 		// 初始化E
 		this.setE(createEntity());
 		// 初始化表单的配置信息
@@ -150,64 +154,68 @@ public class EmailAction extends EntityAction<Long, Email> {
 		this.getE().setFileDate(Calendar.getInstance());
 		SystemContext context = (SystemContext) this.getContext();
 		this.getE().setSender(context.getUser());
-		
-		//设置转发的主题
-		this.getE().setSubject(getText("email.forwoard")+"："+entity.getSubject());
-		//设置转发的内容
-		String content="<div>&nbsp;</div><div>&nbsp;</div>";
-		content+="<p><span style=\"background-color: rgb(238, 236, 225);\">";
-		content+="－－－－&nbsp;转发邮件信息&nbsp;－－－－<br>";
-		content+="<b>发件人</b>："+entity.getSender().getName()+"<br>";
-		
-		//收件人信息
-		String receiver="";
-		//抄送信息
-		String cc="";
+
+		// 设置转发的主题
+		this.getE().setSubject(
+				getText("email.forwoard") + "：" + entity.getSubject());
+		// 设置转发的内容
+		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
+		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content += "－－－－&nbsp;转发邮件信息&nbsp;－－－－<br>";
+		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
+
+		// 收件人信息
+		String receiver = "";
+		// 抄送信息
+		String cc = "";
 
 		int i = 0;
 		int j = 0;
-		for(EmailTo et:entity.getTo()){
-			//收件人的信息
-			if(et.getType()==EmailTo.TYPE_TO){
-				if(i >0) receiver+="、";
-				receiver+=et.getReceiver().getName();
+		for (EmailTo et : entity.getTo()) {
+			// 收件人的信息
+			if (et.getType() == EmailTo.TYPE_TO) {
+				if (i > 0)
+					receiver += "、";
+				receiver += et.getReceiver().getName();
 				i++;
 			}
-			//抄送信息
-			if(et.getType()==EmailTo.TYPE_CC){
-				if(j >0) cc+="、";
-				cc+=et.getReceiver().getName();
+			// 抄送信息
+			if (et.getType() == EmailTo.TYPE_CC) {
+				if (j > 0)
+					cc += "、";
+				cc += et.getReceiver().getName();
 				j++;
 			}
 		}
-		
-		if(receiver.length()>0)content+="<b>收件人</b>："+receiver+"<br>";
-		
-		if(cc.length()>0)content+="<b>抄送</b>："+cc+"<br>";
-		
-		
-		if(receiver.length()==0 && cc.length()==0)content+="<b>收件人</b>："+"<br>";
-		
-		content+="<b>日期</b>："+DateUtils.formatCalendar2Minute(entity.getSendDate());
-		content+="&nbsp;("+DateUtils.getWeekCN(entity.getSendDate())+")<br>";
-		content+="<b>主题</b>："+entity.getSubject()+"<br>";
-		content+="</span></p>";
-		content+=entity.getContent();
-		
+
+		if (receiver.length() > 0)
+			content += "<b>收件人</b>：" + receiver + "<br>";
+		if (cc.length() > 0)
+			content += "<b>抄送</b>：" + cc + "<br>";
+		if (receiver.length() == 0 && cc.length() == 0)
+			content += "<b>收件人</b>：" + "<br>";
+
+		content += "<b>日期</b>："
+				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
+				+ ")<br>";
+		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
+		content += "</span></p>";
+		content += entity.getContent();
+
 		this.getE().setContent(content);
-		
-		//复制附件的处理
-		this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(), Email.ATTACH_TYPE, this.getE().getUid(), false);
-		this.attachsUI=this.buildAttachsUI(false,false);
+
+		// 复制附件的处理
+		this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(),
+				Email.ATTACH_TYPE, this.getE().getUid(), false);
+		this.attachsUI = this.buildAttachsUI(false, false);
 		return "form";
 	}
-	
-	
 
 	@Override
 	protected void afterOpen(Email entity) {
 		super.afterOpen(entity);
-		this.attachsUI=this.buildAttachsUI(false,true);
+		this.attachsUI = this.buildAttachsUI(false, true);
 	}
 
 	@Override
@@ -215,20 +223,19 @@ public class EmailAction extends EntityAction<Long, Email> {
 		return super.buildFormPageOption(editable).setWidth(670)
 				.setMinHeight(200).setHeight(460);
 	}
-	
-	
+
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		// 非编辑状态没有任何操作按钮
-		if (!editable)return;
-		
-		//pageOption.addButton(new ButtonOption(getText("label.preview"), null,
-				//"bc.emailForm.preview"));
-		
-		pageOption
-		.addButton(new ButtonOption(getText("email.send"), null,
+		if (!editable)
+			return;
+
+		// pageOption.addButton(new ButtonOption(getText("label.preview"), null,
+		// "bc.emailForm.preview"));
+
+		pageOption.addButton(new ButtonOption(getText("email.send"), null,
 				"bc.emailForm.save"));
-		
+
 	}
 
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
@@ -248,13 +255,13 @@ public class EmailAction extends EntityAction<Long, Email> {
 	@Override
 	protected void beforeSave(Email entity) {
 		super.beforeSave(entity);
-		//发送状态下设置发送日期
-		if(entity.getStatus()==Email.STATUS_SENDED){
+		// 发送状态下设置发送日期
+		if (entity.getStatus() == Email.STATUS_SENDED) {
 			entity.setSendDate(Calendar.getInstance());
 		}
-		
-		Set<EmailTo> emailTos =new HashSet<EmailTo>();
-		Set<EmailTo> del_emailTos =new HashSet<EmailTo>();
+
+		Set<EmailTo> emailTos = new HashSet<EmailTo>();
+		Set<EmailTo> del_emailTos = new HashSet<EmailTo>();
 		try {
 			if (this.receivers != null && this.receivers.length() > 0) {
 				JSONArray jsons = new JSONArray(this.receivers);
@@ -263,64 +270,66 @@ public class EmailAction extends EntityAction<Long, Email> {
 				Actor upper;
 				Actor receiver;
 				List<Actor> lis;
-				int j=0;
+				int j = 0;
 				for (int i = 0; i < jsons.length(); i++) {
 					json = jsons.getJSONObject(i);
-					//已添加的用户
-					if(json.getInt("type")==4){
-						receiver=this.actorService.load(json.getLong("id"));
-						//检测待添加的收件人是否与带上级中的重复。
-						for(EmailTo to:emailTos){
-							if(to.getReceiver().equals(receiver)&&to.getUpper()!=null){
+					// 已添加的用户
+					if (json.getInt("type") == 4) {
+						receiver = this.actorService.load(json.getLong("id"));
+						// 检测待添加的收件人是否与带上级中的重复。
+						for (EmailTo to : emailTos) {
+							if (to.getReceiver().equals(receiver)
+									&& to.getUpper() != null) {
 								del_emailTos.add(to);
 							}
 						}
-						//删除带岗位的收件人，优先保存不带岗位的
-						for(EmailTo to:del_emailTos){
-								emailTos.remove(to);
+						// 删除带岗位的收件人，优先保存不带岗位的
+						for (EmailTo to : del_emailTos) {
+							emailTos.remove(to);
 						}
-						
-						et=new EmailTo();
+
+						et = new EmailTo();
 						et.setEmail(entity);
 						et.setRead(false);
 						et.setReceiver(receiver);
 						et.setType(json.getInt("toType"));
-						et.setOrderNo(i+j);
+						et.setOrderNo(i + j);
 						emailTos.add(et);
-					}else{
-						//部门或岗位
-						upper=this.actorService.load(json.getLong("id"));
-						lis=this.actorService.findFollower(json.getLong("id")
-								,new Integer[] { ActorRelation.TYPE_BELONG }
-								, new Integer[]{Actor.TYPE_USER});
-						for(Actor a:lis){
-							boolean _save=true;
-							//已保存的接收人不再进行保存
-							for(EmailTo to:emailTos){
-								if(to.getReceiver().equals(a)){
-									_save=false;
+					} else {
+						// 部门或岗位
+						upper = this.actorService.load(json.getLong("id"));
+						lis = this.actorService.findFollower(
+								json.getLong("id"),
+								new Integer[] { ActorRelation.TYPE_BELONG },
+								new Integer[] { Actor.TYPE_USER });
+						for (Actor a : lis) {
+							boolean _save = true;
+							// 已保存的接收人不再进行保存
+							for (EmailTo to : emailTos) {
+								if (to.getReceiver().equals(a)) {
+									_save = false;
 								}
 							}
-							
-							if(_save){
-								et=new EmailTo();
+
+							if (_save) {
+								et = new EmailTo();
 								et.setEmail(entity);
 								et.setRead(false);
 								et.setReceiver(a);
 								et.setUpper(upper);
 								et.setType(json.getInt("toType"));
-								et.setOrderNo(i+j);
+								et.setOrderNo(i + j);
 								emailTos.add(et);
 							}
 						}
 					}
 				}
 			}
-			
-			if(this.getE().getTo()!=null){
+
+			if (this.getE().getTo() != null) {
 				this.getE().getTo().clear();
 				this.getE().getTo().addAll(emailTos);
-			}else{
+			} else {
 				this.getE().setTo(emailTos);
 			}
 
@@ -332,23 +341,35 @@ public class EmailAction extends EntityAction<Long, Email> {
 				e1.printStackTrace();
 			}
 		}
-		
 	}
 	
-
+	public Boolean read;
 	
-	//预览
-	public String preview() throws Exception{
-		Email e=this.getE();
-		e.setSendDate(Calendar.getInstance());
-		
-		this.setE(e);
-		// 强制表单只读
-		this.formPageOption = buildFormPageOption(false);
-		
-		this.attachsUI=this.buildAttachsUI(false,true);
-		
-		return "formr";
+	//标记邮件的状态
+	public String mark() throws Exception{
+		if(this.getIds()==null)throw new CoreException("must set property ids!");
+		if(this.read==null)throw new CoreException("must set property read!");
+		Long[] ids = cn.bc.core.util.StringUtils
+				.stringArray2LongArray(this.getIds().split(","));
+		SystemContext context = (SystemContext) this.getContext();
+		this.emailService.mark(ids,context.getUser().getId(), this.read);
+		Json json=new Json();
+		json.put("success", true);
+		json.put("msg", getText("email.mark.success"));
+		this.json=json.toString();
+		return "json";
+	}
+	
+	
+	//将未读的邮件都标记为已读
+	public String mark4read() throws Exception{
+		SystemContext context = (SystemContext) this.getContext();
+		this.emailService.mark4read(context.getUser().getId());
+		Json json=new Json();
+		json.put("success", true);
+		json.put("msg", getText("email.mark.success"));
+		this.json=json.toString();
+		return "json";
 	}
 
 }

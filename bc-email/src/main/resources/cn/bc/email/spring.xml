@@ -21,4 +21,11 @@
 	<bean id="emailService" class="cn.bc.email.service.EmailServiceImpl"
 		p:entityClass="cn.bc.email.domain.Email"
 		p:emailDao-ref="emailDao" />
+		
+	<bean id="emailTrashDao" class="cn.bc.email.dao.hibernate.jpa.EmailTrashDaoImpl"
+		p:entityClass="cn.bc.email.domain.EmailTrash"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="emailTrasService" class="cn.bc.email.service.EmailTrashServiceImpl"
+		p:entityClass="cn.bc.email.domain.EmailTrash"
+		p:crudDao-ref="emailTrashDao" />
 </beans>

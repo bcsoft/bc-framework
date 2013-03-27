@@ -28,10 +28,16 @@ public class EmailTrash extends EntityImpl {
 	public static final int STATUS_RESUMABLE = 0;
 	/** 状态：已删除 */
 	public static final int STATUS_DELETED = 1;
+	
+	/** 来源：发件箱*/
+	public static final int SOURCE_SEND = 1;
+	/** 来源：收件箱*/
+	public static final int SOURCE_TO = 2;
 
 	private int status;// 状态
 	private Email email;// 邮件
 	private Actor owner;// 所有者
+	private int source;//来源
 	private Calendar handleDate;// 操作时间
 
 	@Column(name = "STATUS_")
@@ -71,4 +77,15 @@ public class EmailTrash extends EntityImpl {
 	public void setHandleDate(Calendar handleDate) {
 		this.handleDate = handleDate;
 	}
+
+	@Column(name = "SRC")
+	public int getSource() {
+		return source;
+	}
+
+	public void setSource(int source) {
+		this.source = source;
+	}
+	
+	
 }

@@ -2,6 +2,7 @@ package cn.bc.email.web.struts2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +12,20 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.email.domain.EmailTrash;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
@@ -38,25 +45,10 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(EmailTrashsAction.class);
 
-	
-	@Override
-	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：访问监控管理角色或系统管理员
-		return !context.hasAnyRole(getText("key.role.bc.acl"),
-				getText("key.role.bc.admin"));
-	}
-
-	public boolean isDelete() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：访问监控删除角色
-		return context.hasAnyRole(getText("key.role.bc.acl.delete"));
-	}
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("b.file_date", Direction.Desc).add(
-				"b.modified_date", Direction.Desc);
+		return new OrderCondition("e.send_date", Direction.Desc);
 	}
 
 	@Override
@@ -65,11 +57,9 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select b.id,b.doc_id,b.doc_type,b.doc_name,e.actor_name author,b.file_date,f.actor_name modifier,b.modified_date");
-		sql.append(",getaccessactors4pid(b.id) accessactors");
-		sql.append(" from bc_acl_doc b");
-		sql.append(" inner join bc_identity_actor_history e on e.id=b.author_id");
-		sql.append(" left join bc_identity_actor_history f on f.id=b.modifier_id");
+		sql.append("select t.id,t.src,t.handle_date,e.subject,e.id emailid,e.send_date");
+		sql.append(" from bc_email_trash t");
+		sql.append(" inner join bc_email e on e.id=t.pid");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -81,14 +71,12 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 				Map<String, Object> map = new HashMap<String, Object>();
 				int i = 0;
 				map.put("id", rs[i++]);
-				map.put("docId", rs[i++]);
-				map.put("docType", rs[i++]);
-				map.put("docName", rs[i++]);
-				map.put("author", rs[i++]);
-				map.put("fileDate", rs[i++]);
-				map.put("modifier", rs[i++]);
-				map.put("modifiedDate", rs[i++]);
-				map.put("accessactors", rs[i++]);
+				map.put("source", rs[i++]);
+				map.put("handleDate", rs[i++]);
+				map.put("subject", rs[i++]);
+				map.put("emailId", rs[i++]);
+				map.put("sendDate", rs[i++]);
+				map.put("openType", 3);//查看邮件 1-发件箱查看，2-收件箱查看，3-垃圾箱查看
 				return map;
 			}
 		});
@@ -98,79 +86,74 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("a.id", "id"));
-		columns.add(new TextColumn4MapKey("b.doc_name", "docName",
-				getText("accessControl.docName"), 250)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.doc_type", "docType",
-				getText("accessControl.docType"), 150)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.doc_id", "docId",
-				getText("accessControl.docId"), 80).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("", "accessactors",
-				getText("accessControl.accessActorAndRole")).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("e.actor_name", "author",
-				getText("accessControl.author"), 60).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.file_date", "fileDate",
-				getText("accessControl.fileDate"), 90)
+		columns.add(new IdColumn4MapKey("t.id", "id"));
+		columns.add(new TextColumn4MapKey("t.src", "source",
+				getText("email.source"), 40)
+				.setUseTitleFromLabel(true)
+				.setValueFormater(new KeyValueFormater(getStatuses())));
+		columns.add(new TextColumn4MapKey("e.subject", "subject",
+				getText("email.subject")).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
+				getText("email.date"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new TextColumn4MapKey("f.actor_name", "modifier",
-				getText("accessControl.modifier"), 60)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.modified_date", "modifiedDate",
-				getText("accessControl.modifiedDate"), 90)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+		columns.add(new HiddenColumn4MapKey("emailId", "emailId"));
+		columns.add(new HiddenColumn4MapKey("source", "source"));
+		columns.add(new HiddenColumn4MapKey("openType", "openType"));
 		return columns;
+	}
+	
+	/**
+	 * 状态值转换列表：收件箱|发件箱
+	 * 
+	 * @return
+	 */
+	private Map<String, String> getStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(EmailTrash.SOURCE_SEND),
+				getText("emailSend"));
+		statuses.put(String.valueOf(EmailTrash.SOURCE_TO),
+				getText("emailTo"));
+		statuses.put("", getText("bc.status.all"));
+		return statuses;
 	}
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['docName']+'的监控配置'";
+		return "['subject']";
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "b.doc_id", "b.doc_type", "b.doc_name", 
-				"e.actor_name", "f.actor_name", "getaccessactors4pid(b.id)" };
+		return new String[] { "e.subject" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "accessControl";
+		return "emailTrash";
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(550).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-
-		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-		} else {
-			// 查看
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		}
-
-		if (this.isDelete()) {
-			// 删除按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-					.setText(getText("label.delete"))
-					.setClick("bc.accessControlView.deleteone"));
-		}
-
-		// 访问历史
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-search")
-				.setText("查看" + getText("accessHistroy"))
-				.setClick("bc.accessControlView.history"));
+		
+		//还原
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
+				.setText(getText("emailTrash.restore"))
+				.setClick("bc.emailTrashView.restore"));
+		//删除
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-closethick")
+				.setText(getText("label.delete"))
+				.setClick("bc.emailTrashView._delete"));
+		//清空
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-alert")
+				.setText(getText("emailTrash.clear"))
+				.setClick("bc.emailTrashView.clear"));
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -180,13 +163,34 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/acl/control/view.js";
+		return this.getHtmlPageNamespace() + "/email/trash/view.js" + ","
+				+ this.getHtmlPageNamespace() + "/email/view.js";
 	}
+	
+	@Override
+	protected String getGridDblRowMethod() {
+		return "bc.emailViewBase.open";
+	}
+	
+	@Override
+	protected Condition getGridSpecalCondition() {
+		// 状态条件
+		AndCondition ac = new AndCondition();
+
+		SystemContext context = (SystemContext) this.getContext();
+
+		//状态必须为可恢复
+		ac.add(new EqualsCondition("t.status_", EmailTrash.STATUS_RESUMABLE));
+		ac.add(new EqualsCondition("t.owner_id", context.getUser().getId()));
+		
+		return ac;
+	}
+
 	
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
-		return true;
+		return false;
 	}
 
 	// ==高级搜索代码结束==

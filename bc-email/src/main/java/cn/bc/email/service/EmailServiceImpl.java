@@ -21,4 +21,12 @@ public class EmailServiceImpl extends DefaultCrudService<Email> implements
 		this.setCrudDao(emailDao);
 		this.emailDao = emailDao;
 	}
+
+	public void mark(Long[] ids, Long receiver_id, boolean read) {
+		this.emailDao.mark(ids, receiver_id, read);
+	}
+
+	public void mark4read(Long receiver_id) {
+		this.emailDao.mark4read(receiver_id);
+	}
 }

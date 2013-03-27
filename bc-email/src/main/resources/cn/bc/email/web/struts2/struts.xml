@@ -61,6 +61,15 @@
 		</action>
 		<action name="save" class="emailAction" method="save"/>
 		<action name="delete" class="emailAction" method="delete"/>
+		<action name="mark" class="emailAction" method="mark"/>
+		<action name="mark4read" class="emailAction" method="mark4read"/>
+	</package>
+	
+	<package name="emailTrash" extends="bc-default" namespace="/bc/emailTrash">
+		<action name="clear" class="emailTrashAction" method="clear"/>
+		<action name="save" class="emailTrashAction" method="save"/>
+		<action name="delete" class="emailTrashAction" method="delete"/>
+		<action name="deleteEmail" class="emailTrashAction" method="deleteEmail"/>
 	</package>
 
 </struts>
