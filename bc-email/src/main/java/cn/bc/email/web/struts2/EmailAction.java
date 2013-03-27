@@ -46,6 +46,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 	public Integer type = 0;// 0：新邮件
 	public Integer openType;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
 	public String receivers;// 邮件接收人
+	public String week4cn;//星期
 
 	private EmailService emailService;
 	private EmailHistoryService emailHistoryService;
@@ -224,6 +225,9 @@ public class EmailAction extends EntityAction<Long, Email> {
 	protected void afterOpen(Email entity) {
 		super.afterOpen(entity);
 		this.attachsUI = this.buildAttachsUI(false, true);
+		
+		this.week4cn=DateUtils.getWeekCN(entity.getSendDate());
+		
 		SystemContext context = (SystemContext) this.getContext();
 		
 		//标记为已读

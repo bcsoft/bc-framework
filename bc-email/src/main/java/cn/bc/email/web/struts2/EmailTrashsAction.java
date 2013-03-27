@@ -190,7 +190,7 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 	// ==高级搜索代码开始==
 	@Override
 	protected boolean useAdvanceSearch() {
-		return false;
+		return true;
 	}
 
 	// ==高级搜索代码结束==

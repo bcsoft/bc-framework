@@ -22,8 +22,8 @@
 		<action name="paging" class="emailSendsAction" method="paging" />
 		<action name="data" class="emailSendsAction" method="data" />
 		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="EmailSendsAction" method="conditions">
-			<result name="success">/bc/acl/email/send/conditions.jsp</result>
+		<action name="conditions" class="emailSendsAction" method="conditions">
+			<result name="success">/bc/email/send/conditions.jsp</result>
 		</action>
 	</package>
 	
