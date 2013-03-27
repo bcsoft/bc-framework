@@ -116,6 +116,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		columns.add(new HiddenColumn4MapKey("source", "source"));
 		columns.add(new HiddenColumn4MapKey("openType", "openType"));
+		columns.add(new HiddenColumn4MapKey("read", "read"));
 		return columns;
 	}
 

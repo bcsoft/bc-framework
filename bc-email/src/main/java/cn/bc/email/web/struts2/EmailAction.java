@@ -18,7 +18,9 @@ import cn.bc.core.util.DateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.email.domain.Email;
+import cn.bc.email.domain.EmailHistory;
 import cn.bc.email.domain.EmailTo;
+import cn.bc.email.service.EmailHistoryService;
 import cn.bc.email.service.EmailService;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorRelation;
@@ -42,13 +44,19 @@ import cn.bc.web.ui.json.Json;
 public class EmailAction extends EntityAction<Long, Email> {
 	private static final long serialVersionUID = 1L;
 	public Integer type = 0;// 0：新邮件
-	public Integer openType = 0;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
+	public Integer openType;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
 	public String receivers;// 邮件接收人
 
 	private EmailService emailService;
+	private EmailHistoryService emailHistoryService;
 	private AttachService attachService;
 	private IdGeneratorService idGeneratorService;
 	private ActorService actorService;
+
+	@Autowired
+	public void setEmailHistoryService(EmailHistoryService emailHistoryService) {
+		this.emailHistoryService = emailHistoryService;
+	}
 
 	@Autowired
 	public void setActorService(ActorService actorService) {
@@ -78,7 +86,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 		super.afterCreate(entity);
 		// 状态为草稿
 		entity.setStatus(Email.STATUS_DRAFT);
-		entity.setType(this.type);
+		entity.setType(Email.TYPE_NEW);
 		entity.setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
 		entity.setFileDate(Calendar.getInstance());
 
@@ -216,6 +224,21 @@ public class EmailAction extends EntityAction<Long, Email> {
 	protected void afterOpen(Email entity) {
 		super.afterOpen(entity);
 		this.attachsUI = this.buildAttachsUI(false, true);
+		SystemContext context = (SystemContext) this.getContext();
+		
+		//标记为已读
+		if(this.openType.equals(2)){
+			this.emailService.mark(new Long[]{entity.getId()}, context.getUser().getId(), true);
+		}
+		
+		//插入查看历史
+		if(this.openType.equals(1)||this.openType.equals(2)||this.openType.equals(3)){
+			EmailHistory eh=this.emailHistoryService.create();
+			eh.setEmail(entity);
+			eh.setFileDate(Calendar.getInstance());
+			eh.setReader(context.getUserHistory());
+			this.emailHistoryService.save(eh);
+		}
 	}
 
 	@Override

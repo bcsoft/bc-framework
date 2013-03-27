@@ -20,7 +20,7 @@ public class EmailTrashServiceImpl extends DefaultCrudService<EmailTrash> implem
 	private EmailTrashDao emailTrashDao;
 
 	@Autowired
-	public void setEmailDao(EmailTrashDao emailTrashDao) {
+	public void setEmailTrashDao(EmailTrashDao emailTrashDao) {
 		this.setCrudDao(emailTrashDao);
 		this.emailTrashDao = emailTrashDao;
 	}

@@ -25,7 +25,13 @@
 	<bean id="emailTrashDao" class="cn.bc.email.dao.hibernate.jpa.EmailTrashDaoImpl"
 		p:entityClass="cn.bc.email.domain.EmailTrash"
 		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="emailTrasService" class="cn.bc.email.service.EmailTrashServiceImpl"
+	<bean id="emailTrashService" class="cn.bc.email.service.EmailTrashServiceImpl"
 		p:entityClass="cn.bc.email.domain.EmailTrash"
-		p:crudDao-ref="emailTrashDao" />
+		p:emailTrashDao-ref="emailTrashDao" />
+		
+	<bean id="emailHistoryDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+		p:entityClass="cn.bc.email.domain.EmailHistory"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="emailHistoryService" class="cn.bc.email.service.EmailHistoryServiceImpl"
+		p:crudDao-ref="emailHistoryDao" />
 </beans>

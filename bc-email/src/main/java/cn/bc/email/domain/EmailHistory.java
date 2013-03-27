@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.core.EntityImpl;
-import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
 
 /**
  * 邮件查阅历史
@@ -26,7 +26,7 @@ public class EmailHistory extends EntityImpl {
 	private static final long serialVersionUID = 1L;
 
 	private Email email;// 所属邮件
-	private Actor reader;// 查阅人
+	private ActorHistory reader;// 查阅人
 	private Calendar fileDate;// 查阅时间
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -41,11 +41,11 @@ public class EmailHistory extends EntityImpl {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "READER_ID", referencedColumnName = "ID")
-	public Actor getReader() {
+	public ActorHistory getReader() {
 		return reader;
 	}
 
-	public void setReader(Actor reader) {
+	public void setReader(ActorHistory reader) {
 		this.reader = reader;
 	}
 
