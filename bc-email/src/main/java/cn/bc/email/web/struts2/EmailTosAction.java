@@ -2,6 +2,7 @@ package cn.bc.email.web.struts2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 邮件收件箱视图Action
@@ -46,6 +48,8 @@ import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 public class EmailTosAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	protected Log logger = LogFactory.getLog(EmailTosAction.class);
+	
+	public Boolean read;
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
@@ -108,12 +112,12 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 					}
 				}));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("email.sender"), 150).setUseTitleFromLabel(true));
+				getText("email.sender"), 60).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
 				getText("email.subject")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
-				getText("email.date"), 90)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+				getText("email.date"), 120)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("source", "source"));
 		columns.add(new HiddenColumn4MapKey("openType", "openType"));
 		columns.add(new HiddenColumn4MapKey("read", "read"));
@@ -150,42 +154,53 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
 		
-		//垃圾箱
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-				.setText(getText("emailTrash"))
-				.setClick("bc.emailViewBase.trashBox"));
-		
+		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+				"read",2,
+				getText("title.click2changeSearchStatus")));
+
 		// "更多"按钮
 		ToolbarMenuButton menuButton = new ToolbarMenuButton(
 				getText("label.operate"))
 				.setChange("bc.emailToView.selectMenuButtonItem");
+		
 		tb.addButton(menuButton);
+		
+		// --查看垃圾箱
+		menuButton.addMenuItem("查看"+getText("emailTrash"),"emailTrash");
 		// --标记为已读
-		menuButton.addMenuItem(getText("email.mark.read"),
-				"markRead");
+		menuButton.addMenuItem(getText("email.mark.read"),"markRead");
 		// --标记为未读
-		menuButton.addMenuItem(getText("email.mark.unread"),
-				"markUnread");
+		menuButton.addMenuItem(getText("email.mark.unread"),"markUnread");
 		// --全部标记为已读
-		menuButton.addMenuItem("全部"+getText("email.mark.read"),
-				"markReadAll");
+		menuButton.addMenuItem("全部"+getText("email.mark.read"),"markReadAll");
 		// --回复
-		menuButton.addMenuItem(getText("email.reply"),
-				"reply");
+		menuButton.addMenuItem(getText("email.reply"),"reply");
 		// --转发
-		menuButton.addMenuItem(getText("email.forwoard"),
-				"forwoard");
+		menuButton.addMenuItem(getText("email.forwoard"),"forwoard");
 		// --移至垃圾箱
-		menuButton.addMenuItem(getText("email.moveTrash"),
-				"moveTrash");
+		menuButton.addMenuItem(getText("email.moveTrash"),"moveTrash");
 		// --彻底删除
-		menuButton.addMenuItem(getText("email.shiftDelete"),
-				"shiftDelete");
+		menuButton.addMenuItem(getText("email.shiftDelete"),"shiftDelete");
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 
 		return tb;
+	}
+	
+	/**
+	 * 状态值转换列表：已读|未读
+	 * 
+	 * @return
+	 */
+	private Map<String, String> getStatuses() {
+		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		statuses.put(String.valueOf(true),
+				getText("email.status.read"));
+		statuses.put(String.valueOf(false),
+				getText("email.status.unread"));
+		statuses.put("", getText("bc.status.all"));
+		return statuses;
 	}
 
 	@Override
@@ -198,6 +213,13 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		AndCondition ac = new AndCondition();
+		
+		if(this.read!=null&&this.read){
+			ac.add(new EqualsCondition("t.read_", this.read));
+		}else if(this.read!=null&&!this.read){
+			ac.add(new EqualsCondition("t.read_", this.read));
+		}
+		
 
 		SystemContext context = (SystemContext) this.getContext();
 
@@ -213,7 +235,15 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		return ac;
 	}
 	
-	
+	@Override
+	protected Json getGridExtrasData() {
+		Json json = new Json();
+		// 状态条件
+		if (read != null)
+			json.put("read", read);
+		
+		return json;
+	}
 
 	@Override
 	protected String getGridDblRowMethod() {

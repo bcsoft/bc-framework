@@ -97,130 +97,6 @@ public class EmailAction extends EntityAction<Long, Email> {
 		this.attachsUI = this.buildAttachsUI(true, false);
 	}
 
-	// 回复邮件
-	public String reply() throws Exception {
-		if (this.getId() == null)
-			throw new CoreException("must set property id!");
-		// 需要回复的邮件
-		Email entity = this.emailService.load(this.getId());
-
-		// 初始化E
-		this.setE(createEntity());
-		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
-		this.getE().setStatus(Email.STATUS_DRAFT);
-		this.getE().setType(Email.TYPE_REPLY);
-		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
-		this.getE().setFileDate(Calendar.getInstance());
-		SystemContext context = (SystemContext) this.getContext();
-		this.getE().setSender(context.getUser());
-		// 设置回复的主题
-		this.getE().setSubject(
-				getText("email.reply") + "：" + entity.getSubject());
-
-		// 回复的发送人
-		Actor sender = entity.getSender();
-		EmailTo et = new EmailTo();
-		et.setRead(false);
-		et.setOrderNo(0);
-		et.setReceiver(sender);
-		et.setType(EmailTo.TYPE_TO);
-		Set<EmailTo> ets = new HashSet<EmailTo>();
-		ets.add(et);
-		this.getE().setTo(ets);
-
-		// 设置回复的内容
-		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
-		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
-		content += "－－－－&nbsp;回复邮件信息&nbsp;－－－－<br>";
-		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
-		content += "<b>日期</b>："
-				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
-		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
-				+ ")<br>";
-		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
-		content += "</span></p>";
-		content += entity.getContent();
-		this.getE().setContent(content);
-
-		this.attachsUI = this.buildAttachsUI(true, false);
-		return "form";
-	}
-
-	// 转发
-	public String forward() throws Exception {
-		if (this.getId() == null)
-			throw new CoreException("must set property id!");
-		// 需要转发的邮件
-		Email entity = this.emailService.load(this.getId());
-		// 初始化E
-		this.setE(createEntity());
-		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
-		this.getE().setStatus(Email.STATUS_DRAFT);
-		this.getE().setType(Email.TYPE_FORWARD);
-		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
-		this.getE().setFileDate(Calendar.getInstance());
-		SystemContext context = (SystemContext) this.getContext();
-		this.getE().setSender(context.getUser());
-
-		// 设置转发的主题
-		this.getE().setSubject(
-				getText("email.forwoard") + "：" + entity.getSubject());
-		// 设置转发的内容
-		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
-		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
-		content += "－－－－&nbsp;转发邮件信息&nbsp;－－－－<br>";
-		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
-
-		// 收件人信息
-		String receiver = "";
-		// 抄送信息
-		String cc = "";
-
-		int i = 0;
-		int j = 0;
-		for (EmailTo et : entity.getTo()) {
-			// 收件人的信息
-			if (et.getType() == EmailTo.TYPE_TO) {
-				if (i > 0)
-					receiver += "、";
-				receiver += et.getReceiver().getName();
-				i++;
-			}
-			// 抄送信息
-			if (et.getType() == EmailTo.TYPE_CC) {
-				if (j > 0)
-					cc += "、";
-				cc += et.getReceiver().getName();
-				j++;
-			}
-		}
-
-		if (receiver.length() > 0)
-			content += "<b>收件人</b>：" + receiver + "<br>";
-		if (cc.length() > 0)
-			content += "<b>抄送</b>：" + cc + "<br>";
-		if (receiver.length() == 0 && cc.length() == 0)
-			content += "<b>收件人</b>：" + "<br>";
-
-		content += "<b>日期</b>："
-				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
-		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
-				+ ")<br>";
-		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
-		content += "</span></p>";
-		content += entity.getContent();
-
-		this.getE().setContent(content);
-
-		// 复制附件的处理
-		this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(),
-				Email.ATTACH_TYPE, this.getE().getUid(), false);
-		this.attachsUI = this.buildAttachsUI(false, false);
-		return "form";
-	}
-
 	@Override
 	protected void afterOpen(Email entity) {
 		super.afterOpen(entity);
@@ -247,7 +123,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(670)
+		return super.buildFormPageOption(editable).setWidth(600)
 				.setMinHeight(200).setHeight(460);
 	}
 
@@ -256,9 +132,6 @@ public class EmailAction extends EntityAction<Long, Email> {
 		// 非编辑状态没有任何操作按钮
 		if (!editable)
 			return;
-
-		// pageOption.addButton(new ButtonOption(getText("label.preview"), null,
-		// "bc.emailForm.preview"));
 
 		pageOption.addButton(new ButtonOption(getText("email.send"), null,
 				"bc.emailForm.save"));
@@ -347,6 +220,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 								et.setType(json.getInt("toType"));
 								et.setOrderNo(i + j);
 								emailTos.add(et);
+								j++;
 							}
 						}
 					}
@@ -368,6 +242,142 @@ public class EmailAction extends EntityAction<Long, Email> {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	// 回复邮件
+	public String reply() throws Exception {
+		if (this.getId() == null)
+			throw new CoreException("must set property id!");
+		// 需要回复的邮件
+		Email entity = this.emailService.load(this.getId());
+
+		// 初始化E
+		this.setE(createEntity());
+		// 初始化表单的配置信息
+		this.formPageOption = buildFormPageOption(true);
+		this.getE().setEmail(entity);
+		this.getE().setStatus(Email.STATUS_DRAFT);
+		this.getE().setType(Email.TYPE_REPLY);
+		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+		this.getE().setFileDate(Calendar.getInstance());
+		SystemContext context = (SystemContext) this.getContext();
+		this.getE().setSender(context.getUser());
+		// 设置回复的主题
+		this.getE().setSubject(
+				getText("email.reply") + "：" + entity.getSubject());
+
+		// 回复的发送人
+		Actor sender = entity.getSender();
+		EmailTo et = new EmailTo();
+		et.setRead(false);
+		et.setOrderNo(0);
+		et.setReceiver(sender);
+		et.setType(EmailTo.TYPE_TO);
+		Set<EmailTo> ets = new HashSet<EmailTo>();
+		ets.add(et);
+		this.getE().setTo(ets);
+
+		// 设置回复的内容
+		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
+		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content += "－－－－&nbsp;回复邮件信息&nbsp;－－－－<br>";
+		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
+		content += "<b>日期</b>："
+				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
+				+ ")<br>";
+		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
+		content += "</span></p>";
+		content += entity.getContent();
+		this.getE().setContent(content);
+
+		this.attachsUI = this.buildAttachsUI(true, false);
+		return "form";
+	}
+
+	// 转发
+	public String forward() throws Exception {
+		if (this.getId() == null)
+			throw new CoreException("must set property id!");
+		// 需要转发的邮件
+		Email entity = this.emailService.load(this.getId());
+		// 初始化E
+		this.setE(createEntity());
+		// 初始化表单的配置信息
+		this.formPageOption = buildFormPageOption(true);
+		this.getE().setEmail(entity);
+		this.getE().setStatus(Email.STATUS_DRAFT);
+		this.getE().setType(Email.TYPE_FORWARD);
+		this.getE().setUid(this.idGeneratorService.next(Email.ATTACH_TYPE));
+		this.getE().setFileDate(Calendar.getInstance());
+		SystemContext context = (SystemContext) this.getContext();
+		this.getE().setSender(context.getUser());
+
+		// 设置转发的主题
+		this.getE().setSubject(
+				getText("email.forwoard") + "：" + entity.getSubject());
+		// 设置转发的内容
+		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
+		content += "<p><span style=\"background-color: rgb(238, 236, 225);\">";
+		content += "－－－－&nbsp;转发邮件信息&nbsp;－－－－<br>";
+		content += "<b>发件人</b>：" + entity.getSender().getName() + "<br>";
+
+		// 收件人信息
+		String receiver = "";
+		// 抄送信息
+		String cc = "";
+
+		Actor receiver_upper=null;
+		Actor cc_upper=null;
+		
+		for (EmailTo et : entity.getTo()) {
+			// 收件人的信息
+			if (et.getType() == EmailTo.TYPE_TO) {
+				if(et.getUpper() == null){
+					if (receiver.length()>0)receiver += "、";
+					receiver += et.getReceiver().getName();
+				}else if(!et.getUpper().equals(receiver_upper) || receiver_upper == null){
+					if (receiver.length()>0)receiver += "、";
+					receiver += et.getUpper().getName();
+					receiver_upper=et.getUpper();
+				}
+			}
+			
+			// 抄送信息
+			if (et.getType() == EmailTo.TYPE_CC) {
+				if(et.getUpper() == null){
+					if (cc.length()>0)cc += "、";
+					cc += et.getReceiver().getName();
+				}else if(!et.getUpper().equals(cc_upper) || cc_upper == null){
+					if (cc.length()>0)cc += "、";
+					cc += et.getUpper().getName();
+					cc_upper=et.getUpper();
+				}
+			}
+		}
+
+		if (receiver.length() > 0)
+			content += "<b>收件人</b>：" + receiver + "<br>";
+		if (cc.length() > 0)
+			content += "<b>抄送</b>：" + cc + "<br>";
+		if (receiver.length() == 0 && cc.length() == 0)
+			content += "<b>收件人</b>：" + "<br>";
+
+		content += "<b>日期</b>："
+				+ DateUtils.formatCalendar2Minute(entity.getSendDate());
+		content += "&nbsp;(" + DateUtils.getWeekCN(entity.getSendDate())
+				+ ")<br>";
+		content += "<b>主题</b>：" + entity.getSubject() + "<br>";
+		content += "</span></p>";
+		content += entity.getContent();
+
+		this.getE().setContent(content);
+
+		// 复制附件的处理
+		this.attachService.doCopy(Email.ATTACH_TYPE, entity.getUid(),
+				Email.ATTACH_TYPE, this.getE().getUid(), false);
+		this.attachsUI = this.buildAttachsUI(false, false);
+		return "form";
 	}
 	
 	public Boolean read;

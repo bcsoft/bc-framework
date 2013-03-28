@@ -27,7 +27,7 @@ public class EmailTo extends EntityImpl {
 	/** 类型：抄送 */
 	public static final int TYPE_CC = 1;
 	/** 类型：密送 */
-	public static final int TYPE_BCC = 1;
+	public static final int TYPE_BCC = 2;
 
 	private Email email;// 所属邮件
 	private int type;// 发送类型 : 0-主送,1-抄送,2-密送

@@ -17,10 +17,12 @@ import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.query.condition.impl.QlCondition;
+import cn.bc.core.util.JsonUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.email.domain.EmailTrash;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -55,7 +57,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver(e.id)");
+		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver2json(e.id)");
 		sql.append(" from bc_email e");
 		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
 		sqlObject.setSql(sql.toString());
@@ -86,12 +88,34 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("e.id", "id"));
 		columns.add(new TextColumn4MapKey("", "receiver",
-				getText("email.receiver"), 150).setUseTitleFromLabel(true));
+				getText("email.receiver"), 150).setUseTitleFromLabel(true)
+				.setValueFormater(new AbstractFormater<String>() {
+
+					@Override
+					public String format(Object context, Object value) {
+						if (value == null)return null;
+						Map<String,Object> map=JsonUtils.toMap(value.toString());
+						String receiver="";
+						if(map.get("receiver").toString().length()>0){
+							receiver=map.get("receiver").toString()+";";
+						}
+						
+						if(map.get("cc").toString().length()>0){
+							receiver+=getText("email.cc")+"--["+map.get("cc").toString()+"];";
+						}
+						
+						if(map.get("bcc").toString().length()>0){
+							receiver+=getText("email.bcc")+"--["+map.get("bcc").toString()+"];";
+						}
+							
+						return receiver;
+					}
+				}));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
 				getText("email.subject")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
-				getText("email.date"), 90)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+				getText("email.date"), 120)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		columns.add(new HiddenColumn4MapKey("source", "source"));
 		columns.add(new HiddenColumn4MapKey("openType", "openType"));
 		return columns;
