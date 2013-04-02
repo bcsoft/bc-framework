@@ -115,6 +115,34 @@ insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL
 	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '010430','垃圾箱', '/bc/emailTrashs/paging', 'i0409' from BC_IDENTITY_RESOURCE m where m.order_='010400'
 	and not exists(select 1 from bc_identity_resource where order_='010430');
 
+-- 资源配置：邮箱管理
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 1, m.id, '800330','邮箱管理', null, 'i0004' from BC_IDENTITY_RESOURCE m where m.order_='800000'
+	and not exists(select 1 from bc_identity_resource where order_='800330');
+
+-- 资源配置：发件管理
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '800331','发件管理', '/bc/emailSend2Manages/paging', 'i0409' from BC_IDENTITY_RESOURCE m where m.order_='800330'
+	and not exists(select 1 from bc_identity_resource where order_='800331');
+
+-- 资源配置：收件管理
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '800332','收件管理', '/bc/emailTo2Manages/paging', 'i0408' from BC_IDENTITY_RESOURCE m where m.order_='800330'
+	and not exists(select 1 from bc_identity_resource where order_='800332');
+
+-- 资源配置：查阅历史管理
+insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '800333','查阅历史管理', '/bc/emailHistory2Manages/paging', 'i0408' from BC_IDENTITY_RESOURCE m where m.order_='800330'
+	and not exists(select 1 from bc_identity_resource where order_='800333');
+
+-- 角色配置：电子邮箱 BC_EMAIL 管理自己的邮件
+insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(NEXTVAL('CORE_SEQUENCE'), 0, false,  0,'0155', 'BC_EMAIL','电子邮箱');
+
+-- 角色配置：电子邮箱管理 BC_EMAIL_MANAGE 管理所有的邮件
+insert into  BC_IDENTITY_ROLE (ID, STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	values(NEXTVAL('CORE_SEQUENCE'), 0, false,  0,'0156', 'BC_EMAIL_MANAGE','电子邮箱管理');
+
 -- 权限访问配置：通用角色
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_COMMON' 
@@ -122,6 +150,33 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 	and not exists(select 1 from BC_IDENTITY_ROLE_RESOURCE 
 				where rid=(select r2.id from BC_IDENTITY_ROLE r2 where r2.code='BC_COMMON')
 				and sid in(select m2.id from BC_IDENTITY_RESOURCE m2 where m2.type_ > 1 and m2.order_ in ('010410','010420','010430')))
+	order by m.order_;
+
+-- 权限访问配置：超级管理员
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_ADMIN' 
+	and m.type_ > 1 and m.order_ in ('010410','010420','010430','800331','800332','800333')
+	and not exists(select 1 from BC_IDENTITY_ROLE_RESOURCE 
+				where rid=(select r2.id from BC_IDENTITY_ROLE r2 where r2.code='BC_ADMIN')
+				and sid in(select m2.id from BC_IDENTITY_RESOURCE m2 where m2.type_ > 1 and m2.order_ in ('010410','010420','010430','800331','800332','800333')))
+	order by m.order_;
+
+-- 权限访问配置：电子邮箱
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_EMAIL' 
+	and m.type_ > 1 and m.order_ in ('010410','010420','010430')
+	and not exists(select 1 from BC_IDENTITY_ROLE_RESOURCE 
+				where rid=(select r2.id from BC_IDENTITY_ROLE r2 where r2.code='BC_EMAIL')
+				and sid in(select m2.id from BC_IDENTITY_RESOURCE m2 where m2.type_ > 1 and m2.order_ in ('010410','010420','010430')))
+	order by m.order_;
+
+-- 权限访问配置：电子邮箱管理
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m where r.code='BC_EMAIL_MANAGE' 
+	and m.type_ > 1 and m.order_ in ('800331','800332','800333')
+	and not exists(select 1 from BC_IDENTITY_ROLE_RESOURCE 
+				where rid=(select r2.id from BC_IDENTITY_ROLE r2 where r2.code='BC_EMAIL_MANAGE')
+				and sid in(select m2.id from BC_IDENTITY_RESOURCE m2 where m2.type_ > 1 and m2.order_ in ('800331','800332','800333')))
 	order by m.order_;
 
 -- 获取邮件的收件人
@@ -192,4 +247,20 @@ BEGIN
 	RETURN '{"receiver":"'||receiver||'","cc":"'||cc||'","bcc":"'||bcc||'"}';
 END;
 $BODY$
- LANGUAGE plpgsql;
+LANGUAGE plpgsql;
+
+-- 获取邮件的接收人查阅邮件的次数
+CREATE OR REPLACE FUNCTION getemailreceiverreadcount(emailid INTEGER,receivercode VARCHAR)
+	RETURNS INT AS
+$BODY$
+DECLARE
+ i int;
+BEGIN
+	select count(h.id) into i
+	from bc_email_history h
+	inner join bc_identity_actor_history ah on ah.id=h.reader_id
+	where h.pid=emailid and ah.actor_code=receivercode;
+	RETURN i;
+END;
+$BODY$
+LANGUAGE plpgsql;
