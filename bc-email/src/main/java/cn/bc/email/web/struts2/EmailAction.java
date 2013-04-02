@@ -1,8 +1,11 @@
 package cn.bc.email.web.struts2;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.DateUtils;
 import cn.bc.docs.service.AttachService;
@@ -47,6 +51,11 @@ public class EmailAction extends EntityAction<Long, Email> {
 	public Integer openType;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
 	public String receivers;// 邮件接收人
 	public String week4cn;//星期
+	
+	public List<Actor> receiverList;//收件人集合
+	public List<Actor> ccList;//抄送集合
+	public List<Actor> bccList;//密送集合
+	public Map<Long,List<Actor>> owenGroupUserMap;//在上级组织中的用户，map.key为：上级组织的id
 
 	private EmailService emailService;
 	private EmailHistoryService emailHistoryService;
@@ -119,11 +128,13 @@ public class EmailAction extends EntityAction<Long, Email> {
 			eh.setReader(context.getUserHistory());
 			this.emailHistoryService.save(eh);
 		}
+		
+		this.sortable();
 	}
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(600)
+		return super.buildFormPageOption(editable).setWidth(630)
 				.setMinHeight(200).setHeight(460);
 	}
 
@@ -198,10 +209,21 @@ public class EmailAction extends EntityAction<Long, Email> {
 					} else {
 						// 部门或岗位
 						upper = this.actorService.load(json.getLong("id"));
-						lis = this.actorService.findFollower(
-								json.getLong("id"),
-								new Integer[] { ActorRelation.TYPE_BELONG },
-								new Integer[] { Actor.TYPE_USER });
+						
+						//岗位
+						if(upper.getType()== Actor.TYPE_GROUP){
+							lis = this.actorService.findFollowerWithName(
+									json.getLong("id"),null,
+									new Integer[] { ActorRelation.TYPE_BELONG },
+									new Integer[] { Actor.TYPE_USER },
+									new Integer[]{BCConstants.STATUS_ENABLED});
+						//部门
+						}else{
+							lis = this.actorService.findDescendantUser(json.getLong("id"), 
+									new Integer[]{BCConstants.STATUS_ENABLED}, Actor.TYPE_UNIT,Actor.TYPE_DEPARTMENT);
+						}
+						
+						
 						for (Actor a : lis) {
 							boolean _save = true;
 							// 已保存的接收人不再进行保存
@@ -407,6 +429,65 @@ public class EmailAction extends EntityAction<Long, Email> {
 		json.put("msg", getText("email.mark.success"));
 		this.json=json.toString();
 		return "json";
+	}
+	
+	//将收件人分类
+	private void sortable(){
+		Set<EmailTo> tos= this.getE().getTo();
+		if(tos == null)return;
+		for(EmailTo to:tos){
+			//拥有上级
+			if(to.getUpper() != null){
+				switch(to.getType()){
+					case EmailTo.TYPE_TO:
+							if(this.receiverList==null)this.receiverList=new ArrayList<Actor>();
+							//若集合中拥有此上级组织 不再加进集合中
+							if(!this.receiverList.contains(to.getUpper()))this.receiverList.add(to.getUpper());
+						break;
+					case EmailTo.TYPE_CC:
+							if(this.ccList==null)this.ccList=new ArrayList<Actor>();
+							if(!this.ccList.contains(to.getUpper()))this.ccList.add(to.getUpper());
+						break;
+					case EmailTo.TYPE_BCC:
+							if(this.bccList==null)this.bccList=new ArrayList<Actor>();
+							if(!this.bccList.contains(to.getUpper()))this.bccList.add(to.getUpper());
+						break;
+					default:return;
+				}
+				//将拥有上级组织的收件人添加到集合中，解释时再遍历出这些收件人
+				this.addOwenGroupUserMap(to.getUpper().getId(), to.getReceiver());
+			
+			}else{
+				switch(to.getType()){
+					case EmailTo.TYPE_TO:
+							if(this.receiverList==null)this.receiverList=new ArrayList<Actor>();
+							this.receiverList.add(to.getReceiver());
+						break;
+					case EmailTo.TYPE_CC:
+							if(this.ccList==null)this.ccList=new ArrayList<Actor>();
+							this.ccList.add(to.getReceiver());
+						break;
+					case EmailTo.TYPE_BCC:
+							if(this.bccList==null)this.bccList=new ArrayList<Actor>();
+							this.bccList.add(to.getReceiver());
+						break;
+					default:return;
+				}
+			}
+		}
+	}
+	
+	//将拥有上级组织的收件人添加到集合中，解释时再遍历出这些收件人
+	private void addOwenGroupUserMap(Long upperId,Actor receiver){
+		if(this.owenGroupUserMap==null)this.owenGroupUserMap=new HashMap<Long, List<Actor>>();
+		List<Actor> userList;
+		if(this.owenGroupUserMap.containsKey(upperId)){
+			userList = this.owenGroupUserMap.get(upperId);
+		}else{
+			userList=new ArrayList<Actor>();
+		}
+		userList.add(receiver);
+		this.owenGroupUserMap.put(upperId,userList);
 	}
 
 }

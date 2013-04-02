@@ -2,6 +2,7 @@ package cn.bc.email.web.struts2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,22 +12,18 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.JsonUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.email.domain.EmailTrash;
+import cn.bc.email.domain.Email;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
@@ -34,7 +31,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 /**
- * 邮件发件箱视图Action
+ * 发件管理视图Action
  * 
  * @author lbj
  * 
@@ -42,10 +39,19 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class EmailSendsAction extends ViewAction<Map<String, Object>> {
+public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	protected Log logger = LogFactory.getLog(EmailSendsAction.class);
+	protected Log logger = LogFactory.getLog(EmailSend2ManagesAction.class);
 
+	@Override
+	public boolean isReadonly() {
+		SystemContext context = (SystemContext) this.getContext();
+		// 配置权限：电子邮件管理角色或系统管理员
+		return !context.hasAnyRole(getText("key.role.bc.email.manage"),
+				getText("key.role.bc.admin"));
+	}
+	
+	
 	@Override
 	protected OrderCondition getGridOrderCondition() {
 		return new OrderCondition("e.send_date", Direction.Desc);
@@ -57,7 +63,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver2json(e.id)");
+		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver2json(e.id),a.name,e.type_");
 		sql.append(" from bc_email e");
 		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
 		sqlObject.setSql(sql.toString());
@@ -75,8 +81,8 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 				map.put("subject", rs[i++]);
 				map.put("sendDate", rs[i++]);
 				map.put("receiver", rs[i++]);
-				map.put("source", EmailTrash.SOURCE_SEND);
-				map.put("openType", 1);//查看邮件 1-发件箱查看，2-收件箱查看，3-垃圾箱查看
+				map.put("name", rs[i++]);
+				map.put("type", rs[i++]);
 				return map;
 			}
 		});
@@ -87,6 +93,14 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("e.id", "id"));
+		/*columns.add(new TextColumn4MapKey("e.status_", "status",
+				getText("email.status"), 40).setSortable(true)
+				.setValueFormater(new KeyValueFormater(this.getStatuses())));*/
+		columns.add(new TextColumn4MapKey("e.type_", "type",
+				getText("email.type"), 60).setSortable(true)
+				.setValueFormater(new KeyValueFormater(this.getTypes())));
+		columns.add(new TextColumn4MapKey("a.name", "name",
+				getText("email.sender"), 60).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("", "receiver",
 				getText("email.receiver"), 150).setUseTitleFromLabel(true)
 				.setValueFormater(new AbstractFormater<String>() {
@@ -116,9 +130,33 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
 				getText("email.date"), 120)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new HiddenColumn4MapKey("source", "source"));
-		columns.add(new HiddenColumn4MapKey("openType", "openType"));
 		return columns;
+	}
+	
+	/**
+	 * 状态值转换列表：已读|未读
+	 * 
+	 * @return
+	 */
+	/*private Map<String, Object> getStatuses() {
+		Map<String, Object> statuses = new LinkedHashMap<String, Object>();
+		statuses.put(String.valueOf(Email.STATUS_DRAFT),
+				getText("bc.status.draft"));
+		statuses.put(String.valueOf(Email.STATUS_SENDED),
+				getText("email.to"));
+		statuses.put("", getText("bc.status.all"));
+		return statuses;
+	}*/
+	
+	private Map<String, Object> getTypes() {
+		Map<String, Object> types = new LinkedHashMap<String, Object>();
+		types.put(String.valueOf(Email.TYPE_NEW),
+				getText("email.new"));
+		types.put(String.valueOf(Email.TYPE_REPLY),
+				getText("email.reply"));
+		types.put(String.valueOf(Email.TYPE_FORWARD), 
+				getText("email.forwoard"));
+		return types;
 	}
 
 	@Override
@@ -128,17 +166,17 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "e.subject", "getemailreceiver(e.id)" };
+		return new String[] { "a.name","e.subject", "getemailreceiver(e.id)" };
 	}
 
 	@Override
 	protected String getFormActionName() {
-		return "emailSend";
+		return "emailSend2Manage";
 	}
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(600).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(650).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
@@ -146,26 +184,10 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 
-		// 写邮件
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
-				.setText(getText("email.write"))
-				.setClick("bc.emailViewBase.writeEmail")
-				.addClazz("bc-email-vriteEmail-send"));
-		
-		//转发
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthick-1-e")
-				.setText(getText("email.forwoard"))
-				.setClick("bc.emailViewBase.forwoard"));
-		
-		//移至垃圾箱
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-trash")
-				.setText(getText("email.moveTrash"))
-				.setClick("bc.emailViewBase.moveTrash"));
-		
-		//彻底删除
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-closethick")
-				.setText(getText("email.shiftDelete"))
-				.setClick("bc.emailViewBase.shiftDelete"));
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-check")
+				.setText(getText("label.read"))
+				.setClick("bc.email2ManageViewBase.open"));
+
 
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
@@ -175,30 +197,12 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/send/view.js" + ","
-				+ this.getHtmlPageNamespace() + "/email/view.js";
-	}
-
-	@Override
-	protected Condition getGridSpecalCondition() {
-		// 状态条件
-		AndCondition ac = new AndCondition();
-
-		SystemContext context = (SystemContext) this.getContext();
-
-		ac.add(new EqualsCondition("e.sender_id", context.getUser().getId()));
-		
-		//去掉垃圾箱已关联的此邮件
-		String sql="not exists(select 1 from bc_email_trash t_e where t_e.pid=e.id";
-		sql+=" and t_e.owner_id=e.sender_id and t_e.src="+EmailTrash.SOURCE_SEND+")";
-		ac.add(new QlCondition(sql));
-
-		return ac;
+		return this.getHtmlPageNamespace() + "/email/manage/view.js";
 	}
 	
 	@Override
 	protected String getGridDblRowMethod() {
-		return "bc.emailViewBase.open";
+		return "bc.email2ManageViewBase.open";
 	}
 
 	// ==高级搜索代码开始==

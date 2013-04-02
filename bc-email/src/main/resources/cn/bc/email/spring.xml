@@ -29,9 +29,10 @@
 		p:entityClass="cn.bc.email.domain.EmailTrash"
 		p:emailTrashDao-ref="emailTrashDao" />
 		
-	<bean id="emailHistoryDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
+	<bean id="emailHistoryDao" class="cn.bc.email.dao.hibernate.jpa.EmailHistoryDaoImpl"
 		p:entityClass="cn.bc.email.domain.EmailHistory"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="emailHistoryService" class="cn.bc.email.service.EmailHistoryServiceImpl"
-		p:crudDao-ref="emailHistoryDao" />
+		p:entityClass="cn.bc.email.domain.EmailHistory"
+		p:emailHistoryDao-ref="emailHistoryDao" />
 </beans>

@@ -23,8 +23,8 @@ import cn.bc.db.jdbc.SqlObject;
 import cn.bc.email.domain.Email;
 import cn.bc.email.domain.EmailTrash;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
@@ -89,6 +89,18 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		});
 		return sqlObject;
 	}
+	
+	//未读邮件特殊显示
+	@SuppressWarnings("unchecked")
+	@Override
+	protected String getGridRowClass(List<? extends Object> data,
+			Object rowData, int index, int type) {
+		Map<String, Object> row = (Map<String, Object>) rowData;
+		if(!(Boolean)row.get("read")){
+			return "ui-state-active";
+		}
+		return null;
+	}
 
 	@Override
 	protected List<Column> getGridColumns() {
@@ -96,21 +108,7 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		columns.add(new IdColumn4MapKey("a.id", "id"));
 		columns.add(new TextColumn4MapKey("t.read_", "read",
 				getText("email.status"), 35).setSortable(true)
-				.setValueFormater(new BooleanFormater() {
-					@Override
-					public String format(Object context, Object value) {
-						if (value == null)
-							return null;
-						if (value instanceof Boolean)
-							return ((Boolean) value).booleanValue() ? getText("email.status.read")
-									: getText("email.status.unread");
-						else if (value instanceof String)
-							return "true".equalsIgnoreCase((String) value) ? getText("email.status.read")
-									: getText("email.status.unread");
-						else
-							return value.toString();
-					}
-				}));
+				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("email.sender"), 60).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
@@ -195,10 +193,10 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 	 */
 	private Map<String, String> getStatuses() {
 		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(true),
-				getText("email.status.read"));
 		statuses.put(String.valueOf(false),
 				getText("email.status.unread"));
+		statuses.put(String.valueOf(true),
+				getText("email.status.read"));
 		statuses.put("", getText("bc.status.all"));
 		return statuses;
 	}

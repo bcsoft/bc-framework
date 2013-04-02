@@ -1,16 +1,16 @@
-package cn.bc.email.service;
+package cn.bc.email.dao;
 
-import cn.bc.core.service.CrudService;
+import cn.bc.core.dao.CrudDao;
 import cn.bc.email.domain.EmailHistory;
 
 /**
- * 邮件查看历史Service接口
+ * 邮件查看历史Dao接口
  * 
  * @author lbj
  * 
  */
-public interface EmailHistoryService extends CrudService<EmailHistory> {
-	
+public interface EmailHistoryDao extends CrudDao<EmailHistory> {
+
 	/**
 	 * 获取邮件接收人查阅邮件的次数
 	 * @param emailId
