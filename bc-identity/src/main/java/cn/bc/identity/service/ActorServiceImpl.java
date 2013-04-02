@@ -174,4 +174,13 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 	public String[] findMailAddressByUser(String[] userCodes) {
 		return this.actorDao.findMailAddressByUser(userCodes);
 	}
+
+	public List<Actor> findUser(Long organizationId, Integer[] status) {
+		return this.actorDao.findUser(organizationId, status);
+	}
+
+	public List<Actor> findDescendantUser(Long organizationId,
+			Integer[] status, Integer... descendantOrganizationTypes) {
+		return this.actorDao.findDescendantUser(organizationId, status, descendantOrganizationTypes);
+	}
 }

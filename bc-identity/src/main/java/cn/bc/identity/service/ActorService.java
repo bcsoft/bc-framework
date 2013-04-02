@@ -141,6 +141,17 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	List<Actor> findUser(Long organizationId);
+	
+	/**
+	 * 获取直接隶属于组织的人员信息
+	 * 
+	 * @param organizationId
+	 *            上级组织的id
+	 * @param status           
+	 *      	隶属于组织的人员的状态
+	 * @return
+	 */
+	List<Actor> findUser(Long organizationId,Integer[] status);
 
 	/**
 	 * 获取隶属关系中的所有上级组织信息，包括上级的上级,按祖先的级别排好序
@@ -176,6 +187,20 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	List<Actor> findDescendantUser(Long organizationId,
+			Integer... descendantOrganizationTypes);
+	
+	/**
+	 * 获取隶属于组织的人员信息，包括组织的所有后代组织下的人员
+	 * 
+	 * @param organizationId
+	 *            上级组织的id
+	 * @param status           
+	 *      	隶属于组织的人员的状态           
+	 * @param descendantOrganizationTypes
+	 *            下级组织的类型，对应Actor的type属性，默认为单位+部门+岗位
+	 * @return
+	 */
+	List<Actor> findDescendantUser(Long organizationId,Integer[] status,
 			Integer... descendantOrganizationTypes);
 
 	/**

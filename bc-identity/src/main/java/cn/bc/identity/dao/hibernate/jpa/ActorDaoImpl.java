@@ -292,6 +292,12 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				new Integer[] { ActorRelation.TYPE_BELONG },
 				new Integer[] { Actor.TYPE_USER });
 	}
+	
+	public List<Actor> findUser(Long organizationId,Integer[] statuses) {
+		return this.findFollowerWithName(organizationId,null,
+				new Integer[] { ActorRelation.TYPE_BELONG },
+				new Integer[] { Actor.TYPE_USER },statuses);
+	}
 
 	public List<Actor> findAncestorOrganization(Long lowerOrganizationId,
 			Integer... ancestorOrganizationTypes) {
@@ -368,6 +374,32 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				&& !descendantOrganizations.isEmpty()) {
 			for (Actor org : descendantOrganizations) {
 				_users = this.findUser(org.getId());
+				if (_users != null && !_users.isEmpty()) {
+					users.addAll(_users);
+				}
+			}
+		}
+		return users;
+	}
+	
+	public List<Actor> findDescendantUser(Long organizationId,Integer[] statuses,
+			Integer... descendantOrganizationTypes) {
+		// 查找直接隶属的人员信息
+		List<Actor> users = new ArrayList<Actor>();
+		List<Actor> _users = this.findUser(organizationId,statuses);
+		if (_users != null && !_users.isEmpty()) {
+			users.addAll(_users);
+		}
+
+		// 获取所有后代组织
+		List<Actor> descendantOrganizations = this.findDescendantOrganization(
+				organizationId, descendantOrganizationTypes);
+
+		// 循环每个组织查找人员信息
+		if (descendantOrganizations != null
+				&& !descendantOrganizations.isEmpty()) {
+			for (Actor org : descendantOrganizations) {
+				_users = this.findUser(org.getId(),statuses);
 				if (_users != null && !_users.isEmpty()) {
 					users.addAll(_users);
 				}
