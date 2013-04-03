@@ -27,6 +27,7 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
 
 /**
@@ -92,7 +93,7 @@ public class EmailHistory2ManagesAction extends ViewAction<Map<String, Object>> 
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("h.id", "id"));
+		columns.add(new IdColumn4MapKey("e.id", "emailId"));
 		columns.add(new TextColumn4MapKey("ah.actor_name", "name",
 				getText("emailHistory2Manage.name"),80).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
@@ -133,7 +134,9 @@ public class EmailHistory2ManagesAction extends ViewAction<Map<String, Object>> 
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
 		
-		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-check")
+				.setText(getText("label.read"))
+				.setClick("bc.email2ManageViewBase.open"));
 
 
 		// 搜索按钮
@@ -144,7 +147,12 @@ public class EmailHistory2ManagesAction extends ViewAction<Map<String, Object>> 
 	
 	@Override
 	protected String getGridDblRowMethod() {
-		return "";
+		return "bc.email2ManageViewBase.open";
+	}
+	
+	@Override
+	protected String getHtmlPageJs() {
+		return this.getHtmlPageNamespace() + "/email/manage/view.js";
 	}
 	
 	@Override
