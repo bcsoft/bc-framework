@@ -64,12 +64,12 @@ public class SelectGroupsAction extends
 		// 查看历史的信息
 		if (this.history) {
 			sql.append("select h.id,a.status_,a.type_,a.code,case when a.pname is null then a.name else");
-			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname");
+			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname,getgroupusercount(a.id)");
 			sql.append(" from bc_identity_actor_history h");
 			sql.append(" inner join bc_identity_actor a on a.id=h.actor_id");
 		} else {
 			sql.append("select a.id,a.status_,a.type_,a.code,case when a.pname is null then a.name else");
-			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname");
+			sql.append(" a.pname||'/'||a.name end as name,a.name cname,a.pcode,a.pname,getgroupusercount(a.id)");
 			sql.append(" from BC_IDENTITY_ACTOR a");
 		}
 		sqlObject.setSql(sql.toString());
@@ -87,7 +87,9 @@ public class SelectGroupsAction extends
 				map.put("code", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("cname", rs[i++]);
+				map.put("pcode", rs[i++]);
 				map.put("pname", rs[i++]);
+				map.put("count", rs[i++]);
 				return map;
 
 			}
@@ -112,6 +114,7 @@ public class SelectGroupsAction extends
 		columns.add(new HiddenColumn4MapKey("code", "code"));
 		columns.add(new HiddenColumn4MapKey("cname", "cname"));
 		columns.add(new HiddenColumn4MapKey("pname", "pname"));
+		columns.add(new HiddenColumn4MapKey("count", "count"));
 		return columns;
 	}
 
