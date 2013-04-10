@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import cn.bc.BCConstants;
 import cn.bc.core.Page;
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
@@ -579,21 +580,86 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		}
 	}
 
+	// 缓存处理过程
+	private boolean hadDealSearch4advance;
+	private JSONArray search4advanceJsonArray;
+
+	private JSONArray getSearch4advanceJsonArray() {
+		if (!hadDealSearch4advance) {
+			if (this.search4advance == null
+					|| this.search4advance.trim().length() == 0)
+				return null;
+			this.search4advance = this.search4advance.trim();
+			try {
+				search4advanceJsonArray = new JSONArray(this.search4advance);
+			} catch (JSONException e) {
+				throw new CoreException(
+						"can't convert to JSONArray:search4advance="
+								+ this.search4advance, e);
+			}
+
+			hadDealSearch4advance = true;
+		}
+
+		return search4advanceJsonArray;
+	}
+
+	/**
+	 * 获取高级搜索条件框输入值
+	 * 
+	 * @param key
+	 *            在data-condition中配置的name属性值
+	 * @return 返回的值是根据值类型转换后的值
+	 */
+	protected Object getGridSearchCondition4AdvanceValue(String key) {
+		return getGridSearchCondition4AdvanceValue(key, false);
+	}
+
+	/**
+	 * 获取高级搜索条件框输入值
+	 * 
+	 * @param key
+	 *            在data-condition中配置的name属性值
+	 * @param origin
+	 *            是否返回原值还是根据值类型转换后的值
+	 * @return
+	 */
+	protected Object getGridSearchCondition4AdvanceValue(String key,
+			boolean origin) {
+		JSONArray jsons = getSearch4advanceJsonArray();
+		if (jsons == null)
+			return null;
+		JSONObject json;
+		try {
+			for (int i = 0; i < jsons.length(); i++) {
+				json = jsons.getJSONObject(i);
+				if (json.has("name") && key.equals(json.getString("name"))) {
+					if (origin) {
+						return json.get("value");
+					} else {
+						return StringUtils
+								.convertValueByType(json.getString("type"),
+										json.getString("value"));
+					}
+				}
+			}
+			return null;
+		} catch (JSONException e) {
+			throw new CoreException(e);
+		}
+	}
+
 	/**
 	 * 构建高级查询条件
 	 * 
 	 * @return
 	 */
 	protected MixCondition getGridSearchCondition4Advance() {
-		if (this.search4advance == null
-				|| this.search4advance.trim().length() == 0)
+		JSONArray jsons = getSearch4advanceJsonArray();
+		if (jsons == null || jsons.length() == 0)
 			return null;
-		this.search4advance = this.search4advance.trim();
-		try {
-			JSONArray jsons = new JSONArray(this.search4advance);
-			if (jsons.length() == 0)
-				return null;
 
+		try {
 			AndCondition and = new AndCondition();
 			and.setAddBracket(true);
 			JSONObject json;
@@ -697,10 +763,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			}
 			return and;
 		} catch (JSONException e) {
-			logger.error("can't convert to JSONArray:search4advance="
-					+ this.search4advance);
-			logger.error(e.getMessage(), e);
-			return null;
+			throw new CoreException(e);
 		}
 	}
 
