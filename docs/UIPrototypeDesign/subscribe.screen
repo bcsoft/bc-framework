@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="2" x="22" y="16" width="467" measuredWidth="467" measuredHeight="169" name="我的订阅">
+    <widgets xsi:type="model:Window" id="1" width="467" height="169" text="【普通用户-我的订阅】" measuredWidth="467" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="9" y="29" width="54" text="{edit}添加" measuredWidth="54" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="53" height="30" text="{edit}添加"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="4" x="294" y="32" width="165" measuredWidth="165" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="5" width="165" measuredWidth="165" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="6" x="8" y="64" width="450" text="(w:30). !,(w:30).状态,订阅主题,(w:30).订阅日期,类型&#xA;1,正常,经济合同下月到期名单邮件提醒,2012-10-03 10:00,主动订阅&#xA;2,正常,劳动合同下月到期名单邮件提醒,2012-10-02 11:01,主动订阅&#xA;3,禁用,车辆保单下月到期名单邮件提醒,2012-10-01 11:02,强制订阅&#xA;" measuredWidth="450" measuredHeight="96" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="8" x="72" y="29" width="55" text="{delete}删除" measuredWidth="55" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="54" height="30" text="{delete}删除"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="12" x="22" y="192" measuredWidth="425" measuredHeight="201" name="选择订阅">
+    <widgets xsi:type="model:Window" id="11" width="425" height="201" text="【普通用户-选择订阅】" measuredWidth="425" measuredHeight="201"/>
+    <widgets xsi:type="model:Table" id="13" x="10" y="58" width="405" height="98" text="(w:30). !,(w:30). 排序号,主题&#xA;1,001,经济合同下月到期名单邮件提醒&#xA;2,002,劳动合同下月到期名单邮件提醒&#xA;3,003,车辆保单下月到期名单邮件提醒&#xA;" measuredWidth="405" measuredHeight="98" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="14" x="253" y="28" measuredWidth="161" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="15" width="161" measuredWidth="161" measuredHeight="24"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="16" x="350" y="162" width="63" text="确定" measuredWidth="63" measuredHeight="30" selection="">
+      <font/>
+      <items x="0" y="0" width="62" height="30" text="确定"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="17" x="499" y="19" width="471" height="373" text="我的订阅&#xD;&#xA;1)入口&#xD;&#xA;&#x9;用户在导航栏“我的事务”中，找到“我的订阅”&#xD;&#xA;2)订阅添加&#xD;&#xA;&#x9;用户点击“添加”按钮，系统弹出订阅的选择对话框，用户选择订阅的对象。&#xD;&#xA;3)删除订阅&#xD;&#xA;&#x9;用户选中已添加的订阅后，点击“删除”按钮，订阅的信息将会直接删除。&#xD;&#xA;4)状态列&#xD;&#xA;&#x9;此列为订阅内容的状态，当此订阅内容被管理员禁用后，状态显示为“禁用”，系统将不再发送此订阅内容。&#xD;&#xA;5)类型列&#xD;&#xA;&#x9;“主动订阅”表示用户自己订阅此内容，“强制订阅”表示管理员在管理端设置用户订阅此内容，用户不能够删除强制订阅的内容。&#xD;&#xA;" measuredWidth="471" measuredHeight="373" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="19" x="22" y="430" width="907" measuredWidth="907" measuredHeight="169" name="订阅管理">
+    <widgets xsi:type="model:Window" id="18" width="907" height="169" text="【管理员-订阅内容】" measuredWidth="907" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="21" x="9" y="30" width="56" height="29" text="新建" measuredWidth="56" measuredHeight="29" selection="">
+      <font/>
+      <items x="0" y="0" width="55" height="29" text="新建"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="22" x="66" y="30" width="56" height="29" text="编辑" measuredWidth="56" measuredHeight="29" selection="">
+      <font/>
+      <items x="0" y="0" width="55" height="29" text="编辑"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="23" x="122" y="30" width="56" height="29" text="发布" measuredWidth="56" measuredHeight="29" selection="">
+      <font/>
+      <items x="0" y="0" width="55" height="29" text="发布"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="24" x="179" y="30" width="56" height="29" text="禁用" measuredWidth="56" measuredHeight="29" selection="">
+      <font/>
+      <items x="0" y="0" width="55" height="29" text="禁用"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="25" x="311" y="29" width="209" height="32" text="草稿,使用中,已停用,全部" measuredWidth="209" measuredHeight="32" selection="">
+      <font/>
+      <items x="0" y="0" width="46" height="32" text="草稿"/>
+      <items x="46" y="0" width="57" height="32" text="使用中"/>
+      <items x="103" y="0" width="57" height="32" text="已停用"/>
+      <items x="160" y="0" width="49" height="32" text="全部"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="26" x="697" y="33" width="191" measuredWidth="191" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="27" width="191" measuredWidth="191" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="28" x="169" y="5" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="29" x="249" y="30" width="56" height="29" text="监控配置" measuredWidth="56" measuredHeight="29" selection="">
+      <font/>
+      <items x="0" y="0" width="55" height="29" text="监控配置"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="30" x="9" y="64" width="881" height="95" text="(w:30). !,(w:30). 状态,(w:30). 排序号,主题,(w:60).事件编码,(w:120).访问者及其权限,(w:40).创建人,(w:60).创建日期,(w:40).最后修改人,(w:60).最后修改日期&#xA;1,使用中,001,经济合同下月到期名单邮件提醒,CHARGE,&#xA;2,使用中,002,劳动合同下月到期名单邮件提醒,,&#xA;3,已停用,003,车辆保单下月到期名单邮件提醒,POLICY,&#xA;" measuredWidth="881" measuredHeight="95" alternative="#eeeeee">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="39" x="22" y="608" measuredWidth="489" measuredHeight="173" name="订阅操作历史">
+    <widgets xsi:type="model:Window" id="38" width="489" height="173" text="【管理员-订阅日志】" measuredWidth="489" measuredHeight="173" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:SearchField" id="40" x="345" y="28" width="132" measuredWidth="132" measuredHeight="24"/>
+    <widgets xsi:type="model:Table" id="42" x="8" y="60" width="468" height="102" text="(w:30). !,(w:30).类型,(w:30).订阅人,(w:30).操作人,订阅主题,(w:30).操作日期&#xA;1,添加,张山,张山,经济合同下月到期名单邮件提醒,2012-10-03 10:00&#xA;2,添加,李四,系统管理员,劳动合同下月到期名单邮件提醒,2012-10-02 11:01&#xA;3,删除,王五,系统管理员,车辆保单下月到期名单邮件提醒,2012-10-01 11:02&#xA;" measuredWidth="468" measuredHeight="102" alternative="#eeeeee">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="44" x="499" y="848" width="462" height="321" text="订阅管理&#xD;&#xA;1)入口&#xD;&#xA;&#x9;管理员导航“系统维护”中找到“订阅管理”，然后再找到“订阅内容”，“订阅人”，“订阅日志”。&#xD;&#xA;2)订阅内容&#xD;&#xA;&#x9;管理员可新建订阅的内容，编辑订阅内容，订阅内容已发布时，管理员可添加强制订阅的用户，或者删除 主动、强制订阅的用户&#xD;&#xA;3)订阅日志&#xD;&#xA;&#x9;管理员可查看用户的订阅日志" measuredWidth="462" measuredHeight="321" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="45" x="522" y="608" measuredWidth="439" measuredHeight="217">
+    <widgets xsi:type="model:Window" id="46" width="439" height="217" text="【新建订阅内容】" measuredWidth="439" measuredHeight="217" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="61" y="168" width="439" measuredWidth="439" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="62" x="388" y="184" width="41" text="发布" measuredWidth="41" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="63" x="328" y="184" width="50" text="存草稿" measuredWidth="50" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="70" x="40" y="29" text="主题：" measuredWidth="41" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="76" x="80" y="29" width="345" text="经济合同下月到期名单邮件提醒" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="77" x="80" y="63" width="345" text="CHARGE" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="78" x="16" y="63" text="事件编码：" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="79" x="28" y="96" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="80" x="80" y="96" width="345" text="001" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="86" x="360" y="144" text="状态：草稿" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="88" x="22" y="848" measuredWidth="449" measuredHeight="321">
+    <widgets xsi:type="model:Window" id="89" width="449" height="321" text="【编辑订阅内容】" measuredWidth="449" measuredHeight="321" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Label" id="90" x="10" y="176" text="主动订阅：" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="104" y="275" width="449" measuredWidth="449" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="105" x="376" y="284" width="50" text="保存" measuredWidth="50" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="108" x="74" y="176" width="61" height="25" text="用户1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="109" x="146" y="176" width="61" height="25" text="用户2 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="110" x="74" y="224" width="61" height="25" text="岗位1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="111" x="392" y="227" text="+" measuredWidth="14" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="112" x="376" y="227" width="15" text="+" measuredWidth="15" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:HLine" id="114" y="162" width="446" measuredWidth="446" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:HLine" id="116" y="208" width="447" measuredWidth="447" measuredHeight="6" foreground="#cfe2f3"/>
+    <widgets xsi:type="model:Label" id="119" x="10" y="224" text="强制订阅：" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="120" x="206" y="224" width="61" height="25" text="用户3X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Rectangle" id="121" x="142" y="224" width="61" height="25" text="部门1 X" measuredWidth="61" measuredHeight="25" foreground="#999999" border="solid-rounded">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="123" x="409" y="227" text="+" measuredWidth="14" measuredHeight="25" foreground="#666666">
+      <font underline="true"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="124" x="346" y="256" text="状态：使用中" measuredWidth="77" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="125" x="50" y="39" text="主题：" measuredWidth="41" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="126" x="90" y="39" width="345" text="经济合同下月到期名单邮件提醒" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="127" x="90" y="73" width="345" text="CHARGE" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="128" x="26" y="73" text="事件编码：" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="129" x="38" y="106" text="排序号：" measuredWidth="53" measuredHeight="25" textAlignment="Right" foreground="#666666">
+      <font size="9" underline="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="130" x="90" y="106" width="345" text="001" measuredWidth="345" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="134" x="274" y="284" width="90" text="查看订阅日志" measuredWidth="90" measuredHeight="27">
+      <font bold="true"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
