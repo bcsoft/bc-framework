@@ -665,7 +665,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			JSONObject json;
 			Object value;
 			Object[] values;
-			String type;
+			String type, name;
 			String ql;
 			JSONArray value1;
 			boolean isLike;
@@ -675,6 +675,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				json = jsons.getJSONObject(i);
 				value = json.get("value");
 				type = json.getString("type");
+				name = json.has("name") ? json.getString("name") : null;
 				ql = json.getString("ql");
 				isLike = ql.toLowerCase().indexOf("like") != -1;
 				if (value instanceof JSONArray) {// 多个值的数组
@@ -729,11 +730,13 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 						value = QlCondition.convertValue(type, (String) value,
 								isLike);
 
-						// 如果查询语句中有多个?号，就将值复制出多个来
-						for (int j = 0; j < values.length; j++) {
-							values[j] = value;
+						if (isIncludeCondition4AdvanceSearch(name)) {
+							// 如果查询语句中有多个?号，就将值复制出多个来
+							for (int j = 0; j < values.length; j++) {
+								values[j] = value;
+							}
+							and.add(new QlCondition(ql, values));
 						}
-						and.add(new QlCondition(ql, values));
 					} else if (vs.length > 1) {
 						OrCondition or = new OrCondition();
 						or.setAddBracket(true);
@@ -765,6 +768,10 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		} catch (JSONException e) {
 			throw new CoreException(e);
 		}
+	}
+
+	protected boolean isIncludeCondition4AdvanceSearch(String name) {
+		return true;
 	}
 
 	private String convertByLikeType(String likeType, String value) {
