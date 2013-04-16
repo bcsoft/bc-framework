@@ -170,6 +170,14 @@ public class SqlObject<T extends Object> {
 		return this;
 	}
 
+	public String getSelect() {
+		return select;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
 	public SqlObject<T> setFrom(String from) {
 		this.from = innerDealSql(from);
 		return this;
