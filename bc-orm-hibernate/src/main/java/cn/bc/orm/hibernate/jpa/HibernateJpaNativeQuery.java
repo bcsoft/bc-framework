@@ -88,8 +88,7 @@ public class HibernateJpaNativeQuery<T extends Object> implements
 		// queryTemp = "select count(*) "
 		// + HibernateUtils.removeSelect(queryTemp);
 		// }
-		String queryTemp = "select count(*) "
-				+ this.sqlObject.getFromWhereSql(condition);
+		String queryTemp = this.sqlObject.getCountSql(condition);
 
 		// 合并参数
 		final List<Object> args = new ArrayList<Object>();
