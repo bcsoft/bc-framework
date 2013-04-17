@@ -54,7 +54,8 @@ public class SqlObject<T extends Object> {
 				}
 			}
 		}else{
-			throw new CoreException("not implement!");
+			return getSql(condition);
+			//throw new CoreException("not implement!");
 		}
 		return t;
 	}
