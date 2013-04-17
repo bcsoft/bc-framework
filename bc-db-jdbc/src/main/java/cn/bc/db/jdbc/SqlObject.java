@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 
@@ -31,6 +32,34 @@ public class SqlObject<T extends Object> {
 	public SqlObject(String sql, List<Object> args) {
 		this.sql = sql;
 		this.args = args;
+	}
+
+	public String getNativeSql(Condition condition) {
+		if (condition == null)
+			return getNativeSql();
+
+		String expression = condition.getExpression();
+		if (expression == null || expression.length() == 0)
+			return getNativeSql();
+
+		String t = "";
+		if (sql != null) {
+			if (condition instanceof OrderCondition) {
+				t += sql + " order by " + expression;
+			} else {
+				if (expression.startsWith("order by")) {
+					t += sql + " " + expression;
+				} else {
+					t += sql + " where " + expression;
+				}
+			}
+		}else{
+			throw new CoreException("not implement!");
+		}
+		return t;
+	}
+	public String getNativeSql() {
+		return sql;
 	}
 
 	/**
@@ -191,6 +220,18 @@ public class SqlObject<T extends Object> {
 	public SqlObject<T> setOrderBy(String orderBy) {
 		this.orderBy = innerDealSql(orderBy);
 		return this;
+	}
+
+	public String getCountSql(Condition condition) {
+		String sql = this.getNativeSql(condition);
+		int selectIndex = sql.indexOf("!!select");
+		int fromIndex = sql.indexOf("!!from");
+		if (selectIndex != -1 && fromIndex != -1) {// 使用特殊标记的情况
+			return removeOrderBy(sql.substring(0, selectIndex)
+					+ " select count(*) " + sql.substring(fromIndex + 2));
+		} else {
+			return "select count(*) " + this.getFromWhereSql(condition);
+		}
 	}
 
 	/**
