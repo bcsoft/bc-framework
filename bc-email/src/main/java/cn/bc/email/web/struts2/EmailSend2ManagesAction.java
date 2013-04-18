@@ -166,7 +166,7 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name","e.subject", "getemailreceiver(e.id)" };
+		return new String[] { "a.name","e.subject"};
 	}
 
 	@Override
