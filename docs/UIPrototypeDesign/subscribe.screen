@@ -34,7 +34,7 @@
     <font/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="19" x="22" y="430" width="907" measuredWidth="907" measuredHeight="169" name="订阅管理">
-    <widgets xsi:type="model:Window" id="18" width="907" height="169" text="【管理员-订阅内容】" measuredWidth="907" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Window" id="18" width="907" height="169" text="【管理员-订阅】" measuredWidth="907" measuredHeight="169" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:ButtonBar" id="21" x="9" y="30" width="56" height="29" text="新建" measuredWidth="56" measuredHeight="29" selection="">
       <font/>
       <items x="0" y="0" width="55" height="29" text="新建"/>
@@ -81,7 +81,7 @@
     <font/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="45" x="522" y="608" measuredWidth="439" measuredHeight="217">
-    <widgets xsi:type="model:Window" id="46" width="439" height="217" text="【新建订阅内容】" measuredWidth="439" measuredHeight="217" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Window" id="46" width="439" height="217" text="【新建订阅】" measuredWidth="439" measuredHeight="217" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:HLine" id="61" y="168" width="439" measuredWidth="439" measuredHeight="6"/>
     <widgets xsi:type="model:Button" id="62" x="388" y="184" width="41" text="发布" measuredWidth="41" measuredHeight="27">
       <font bold="true"/>
@@ -112,7 +112,7 @@
     </widgets>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="88" x="22" y="848" measuredWidth="449" measuredHeight="321">
-    <widgets xsi:type="model:Window" id="89" width="449" height="321" text="【编辑订阅内容】" measuredWidth="449" measuredHeight="321" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Window" id="89" width="449" height="321" text="【编辑订阅】" measuredWidth="449" measuredHeight="321" minimizeButton="true" maximizeButton="true"/>
     <widgets xsi:type="model:Label" id="90" x="10" y="176" text="主动订阅：" measuredWidth="65" measuredHeight="25" textAlignment="Right" foreground="#666666">
       <font size="9" underline="false"/>
     </widgets>

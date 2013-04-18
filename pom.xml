@@ -21,6 +21,7 @@
 		<module>bc-chat</module>
 		<module>bc-acl</module>
 		<module>bc-email</module>
+		<module>bc-subscribe</module>
 
 		<module>bc-web</module>
 		<module>bc-web-struts</module>
