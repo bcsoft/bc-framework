@@ -407,7 +407,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 				this.resultPath = this.resultPath.substring(1);// 去除前缀"/"
 			return "redirectAction";
 		} else if (condition.startsWith("jsp:")) {// 使用自定义的jsp页面
-			this.resultPath = condition.substring(7);
+			this.resultPath = condition.substring(4);
 			return SUCCESS;
 		} else {// 纯文本
 			this.json = condition;
