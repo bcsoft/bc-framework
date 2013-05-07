@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 网络抓取 -->
+	<package name="spider" extends="bc-default" namespace="/bc/spider">
+		<action name="common" class="spiderAction" method="execute">
+			<result>/bc/spider/common.jsp</result>
+		</action>
+		<action name="captcha" class="spiderAction" method="captcha" />
+		<action name="run" class="spiderAction" method="run"/>
+	</package>
+</struts>

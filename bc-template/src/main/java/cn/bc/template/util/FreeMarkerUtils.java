@@ -42,10 +42,14 @@ public class FreeMarkerUtils {
 	 * @throws Exception
 	 */
 	public static String format(String tpl, Map<String, Object> args) {
+		return format(tpl, (Object) args);
+	}
+
+	public static String format(String tpl, Object args) {
 		if (tpl == null || tpl.length() == 0)
 			return "";
-//		if (null == args || args.isEmpty())
-//			return tpl;
+		// if (null == args || args.isEmpty())
+		// return tpl;
 
 		// 构建模板
 		try {
