@@ -18,8 +18,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
@@ -52,6 +52,7 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String carId;// 车辆Id
 	public String carManId;// 司机Id
+	public String pid;//pid 模块Id
 	public String module;// 所属模块
 	public List<Map<String, String>> ptypeList; // 所属模块列表
 	private OptionService optionService;
@@ -196,23 +197,27 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Condition getGridSpecalCondition() {
+		
+		AndCondition ac=new AndCondition();
+		
 		// 模块条件
-		Condition moduleCondition = null;
-		if (module != null) {
-			moduleCondition = new EqualsCondition("l.ptype", module);
+		if (this.module != null && this.module != "") {
+			ac.add(new EqualsCondition("l.ptype", module));
 		}
 		// 车辆Id条件
-		Condition carIdCondition = null;
-		if (carId != null) {
-			carIdCondition = new EqualsCondition("l.pid", carId);
+		if (this.carId != null && this.carId != "") {
+			ac.add(new EqualsCondition("l.pid", carId));
 		}
 		// 司机ID条件
-		Condition carManIdCondition = null;
-		if (carManId != null) {
-			carManIdCondition = new EqualsCondition("l.pid", carManId);
+		if (this.carManId != null && this.carManId != "") {
+			ac.add(new EqualsCondition("l.pid", carManId));
 		}
-		return ConditionUtils.mix2AndCondition(moduleCondition, ConditionUtils
-				.mix2OrCondition(carIdCondition, carManIdCondition));
+		
+		if(this.pid != null && this.pid != ""){
+			ac.add(new EqualsCondition("l.pid", pid));
+		}
+
+		return ac.isEmpty()?null:ac;
 	}
 
 	@Override
@@ -231,6 +236,11 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 		if (this.carManId != null && this.carManId.trim().length() > 0) {
 			json.put("carManId", carManId);
 		}
+		
+		if(this.pid != null && this.pid != ""){
+			json.put("pid", pid);
+		}
+
 		return json.isEmpty() ? null : json;
 	}
 
