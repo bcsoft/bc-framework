@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2013-04-10 13:59:02</creation_date>
-			<updated_date>2013-04-17 15:26:07</updated_date>
+			<updated_date>2013-04-18 17:03:07</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -308,7 +308,7 @@
 			<array_dimension>null</array_dimension>
 			<unsigned>false</unsigned>
 			<args></args>
-			<description>类型: 0-主动订阅，1-被动订阅</description>
+			<description>操作类型 : 0-添加订阅，1-删除订阅，2-发送订阅</description>
 			<logical_name>类型</logical_name>
 			<physical_name>TYPE_</physical_name>
 			<type>integer</type>
@@ -321,7 +321,7 @@
 			<array_dimension>null</array_dimension>
 			<unsigned>false</unsigned>
 			<args></args>
-			<description>操作类型 : 0-添加订阅，1-删除订阅，2-发送订阅</description>
+			<description>类型: 0-主动订阅，1-被动订阅</description>
 			<logical_name>类型</logical_name>
 			<physical_name>TYPE_</physical_name>
 			<type>integer</type>
@@ -343,25 +343,8 @@
 	<tablespace_set>
 	</tablespace_set>
 	<contents>
-		<note>
-			<id>0</id>
-			<height>154</height>
-			<width>330</width>
-				<font_name>微软雅黑</font_name>
-				<font_size>9</font_size>
-			<x>73</x>
-			<y>433</y>
-			<color>
-				<r>255</r>
-				<g>0</g>
-				<b>128</b>
-			</color>
-			<connections>
-			</connections>
-			<text>订阅组件：&#x0D;&#x0A;1)暂时订阅类型只支持邮件&#x0D;&#x0A;2)用户可选择需要的订阅内容&#x0D;&#x0A;3)管理员可新建、发布、禁用订阅内容&#x0D;&#x0A;4)管理员可配置某些用户强制订阅指定的内容&#x0D;&#x0A;5)管理员可查看用户的订阅日志</text>
-		</note>
 		<table>
-			<id>1</id>
+			<id>0</id>
 			<height>229</height>
 			<width>318</width>
 				<font_name>微软雅黑</font_name>
@@ -376,25 +359,8 @@
 			<connections>
 				<relation>
 					<id>0</id>
-					<source>2</source>
-					<target>1</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BCFK_SUBSCRIBE_MODIFIER</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>-1</source_xp>
-					<source_yp>-1</source_yp>
-					<target_xp>16</target_xp>
-					<target_yp>100</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-				<relation>
-					<id>1</id>
-					<source>2</source>
-					<target>1</target>
+					<source>3</source>
+					<target>0</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
@@ -408,6 +374,23 @@
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
 				</relation>
+				<relation>
+					<id>1</id>
+					<source>3</source>
+					<target>0</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BCFK_SUBSCRIBE_MODIFIER</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>-1</source_xp>
+					<source_yp>-1</source_yp>
+					<target_xp>16</target_xp>
+					<target_yp>100</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
 			</connections>
 			<physical_name>BC_SUBSCRIBE</physical_name>
 			<logical_name>订阅</logical_name>
@@ -417,7 +400,7 @@
 			<option></option>
 			<columns>
 				<normal_column>
-					<word_id>5</word_id>
+					<word_id>6</word_id>
 					<id>0</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -610,8 +593,8 @@
 				</normal_column>
 				<normal_column>
 					<id>6</id>
-					<referenced_column>10</referenced_column>
-					<relation>1</relation>
+					<referenced_column>15</referenced_column>
+					<relation>0</relation>
 					<description>创建人ID</description>
 					<unique_key_name></unique_key_name>
 					<logical_name>创建人ID</logical_name>
@@ -675,8 +658,8 @@
 				</normal_column>
 				<normal_column>
 					<id>8</id>
-					<referenced_column>10</referenced_column>
-					<relation>0</relation>
+					<referenced_column>15</referenced_column>
+					<relation>1</relation>
 					<description>最后修改人ID</description>
 					<unique_key_name></unique_key_name>
 					<logical_name>最后修改人ID</logical_name>
@@ -749,13 +732,209 @@
 			</table_properties>
 		</table>
 		<table>
-			<id>2</id>
-			<height>68</height>
-			<width>324</width>
+			<id>1</id>
+			<height>141</height>
+			<width>267</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>78</x>
-			<y>348</y>
+			<x>455</x>
+			<y>36</y>
+			<color>
+				<r>128</r>
+				<g>128</g>
+				<b>192</b>
+			</color>
+			<connections>
+				<relation>
+					<id>2</id>
+					<source>0</source>
+					<target>1</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BCFK_SUBSCRIBE_ACTOR_PID</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>-1</source_xp>
+					<source_yp>-1</source_yp>
+					<target_xp>-1</target_xp>
+					<target_yp>-1</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+				<relation>
+					<id>3</id>
+					<source>2</source>
+					<target>1</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BCFK_SUBSCRIBE_ACTOR</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>-1</source_xp>
+					<source_yp>-1</source_yp>
+					<target_xp>-1</target_xp>
+					<target_yp>-1</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+			</connections>
+			<physical_name>BC_SUBSCRIBE_ACTOR</physical_name>
+			<logical_name>订阅者</logical_name>
+			<description></description>
+			<constraint></constraint>
+			<primary_key_name>BCPK_SUBSCRIBE_ACTOR</primary_key_name>
+			<option></option>
+			<columns>
+				<normal_column>
+					<id>10</id>
+					<referenced_column>0</referenced_column>
+					<relation>2</relation>
+					<description>订阅对象ID</description>
+					<unique_key_name></unique_key_name>
+					<logical_name>订阅对象ID</logical_name>
+					<physical_name>PID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>true</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<id>11</id>
+					<referenced_column>14</referenced_column>
+					<relation>3</relation>
+					<description>订阅者ID : 对应Actor的ID</description>
+					<unique_key_name></unique_key_name>
+					<logical_name>订阅者ID</logical_name>
+					<physical_name>AID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>true</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>13</word_id>
+					<id>12</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value>0</default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>4</word_id>
+					<id>13</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>timestamp</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+			</columns>
+			<indexes>
+			</indexes>
+			<complex_unique_key_list>
+			</complex_unique_key_list>
+			<table_properties>
+				<schema></schema>
+				<without_oids>true</without_oids>
+			</table_properties>
+		</table>
+		<table>
+			<id>2</id>
+			<height>68</height>
+			<width>265</width>
+				<font_name>微软雅黑</font_name>
+				<font_size>9</font_size>
+			<x>458</x>
+			<y>207</y>
 			<color>
 				<r>255</r>
 				<g>128</g>
@@ -763,16 +942,16 @@
 			</color>
 			<connections>
 			</connections>
-			<physical_name>BC_IDENTITY_HISTORY_ACTOR</physical_name>
-			<logical_name>历史用户</logical_name>
+			<physical_name>BC_IDENTITY_ACTOR</physical_name>
+			<logical_name>用户</logical_name>
 			<description></description>
 			<constraint></constraint>
 			<primary_key_name></primary_key_name>
 			<option></option>
 			<columns>
 				<normal_column>
-					<word_id>6</word_id>
-					<id>10</id>
+					<word_id>5</word_id>
+					<id>14</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -814,208 +993,12 @@
 		</table>
 		<table>
 			<id>3</id>
-			<height>141</height>
-			<width>267</width>
-				<font_name>微软雅黑</font_name>
-				<font_size>9</font_size>
-			<x>455</x>
-			<y>36</y>
-			<color>
-				<r>128</r>
-				<g>128</g>
-				<b>192</b>
-			</color>
-			<connections>
-				<relation>
-					<id>2</id>
-					<source>1</source>
-					<target>3</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BCFK_SUBSCRIBE_ACTOR_PID</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>-1</source_xp>
-					<source_yp>-1</source_yp>
-					<target_xp>-1</target_xp>
-					<target_yp>-1</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-				<relation>
-					<id>3</id>
-					<source>4</source>
-					<target>3</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BCFK_SUBSCRIBE_ACTOR</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>-1</source_xp>
-					<source_yp>-1</source_yp>
-					<target_xp>-1</target_xp>
-					<target_yp>-1</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-			</connections>
-			<physical_name>BC_SUBSCRIBE_ACTOR</physical_name>
-			<logical_name>订阅者</logical_name>
-			<description></description>
-			<constraint></constraint>
-			<primary_key_name>BCPK_SUBSCRIBE_ACTOR</primary_key_name>
-			<option></option>
-			<columns>
-				<normal_column>
-					<id>11</id>
-					<referenced_column>0</referenced_column>
-					<relation>2</relation>
-					<description>订阅对象ID</description>
-					<unique_key_name></unique_key_name>
-					<logical_name>订阅对象ID</logical_name>
-					<physical_name>PID</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>true</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<id>12</id>
-					<referenced_column>15</referenced_column>
-					<relation>3</relation>
-					<description>订阅者ID : 对应Actor的ID</description>
-					<unique_key_name></unique_key_name>
-					<logical_name>订阅者ID</logical_name>
-					<physical_name>AID</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>true</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>12</word_id>
-					<id>13</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value>0</default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>4</word_id>
-					<id>14</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>timestamp</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-			</columns>
-			<indexes>
-			</indexes>
-			<complex_unique_key_list>
-			</complex_unique_key_list>
-			<table_properties>
-				<schema></schema>
-				<without_oids>true</without_oids>
-			</table_properties>
-		</table>
-		<table>
-			<id>4</id>
 			<height>68</height>
-			<width>265</width>
+			<width>324</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>458</x>
-			<y>207</y>
+			<x>78</x>
+			<y>348</y>
 			<color>
 				<r>255</r>
 				<g>128</g>
@@ -1023,15 +1006,15 @@
 			</color>
 			<connections>
 			</connections>
-			<physical_name>BC_IDENTITY_ACTOR</physical_name>
-			<logical_name>用户</logical_name>
+			<physical_name>BC_IDENTITY_HISTORY_ACTOR</physical_name>
+			<logical_name>历史用户</logical_name>
 			<description></description>
 			<constraint></constraint>
 			<primary_key_name></primary_key_name>
 			<option></option>
 			<columns>
 				<normal_column>
-					<word_id>6</word_id>
+					<word_id>5</word_id>
 					<id>15</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1072,14 +1055,31 @@
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
+		<note>
+			<id>4</id>
+			<height>154</height>
+			<width>330</width>
+				<font_name>微软雅黑</font_name>
+				<font_size>9</font_size>
+			<x>60</x>
+			<y>442</y>
+			<color>
+				<r>255</r>
+				<g>0</g>
+				<b>128</b>
+			</color>
+			<connections>
+			</connections>
+			<text>订阅组件：&#x0D;&#x0A;1)暂时订阅类型只支持邮件&#x0D;&#x0A;2)用户可选择需要的订阅内容&#x0D;&#x0A;3)管理员可新建、发布、禁用订阅内容&#x0D;&#x0A;4)管理员可配置某些用户强制订阅指定的内容&#x0D;&#x0A;5)管理员可查看用户的订阅日志</text>
+		</note>
 		<table>
 			<id>5</id>
-			<height>183</height>
+			<height>206</height>
 			<width>286</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>455</x>
-			<y>310</y>
+			<x>459</x>
+			<y>297</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -1088,12 +1088,12 @@
 			<connections>
 				<relation>
 					<id>4</id>
-					<source>2</source>
+					<source>0</source>
 					<target>5</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BCFK_SUBSCRIBE_LOG_SUBSCRIBER</name>
+					<name>BCFK_SUBSCRIBE_LOG_SUBSCRIBE</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
 					<source_xp>-1</source_xp>
@@ -1105,18 +1105,35 @@
 				</relation>
 				<relation>
 					<id>5</id>
-					<source>1</source>
+					<source>3</source>
 					<target>5</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BCFK_SUBSCRIBE_LOG_PID</name>
+					<name>BCFK_SUBSCRIBE_LOG_ACTOR_HISTORY</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
 					<source_xp>-1</source_xp>
 					<source_yp>-1</source_yp>
-					<target_xp>-1</target_xp>
-					<target_yp>-1</target_yp>
+					<target_xp>0</target_xp>
+					<target_yp>29</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+				<relation>
+					<id>6</id>
+					<source>3</source>
+					<target>5</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BCFK_SUBSCRIBE_LOG_OPERATER_HISTORY</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>-1</source_xp>
+					<source_yp>-1</source_yp>
+					<target_xp>0</target_xp>
+					<target_yp>85</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
 				</relation>
@@ -1163,7 +1180,7 @@
 				<normal_column>
 					<id>17</id>
 					<referenced_column>0</referenced_column>
-					<relation>5</relation>
+					<relation>4</relation>
 					<description>订阅对象ID</description>
 					<unique_key_name></unique_key_name>
 					<logical_name>PID</logical_name>
@@ -1194,7 +1211,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>13</word_id>
+					<word_id>12</word_id>
 					<id>18</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1227,8 +1244,8 @@
 				</normal_column>
 				<normal_column>
 					<id>19</id>
-					<referenced_column>10</referenced_column>
-					<relation>4</relation>
+					<referenced_column>15</referenced_column>
+					<relation>5</relation>
 					<description>订阅人ID : 对应ActorHistory的ID</description>
 					<unique_key_name></unique_key_name>
 					<logical_name>订阅人ID</logical_name>
@@ -1303,6 +1320,39 @@
 					<auto_increment>false</auto_increment>
 					<foreign_key>false</foreign_key>
 					<not_null>false</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<id>22</id>
+					<referenced_column>15</referenced_column>
+					<relation>6</relation>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name>操作人ID</logical_name>
+					<physical_name>OID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
 					<primary_key>false</primary_key>
 					<unique_key>false</unique_key>
 					<character_set></character_set>
