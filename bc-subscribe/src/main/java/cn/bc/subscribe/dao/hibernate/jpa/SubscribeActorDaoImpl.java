@@ -1,5 +1,6 @@
 package cn.bc.subscribe.dao.hibernate.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -12,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.identity.domain.Actor;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 import cn.bc.subscribe.dao.SubscribeActorDao;
 import cn.bc.subscribe.domain.Subscribe;
@@ -37,8 +38,16 @@ public class SubscribeActorDaoImpl extends HibernateCrudJpaDao<SubscribeActor> i
 
 	public List<SubscribeActor> findList(Subscribe subscribe) {
 		EqualsCondition eq=new EqualsCondition("subscribe", subscribe);
-		OrderCondition oc=new OrderCondition("fileDate");
-		return this.createQuery().condition(eq).condition(oc).list();
+		return this.createQuery().condition(eq).list();
+	}
+	
+	public List<Actor> findList2Actor(Subscribe subscribe) {
+		List<SubscribeActor> sas=this.findList(subscribe);
+		List<Actor> actors=new ArrayList<Actor>();
+		for(SubscribeActor sa : sas){
+			actors.add(sa.getActor());
+		}
+		return actors;
 	}
 
 	public void delete(Long aid, Long pid) {
@@ -87,6 +96,5 @@ public class SubscribeActorDaoImpl extends HibernateCrudJpaDao<SubscribeActor> i
 
 		this.jdbcTemplate.execute(sql);
 	}
-
 
 }

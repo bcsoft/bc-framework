@@ -6,6 +6,7 @@ import org.commontemplate.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.service.DefaultCrudService;
+import cn.bc.identity.domain.Actor;
 import cn.bc.subscribe.dao.SubscribeActorDao;
 import cn.bc.subscribe.domain.Subscribe;
 import cn.bc.subscribe.domain.SubscribeActor;
@@ -45,6 +46,10 @@ public class SubscribeActorServiceImpl extends
 		Assert.assertNotNull(aid);
 		Assert.assertNotNull(pid);
 		this.subscribeActorDao.delete(aid, pid);
+	}
+
+	public List<Actor> findList2Actor(Subscribe subscribe) {
+		return this.subscribeActorDao.findList2Actor(subscribe);
 	}
 
 }

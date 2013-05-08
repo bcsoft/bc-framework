@@ -23,7 +23,7 @@ import cn.bc.subscribe.domain.SubscribeActor;
  * @author lbj
  * 
  */
-public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implements SubscribeService {
+public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implements SubscribeService{
 	private SubscribeDao subscribeDao;
 	private SubscribeActorService subscribeActorService;
 	private OperateLogService operateLogService;
@@ -178,6 +178,8 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		return operateLogService.save(worklog);
 	}
 
-	
+	public Subscribe loadByEventCode(String eventCode) {
+		return this.subscribeDao.loadByEventCode(eventCode);
+	}
 	
 }

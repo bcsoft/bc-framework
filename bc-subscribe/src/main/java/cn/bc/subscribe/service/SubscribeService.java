@@ -13,6 +13,13 @@ import cn.bc.subscribe.domain.Subscribe;
  * 
  */
 public interface SubscribeService extends CrudService<Subscribe> {
+	
+	/**
+	 * 根据时间编码查找 订阅
+	 * @param eventCode
+	 * @return
+	 */
+	Subscribe loadByEventCode(String eventCode);
 
 	/**
 	 * 唯一性检测
@@ -80,5 +87,4 @@ public interface SubscribeService extends CrudService<Subscribe> {
 	 */
 	void doDeleteActor4Manager(Subscribe subscribe, List<Actor> actors);
 	
-
 }

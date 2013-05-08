@@ -3,6 +3,7 @@ package cn.bc.subscribe.service;
 import java.util.List;
 
 import cn.bc.core.service.CrudService;
+import cn.bc.identity.domain.Actor;
 import cn.bc.subscribe.domain.Subscribe;
 import cn.bc.subscribe.domain.SubscribeActor;
 
@@ -21,6 +22,13 @@ public interface SubscribeActorService extends CrudService<SubscribeActor> {
 	 * @return
 	 */
 	List<SubscribeActor> findList(Subscribe subscribe);
+	
+	/**
+	 * 查找订阅者用户(包含：用户，岗位，单位，部门)
+	 * @param subscribe
+	 * @return
+	 */
+	List<Actor> findList2Actor(Subscribe subscribe);
 
 	/**
 	 * 订阅人添加订阅
