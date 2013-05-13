@@ -629,4 +629,33 @@ public class DateUtils {
 		
 		return null;
 	}
+	
+	/**
+	 * 获取下个月份的第一天(类似yyyy-MM-01 00:00:00)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getFirstDayOfNextMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to=getFirstDayOfMonth(calendar);//本月第一天
+		to.add(Calendar.MONTH, 1);//下月第一天
+		return to;
+	}
+
+	/**
+	 * 获取下个月份的最后一天(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getLastDayOfNextMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to = getFirstDayOfNextMonth(calendar);// 下月第一天
+		to.add(Calendar.MONTH, 1);// 下下月第一天
+		to.add(Calendar.SECOND, -1);// 缩减1秒变为上月最后一天
+		return to;
+	}
 }
