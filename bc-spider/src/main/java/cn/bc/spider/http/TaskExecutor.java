@@ -1,4 +1,4 @@
-package cn.bc.spider.service;
+package cn.bc.spider.http;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

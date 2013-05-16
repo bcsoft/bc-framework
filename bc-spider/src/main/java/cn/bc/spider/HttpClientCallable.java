@@ -31,6 +31,8 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+import cn.bc.spider.http.HttpClientFactory;
+
 /**
  * 基于HttpClient的基础 Callable
  * 

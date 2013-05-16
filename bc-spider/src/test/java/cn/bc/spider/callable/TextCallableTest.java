@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.bc.spider.Result;
-import cn.bc.spider.service.TaskExecutor;
+import cn.bc.spider.http.TaskExecutor;
 
 public class TextCallableTest {
 	private static Log logger = LogFactory.getLog(TextCallableTest.class);

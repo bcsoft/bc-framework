@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.spider.service.TaskExecutor;
+import cn.bc.spider.http.TaskExecutor;
 
 public class SimpleLoginCallableTest {
 	ExecutorService executorService = Executors.newCachedThreadPool();

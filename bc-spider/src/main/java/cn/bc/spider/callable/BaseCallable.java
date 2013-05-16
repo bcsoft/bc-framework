@@ -34,8 +34,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.FileCopyUtils;
 
 import cn.bc.core.exception.CoreException;
-import cn.bc.spider.HttpClientFactory;
 import cn.bc.spider.Result;
+import cn.bc.spider.http.HttpClientFactory;
 
 /**
  * 基本的网络请求Callable，需要子类解析响应的结果

@@ -8,7 +8,7 @@ import org.apache.tools.ant.util.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.spider.service.TaskExecutor;
+import cn.bc.spider.http.TaskExecutor;
 
 public class CaptchaImageCallableTest {
 	private static Log logger = LogFactory

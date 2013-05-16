@@ -1,12 +1,14 @@
 /**
  * 
  */
-package cn.bc.spider;
+package cn.bc.spider.http;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -25,6 +27,7 @@ import org.apache.http.params.HttpProtocolParams;
  * 
  */
 public class HttpClientFactory {
+	private static Log logger = LogFactory.getLog(HttpClientFactory.class);
 	private static Map<String, HttpClient> cache = new HashMap<String, HttpClient>();
 	public static Map<String, String> userAgents = new HashMap<String, String>();
 
@@ -90,12 +93,13 @@ public class HttpClientFactory {
 	 * @param id
 	 * @return
 	 */
-	public static HttpClient get(String id) {
+	public static synchronized HttpClient get(String id) {
 		if (cache.containsKey(id)) {
 			return cache.get(id);
 		} else {
 			HttpClient httpClient = create();
 			cache.put(id, httpClient);
+			logger.warn("创建 HttpClient 缓存: id=" + id);
 			return httpClient;
 		}
 	}
@@ -106,11 +110,12 @@ public class HttpClientFactory {
 	 * @param id
 	 * @return
 	 */
-	public static HttpClient remove(String id) {
+	public static synchronized HttpClient remove(String id) {
 		if (id == null)
 			return null;
 
 		if (cache.containsKey(id)) {
+			logger.warn("移除 HttpClient 缓存: id=" + id);
 			return cache.remove(id);
 		} else {
 			return null;

@@ -15,8 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
 import cn.bc.core.exception.CoreException;
+import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.spider.Result;
 import cn.bc.spider.domain.SpiderConfig;
+import cn.bc.spider.http.HttpClientFactory;
 import cn.bc.spider.service.SpiderService;
 import cn.bc.web.ui.html.page.PageOption;
 
@@ -37,6 +39,7 @@ public class SpiderAction extends ActionSupport {
 	private SpiderService spiderService;
 	public String title;// 对话框的标题
 	public String code;// 配置的编码
+	public String auto;// 是否自动开始抓取:true|fale|不配置
 	public String params;// 初始化参数的json字符串
 	public PageOption pageOption;// 页面参数配置
 	public String config;// 配置参数
@@ -124,16 +127,22 @@ public class SpiderAction extends ActionSupport {
 	// 执行抓取
 	public String run() throws Exception {
 		JSONObject json = new JSONObject();
-		try {
-			// 加载配置
-			SpiderConfig c = this.spiderService.loadConfig(code);
-			if (logger.isDebugEnabled()) {
-				logger.debug("code=" + code);
-				logger.debug("params=" + params);
-				logger.debug("config=" + c.getConfig());
-			}
+		// 加载配置
+		SpiderConfig c = this.spiderService.loadConfig(code);
+		if (logger.isDebugEnabled()) {
+			logger.debug("code=" + code);
+			logger.debug("params=" + params);
+			logger.debug("config=" + c.getConfig());
+		}
 
-			// 获取抓取结果
+		// 附加当前用户的编码到group中,避免不同用户之间的查询互相影响
+		String _g = SystemContextHolder.get().getUser().getCode();
+		JSONObject j = c.getConfigJson();
+		_g = j.get("group") + ":" + _g;
+		j.put("group", _g);
+
+		try {
+			// 构建抓取参数
 			Map<String, String> map = null;
 			if (params != null) {
 				JSONObject ps = new JSONObject(params);
@@ -146,6 +155,8 @@ public class SpiderAction extends ActionSupport {
 					map.put(key, ps.getString(key));
 				}
 			}
+			
+			// 获取抓取结果
 			Result<Object> r;
 			r = this.spiderService.doSpide(c, map);
 			if (logger.isDebugEnabled()) {
@@ -167,6 +178,10 @@ public class SpiderAction extends ActionSupport {
 			logger.warn(e.getMessage(), e);
 		}
 		this.json = json.toString();
+
+		// 用完就清掉缓存: TODO-内部自动控制缓存的时间
+		HttpClientFactory.remove(_g);
+
 		return "json";
 	}
 

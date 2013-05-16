@@ -3,7 +3,7 @@ package cn.bc.spider;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.spider.service.TaskExecutor;
+import cn.bc.spider.http.TaskExecutor;
 
 public class HttpClientCallableTest {
 	@Test
