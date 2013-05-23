@@ -53,10 +53,16 @@ public class SpiderConfigCallable implements Callable<Result<Object>> {
 					logger.debug("parser=" + parser);
 				Parser p = null;
 				if (parser instanceof String) {// 从spring上下文中取定义的bean
-					if (((String) parser).startsWith("tpl:")) {// 基于模版编码的TemplateParser实例
-						p = new TemplateParser(((String) parser).substring(4));
-					} else {// 从spring上下文中取定义的bean
-						p = SpringUtils.getBean((String) parser, Parser.class);
+					if (parser instanceof String) {// 字符串配置
+						if (((String) parser).startsWith("tpl:")) {// 基于模版编码的TemplateParser实例
+							p = new TemplateParser(
+									((String) parser).substring(4));
+						} else {// 从spring上下文中取定义的bean
+							p = SpringUtils.getBean((String) parser,
+									Parser.class);
+						}
+					} else if (parser instanceof Parser) {// 类
+						p = (Parser) parser;
 					}
 				} else if (parser instanceof JSONObject) {// 根据json配置自动生成
 					p = new JSONConfigParser((JSONObject) parser);

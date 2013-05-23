@@ -32,8 +32,8 @@ public interface SpiderService {
 	/**
 	 * 执行抓取
 	 * 
-	 * @param config
-	 * @param params
+	 * @param config 配置
+	 * @param params 附加的请求参数
 	 * @return
 	 */
 	Result<Object> doSpide(SpiderConfig config, Map<String, String> params);
