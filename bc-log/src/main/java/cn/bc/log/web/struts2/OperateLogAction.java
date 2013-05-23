@@ -135,7 +135,7 @@ public class OperateLogAction extends EntityAction<Long, OperateLog> {
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(600)
-				.setMinWidth(250);
+				.setMinWidth(250).setHeight(420);
 	}
 
 	@Override
