@@ -44,7 +44,7 @@ import cn.bc.spider.http.HttpClientFactory;
  * 
  */
 public abstract class BaseCallable<V> implements Callable<Result<V>> {
-	private static Log logger = LogFactory.getLog("cn.bc.spider.BaseCallable");
+	private static Log logger = LogFactory.getLog("cn.bc.spider.callable.BaseCallable");
 	private String method;// 请求方法：get|post
 	private String type;// 响应的类型：json、html、stream:jpg、...
 	private String url;// 请求的地址
@@ -155,7 +155,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	private boolean hadParseRespone;
 	private V respone;
-	private String responeText;
+	private String responseText;
 
 	/**
 	 * @return
@@ -384,7 +384,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	}
 
 	protected Object getFailedData() throws IOException {
-		return this.getResponeText();
+		return this.getResponseText();
 	}
 
 	/**
@@ -409,11 +409,17 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * @return
 	 * @throws IOException
 	 */
-	protected String getResponeText() throws IOException {
-		if (responeText == null) {
-			responeText = EntityUtils.toString(this.responseEntity);
+	protected String getResponseText() throws IOException {
+		if (responseText == null) {
+			responseText = EntityUtils.toString(this.responseEntity);
+			if (logger.isDebugEnabled()) {
+				logger.debug("responeText=" + responseText);
+			}
+			if (responseText == null) {
+				responseText = "";
+			}
 		}
-		return responeText;
+		return responseText;
 	}
 
 	@SuppressWarnings("unchecked")
