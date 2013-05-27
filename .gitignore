@@ -10,3 +10,4 @@ Thumbs.db
 build
 bin
 .DS_Store
+.idea
