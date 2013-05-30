@@ -1,5 +1,8 @@
 package cn.bc.subscribe.event;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.ApplicationEvent;
 
 import cn.bc.docs.domain.Attach;
@@ -16,15 +19,25 @@ public class SubscribeEvent extends ApplicationEvent {
 	private final String code;// 事件编码
 	private final String subject;// 主题
 	private final String content;// 详细内容
-	private final Attach attach;// 附件，监听者只准复制内容 不能直接引用内容
+	private final List<Attach> attachs;// 多个附件，监听者只准复制内容 不能直接引用内容
+	private final Map<String,Object> params;
 
+	/**
+	 * @param source 
+	 * @param code    事件编码
+	 * @param subject 主题
+	 * @param content 详细内容
+	 * @param attachs 多个附件，监听者只准复制内容 不能直接引用内容
+	 * @param params  参数
+	 */
 	public SubscribeEvent(Object source, String code, String subject,
-			String content,Attach attach) {
+			String content,List<Attach> attachs, Map<String,Object> params) {
 		super(source);
 		this.code = code;
 		this.subject = subject;
 		this.content = content;
-		this.attach = attach;
+		this.attachs = attachs;
+		this.params = params;
 	}
 
 	public String getCode() {
@@ -44,9 +57,14 @@ public class SubscribeEvent extends ApplicationEvent {
 	 * 		建议：不直接引用内容，直接引用可能出现风险
 	 * @return
 	 */
-	public Attach getAttach() {
-		return attach;
+	public List<Attach> getAttachs() {
+		return attachs;
 	}
+
+	public Map<String, Object> getParams() {
+		return params;
+	}
+	
 	
 	
 

@@ -5,8 +5,10 @@ package cn.bc.subscribe.listener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 
 import cn.bc.BCConstants;
+import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
 import cn.bc.email.domain.Email;
 import cn.bc.email.domain.EmailTo;
@@ -31,6 +34,8 @@ import cn.bc.subscribe.domain.Subscribe;
 import cn.bc.subscribe.event.SubscribeEvent;
 import cn.bc.subscribe.service.SubscribeActorService;
 import cn.bc.subscribe.service.SubscribeService;
+import cn.bc.template.domain.Template;
+import cn.bc.template.service.TemplateService;
 
 /**
  * 订阅事件的监听器
@@ -49,6 +54,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	private OperateLogService operateLogService;
+	private TemplateService templateService;
 	
 	@Autowired
 	public void setSubscribeService(SubscribeService subscribeService) {
@@ -88,6 +94,11 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 	@Autowired
 	public void setEmailService(EmailService emailService) {
 		this.emailService = emailService;
+	}
+	
+	@Autowired
+	public void setTemplateService(TemplateService templateService) {
+		this.templateService = templateService;
 	}
 
 	public void onApplicationEvent(SubscribeEvent event) {
@@ -163,16 +174,29 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		email.setSendDate(Calendar.getInstance());
 		email.setSubject(event.getSubject());
 		worklog_content+="邮件主题： "+event.getSubject()+"<br>";
-		email.setContent(event.getContent());
+		
+		Map<String,Object> args = new HashMap<String,Object>();
+		args.put("content", event.getContent());
+		
+		// 根据事件的CODE 加上 “-EMAIL”后缀 查找模板中是否有配置 自定义的模板
+		Template custom = this.templateService.loadByCode(event.getCode()+"-EMAIL");
+		
+		if(custom != null){
+			email.setContent(this.templateService.format(custom.getCode(), args));
+		}else{//使用默认的邮件模板
+			email.setContent(this.templateService.format("BC-EMAIL-SYSTEMAUTOFORWARD", args));
+		}
 		worklog_content+="邮件内容： "+event.getContent()+"<br>";
 		//系统管理员发送
 		Actor admin=this.actorService.loadByCode("admin");
 		email.setSender(admin);
 		
-		if(event.getAttach() != null){
-			//复制附件
-			this.attachService.doCopy(event.getAttach().getPtype()
-					, event.getAttach().getPuid(),Email.ATTACH_TYPE, emailUid, true);
+		if(event.getAttachs() != null){
+			for(Attach attach:event.getAttachs()){
+				//复制附件
+				this.attachService.doCopy(attach.getPtype()
+						, attach.getPuid(),Email.ATTACH_TYPE, emailUid, true);
+			}
 		}
 		
 		//设置发送人
