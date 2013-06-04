@@ -56,10 +56,6 @@ public class SpiderAction extends ActionSupport {
 	@Override
 	// 显示抓取页面
 	public String execute() throws Exception {
-		// 设置页面参数
-		this.pageOption = new PageOption();
-		this.pageOption.setWidth(600).setHeight(400);
-
 		// 加载配置
 		SpiderConfig c = this.spiderService.loadConfig(code);
 		if (logger.isDebugEnabled()) {
@@ -76,6 +72,14 @@ public class SpiderAction extends ActionSupport {
 
 		// 参数配置
 		this.config = c.getConfig();
+
+		// 设置页面参数
+		this.pageOption = new PageOption();
+		this.pageOption.setWidth(600).setHeight(400);
+		if (c.getConfigJson().has("width"))
+			this.pageOption.setWidth(c.getConfigJson().getInt("width"));
+		if (c.getConfigJson().has("height"))
+			this.pageOption.setHeight(c.getConfigJson().getInt("height"));
 
 		return SUCCESS;
 	}
@@ -155,7 +159,7 @@ public class SpiderAction extends ActionSupport {
 					map.put(key, ps.getString(key));
 				}
 			}
-			
+
 			// 获取抓取结果
 			Result<Object> r;
 			r = this.spiderService.doSpide(c, map);
