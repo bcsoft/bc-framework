@@ -629,4 +629,67 @@ public class DateUtils {
 		
 		return null;
 	}
+	
+	/**
+	 * 获取下个月份的第一天(类似yyyy-MM-01 00:00:00)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getFirstDayOfNextMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to=getFirstDayOfMonth(calendar);//本月第一天
+		to.add(Calendar.MONTH, 1);//下月第一天
+		return to;
+	}
+
+	/**
+	 * 获取下个月份的最后一天(类似yyyy-MM-dd 23:59:59)
+	 * 
+	 * @param calendar
+	 *            要处理的日期
+	 */
+	public static Calendar getLastDayOfNextMonth(Calendar calendar) {
+		if (calendar == null)
+			return null;
+		Calendar to = getFirstDayOfNextMonth(calendar);// 下月第一天
+		to.add(Calendar.MONTH, 1);// 下下月第一天
+		to.add(Calendar.SECOND, -1);// 缩减1秒变为上月最后一天
+		return to;
+	}
+	
+	/**
+	 * 获取根据幅度增加后的日期
+	 * @param calendar
+	 *            要处理的日期
+	 * @param rangeConfig
+	 * 			  幅度 ：	1h 表示增加1小时
+	 * 					1d 表示增加1天
+	 * 				 	1m 表示增加1个月
+	 * 					1y 表示增加1年			
+	 */
+	public static Calendar getDate4Range(Calendar calendar,String rangeConfig){
+		if (calendar == null)
+			return null;
+		Calendar to =Calendar.getInstance();
+		to.set(calendar.get(Calendar.YEAR)
+				, calendar.get(Calendar.MONTH)
+				, calendar.get(Calendar.DAY_OF_MONTH)
+				, calendar.get(Calendar.HOUR_OF_DAY)
+				, calendar.get(Calendar.MINUTE)
+				, calendar.get(Calendar.SECOND));
+		
+		if(rangeConfig.matches("\\b\\d*h")){//1h
+			to.add(Calendar.HOUR_OF_DAY, Integer.valueOf(rangeConfig.replace("h", "")));
+		}else if(rangeConfig.matches("\\b\\d*d")){//1d
+			to.add(Calendar.DAY_OF_MONTH, Integer.valueOf(rangeConfig.replace("d", "")));
+		}else if(rangeConfig.matches("\\b\\d*m")){
+			to.add(Calendar.MONTH, Integer.valueOf(rangeConfig.replace("m", "")));
+		}else if(rangeConfig.matches("\\b\\d*y")){
+			to.add(Calendar.YEAR, Integer.valueOf(rangeConfig.replace("y", "")));
+		}
+		
+		return to;
+	}
 }

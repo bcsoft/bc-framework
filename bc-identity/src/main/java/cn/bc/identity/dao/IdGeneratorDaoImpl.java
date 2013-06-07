@@ -94,4 +94,20 @@ public class IdGeneratorDaoImpl implements IdGeneratorDao {
 			}
 		});
 	}
+
+	public Long getNextval(){
+		try {
+			return jpaTemplate.execute(new JpaCallback<Long>() {
+				public Long doInJpa(EntityManager em)
+						throws PersistenceException {
+					Query queryObject = em
+							.createNativeQuery("select NEXTVAL('CORE_SEQUENCE') from bc_dual");
+
+					return new Long(queryObject.getSingleResult().toString());
+				}
+			});
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
 }
