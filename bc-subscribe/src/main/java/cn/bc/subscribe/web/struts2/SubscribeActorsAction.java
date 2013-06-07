@@ -210,13 +210,13 @@ public class SubscribeActorsAction extends ViewAction<Map<String, Object>> {
 		if(!this.isReadonly() && this.sid != null){
 			// 添加
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-person")
-					.setText(getText("label.add"))
+					.setText(getText("subscribeActor.add.actor"))
 					.setClick("bc.subscribeActorView.selectUser"));
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-contact")
-					.setText(getText("label.add"))
+					.setText(getText("subscribeActor.add.group"))
 					.setClick("bc.subscribeActorView.selectGroup"));
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-home")
-					.setText(getText("label.add"))
+					.setText(getText("subscribeActor.add.unitAndDepartment"))
 					.setClick("bc.subscribeActorView.selectUnitOrDepartment"));
 			
 			// 删除

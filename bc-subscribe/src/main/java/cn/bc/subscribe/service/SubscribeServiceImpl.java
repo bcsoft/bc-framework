@@ -59,9 +59,9 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		this.subscribeActorService.save(actor.getId(), subscribe.getId(), 0);
+		String subject=actor.getName()+"添加"+subscribe.getSubject();
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_CREATE
-						,"用户<b>"+actor.getName()+"</b>添加订阅","用户：<b>"
-						+actor.getName()+"</b>，添加的订阅：<b>"+subscribe.getSubject()+"</b>.");
+						,subject,subject+"。");
 	}
 
 	public void doAddActor4Personal(List<Subscribe> subscribes) {
@@ -71,20 +71,21 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		
 		for(Subscribe subscribe : subscribes){
 			this.subscribeActorService.save(actor.getId(), subscribe.getId(), 0);
+			String subject=actor.getName()+"添加"+subscribe.getSubject();
 			this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_CREATE
-							,"用户<b>"+actor.getName()+"</b>添加订阅","用户：<b>"
-							+actor.getName()+"</b>，添加的订阅：<b>"+subscribe.getSubject()+"</b>.");
+							,subject,subject+"。");
 		}
 	}
 
 	public void doAddActor4Manager(Subscribe subscribe, Actor actor) {
 		Assert.assertNotNull(subscribe);
 		Assert.assertNotNull(actor);
+		SystemContext context = SystemContextHolder.get();
+		Actor operater=context.getUser();
 		this.subscribeActorService.save(actor.getId(), subscribe.getId(), 1);
+		String subject=actor.getName()+"添加"+subscribe.getSubject()+"[系统推送]";
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_CREATE
-				,"用户<b>"+actor.getName()+"</b>被配置系统推送订阅",
-				"用户：<b>"+actor.getName()+"</b>，被配置系统推送的订阅：<b>"
-				+subscribe.getSubject()+"</b>.");
+				,subject,subject+"，操作人："+operater.getName()+"。");
 	}
 
 	public void doAddActor4Manager(Subscribe subscribe, List<Actor> actors) {
@@ -92,18 +93,15 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		Assert.assertNotNull(actors);
 		SystemContext context = SystemContextHolder.get();
 		Actor operater=context.getUser();
-		
 		String actorNames = "";
 		for(Actor actor: actors){
 			this.subscribeActorService.save(actor.getId(), subscribe.getId(), 1);
 			if(actorNames!="")actorNames += "、";
 			actorNames +=actor.getName();
 		}
+		String subject=actorNames+"添加"+subscribe.getSubject()+"[系统推送]";
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_CREATE
-				,"用户<b>"+actorNames+"</b>被配置系统推送订阅",
-				"用户：<b>"+actorNames+"</b>，被配置系统推送的订阅：<b>"
-				+subscribe.getSubject()+"</b>,操作人：<b>"
-				+operater.getName()+"</b>.");
+				,subject,subject+"，操作人："+operater.getName()+"。");
 		
 	}
 	
@@ -112,9 +110,9 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		this.subscribeActorService.delete(actor.getId(), subscribe.getId());
+		String subject=actor.getName()+"删除 "+subscribe.getSubject();
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_DELETE
-				,"用户<b>"+actor.getName()+"</b>删除订阅","用户：<b>"
-				+actor.getName()+"</b>，删除的订阅：<b>"+subscribe.getSubject()+"</b>.");
+				,subject,subject+"。");
 		
 	}
 
@@ -125,39 +123,42 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 		
 		for(Subscribe subscribe : subscribes){
 			this.subscribeActorService.delete(actor.getId(), subscribe.getId());
+			String subject=actor.getName()+"删除 "+subscribe.getSubject();
 			this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_DELETE
-					,"用户<b>"+actor.getName()+"</b>删除订阅","用户：<b>"
-					+actor.getName()+"</b>，删除的订阅：<b>"+subscribe.getSubject()+"</b>.");
+					,subject,subject+"。");
 		}	
 	}
 
 	public void doDeleteActor4Manager(Subscribe subscribe, Actor actor) {
 		Assert.assertNotNull(subscribe);
 		Assert.assertNotNull(actor);
+		SystemContext context = SystemContextHolder.get();
+		Actor operater=context.getUser();
 		SubscribeActor sa=this.subscribeActorService.find4aidpid(actor.getId(), subscribe.getId());
 		this.subscribeActorService.delete(actor.getId(), subscribe.getId());
-		
+		String subject = actor.getName()+"被删除"+subscribe.getSubject()+(sa.getType()==SubscribeActor.TYPE_PASSIVE?"[系统推送] ":"");
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_DELETE
-				,"用户<b>"+actor.getName()+"</b>被删除"+(sa.getType()==SubscribeActor.TYPE_ACTIVE?"订阅":"系统推送订阅"),"用户：<b>"
-				+actor.getName()+"</b>，被删除的"+(sa.getType()==SubscribeActor.TYPE_ACTIVE?"订阅":"系统推送订阅")+"<b>"+subscribe.getSubject()+"</b>.");
+				,subject,subject+"，操作人："+operater.getName()+"。");
 		
 	}
 
 	public void doDeleteActor4Manager(Subscribe subscribe, List<Actor> actors) {
 		Assert.assertNotNull(subscribe);
 		Assert.assertNotNull(actors);
+		SystemContext context = SystemContextHolder.get();
+		Actor operater=context.getUser();
 		String actorNames = "";
 		SubscribeActor sa;
 		for(Actor actor: actors){
 			sa=this.subscribeActorService.find4aidpid(actor.getId(), subscribe.getId());
 			this.subscribeActorService.delete(actor.getId(), subscribe.getId());
 			if(actorNames!="")actorNames += "、";
-			actorNames+="<b"+actor.getName()+"</b>"+(sa.getType()==SubscribeActor.TYPE_ACTIVE?"":"[系统推送]");
+			actorNames+=actor.getName()+(sa.getType()==SubscribeActor.TYPE_PASSIVE?"[系统推送] ":"");
 		}
 		
+		String subject =actorNames +"被删除"+subscribe.getSubject();
 		this.saveWorkLog(subscribe.getId()+"",OperateLog.OPERATE_DELETE
-				,actorNames+"删除订阅"
-				,actorNames+"删除订阅，"+"订阅：<b>"+subscribe.getSubject()+"</b>。");
+				,subject,subject+"，操作人："+operater.getName()+"。");
 	}
 	
 	//工作日志

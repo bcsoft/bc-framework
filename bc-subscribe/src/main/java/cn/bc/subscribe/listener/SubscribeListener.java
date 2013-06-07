@@ -164,16 +164,16 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		//工作日志的详细内容
 		String worklog_content=worklog.getContent();
 		Email email=new Email();
-		worklog_content+="发送方式：邮件[<br>";
+		worklog_content+="发送方式：邮件[";
 		
-		String emailUid=this.idGeneratorService.next(Email.ATTACH_TYPE);
+		String emailUid=this.idGeneratorService.nexttvak(Email.ATTACH_TYPE);
 		email.setUid(emailUid);
 		email.setStatus(Email.STATUS_SENDED);
 		email.setType(Email.TYPE_NEW);
 		email.setFileDate(Calendar.getInstance());
 		email.setSendDate(Calendar.getInstance());
 		email.setSubject(event.getSubject());
-		worklog_content+="邮件主题： "+event.getSubject()+"<br>";
+		worklog_content+="邮件主题： "+event.getSubject();
 		
 		Map<String,Object> args = new HashMap<String,Object>();
 		args.put("content", event.getContent());
@@ -186,7 +186,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		}else{//使用默认的邮件模板
 			email.setContent(this.templateService.format("BC-EMAIL-SYSTEMAUTOFORWARD", args));
 		}
-		worklog_content+="邮件内容： "+event.getContent()+"<br>";
+		worklog_content+="，邮件内容： "+event.getContent();
 		//系统管理员发送
 		Actor admin=this.actorService.loadByCode("admin");
 		email.setSender(admin);
@@ -201,7 +201,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		
 		//设置发送人
 		Set<EmailTo> emailTos = new HashSet<EmailTo>();
-		worklog_content+="邮件接收人：";
+		worklog_content+="，邮件接收人：";
 		EmailTo et;
 		int i = 0;
 		for(Actor a : actors){
@@ -209,8 +209,8 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 			et.setEmail(email);
 			et.setRead(false);
 			et.setReceiver(a);
-			//都为密送
-			et.setType(EmailTo.TYPE_BCC);
+			//正常发送
+			et.setType(EmailTo.TYPE_TO);
 			et.setOrderNo(i);
 			emailTos.add(et);
 			
@@ -218,7 +218,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 			worklog_content+=a.getName();
 			i++;
 		}
-		worklog_content+="<br>]";
+		worklog_content+="]";
 		worklog.setContent(worklog_content);
 		email.setTo(emailTos);
 		

@@ -286,7 +286,7 @@ public class SubscribeAction extends FileEntityAction<Long, Subscribe> {
 			// 验证是否已添加
 			if (this.subscirbeActorService.find4aidpid(this.actorId,this.getId()) != null) {
 				_json.put("success", false);
-				_json.put("msg", "<b>"+actor.getName()+"</b>"+getText("subscribePersonal.add.false"));
+				_json.put("msg",actor.getName()+getText("subscribePersonal.add.false"));
 				json = _json.toString();
 				return "json";
 			}
@@ -306,7 +306,7 @@ public class SubscribeAction extends FileEntityAction<Long, Subscribe> {
 						// 验证是否已添加
 						if (this.subscirbeActorService.find4aidpid(actor.getId(),this.getId()) != null) {
 							_json.put("success", false);
-							_json.put("msg", "<b>"+actor.getName()+"</b>"+getText("subscribePersonal.add.false"));
+							_json.put("msg",actor.getName()+getText("subscribePersonal.add.false"));
 							json = _json.toString();
 							return "json";
 						}

@@ -23,7 +23,6 @@ import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.subscribe.domain.Subscribe;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -81,6 +80,8 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select s.id,s.status_,s.type_,s.order_,s.subject,s.event_code,e.actor_name as author,s.file_date");
 		sql.append(",f.actor_name as modifier,s.modified_date");
+		sql.append(",(select string_agg(a.name,',') from bc_subscribe_actor sa");
+		sql.append(" inner join bc_identity_actor a on a.id = sa.aid where sa.pid=s.id) actornames");
 		sql.append(",getaccessactors4docidtype4docidinteger(s.id,'Subscribe')");
 		sql.append(" from bc_subscribe s");
 		sql.append(" inner join bc_identity_actor_history e on e.id=s.author_id");
@@ -105,6 +106,7 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 				map.put("fileDate", rs[i++]);
 				map.put("modifier", rs[i++]);
 				map.put("modifiedDate", rs[i++]);
+				map.put("actornames", rs[i++]);
 				map.put("accessactors", rs[i++]);
 				map.put("accessControlDocType","Subscribe");
 				return map;
@@ -121,21 +123,20 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 				getText("subscribe.status"), 40)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new KeyValueFormater(getStatuses())));
-		/*columns.add(new TextColumn4MapKey("s.type_", "type",
-				getText("subscribe.type"), 40)
-				.setUseTitleFromLabel(true)
-				.setValueFormater(new KeyValueFormater(getTypes())));*/
+		
 		columns.add(new TextColumn4MapKey("s.subject", "subject",
-				getText("subscribe.subject"))
+				getText("subscribe.subject"),200)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("s.event_code", "eventCode",
-				getText("subscribe.eventCode"), 120)
+				getText("subscribe.eventCode"))
 				.setUseTitleFromLabel(true));
 		if(this.isAccessControl()){
 			columns.add(new TextColumn4MapKey("", "accessactors",
 					getText("subscribe.accessActorAndRole"),150).setSortable(true)
 					.setUseTitleFromLabel(true));
 		}
+		columns.add(new TextColumn4MapKey("", "actornames",
+				getText("subscribeActor.name"), 120).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.actor_name", "author",
 				getText("subscribe.author"), 60).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("s.file_date", "fileDate",
@@ -168,17 +169,6 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 		statuses.put("", getText("bc.status.all"));
 		return statuses;
 	}
-	
-	private Map<String, String> getTypes() {
-		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(Subscribe.TYPE_EMAIL),
-				getText("subscribe.type.email"));
-		statuses.put(String.valueOf(Subscribe.TYPE_SMS),
-				getText("subscribe.type.sms"));
-		statuses.put("", getText("bc.status.all"));
-		return statuses;
-	}
-
 
 	@Override
 	protected String getGridRowLabelExpression() {
