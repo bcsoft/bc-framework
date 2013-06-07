@@ -132,16 +132,17 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("t.category", "category",
-				getText("template.category"), 200).setUseTitleFromLabel(true));
+				getText("template.category"), 200)
+				.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
-				getText("template.type"), 150).setUseTitleFromLabel(true));
+				getText("template.type"), 150).setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject"), 250).setUseTitleFromLabel(true));
+				getText("template.tfsubject"), 250).setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
 				getText("template.code"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.version_", "version",
-				getText("template.version"), 100).setUseTitleFromLabel(true));
+				getText("template.version"), 100).setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.path", "path",
 				getText("template.tfpath")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.formatted", "formatted",

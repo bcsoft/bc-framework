@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,6 +107,14 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if (tpl.getTemplateType().getCode().equals("xls")
 				&& extension.equals("xls"))
 			return XlsUtils.loadText(tpl.getInputStream());
+		
+		if (tpl.getTemplateType().getCode().equals("xlsx")
+				&& extension.equals("xlsx"))
+			return XlsxUtils.loadText(tpl.getInputStream());
+		
+		if (tpl.getTemplateType().getCode().equals("html")
+				&& extension.equals("html"))
+			return TemplateUtils.loadText(tpl.getInputStream());
 
 		logger.warn("文件后缀名：" + extension + ",未转换为字符串类型");
 		return null;
@@ -355,7 +364,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		Attach attach = new Attach();
 		attach.setAuthor(author);
 		attach.setFileDate(Calendar.getInstance());
-		attach.setSubject("生成附件:"+subject);
+		attach.setSubject(subject);
 		attach.setAppPath(false);
 		attach.setFormat(template.getTemplateType().getExtension());
 		attach.setStatus(BCConstants.STATUS_ENABLED);
@@ -368,8 +377,9 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
 		// 要保存的物理文件
 		String realpath;// 绝对路径名
-		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-				.getTime()) + "." + template.getTemplateType().getExtension();// 不含路径的文件名
+							//uuid
+		String fileName = UUID.randomUUID().toString().replace("-", "")
+				+ "." + template.getTemplateType().getExtension();// 不含路径的文件名
 		realpath = Attach.DATA_REAL_PATH + "/" + datedir + "/" + fileName;
 
 		// 构建文件要保存到的目录
