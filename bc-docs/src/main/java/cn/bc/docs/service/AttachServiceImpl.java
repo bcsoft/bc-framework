@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -134,8 +135,8 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			String realFilePath;// 所保存文件的绝对路径名
 			String newFileName = toPtype
 					+ (toPtype.length() > 0 ? "_" : "")
-					+ new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-							.getTime()) + "." + old.getFormat();// 不含路径的文件名
+					+ UUID.randomUUID().toString().replace("-", "")
+					+ "." + old.getFormat();// 不含路径的文件名
 			relativeFilePath = subFolder + "/" + newFileName;
 			realFileDir = dataPath + "/" + subFolder;
 			realFilePath = realFileDir + "/" + newFileName;
