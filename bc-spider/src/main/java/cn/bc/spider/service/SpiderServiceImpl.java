@@ -142,7 +142,7 @@ public class SpiderServiceImpl implements SpiderService {
             // 解析前置执行结果作为参数继续传递
             if (parsePrevRespone) {
                 Object prevDate = r.getData();
-                if (prevDate instanceof String) {
+                if (prevDate instanceof String) {// 字符串当作json对象格式处理
                     Map<String, Object> addParams = JsonUtils.toMap((String) prevDate);
                     for (Map.Entry<String, Object> e : addParams.entrySet()) {
                         params.put(e.getKey(), String.valueOf(e.getValue()));

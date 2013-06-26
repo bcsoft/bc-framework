@@ -356,6 +356,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
     protected EvaluationContext getExpressionContextObject() throws Exception {
         StandardEvaluationContext context = new StandardEvaluationContext(
                 getResponse());
+        context.setVariable("httpParams",this.httpParams);
+        context.setVariable("formData",this.formData);
         return context;
         // return this;
         // return new Object() {
