@@ -54,7 +54,7 @@ public class EmailServiceImpl extends DefaultCrudService<Email> implements
         email.setSubject(subject);
         email.setContent(content);
         email.setFileDate(Calendar.getInstance());
-        email.setSendDate(email.geFileDate());
+        email.setSendDate(email.getFileDate());
         email.setSender(sender);
         email.setStatus(Email.STATUS_SENDED);
         email.setUid(this.idGeneratorService.next(Email.class.getSimpleName()));
