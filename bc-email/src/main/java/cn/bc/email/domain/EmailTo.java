@@ -33,8 +33,8 @@ public class EmailTo extends EntityImpl {
 	private int type;// 发送类型 : 0-主送,1-抄送,2-密送
 	private int orderNo;// 排序号 : 针对同一发送类型的不同收件人之间的排序
 	private boolean read;// 已阅标记
-	private Actor receiver;// 收件人
-	private Actor upper;//接收人所属的部门或岗位
+	private Actor receiver; // 收件人：只能为用户类型，如果为岗位、部门、单位类型需要使用到upper字段配合
+	private Actor upper;    // 收件人所属的部门或岗位
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
