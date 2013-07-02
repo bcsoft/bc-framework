@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
@@ -68,8 +67,7 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("s.file_date", Direction.Desc).add(
-				"s.modified_date", Direction.Desc);
+		return new OrderCondition("s.order_");
 	}
 
 	@Override
@@ -123,27 +121,29 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 				getText("subscribe.status"), 40)
 				.setUseTitleFromLabel(true)
 				.setValueFormater(new KeyValueFormater(getStatuses())));
-		
+		columns.add(new TextColumn4MapKey("s.order_", "orderNo",
+				getText("subscribe.orderNo"),60)
+				.setSortable(true));
 		columns.add(new TextColumn4MapKey("s.subject", "subject",
 				getText("subscribe.subject"),200)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("s.event_code", "eventCode",
 				getText("subscribe.eventCode"))
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("", "actornames",
+				getText("subscribeActor.name"), 120).setUseTitleFromLabel(true));
 		if(this.isAccessControl()){
 			columns.add(new TextColumn4MapKey("", "accessactors",
 					getText("subscribe.accessActorAndRole"),150).setSortable(true)
 					.setUseTitleFromLabel(true));
 		}
-		columns.add(new TextColumn4MapKey("", "actornames",
-				getText("subscribeActor.name"), 120).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("e.actor_name", "author",
-				getText("subscribe.author"), 60).setUseTitleFromLabel(true));
+				getText("subscribe.author"), 70).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("s.file_date", "fileDate",
 				getText("subscribe.fileDate"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		columns.add(new TextColumn4MapKey("f.actor_name", "modifier",
-				getText("subscribe.modifier"), 60)
+				getText("subscribe.modifier"), 70)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("s.modified_date", "modifiedDate",
 				getText("subscribe.modifiedDate"), 90)
