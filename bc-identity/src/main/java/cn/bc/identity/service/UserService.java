@@ -52,4 +52,10 @@ public interface UserService extends ActorService {
      * @return 如果没有限制返回null，否则返回相应的限制条件
      */
     Condition getCurrenUserUnitInfoLimitedCondition(String unitKey);
+
+    /**
+     * 获取当前用户的单位信息查看限制条件对应的单位id列表
+     * @return
+     */
+    Long[] getCurrenUserUnitInfoLimitedIds();
 }
