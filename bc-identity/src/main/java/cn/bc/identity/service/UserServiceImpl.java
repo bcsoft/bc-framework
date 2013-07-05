@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.SystemContextHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.DigestUtils;
@@ -104,7 +109,7 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 		return user;
 	}
 
-	public AuthData loadAuthData(Long userId) {
+    public AuthData loadAuthData(Long userId) {
 		return this.authDataDao.load(userId);
 	}
 
@@ -121,4 +126,25 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 		// 同时删除认证信息
 		// this.authDataDao.delete((Long[]) ids);
 	}
+
+    public Condition getCurrenUserUnitInfoLimitedCondition(String unitKey) {
+        Long[] unitIds = getCurrenUserUnitInfoLimitedIds();
+        if(unitIds == null || unitIds.length == 0)
+            return null;
+
+        if(unitIds.length == 1){
+            return new EqualsCondition(unitKey,unitIds[0]);
+        }else{
+            return new InCondition(unitKey,unitIds);
+        }
+    }
+
+    public Long[] getCurrenUserUnitInfoLimitedIds() {
+        SystemContext context = SystemContextHolder.get();
+        if(context.hasAnyRole("BC_LOCAL_UNITINFO_LIMITED")){// "本单位信息查看"角色的限制
+            Long currentUnitId = context.getUnit().getId();// 当前用户所属单位的ID
+            return new Long[]{currentUnitId};
+        }
+        return null;
+    }
 }

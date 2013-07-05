@@ -12,6 +12,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -58,6 +59,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
     private boolean hadParseRespone;
     private V respone;
     private String responseText;
+    private Object payload;
 
     public Result<V> call() throws Exception {
         String url = getUrl();
@@ -88,6 +90,12 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
                 HttpEntity entity = new UrlEncodedFormEntity(formData,
                         getEncoding());
                 post.setEntity(entity);
+            } else if (payload != null) {
+                if (logger.isInfoEnabled())
+                    logger.info("payload=" + payload);
+                if (payload instanceof String) {
+                    post.setEntity(new StringEntity((String) payload));
+                }
             }
             request = post;
         } else {// 默认为get
@@ -143,7 +151,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
         logger.debug("request:");
         logger.debug("  requestLine=" + request.getRequestLine());
         logger.debug("  headers:");
-        for (Header h :  request.getAllHeaders()) {
+        for (Header h : request.getAllHeaders()) {
             logger.debug("      " + h.getName() + "=" + h.getValue());
         }
         logger.debug("  params=" + request.getParams());
@@ -176,6 +184,14 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
             hadParseRespone = true;
         }
         return respone;
+    }
+
+    public Object getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 
     public String getGroup() {
@@ -356,8 +372,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
     protected EvaluationContext getExpressionContextObject() throws Exception {
         StandardEvaluationContext context = new StandardEvaluationContext(
                 getResponse());
-        context.setVariable("httpParams",this.httpParams);
-        context.setVariable("formData",this.formData);
+        context.setVariable("httpParams", this.httpParams);
+        context.setVariable("formData", this.formData);
         return context;
         // return this;
         // return new Object() {
