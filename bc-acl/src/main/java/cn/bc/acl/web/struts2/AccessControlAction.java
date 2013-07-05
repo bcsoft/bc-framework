@@ -103,7 +103,7 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(500)
-				.setMinHeight(200).setMinWidth(300).setMaxHeight(800);
+				.setMinHeight(200).setMinWidth(300).setHeight(500).setMaxHeight(600);
 	}
 
 	@Override
