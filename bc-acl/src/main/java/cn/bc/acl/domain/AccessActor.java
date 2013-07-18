@@ -30,8 +30,12 @@ public class AccessActor implements Serializable {
 	private Actor actor;// 访问者
 	private int orderNo = 0;// 排序号：针对同一文档同一访问类型的不同访问者之间的排序
 	
-	/*
-	 * 访问权限:"01"  查阅 编辑 1代表有权限 0代表无限权
+	/**
+	 * 访问权限  从右边起，第一位为：查阅
+	 * 				第二位为： 编辑 
+	 * 				1代表有权限 0代表无限权
+	 * 	例如：“01” 代表有查阅，没有编辑权限
+	 * 		“11” 代表既有查阅权限，又有编辑权限
 	 * 
 	 */
 	private String role;

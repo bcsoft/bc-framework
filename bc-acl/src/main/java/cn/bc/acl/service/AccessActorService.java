@@ -43,4 +43,14 @@ public interface AccessActorService extends CrudService<AccessActor> {
 	 * @param accessActors 对象
 	 */
 	void delete(List<AccessActor> accessActors);
+	
+	/**
+	 * 查找对象
+	 * @param docId
+	 * @param docType
+	 * @param aid  用户id
+	 * @param wildcard  权限通配符
+	 * @return
+	 */
+	AccessActor load(String docId,String docType,Long aid,String wildcard);
 }

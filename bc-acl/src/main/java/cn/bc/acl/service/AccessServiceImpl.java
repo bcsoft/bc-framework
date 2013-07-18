@@ -15,7 +15,14 @@ import cn.bc.acl.domain.AccessActor;
  */
 public class AccessServiceImpl implements AccessService {
 	private AccessActorDao accessActorDao;
+	private AccessActorService accessActorService;
 	
+	@Autowired
+	public void setAccessActorService(AccessActorService accessActorService) {
+		this.accessActorService = accessActorService;
+	}
+
+
 	@Autowired
 	public void setAccessActorDao(AccessActorDao accessActorDao) {
 		this.accessActorDao = accessActorDao;
@@ -39,6 +46,17 @@ public class AccessServiceImpl implements AccessService {
 	public List<AccessActor> findByDocIdType(Long id, String docId,
 			String docType) {
 		return this.accessActorDao.findByDocIdType(id, docId, docType);
+	}
+	
+	public String findRolw(String docId,String docType,Long aid){
+		AccessActor aa= this.accessActorService.load(docId, docType, aid,null);
+		if(aa==null)return null;
+		return aa.getRole();
+	}
+	
+	public boolean hasRolw(String docId,String docType,Long aid,String wildcard){
+		AccessActor aa= this.accessActorService.load(docId, docType, aid,wildcard);
+		return aa!=null;
 	}
 	
 	

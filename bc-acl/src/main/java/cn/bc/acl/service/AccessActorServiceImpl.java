@@ -2,10 +2,14 @@ package cn.bc.acl.service;
 
 import java.util.List;
 
+import org.commontemplate.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.acl.dao.AccessActorDao;
 import cn.bc.acl.domain.AccessActor;
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.LikeRightCondition;
 import cn.bc.core.service.DefaultCrudService;
 
 /**
@@ -41,5 +45,20 @@ public class AccessActorServiceImpl extends DefaultCrudService<AccessActor> impl
 
 	public void delete(List<AccessActor> accessActors) {
 		this.accessActorDao.delete(accessActors);
+	}
+	
+	public AccessActor load(String docId,String docType,Long aid,String wildcard){
+		Assert.assertNotNull(docId);
+		Assert.assertNotNull(docType);
+		Assert.assertNotNull(aid);
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("accessDoc.docId", docId));
+		ac.add(new EqualsCondition("accessDoc.docType", docType));
+		ac.add(new EqualsCondition("actor.id", aid));
+		if(wildcard !=null && wildcard.length()>0){
+			ac.add(new LikeRightCondition("role", wildcard));
+		}
+		
+		return this.createQuery().condition(ac).singleResult();
 	}
 }
