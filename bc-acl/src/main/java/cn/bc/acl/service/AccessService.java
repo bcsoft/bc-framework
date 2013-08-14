@@ -63,4 +63,5 @@ public interface AccessService{
 	 * @return true有 false没
 	 */
 	boolean hasRolw(String docId,String docType,Long aid,String wildcard);
+	
 }
