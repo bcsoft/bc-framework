@@ -194,9 +194,8 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
 				.addClazz("bc-page");
-		listPage.setCreateUrl(getCreateUrl()).setDeleteUrl(getDeleteUrl())
-				.setEditUrl(this.getEditUrl()).setOpenUrl(this.getOpenUrl())
-				.setAttr("data-name", getText(getFormActionName()));
+		listPage.setAttr("data-name", getText(getFormActionName()));
+		initDefaultActionUrl(listPage);
 
 		// 附加头部信息
 		listPage.addChild(getHtmlPageHeader());
@@ -213,6 +212,16 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 			listPage.setAttr("data-extras", json.toString());
 
 		return listPage;
+	}
+
+	/**
+	 * 初始化默认Action的Url
+	 * 
+	 * @param listPage
+	 */
+	protected void initDefaultActionUrl(ListPage listPage) {
+		listPage.setCreateUrl(getCreateUrl()).setDeleteUrl(getDeleteUrl())
+				.setEditUrl(this.getEditUrl()).setOpenUrl(this.getOpenUrl());
 	}
 
 	/** 附加头部信息 */
