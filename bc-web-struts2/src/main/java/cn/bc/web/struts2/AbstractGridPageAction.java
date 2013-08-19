@@ -188,9 +188,8 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 		ListPage listPage = new ListPage();
 
 		// 设置页面参数
-		listPage.setNamespace(
-				getHtmlPageNamespace() + "/" + getViewActionName())
-				.addJs(getHtmlPageJs()).setTitle(this.getHtmlPageTitle())
+		listPage.setNamespace(getHtmlPageNamespace()).addJs(getHtmlPageJs())
+				.setTitle(this.getHtmlPageTitle())
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
 				.addClazz("bc-page");
@@ -249,27 +248,34 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	/** 获取表单action的简易名称 */
 	protected abstract String getFormActionName();
 
+	/** 模块所在上下文路径 */
+	protected abstract String getModuleContextPath();
+
+	@Override
+	protected String getHtmlPageNamespace() {
+		return this.getModuleContextPath() + "/" + getViewActionName();
+	}
+
 	/** 编辑的url */
 	protected String getEditUrl() {
-		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+		return this.getModuleContextPath() + "/" + getFormActionName()
 				+ "/edit";
 	}
 
 	/** 查看的url */
 	protected String getOpenUrl() {
-		return getHtmlPageNamespace() + "/" + this.getFormActionName()
-				+ "/open";
+		return getModuleContextPath() + "/" + getFormActionName() + "/open";
 	}
 
 	/** 删除的url */
 	protected String getDeleteUrl() {
-		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+		return this.getModuleContextPath() + "/" + getFormActionName()
 				+ "/delete";
 	}
 
 	/** 新建的url */
 	protected String getCreateUrl() {
-		return getHtmlPageNamespace() + "/" + this.getFormActionName()
+		return this.getModuleContextPath() + "/" + getFormActionName()
 				+ "/create";
 	}
 
