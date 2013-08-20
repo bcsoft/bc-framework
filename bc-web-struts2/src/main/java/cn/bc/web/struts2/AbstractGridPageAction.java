@@ -193,7 +193,7 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				.setInitMethod(getHtmlPageInitMethod()).setType("list")
 				.setOption(getHtmlPageOption().toString()).setBeautiful(false)
 				.addClazz("bc-page");
-		listPage.setAttr("data-name", getText(getFormActionName()));
+		listPage.setAttr("data-name", this.getHtmlPageTitle());
 		initDefaultActionUrl(listPage);
 
 		// 附加头部信息
