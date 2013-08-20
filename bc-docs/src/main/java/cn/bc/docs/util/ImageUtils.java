@@ -27,7 +27,7 @@ public class ImageUtils {
 	 * @param image
 	 *            要写入的图片
 	 * @param fileName
-	 *             要写入到的文件路径名
+	 *            要写入到的文件路径名
 	 * @param extension
 	 *            图片格式，即文件扩展名
 	 * @throws IOException
@@ -270,5 +270,122 @@ public class ImageUtils {
 			}
 		}
 		return type;
+	}
+
+	public static BufferedImage combineHorizontal(InputStream[] imageStreams)
+			throws IOException {
+		BufferedImage[] images = new BufferedImage[imageStreams.length];
+		for (int i = 0; i < imageStreams.length; i++) {
+			images[i] = ImageIO.read(imageStreams[i]);
+		}
+		return combineHorizontal(images);
+	}
+
+	/**
+	 * 将图片沿水平方向合并在一起
+	 * 
+	 * @param images
+	 * @return
+	 * @throws IOException
+	 */
+	public static BufferedImage combineHorizontal(BufferedImage[] images) {
+		int width = 0, height = 0;
+		for (BufferedImage image : images) {
+			width += image.getWidth();
+			height = Math.max(height, image.getHeight());
+		}
+
+		BufferedImage imageNew = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_ARGB);
+		int startX = 0;
+		int[] ImageArrayOne;
+		for (BufferedImage image1 : images) {
+			width = image1.getWidth();
+			height = image1.getHeight();
+			ImageArrayOne = new int[width * height];
+			ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
+					0, width);
+			imageNew.setRGB(startX, 0, width, height, ImageArrayOne, 0, width);
+			startX += width;
+		}
+
+		return imageNew;
+	}
+
+	public static BufferedImage combineVertical(InputStream[] imageStreams)
+			throws IOException {
+		BufferedImage[] images = new BufferedImage[imageStreams.length];
+		for (int i = 0; i < imageStreams.length; i++) {
+			images[i] = ImageIO.read(imageStreams[i]);
+		}
+		return combineVertical(images);
+	}
+
+	/**
+	 * 将图片沿垂直方向合并在一起
+	 * 
+	 * @param images
+	 * @return
+	 */
+	public static BufferedImage combineVertical(BufferedImage[] images) {
+		int width = 0, height = 0;
+		for (BufferedImage image : images) {
+			width = Math.max(width, image.getWidth());
+			height += image.getHeight();
+		}
+
+		BufferedImage imageNew = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_ARGB);
+		int startY = 0;
+		int[] ImageArrayOne;
+		for (BufferedImage image1 : images) {
+			width = image1.getWidth();
+			height = image1.getHeight();
+			ImageArrayOne = new int[width * height];
+			ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
+					0, width);
+			imageNew.setRGB(0, startY, width, height, ImageArrayOne, 0, width);
+			startY += height;
+		}
+
+		return imageNew;
+	}
+
+	/**
+	 * 安指定的配置沿水平、垂直方向混合合并图片
+	 * 
+	 * @param imageStreams
+	 * @param mixConfig
+	 *            如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并
+	 * @return
+	 * @throws IOException
+	 */
+	public static BufferedImage combineMix(InputStream[] imageStreams,
+			String mixConfig) throws IOException {
+		BufferedImage[] images = new BufferedImage[imageStreams.length];
+		for (int i = 0; i < imageStreams.length; i++) {
+			images[i] = ImageIO.read(imageStreams[i]);
+		}
+		return combineMix(images, mixConfig);
+	}
+
+	public static BufferedImage combineMix(BufferedImage[] images,
+			String mixConfig) {
+		String[] vertical = mixConfig.split(";");
+		BufferedImage[] vimages = new BufferedImage[vertical.length];
+		String[][] all = new String[vertical.length][];
+
+		BufferedImage[] himages;
+		int c = 0;
+		for (int i = 0; i < vertical.length; i++) {
+			all[i] = vertical[i].split(",");
+			himages = new BufferedImage[all[i].length];
+			for (int j = 0; j < himages.length; j++) {
+				himages[j] = images[c + j];
+			}
+			c += himages.length;
+			vimages[i] = combineHorizontal(himages);
+		}
+		return combineVertical(vimages);
 	}
 }

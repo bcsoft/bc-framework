@@ -1,6 +1,7 @@
 package cn.bc.web.ui.html.tree;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import cn.bc.web.ui.html.Table;
@@ -193,7 +194,7 @@ public class TreeNode extends Td {
 	/**
 	 * 构建子节点列表DOM
 	 */
-	public static Table buildSubNodes(List<TreeNode> subNodes) {
+	public static Table buildSubNodes(Collection<TreeNode> subNodes) {
 		if (subNodes != null && !subNodes.isEmpty()) {
 			Table table = new Table();
 			table.addClazz("nodes");
