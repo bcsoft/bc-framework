@@ -209,7 +209,7 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 				else
 					hql.append(" set _alias." + key + "=?");
 				args.add(attributes.get(key));
-			}else{
+			} else {
 				if (i > 0)
 					hql.append(",_alias." + key + "=null");
 				else
@@ -259,14 +259,15 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 			logger.debug("executeUpdate count=" + o);
 	}
 
-	protected void executeSql(final String sql, final List<Object> args) {
+	protected int executeSql(final String sql, final List<Object> args) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("sql=" + sql);
 			logger.debug("args="
 					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
-		Object o = this.jpaTemplate.execute(new JpaCallback<Object>() {
-			public Object doInJpa(EntityManager em) throws PersistenceException {
+		Integer result = this.jpaTemplate.execute(new JpaCallback<Integer>() {
+			public Integer doInJpa(EntityManager em)
+					throws PersistenceException {
 				javax.persistence.Query query = createSqlQuery(em, sql,
 						args != null ? args.toArray() : null);
 				jpaTemplate.prepareQuery(query);
@@ -274,7 +275,8 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 			}
 		});
 		if (logger.isDebugEnabled())
-			logger.debug("executeUpdate count=" + o);
+			logger.debug("executeUpdate count=" + result);
+		return result;
 	}
 
 	/**
