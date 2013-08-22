@@ -260,22 +260,28 @@ public class HibernateCrudJpaDao<T extends Object> implements CrudDao<T>,
 	}
 
 	protected int executeSql(final String sql, final List<Object> args) {
+		return this.executeSql(sql,
+				args != null && !args.isEmpty() ? args.toArray()
+						: (Object[]) null);
+	}
+
+	protected int executeSql(final String sql, final Object[] args) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("sql=" + sql);
 			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
+					+ StringUtils.arrayToCommaDelimitedString(args));
 		}
 		Integer result = this.jpaTemplate.execute(new JpaCallback<Integer>() {
 			public Integer doInJpa(EntityManager em)
 					throws PersistenceException {
 				javax.persistence.Query query = createSqlQuery(em, sql,
-						args != null ? args.toArray() : null);
+						args != null ? args : null);
 				jpaTemplate.prepareQuery(query);
 				return query.executeUpdate();
 			}
 		});
 		if (logger.isDebugEnabled())
-			logger.debug("executeUpdate count=" + result);
+			logger.debug("executeSql count=" + result);
 		return result;
 	}
 
