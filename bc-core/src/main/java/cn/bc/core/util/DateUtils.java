@@ -692,4 +692,25 @@ public class DateUtils {
 		
 		return to;
 	}
+	
+	/**
+	 * 判断日期是否为月末
+	 * @return true 是月末  false非月末，
+	 */
+	public static boolean isMonthEnd(Calendar calendar){
+		if (calendar == null)
+			return false;
+		Calendar date =Calendar.getInstance();
+		date.set(calendar.get(Calendar.YEAR)
+				, calendar.get(Calendar.MONTH)
+				, calendar.get(Calendar.DAY_OF_MONTH)
+				, calendar.get(Calendar.HOUR_OF_DAY)
+				, calendar.get(Calendar.MINUTE)
+				, calendar.get(Calendar.SECOND));
+		int month = date.get(Calendar.MONTH);
+		//加1日
+		date.add(Calendar.DAY_OF_MONTH, 1);
+		int _month = date.get(Calendar.MONTH);
+		return month!=_month;
+	}
 }
