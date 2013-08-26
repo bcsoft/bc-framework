@@ -98,4 +98,32 @@
 		<action name="paging" class="selectTempalteParamAction" method="paging"/>
 		<action name="data" class="selectTempalteParamAction" method="data"/>
 	</package>
+	
+	<!-- 动态在线查看或下载通过模板格式化后附件的入口 -->
+	<package name="templateDynamicViewFile" extends="bc-default" namespace="/bc/templateDynamicViewFile">
+		<action name="download" class="templateDynamicViewFileAction" method="download">
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${contentType}</param>
+				<param name="contentLength">${contentLength}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">attachment; filename="${filename}"</param>
+			</result>
+		</action>
+		<action name="inline" class="templateDynamicViewFileAction" method="inline">
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${contentType}</param>
+				<param name="contentLength">${contentLength}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">inline; filename="${filename}"</param>
+			</result>
+		</action>
+	</package>
 </struts>
