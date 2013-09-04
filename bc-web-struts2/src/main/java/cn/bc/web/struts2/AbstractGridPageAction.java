@@ -931,8 +931,8 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @return
 	 */
 	protected String getAdvanceSearchConditionsActionPath() {
-		return this.getHtmlPageNamespace() + "/" + this.getFormActionName()
-				+ "s/conditions";
+		return this.getModuleContextPath() + "/" + this.getViewActionName()
+				+ "/conditions";
 	}
 
 	/**
