@@ -51,6 +51,8 @@ public class EmailAction extends EntityAction<Long, Email> {
 	public Integer openType;// 类型 1-已发邮件 2-已收邮件 3-垃圾邮件
 	public String receivers;// 邮件接收人
 	public String week4cn;//星期
+	public Integer trashSource;//从垃圾箱查看时的来源 1-发件箱，2-收件箱
+	public String trashHandleDate;//移动到垃圾箱时的操作时间
 	
 	public List<Actor> receiverList;//收件人集合
 	public List<Actor> ccList;//抄送集合

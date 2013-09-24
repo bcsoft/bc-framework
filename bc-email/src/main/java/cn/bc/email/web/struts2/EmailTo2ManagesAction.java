@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
@@ -52,18 +53,41 @@ public class EmailTo2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>() {
+			// 自己根据条件构建实际的sql
+			@Override
+			public String getSql(Condition condition) {
+				Assert.notNull(condition);
+				return getSelect() + " " + getFromWhereSql(condition);
+			}
 
+			@Override
+			public String getFromWhereSql(Condition condition) {
+				Assert.notNull(condition);
+				String expression = condition.getExpression();
+				if (!expression.startsWith("order by")) {
+					expression = "where " + expression;
+				}
+				return getFrom().replace("${condition}", expression);
+			}
+		};
+		
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.subject,e.send_date,t.id to_id,t.read_,a.name,a2.name receiver,a3.name upper,e.type_");
-		sql.append(",getemailreceiverreadcount(e.id,a2.code)");
-		sql.append(" from bc_email_to t");
-		sql.append(" inner join bc_email e on e.id=t.pid");
-		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
-		sql.append(" inner join bc_identity_actor a2 on a2.id=t.receiver_id");
-		sql.append(" left join bc_identity_actor a3 on a3.id=t.upper_id");
-		sqlObject.setSql(sql.toString());
+		StringBuffer selectSql = new StringBuffer();
+		selectSql.append("select t2.*,getemailreceiverreadcount(t2.id,t2.code)");
+
+		StringBuffer fromSql = new StringBuffer();
+		
+		fromSql.append(" from (select e.id,e.subject,e.send_date,t.id to_id,t.read_,a.name,a2.name receiver,a2.code,a3.name upper,e.type_");
+		fromSql.append(" from bc_email_to t");
+		fromSql.append(" inner join bc_email e on e.id=t.pid");
+		fromSql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
+		fromSql.append(" inner join bc_identity_actor a2 on a2.id=t.receiver_id");
+		fromSql.append(" left join bc_identity_actor a3 on a3.id=t.upper_id");
+		fromSql.append(" ${condition} ) t2");
+		
+		sqlObject.setSelect(selectSql.toString());
+		sqlObject.setFrom(fromSql.toString());
 
 		// 注入参数
 		sqlObject.setArgs(null);
@@ -80,6 +104,7 @@ public class EmailTo2ManagesAction extends ViewAction<Map<String, Object>> {
 				map.put("read", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("receiver", rs[i++]);
+				map.put("code", rs[i++]);
 				map.put("upper", rs[i++]);
 				map.put("type", rs[i++]);
 				map.put("receiverReadCount", rs[i++]);//邮件查阅次数
