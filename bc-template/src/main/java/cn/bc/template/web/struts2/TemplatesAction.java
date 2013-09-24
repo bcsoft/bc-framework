@@ -294,7 +294,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/template/list.js";
+		return this.getModuleContextPath() + "/template/list.js";
 	}
 
 	// ==高级搜索代码开始==
