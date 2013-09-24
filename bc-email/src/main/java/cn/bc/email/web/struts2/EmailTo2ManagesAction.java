@@ -194,7 +194,7 @@ public class EmailTo2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/manage/view.js";
+		return this.getModuleContextPath() + "/email/manage/view.js";
 	}
 
 	@Override

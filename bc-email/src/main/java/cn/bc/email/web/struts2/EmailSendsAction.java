@@ -175,8 +175,8 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/send/view.js" + ","
-				+ this.getHtmlPageNamespace() + "/email/view.js";
+		return this.getModuleContextPath() + "/email/send/view.js" + ","
+				+ this.getModuleContextPath() + "/email/view.js";
 	}
 
 	@Override

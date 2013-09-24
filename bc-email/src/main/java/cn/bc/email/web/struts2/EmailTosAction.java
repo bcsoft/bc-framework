@@ -203,8 +203,8 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/to/view.js" + ","
-				+ this.getHtmlPageNamespace() + "/email/view.js";
+		return this.getModuleContextPath() + "/email/to/view.js" + ","
+				+ this.getModuleContextPath() + "/email/view.js";
 	}
 
 	@Override

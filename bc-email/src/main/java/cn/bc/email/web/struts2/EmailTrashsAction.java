@@ -163,8 +163,8 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/email/trash/view.js" + ","
-				+ this.getHtmlPageNamespace() + "/email/view.js";
+		return this.getModuleContextPath() + "/email/trash/view.js" + ","
+				+ this.getModuleContextPath() + "/email/view.js";
 	}
 	
 	@Override
