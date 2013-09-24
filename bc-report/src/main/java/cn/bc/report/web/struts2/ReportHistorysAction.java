@@ -254,7 +254,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/history/list.js";
+		return this.getModuleContextPath() + "/report/history/list.js";
 	}
 
 	@Override

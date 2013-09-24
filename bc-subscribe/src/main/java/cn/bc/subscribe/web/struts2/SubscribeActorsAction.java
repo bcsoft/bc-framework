@@ -256,8 +256,8 @@ public class SubscribeActorsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/subscribe/actor/view.js"
-				+","+this.getHtmlPageNamespace() + "/subscribe/subscribe.js";
+		return this.getModuleContextPath() + "/subscribe/actor/view.js"
+				+","+this.getModuleContextPath() + "/subscribe/subscribe.js";
 	}
 
 }

@@ -193,7 +193,6 @@ public class ReportTasksAction extends ViewAction<Map<String, Object>> {
 	
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/task/list.js";
+		return this.getModuleContextPath() + "/report/task/list.js";
 	}
-
 }

@@ -275,7 +275,6 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/report/template/list.js";
+		return this.getModuleContextPath() + "/report/template/list.js";
 	}
-
 }
