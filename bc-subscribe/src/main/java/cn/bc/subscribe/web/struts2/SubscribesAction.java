@@ -262,7 +262,7 @@ public class SubscribesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/subscribe/view.js"
+		return this.getModuleContextPath() + "/subscribe/view.js"
 				+","+this.getContextPath()+"/bc/acl/accessControl.js";
 	}
 	

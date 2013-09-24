@@ -236,8 +236,8 @@ public class SubscribePersonalsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/subscribe/personal/view.js"
-				+","+this.getHtmlPageNamespace() + "/subscribe/subscribe.js";
+		return this.getModuleContextPath() + "/subscribe/personal/view.js"
+				+","+this.getModuleContextPath() + "/subscribe/subscribe.js";
 	}
 
 }
