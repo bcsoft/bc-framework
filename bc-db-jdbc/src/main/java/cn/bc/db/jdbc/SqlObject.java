@@ -22,6 +22,7 @@ public class SqlObject<T extends Object> {
 	private String select;// sql查询语句的"select ..."部分
 	private String from;// sql查询语句的"from ..."部分
 	private String where;// sql查询语句的"where ..."部分
+	private String groupBy;// sql查询语句的"group by ..."部分
 	private String orderBy;// sql查询语句的"order by ..."部分
 	private List<Object> args;// 查询参数
 	private RowMapper<T> rowMapper;// 数据映射器
@@ -139,7 +140,7 @@ public class SqlObject<T extends Object> {
 			return sql.replace("!!", "");
 		}
 
-		// 根据select、where、orderBy拼凑出sql
+		// 根据select、where、groupBy、orderBy拼凑出sql
 		String t = "";
 		if (select != null) {
 			t += "select " + select;
@@ -150,9 +151,12 @@ public class SqlObject<T extends Object> {
 		if (where != null) {
 			t += " where " + where;
 		}
-		if (orderBy != null) {
-			t += " order by " + orderBy;
-		}
+        if (groupBy != null) {
+            t += " group by " + groupBy;
+        }
+        if (orderBy != null) {
+            t += " order by " + orderBy;
+        }
 
 		return t;
 	}
@@ -174,7 +178,8 @@ public class SqlObject<T extends Object> {
 		return sql.replaceAll("(?i)select", "select")
 				.replaceAll("(?i)from", "from")
 				.replaceAll("(?i)where", "where")
-				.replaceAll("(?i)order by", "order by");
+                .replaceAll("(?i)order by", "order by")
+                .replaceAll("(?i)group by", "group by");
 	}
 
 	public List<Object> getArgs() {
@@ -218,7 +223,11 @@ public class SqlObject<T extends Object> {
 		return this;
 	}
 
-	public SqlObject<T> setOrderBy(String orderBy) {
+    public void setGroupBy(String groupBy) {
+        this.groupBy = innerDealSql(groupBy);
+    }
+
+    public SqlObject<T> setOrderBy(String orderBy) {
 		this.orderBy = innerDealSql(orderBy);
 		return this;
 	}

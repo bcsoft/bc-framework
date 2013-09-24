@@ -25,7 +25,7 @@ public abstract class ViewAction<T extends Object> extends ViewActionWithJpa<T> 
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected String getHtmlPageNamespace() {
+	protected String getModuleContextPath() {
 		return this.getContextPath() + BCConstants.NAMESPACE;
 	}
 
