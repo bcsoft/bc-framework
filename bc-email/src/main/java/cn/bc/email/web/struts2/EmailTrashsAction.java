@@ -93,12 +93,13 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new KeyValueFormater(getStatuses())));
 		columns.add(new TextColumn4MapKey("e.subject", "subject",
 				getText("email.subject")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("e.send_date", "sendDate",
+		columns.add(new TextColumn4MapKey("t.handle_date", "handleDate",
 				getText("email.date"), 90)
 				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
 		columns.add(new HiddenColumn4MapKey("emailId", "emailId"));
 		columns.add(new HiddenColumn4MapKey("source", "source"));
 		columns.add(new HiddenColumn4MapKey("openType", "openType"));
+		columns.add(new HiddenColumn4MapKey("handleDate", "handleDate"));
 		return columns;
 	}
 	
