@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
-import cn.bc.BCConstants;
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
@@ -138,13 +137,8 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected String getAdvanceSearchConditionsActionPath() {
-		return this.getHtmlPageNamespace() + "/report/conditions";
-	}
-
-	@Override
-	protected String getHtmlPageNamespace() {
-		return this.getContextPath() + BCConstants.NAMESPACE;
+	protected String getFormActionName() {
+		return "report";
 	}
 
 	@Override
@@ -477,10 +471,5 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	protected String getGridDblRowMethod() {
 		// 取消双击处理函数
 		return null;
-	}
-
-	@Override
-	protected String getFormActionName() {
-		return "Report";
 	}
 }
