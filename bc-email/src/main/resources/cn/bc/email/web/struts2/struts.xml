@@ -39,6 +39,22 @@
 		</action>
 	</package>
 	
+	<!-- 草稿箱  -->
+	<package name="emailDrafts" extends="bc-default" namespace="/bc/emailDrafts">
+		<action name="export" class="emailDraftsAction" method="export" />
+		<action name="list" class="emailDraftsAction" method="list" />
+		<action name="paging" class="emailDraftsAction" method="paging" />
+		<action name="data" class="emailDraftsAction" method="data" />
+		<!-- 高级搜索条件窗口 -->
+		<action name="conditions" class="emailDraftsAction" method="conditions">
+			<result name="success">/bc/email/draft/conditions.jsp</result>
+		</action>
+	</package>
+	
+	<package name="emailDraft" extends="bc-default" namespace="/bc/emailDraft">
+		<action name="delete" class="emailAction" method="delete"/>
+	</package>
+	
 	<package name="email" extends="bc-default" namespace="/bc/email">
 		<action name="create" class="emailAction" method="create">
 			<result name="form">/bc/email/form.jsp</result>

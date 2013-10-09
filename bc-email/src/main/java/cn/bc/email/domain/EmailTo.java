@@ -73,7 +73,7 @@ public class EmailTo extends EntityImpl {
 		this.read = read;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RECEIVER_ID", referencedColumnName = "ID")
 	public Actor getReceiver() {
 		return receiver;
@@ -83,7 +83,7 @@ public class EmailTo extends EntityImpl {
 		this.receiver = receiver;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "UPPER_ID", referencedColumnName = "ID")
 	public Actor getUpper() {
 		return upper;

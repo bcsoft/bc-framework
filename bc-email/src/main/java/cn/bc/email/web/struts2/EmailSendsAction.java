@@ -20,6 +20,7 @@ import cn.bc.core.query.condition.impl.QlCondition;
 import cn.bc.core.util.JsonUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.email.domain.Email;
 import cn.bc.email.domain.EmailTrash;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.formater.AbstractFormater;
@@ -183,6 +184,8 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		AndCondition ac = new AndCondition();
+		
+		ac.add(new EqualsCondition("e.status_",Email.STATUS_SENDED));
 
 		SystemContext context = (SystemContext) this.getContext();
 

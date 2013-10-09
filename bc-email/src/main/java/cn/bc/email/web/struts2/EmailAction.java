@@ -133,7 +133,12 @@ public class EmailAction extends EntityAction<Long, Email> {
 		
 		this.sortable();
 	}
-
+	
+	@Override
+	protected void afterEdit(Email entity) {
+		this.attachsUI = this.buildAttachsUI(false, false);
+	}
+	
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(630)
@@ -145,9 +150,10 @@ public class EmailAction extends EntityAction<Long, Email> {
 		// 非编辑状态没有任何操作按钮
 		if (!editable)
 			return;
-
-		pageOption.addButton(new ButtonOption(getText("email.send"), null,
+		pageOption.addButton(new ButtonOption(getText("label.save")+getText("bc.status.draft"), null,
 				"bc.emailForm.save"));
+		pageOption.addButton(new ButtonOption(getText("email.send"), null,
+				"bc.emailForm.send"));
 
 	}
 
@@ -168,103 +174,150 @@ public class EmailAction extends EntityAction<Long, Email> {
 	@Override
 	protected void beforeSave(Email entity) {
 		super.beforeSave(entity);
-		// 发送状态下设置发送日期
-		if (entity.getStatus() == Email.STATUS_SENDED) {
+		
+		//发送时保存
+		if(entity.getStatus() == Email.STATUS_SENDED){
+		
+			// 设置发送日期
 			entity.setSendDate(Calendar.getInstance());
-		}
 
-		Set<EmailTo> emailTos = new HashSet<EmailTo>();
-		Set<EmailTo> del_emailTos = new HashSet<EmailTo>();
-		try {
-			if (this.receivers != null && this.receivers.length() > 0) {
-				JSONArray jsons = new JSONArray(this.receivers);
-				JSONObject json;
-				EmailTo et;
-				Actor upper;
-				Actor receiver;
-				List<Actor> lis;
-				int j = 0;
-				for (int i = 0; i < jsons.length(); i++) {
-					json = jsons.getJSONObject(i);
-					// 已添加的用户
-					if (json.getInt("type") == 4) {
-						receiver = this.actorService.load(json.getLong("id"));
-						// 检测待添加的收件人是否与带上级中的重复。
-						for (EmailTo to : emailTos) {
-							if (to.getReceiver().equals(receiver)
-									&& to.getUpper() != null) {
-								del_emailTos.add(to);
-							}
-						}
-						// 删除带岗位的收件人，优先保存不带岗位的
-						for (EmailTo to : del_emailTos) {
-							emailTos.remove(to);
-						}
-
-						et = new EmailTo();
-						et.setEmail(entity);
-						et.setRead(false);
-						et.setReceiver(receiver);
-						et.setType(json.getInt("toType"));
-						et.setOrderNo(i + j);
-						emailTos.add(et);
-					} else {
-						// 部门或岗位
-						upper = this.actorService.load(json.getLong("id"));
-						
-						//岗位
-						if(upper.getType()== Actor.TYPE_GROUP){
-							lis = this.actorService.findFollowerWithName(
-									json.getLong("id"),null,
-									new Integer[] { ActorRelation.TYPE_BELONG },
-									new Integer[] { Actor.TYPE_USER },
-									new Integer[]{BCConstants.STATUS_ENABLED});
-						//部门
-						}else{
-							lis = this.actorService.findDescendantUser(json.getLong("id"), 
-									new Integer[]{BCConstants.STATUS_ENABLED}, Actor.TYPE_UNIT,Actor.TYPE_DEPARTMENT);
-						}
-						
-						
-						for (Actor a : lis) {
-							boolean _save = true;
-							// 已保存的接收人不再进行保存
+			Set<EmailTo> emailTos = new HashSet<EmailTo>();
+			Set<EmailTo> del_emailTos = new HashSet<EmailTo>();
+			try {
+				if (this.receivers != null && this.receivers.length() > 0) {
+					JSONArray jsons = new JSONArray(this.receivers);
+					JSONObject json;
+					EmailTo et;
+					Actor upper;
+					Actor receiver;
+					List<Actor> lis;
+					int j = 0;
+					for (int i = 0; i < jsons.length(); i++) {
+						json = jsons.getJSONObject(i);
+						// 已添加的用户
+						if (json.getInt("type") == 4) {
+							receiver = this.actorService.load(json.getLong("id"));
+							// 检测待添加的收件人是否与带上级中的重复。
 							for (EmailTo to : emailTos) {
-								if (to.getReceiver().equals(a)) {
-									_save = false;
+								if (to.getReceiver().equals(receiver)
+										&& to.getUpper() != null) {
+									del_emailTos.add(to);
 								}
 							}
-
-							if (_save) {
-								et = new EmailTo();
-								et.setEmail(entity);
-								et.setRead(false);
-								et.setReceiver(a);
-								et.setUpper(upper);
-								et.setType(json.getInt("toType"));
-								et.setOrderNo(i + j);
-								emailTos.add(et);
-								j++;
+							// 删除带岗位的收件人，优先保存不带岗位的
+							for (EmailTo to : del_emailTos) {
+								emailTos.remove(to);
+							}
+	
+							et = new EmailTo();
+							et.setEmail(entity);
+							et.setRead(false);
+							et.setReceiver(receiver);
+							et.setType(json.getInt("toType"));
+							et.setOrderNo(i + j);
+							emailTos.add(et);
+						} else {
+							// 部门或岗位
+							upper = this.actorService.load(json.getLong("id"));
+							
+							//岗位
+							if(upper.getType()== Actor.TYPE_GROUP){
+								lis = this.actorService.findFollowerWithName(
+										json.getLong("id"),null,
+										new Integer[] { ActorRelation.TYPE_BELONG },
+										new Integer[] { Actor.TYPE_USER },
+										new Integer[]{BCConstants.STATUS_ENABLED});
+							//部门
+							}else{
+								lis = this.actorService.findDescendantUser(json.getLong("id"), 
+										new Integer[]{BCConstants.STATUS_ENABLED}, Actor.TYPE_UNIT,Actor.TYPE_DEPARTMENT);
+							}
+							
+							
+							for (Actor a : lis) {
+								boolean _save = true;
+								// 已保存的接收人不再进行保存
+								for (EmailTo to : emailTos) {
+									if (to.getReceiver().equals(a)) {
+										_save = false;
+									}
+								}
+	
+								if (_save) {
+									et = new EmailTo();
+									et.setEmail(entity);
+									et.setRead(false);
+									et.setReceiver(a);
+									et.setUpper(upper);
+									et.setType(json.getInt("toType"));
+									et.setOrderNo(i + j);
+									emailTos.add(et);
+									j++;
+								}
 							}
 						}
 					}
 				}
+	
+				if (this.getE().getTos() != null) {
+					this.getE().getTos().clear();
+					this.getE().getTos().addAll(emailTos);
+				} else {
+					this.getE().setTos(emailTos);
+				}
+	
+			} catch (JSONException e) {
+				logger.error(e.getMessage(), e);
+				try {
+					throw e;
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
 			}
-
-			if (this.getE().getTo() != null) {
-				this.getE().getTo().clear();
-				this.getE().getTo().addAll(emailTos);
-			} else {
-				this.getE().setTo(emailTos);
-			}
-
-		} catch (JSONException e) {
-			logger.error(e.getMessage(), e);
+			
+		}else{//草稿时保存
+			Set<EmailTo> emailTos = new HashSet<EmailTo>();
 			try {
-				throw e;
-			} catch (JSONException e1) {
-				e1.printStackTrace();
+				if (this.receivers != null && this.receivers.length() > 0) {
+					JSONArray jsons = new JSONArray(this.receivers);
+					JSONObject json;
+					EmailTo et;
+					for (int i = 0; i < jsons.length(); i++) {
+						json = jsons.getJSONObject(i);
+						et = new EmailTo();
+						et.setEmail(entity);
+						et.setRead(false);
+						et.setType(json.getInt("toType"));
+						et.setOrderNo(i);
+
+						// 已添加的用户
+						if (json.getInt("type") == 4) {
+							et.setReceiver(this.actorService.load(json.getLong("id")));
+						} else {
+							// 部门或岗位
+							et.setUpper(this.actorService.load(json.getLong("id")));
+
+						}
+						emailTos.add(et);
+					}
+				}
+	
+				if (this.getE().getTos() != null) {
+					this.getE().getTos().clear();
+					this.getE().getTos().addAll(emailTos);
+				} else {
+					this.getE().setTos(emailTos);
+				}
+	
+			} catch (JSONException e) {
+				logger.error(e.getMessage(), e);
+				try {
+					throw e;
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
 			}
+			
 		}
 	}
 	
@@ -299,7 +352,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 		et.setType(EmailTo.TYPE_TO);
 		Set<EmailTo> ets = new HashSet<EmailTo>();
 		ets.add(et);
-		this.getE().setTo(ets);
+		this.getE().setTos(ets);
 
 		// 设置回复的内容
 		String content = "<div>&nbsp;</div><div>&nbsp;</div>";
@@ -354,7 +407,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 		Actor receiver_upper=null;
 		Actor cc_upper=null;
 		
-		for (EmailTo et : entity.getTo()) {
+		for (EmailTo et : entity.getTos()) {
 			// 收件人的信息
 			if (et.getType() == EmailTo.TYPE_TO) {
 				if(et.getUpper() == null){
@@ -435,7 +488,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 	
 	//将收件人分类
 	private void sortable(){
-		Set<EmailTo> tos= this.getE().getTo();
+		Set<EmailTo> tos= this.getE().getTos();
 		if(tos == null)return;
 		for(EmailTo to:tos){
 			//拥有上级
