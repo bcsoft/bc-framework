@@ -16,10 +16,21 @@ import cn.bc.identity.domain.FileEntityImpl;
 @Table(name = "BC_FORM")
 public class Form extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
+	private String uid; //附件编码
 	private String type;// 类别
 	private String subject;// 标题
 	private String template;// 模板
+	
+	
+	@Column(name = "UID_")
+	public String getUid() {
+		return uid;
+	}
 
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	
 	@Column(name = "TYPE_")
 	public String getType() {
 		return type;
@@ -45,4 +56,6 @@ public class Form extends FileEntityImpl {
 	public void setTemplate(String template) {
 		this.template = template;
 	}
+	
+	
 }

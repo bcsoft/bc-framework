@@ -41,7 +41,7 @@
 		<suspend_validator>false</suspend_validator>
 		<export_setting>
 			<category_name_to_export>All</category_name_to_export>
-			<ddl_output>E:\Work\bc-eclipse\bc-business-arrange\docs\t.sql</ddl_output>
+			<ddl_output>E:\work\bc-framework\bc-form\docs\form.sql</ddl_output>
 			<excel_output></excel_output>
 			<excel_template></excel_template>
 			<image_output></image_output>
@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2012-06-08 10:14:54</creation_date>
-			<updated_date>2013-10-12 11:08:23</updated_date>
+			<updated_date>2013-10-12 17:59:38</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -179,8 +179,8 @@
 			<unsigned>false</unsigned>
 			<args></args>
 			<description></description>
-			<logical_name>id</logical_name>
-			<physical_name>id</physical_name>
+			<logical_name>ID</logical_name>
+			<physical_name>ID</physical_name>
 			<type>integer</type>
 		</word>
 		<word>
@@ -192,8 +192,8 @@
 			<unsigned>false</unsigned>
 			<args></args>
 			<description></description>
-			<logical_name>ID</logical_name>
-			<physical_name>ID</physical_name>
+			<logical_name>id</logical_name>
+			<physical_name>id</physical_name>
 			<type>integer</type>
 		</word>
 		<word>
@@ -289,6 +289,19 @@
 		</word>
 		<word>
 			<id>11</id>
+			<length>36</length>
+			<decimal>null</decimal>
+			<array>false</array>
+			<array_dimension>null</array_dimension>
+			<unsigned>false</unsigned>
+			<args></args>
+			<description></description>
+			<logical_name>关联附件的标识号</logical_name>
+			<physical_name>UID_</physical_name>
+			<type>varchar(n)</type>
+		</word>
+		<word>
+			<id>12</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -301,7 +314,7 @@
 			<type>timestamp</type>
 		</word>
 		<word>
-			<id>12</id>
+			<id>13</id>
 			<length>4000</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -323,54 +336,20 @@
 			<width>-1</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>12</x>
-			<y>12</y>
+			<x>37</x>
+			<y>270</y>
 			<color>
-				<r>128</r>
+				<r>255</r>
 				<g>128</g>
 				<b>192</b>
 			</color>
 			<connections>
-				<relation>
-					<id>0</id>
-					<source>3</source>
-					<target>0</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_AUTHOR</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>78</source_xp>
-					<source_yp>0</source_yp>
-					<target_xp>77</target_xp>
-					<target_yp>100</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-				<relation>
-					<id>1</id>
-					<source>3</source>
-					<target>0</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_MODIFIER</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>91</source_xp>
-					<source_yp>0</source_yp>
-					<target_xp>89</target_xp>
-					<target_yp>100</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
 			</connections>
-			<physical_name>BC_FORM</physical_name>
-			<logical_name>表单</logical_name>
+			<physical_name>BC_IDENTITY_ACTOR_HISTORY</physical_name>
+			<logical_name>参与者历史</logical_name>
 			<description></description>
 			<constraint></constraint>
-			<primary_key_name>BCPK_FORM</primary_key_name>
+			<primary_key_name>BCPK_IDENTITY_ACTOR_HISTORY</primary_key_name>
 			<option></option>
 			<columns>
 				<normal_column>
@@ -405,502 +384,33 @@
 						<decimal_size>0</decimal_size>
 					</sequence>
 				</normal_column>
-				<normal_column>
-					<word_id>10</word_id>
-					<id>1</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>varchar(n)</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>7</word_id>
-					<id>2</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>varchar(n)</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>8</word_id>
-					<id>3</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>varchar(n)</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<id>4</id>
-					<referenced_column>20</referenced_column>
-					<relation>0</relation>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name>创建人ID</logical_name>
-					<physical_name>AUTHOR_ID</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>1</word_id>
-					<id>5</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>timestamp</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<id>6</id>
-					<referenced_column>20</referenced_column>
-					<relation>1</relation>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name>最后修改人ID</logical_name>
-					<physical_name>MODIFIER_ID</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>5</word_id>
-					<id>7</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>timestamp</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
 			</columns>
 			<indexes>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>
 			<table_properties>
-				<schema></schema>
+				<schema>public</schema>
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
-		<table>
+		<note>
 			<id>1</id>
-			<height>-1</height>
-			<width>-1</width>
+			<height>144</height>
+			<width>363</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>374</x>
-			<y>255</y>
+			<x>9</x>
+			<y>349</y>
 			<color>
-				<r>128</r>
+				<r>255</r>
 				<g>128</g>
 				<b>192</b>
 			</color>
 			<connections>
-				<relation>
-					<id>2</id>
-					<source>3</source>
-					<target>1</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_FIELD_LOG_UPDATOR</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>100</source_xp>
-					<source_yp>47</source_yp>
-					<target_xp>0</target_xp>
-					<target_yp>28</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-				<relation>
-					<id>3</id>
-					<source>2</source>
-					<target>1</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_FIELD_LOG_PID</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>39</source_xp>
-					<source_yp>100</source_yp>
-					<target_xp>32</target_xp>
-					<target_yp>0</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
 			</connections>
-			<physical_name>BC_FORM_FIELD_LOG</physical_name>
-			<logical_name>表单字段审计日志</logical_name>
-			<description></description>
-			<constraint></constraint>
-			<primary_key_name>BCPK_FORM_FIELD_LOG</primary_key_name>
-			<option></option>
-			<columns>
-				<normal_column>
-					<word_id>3</word_id>
-					<id>8</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>true</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<id>9</id>
-					<referenced_column>14</referenced_column>
-					<relation>3</relation>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name>所属字段</logical_name>
-					<physical_name>PID</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>12</word_id>
-					<id>10</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>varchar(n)</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>false</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<id>11</id>
-					<referenced_column>20</referenced_column>
-					<relation>2</relation>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name>更新人</logical_name>
-					<physical_name>UPDATOR</physical_name>
-					<type>integer</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>true</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>11</word_id>
-					<id>12</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>timestamp</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-				<normal_column>
-					<word_id>0</word_id>
-					<id>13</id>
-					<description></description>
-					<unique_key_name></unique_key_name>
-					<logical_name></logical_name>
-					<physical_name></physical_name>
-					<type>varchar(n)</type>
-					<constraint></constraint>
-					<default_value></default_value>
-					<auto_increment>false</auto_increment>
-					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
-					<primary_key>false</primary_key>
-					<unique_key>false</unique_key>
-					<character_set></character_set>
-					<collation></collation>
-					<sequence>
-						<name></name>
-						<schema></schema>
-						<increment></increment>
-						<min_value></min_value>
-						<max_value></max_value>
-						<start></start>
-						<cache></cache>
-						<cycle>false</cycle>
-						<order>false</order>
-						<description></description>
-						<data_type></data_type>
-						<decimal_size>0</decimal_size>
-					</sequence>
-				</normal_column>
-			</columns>
-			<indexes>
-			</indexes>
-			<complex_unique_key_list>
-			</complex_unique_key_list>
-			<table_properties>
-				<schema></schema>
-				<without_oids>true</without_oids>
-			</table_properties>
-		</table>
+			<text>说明：&#x0D;&#x0A;1）实现自定义表单的信息保存功能。&#x0D;&#x0A;2）表单的信息修改后保存，都有相应字段值的审计日志。&#x0D;&#x0A;3）为了标记那些字段是一齐更新的，使用同一批号值来标记，一般使用更新时的时间锉，如yyyyMMddHmmssSSSS</text>
+		</note>
 		<table>
 			<id>2</id>
 			<height>-1</height>
@@ -916,8 +426,8 @@
 			</color>
 			<connections>
 				<relation>
-					<id>4</id>
-					<source>0</source>
+					<id>0</id>
+					<source>4</source>
 					<target>2</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
@@ -941,8 +451,8 @@
 			<option></option>
 			<columns>
 				<normal_column>
-					<word_id>3</word_id>
-					<id>14</id>
+					<word_id>2</word_id>
+					<id>1</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -973,9 +483,9 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<id>15</id>
-					<referenced_column>0</referenced_column>
-					<relation>4</relation>
+					<id>2</id>
+					<referenced_column>13</referenced_column>
+					<relation>0</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>所属表单</logical_name>
@@ -1007,7 +517,7 @@
 				</normal_column>
 				<normal_column>
 					<word_id>6</word_id>
-					<id>16</id>
+					<id>3</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1039,7 +549,7 @@
 				</normal_column>
 				<normal_column>
 					<word_id>4</word_id>
-					<id>17</id>
+					<id>4</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1071,7 +581,7 @@
 				</normal_column>
 				<normal_column>
 					<word_id>9</word_id>
-					<id>18</id>
+					<id>5</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1102,8 +612,8 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>12</word_id>
-					<id>19</id>
+					<word_id>13</word_id>
+					<id>6</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1149,25 +659,59 @@
 			<width>-1</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>37</x>
-			<y>270</y>
+			<x>374</x>
+			<y>255</y>
 			<color>
-				<r>255</r>
+				<r>128</r>
 				<g>128</g>
 				<b>192</b>
 			</color>
 			<connections>
+				<relation>
+					<id>1</id>
+					<source>2</source>
+					<target>3</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BC_FORM_FIELD_LOG_PID</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>39</source_xp>
+					<source_yp>100</source_yp>
+					<target_xp>32</target_xp>
+					<target_yp>0</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+				<relation>
+					<id>2</id>
+					<source>0</source>
+					<target>3</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BC_FORM_FIELD_LOG_UPDATOR</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>100</source_xp>
+					<source_yp>47</source_yp>
+					<target_xp>0</target_xp>
+					<target_yp>28</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
 			</connections>
-			<physical_name>BC_IDENTITY_ACTOR_HISTORY</physical_name>
-			<logical_name>参与者历史</logical_name>
+			<physical_name>BC_FORM_FIELD_LOG</physical_name>
+			<logical_name>表单字段审计日志</logical_name>
 			<description></description>
 			<constraint></constraint>
-			<primary_key_name>BCPK_IDENTITY_ACTOR_HISTORY</primary_key_name>
+			<primary_key_name>BCPK_FORM_FIELD_LOG</primary_key_name>
 			<option></option>
 			<columns>
 				<normal_column>
 					<word_id>2</word_id>
-					<id>20</id>
+					<id>7</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1197,187 +741,540 @@
 						<decimal_size>0</decimal_size>
 					</sequence>
 				</normal_column>
+				<normal_column>
+					<id>8</id>
+					<referenced_column>1</referenced_column>
+					<relation>1</relation>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name>所属字段</logical_name>
+					<physical_name>PID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>13</word_id>
+					<id>9</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>false</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<id>10</id>
+					<referenced_column>0</referenced_column>
+					<relation>2</relation>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name>更新人</logical_name>
+					<physical_name>UPDATOR</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>12</word_id>
+					<id>11</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>timestamp</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>0</word_id>
+					<id>12</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
 			</columns>
 			<indexes>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>bcidx_actorhistory_actorid</name>
-					<type>BTREE</type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>bcidx_actorhistory_actorname</name>
-					<type>BTREE</type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>bcidx_actorhistory_unit</name>
-					<type>BTREE</type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>bcidx_actorhistory_upper</name>
-					<type>BTREE</type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>
 			<table_properties>
-				<schema>public</schema>
+				<schema></schema>
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
-		<note>
+		<table>
 			<id>4</id>
-			<height>144</height>
-			<width>363</width>
+			<height>-1</height>
+			<width>-1</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>9</x>
-			<y>349</y>
+			<x>12</x>
+			<y>12</y>
 			<color>
-				<r>255</r>
+				<r>128</r>
 				<g>128</g>
 				<b>192</b>
 			</color>
 			<connections>
+				<relation>
+					<id>3</id>
+					<source>0</source>
+					<target>4</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BC_FORM_AUTHOR</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>78</source_xp>
+					<source_yp>0</source_yp>
+					<target_xp>77</target_xp>
+					<target_yp>100</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+				<relation>
+					<id>4</id>
+					<source>0</source>
+					<target>4</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BC_FORM_MODIFIER</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>91</source_xp>
+					<source_yp>0</source_yp>
+					<target_xp>89</target_xp>
+					<target_yp>100</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
 			</connections>
-			<text>说明：&#x0D;&#x0A;1）实现自定义表单的信息保存功能。&#x0D;&#x0A;2）表单的信息修改后保存，都有相应字段值的审计日志。&#x0D;&#x0A;3）为了标记那些字段是一齐更新的，使用同一批号值来标记，一般使用更新时的时间锉，如yyyyMMddHmmssSSSS</text>
-		</note>
+			<physical_name>BC_FORM</physical_name>
+			<logical_name>表单</logical_name>
+			<description></description>
+			<constraint></constraint>
+			<primary_key_name>BCPK_FORM</primary_key_name>
+			<option></option>
+			<columns>
+				<normal_column>
+					<word_id>2</word_id>
+					<id>13</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>true</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>11</word_id>
+					<id>14</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>10</word_id>
+					<id>15</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>7</word_id>
+					<id>16</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>8</word_id>
+					<id>17</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>varchar(n)</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<id>18</id>
+					<referenced_column>0</referenced_column>
+					<relation>3</relation>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name>创建人ID</logical_name>
+					<physical_name>AUTHOR_ID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>1</word_id>
+					<id>19</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>timestamp</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<id>20</id>
+					<referenced_column>0</referenced_column>
+					<relation>4</relation>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name>最后修改人ID</logical_name>
+					<physical_name>MODIFIER_ID</physical_name>
+					<type>integer</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>true</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+				<normal_column>
+					<word_id>5</word_id>
+					<id>21</id>
+					<description></description>
+					<unique_key_name></unique_key_name>
+					<logical_name></logical_name>
+					<physical_name></physical_name>
+					<type>timestamp</type>
+					<constraint></constraint>
+					<default_value></default_value>
+					<auto_increment>false</auto_increment>
+					<foreign_key>false</foreign_key>
+					<not_null>true</not_null>
+					<primary_key>false</primary_key>
+					<unique_key>false</unique_key>
+					<character_set></character_set>
+					<collation></collation>
+					<sequence>
+						<name></name>
+						<schema></schema>
+						<increment></increment>
+						<min_value></min_value>
+						<max_value></max_value>
+						<start></start>
+						<cache></cache>
+						<cycle>false</cycle>
+						<order>false</order>
+						<description></description>
+						<data_type></data_type>
+						<decimal_size>0</decimal_size>
+					</sequence>
+				</normal_column>
+			</columns>
+			<indexes>
+			</indexes>
+			<complex_unique_key_list>
+			</complex_unique_key_list>
+			<table_properties>
+				<schema></schema>
+				<without_oids>true</without_oids>
+			</table_properties>
+		</table>
 	</contents>
 	<column_groups>
 	</column_groups>
 	<test_data_list>
 	</test_data_list>
 	<sequence_set>
-		<sequence>
-			<name>core_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>11839</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>core_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>11839</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>dc_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>374859</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>dc_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>374859</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>hibernate_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>11513799</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>hibernate_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>11513799</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>idcard_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>6799</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
-		<sequence>
-			<name>idcard_sequence</name>
-			<schema>public</schema>
-			<increment>1</increment>
-			<min_value>1</min_value>
-			<max_value>9223372036854775807</max_value>
-			<start>6799</start>
-			<cache>20</cache>
-			<cycle>false</cycle>
-			<order>false</order>
-			<description></description>
-			<data_type></data_type>
-			<decimal_size>0</decimal_size>
-		</sequence>
 	</sequence_set>
 	<trigger_set>
 	</trigger_set>
