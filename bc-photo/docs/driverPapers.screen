@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="30" x="8" y="46" measuredWidth="713" measuredHeight="145">
+    <widgets xsi:type="model:Window" id="31" width="713" height="145" text="司机证件 - 视图" measuredWidth="713" measuredHeight="145" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="32" x="4" y="23" height="25" text="查看|编辑,删除" measuredWidth="117" measuredHeight="25" selection="">
+      <font/>
+      <items x="0" y="0" width="72" height="25" text="查看|编辑"/>
+      <items x="72" y="0" width="45" height="25" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="33" y="50" width="713" height="95" text="(w:30). !,(w:20). 状态,(w:20). 司机状态,(w:30). 车队,(w:20). 姓名,(w:20). 性别,(w:20). 入职日期,证件名称,(w:20). 文件大小,(w:20). 服务资格证,(w:20). 联系电话,(w:20). 最后修改&#xA;1,未上传,在案,一分一队,[小明],男,2013-01-03,身份证&#xA;2,已上传,在案,一分一队,[小明],男,2013-01-02,服务资格证,45KB,,,小张 (2013-01-01)&#xA;3,已上传,在案,一分一队,[小明],男,2013-01-01,从业资格证,35KB,,,小张 (2013-01-01)" measuredWidth="713" measuredHeight="95" alternative="#eeeeee">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="34" x="520" y="24" measuredWidth="183" measuredHeight="24">
+      <widgets xsi:type="model:SearchField" id="35" width="183" measuredWidth="183" measuredHeight="24"/>
+      <widgets xsi:type="model:Icon" id="36" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="37" x="126" y="23" height="25" text="已上传,未上传" measuredWidth="114" measuredHeight="25" selection="0">
+      <font/>
+      <items x="0" y="0" width="57" height="25" text="已上传"/>
+      <items x="57" y="0" width="57" height="25" text="未上传"/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="39" x="246" y="23" height="25" text="司机状态：在案,注销,草稿,全部" measuredWidth="238" measuredHeight="25" selection="0">
+      <font/>
+      <items x="0" y="0" width="105" height="25" text="司机状态：在案"/>
+      <items x="105" y="0" width="44" height="25" text="注销"/>
+      <items x="149" y="0" width="44" height="25" text="草稿"/>
+      <items x="193" y="0" width="45" height="25" text="全部"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="40" x="8" y="198" measuredWidth="868" measuredHeight="608">
+    <widgets xsi:type="model:Window" id="41" width="713" height="569" text="小明的身份证 - 司机证件表单" measuredWidth="713" measuredHeight="569" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:WidgetGroup" id="97" y="19" measuredWidth="713" measuredHeight="257">
+      <widgets xsi:type="model:Accordion" id="98" width="713" height="257" text="证件信息：" measuredWidth="713" measuredHeight="257" selection="0">
+        <items x="0" y="2" width="713" height="27" text="证件信息："/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="99" x="687" y="8" measuredWidth="16" measuredHeight="16" icon="asc (small)"/>
+      <widgets xsi:type="model:Image" id="102" x="4" y="30" measuredWidth="705" measuredHeight="225" src="身份证模板.jpg"/>
+      <widgets xsi:type="model:Label" id="115" x="72" y="3" text="小李 于 2012-10-01 14:08 创建，张三 于 2012-10-02 14:12 最后修改" measuredWidth="387" measuredHeight="25" textAlignment="Right" foreground="#999999">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:HLine" id="117" x="71" y="76" width="48" measuredWidth="48" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="118" x="71" y="101" width="26" measuredWidth="26" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="119" x="71" y="127" width="34" measuredWidth="34" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="120" x="136" y="101" width="26" measuredWidth="26" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="121" x="118" y="127" width="24" measuredWidth="24" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="122" x="151" y="127" width="23" measuredWidth="23" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="123" x="72" y="177" width="149" measuredWidth="149" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="124" x="121" y="229" width="195" measuredWidth="195" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="125" x="498" y="205" width="189" measuredWidth="189" measuredHeight="6"/>
+      <widgets xsi:type="model:HLine" id="126" x="498" y="232" width="189" measuredWidth="189" measuredHeight="6"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="78" x="662" y="536" width="41" text="确定" measuredWidth="41" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="103" y="274" measuredWidth="713" measuredHeight="257">
+      <widgets xsi:type="model:Accordion" id="104" width="713" height="257" text="证件图片：" measuredWidth="713" measuredHeight="257" selection="0">
+        <items x="0" y="2" width="713" height="27" text="证件图片："/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="105" x="538" y="3" measuredWidth="24" measuredHeight="24" icon="edit (medium)"/>
+      <widgets xsi:type="model:Image" id="106" x="4" y="30" measuredWidth="705" measuredHeight="225" src="身份证模板.jpg"/>
+      <widgets xsi:type="model:WidgetGroup" id="114" x="598" y="5" measuredWidth="81" measuredHeight="20">
+        <widgets xsi:type="model:Rectangle" id="110" width="81" height="20" text="－ 100% ＋" measuredWidth="81" measuredHeight="20" foreground="#666666" border="solid-rounded">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:VLine" id="112" x="19" y="1" height="19" measuredWidth="6" measuredHeight="19" foreground="#666666"/>
+        <widgets xsi:type="model:VLine" id="113" x="56" height="19" measuredWidth="6" measuredHeight="19" foreground="#666666"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="116" x="72" y="4" text="800 x 600 jpg" measuredWidth="84" measuredHeight="25" textAlignment="Right" foreground="#999999">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="169" x="564" y="2" measuredWidth="24" measuredHeight="24" icon="import (medium)"/>
+      <widgets xsi:type="model:Icon" id="170" x="686" y="8" measuredWidth="16" measuredHeight="16" icon="asc (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="129" x="688" y="64" width="49" height="18" measuredWidth="49" measuredHeight="18" annotation="true" foreground="#666666" left="false" right="true"/>
+    <widgets xsi:type="model:Arrow" id="131" x="688" y="400" width="49" height="18" measuredWidth="49" measuredHeight="18" annotation="true" foreground="#666666" left="false" right="true"/>
+    <widgets xsi:type="model:Text" id="132" x="736" y="72" text="用模板展现&#xD;&#xA;识别的数据" measuredWidth="60" measuredHeight="34" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Text" id="133" x="736" y="408" text="图片预览" measuredWidth="48" measuredHeight="17" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="134" x="555" y="174" width="182" height="108" measuredWidth="182" measuredHeight="108" annotation="true" foreground="#666666" left="false" right="true" direction="bottom"/>
+    <widgets xsi:type="model:Text" id="135" x="736" y="168" text="点此打开图片处理界面，&#xD;&#xA;进行上传、拍照、拼图等" measuredWidth="132" measuredHeight="34" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="136" x="640" y="297" width="97" height="65" measuredWidth="97" measuredHeight="65" annotation="true" foreground="#666666" left="false" right="true"/>
+    <widgets xsi:type="model:Text" id="137" x="736" y="352" text="点此控制预览图&#xD;&#xA;片的缩放比例" measuredWidth="84" measuredHeight="34" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="164" x="116" y="480" measuredWidth="203" measuredHeight="128">
+      <widgets xsi:type="model:Panel" id="165" width="203" height="32" measuredWidth="203" measuredHeight="32" alpha="0" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="166" y="30" width="115" height="98" measuredWidth="115" measuredHeight="98" alpha="192" foreground="#0000ff"/>
+      <widgets xsi:type="model:Text" id="167" x="10" y="36" text="取消&#xA;识别为 姓名&#xA;识别为 住址&#xA;识别为 身份证号&#xA;......" measuredWidth="88" measuredHeight="85">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="168" x="318" y="448" width="419" height="58" measuredWidth="419" measuredHeight="58" annotation="true" foreground="#666666" left="false" right="true" direction="bottom"/>
+    <widgets xsi:type="model:Arrow" id="171" x="585" y="233" width="152" height="50" measuredWidth="152" measuredHeight="50" annotation="true" foreground="#666666" left="false" right="true" direction="bottom"/>
+    <widgets xsi:type="model:Text" id="172" x="736" y="224" text="点此自动对上传的图片&#xD;&#xA;进行OCR识别" measuredWidth="120" measuredHeight="34" foreground="#666666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Text" id="173" x="736" y="443" text="鼠标框选图片中的区域，&#xD;&#xA;进行局部文字识别，通过&#xD;&#xA;下拉菜单控制识别到证件&#xD;&#xA;信息的指定字段" measuredWidth="132" measuredHeight="68" foreground="#666666">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Label" id="174" x="8" y="8" text="司机证件管理" measuredWidth="149" measuredHeight="39">
+    <font size="18"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="178" x="8" y="822" measuredWidth="668" measuredHeight="163">
+    <widgets xsi:type="model:WidgetGroup" id="179" y="34" measuredWidth="313" measuredHeight="129">
+      <widgets xsi:type="model:Panel" id="180" width="313" height="129" measuredWidth="313" measuredHeight="129"/>
+      <widgets xsi:type="model:Label" id="181" x="8" y="4" text="1 个附件共 50 KB" measuredWidth="102" measuredHeight="25" foreground="#351c75">
+        <font bold="true" underline="false"/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="182" x="122" y="4" text="添加附件{desc}" measuredWidth="67" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="183" x="191" y="4" text="打包下载" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Link" id="184" x="250" y="4" text="全部删除" measuredWidth="51" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="185" x="8" y="28" measuredWidth="205" measuredHeight="49">
+        <widgets xsi:type="model:Icon" id="186" y="1" measuredWidth="48" measuredHeight="48" icon="image (xlarge)"/>
+        <widgets xsi:type="model:Label" id="187" x="54" text="身份证.jpg" measuredWidth="63" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="188" x="54" y="24" text="50KB" measuredWidth="35" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="189" x="88" y="24" text="在线查看" measuredWidth="51" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="190" x="146" y="24" text="下载" measuredWidth="27" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="191" x="178" y="24" text="删除" measuredWidth="27" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:WidgetGroup" id="192" x="8" y="76" measuredWidth="205" measuredHeight="49">
+        <widgets xsi:type="model:Icon" id="193" y="1" measuredWidth="48" measuredHeight="48" icon="image (xlarge)"/>
+        <widgets xsi:type="model:Label" id="194" x="54" text="服务资格证.jpg" measuredWidth="87" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Label" id="195" x="54" y="24" text="35KB" measuredWidth="35" measuredHeight="25">
+          <font underline="false"/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="196" x="88" y="24" text="在线查看" measuredWidth="51" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="197" x="146" y="24" text="下载" measuredWidth="27" measuredHeight="25">
+          <font/>
+        </widgets>
+        <widgets xsi:type="model:Link" id="198" x="178" y="24" text="删除" measuredWidth="27" measuredHeight="25">
+          <font/>
+        </widgets>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Arrow" id="199" x="178" y="51" width="159" height="44" measuredWidth="159" measuredHeight="44" annotation="true" foreground="#999999" left="false" right="true"/>
+    <widgets xsi:type="model:Label" id="200" text="司机表单的附件控件" measuredWidth="221" measuredHeight="39">
+      <font size="18"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="201" x="336" y="57" measuredWidth="332" measuredHeight="106">
+      <widgets xsi:type="model:Combo" id="202" text="添加附件" measuredWidth="72" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="203" x="153" y="25" text="ptype=Driver.ShenFenZheng" measuredWidth="169" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="204" x="153" y="53" text="ptype=Driver.FuWuZiGeZheng" measuredWidth="179" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Panel" id="205" y="23" width="115" height="83" measuredWidth="115" measuredHeight="83" alpha="192"/>
+      <widgets xsi:type="model:Text" id="206" x="10" y="29" text="取消&#xA;添加为 身份证&#xA;添加为 服务资格证&#xA;......" measuredWidth="100" measuredHeight="68">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Arrow" id="207" x="80" y="30" width="73" height="14" measuredWidth="73" measuredHeight="14" annotation="true" foreground="#666666" left="false" right="true"/>
+      <widgets xsi:type="model:Arrow" id="208" x="94" y="57" width="59" height="14" measuredWidth="59" measuredHeight="14" annotation="true" foreground="#666666" left="false" right="true"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
