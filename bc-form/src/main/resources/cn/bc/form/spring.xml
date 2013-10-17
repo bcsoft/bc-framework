@@ -13,5 +13,9 @@
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
-
+	<!--form -->
+	<bean id="formDao"
+		class="cn.bc.form.dao.hibernate.jpa.FormDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="formService" class="cn.bc.form.service.FormServiceImpl" />
 </beans>

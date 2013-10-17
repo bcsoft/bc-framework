@@ -3,5 +3,8 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-
+	<!-- 自定义表单 -->
+	<package name="customForm" extends="bc-default" namespace="/bc/customForm">
+		<action name="create" class="customFormEntityAction" method="create" />
+	</package>
 </struts>
