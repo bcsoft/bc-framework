@@ -66,6 +66,7 @@ public class BulletinAction extends EntityAction<Long, Bulletin> implements
 			boolean readonly = !context.hasAnyRole(
 					getText("key.role.bc.bulletin"),
 					getText("key.role.bc.admin"));// 电子公告管理或超级管理角色
+			
 			return readonly;
 		}
 	}

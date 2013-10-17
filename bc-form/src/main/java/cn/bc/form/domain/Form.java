@@ -19,7 +19,7 @@ public class Form extends FileEntityImpl {
 	private String uid; //附件编码
 	private String type;// 类别
 	private String subject;// 标题
-	private String template;// 模板
+	private String template;// 模板编码
 	
 	
 	@Column(name = "UID_")
