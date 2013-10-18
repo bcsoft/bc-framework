@@ -16,10 +16,10 @@ public interface FormService extends CrudService<Form> {
 	/**
 	 * 初始化自定义表单
 	 * 
-	 * @param templCode
+	 * @param tpl
 	 *            表单编码
 	 */
-	public void initForm(String templCode);
+	public void initForm(String tpl);
 
 	/**
 	 * 获取格式化后的表单

@@ -39,8 +39,8 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements
 		this.templateService = templateService;
 	}
 	
-	public void initForm(String templCode) {
-		templContent = templateService.getContent(templCode);
+	public void initForm(String tpl) {
+		templContent = templateService.getContent(tpl);
 		List<String> keyNames = TemplateUtils.findMarkers(templContent);
 
 		for(int i=0; i<keyNames.size(); i++) {

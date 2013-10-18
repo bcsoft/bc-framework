@@ -46,7 +46,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private AttachService attachService;
 	public AttachWidget attachsUI;
 	private Form e;
-	public String templCode;// 模板编码：如果含字符":"，则进行分拆，前面部分为编码，
+	public String tpl;// 模板编码：如果含字符":"，则进行分拆，前面部分为编码，
 							// 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	private Map<String, Object> formArgs = new HashMap<String, Object>();
 
@@ -93,14 +93,14 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
 		SystemContext context = (SystemContext) this.getContext();
-		this.formService.initForm(templCode);
+		this.formService.initForm(tpl);
 
 		Map<String, Object> templArgs = this.formService.getTemplArgs();
 		templArgs.put("eId", "");
 		templArgs.put("eUid", this.idGeneratorService.next("form.uid"));
 		templArgs.put("eType", "eType");
 		templArgs.put("eSubject", "eSubject");
-		templArgs.put("eTemplCode", templCode);
+		templArgs.put("eTemplCode", tpl);
 		templArgs.put("eAuthorId", context.getUserHistory().getId());
 		templArgs.put("eFileDate", Calendar.getInstance().getTime());
 		templArgs.put("eModifierId", "");
@@ -112,7 +112,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUserHistory());
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
-		e.setTemplate(templCode);
+		e.setTemplate(tpl);
 
 		// 构建附件控件
 		attachsUI = buildAttachsUI(true, false);
