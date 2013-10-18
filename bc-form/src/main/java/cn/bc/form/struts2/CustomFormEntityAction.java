@@ -1,8 +1,12 @@
 package cn.bc.form.struts2;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -41,16 +45,17 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	public AttachWidget attachsUI;
-	private Form form;
-	public String tplCode;// 模板编码：如果含字符":"，则进行分拆，前面部分为编码，
+	private Form e;
+	public String templCode;// 模板编码：如果含字符":"，则进行分拆，前面部分为编码，
 							// 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
+	private Map<String, Object> formArgs = new HashMap<String, Object>();
 
-	public Form getForm() {
-		return form;
+	public Form getE() {
+		return e;
 	}
 
-	public void setForm(Form form) {
-		this.form = form;
+	public void setE(Form e) {
+		this.e = e;
 	}
 
 	public void setRequest(Map<String, Object> request) {
@@ -87,37 +92,39 @@ public class CustomFormEntityAction extends ActionSupport implements
 	// 创建自定义表单
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
-		this.setForm(this.formService.create());
-		html = formService.getFormattedForm(tplCode);
-		afterCreate(this.getForm());
-		return "page";
-	}
-
-	// 创建表单之后
-	protected void afterCreate(Form entity) {
 		SystemContext context = (SystemContext) this.getContext();
-		Form e = this.getForm();
+		this.formService.initForm(templCode);
+
+		Map<String, Object> templArgs = this.formService.getTemplArgs();
+		templArgs.put("eId", "");
+		templArgs.put("eUid", this.idGeneratorService.next("form.uid"));
+		templArgs.put("eType", "eType");
+		templArgs.put("eSubject", "eSubject");
+		templArgs.put("eTemplCode", templCode);
+		templArgs.put("eAuthorId", context.getUserHistory().getId());
+		templArgs.put("eFileDate", Calendar.getInstance().getTime());
+		templArgs.put("eModifierId", "");
+		templArgs.put("eModifiedDate", "");
+		this.formService.setTemplArgs(templArgs);
+
+		html = formService.getFormattedForm();
+
 		e.setFileDate(Calendar.getInstance());
 		e.setAuthor(context.getUserHistory());
 		e.setUid(this.idGeneratorService.next("bulletin.uid"));
-		e.setTemplate(tplCode);
+		e.setTemplate(templCode);
 
 		// 构建附件控件
 		attachsUI = buildAttachsUI(true, false);
-	}
-
-	// 保存之前处理
-	protected void beforeSave(Form entity) {
-		Form e = this.getForm();
-		SystemContext context = (SystemContext) this.getContext();
-		e.setModifier(context.getUserHistory());
-		e.setModifiedDate(Calendar.getInstance());
+		return "page";
 	}
 
 	// 保存自定义表单
 	public String save() throws Exception {
-		Form e = this.getForm();
-		beforeSave(e);
+		SystemContext context = (SystemContext) this.getContext();
+		e.setModifier(context.getUserHistory());
+		e.setModifiedDate(Calendar.getInstance());
+		this.formService.save(e);
 		// html = formService.saveForm(uid,tplCode);
 		return "page";
 	}
@@ -132,21 +139,15 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	// 查看自定表单
 	public String open() throws Exception {
-		Form e = this.getForm();
-		afterOpen(e);
-		return "page";
-	}
-	
-	
-	protected void afterOpen(Form entity) {
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false, true);
+		return "page";
 	}
 
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 		// 构建附件控件
 		String ptype = "bulletin.main";
-		String puid = this.getForm().getUid();
+		String puid = this.getE().getUid();
 		boolean readonly = forceReadonly ? true : this.isReadonly();
 		AttachWidget attachsUI = AttachWidget.defaultAttachWidget(isNew,
 				readonly, isFlashUpload(), this.attachService, ptype, puid);
@@ -158,7 +159,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 		return attachsUI;
 	}
-	
+
 	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
 	public static boolean isFlashUpload() {
 		// TODO Opera;

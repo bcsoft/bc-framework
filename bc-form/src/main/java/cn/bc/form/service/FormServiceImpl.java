@@ -25,7 +25,9 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements
 
 	private FormDao formDao;
 	private TemplateService templateService;
-
+	private Map<String, Object> templArgs = new HashMap<String, Object>();
+	private String templContent;	
+	
 	@Autowired
 	public void setFromDao(FormDao formDao) {
 		this.setCrudDao(formDao);
@@ -36,23 +38,26 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements
 	public void setTemplateService(TemplateService templateService) {
 		this.templateService = templateService;
 	}
+	
+	public void initForm(String templCode) {
+		templContent = templateService.getContent(templCode);
+		List<String> keyNames = TemplateUtils.findMarkers(templContent);
 
-
-	public void saveForm(Long pid, Form form) {
-		// TODO Auto-generated method stub
-
+		for(int i=0; i<keyNames.size(); i++) {
+			templArgs.put(keyNames.get(i), "");
+		}
+	}
+	
+	public String getFormattedForm() {
+		String fomattedCont = TemplateUtils.format(templContent, templArgs);
+		return fomattedCont;
 	}
 
-	public String getFormattedForm(String tplCode) {
-		String Templcontent = templateService.getContent(tplCode);
-		List<String> keyNames = TemplateUtils.findMarkers(Templcontent);
-		Map<String, Object> args = new HashMap<String, Object>();
-		
-		for(int i=0; i<keyNames.size(); i++) {
-			args.put(keyNames.get(i), "");
-		}
-		
-		String fomattedCont = TemplateUtils.format(Templcontent, args);
-		return fomattedCont;
+	public Map<String, Object> getTemplArgs() {
+		return templArgs;
+	}
+	
+	public void setTemplArgs(Map<String, Object> templArgs) {
+		this.templArgs = templArgs;
 	}
 }

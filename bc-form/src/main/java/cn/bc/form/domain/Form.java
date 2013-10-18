@@ -19,7 +19,7 @@ public class Form extends FileEntityImpl {
 	private String uid; //附件编码
 	private String type;// 类别
 	private String subject;// 标题
-	private String template;// 模板编码
+	private String templCode;// 模板编码
 	
 	
 	@Column(name = "UID_")
@@ -50,11 +50,11 @@ public class Form extends FileEntityImpl {
 
 	@Column(name = "TPL_")
 	public String getTemplate() {
-		return template;
+		return templCode;
 	}
 
 	public void setTemplate(String template) {
-		this.template = template;
+		this.templCode = template;
 	}
 	
 	

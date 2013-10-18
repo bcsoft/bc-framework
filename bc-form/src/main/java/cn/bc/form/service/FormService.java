@@ -1,5 +1,7 @@
 package cn.bc.form.service;
 
+import java.util.Map;
+
 import cn.bc.core.service.CrudService;
 import cn.bc.form.domain.Form;
 
@@ -10,24 +12,33 @@ import cn.bc.form.domain.Form;
  * 
  */
 public interface FormService extends CrudService<Form> {
+
 	/**
-	 * 保存回复信息
+	 * 初始化自定义表单
 	 * 
-	 * @param pid
-	 *            自定义表单的id
-	 * @param form
-	 *            自定义表单 对象
-	 * @return
+	 * @param templCode
+	 *            表单编码
 	 */
-	void saveForm(Long pid, Form form);
-	
+	public void initForm(String templCode);
+
 	/**
 	 * 获取格式化后的表单
 	 * 
-	 * @param tplCode
-	 *            表单编码
 	 * @return
 	 */
-	public String getFormattedForm(String tplCode);
+	public String getFormattedForm();
 
+	/**
+	 * 获取模板参数
+	 * 
+	 * @return
+	 */
+	public Map<String, Object> getTemplArgs();
+
+	/**
+	 * 设置模板参数
+	 * 
+	 * @return
+	 */
+	public void setTemplArgs(Map<String, Object> templArgs);
 }

@@ -46,9 +46,5 @@ public class FormAction extends EntityAction<Long, Form> implements
 		}
 	}
 
-	public String createCustomForm() {
-		System.out.println("aaaa" + formService.getFormattedForm("BC_FORM"));
-		return "success";
-	}
-
+	
 }
