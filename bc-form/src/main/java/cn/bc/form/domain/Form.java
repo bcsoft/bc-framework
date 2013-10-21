@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import cn.bc.identity.domain.FileEntityImpl;
+import cn.bc.identity.domain.RichFileEntityImpl;
 
 /**
  * 表单
@@ -14,22 +14,12 @@ import cn.bc.identity.domain.FileEntityImpl;
  */
 @Entity
 @Table(name = "BC_FORM")
-public class Form extends FileEntityImpl {
+public class Form extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
-	private String uid; //附件编码
 	private String type;// 类别
 	private String subject;// 标题
 	private String templCode;// 模板编码
-	
-	
-	@Column(name = "UID_")
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+	public static final String ATTACH_TYPE = Form.class.getSimpleName();
 	
 	@Column(name = "TYPE_")
 	public String getType() {

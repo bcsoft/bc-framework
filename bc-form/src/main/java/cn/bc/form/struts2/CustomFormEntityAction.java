@@ -1,5 +1,6 @@
 package cn.bc.form.struts2;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.form.service.FormService;
 import cn.bc.identity.service.IdGeneratorService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.template.service.TemplateService;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -43,11 +45,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	public AttachWidget attachsUI;
-	
+
 	/**
-	 * 模板编码
-	 * 		如果含字符":"，则进行分拆，前面部分为编码，
-	 * 		后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
+	 * 模板编码 如果含字符":"，则进行分拆，前面部分为编码， 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	 */
 	public String tpl;
 
@@ -73,7 +73,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
 		this.idGeneratorService = idGeneratorService;
 	}
-	
+
 	@Autowired
 	public void setTemplateService(TemplateService templateService) {
 		this.templateService = templateService;
@@ -90,14 +90,46 @@ public class CustomFormEntityAction extends ActionSupport implements
 	// 创建自定义表单
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
-		String content=this.templateService.getContent(this.tpl);
-		List<String> keys=TemplateUtils.findMarkers(content);
-		Map<String,Object> args=new HashMap<String, Object>();
+		String content = this.templateService.getContent(this.tpl);
+		int contIndex = content.indexOf("</form>");
+		StringBuffer contSubStr = new StringBuffer(content.substring(0,
+				contIndex));
+		contSubStr
+				.append("<input type='hidden' name='eId' class='ui-widget-content' value='${eId}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eUid' class='ui-widget-content' value='${eUid}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eType' class='ui-widget-content' value='${eType}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eSubject' class='ui-widget-content' value='${eSubject}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eTemplCode' class='ui-widget-content' value='${eTemplCode}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eAuthorId' class='ui-widget-content' value='${eAuthorId}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eFileDate' class='ui-widget-content' value='${eFileDate}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eModifierId' class='ui-widget-content' value='${eModifierId}'/>");
+		contSubStr
+				.append("<input type='hidden' name='eModifiedDate' class='ui-widget-content' value='${eModifiedDate}'/>");
+		contSubStr.append("</form></div>");
+		content = contSubStr.toString();
+
+		List<String> keys = TemplateUtils.findMarkers(content);
+		SystemContext context = (SystemContext) this.getContext();
+		Map<String, Object> args = new HashMap<String, Object>();
 		// 将模板班中的参数key替换为空值
-		for(int i=0; i<keys.size(); i++) {
-			args.put(keys.get(i), "");
+		for (int i = 0; i < keys.size(); i++) {
+System.out.println(keys.get(i));
+			if (keys.get(i).equals("eAuthorId")) {
+				args.put(keys.get(i), context.getUserHistory().getActorId());
+			} else if (keys.get(i).equals("eFileDate")) {
+				args.put(keys.get(i), Calendar.getInstance().getTime());
+			} else {
+				args.put(keys.get(i), "");
+			}
 		}
-		this.html=TemplateUtils.format(content, args);
+		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
 
@@ -123,18 +155,17 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
-		/*// 构建附件控件
-		String ptype = "bulletin.main";
-		String puid = this.getE().getUid();
-		boolean readonly = forceReadonly ? true : this.isReadonly();
-		AttachWidget attachsUI = AttachWidget.defaultAttachWidget(isNew,
-				readonly, isFlashUpload(), this.attachService, ptype, puid);
-
-		// 上传附件的限制
-		attachsUI.addExtension(getText("app.attachs.extensions"))
-				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
-				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-*/
+		/*
+		 * // 构建附件控件 String ptype = "bulletin.main"; String puid =
+		 * this.getE().getUid(); boolean readonly = forceReadonly ? true :
+		 * this.isReadonly(); AttachWidget attachsUI =
+		 * AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
+		 * this.attachService, ptype, puid);
+		 * 
+		 * // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
+		 * .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+		 * .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		 */
 		return attachsUI;
 	}
 
