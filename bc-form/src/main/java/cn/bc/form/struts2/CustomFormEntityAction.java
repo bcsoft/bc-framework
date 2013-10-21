@@ -1,12 +1,9 @@
 package cn.bc.form.struts2;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -16,12 +13,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.Context;
+import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
-import cn.bc.form.domain.Form;
 import cn.bc.form.service.FormService;
 import cn.bc.identity.service.IdGeneratorService;
-import cn.bc.identity.web.SystemContext;
+import cn.bc.template.service.TemplateService;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -42,21 +39,17 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String ids; // 批量删除的id，多个id间用逗号连接
 	public String html;// 后台生成的html页面
 	private FormService formService;
+	private TemplateService templateService;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	public AttachWidget attachsUI;
-	private Form e;
-	public String tpl;// 模板编码：如果含字符":"，则进行分拆，前面部分为编码，
-							// 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
-	private Map<String, Object> formArgs = new HashMap<String, Object>();
-
-	public Form getE() {
-		return e;
-	}
-
-	public void setE(Form e) {
-		this.e = e;
-	}
+	
+	/**
+	 * 模板编码
+	 * 		如果含字符":"，则进行分拆，前面部分为编码，
+	 * 		后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
+	 */
+	public String tpl;
 
 	public void setRequest(Map<String, Object> request) {
 		this.request = request;
@@ -80,6 +73,11 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
 		this.idGeneratorService = idGeneratorService;
 	}
+	
+	@Autowired
+	public void setTemplateService(TemplateService templateService) {
+		this.templateService = templateService;
+	}
 
 	public Context getContext() {
 		return (Context) this.session.get(Context.KEY);
@@ -92,40 +90,20 @@ public class CustomFormEntityAction extends ActionSupport implements
 	// 创建自定义表单
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
-		SystemContext context = (SystemContext) this.getContext();
-		this.formService.initForm(tpl);
-
-		Map<String, Object> templArgs = this.formService.getTemplArgs();
-		templArgs.put("eId", "");
-		templArgs.put("eUid", this.idGeneratorService.next("form.uid"));
-		templArgs.put("eType", "eType");
-		templArgs.put("eSubject", "eSubject");
-		templArgs.put("eTemplCode", tpl);
-		templArgs.put("eAuthorId", context.getUserHistory().getId());
-		templArgs.put("eFileDate", Calendar.getInstance().getTime());
-		templArgs.put("eModifierId", "");
-		templArgs.put("eModifiedDate", "");
-		this.formService.setTemplArgs(templArgs);
-
-		html = formService.getFormattedForm();
-
-		e.setFileDate(Calendar.getInstance());
-		e.setAuthor(context.getUserHistory());
-		e.setUid(this.idGeneratorService.next("bulletin.uid"));
-		e.setTemplate(tpl);
-
-		// 构建附件控件
-		attachsUI = buildAttachsUI(true, false);
+		String content=this.templateService.getContent(this.tpl);
+		List<String> keys=TemplateUtils.findMarkers(content);
+		Map<String,Object> args=new HashMap<String, Object>();
+		// 将模板班中的参数key替换为空值
+		for(int i=0; i<keys.size(); i++) {
+			args.put(keys.get(i), "");
+		}
+		this.html=TemplateUtils.format(content, args);
 		return "page";
 	}
 
 	// 保存自定义表单
 	public String save() throws Exception {
-		SystemContext context = (SystemContext) this.getContext();
-		e.setModifier(context.getUserHistory());
-		e.setModifiedDate(Calendar.getInstance());
-		this.formService.save(e);
-		// html = formService.saveForm(uid,tplCode);
+
 		return "page";
 	}
 
@@ -145,7 +123,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
-		// 构建附件控件
+		/*// 构建附件控件
 		String ptype = "bulletin.main";
 		String puid = this.getE().getUid();
 		boolean readonly = forceReadonly ? true : this.isReadonly();
@@ -156,7 +134,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		attachsUI.addExtension(getText("app.attachs.extensions"))
 				.setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
 				.setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-
+*/
 		return attachsUI;
 	}
 
