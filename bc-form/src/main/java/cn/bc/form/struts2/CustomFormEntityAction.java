@@ -1,6 +1,8 @@
 package cn.bc.form.struts2;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +16,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.Context;
+import cn.bc.core.util.JsonUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
+import cn.bc.form.domain.Form;
 import cn.bc.form.service.FormService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.template.service.TemplateService;
+import cn.bc.web.ui.json.Json;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -54,7 +59,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public void setRequest(Map<String, Object> request) {
 		this.request = request;
 	}
-
+	
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
 	}
@@ -96,8 +101,16 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Map<String, Object> args = new HashMap<String, Object>();
 		// 将模板班中的参数key替换为空值
 		for (int i = 0; i < keys.size(); i++) {
-			args.put(keys.get(i), "");
+				args.put(keys.get(i), "");
+			
 		}
+		Json infoArgs = new Json();
+		infoArgs.put("uid",
+				this.idGeneratorService.next(Form.ATTACH_TYPE + ".uid"));
+		infoArgs.put("authorId", context.getUserHistory().getId());
+		infoArgs.put("fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+				.format(Calendar.getInstance().getTime()));
+		args.put("form_info", infoArgs.toString());
 		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
