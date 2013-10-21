@@ -91,43 +91,12 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
 		String content = this.templateService.getContent(this.tpl);
-		int contIndex = content.indexOf("</form>");
-		StringBuffer contSubStr = new StringBuffer(content.substring(0,
-				contIndex));
-		contSubStr
-				.append("<input type='hidden' name='eId' class='ui-widget-content' value='${eId}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eUid' class='ui-widget-content' value='${eUid}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eType' class='ui-widget-content' value='${eType}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eSubject' class='ui-widget-content' value='${eSubject}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eTemplCode' class='ui-widget-content' value='${eTemplCode}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eAuthorId' class='ui-widget-content' value='${eAuthorId}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eFileDate' class='ui-widget-content' value='${eFileDate}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eModifierId' class='ui-widget-content' value='${eModifierId}'/>");
-		contSubStr
-				.append("<input type='hidden' name='eModifiedDate' class='ui-widget-content' value='${eModifiedDate}'/>");
-		contSubStr.append("</form></div>");
-		content = contSubStr.toString();
-
 		List<String> keys = TemplateUtils.findMarkers(content);
 		SystemContext context = (SystemContext) this.getContext();
 		Map<String, Object> args = new HashMap<String, Object>();
 		// 将模板班中的参数key替换为空值
 		for (int i = 0; i < keys.size(); i++) {
-System.out.println(keys.get(i));
-			if (keys.get(i).equals("eAuthorId")) {
-				args.put(keys.get(i), context.getUserHistory().getActorId());
-			} else if (keys.get(i).equals("eFileDate")) {
-				args.put(keys.get(i), Calendar.getInstance().getTime());
-			} else {
-				args.put(keys.get(i), "");
-			}
+			args.put(keys.get(i), "");
 		}
 		this.html = TemplateUtils.format(content, args);
 		return "page";
