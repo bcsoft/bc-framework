@@ -1,8 +1,5 @@
 package cn.bc.form.service;
 
-import java.util.Collection;
-import java.util.Map;
-
 import cn.bc.core.service.CrudService;
 import cn.bc.form.domain.Form;
 
@@ -14,5 +11,5 @@ import cn.bc.form.domain.Form;
  */
 public interface FormService extends CrudService<Form> {
 
-	public void saveForm(Map<String, Object> formInfoMap,Collection<Map<String, Object>> formDataMap);
+
 }

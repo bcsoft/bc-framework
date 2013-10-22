@@ -1,6 +1,6 @@
 package cn.bc.form.service;
 
-import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,19 +35,22 @@ public class CustomFormServiceImpl implements CustomFormService {
 		this.fieldService = fieldService;
 	}
 
-	public void save(Form form, Set<Field> fields, JSONObject jo) {
-		form = this.formService.save(form);
+	public void doSave(Form form, List<Field> fields, JSONObject jo) {
+		
 		try {
+			form = this.formService.save(form);
 			jo.put("id", form.getId());
 			JSONArray ja=new JSONArray();
 			JSONObject _jo;
 			for(Field f:fields){
+				f.setForm(form);
 				f=this.fieldService.save(f);
 				_jo=new JSONObject();
-				jo.put("id", f.getId());
+				_jo.put("id", f.getId()+"");
+				_jo.put("name", f.getName());
 				ja.put(_jo);
 			}
-			jo.put("formData", ja.toString());
+			jo.put("formData", ja);
 		} catch (JSONException e) {
 			logger.error(e.getMessage(), e);
 			try {

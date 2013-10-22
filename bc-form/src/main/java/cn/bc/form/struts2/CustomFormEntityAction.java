@@ -11,6 +11,8 @@ import java.util.Map;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -23,10 +25,12 @@ import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.form.domain.Field;
 import cn.bc.form.domain.Form;
+import cn.bc.form.service.CustomFormService;
 import cn.bc.form.service.FieldService;
 import cn.bc.form.service.FormService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.service.TemplateService;
 import cn.bc.web.ui.json.Json;
 
@@ -48,7 +52,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public Long id; // 自定义表单的id
 	public String ids; // 批量删除的id，多个id间用逗号连接
 	public String html;// 后台生成的html页面
+	private CustomFormService customFormService;
 	private FormService formService;
+	private FieldService fieldService;
 	private TemplateService templateService;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
@@ -81,8 +87,18 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	@Autowired
+	public void setCustomFormService(CustomFormService customFormService) {
+		this.customFormService = customFormService;
+	}
+
+	@Autowired
 	public void setFormService(FormService formService) {
 		this.formService = formService;
+	}
+
+	@Autowired
+	public void setFieldService(FieldService fieldService) {
+		this.fieldService = fieldService;
 	}
 
 	@Autowired
@@ -133,19 +149,50 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	// 保存自定义表单
 	public String save() throws Exception {
-		Map<String, Object> formInfoMap = JsonUtils.toMap(this.formInfo);
-		Collection<Map<String, Object>> formDataMap = JsonUtils
-				.toCollection(this.formData);
-		System.out.println("this.formInfo = " + this.formInfo.toString());
-		System.out.println("this.formData = " + this.formData.toString());
-		
-		Json o = new Json();
-		this.formService.saveForm(formInfoMap, formDataMap);
 
-		
-		o.put("success", true);
-		o.put("msg", "保存成功");
-		this.json = o.toString();
+		JSONObject formInfoJO = new JSONObject(this.formInfo);
+		JSONArray formDataJA = new JSONArray(this.formData);
+
+		Form form = null;
+		if (formInfoJO.isNull("id")) {
+			form = new Form();
+			form.setUid(formInfoJO.getString("uid"));
+			form.setType(formInfoJO.getString("type"));
+			form.setStatus(formInfoJO.getInt("status"));
+			form.setSubject(formInfoJO.getString("subject"));
+			form.setTpl(formInfoJO.getString("tpl"));
+			form.setAuthor(SystemContextHolder.get().getUserHistory());
+			form.setFileDate(Calendar.getInstance());
+		} else {
+			form = this.formService.load(formInfoJO.getLong("id"));
+			form.setModifier(SystemContextHolder.get().getUserHistory());
+			form.setModifiedDate(Calendar.getInstance());
+		}
+
+		List<Field> fields = new ArrayList<Field>();
+		for (int i = 0; i < formDataJA.length(); i++) {
+			Field field = null;
+			JSONObject formDataJO = (JSONObject) formDataJA.get(i);
+			if (formDataJO.isNull("id")) {
+				field = new Field();
+				field.setName(formDataJO.getString("name"));
+				field.setLabel("label");
+				field.setType(formDataJO.getString("type"));
+				field.setValue(formDataJO.getString("value"));
+			} else {
+				field = this.fieldService.load(formDataJO.getLong("id"));
+				field.setValue(formDataJO.getString("value"));
+			}
+
+			fields.add(field);
+		}
+
+		JSONObject jo = new JSONObject();
+		this.customFormService.doSave(form, fields, jo);
+
+		jo.put("success", true);
+		jo.put("msg", "保存成功");
+		this.json = jo.toString();
 		return "json";
 	}
 

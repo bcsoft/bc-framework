@@ -1,6 +1,6 @@
 package cn.bc.form.service;
 
-import java.util.Set;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -16,7 +16,7 @@ import cn.bc.form.domain.Form;
  */
 public interface CustomFormService {
 
-	void save(Form form,Set<Field> fields,JSONObject jo);
+	void doSave(Form form,List<Field> fields,JSONObject jo);
 	
 	
 }
