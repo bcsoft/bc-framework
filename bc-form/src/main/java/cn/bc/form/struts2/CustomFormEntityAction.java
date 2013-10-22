@@ -1,6 +1,7 @@
 package cn.bc.form.struts2;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +21,9 @@ import cn.bc.core.util.JsonUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
+import cn.bc.form.domain.Field;
 import cn.bc.form.domain.Form;
+import cn.bc.form.service.FieldService;
 import cn.bc.form.service.FormService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
@@ -50,16 +53,29 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
 	public AttachWidget attachsUI;
+	public String json;
 
 	/**
 	 * 模板编码 如果含字符":"，则进行分拆，前面部分为编码， 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	 */
 	public String tpl;
 
+	/**
+	 * 自定义表单数据，使用标准的Json数据格式：[{name:"",value:"",type:"int|long|string|date|..."}
+	 * ]
+	 */
+	public String formData;
+
+	/**
+	 * 自定义表单信息，使用标准的Json数据格式：[{id:"",uid:"",type:"",status:"",subject:"",tpl:"",
+	 * authorId:"",fileDate:"",modifierId:"",modifiedDate:""}]
+	 */
+	public String formInfo;
+
 	public void setRequest(Map<String, Object> request) {
 		this.request = request;
 	}
-	
+
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
 	}
@@ -101,24 +117,36 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Map<String, Object> args = new HashMap<String, Object>();
 		// 将模板班中的参数key替换为空值
 		for (int i = 0; i < keys.size(); i++) {
-				args.put(keys.get(i), "");
-			
+			args.put(keys.get(i), "");
+
 		}
 		Json infoArgs = new Json();
-		infoArgs.put("uid",
-				this.idGeneratorService.next(Form.ATTACH_TYPE + ".uid"));
+		infoArgs.put("uid", this.idGeneratorService.next(Form.ATTACH_TYPE));
+		infoArgs.put("status", Form.STATUS_ENABLED);
 		infoArgs.put("authorId", context.getUserHistory().getId());
 		infoArgs.put("fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 				.format(Calendar.getInstance().getTime()));
-		args.put("form_info", infoArgs.toString());
+		args.put("formInfo", infoArgs.toString());
 		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
 
 	// 保存自定义表单
 	public String save() throws Exception {
+		Map<String, Object> formInfoMap = JsonUtils.toMap(this.formInfo);
+		Collection<Map<String, Object>> formDataMap = JsonUtils
+				.toCollection(this.formData);
+		System.out.println("this.formInfo = " + this.formInfo.toString());
+		System.out.println("this.formData = " + this.formData.toString());
+		
+		Json o = new Json();
+		this.formService.saveForm(formInfoMap, formDataMap);
 
-		return "page";
+		
+		o.put("success", true);
+		o.put("msg", "保存成功");
+		this.json = o.toString();
+		return "json";
 	}
 
 	// 编辑自定义表单
