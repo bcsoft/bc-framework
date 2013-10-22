@@ -2,10 +2,7 @@ package cn.bc.form.service;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +18,6 @@ import cn.bc.form.domain.Form;
  */
 
 public class CustomFormServiceImpl implements CustomFormService {
-	private static Log logger = LogFactory.getLog(CustomFormServiceImpl.class);
 	private FormService formService;
 	private FieldService fieldService;
 	
@@ -35,9 +31,7 @@ public class CustomFormServiceImpl implements CustomFormService {
 		this.fieldService = fieldService;
 	}
 
-	public void doSave(Form form, List<Field> fields, JSONObject jo) {
-		
-		try {
+	public void save(Form form, List<Field> fields, JSONObject jo) throws Exception {
 			form = this.formService.save(form);
 			jo.put("id", form.getId());
 			JSONArray ja=new JSONArray();
@@ -51,14 +45,6 @@ public class CustomFormServiceImpl implements CustomFormService {
 				ja.put(_jo);
 			}
 			jo.put("formData", ja);
-		} catch (JSONException e) {
-			logger.error(e.getMessage(), e);
-			try {
-				throw e;
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
 	}
 
 }

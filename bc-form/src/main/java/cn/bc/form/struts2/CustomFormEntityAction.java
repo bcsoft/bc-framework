@@ -3,7 +3,6 @@ package cn.bc.form.struts2;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.Context;
-import cn.bc.core.util.JsonUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
@@ -188,7 +186,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		}
 
 		JSONObject jo = new JSONObject();
-		this.customFormService.doSave(form, fields, jo);
+		this.customFormService.save(form, fields, jo);
 
 		jo.put("success", true);
 		jo.put("msg", "保存成功");

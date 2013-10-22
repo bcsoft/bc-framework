@@ -16,7 +16,7 @@ import cn.bc.form.domain.Form;
  */
 public interface CustomFormService {
 
-	void doSave(Form form,List<Field> fields,JSONObject jo);
+	void save(Form form,List<Field> fields,JSONObject jo) throws Exception ;
 	
 	
 }
