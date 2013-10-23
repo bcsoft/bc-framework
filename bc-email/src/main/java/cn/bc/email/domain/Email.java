@@ -46,7 +46,7 @@ public class Email extends RichEntityImpl {
 
 	private String subject;// 标题
 	private String content;// 内容
-	private Set<EmailTo> to;// 收件人列表
+	private Set<EmailTo> tos;// 收件人列表
 	private Calendar fileDate;// 创建时间
 	private Actor sender;// 发件人
 	private Calendar sendDate;//发送日期
@@ -70,14 +70,14 @@ public class Email extends RichEntityImpl {
 		this.email = email;
 	}
 
-	@OneToMany(mappedBy = "email", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy(value = "type asc, orderNo asc")
-	public Set<EmailTo> getTo() {
-		return to;
+	public Set<EmailTo> getTos() {
+		return tos;
 	}
 
-	public void setTo(Set<EmailTo> to) {
-		this.to = to;
+	public void setTos(Set<EmailTo> tos) {
+		this.tos = tos;
 	}
 
 	public String getSubject() {

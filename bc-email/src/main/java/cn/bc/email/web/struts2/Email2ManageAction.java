@@ -104,7 +104,7 @@ public class Email2ManageAction extends EntityAction<Long, Email> {
 
 	//将收件人分类
 	private void sortable(){
-		Set<EmailTo> tos= this.getE().getTo();
+		Set<EmailTo> tos= this.getE().getTos();
 		if(tos == null)return;
 		Map<String,Object> map;
 		

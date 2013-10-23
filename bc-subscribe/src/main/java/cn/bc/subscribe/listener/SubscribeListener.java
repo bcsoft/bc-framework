@@ -220,7 +220,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		}
 		worklog_content+="]";
 		worklog.setContent(worklog_content);
-		email.setTo(emailTos);
+		email.setTos(emailTos);
 		
 		this.emailService.save(email);
 	}
