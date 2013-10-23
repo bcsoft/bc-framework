@@ -154,8 +154,18 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Form form = null;
 		if (formInfoJO.isNull("id")) {
 			form = new Form();
+			if(formInfoJO.isNull("pid")) {
+				form.setPid(-1);
+			} else {
+				form.setPid(formInfoJO.getInt("pid"));
+			}
 			form.setUid(formInfoJO.getString("uid"));
 			form.setType(formInfoJO.getString("type"));
+			if(formInfoJO.isNull("code")) {
+				form.setCode("code is null");
+			} else {
+				form.setCode(formInfoJO.getString("code"));
+			}
 			form.setStatus(formInfoJO.getInt("status"));
 			form.setSubject(formInfoJO.getString("subject"));
 			form.setTpl(formInfoJO.getString("tpl"));

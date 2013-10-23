@@ -34,6 +34,8 @@ public class CustomFormServiceImpl implements CustomFormService {
 	public void save(Form form, List<Field> fields, JSONObject jo) throws Exception {
 			form = this.formService.save(form);
 			jo.put("id", form.getId());
+			jo.put("pid", form.getPid());
+			jo.put("code", form.getCode());
 			JSONArray ja=new JSONArray();
 			JSONObject _jo;
 			for(Field f:fields){
