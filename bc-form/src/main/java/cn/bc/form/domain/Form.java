@@ -21,7 +21,7 @@ public class Form extends RichFileEntityImpl {
 	public static final int STATUS_DRAFT = BCConstants.STATUS_DRAFT;
 	/** 状态：正常 */
 	public static final int STATUS_ENABLED = BCConstants.STATUS_ENABLED;
-	private int pid;
+	private Long pid;
 	private String type;// 类别
 	private String code;// 编码
 	private String subject;// 标题
@@ -29,11 +29,11 @@ public class Form extends RichFileEntityImpl {
 	public static final String ATTACH_TYPE = Form.class.getSimpleName();
 
 	// 获取pid
-	public int getPid() {
+	public Long getPid() {
 		return pid;
 	}
 
-	public void setPid(int pid) {
+	public void setPid(Long pid) {
 		this.pid = pid;
 	}
 

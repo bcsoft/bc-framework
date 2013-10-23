@@ -1,11 +1,12 @@
 package cn.bc.form.struts2;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import oracle.core.lmx.CoreException;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.BCConstants;
 import cn.bc.Context;
+import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
@@ -26,6 +29,7 @@ import cn.bc.form.domain.Form;
 import cn.bc.form.service.CustomFormService;
 import cn.bc.form.service.FieldService;
 import cn.bc.form.service.FormService;
+import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.SystemContextHolder;
@@ -121,26 +125,48 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public boolean isReadonly() {
 		return false;
 	}
+	
+	//增加系统上下文变量参数
+	private void addSystemContextParam(Map<String, Object> args){
+		if(args==null)return;
+		SystemContext context=SystemContextHolder.get();
+		args.put("htmlPageNamespace", context.getAttr(SystemContext.KEY_HTMLPAGENAMESPACE));
+		args.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
+
+	}
 
 	// 创建自定义表单
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
 		String content = this.templateService.getContent(this.tpl);
 		List<String> keys = TemplateUtils.findMarkers(content);
-		SystemContext context = (SystemContext) this.getContext();
 		Map<String, Object> args = new HashMap<String, Object>();
 		// 将模板班中的参数key替换为空值
 		for (int i = 0; i < keys.size(); i++) {
 			args.put(keys.get(i), "");
 
 		}
+		SystemContext context = (SystemContext) this.getContext();
+		ActorHistory author = context.getUserHistory();
+		String fileDate = DateUtils.formatCalendar2Second(Calendar.getInstance());
+		String uid = this.idGeneratorService.next(Form.ATTACH_TYPE);
+		
+		args.put("form_author", author.getName());
+		args.put("form_fileDate", fileDate);
+		args.put("form_uid", uid);
+		args.put("form_status", BCConstants.STATUS_DRAFT);
+		args.put("form_isNew", true);
+		
+
+		//设置${from_info}参数对应的值
 		Json infoArgs = new Json();
-		infoArgs.put("uid", this.idGeneratorService.next(Form.ATTACH_TYPE));
-		infoArgs.put("status", Form.STATUS_ENABLED);
-		infoArgs.put("authorId", context.getUserHistory().getId());
-		infoArgs.put("fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-				.format(Calendar.getInstance().getTime()));
-		args.put("formInfo", infoArgs.toString());
+		infoArgs.put("uid", uid);
+		infoArgs.put("status", BCConstants.STATUS_DRAFT);
+		infoArgs.put("authorId", author.getId());
+		infoArgs.put("fileDate", fileDate);
+		args.put("form_info", infoArgs.toString());
+		
+		addSystemContextParam(args);
 		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
@@ -152,12 +178,13 @@ public class CustomFormEntityAction extends ActionSupport implements
 		JSONArray formDataJA = new JSONArray(this.formData);
 
 		Form form = null;
+		//新建保存
 		if (formInfoJO.isNull("id")) {
 			form = new Form();
 			if(formInfoJO.isNull("pid")) {
-				form.setPid(-1);
+				form.setPid(-1l);
 			} else {
-				form.setPid(formInfoJO.getInt("pid"));
+				form.setPid(formInfoJO.getLong("pid"));
 			}
 			form.setUid(formInfoJO.getString("uid"));
 			form.setType(formInfoJO.getString("type"));
@@ -171,7 +198,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 			form.setTpl(formInfoJO.getString("tpl"));
 			form.setAuthor(SystemContextHolder.get().getUserHistory());
 			form.setFileDate(Calendar.getInstance());
-		} else {
+		} else {//编辑保存
 			form = this.formService.load(formInfoJO.getLong("id"));
 			form.setModifier(SystemContextHolder.get().getUserHistory());
 			form.setModifiedDate(Calendar.getInstance());
@@ -206,9 +233,73 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	// 编辑自定义表单
 	public String edit() throws Exception {
+		if(this.id == null){
+			throw new CoreException("Must set property id!");
+		}
+		
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-		// TODO
+		Form form=this.formService.load(this.id);
+		//获取模板文本
+		String content = this.templateService.getContent(form.getTpl());
+		
+		//构建格式化模板参数
+		Map<String, Object> args = new HashMap<String, Object>();
+		ActorHistory author = form.getAuthor();
+		ActorHistory modifier = form.getModifier();
+		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
+		String modifiedDate = DateUtils.formatCalendar2Second(form.getModifiedDate());
+		String uid = form.getUid();
+		String type = form.getType();
+		String code = form.getCode();
+		Long pid = form.getPid();
+		String subject = form.getSubject();
 
+		args.put("form_author", author.getName());
+		args.put("form_fileDate", fileDate);
+		args.put("form_modifier", modifier.getName());
+		args.put("form_modifiedDate", modifiedDate);
+		args.put("form_uid", uid);
+		args.put("form_status", form.getStatus());
+		args.put("form_isNew", false);
+		args.put("form_type", type);
+		args.put("form_code", code);
+		args.put("form_pid", pid);
+		args.put("form_subject", subject);
+		args.put("form_id", id);
+		
+		//设置${from_info}参数对应的值
+		JSONObject infoJson = new JSONObject();
+		infoJson.put("author", author.getName());
+		infoJson.put("fileDate", fileDate);
+		infoJson.put("modifier", modifier.getName());
+		infoJson.put("modifiedDate", modifiedDate);
+		infoJson.put("uid", uid);
+		infoJson.put("status", form.getStatus());
+		infoJson.put("isNew", false);
+		infoJson.put("type", type);
+		infoJson.put("code", code);
+		infoJson.put("pid", pid);
+		infoJson.put("subject", subject);
+		infoJson.put("id", id);
+		// 获取表单字段属性
+		List<Field> fields = this.fieldService.findList(form);
+		if(fields == null||fields.size()==0){
+			infoJson.put("formData", "");
+		}else{
+			JSONArray ja = new JSONArray();
+			JSONObject jo;
+			for(Field f:fields){
+				jo=new JSONObject();
+				jo.put("id", f.getId()+"");
+				jo.put("name", f.getName());
+				ja.put(jo);
+				args.put(f.getName(), f.getValue());
+			}
+			infoJson.put("formData", ja);
+		}
+		args.put("form_info", infoJson.toString());
+		addSystemContextParam(args);
+		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
 
