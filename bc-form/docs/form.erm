@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2012-06-08 10:14:54</creation_date>
-			<updated_date>2013-10-23 09:09:15</updated_date>
+			<updated_date>2013-10-23 11:18:43</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -973,12 +973,12 @@
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_MODIFIER</name>
+					<name>BC_FORM_AUTHOR</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>91</source_xp>
+					<source_xp>78</source_xp>
 					<source_yp>0</source_yp>
-					<target_xp>89</target_xp>
+					<target_xp>77</target_xp>
 					<target_yp>100</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
@@ -990,12 +990,12 @@
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_AUTHOR</name>
+					<name>BC_FORM_MODIFIER</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>78</source_xp>
+					<source_xp>91</source_xp>
 					<source_yp>0</source_yp>
-					<target_xp>77</target_xp>
+					<target_xp>89</target_xp>
 					<target_yp>100</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
@@ -1267,7 +1267,7 @@
 				<normal_column>
 					<id>21</id>
 					<referenced_column>12</referenced_column>
-					<relation>4</relation>
+					<relation>3</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>创建人ID</logical_name>
@@ -1332,7 +1332,7 @@
 				<normal_column>
 					<id>23</id>
 					<referenced_column>12</referenced_column>
-					<relation>3</relation>
+					<relation>4</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>最后修改人ID</logical_name>
@@ -1342,7 +1342,7 @@
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>
 					<foreign_key>true</foreign_key>
-					<not_null>false</not_null>
+					<not_null>true</not_null>
 					<primary_key>false</primary_key>
 					<unique_key>false</unique_key>
 					<character_set></character_set>
@@ -1374,7 +1374,7 @@
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>
 					<foreign_key>false</foreign_key>
-					<not_null>false</not_null>
+					<not_null>true</not_null>
 					<primary_key>false</primary_key>
 					<unique_key>false</unique_key>
 					<character_set></character_set>

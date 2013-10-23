@@ -134,13 +134,33 @@ public class CustomFormEntityAction extends ActionSupport implements
 			args.put(keys.get(i), "");
 
 		}
+		// 设置data-form-info的值
 		Json infoArgs = new Json();
 		infoArgs.put("uid", this.idGeneratorService.next(Form.ATTACH_TYPE));
 		infoArgs.put("status", Form.STATUS_ENABLED);
 		infoArgs.put("authorId", context.getUserHistory().getId());
 		infoArgs.put("fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 				.format(Calendar.getInstance().getTime()));
-		args.put("formInfo", infoArgs.toString());
+		infoArgs.put("modifierId", context.getUserHistory().getId());
+		infoArgs.put("modifiedDate",
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar
+						.getInstance().getTime()));
+		// 设置模板参数的值
+		args.put("form_info", infoArgs.toString());
+		args.put("form_status", Form.STATUS_DRAFT);
+		args.put("form_author", context.getUserHistory().getName());
+		args.put("form_fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+				.format(Calendar.getInstance().getTime()));
+		args.put("form_modifier", context.getUserHistory().getName());
+		args.put("form_modifiedDate", new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+		args.put("form_isNew", true);
+
+		// 添加系统上下文和时间戳的路径到替换参数
+		args.put("htmlPageNamespace",
+				context.getAttr(SystemContext.KEY_HTMLPAGENAMESPACE));
+		args.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
+
 		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
@@ -154,14 +174,14 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Form form = null;
 		if (formInfoJO.isNull("id")) {
 			form = new Form();
-			if(formInfoJO.isNull("pid")) {
+			if (formInfoJO.isNull("pid")) {
 				form.setPid(-1);
 			} else {
 				form.setPid(formInfoJO.getInt("pid"));
 			}
 			form.setUid(formInfoJO.getString("uid"));
 			form.setType(formInfoJO.getString("type"));
-			if(formInfoJO.isNull("code")) {
+			if (formInfoJO.isNull("code")) {
 				form.setCode("code is null");
 			} else {
 				form.setCode(formInfoJO.getString("code"));
@@ -173,9 +193,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 			form.setFileDate(Calendar.getInstance());
 		} else {
 			form = this.formService.load(formInfoJO.getLong("id"));
-			form.setModifier(SystemContextHolder.get().getUserHistory());
-			form.setModifiedDate(Calendar.getInstance());
 		}
+		form.setModifier(SystemContextHolder.get().getUserHistory());
+		form.setModifiedDate(Calendar.getInstance());
 
 		List<Field> fields = new ArrayList<Field>();
 		for (int i = 0; i < formDataJA.length(); i++) {
@@ -197,7 +217,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 		JSONObject jo = new JSONObject();
 		this.customFormService.save(form, fields, jo);
-
 		jo.put("success", true);
 		jo.put("msg", "保存成功");
 		this.json = jo.toString();
@@ -207,8 +226,47 @@ public class CustomFormEntityAction extends ActionSupport implements
 	// 编辑自定义表单
 	public String edit() throws Exception {
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-		// TODO
+		Form form = this.formService.load(id);
+		String content = this.templateService.getContent(form.getTpl());
+		List<String> keys = TemplateUtils.findMarkers(content);
+		SystemContext context = (SystemContext) this.getContext();
+		Map<String, Object> args = new HashMap<String, Object>();
 
+		// 设置data-form-info的值
+		Json infoArgs = new Json();
+		infoArgs.put("id", form.getId());
+		infoArgs.put("uid", form.getUid());
+		infoArgs.put("status", form.getStatus());
+		infoArgs.put("authorId", form.getAuthor().getId());
+		infoArgs.put("fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+				.format(form.getFileDate().getTime()));
+		infoArgs.put("modifierId", form.getModifier().getId());
+		infoArgs.put("modifiedDate",
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(form.getModifiedDate().getTime()));
+		// 设置模板参数的值
+		args.put("form_info", infoArgs.toString());
+		args.put("form_status", form.getStatus());
+		args.put("form_author", form.getAuthor().getName());
+		args.put("form_fileDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+				.format(form.getFileDate().getTime()));
+		args.put("form_modifier", form.getModifier().getName());
+		args.put("form_modifiedDate", new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss").format(form.getModifiedDate().getTime()));
+		args.put("form_isNew", false);
+
+		// 设置字段参数
+		List<Map<String, Object>> fieldList = this.fieldService.loadFields(id);
+		for (int i = 0; i < fieldList.size(); i++) {
+			Map<String, Object> m = fieldList.get(i);
+			args.put(m.get("name_").toString(), m.get("value_"));
+		}
+
+		// 添加系统上下文和时间戳的路径到替换参数
+		args.put("htmlPageNamespace",
+				context.getAttr(SystemContext.KEY_HTMLPAGENAMESPACE));
+		args.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
+
+		this.html = TemplateUtils.format(content, args);
 		return "page";
 	}
 

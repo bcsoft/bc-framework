@@ -1,5 +1,8 @@
 package cn.bc.form.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.service.DefaultCrudService;
@@ -21,5 +24,10 @@ public class FieldServiceImpl extends DefaultCrudService<Field> implements Field
 	public void setFromDao(FieldDao fieldDao) {
 		this.setCrudDao(fieldDao);
 		this.fieldDao = fieldDao;
+	}
+
+	public List<Map<String,Object>> loadFields(Long formId) {
+		
+		return this.fieldDao.fieldList(formId);
 	}
 }

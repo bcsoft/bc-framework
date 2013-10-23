@@ -7,5 +7,6 @@
 	<package name="customForm" extends="bc-default" namespace="/bc/customForm">
 		<action name="create" class="customFormEntityAction" method="create" />
 		<action name="save" class="customFormEntityAction" method="save" />
+		<action name="edit" class="customFormEntityAction" method="edit" />
 	</package>
 </struts>
