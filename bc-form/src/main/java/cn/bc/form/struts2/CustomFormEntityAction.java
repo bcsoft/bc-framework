@@ -34,6 +34,7 @@ import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.service.TemplateService;
+import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.web.ui.json.Json;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -126,6 +127,10 @@ public class CustomFormEntityAction extends ActionSupport implements
 		return false;
 	}
 	
+	private void formatHtml(String content,Map<String, Object> args) {
+		this.html = FreeMarkerUtils.format(content, args);
+	}
+	
 	//增加系统上下文变量参数
 	private void addSystemContextParam(Map<String, Object> args){
 		if(args==null)return;
@@ -167,7 +172,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_info", infoArgs.toString());
 		
 		addSystemContextParam(args);
-		this.html = TemplateUtils.format(content, args);
+		formatHtml(content, args);
 		return "page";
 	}
 
@@ -176,49 +181,46 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 		JSONObject formInfoJO = new JSONObject(this.formInfo);
 		JSONArray formDataJA = new JSONArray(this.formData);
+		
+		ActorHistory actor = SystemContextHolder.get().getUserHistory();
 
 		Form form = null;
 		//新建保存
 		if (formInfoJO.isNull("id")) {
 			form = new Form();
-			if(formInfoJO.isNull("pid")) {
-				form.setPid(-1l);
-			} else {
-				form.setPid(formInfoJO.getLong("pid"));
-			}
+			form.setPid(formInfoJO.getLong("pid"));
 			form.setUid(formInfoJO.getString("uid"));
 			form.setType(formInfoJO.getString("type"));
-			if(formInfoJO.isNull("code")) {
-				form.setCode("code is null");
-			} else {
-				form.setCode(formInfoJO.getString("code"));
-			}
+			form.setCode(formInfoJO.getString("code"));
 			form.setStatus(formInfoJO.getInt("status"));
 			form.setSubject(formInfoJO.getString("subject"));
 			form.setTpl(formInfoJO.getString("tpl"));
-			form.setAuthor(SystemContextHolder.get().getUserHistory());
-			form.setFileDate(Calendar.getInstance());
+			form.setAuthor(actor);
+			form.setFileDate(DateUtils.getCalendar(formInfoJO.getString("fileDate")));
 		} else {//编辑保存
 			form = this.formService.load(formInfoJO.getLong("id"));
-			form.setModifier(SystemContextHolder.get().getUserHistory());
-			form.setModifiedDate(Calendar.getInstance());
 		}
-
+		
+		form.setModifier(actor);
+		form.setModifiedDate(Calendar.getInstance());
+		// 表单字段处理
 		List<Field> fields = new ArrayList<Field>();
 		for (int i = 0; i < formDataJA.length(); i++) {
 			Field field = null;
 			JSONObject formDataJO = (JSONObject) formDataJA.get(i);
 			if (formDataJO.isNull("id")) {
 				field = new Field();
-				field.setName(formDataJO.getString("name"));
-				field.setLabel("label");
-				field.setType(formDataJO.getString("type"));
-				field.setValue(formDataJO.getString("value"));
 			} else {
 				field = this.fieldService.load(formDataJO.getLong("id"));
-				field.setValue(formDataJO.getString("value"));
 			}
-
+			field.setName(formDataJO.getString("name"));
+			field.setType(formDataJO.getString("type"));
+			field.setValue(formDataJO.getString("value"));
+			if(formDataJO.isNull("label")){
+				field.setLabel("");
+			}else{
+				field.setLabel(formDataJO.getString("label"));
+			}
 			fields.add(field);
 		}
 
@@ -299,7 +301,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		}
 		args.put("form_info", infoJson.toString());
 		addSystemContextParam(args);
-		this.html = TemplateUtils.format(content, args);
+		formatHtml(content, args);
 		return "page";
 	}
 
