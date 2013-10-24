@@ -10,8 +10,10 @@
     <widgets xsi:type="model:Table" id="33" y="50" width="713" height="95" text="(w:30). !,(w:20). 状态,(w:20). 司机状态,(w:30). 车队,(w:20). 姓名,(w:20). 性别,(w:20). 入职日期,证件名称,(w:20). 文件大小,(w:20). 服务资格证,(w:20). 联系电话,(w:20). 最后修改&#xA;1,未上传,在案,一分一队,[小明],男,2013-01-03,身份证&#xA;2,已上传,在案,一分一队,[小明],男,2013-01-02,服务资格证,45KB,,,小张 (2013-01-01)&#xA;3,已上传,在案,一分一队,[小明],男,2013-01-01,从业资格证,35KB,,,小张 (2013-01-01)" measuredWidth="713" measuredHeight="95" alternative="#eeeeee">
       <font bold="false"/>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" id="34" x="520" y="24" measuredWidth="183" measuredHeight="24">
-      <widgets xsi:type="model:SearchField" id="35" width="183" measuredWidth="183" measuredHeight="24"/>
+    <widgets xsi:type="model:WidgetGroup" id="34" x="520" y="24" measuredWidth="183" measuredHeight="25">
+      <widgets xsi:type="model:SearchField" id="35" width="183" measuredWidth="183" measuredHeight="25">
+        <font/>
+      </widgets>
       <widgets xsi:type="model:Icon" id="36" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
     </widgets>
     <widgets xsi:type="model:ButtonBar" id="37" x="126" y="23" height="25" text="已上传,未上传" measuredWidth="114" measuredHeight="25" selection="0">
@@ -34,7 +36,7 @@
         <items x="0" y="2" width="713" height="27" text="证件信息："/>
       </widgets>
       <widgets xsi:type="model:Icon" id="99" x="687" y="8" measuredWidth="16" measuredHeight="16" icon="asc (small)"/>
-      <widgets xsi:type="model:Image" id="102" x="4" y="30" measuredWidth="705" measuredHeight="225" src="身份证模板.jpg"/>
+      <widgets xsi:type="model:Image" id="102" x="4" y="30" measuredWidth="705" measuredHeight="225" src="idcard.jpg"/>
       <widgets xsi:type="model:Label" id="115" x="72" y="3" text="小李 于 2012-10-01 14:08 创建，张三 于 2012-10-02 14:12 最后修改" measuredWidth="387" measuredHeight="25" textAlignment="Right" foreground="#999999">
         <font/>
       </widgets>
@@ -57,7 +59,7 @@
         <items x="0" y="2" width="713" height="27" text="证件图片："/>
       </widgets>
       <widgets xsi:type="model:Icon" id="105" x="538" y="3" measuredWidth="24" measuredHeight="24" icon="edit (medium)"/>
-      <widgets xsi:type="model:Image" id="106" x="4" y="30" measuredWidth="705" measuredHeight="225" src="身份证模板.jpg"/>
+      <widgets xsi:type="model:Image" id="106" x="4" y="30" measuredWidth="705" measuredHeight="225" src="idcard.jpg"/>
       <widgets xsi:type="model:WidgetGroup" id="114" x="598" y="5" measuredWidth="81" measuredHeight="20">
         <widgets xsi:type="model:Rectangle" id="110" width="81" height="20" text="－ 100% ＋" measuredWidth="81" measuredHeight="20" foreground="#666666" border="solid-rounded">
           <font/>
@@ -104,7 +106,7 @@
     </widgets>
   </widgets>
   <widgets xsi:type="model:Label" id="174" x="8" y="8" text="司机证件管理" measuredWidth="149" measuredHeight="39">
-    <font size="18"/>
+    <font size="18pt"/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="178" x="8" y="822" measuredWidth="668" measuredHeight="163">
     <widgets xsi:type="model:WidgetGroup" id="179" y="34" measuredWidth="313" measuredHeight="129">
@@ -160,10 +162,10 @@
     </widgets>
     <widgets xsi:type="model:Arrow" id="199" x="178" y="51" width="159" height="44" measuredWidth="159" measuredHeight="44" annotation="true" foreground="#999999" left="false" right="true"/>
     <widgets xsi:type="model:Label" id="200" text="司机表单的附件控件" measuredWidth="221" measuredHeight="39">
-      <font size="18"/>
+      <font size="18pt"/>
     </widgets>
     <widgets xsi:type="model:WidgetGroup" id="201" x="336" y="57" measuredWidth="332" measuredHeight="106">
-      <widgets xsi:type="model:Combo" id="202" text="添加附件" measuredWidth="72" measuredHeight="25">
+      <widgets xsi:type="model:Combo" id="202" text="添加附件" measuredWidth="74" measuredHeight="25">
         <font/>
       </widgets>
       <widgets xsi:type="model:Label" id="203" x="153" y="25" text="ptype=Driver.ShenFenZheng" measuredWidth="169" measuredHeight="25">
@@ -182,5 +184,5 @@
   </widgets>
   <hRuler/>
   <vRuler/>
-  <font/>
+  <font size="12px"/>
 </model:Screen>
