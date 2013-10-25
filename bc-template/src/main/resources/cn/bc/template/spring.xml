@@ -18,25 +18,36 @@
 		p:entityClass="cn.bc.template.domain.Template"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="templateService" class="cn.bc.template.service.TemplateServiceImpl"
-		p:entityClass="cn.bc.template.domain.Template" 
-		p:templateDao-ref="templateDao"
-		/>
-		
+		p:entityClass="cn.bc.template.domain.Template" p:templateDao-ref="templateDao" />
+
 	<!-- 模板类型 -->
 	<bean id="templateTypeDao" class="cn.bc.template.dao.hibernate.jpa.TemplateTypeDaoImpl"
 		p:entityClass="cn.bc.template.domain.TemplateType"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
-		p:entityClass="cn.bc.template.domain.TemplateType" 
-		p:templateTypeDao-ref="templateTypeDao"
-		/>	
-		
+		p:entityClass="cn.bc.template.domain.TemplateType"
+		p:templateTypeDao-ref="templateTypeDao" />
+
 	<!-- 模板参数 -->
 	<bean id="templateParamDao" class="cn.bc.template.dao.hibernate.jpa.TemplateParamDaoImpl"
 		p:entityClass="cn.bc.template.domain.TemplateParam"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="templateParamService" class="cn.bc.template.service.TemplateParamServiceImpl"
-		p:entityClass="cn.bc.template.domain.TemplateParam" 
-		p:templateParamDao-ref="templateParamDao"
-		/>	
+		p:entityClass="cn.bc.template.domain.TemplateParam"
+		p:templateParamDao-ref="templateParamDao" />
+
+	<!-- 模板引擎 -->
+	<bean id="templateEngine"
+		class="cn.bc.template.engine.TemplateEngineImpl<java.lang.Object>">
+		<property name="engines">
+			<map>
+				<entry key="freeMarker" value-ref="freeMarkerEngine" />
+				<entry key="mustache" value-ref="mustacheEngine" />
+			</map>
+		</property>
+	</bean>
+	<!-- FreeMarker模板引擎 -->
+	<bean id="freeMarkerEngine" class="cn.bc.template.engine.FreeMarkerEngine" />
+	<!-- Mustache模板引擎 -->
+	<bean id="mustacheEngine" class="cn.bc.template.engine.MustacheEngine" />
 </beans>
