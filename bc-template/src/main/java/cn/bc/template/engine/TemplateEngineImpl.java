@@ -19,6 +19,10 @@ public class TemplateEngineImpl<T extends Object> implements TemplateEngine<T> {
 	private Map<String, TemplateEngine<Object>> engines;
 	private TemplateService templateService;
 
+	public void setEngines(Map<String, TemplateEngine<Object>> engines) {
+		this.engines = engines;
+	}
+
 	@Autowired
 	public void setTemplateService(TemplateService templateService) {
 		this.templateService = templateService;
