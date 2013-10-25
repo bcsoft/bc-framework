@@ -21,4 +21,12 @@ public interface FieldService extends CrudService<Field>{
 	 * @return
 	 */
 	List<Field> findList(Form form);
+	
+	/**
+	 * 
+	 * @param form
+	 * @param name
+	 * @return
+	 */
+	public Field findField(Form form, String name);
 }

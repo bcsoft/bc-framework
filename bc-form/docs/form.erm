@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2012-06-08 10:14:54</creation_date>
-			<updated_date>2013-10-23 11:18:43</updated_date>
+			<updated_date>2013-10-24 13:40:38</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -627,23 +627,6 @@
 			<connections>
 				<relation>
 					<id>1</id>
-					<source>3</source>
-					<target>1</target>
-					<child_cardinality>1..n</child_cardinality>
-					<parent_cardinality>1</parent_cardinality>
-					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_FIELD_LOG_UPDATOR</name>
-					<on_delete_action>RESTRICT</on_delete_action>
-					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>100</source_xp>
-					<source_yp>47</source_yp>
-					<target_xp>0</target_xp>
-					<target_yp>28</target_yp>
-					<referenced_column>null</referenced_column>
-					<referenced_complex_unique_key>null</referenced_complex_unique_key>
-				</relation>
-				<relation>
-					<id>2</id>
 					<source>0</source>
 					<target>1</target>
 					<child_cardinality>1..n</child_cardinality>
@@ -656,6 +639,23 @@
 					<source_yp>100</source_yp>
 					<target_xp>32</target_xp>
 					<target_yp>0</target_yp>
+					<referenced_column>null</referenced_column>
+					<referenced_complex_unique_key>null</referenced_complex_unique_key>
+				</relation>
+				<relation>
+					<id>2</id>
+					<source>3</source>
+					<target>1</target>
+					<child_cardinality>1..n</child_cardinality>
+					<parent_cardinality>1</parent_cardinality>
+					<reference_for_pk>true</reference_for_pk>
+					<name>BC_FORM_FIELD_LOG_UPDATOR</name>
+					<on_delete_action>RESTRICT</on_delete_action>
+					<on_update_action>RESTRICT</on_update_action>
+					<source_xp>100</source_xp>
+					<source_yp>47</source_yp>
+					<target_xp>0</target_xp>
+					<target_yp>28</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
 				</relation>
@@ -702,7 +702,7 @@
 				<normal_column>
 					<id>7</id>
 					<referenced_column>0</referenced_column>
-					<relation>2</relation>
+					<relation>1</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>所属字段</logical_name>
@@ -767,7 +767,7 @@
 				<normal_column>
 					<id>9</id>
 					<referenced_column>12</referenced_column>
-					<relation>1</relation>
+					<relation>2</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>更新人</logical_name>
@@ -973,12 +973,12 @@
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_AUTHOR</name>
+					<name>BC_FORM_MODIFIER</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>78</source_xp>
+					<source_xp>91</source_xp>
 					<source_yp>0</source_yp>
-					<target_xp>77</target_xp>
+					<target_xp>89</target_xp>
 					<target_yp>100</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
@@ -990,12 +990,12 @@
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
 					<reference_for_pk>true</reference_for_pk>
-					<name>BC_FORM_MODIFIER</name>
+					<name>BC_FORM_AUTHOR</name>
 					<on_delete_action>RESTRICT</on_delete_action>
 					<on_update_action>RESTRICT</on_update_action>
-					<source_xp>91</source_xp>
+					<source_xp>78</source_xp>
 					<source_yp>0</source_yp>
-					<target_xp>89</target_xp>
+					<target_xp>77</target_xp>
 					<target_yp>100</target_yp>
 					<referenced_column>null</referenced_column>
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
@@ -1267,7 +1267,7 @@
 				<normal_column>
 					<id>21</id>
 					<referenced_column>12</referenced_column>
-					<relation>3</relation>
+					<relation>4</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>创建人ID</logical_name>
@@ -1332,7 +1332,7 @@
 				<normal_column>
 					<id>23</id>
 					<referenced_column>12</referenced_column>
-					<relation>4</relation>
+					<relation>3</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>最后修改人ID</logical_name>
@@ -1396,6 +1396,27 @@
 				</normal_column>
 			</columns>
 			<indexes>
+				<inidex>
+					<full_text>false</full_text>
+					<non_unique>false</non_unique>
+					<name>FORMIDX_FORM_TYPE_PID_CODE</name>
+					<type>BTREE</type>
+					<description></description>
+					<columns>
+						<column>
+							<id>16</id>
+							<desc>false</desc>
+						</column>
+						<column>
+							<id>14</id>
+							<desc>false</desc>
+						</column>
+						<column>
+							<id>17</id>
+							<desc>false</desc>
+						</column>
+					</columns>
+				</inidex>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>
