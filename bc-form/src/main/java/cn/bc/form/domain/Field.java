@@ -34,21 +34,21 @@ public class Field extends EntityImpl {
 	public void setForm(Form form) {
 		this.form = form;
 	}
-
+	
+	@Column(name = "NAME_")
 	public String getName() {
 		return name;
 	}
-
-	@Column(name = "NAME_")
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	@Column(name = "LABEL_")
 	public String getLabel() {
 		return label;
 	}
 
-	@Column(name = "LABEL_")
 	public void setLabel(String label) {
 		this.label = label;
 	}

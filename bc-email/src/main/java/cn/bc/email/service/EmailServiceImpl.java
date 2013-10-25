@@ -1,18 +1,20 @@
 package cn.bc.email.service;
 
-import cn.bc.email.domain.EmailTo;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.ActorRelation;
-import cn.bc.identity.service.ActorService;
-import cn.bc.identity.service.GroupService;
-import cn.bc.identity.service.IdGeneratorService;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.email.dao.EmailDao;
 import cn.bc.email.domain.Email;
-
-import java.util.*;
+import cn.bc.email.domain.EmailTo;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorRelation;
+import cn.bc.identity.service.ActorService;
+import cn.bc.identity.service.IdGeneratorService;
 
 /**
  * 邮件service接口的实现
@@ -60,7 +62,7 @@ public class EmailServiceImpl extends DefaultCrudService<Email> implements
         email.setUid(this.idGeneratorService.next(Email.class.getSimpleName()));
         email.setType(Email.TYPE_NEW);
 
-        Set<EmailTo> to = new HashSet<EmailTo>();
+        Set<EmailTo> tos = new HashSet<EmailTo>();
         EmailTo emailTo;
         if (receiver.getType() == Actor.TYPE_USER) {// 发送到人
             emailTo = new EmailTo();
@@ -68,7 +70,7 @@ public class EmailServiceImpl extends DefaultCrudService<Email> implements
             emailTo.setEmail(email);
             emailTo.setOrderNo(0);
             emailTo.setReceiver(receiver);
-            to.add(emailTo);
+            tos.add(emailTo);
         } else if (receiver.getType() == Actor.TYPE_GROUP || receiver.getType() == Actor.TYPE_DEPARTMENT || receiver.getType() == Actor.TYPE_UNIT) {// 发送到岗位、部门、单位
             List<Actor> followers = this.actorService.findFollower(receiver.getId(), new Integer[]{ActorRelation.TYPE_BELONG}, new Integer[]{Actor.TYPE_USER});
             int i= 0;
@@ -79,10 +81,10 @@ public class EmailServiceImpl extends DefaultCrudService<Email> implements
                 emailTo.setOrderNo(i++);
                 emailTo.setUpper(receiver);
                 emailTo.setReceiver(f);
-                to.add(emailTo);
+                tos.add(emailTo);
             }
         }
-        email.setTo(to);
+        email.setTos(tos);
 
         this.save(email);
     }

@@ -13,5 +13,25 @@
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
-
+	<!--form -->
+	<bean id="formDao"
+		class="cn.bc.form.dao.hibernate.jpa.FormDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="formService" class="cn.bc.form.service.FormServiceImpl" />
+	
+	<!-- field -->
+	<bean id="fieldDao"
+		class="cn.bc.form.dao.hibernate.jpa.FieldDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="fieldService" class="cn.bc.form.service.FieldServiceImpl" />
+	
+	<!-- customForm -->
+	<bean id="customFormService" class="cn.bc.form.service.CustomFormServiceImpl" />
+	
+	<aop:config>
+		<!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts 
+			包或实现类使用within关键字，接口实现使用this关键字 -->
+		<aop:pointcut id="customFormServiceMethod" expression="this(cn.bc.form.service.CustomFormService)" />
+		<aop:advisor pointcut-ref="customFormServiceMethod" advice-ref="crudServiceTxAdvice" />
+	</aop:config>
 </beans>
