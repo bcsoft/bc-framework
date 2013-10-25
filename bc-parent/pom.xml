@@ -730,7 +730,7 @@
 			<dependency>
 			  <groupId>com.github.spullara.mustache.java</groupId>
 			  <artifactId>compiler</artifactId>
-			  <version>0.8.6</version>
+			  <version>0.8.13</version>
 			</dependency>
 			
 			<!-- javamail -->
@@ -743,6 +743,18 @@
 			    <groupId>org.apache.geronimo.specs</groupId>
 			    <artifactId>geronimo-javamail_1.4_spec</artifactId>
 			    <version>1.7.1</version>
+			</dependency>
+
+			<!-- 条形码二维码 -->
+		    <dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>2.2</version>
+		    </dependency>			
+		    <dependency>
+			    <groupId>com.google.zxing</groupId>
+			    <artifactId>javase</artifactId>
+			    <version>2.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
