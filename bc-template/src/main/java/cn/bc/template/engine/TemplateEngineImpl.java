@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.util.TemplateUtils;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 
@@ -44,6 +45,6 @@ public class TemplateEngineImpl<T extends Object> implements TemplateEngine<T> {
 			throw new CoreException("没有找到编码为'" + typeCode + "'的模板引擎!");
 		}
 
-		return (T) engine.render(tpl.getContent(), args);
+		return (T) engine.render(tpl.getContentEx(), args);
 	}
 }

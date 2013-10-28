@@ -22,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.util.DateUtils;
+import cn.bc.core.util.SpringUtils;
+import cn.bc.core.util.StringUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
@@ -34,6 +36,7 @@ import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.SystemContextHolder;
+import cn.bc.template.engine.TemplateEngine;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.web.ui.json.Json;
@@ -128,8 +131,11 @@ public class CustomFormEntityAction extends ActionSupport implements
 		return false;
 	}
 
-	private void formatHtml(String content, Map<String, Object> args) {
-		this.html = FreeMarkerUtils.format(content, args);
+	private void formatHtml(String tpl_, Map<String, Object> args) {
+		@SuppressWarnings("unchecked")
+		TemplateEngine<String> eng = (TemplateEngine<String>) SpringUtils
+				.getBean("templateEngine");
+		this.html = eng.render(tpl_, args);
 	}
 
 	// 增加系统上下文变量参数
@@ -187,7 +193,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		String content = this.templateService.getContent(this.tpl);
 		List<String> keys = TemplateUtils.findMarkers(content);
 		Map<String, Object> args = new HashMap<String, Object>();
-		
+
 		SystemContext context = (SystemContext) this.getContext();
 		ActorHistory author = context.getUserHistory();
 		String fileDate = DateUtils.formatCalendar2Second(Calendar
@@ -209,7 +215,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_info", infoArgs.toString());
 
 		addSystemContextParam(args);
-		formatHtml(content, args);
+		formatHtml(this.tpl, args);
 		return "page";
 	}
 
@@ -225,7 +231,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		List<Field> fields = new ArrayList<Field>();
 		// 新建保存
 		if (formInfoJO.isNull("id")) {
-			//表单信息处理
+			// 表单信息处理
 			form = new Form();
 			form.setPid(formInfoJO.getLong("pid"));
 			form.setUid(formInfoJO.getString("uid"));
@@ -239,7 +245,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 					.getString("fileDate")));
 			form.setModifier(actor);
 			form.setModifiedDate(Calendar.getInstance());
-			
+
 			// 表单字段处理
 			for (int i = 0; i < formDataJA.length(); i++) {
 				Field field = new Field();
@@ -253,16 +259,32 @@ public class CustomFormEntityAction extends ActionSupport implements
 					field.setLabel(formDataJO.getString("label"));
 				}
 				fields.add(field);
-			}			
+			}
 		} else {// 编辑保存
+			// 表单信息处理
 			form = this.formService.load(formInfoJO.getLong("id"));
 			form.setModifier(actor);
 			form.setModifiedDate(Calendar.getInstance());
+			// 表单字段处理
 			for (int i = 0; i < formDataJA.length(); i++) {
 				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				Field field = this.fieldService.load(formDataJO.getLong("id"));
+				Field field = this.fieldService.findByPidAndName(form,
+						formDataJO.getString("name"));
+				if (field != null) {
+					field.setValue(formDataJO.getString("value"));
+				} else {
+					field = new Field();
+					field.setName(formDataJO.getString("name"));
+					field.setType(formDataJO.getString("type"));
+					field.setValue(formDataJO.getString("value"));
+					if (formDataJO.isNull("label")) {
+						field.setLabel("");
+					} else {
+						field.setLabel(formDataJO.getString("label"));
+					}
+				}
 				fields.add(field);
-			}		
+			}
 		}
 
 		JSONObject jo = new JSONObject();
@@ -331,19 +353,18 @@ public class CustomFormEntityAction extends ActionSupport implements
 		List<Field> fields = this.fieldService.findList(form);
 		if (fields != null && fields.size() != 0) {
 			for (Field f : fields) {
-				args.put(f.getName(), f.getValue());
+				args.put(f.getName(),StringUtils.convertValueByType(f.getType(),f.getValue()));
 			}
 		}
 
 		addSystemContextParam(args);
-		formatHtml(content, args);
+		formatHtml(this.tpl, args);
 		return "page";
 	}
 
 	// 查看自定表单
 	public String open() throws Exception {
-		
-		
+
 		// 构建附件控件
 		attachsUI = buildAttachsUI(false, true);
 		return "page";

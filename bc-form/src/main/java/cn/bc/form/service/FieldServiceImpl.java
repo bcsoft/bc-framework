@@ -31,7 +31,7 @@ public class FieldServiceImpl extends DefaultCrudService<Field> implements Field
 		return this.createQuery().condition(new EqualsCondition("form", form)).list();
 	}
 
-	public Field findField(Form form, String name) {
+	public Field findByPidAndName(Form form, String name) {
 		AndCondition ac = new AndCondition();
 		ac.add(new EqualsCondition("form", form));
 		ac.add(new EqualsCondition("name", name));
