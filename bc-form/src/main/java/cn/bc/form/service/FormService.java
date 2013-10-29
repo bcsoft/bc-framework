@@ -18,7 +18,7 @@ public interface FormService extends CrudService<Form> {
 	 * @param code 其他模块调用此模块时，使用的编码
 	 * @return
 	 */
-	public Form findForm(String type, Long pid, String code);
+	public Form findByTPC(String type, Long pid, String code);
 
 	
 }

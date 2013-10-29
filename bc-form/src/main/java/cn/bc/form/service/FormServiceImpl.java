@@ -26,7 +26,7 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements
 		this.formDao = formDao;
 	}
 
-	public Form findForm(String type, Long pid, String code) {
+	public Form findByTPC(String type, Long pid, String code) {
 		AndCondition ac = new AndCondition();
 		ac.add(new EqualsCondition("type", type));
 		ac.add(new EqualsCondition("pid", pid));

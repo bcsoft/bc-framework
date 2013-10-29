@@ -354,6 +354,14 @@ public class StringUtils {
 				longArray[i] = Long.parseLong(strArray[i]);
 			}
 			return longArray;
+		} else if (type.equals("float[]")) {
+			String subStr = value.substring(1, value.length() - 1);
+			String[] strArray = subStr.split(",");
+			float[] floatArray = new float[strArray.length];
+			for (int i = 0; i < strArray.length; i++) {
+				floatArray[i] = Float.parseFloat(strArray[i]);
+			}
+			return floatArray;
 		} else if (type.equals("string[]")) {
 			String subStr = value.substring(1, value.length() - 1);
 			String[] strArray = subStr.split(",");
