@@ -18,6 +18,7 @@
 		<dependency>
 		    <groupId>com.google.zxing</groupId>
 		    <artifactId>javase</artifactId>
+			<version>2.2</version>
 		</dependency>
 
 		<!-- 模板模块 -->
@@ -26,5 +27,10 @@
 			<artifactId>bc-identity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>cn.bc</groupId>
+            <artifactId>bc-docs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 </project>

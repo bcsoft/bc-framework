@@ -5,8 +5,9 @@
 <struts>
 	<!-- 图片处理 -->
 	<package name="photo" extends="bc-default" namespace="/bc/photo">
-		<action name="main" class="photoAction" method="execute">
-			<result name="success">/bc/photo/photo.jsp</result>
-		</action>
+        <action name="main" class="photoAction" method="execute">
+            <result name="success">/bc/photo/photo.jsp</result>
+        </action>
+        <action name="upload" class="photoAction" method="upload"/>
 	</package>
 </struts>
