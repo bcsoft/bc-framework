@@ -89,8 +89,8 @@ public class CustomFormEntityAction extends ActionSupport implements
 	 * authorId:"",fileDate:"",modifierId:"",modifiedDate:""}
 	 */
 	public String formInfo;
-	
-	/** 
+
+	/**
 	 * 创建自定义表单时的额外参数,使用标准Json数据格式[{var : value,type : valueType}]
 	 */
 	public String extraData;
@@ -196,28 +196,19 @@ public class CustomFormEntityAction extends ActionSupport implements
 		infoArgs.put("authorId", author.getId());
 		infoArgs.put("fileDate", fileDate);
 		args.put("form_info", infoArgs.toString());
-		
-		//设置额外参数
-		if(this.extraData != null && !this.extraData.equals("")) {
+
+		// 设置额外参数
+		if (this.extraData != null && !this.extraData.equals("")) {
 			JSONArray extraDataJA = new JSONArray(this.extraData);
-			for(int i=0; i<extraDataJA.length(); i++) {
-				JSONObject extraDataJO = extraDataJA.getJSONObject(i);
-				Iterator it = extraDataJO.keys();
-				String type = "";
-				String name = "";
-				while (it.hasNext()) {  
-					String key = (String) it.next();
-					if(key.equals("type")) {
-						type = extraDataJO.getString("type");
-					} else {
-						name = key;
-					}
-				}
-				args.put(name,StringUtils.convertValueByType(type,
-						extraDataJO.getString(name)));
+			for (int i = 0; i < extraDataJA.length(); i++) {
+				JSONObject jo = extraDataJA.getJSONObject(i);
+				args.put(
+						jo.getString("name"),
+						StringUtils.convertValueByType(jo.getString("type"),
+								jo.getString("value")));
+
 			}
 		}
-		
 
 		addSystemContextParam(args);
 		formatHtml(this.tpl, args);
@@ -370,7 +361,22 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String delete() throws Exception {
 		Json _json = new Json();
 		try {
-			if (this.id != null) {// 删除一条
+			if (this.type != null && !this.type.equals("") && this.pid != 0L
+					&& this.code != null && !this.code.equals("")) { // option
+																		// 不为空
+				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
+				Form form = this.formService.findByTPC(type, pid, code);
+
+				// 获取表单字段属性
+				List<Field> fields = this.fieldService.findList(form);
+				if (fields != null && fields.size() != 0) {
+					for (Field f : fields) {
+						this.fieldService.delete(f.getId());
+					}
+
+				}
+				this.formService.delete(form.getId());
+			} else if (this.id != null) {// 删除一条
 				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 				Form form = this.formService.load(this.id);
 
@@ -401,19 +407,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 					}
 					this.formService.delete(form.getId());
 				}
-			} else if(this.type != null && !this.type.equals("") && this.pid != 0L && this.code != null && !this.code.equals("") ){
-				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-				Form form = this.formService.findByTPC(type, pid, code);
-
-				// 获取表单字段属性
-				List<Field> fields = this.fieldService.findList(form);
-				if (fields != null && fields.size() != 0) {
-					for (Field f : fields) {
-						this.fieldService.delete(f.getId());
-					}
-
-				}
-				this.formService.delete(form.getId());
 			} else {
 				throw new CoreException("must set property id or ids");
 			}
@@ -516,7 +509,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 
 		/*
-		 * * // 构建附件控件 String ptype = "bulletin.main"; String puid =
+		 * // 构建附件控件 String ptype = "bulletin.main"; String puid =
 		 * this.getE().getUid(); boolean readonly = forceReadonly ? true :
 		 * this.isReadonly(); AttachWidget attachsUI =
 		 * AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
