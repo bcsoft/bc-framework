@@ -38,7 +38,7 @@
 
 	<!-- 模板引擎 -->
 	<bean id="templateEngine"
-		class="cn.bc.template.engine.TemplateEngineImpl<java.lang.Object>">
+		class="cn.bc.template.engine.TemplateEngineImpl">
 		<property name="engines">
 			<map>
 				<entry key="freeMarker" value-ref="freeMarkerEngine" />
