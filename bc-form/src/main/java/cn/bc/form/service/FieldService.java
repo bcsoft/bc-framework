@@ -21,4 +21,12 @@ public interface FieldService extends CrudService<Field>{
 	 * @return
 	 */
 	List<Field> findList(Form form);
+	
+	/**
+	 * 获取字段对象
+	 * @param form 表单id
+	 * @param name 字段名称
+	 * @return
+	 */
+	public Field findByPidAndName(Form form, String name);
 }

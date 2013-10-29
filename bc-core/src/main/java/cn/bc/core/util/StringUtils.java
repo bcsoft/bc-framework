@@ -338,12 +338,40 @@ public class StringUtils {
 			return JsonUtils.toMap(value);
 		} else if (type.equals("array")) {
 			return JsonUtils.toArray(value);
+		} else if (type.equals("int[]")) {
+			String subStr = value.substring(1, value.length() - 1);
+			String[] strArray = subStr.split(",");
+			int[] intArray = new int[strArray.length];
+			for (int i = 0; i < strArray.length; i++) {
+				intArray[i] = Integer.parseInt(strArray[i]);
+			}
+			return intArray;
+		} else if (type.equals("long[]")) {
+			String subStr = value.substring(1, value.length() - 1);
+			String[] strArray = subStr.split(",");
+			long[] longArray = new long[strArray.length];
+			for (int i = 0; i < strArray.length; i++) {
+				longArray[i] = Long.parseLong(strArray[i]);
+			}
+			return longArray;
+		} else if (type.equals("string[]")) {
+			String subStr = value.substring(1, value.length() - 1);
+			String[] strArray = subStr.split(",");
+			return strArray;
+		}else if (type.equals("boolean[]")) {
+			String subStr = value.substring(1, value.length() - 1);
+			String[] strArray = subStr.split(",");
+			boolean[] booleanArray = new boolean[strArray.length];
+			for (int i = 0; i < strArray.length; i++) {
+				booleanArray[i] = Boolean.parseBoolean(strArray[i]);
+			}
+			return booleanArray;
 		} else {
 			throw new CoreException("unsupport value type: type=" + type
 					+ ",value=" + value);
 		}
 	}
-	
+
 	/**
 	 * 字符串反转
 	 * 

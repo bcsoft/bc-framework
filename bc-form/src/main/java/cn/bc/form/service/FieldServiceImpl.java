@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.form.dao.FieldDao;
@@ -28,5 +29,16 @@ public class FieldServiceImpl extends DefaultCrudService<Field> implements Field
 
 	public List<Field> findList(Form form) {
 		return this.createQuery().condition(new EqualsCondition("form", form)).list();
+	}
+
+	public Field findByPidAndName(Form form, String name) {
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("form", form));
+		ac.add(new EqualsCondition("name", name));
+		if (this.createQuery().condition(ac).count() == 0) {
+			return null;
+		} else {
+			return this.createQuery().condition(ac).list().get(0);
+		}
 	}
 }
