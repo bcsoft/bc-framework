@@ -10,5 +10,6 @@
 		<action name="edit" class="customFormEntityAction" method="edit" />
 		<action name="open" class="customFormEntityAction" method="open" />
 		<action name="save" class="customFormEntityAction" method="save" />
+		<action name="delete" class="customFormEntityAction" method="delete" />
 	</package>
 </struts>
