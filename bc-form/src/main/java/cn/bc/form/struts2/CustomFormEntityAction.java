@@ -3,7 +3,6 @@ package cn.bc.form.struts2;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -160,7 +159,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	// 渲染表单
-	public String render() throws Exception {
+	public String render() throws Exception {	
 		Form f = this.formService.findByTPC(type, pid, code);
 		if (f == null) {
 			return this.create();
@@ -173,8 +172,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 	// 创建自定义表单
 	public String create() throws Exception {
 		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
-		String content = this.templateService.getContent(this.tpl);
-		List<String> keys = TemplateUtils.findMarkers(content);
 		Map<String, Object> args = new HashMap<String, Object>();
 
 		SystemContext context = (SystemContext) this.getContext();
@@ -296,8 +293,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String edit() throws Exception {
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 		Form form = this.formService.load(this.id);
-		// 获取模板文本
-		String content = this.templateService.getContent(form.getTpl());
 
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -362,8 +357,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Json _json = new Json();
 		try {
 			if (this.type != null && !this.type.equals("") && this.pid != 0L
-					&& this.code != null && !this.code.equals("")) { // option
-																		// 不为空
+					&& this.code != null && !this.code.equals("")) { // option不为空
 				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 				Form form = this.formService.findByTPC(type, pid, code);
 
@@ -445,8 +439,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String open() throws Exception {
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 		Form form = this.formService.findByTPC(type, pid, code);
-		// 获取模板文本
-		String content = this.templateService.getContent(form.getTpl());
 
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -509,16 +501,19 @@ public class CustomFormEntityAction extends ActionSupport implements
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 
 		/*
-		 * // 构建附件控件 String ptype = "bulletin.main"; String puid =
-		 * this.getE().getUid(); boolean readonly = forceReadonly ? true :
-		 * this.isReadonly(); AttachWidget attachsUI =
-		 * AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
-		 * this.attachService, ptype, puid);
-		 * 
-		 * // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
-		 * .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
-		 * .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-		 */
+		  // 构建附件控件
+			String ptype = "bulletin.main"; 
+			String puid =
+		  this.getE().getUid();
+		  boolean readonly = forceReadonly ? true :
+		  this.isReadonly(); AttachWidget attachsUI =
+		  AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
+		  this.attachService, ptype, puid);
+		  
+		  // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
+		  .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+		  .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));*/
+		 
 
 		return attachsUI;
 	}

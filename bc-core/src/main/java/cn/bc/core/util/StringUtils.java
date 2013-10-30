@@ -365,8 +365,11 @@ public class StringUtils {
 		} else if (type.equals("string[]")) {
 			String subStr = value.substring(1, value.length() - 1);
 			String[] strArray = subStr.split(",");
+			for (int i = 0; i < strArray.length; i++) {
+				strArray[i] = strArray[i].replaceAll("\"", "");
+			}
 			return strArray;
-		}else if (type.equals("boolean[]")) {
+		} else if (type.equals("boolean[]")) {
 			String subStr = value.substring(1, value.length() - 1);
 			String[] strArray = subStr.split(",");
 			boolean[] booleanArray = new boolean[strArray.length];
