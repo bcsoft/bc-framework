@@ -21,6 +21,7 @@ import sun.misc.BASE64Decoder;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 图片处理Action
@@ -34,11 +35,24 @@ public class PhotoAction extends ActionSupport {
     private static final long serialVersionUID = 1L;
     public PageOption pageOption;
 
+    /**
+     * 1）关联平台的附件时格式为：a:[附件主键]
+     * 2）关联流程的附件时格式为：p:[附件主键]
+     * 3）指定文件相对于bcdata目录下的相对路径，如"201310/201310110130220001.jpg"
+     */
+    public String id;
+
+    private Map<String, PhotoExecutor> executors;
+
+    public void setExecutors(Map<String, PhotoExecutor> executors) {
+        this.executors = executors;
+    }
+
     @Override
     public String execute() throws Exception {
         // 页面参数
         pageOption = new PageOption();
-        pageOption.setWidth(800).setHeight(600).setMinWidth(500).setMinHeight(400);
+        pageOption.setWidth(600).setHeight(400).setMinWidth(450).setMinHeight(350);
 
         // 添加操作按钮
         //-- 拍照按钮
@@ -49,6 +63,23 @@ public class PhotoAction extends ActionSupport {
         pageOption.addButton(new ButtonOption("下载", null, "bc.photo.download").setId("downloadBtn"));
         //-- 完成按钮
         pageOption.addButton(new ButtonOption("完成", null, "bc.photo.ok").setId("okBtn"));
+
+        // 编辑现有附件的处理
+        if (id != null && !id.isEmpty()) {
+            String[] tid = id.split(":");
+            if (tid.length > 1) {
+                PhotoExecutor executor = executors.get(tid[0]);
+                if ("a".equals(tid[0])) {// Attach附件的编辑
+
+                } else if ("p".equals(tid[0])) {// 流程附件的编辑
+
+                } else {// 指定文件路径的处理
+
+                }
+            } else {// 指定文件路径的处理
+
+            }
+        }
 
         return super.execute();
     }
@@ -92,16 +123,16 @@ public class PhotoAction extends ActionSupport {
             }
 
             // 处理base64数据
-            if(this.data == null || this.data.isEmpty())
+            if (this.data == null || this.data.isEmpty())
                 throw new CoreException("没有图像数据！");
             this.data = this.data.substring(this.data.indexOf(",") + 1);
-            if(this.data.isEmpty())
+            if (this.data.isEmpty())
                 throw new CoreException("没有图像数据！");
 
             // base64字符转换为图片文件保存
             logger.debug("file=" + file);
             File _file = new File(Attach.DATA_REAL_PATH + "/" + file);
-            if(!_file.exists())
+            if (!_file.exists())
                 _file.getParentFile().mkdirs();
             FileCopyUtils.copy(decoder.decodeBuffer(this.data), _file);
 
