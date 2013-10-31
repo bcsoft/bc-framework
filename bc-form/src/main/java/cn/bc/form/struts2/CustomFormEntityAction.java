@@ -27,7 +27,6 @@ import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.SpringUtils;
 import cn.bc.core.util.StringUtils;
-import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.form.domain.Field;
@@ -159,7 +158,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	// 渲染表单
-	public String render() throws Exception {	
+	public String render() throws Exception {
 		Form f = this.formService.findByTPC(type, pid, code);
 		if (f == null) {
 			return this.create();
@@ -347,6 +346,19 @@ public class CustomFormEntityAction extends ActionSupport implements
 			}
 		}
 
+		// 设置额外参数
+		if (this.extraData != null && !this.extraData.equals("")) {
+			JSONArray extraDataJA = new JSONArray(this.extraData);
+			for (int i = 0; i < extraDataJA.length(); i++) {
+				JSONObject jo = extraDataJA.getJSONObject(i);
+				args.put(
+						jo.getString("name"),
+						StringUtils.convertValueByType(jo.getString("type"),
+								jo.getString("value")));
+
+			}
+		}
+
 		addSystemContextParam(args);
 		formatHtml(this.tpl, args);
 		return "page";
@@ -501,19 +513,16 @@ public class CustomFormEntityAction extends ActionSupport implements
 	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
 
 		/*
-		  // 构建附件控件
-			String ptype = "bulletin.main"; 
-			String puid =
-		  this.getE().getUid();
-		  boolean readonly = forceReadonly ? true :
-		  this.isReadonly(); AttachWidget attachsUI =
-		  AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
-		  this.attachService, ptype, puid);
-		  
-		  // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
-		  .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
-		  .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));*/
-		 
+		 * // 构建附件控件 String ptype = "bulletin.main"; String puid =
+		 * this.getE().getUid(); boolean readonly = forceReadonly ? true :
+		 * this.isReadonly(); AttachWidget attachsUI =
+		 * AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
+		 * this.attachService, ptype, puid);
+		 * 
+		 * // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
+		 * .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
+		 * .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
+		 */
 
 		return attachsUI;
 	}
