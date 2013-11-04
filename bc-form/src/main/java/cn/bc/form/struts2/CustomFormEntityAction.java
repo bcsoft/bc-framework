@@ -66,6 +66,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private TemplateService templateService;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
+	private TemplateEngine templateEngine;
 	public AttachWidget attachsUI;
 	public String json;
 	public String type; // 表单类型
@@ -130,6 +131,11 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public void setTemplateService(TemplateService templateService) {
 		this.templateService = templateService;
 	}
+	
+	@Autowired
+	public void setTemplateEngine(TemplateEngine templateEngine) {
+		this.templateEngine = templateEngine;
+	}
 
 	public Context getContext() {
 		return (Context) this.session.get(Context.KEY);
@@ -139,11 +145,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void formatHtml(String tpl_, Map<String, Object> args) {
-		@SuppressWarnings("unchecked")
-		TemplateEngine<String> eng = (TemplateEngine<String>) SpringUtils
-				.getBean("templateEngine");
-		this.html = eng.render(tpl_, args);
+		this.html = (String) templateEngine.render(tpl_, args);
 	}
 
 	// 增加系统上下文变量参数
@@ -184,6 +188,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_uid", uid);
 		args.put("form_status", BCConstants.STATUS_DRAFT);
 		args.put("form_isNew", true);
+		args.put("context", context);
 
 		// 设置${from_info}参数对应的值
 		Json infoArgs = new Json();
@@ -217,70 +222,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		JSONObject formInfoJO = new JSONObject(this.formInfo);
 		JSONArray formDataJA = new JSONArray(this.formData);
 
-		ActorHistory actor = SystemContextHolder.get().getUserHistory();
-
-		Form form = null;
-		List<Field> fields = new ArrayList<Field>();
-		// 新建保存
-		if (formInfoJO.isNull("id")) {
-			// 表单信息处理
-			form = new Form();
-			form.setPid(formInfoJO.getLong("pid"));
-			form.setUid(formInfoJO.getString("uid"));
-			form.setType(formInfoJO.getString("type"));
-			form.setCode(formInfoJO.getString("code"));
-			form.setStatus(formInfoJO.getInt("status"));
-			form.setSubject(formInfoJO.getString("subject"));
-			form.setTpl(formInfoJO.getString("tpl"));
-			form.setAuthor(actor);
-			form.setFileDate(DateUtils.getCalendar(formInfoJO
-					.getString("fileDate")));
-			form.setModifier(actor);
-			form.setModifiedDate(Calendar.getInstance());
-
-			// 表单字段处理
-			for (int i = 0; i < formDataJA.length(); i++) {
-				Field field = new Field();
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				field.setName(formDataJO.getString("name"));
-				field.setType(formDataJO.getString("type"));
-				field.setValue(formDataJO.getString("value"));
-				if (formDataJO.isNull("label")) {
-					field.setLabel("");
-				} else {
-					field.setLabel(formDataJO.getString("label"));
-				}
-				fields.add(field);
-			}
-		} else {// 编辑保存
-			// 表单信息处理
-			form = this.formService.load(formInfoJO.getLong("id"));
-			form.setModifier(actor);
-			form.setModifiedDate(Calendar.getInstance());
-			// 表单字段处理
-			for (int i = 0; i < formDataJA.length(); i++) {
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				Field field = this.fieldService.findByPidAndName(form,
-						formDataJO.getString("name"));
-				if (field != null) {
-					field.setValue(formDataJO.getString("value"));
-				} else {
-					field = new Field();
-					field.setName(formDataJO.getString("name"));
-					field.setType(formDataJO.getString("type"));
-					field.setValue(formDataJO.getString("value"));
-					if (formDataJO.isNull("label")) {
-						field.setLabel("");
-					} else {
-						field.setLabel(formDataJO.getString("label"));
-					}
-				}
-				fields.add(field);
-			}
-		}
-
 		JSONObject jo = new JSONObject();
-		this.customFormService.save(form, fields, jo);
+		this.customFormService.save(formInfoJO, formDataJA, jo);
+		//this.customFormService.save(form, fields, jo);
 
 		jo.put("success", true);
 		jo.put("msg", "保存成功");
@@ -292,6 +236,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String edit() throws Exception {
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 		Form form = this.formService.load(this.id);
+		SystemContext context = (SystemContext) this.getContext();
 
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -305,7 +250,8 @@ public class CustomFormEntityAction extends ActionSupport implements
 		String code = form.getCode();
 		Long pid = form.getPid();
 		String subject = form.getSubject();
-
+		
+		args.put("context", context);
 		args.put("form_author", author.getName());
 		args.put("form_fileDate", fileDate);
 		args.put("form_modifier", modifier.getName());
@@ -451,6 +397,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String open() throws Exception {
 		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
 		Form form = this.formService.findByTPC(type, pid, code);
+		SystemContext context = (SystemContext) this.getContext();
 
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -464,7 +411,8 @@ public class CustomFormEntityAction extends ActionSupport implements
 		String code = form.getCode();
 		Long pid = form.getPid();
 		String subject = form.getSubject();
-
+		
+		args.put("context", context);
 		args.put("form_author", author.getName());
 		args.put("form_fileDate", fileDate);
 		args.put("form_modifier", modifier.getName());
