@@ -1,10 +1,10 @@
 package cn.bc.form.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -54,17 +54,23 @@ public class CustomFormServiceImpl implements CustomFormService {
 		jo.put("formData", ja);
 	}
 
-	public void save(JSONObject formInfoJO, JSONArray formDataJA, JSONObject jo) throws Exception {
-		Form form = null;
+	public void save(JSONObject formInfoJO, JSONArray formDataJA) throws Exception {
 		ActorHistory actor = SystemContextHolder.get().getUserHistory();
+		List<Field> fields = new ArrayList<Field>();
+		
+		String type = formInfoJO.getString("type");
+		long pid = formInfoJO.getLong("pid");
+		String code = formInfoJO.getString("code");
+		
+		Form form = this.formService.findByTPC(type, pid, code);
 		// 新建保存
-		if (formInfoJO.isNull("id")) {
+		if (form == null) {
 			// 表单信息处理
 			form = new Form();
-			form.setPid(formInfoJO.getLong("pid"));
+			form.setPid(pid);
 			form.setUid(formInfoJO.getString("uid"));
-			form.setType(formInfoJO.getString("type"));
-			form.setCode(formInfoJO.getString("code"));
+			form.setType(type);
+			form.setCode(code);
 			form.setStatus(formInfoJO.getInt("status"));
 			form.setSubject(formInfoJO.getString("subject"));
 			form.setTpl(formInfoJO.getString("tpl"));
@@ -76,9 +82,12 @@ public class CustomFormServiceImpl implements CustomFormService {
 			this.formService.save(form);
 
 			// 表单字段处理
-			Field field = new Field();
+			
+			JSONObject formDataJO;
 			for (int i = 0; i < formDataJA.length(); i++) {
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
+				Field field = new Field();
+				formDataJO = (JSONObject) formDataJA.get(i);
+				field.setForm(form);
 				field.setName(formDataJO.getString("name"));
 				field.setType(formDataJO.getString("type"));
 				field.setValue(formDataJO.getString("value"));
@@ -87,23 +96,28 @@ public class CustomFormServiceImpl implements CustomFormService {
 				} else {
 					field.setLabel(formDataJO.getString("label"));
 				}
-				this.fieldService.save(field);
+				fields.add(field);
 			}
+			this.fieldService.save(fields);
 		} else {// 编辑保存
 			// 表单信息处理
-			form = this.formService.load(formInfoJO.getLong("id"));
 			form.setModifier(actor);
 			form.setModifiedDate(Calendar.getInstance());
 			this.formService.save(form);
+			
 			// 表单字段处理
+			
+			JSONObject formDataJO;
 			for (int i = 0; i < formDataJA.length(); i++) {
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				Field field = this.fieldService.findByPidAndName(form,
+				formDataJO = (JSONObject) formDataJA.get(i);
+				Field field = null;
+				field = this.fieldService.findByPidAndName(form,
 						formDataJO.getString("name"));
 				if (field != null) {
 					field.setValue(formDataJO.getString("value"));
 				} else {
 					field = new Field();
+					field.setForm(form);
 					field.setName(formDataJO.getString("name"));
 					field.setType(formDataJO.getString("type"));
 					field.setValue(formDataJO.getString("value"));
@@ -112,9 +126,11 @@ public class CustomFormServiceImpl implements CustomFormService {
 					} else {
 						field.setLabel(formDataJO.getString("label"));
 					}
+					fields.add(field);
 				}
-				this.fieldService.save(field);
+				
 			}
+			this.fieldService.save(fields);
 		}
 
 	}

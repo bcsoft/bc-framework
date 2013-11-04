@@ -1,6 +1,5 @@
 package cn.bc.form.struts2;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,6 @@ import cn.bc.core.exception.InnerLimitedException;
 import cn.bc.core.exception.NotExistsException;
 import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.DateUtils;
-import cn.bc.core.util.SpringUtils;
 import cn.bc.core.util.StringUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
@@ -223,7 +221,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		JSONArray formDataJA = new JSONArray(this.formData);
 
 		JSONObject jo = new JSONObject();
-		this.customFormService.save(formInfoJO, formDataJA, jo);
+		this.customFormService.save(formInfoJO, formDataJA);
 		//this.customFormService.save(form, fields, jo);
 
 		jo.put("success", true);
