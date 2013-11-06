@@ -275,6 +275,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		infoJson.put("type", type);
 		infoJson.put("code", code);
 		infoJson.put("pid", pid);
+		infoJson.put("tpl", tpl);
 		infoJson.put("subject", subject);
 		infoJson.put("id", id);
 		args.put("form_info", infoJson.toString());
@@ -436,6 +437,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		infoJson.put("type", type);
 		infoJson.put("code", code);
 		infoJson.put("pid", pid);
+		infoJson.put("tpl", tpl);
 		infoJson.put("subject", subject);
 		infoJson.put("id", id);
 		args.put("form_info", infoJson.toString());
