@@ -38,22 +38,21 @@ public class PhotoAction extends ActionSupport {
 	private static Log logger = LogFactory.getLog(PhotoAction.class);
 	private static final long serialVersionUID = 1L;
 	public PageOption pageOption;
-
-	/**
-	 * 1）关联平台的附件时格式为：a:[附件主键]
-	 * 2）关联流程的附件时格式为：p:[附件主键]
-	 * 3）指定文件相对于bcdata目录下的相对路径，如"201310/201310110130220001.jpg"
-	 */
-	public String id;
-
 	@Autowired
 	private PhotoService photoService;
+
+	/**
+	 * 1）关联平台的附件时格式为：attach:[附件主键]
+	 * 2）关联流程的附件时格式为：wf:[附件主键]
+	 * 3）指定文件相对于"/bcdata"目录下的相对路径，如"201310/201310110130220001.jpg"
+	 */
+	public String id;
 	public JSONObject json;
-	public String type;// 图片类型
-	public String name;// 图片原始名称
-	public String path;// 图片文件(含相对路径和扩展名)，如果没有指定则按时间错自动生成
 	public String dir;// 指定的子路径（相对于bcdata路径）
-	public String data;// 图片的八base64编码数据
+	public String path;// 图片文件(含相对路径和扩展名)，如果没有指定则按时间错自动生成
+	public String fname;// 图片原始名称
+	public String format;// 图片类型
+	public String data;// 图片的base64编码数据
 
 	@Override
 	public String execute() throws Exception {
@@ -63,13 +62,13 @@ public class PhotoAction extends ActionSupport {
 
 		// 添加操作按钮
 		//-- 拍照按钮
-		pageOption.addButton(new ButtonOption("拍照", null, "bc.photo.captureCamera").setId("captureCameraBtn"));
+		pageOption.addButton(new ButtonOption("拍照", null, "bc.photo.handler.captureCamera").setId("captureCameraBtn"));
 		//-- 打开图片按钮
 		pageOption.addButton(new ButtonOption("打开图片", null, "jQuery.noop").setId("openImageBtn"));
 		//-- 下载按钮
-		pageOption.addButton(new ButtonOption("下载", null, "bc.photo.download").setId("downloadBtn"));
+		pageOption.addButton(new ButtonOption("下载", null, "bc.photo.handler.download").setId("downloadBtn"));
 		//-- 完成按钮
-		pageOption.addButton(new ButtonOption("完成", null, "bc.photo.ok").setId("okBtn"));
+		pageOption.addButton(new ButtonOption("完成", null, "bc.photo.handler.ok").setId("okBtn"));
 
 		// 编辑现有附件的处理
 		if (id != null && !id.isEmpty()) {
@@ -80,20 +79,20 @@ public class PhotoAction extends ActionSupport {
 					throw new CoreException("undefined PhotoExecutor: code=" + tid[0]);
 				Map<String, Object> info = photoExecutor.execute(tid[1]);
 				this.path = (String) info.get("path");
-				this.type = (String) info.get("type");
-				this.name = (String) info.get("name");
+				this.format = (String) info.get("format");
+				this.fname = (String) info.get("fname");
 			} else {// 指定文件路径的处理
 				this.path = tid[0];
 
 				// 从文件路径名解析出扩展名
-				if (this.type == null || this.type.isEmpty()) {
-					this.type = this.path.substring(this.path.lastIndexOf(".") + 1);
+				if (this.format == null || this.format.isEmpty()) {
+					this.format = this.path.substring(this.path.lastIndexOf(".") + 1);
 				}
 
 				// 从文件路径名解析出文件名
-				if (this.name == null || this.name.isEmpty()) {
-					this.name = this.path.substring(this.path.lastIndexOf("/") + 1);
-					this.name = this.name.substring(0, this.name.lastIndexOf("."));
+				if (this.fname == null || this.fname.isEmpty()) {
+					this.fname = this.path.substring(this.path.lastIndexOf("/") + 1);
+					this.fname = this.fname.substring(0, this.fname.lastIndexOf("."));
 				}
 			}
 		} else {
@@ -112,8 +111,10 @@ public class PhotoAction extends ActionSupport {
 	public String upload() throws Exception {
 		if (logger.isDebugEnabled()) {
 			logger.debug("id=" + id);
-			logger.debug("type=" + type);
-			logger.debug("name=" + name);
+			logger.debug("dir=" + dir);
+			logger.debug("path=" + path);
+			logger.debug("fname=" + fname);
+			logger.debug("format=" + format);
 			logger.debug("data=" + data);
 		}
 		json = new JSONObject();
@@ -131,7 +132,7 @@ public class PhotoAction extends ActionSupport {
 				// 构建时间目录
 				Date now = new Date();
 				file += DateUtils.format(now, "yyyyMM") + "/";
-				newName = DateUtils.format(now, "yyyyMMddHHmmssSSSS") + "." + this.type;
+				newName = DateUtils.format(now, "yyyyMMddHHmmssSSSS") + "." + this.format;
 				file += newName;
 			}
 
@@ -150,10 +151,12 @@ public class PhotoAction extends ActionSupport {
 			FileCopyUtils.copy(decoder.decodeBuffer(this.data), _file);
 
 			json.put("success", true);
-			json.put("file", file);
-			json.put("name", this.name);
-			json.put("type", this.type);
+			json.put("id", this.id);
 			json.put("dir", this.dir);
+			json.put("path", file);
+			json.put("fname", this.fname);
+			json.put("format", this.format);
+			json.put("size", 111111);// TODO
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			json.put("success", false);
