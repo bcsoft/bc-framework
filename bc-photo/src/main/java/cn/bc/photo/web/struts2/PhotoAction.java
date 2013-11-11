@@ -41,18 +41,20 @@ public class PhotoAction extends ActionSupport {
 	@Autowired
 	private PhotoService photoService;
 
+	public JSONObject json;// 图片处理完毕后返回的json数据：{success、path、url、fname、size、format [、dir、msg、id]}
 	/**
 	 * 1）关联平台的附件时格式为：attach:[附件主键]
 	 * 2）关联流程的附件时格式为：wf:[附件主键]
 	 * 3）指定文件相对于"/bcdata"目录下的相对路径，如"201310/201310110130220001.jpg"
 	 */
 	public String id;
-	public JSONObject json;
 	public String dir;// 指定的子路径（相对于bcdata路径）
 	public String path;// 图片文件(含相对路径和扩展名)，如果没有指定则按时间错自动生成
 	public String fname;// 图片原始名称
 	public String format;// 图片类型
 	public String data;// 图片的base64编码数据
+	public String url;// 图片的web访问路径，可以直接设置为img的src的url路径
+	public Integer size;// 图片大小
 
 	@Override
 	public String execute() throws Exception {
@@ -78,9 +80,12 @@ public class PhotoAction extends ActionSupport {
 				if (photoExecutor == null)
 					throw new CoreException("undefined PhotoExecutor: code=" + tid[0]);
 				Map<String, Object> info = photoExecutor.execute(tid[1]);
+				this.url = (String) info.get("url");
+				this.dir = (String) info.get("dir");
 				this.path = (String) info.get("path");
-				this.format = (String) info.get("format");
 				this.fname = (String) info.get("fname");
+				this.format = (String) info.get("format");
+				this.size = (Integer) info.get("size");
 			} else {// 指定文件路径的处理
 				this.path = tid[0];
 
@@ -110,53 +115,55 @@ public class PhotoAction extends ActionSupport {
 	 */
 	public String upload() throws Exception {
 		if (logger.isDebugEnabled()) {
-			logger.debug("id=" + id);
-			logger.debug("dir=" + dir);
-			logger.debug("path=" + path);
-			logger.debug("fname=" + fname);
-			logger.debug("format=" + format);
-			logger.debug("data=" + data);
+			logger.debug("id=" + this.id);
+			logger.debug("dir=" + this.dir);
+			logger.debug("path=" + this.path);
+			logger.debug("fname=" + this.fname);
+			logger.debug("format=" + this.format);
+			logger.debug("data=" + this.data);
 		}
 		json = new JSONObject();
 		try {
-			BASE64Decoder decoder = new BASE64Decoder();
-			String file = "", newName;
-			if (this.path != null && !this.path.isEmpty()) {// 指定目标文件：通常为编辑状态的处理
-				file += this.path;
-			} else {// 新建的文件
-				// 附加子目录
-				if (this.dir != null && !this.dir.isEmpty()) {
-					file += this.dir + "/";
-				}
+			// 相对于"/bcdata"目录下的文件全路径名
+			String file = "";
 
-				// 构建时间目录
-				Date now = new Date();
-				file += DateUtils.format(now, "yyyyMM") + "/";
-				newName = DateUtils.format(now, "yyyyMMddHHmmssSSSS") + "." + this.format;
-				file += newName;
+			// 附加子路径
+			if (this.dir != null && !this.dir.isEmpty()) {
+				file += this.dir + "/";
 			}
 
+			// 附加文件相对路径
+			if (this.path == null || this.path.isEmpty()) {// 自动创建文件路径
+				Date now = new Date();
+				this.path = DateUtils.format(now, "yyyyMM") + "/";// 年月
+				this.path += DateUtils.format(now, "yyyyMMddHHmmssSSSS") + "." + this.format;// 文件名
+			}
+			file += this.path;
+			logger.debug("file=" + file);
+
 			// 处理base64数据
-			if (this.data == null || this.data.isEmpty())
+			if (this.data == null || this.data.isEmpty()) {
 				throw new CoreException("没有图像数据！");
+			}
+			if (!this.data.startsWith("data:image/")) {
+				throw new CoreException("错误的图像数据格式！");
+			}
 			this.data = this.data.substring(this.data.indexOf(",") + 1);
-			if (this.data.isEmpty())
-				throw new CoreException("没有图像数据！");
 
 			// base64字符转换为图片文件保存
-			logger.debug("file=" + file);
 			File _file = new File(Attach.DATA_REAL_PATH + "/" + file);
 			if (!_file.exists())
 				_file.getParentFile().mkdirs();
+			BASE64Decoder decoder = new BASE64Decoder();
 			FileCopyUtils.copy(decoder.decodeBuffer(this.data), _file);
 
 			json.put("success", true);
 			json.put("id", this.id);
 			json.put("dir", this.dir);
-			json.put("path", file);
+			json.put("path", this.path);
 			json.put("fname", this.fname);
 			json.put("format", this.format);
-			json.put("size", 111111);// TODO
+			json.put("size", _file.length());
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			json.put("success", false);

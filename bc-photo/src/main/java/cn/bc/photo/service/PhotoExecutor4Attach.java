@@ -21,8 +21,8 @@ public class PhotoExecutor4Attach implements PhotoExecutor {
 	}
 
 	public Map<String, Object> execute(String id) {
-		String sql = "select format as type, subject as name";
-		sql += ", '" + SystemContextHolder.get().getContextPath() + "' || '/bc/attach/inline?id=' || id as path";
+		String sql = "select '' as dir, path as path, subject as fname, format as format, size_ as size";
+		sql += ", '" + SystemContextHolder.get().getContextPath() + "' || '/bc/attach/inline?id=' || id as url";
 		sql += " from bc_docs_attach where id = ?";
 		return this.jdbcTemplate.queryForMap(sql, new Long(id));
 	}

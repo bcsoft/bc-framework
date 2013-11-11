@@ -1,5 +1,6 @@
 package cn.bc.photo.service;
 
+import cn.bc.identity.web.SystemContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -19,7 +20,9 @@ public class PhotoExecutor4FlowAttach implements PhotoExecutor {
     }
 
     public Map<String, Object> execute(String id) {
-        String sql = "select ext as type, path_ as path, subject as name from bc_wf_attach where id = ?";
+	    String sql = "select 'workflow/attachment' as dir, path_ as path, subject as fname, ext as format, size_ as size";
+	    sql += ", '" + SystemContextHolder.get().getContextPath() + "' || '/bc-workflow/flowattachfile/inline?id=' || id as url";
+	    sql += " from bc_wf_attach where id = ?";
         return this.jdbcTemplate.queryForMap(sql, new Long(id));
     }
 }
