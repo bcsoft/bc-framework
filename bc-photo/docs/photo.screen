@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="720" x="8" y="8" measuredWidth="665" measuredHeight="474">
+    <widgets xsi:type="model:Window" id="721" width="665" height="474" text="图片应用" measuredWidth="665" measuredHeight="474" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="723" y="434" width="481" measuredWidth="481" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="735" x="527" y="442" text="下载" measuredWidth="65" measuredHeight="27" icon="download (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Accordion" id="759" x="480" y="19" width="185" height="419" text="{table} 基础调整&#xD;&#xA;{cut} 裁剪&#xD;&#xA;{country-flag2} 模板" measuredWidth="185" measuredHeight="419" selection="0">
+      <items x="0" y="2" width="185" height="27" text="{table} 基础调整"/>
+      <items x="0" y="365" width="185" height="27" text="{cut} 裁剪"/>
+      <items x="0" y="392" width="185" height="27" text="{country-flag2} 模板"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="789" x="88" y="443" measuredWidth="128" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="787" text="800x600 --> 320x160" measuredWidth="128" measuredHeight="25" foreground="#666666">
+        <font bold="false"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Button" id="808" x="393" y="442" text="拍照" measuredWidth="65" measuredHeight="27" icon="snapshot (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="809" x="460" y="442" text="上传" measuredWidth="65" measuredHeight="27" icon="upload (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="810" x="594" y="442" text="完成" measuredWidth="65" measuredHeight="27" icon="check (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Panel" id="812" y="19" width="482" height="419" measuredWidth="482" measuredHeight="419" background="#444444"/>
+    <widgets xsi:type="model:Icon" id="992" x="644" y="26" measuredWidth="16" measuredHeight="16" icon="line-arrow-up (small)"/>
+    <widgets xsi:type="model:Icon" id="993" x="644" y="389" measuredWidth="16" measuredHeight="16" icon="line-arrow-down (small)"/>
+    <widgets xsi:type="model:Panel" id="997" x="240" y="148" width="238" height="152" measuredWidth="238" measuredHeight="152" foreground="#0000ff"/>
+    <widgets xsi:type="model:Icon" id="994" x="644" y="416" measuredWidth="16" measuredHeight="16" icon="line-arrow-down (small)"/>
+    <widgets xsi:type="model:Image" id="733" x="5" y="150" width="234" height="148" measuredWidth="234" measuredHeight="148" src="idcard-1.jpg"/>
+    <widgets xsi:type="model:WidgetGroup" id="756" x="290" y="179" measuredWidth="137" measuredHeight="92">
+      <widgets xsi:type="model:VLine" id="741" x="1" y="8" height="77" measuredWidth="6" measuredHeight="77" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:VLine" id="742" x="129" y="8" height="77" measuredWidth="6" measuredHeight="77" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:HLine" id="743" x="9" y="1" width="120" measuredWidth="120" measuredHeight="6" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:HLine" id="744" x="9" y="85" width="120" measuredWidth="120" measuredHeight="6" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:Panel" id="748" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="749" x="128" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="750" y="84" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="751" x="128" y="84" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+    </widgets>
+    <widgets xsi:type="model:Image" id="996" x="298" y="187" width="120" height="76" measuredWidth="120" measuredHeight="76" src="idcard-2.jpg" grayscale="true"/>
+    <widgets xsi:type="model:Icon" id="998" x="6" y="444" measuredWidth="24" measuredHeight="24" icon="arrow-left (medium)"/>
+    <widgets xsi:type="model:Icon" id="999" x="33" y="444" measuredWidth="24" measuredHeight="24" icon="table (medium)"/>
+  </widgets>
+  <widgets xsi:type="model:Note" id="795" x="672" y="488" width="297" height="289" text="-- 获取图片指定区域的两种方法：&#xD;&#xA;1）通过裁剪功能进行裁剪，裁剪区就是最终的结果。推荐此方法。&#xD;&#xA;2）上传图片后，可以通过鼠标中键滚动缩放、鼠标点按拖动进行移动定位，用户所看到的就是最终的结果。&#xD;&#xA;此法虽然直接方便，但鼠标的滚动精度难以控制，不推荐。&#xD;&#xA;-- 说明：&#xD;&#xA;1）点击上传按钮，选择图片后直接显示选中的图片。&#xD;&#xA;2）点击拍照按钮，在图片显示区动态显示摄像头的视频&#xD;&#xA;，区域大小直接为视频源的大小，可在视频上直接进行裁剪、选定模板等" measuredWidth="297" measuredHeight="289" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="807" x="680" text="上传{upload} 查看{eye} 编辑{edit} 删除{delete}" measuredWidth="177" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="832" x="680" y="28" measuredWidth="185" measuredHeight="185">
+    <widgets xsi:type="model:Accordion" id="815" width="185" height="185" text="{table} 基础调整" measuredWidth="185" measuredHeight="185" selection="0">
+      <items x="0" y="2" width="185" height="27" text="{table} 基础调整"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="894" x="10" y="135" measuredWidth="171" measuredHeight="37">
+      <widgets xsi:type="model:HSlider" id="817" x="6" y="20" width="152" measuredWidth="152" measuredHeight="17" value="50"/>
+      <widgets xsi:type="model:Label" id="818" text="旋转 {undo} {redo}" measuredWidth="69" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="819" x="154" text="0°" measuredWidth="17" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="891" x="10" y="27" measuredWidth="166" measuredHeight="37">
+      <widgets xsi:type="model:HSlider" id="821" x="6" y="20" width="152" measuredWidth="152" measuredHeight="17" value="50"/>
+      <widgets xsi:type="model:Label" id="822" text="亮度" measuredWidth="29" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="823" x="154" text="0" measuredWidth="12" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="892" x="10" y="63" measuredWidth="166" measuredHeight="37">
+      <widgets xsi:type="model:HSlider" id="825" x="6" y="20" width="152" measuredWidth="152" measuredHeight="17" value="50"/>
+      <widgets xsi:type="model:Label" id="826" text="对比度" measuredWidth="41" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="827" x="154" text="0" measuredWidth="12" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="893" x="10" y="99" measuredWidth="166" measuredHeight="37">
+      <widgets xsi:type="model:HSlider" id="829" x="6" y="20" width="152" measuredWidth="152" measuredHeight="17" value="50"/>
+      <widgets xsi:type="model:Label" id="830" text="缩放" measuredWidth="29" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="831" x="154" text="0" measuredWidth="12" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="989" x="163" y="6" measuredWidth="16" measuredHeight="16" icon="line-arrow-up (small)"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="918" x="869" y="28" measuredWidth="185" measuredHeight="278">
+    <widgets xsi:type="model:Accordion" id="903" width="185" height="278" text="{country-flag2} 模板" measuredWidth="185" measuredHeight="278" selection="0" verticalScrollbar="true">
+      <items x="0" y="2" width="185" height="27" text="{country-flag2} 模板"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="912" x="5" y="113" measuredWidth="80" measuredHeight="84">
+      <widgets xsi:type="model:Panel" id="938" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" border="none"/>
+      <widgets xsi:type="model:Rectangle" id="960" x="21" y="9" width="34" height="22" text="正" measuredWidth="34" measuredHeight="22" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Rectangle" id="961" x="21" y="29" width="34" height="22" text="反" measuredWidth="34" measuredHeight="22" background="#cccccc">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="962" x="19" y="51" text="身份证" measuredWidth="41" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="970" x="17" y="65" text="(696x220)" measuredWidth="45" measuredHeight="19" textAlignment="Center" foreground="#444444">
+        <font size="8px"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="971" x="86" y="113" measuredWidth="80" measuredHeight="84">
+      <widgets xsi:type="model:Panel" id="972" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" border="none"/>
+      <widgets xsi:type="model:Rectangle" id="973" x="7" y="21" width="34" height="22" text="正" measuredWidth="34" measuredHeight="22" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Rectangle" id="974" x="39" y="21" width="34" height="22" text="反" measuredWidth="34" measuredHeight="22" background="#cccccc">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="975" x="19" y="51" text="身份证" measuredWidth="41" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="976" x="17" y="65" text="(384x440)" measuredWidth="45" measuredHeight="19" textAlignment="Center" foreground="#444444">
+        <font size="8px"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="977" x="5" y="194" measuredWidth="80" measuredHeight="84">
+      <widgets xsi:type="model:Panel" id="978" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" border="none"/>
+      <widgets xsi:type="model:Rectangle" id="979" x="21" y="9" width="34" height="22" text="正" measuredWidth="34" measuredHeight="22" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Rectangle" id="980" x="21" y="29" width="34" height="22" text="反" measuredWidth="34" measuredHeight="22" background="#cccccc">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="981" x="7" y="51" text="服务资格证" measuredWidth="65" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="982" x="17" y="65" text="(696x220)" measuredWidth="45" measuredHeight="19" textAlignment="Center" foreground="#444444">
+        <font size="8px"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="983" x="86" y="194" measuredWidth="80" measuredHeight="84">
+      <widgets xsi:type="model:Panel" id="984" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" border="none"/>
+      <widgets xsi:type="model:Rectangle" id="985" x="7" y="21" width="34" height="22" text="正" measuredWidth="34" measuredHeight="22" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Rectangle" id="986" x="39" y="21" width="34" height="22" text="反" measuredWidth="34" measuredHeight="22" background="#cccccc">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="987" x="7" y="51" text="服务资格证" measuredWidth="65" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="988" x="17" y="65" text="(384x440)" measuredWidth="45" measuredHeight="19" textAlignment="Center" foreground="#444444">
+        <font size="8px"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="991" x="163" y="7" measuredWidth="16" measuredHeight="16" icon="line-arrow-up (small)"/>
+    <widgets xsi:type="model:WidgetGroup" id="1034" x="5" y="32" measuredWidth="80" measuredHeight="80">
+      <widgets xsi:type="model:Panel" id="1035" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" foreground="#666666"/>
+      <widgets xsi:type="model:Rectangle" id="1036" x="21" y="9" width="34" height="43" measuredWidth="34" measuredHeight="43" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="1038" x="24" y="51" text="原图" measuredWidth="29" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="1040" x="86" y="32" measuredWidth="80" measuredHeight="84">
+      <widgets xsi:type="model:Panel" id="1041" width="80" height="80" measuredWidth="80" measuredHeight="80" background="#cccccc" border="none"/>
+      <widgets xsi:type="model:Rectangle" id="1042" x="7" y="21" width="34" height="22" text="正" measuredWidth="34" measuredHeight="22" background="#666666">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Rectangle" id="1043" x="39" y="21" width="34" height="22" text="反" measuredWidth="34" measuredHeight="22" background="#cccccc">
+        <font size="8px"/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="1044" x="19" y="51" text="身份证" measuredWidth="41" measuredHeight="25" textAlignment="Center">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" id="1045" x="17" y="65" text="(384x440)" measuredWidth="45" measuredHeight="19" textAlignment="Center" foreground="#444444">
+        <font size="8px"/>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1000" x="352" y="135" width="25" height="44" measuredWidth="25" measuredHeight="44" annotation="true" foreground="#ff00ff"/>
+  <widgets xsi:type="model:Label" id="1001" x="288" y="107" text="裁剪身份证的背面" measuredWidth="133" measuredHeight="29" foreground="#ff00ff">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="1006" x="8" y="488" measuredWidth="665" measuredHeight="474">
+    <widgets xsi:type="model:Window" id="1007" width="665" height="474" text="图片应用" measuredWidth="665" measuredHeight="474" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="1008" y="434" width="481" measuredWidth="481" measuredHeight="6"/>
+    <widgets xsi:type="model:Accordion" id="1010" x="480" y="19" width="185" height="419" text="{table} 基础调整&#xD;&#xA;{cut} 裁剪&#xD;&#xA;{country-flag2} 模板" measuredWidth="185" measuredHeight="419" selection="1">
+      <items x="0" y="2" width="185" height="27" text="{table} 基础调整"/>
+      <items x="0" y="29" width="185" height="27" text="{cut} 裁剪"/>
+      <items x="0" y="392" width="185" height="27" text="{country-flag2} 模板"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="1011" x="64" y="445" measuredWidth="130" measuredHeight="25">
+      <widgets xsi:type="model:Label" id="1012" text="800x600 --> 348x220" measuredWidth="130" measuredHeight="25" foreground="#444444">
+        <font bold="true"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:Button" id="1013" x="460" y="442" text="拍照" measuredWidth="65" measuredHeight="27" icon="snapshot (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="1014" x="527" y="442" text="上传" measuredWidth="65" measuredHeight="27" icon="upload (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="1015" x="594" y="442" text="完成" measuredWidth="65" measuredHeight="27" icon="check (small)">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Panel" id="1016" y="19" width="482" height="419" measuredWidth="482" measuredHeight="419" background="#444444"/>
+    <widgets xsi:type="model:Icon" id="1017" x="644" y="26" measuredWidth="16" measuredHeight="16" icon="line-arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="1018" x="644" y="53" measuredWidth="16" measuredHeight="16" icon="line-arrow-up (small)"/>
+    <widgets xsi:type="model:Panel" id="1019" x="88" y="29" width="305" height="399" measuredWidth="305" measuredHeight="399" foreground="#0000ff"/>
+    <widgets xsi:type="model:Icon" id="1020" x="644" y="416" measuredWidth="16" measuredHeight="16" icon="line-arrow-down (small)"/>
+    <widgets xsi:type="model:WidgetGroup" id="1022" x="172" y="167" measuredWidth="137" measuredHeight="92">
+      <widgets xsi:type="model:VLine" id="1023" x="1" y="8" height="77" measuredWidth="6" measuredHeight="77" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:VLine" id="1024" x="129" y="8" height="77" measuredWidth="6" measuredHeight="77" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:HLine" id="1025" x="9" y="1" width="120" measuredWidth="120" measuredHeight="6" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:HLine" id="1026" x="9" y="85" width="120" measuredWidth="120" measuredHeight="6" foreground="#ff9900" lineStyle="dashed"/>
+      <widgets xsi:type="model:Panel" id="1027" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="1028" x="128" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="1029" y="84" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+      <widgets xsi:type="model:Panel" id="1030" x="128" y="84" width="9" height="8" measuredWidth="9" measuredHeight="8" background="#ffff00" foreground="#0000ff"/>
+    </widgets>
+    <widgets xsi:type="model:Image" id="1031" x="180" y="175" width="120" height="76" measuredWidth="120" measuredHeight="76" src="idcard-2.jpg" grayscale="true"/>
+    <widgets xsi:type="model:Icon" id="1032" x="6" y="444" measuredWidth="24" measuredHeight="24" icon="arrow-left (medium)"/>
+    <widgets xsi:type="model:Icon" id="1033" x="33" y="444" measuredWidth="24" measuredHeight="24" icon="table (medium)"/>
+    <widgets xsi:type="model:Label" id="1057" x="499" y="108" text="宽度：" measuredWidth="41" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" id="1058" x="497" y="83" width="152" text="身份证 (348x220)" measuredWidth="152" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="1059" x="580" y="108" text="高度：" measuredWidth="41" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="1060" x="497" y="129" width="65" text="348" measuredWidth="65" measuredHeight="25" state="disabled" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="1061" x="566" y="129" text="X" measuredWidth="13" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="1062" x="578" y="129" width="71" text="220" measuredWidth="71" measuredHeight="25" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Checkbox" id="1063" x="497" y="162" text="锁定长宽比" measuredWidth="81" measuredHeight="25" selected="true" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="1064" x="585" y="161" text="{check} 应用" measuredWidth="64" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="877" x="680" y="216" measuredWidth="185" measuredHeight="154">
+    <widgets xsi:type="model:Accordion" id="878" width="185" height="154" text="{cut} 裁剪" measuredWidth="185" measuredHeight="154" selection="0">
+      <items x="0" y="2" width="185" height="27" text="{cut} 裁剪"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="886" x="18" y="65" text="宽度：" measuredWidth="41" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" id="895" x="16" y="40" width="152" text="自由裁剪" measuredWidth="152" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="896" x="99" y="65" text="高度：" measuredWidth="41" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="897" x="16" y="86" width="65" text="800" measuredWidth="65" measuredHeight="25" textAlignment="Right">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="898" x="85" y="86" text="X" measuredWidth="13" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="899" x="97" y="86" width="71" text="600" measuredWidth="71" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Checkbox" id="900" x="16" y="119" text="锁定长宽比" measuredWidth="81" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="901" x="104" y="118" text="{check} 应用" measuredWidth="64" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="990" x="163" y="7" measuredWidth="16" measuredHeight="16" icon="line-arrow-up (small)"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
