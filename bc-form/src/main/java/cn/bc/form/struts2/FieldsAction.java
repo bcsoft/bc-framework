@@ -69,16 +69,16 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new IdColumn4MapKey("w.id", "id"));
 
 		columns.add(new TextColumn4MapKey("ff.pid", "pid",
-				getText("field.pid"), 40).setSortable(true));
+				getText("field.pid"), 100).setSortable(true));
 
 		columns.add(new TextColumn4MapKey("ff.name_", "name",
-				getText("field.name"), 40).setSortable(true));
+				getText("field.name"), 100).setSortable(true));
 
 		columns.add(new TextColumn4MapKey("ff.type_", "type",
-				getText("field.type"), 40).setSortable(true));
+				getText("field.type"), 80).setSortable(true));
 
 		columns.add(new TextColumn4MapKey("ff.value_", "value",
-				getText("field.value"), 110).setSortable(true));
+				getText("field.value")).setSortable(true));
 
 		columns.add(new TextColumn4MapKey("ff.label_", "label",
 				getText("field.lable"), 110).setSortable(true));
@@ -89,13 +89,14 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 	protected String getHtmlPageTitle() {
 		return this.getText("form.title");
 	}
-
+	
+	@Override
 	protected Condition getGridSpecalCondition() {
-		/** 发布状态条件 */
-		Condition statusCondition = ConditionUtils
+		/** 当前记录id条件 */
+		Condition condition = ConditionUtils
 				.toConditionByComma4IntegerValue(this.id, "ff.pid");
 
-		return statusCondition;
+		return condition;
 	}
 
 	@Override
@@ -136,9 +137,6 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 		return "fieldManage";
 	}
 
-	@Override
-	protected String getHtmlPageJs() {
-		return "";
-	}
+	
 
 }

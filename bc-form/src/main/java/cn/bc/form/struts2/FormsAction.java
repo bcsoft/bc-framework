@@ -69,7 +69,6 @@ public class FormsAction extends ViewAction<Map<String, Object>> {
 		sql.append(" inner join bc_identity_actor_history a on a.id = f.author_id");
 		sql.append(" left join bc_identity_actor_history m on m.id = f.modifier_id");
 		sqlObject.setSql(sql.toString());
-		// System.out.println(sql.toString());
 		// 注入参数
 		sqlObject.setArgs(null);
 
@@ -125,7 +124,7 @@ public class FormsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("f.code", "code",
 				getText("form.code"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("f.subject", "subject",
-				getText("form.subject"), 120).setSortable(true));
+				getText("form.subject")).setSortable(true));
 		columns.add(new TextColumn4MapKey("f.tpl_", "tpl", getText("form.tpl"),
 				100).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.actor_name", "authorName",
@@ -164,6 +163,9 @@ public class FormsAction extends ViewAction<Map<String, Object>> {
 		// 管理字段按钮
 		tb.addButton(getToolbarButton4ManageField());
 
+		// 管理审计日志按钮
+		tb.addButton(getToolbarButton4ManageFieldLog());
+
 		// 删除按钮
 		tb.addButton(getToolbarButton4Delete());
 
@@ -189,6 +191,13 @@ public class FormsAction extends ViewAction<Map<String, Object>> {
 		return new ToolbarButton().setIcon("ui-icon-wrench")
 				.setText(getText("form.manageField"))
 				.setClick("bc.formMangeView.manageField");
+	}
+
+	// 跳转到管理表单审计日志视图的按钮
+	private Button getToolbarButton4ManageFieldLog() {
+		return new ToolbarButton().setIcon("ui-icon-wrench")
+				.setText(getText("form.manageFieldLog"))
+				.setClick("bc.formMangeView.manageFieldLog");
 	}
 
 	// 删除表单

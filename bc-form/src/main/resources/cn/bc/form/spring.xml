@@ -25,6 +25,12 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="fieldService" class="cn.bc.form.service.FieldServiceImpl" />
 	
+	<!-- fieldLog -->
+	<bean id="fieldLogDao"
+		class="cn.bc.form.dao.hibernate.jpa.FieldLogDaoImpl"
+		p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="fieldLogService" class="cn.bc.form.service.FieldLogServiceImpl" />
+	
 	<!-- customForm -->
 	<bean id="customFormService" class="cn.bc.form.service.CustomFormServiceImpl" />
 	

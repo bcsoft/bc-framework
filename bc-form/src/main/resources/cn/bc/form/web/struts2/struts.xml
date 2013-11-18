@@ -57,4 +57,19 @@
 		<action name="save" class="fieldAction" method="save" />
 		<action name="delete" class="fieldAction" method="delete" />
 	</package>
+	
+	<!-- 表单审计日志 -->
+	<package name="fieldLogManages" extends="bc-default" namespace="/bc/fieldLogManages">
+		<!-- 分页视图 -->
+		<action name="paging" class="fieldLogsAction" method="paging" />
+		<!-- 分页数据 -->
+		<action name="data" class="fieldLogsAction" method="data" />
+		<!-- 导出 视图数据 -->
+		<action name="export" class="fieldLogsAction" method="export" />
+		<!-- 高级搜索 -->
+		<action name="conditions" class="fieldLogsAction" method="conditions">
+			<result name="success">/bc-form/field/conditions.jsp
+			</result>
+		</action>
+	</package>
 </struts>

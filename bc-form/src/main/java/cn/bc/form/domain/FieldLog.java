@@ -15,25 +15,26 @@ import cn.bc.identity.domain.ActorHistory;
 /**
  * 表单字段更新日志
  * 
- * @author dragon
+ * @author dragon & hwx
  * 
  */
 @Entity
 @Table(name = "BC_FORM_FIELD_LOG")
 public class FieldLog extends EntityImpl {
 	private static final long serialVersionUID = 1L;
-	private FieldLog field;// 所属字段
+	private Field field;// 所属字段
 	private String value;// 值
 	private Calendar updateTime;// 更新时间
 	private ActorHistory updator;// 更新人
+	private String BatchNo;
 
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	public FieldLog getField() {
+	public Field getField() {
 		return field;
 	}
 
-	public void setField(FieldLog field) {
+	public void setField(Field field) {
 		this.field = field;
 	}
 
@@ -55,13 +56,23 @@ public class FieldLog extends EntityImpl {
 		this.updateTime = updateTime;
 	}
 
-	@Column(name = "UPDATOR")
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "UPDATOR", referencedColumnName = "ID")
 	public ActorHistory getUpdator() {
 		return updator;
 	}
 
 	public void setUpdator(ActorHistory updator) {
 		this.updator = updator;
+	}
+	
+	@Column(name = "BATCH_NO")
+	public String getBatchNo() {
+		return BatchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		BatchNo = batchNo;
 	}
 
 	@Override
