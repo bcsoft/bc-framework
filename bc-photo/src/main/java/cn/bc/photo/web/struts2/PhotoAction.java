@@ -3,8 +3,11 @@
  */
 package cn.bc.photo.web.struts2;
 
+import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
+import cn.bc.docs.service.AttachService;
+import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.photo.service.PhotoExecutor;
 import cn.bc.photo.service.PhotoService;
 import cn.bc.web.ui.html.page.ButtonOption;
@@ -24,6 +27,7 @@ import org.springframework.util.FileCopyUtils;
 import sun.misc.BASE64Decoder;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -38,6 +42,8 @@ public class PhotoAction extends ActionSupport {
 	private static Log logger = LogFactory.getLog(PhotoAction.class);
 	private static final long serialVersionUID = 1L;
 	public PageOption pageOption;
+	@Autowired
+	private AttachService attachService;
 	@Autowired
 	private PhotoService photoService;
 
@@ -55,6 +61,8 @@ public class PhotoAction extends ActionSupport {
 	public String data;// 图片的base64编码数据
 	public String url;// 图片的web访问路径，可以直接设置为img的src的url路径
 	public Integer size;// 图片大小
+	public String ptype;// 创建Attach附件时使用
+	public String puid;// 创建Attach附件时使用
 
 	@Override
 	public String execute() throws Exception {
@@ -120,6 +128,8 @@ public class PhotoAction extends ActionSupport {
 			logger.debug("path=" + this.path);
 			logger.debug("fname=" + this.fname);
 			logger.debug("format=" + this.format);
+			logger.debug("ptype=" + this.ptype);
+			logger.debug("puid=" + this.puid);
 			logger.debug("data=" + this.data);
 		}
 		json = new JSONObject();
@@ -157,12 +167,41 @@ public class PhotoAction extends ActionSupport {
 			BASE64Decoder decoder = new BASE64Decoder();
 			FileCopyUtils.copy(decoder.decodeBuffer(this.data), _file);
 
+			// 保存或更新Attach
+			if (this.id != null && !this.id.isEmpty()) {
+				if (this.id.startsWith("attach:")) {// 更新现有Attach附件的信息
+					Attach attach = this.attachService.load(Long.parseLong(this.id.split(":")[1]));
+					attach.setModifier(SystemContextHolder.get().getUserHistory());
+					attach.setModifiedDate(Calendar.getInstance());
+					attach.setSize(_file.length());
+					this.attachService.save(attach);
+				}
+			} else if (this.ptype != null && !this.ptype.isEmpty()) {// 创建新的Attach附件
+				Attach attach = new Attach();
+				attach.setAuthor(SystemContextHolder.get().getUserHistory());
+				attach.setFileDate(Calendar.getInstance());
+				attach.setFormat(this.format);
+				attach.setSubject(this.fname);
+				attach.setStatus(BCConstants.STATUS_ENABLED);
+				attach.setPtype(this.ptype);
+				attach.setPuid(this.puid);
+				attach.setAppPath(false);
+				attach.setPath(this.path);
+				attach.setSize(_file.length());
+				attach.setModifier(SystemContextHolder.get().getUserHistory());
+				attach.setModifiedDate(Calendar.getInstance());
+				this.attachService.save(attach);
+				this.id = "attach:" + attach.getId();
+			}
+
 			json.put("success", true);
 			json.put("id", this.id);
 			json.put("dir", this.dir);
 			json.put("path", this.path);
 			json.put("fname", this.fname);
 			json.put("format", this.format);
+			json.put("ptype", this.ptype);
+			json.put("puid", this.puid);
 			json.put("size", _file.length());
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
