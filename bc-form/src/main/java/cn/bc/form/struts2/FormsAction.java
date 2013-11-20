@@ -39,21 +39,8 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class FormsAction extends ViewAction<Map<String, Object>> {
-
 	private static final long serialVersionUID = 1L;
 	public String status = "0"; // 表单状态
-	private FormService formService;
-	private FieldService fieldService;
-
-	@Autowired
-	public void setFormService(FormService formService) {
-		this.formService = formService;
-	}
-
-	@Autowired
-	public void setFieldService(FieldService fieldService) {
-		this.fieldService = fieldService;
-	}
 
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
