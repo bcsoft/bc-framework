@@ -1,9 +1,7 @@
 package cn.bc.form.struts2;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +11,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -26,9 +25,7 @@ import cn.bc.core.exception.InnerLimitedException;
 import cn.bc.core.exception.NotExistsException;
 import cn.bc.core.exception.PermissionDeniedException;
 import cn.bc.core.util.DateUtils;
-import cn.bc.core.util.SpringUtils;
 import cn.bc.core.util.StringUtils;
-import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.web.ui.html.AttachWidget;
 import cn.bc.form.domain.Field;
@@ -49,7 +46,7 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  * 自定义表单CRUD入口Action
  * 
- * @author lbj
+ * @author lbj & hwx
  * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -68,11 +65,14 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private TemplateService templateService;
 	private IdGeneratorService idGeneratorService;
 	private AttachService attachService;
+	private TemplateEngine templateEngine;
 	public AttachWidget attachsUI;
 	public String json;
 	public String type; // 表单类型
 	public String code; // 编码
 	public long pid;
+	public String subject;// 表单标题名称
+	private boolean isNew;// 表单是否为新建
 	/**
 	 * 模板编码 如果含字符":"，则进行分拆，前面部分为编码， 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	 */
@@ -133,6 +133,11 @@ public class CustomFormEntityAction extends ActionSupport implements
 		this.templateService = templateService;
 	}
 
+	@Autowired
+	public void setTemplateEngine(TemplateEngine templateEngine) {
+		this.templateEngine = templateEngine;
+	}
+
 	public Context getContext() {
 		return (Context) this.session.get(Context.KEY);
 	}
@@ -141,11 +146,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void formatHtml(String tpl_, Map<String, Object> args) {
-		@SuppressWarnings("unchecked")
-		TemplateEngine<String> eng = (TemplateEngine<String>) SpringUtils
-				.getBean("templateEngine");
-		this.html = eng.render(tpl_, args);
+		this.html = (String) templateEngine.render(tpl_, args);
 	}
 
 	// 增加系统上下文变量参数
@@ -165,196 +168,42 @@ public class CustomFormEntityAction extends ActionSupport implements
 		if (f == null) {
 			return this.create();
 		} else {
-			this.id = f.getId();
 			return this.edit();
 		}
 	}
 
 	// 创建自定义表单
 	public String create() throws Exception {
-		// 根据模板编码，调用相应的模板处理后输出格式化好的前台表单HTML代码
-		String content = this.templateService.getContent(this.tpl);
-		List<String> keys = TemplateUtils.findMarkers(content);
-		Map<String, Object> args = new HashMap<String, Object>();
+		isNew = true;
+		formatTpl();
+		return "page";
+	}
 
-		SystemContext context = (SystemContext) this.getContext();
-		ActorHistory author = context.getUserHistory();
-		String fileDate = DateUtils.formatCalendar2Second(Calendar
-				.getInstance());
-		String uid = this.idGeneratorService.next(Form.ATTACH_TYPE);
+	// 查看自定义表单
+	public String open() throws Exception {
+		isNew = false;
+		formatTpl();
+		return "page";
+	}
 
-		args.put("form_author", author.getName());
-		args.put("form_fileDate", fileDate);
-		args.put("form_uid", uid);
-		args.put("form_status", BCConstants.STATUS_DRAFT);
-		args.put("form_isNew", true);
-
-		// 设置${from_info}参数对应的值
-		Json infoArgs = new Json();
-		infoArgs.put("uid", uid);
-		infoArgs.put("status", BCConstants.STATUS_DRAFT);
-		infoArgs.put("authorId", author.getId());
-		infoArgs.put("fileDate", fileDate);
-		args.put("form_info", infoArgs.toString());
-
-		// 设置额外参数
-		if (this.extraData != null && !this.extraData.equals("")) {
-			JSONArray extraDataJA = new JSONArray(this.extraData);
-			for (int i = 0; i < extraDataJA.length(); i++) {
-				JSONObject jo = extraDataJA.getJSONObject(i);
-				args.put(
-						jo.getString("name"),
-						StringUtils.convertValueByType(jo.getString("type"),
-								jo.getString("value")));
-
-			}
-		}
-
-		addSystemContextParam(args);
-		formatHtml(this.tpl, args);
+	// 编辑自定义表单
+	public String edit() throws Exception {
+		isNew = false;
+		formatTpl();
 		return "page";
 	}
 
 	// 保存自定义表单
 	public String save() throws Exception {
-
 		JSONObject formInfoJO = new JSONObject(this.formInfo);
 		JSONArray formDataJA = new JSONArray(this.formData);
-
-		ActorHistory actor = SystemContextHolder.get().getUserHistory();
-
-		Form form = null;
-		List<Field> fields = new ArrayList<Field>();
-		// 新建保存
-		if (formInfoJO.isNull("id")) {
-			// 表单信息处理
-			form = new Form();
-			form.setPid(formInfoJO.getLong("pid"));
-			form.setUid(formInfoJO.getString("uid"));
-			form.setType(formInfoJO.getString("type"));
-			form.setCode(formInfoJO.getString("code"));
-			form.setStatus(formInfoJO.getInt("status"));
-			form.setSubject(formInfoJO.getString("subject"));
-			form.setTpl(formInfoJO.getString("tpl"));
-			form.setAuthor(actor);
-			form.setFileDate(DateUtils.getCalendar(formInfoJO
-					.getString("fileDate")));
-			form.setModifier(actor);
-			form.setModifiedDate(Calendar.getInstance());
-
-			// 表单字段处理
-			for (int i = 0; i < formDataJA.length(); i++) {
-				Field field = new Field();
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				field.setName(formDataJO.getString("name"));
-				field.setType(formDataJO.getString("type"));
-				field.setValue(formDataJO.getString("value"));
-				if (formDataJO.isNull("label")) {
-					field.setLabel("");
-				} else {
-					field.setLabel(formDataJO.getString("label"));
-				}
-				fields.add(field);
-			}
-		} else {// 编辑保存
-			// 表单信息处理
-			form = this.formService.load(formInfoJO.getLong("id"));
-			form.setModifier(actor);
-			form.setModifiedDate(Calendar.getInstance());
-			// 表单字段处理
-			for (int i = 0; i < formDataJA.length(); i++) {
-				JSONObject formDataJO = (JSONObject) formDataJA.get(i);
-				Field field = this.fieldService.findByPidAndName(form,
-						formDataJO.getString("name"));
-				if (field != null) {
-					field.setValue(formDataJO.getString("value"));
-				} else {
-					field = new Field();
-					field.setName(formDataJO.getString("name"));
-					field.setType(formDataJO.getString("type"));
-					field.setValue(formDataJO.getString("value"));
-					if (formDataJO.isNull("label")) {
-						field.setLabel("");
-					} else {
-						field.setLabel(formDataJO.getString("label"));
-					}
-				}
-				fields.add(field);
-			}
-		}
-
 		JSONObject jo = new JSONObject();
-		this.customFormService.save(form, fields, jo);
-
+		
+		this.customFormService.save(formInfoJO, formDataJA);
 		jo.put("success", true);
 		jo.put("msg", "保存成功");
 		this.json = jo.toString();
 		return "json";
-	}
-
-	// 编辑自定义表单
-	public String edit() throws Exception {
-		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-		Form form = this.formService.load(this.id);
-		// 获取模板文本
-		String content = this.templateService.getContent(form.getTpl());
-
-		// 构建格式化模板参数
-		Map<String, Object> args = new HashMap<String, Object>();
-		ActorHistory author = form.getAuthor();
-		ActorHistory modifier = form.getModifier();
-		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
-		String modifiedDate = DateUtils.formatCalendar2Second(form
-				.getModifiedDate());
-		String uid = form.getUid();
-		String type = form.getType();
-		String code = form.getCode();
-		Long pid = form.getPid();
-		String subject = form.getSubject();
-
-		args.put("form_author", author.getName());
-		args.put("form_fileDate", fileDate);
-		args.put("form_modifier", modifier.getName());
-		args.put("form_modifiedDate", modifiedDate);
-		args.put("form_uid", uid);
-		args.put("form_status", form.getStatus());
-		args.put("form_isNew", false);
-		args.put("form_type", type);
-		args.put("form_code", code);
-		args.put("form_pid", pid);
-		args.put("form_subject", subject);
-		args.put("form_id", id);
-
-		// 设置${from_info}参数对应的值
-		JSONObject infoJson = new JSONObject();
-		infoJson.put("author", author.getName());
-		infoJson.put("fileDate", fileDate);
-		infoJson.put("modifier", modifier.getName());
-		infoJson.put("modifiedDate", modifiedDate);
-		infoJson.put("uid", uid);
-		infoJson.put("status", form.getStatus());
-		infoJson.put("isNew", false);
-		infoJson.put("type", type);
-		infoJson.put("code", code);
-		infoJson.put("pid", pid);
-		infoJson.put("subject", subject);
-		infoJson.put("id", id);
-		args.put("form_info", infoJson.toString());
-
-		// 获取表单字段属性
-		List<Field> fields = this.fieldService.findList(form);
-		if (fields != null && fields.size() != 0) {
-			for (Field f : fields) {
-				args.put(
-						f.getName(),
-						StringUtils.convertValueByType(f.getType(),
-								f.getValue()));
-			}
-		}
-
-		addSystemContextParam(args);
-		formatHtml(this.tpl, args);
-		return "page";
 	}
 
 	// 删除自定义表单
@@ -362,51 +211,16 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Json _json = new Json();
 		try {
 			if (this.type != null && !this.type.equals("") && this.pid != 0L
-					&& this.code != null && !this.code.equals("")) { // option
-																		// 不为空
-				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-				Form form = this.formService.findByTPC(type, pid, code);
+					&& this.code != null && !this.code.equals("")) { // option不为空
+				this.customFormService.delete(type, pid, code);
 
-				// 获取表单字段属性
-				List<Field> fields = this.fieldService.findList(form);
-				if (fields != null && fields.size() != 0) {
-					for (Field f : fields) {
-						this.fieldService.delete(f.getId());
-					}
-
-				}
-				this.formService.delete(form.getId());
 			} else if (this.id != null) {// 删除一条
-				// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-				Form form = this.formService.load(this.id);
+				this.customFormService.delete(this.id);
 
-				// 获取表单字段属性
-				List<Field> fields = this.fieldService.findList(form);
-				if (fields != null && fields.size() != 0) {
-					for (Field f : fields) {
-						this.fieldService.delete(f.getId());
-					}
-
-				}
-				this.formService.delete(form.getId());
 			} else if (this.ids != null && this.ids.length() > 0) {// 删除一批
-
 				Long[] ids = cn.bc.core.util.StringUtils
 						.stringArray2LongArray(this.ids.split(","));
-				for (int i = 0; i < ids.length; i++) {
-					// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-					Form form = this.formService.load(ids[i]);
-
-					// 获取表单字段属性
-					List<Field> fields = this.fieldService.findList(form);
-					if (fields != null && fields.size() != 0) {
-						for (Field f : fields) {
-							this.fieldService.delete(f.getId());
-						}
-
-					}
-					this.formService.delete(form.getId());
-				}
+				this.customFormService.delete(ids);
 			} else {
 				throw new CoreException("must set property id or ids");
 			}
@@ -439,104 +253,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 		json = _json.toString();
 
 		return "json";
-	}
-
-	// 查看自定表单
-	public String open() throws Exception {
-		// 根据自定义表单id，获取相应的自定义表单表单对象，根据表单字段参数格式化模板后生成的前台表单HTML代码
-		Form form = this.formService.findByTPC(type, pid, code);
-		// 获取模板文本
-		String content = this.templateService.getContent(form.getTpl());
-
-		// 构建格式化模板参数
-		Map<String, Object> args = new HashMap<String, Object>();
-		ActorHistory author = form.getAuthor();
-		ActorHistory modifier = form.getModifier();
-		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
-		String modifiedDate = DateUtils.formatCalendar2Second(form
-				.getModifiedDate());
-		String uid = form.getUid();
-		String type = form.getType();
-		String code = form.getCode();
-		Long pid = form.getPid();
-		String subject = form.getSubject();
-
-		args.put("form_author", author.getName());
-		args.put("form_fileDate", fileDate);
-		args.put("form_modifier", modifier.getName());
-		args.put("form_modifiedDate", modifiedDate);
-		args.put("form_uid", uid);
-		args.put("form_status", form.getStatus());
-		args.put("form_isNew", false);
-		args.put("form_type", type);
-		args.put("form_code", code);
-		args.put("form_pid", pid);
-		args.put("form_subject", subject);
-		args.put("form_id", id);
-
-		// 设置${from_info}参数对应的值
-		JSONObject infoJson = new JSONObject();
-		infoJson.put("author", author.getName());
-		infoJson.put("fileDate", fileDate);
-		infoJson.put("modifier", modifier.getName());
-		infoJson.put("modifiedDate", modifiedDate);
-		infoJson.put("uid", uid);
-		infoJson.put("status", form.getStatus());
-		infoJson.put("isNew", false);
-		infoJson.put("type", type);
-		infoJson.put("code", code);
-		infoJson.put("pid", pid);
-		infoJson.put("subject", subject);
-		infoJson.put("id", id);
-		args.put("form_info", infoJson.toString());
-
-		// 获取表单字段属性
-		List<Field> fields = this.fieldService.findList(form);
-		if (fields != null && fields.size() != 0) {
-			for (Field f : fields) {
-				args.put(
-						f.getName(),
-						StringUtils.convertValueByType(f.getType(),
-								f.getValue()));
-			}
-		}
-
-		addSystemContextParam(args);
-		formatHtml(this.tpl, args);
-		return "page";
-	}
-
-	protected AttachWidget buildAttachsUI(boolean isNew, boolean forceReadonly) {
-
-		/*
-		 * // 构建附件控件 String ptype = "bulletin.main"; String puid =
-		 * this.getE().getUid(); boolean readonly = forceReadonly ? true :
-		 * this.isReadonly(); AttachWidget attachsUI =
-		 * AttachWidget.defaultAttachWidget(isNew, readonly, isFlashUpload(),
-		 * this.attachService, ptype, puid);
-		 * 
-		 * // 上传附件的限制 attachsUI.addExtension(getText("app.attachs.extensions"))
-		 * .setMaxCount(Integer.parseInt(getText("app.attachs.maxCount")))
-		 * .setMaxSize(Integer.parseInt(getText("app.attachs.maxSize")));
-		 */
-
-		return attachsUI;
-	}
-
-	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
-	public static boolean isFlashUpload() {
-		// TODO Opera;
-		return isIE();
-	}
-
-	/**
-	 * 判断客户端的浏览器是否是IE浏览器
-	 * 
-	 * @return
-	 */
-	public static boolean isIE() {
-		return ServletActionContext.getRequest().getHeader("User-Agent")
-				.toUpperCase().indexOf("MSIE") != -1;
 	}
 
 	/**
@@ -575,5 +291,186 @@ public class CustomFormEntityAction extends ActionSupport implements
 			json.put("msg", e.toString());
 			json.put("e", e.getClass().getSimpleName());
 		}
+	}
+
+	/**
+	 * 格式化模板 
+	 * @param form
+	 * @throws JSONException
+	 */
+	private void formatTpl() throws JSONException {
+		Form form = null;
+		// 构建格式化模板参数
+		Map<String, Object> args = new HashMap<String, Object>();
+		if (isNew) { //表单为新建状态时
+			//设置模板参数
+			setCreatedTplAgs(args);
+			// 设置表单信息
+			String formInfoJsonStr = setCreatedFormInfo();
+			args.put("form_info", formInfoJsonStr);
+		} else { //表单为编辑状态时
+			form = this.formService.findByTPC(type, pid,code);
+			//设置模板参数
+			setEditedTplAgs(args, form);
+			// 设置表单信息
+			String formInfoJsonStr = setEditedFormInfo(form);
+			args.put("form_info", formInfoJsonStr);
+
+			// 设置表单字段
+			List<Field> fields = this.fieldService.findList(form);
+			if (fields != null && fields.size() != 0) {
+				for (Field f : fields) {
+					if (f.getType().equals("string")) { // 如果为字段的值为string类型
+						args.put(
+								f.getName(),
+								StringUtils.convertValueByType(f.getType(),
+										f.getValue()));
+					} else {// 如果为字段的值为其他类型
+						if (f.getValue().equals("")) {// 如果为字段的值为其他类型，并且为空字符串
+							args.put(f.getName(), StringUtils
+									.convertValueByType("string", ""));
+						} else {
+							args.put(f.getName(), StringUtils
+									.convertValueByType(f.getType(),
+											f.getValue()));
+						}
+					}
+				}
+			}
+		}
+
+		// 设置额外参数
+		if (this.extraData != null && !this.extraData.equals("")) {
+			JSONArray extraDataJA = new JSONArray(this.extraData);
+			for (int i = 0; i < extraDataJA.length(); i++) {
+				JSONObject jo = extraDataJA.getJSONObject(i);
+				args.put(
+						jo.getString("name"),
+						StringUtils.convertValueByType(jo.getString("type"),
+								jo.getString("value")));
+			}
+		}
+
+		addSystemContextParam(args);
+		formatHtml(this.tpl, args);
+	}
+
+	/**
+	 * 新建时设置模板参数
+	 * 
+	 * @param args
+	 */
+	private void setCreatedTplAgs(Map<String, Object> args) {
+		SystemContext context = (SystemContext) this.getContext();
+		ActorHistory author = context.getUserHistory();
+		String fileDate = DateUtils.formatCalendar2Second(Calendar
+				.getInstance());
+		String uid = this.idGeneratorService.next(Form.ATTACH_TYPE);
+
+		args.put("form_author", author.getName());
+		args.put("form_fileDate", fileDate);
+		args.put("form_uid", uid);
+		args.put("form_status", BCConstants.STATUS_DRAFT);
+		args.put("form_isNew", true);
+		args.put("context", context);
+	}
+
+	/**
+	 * 编辑时设置模板参数
+	 * 
+	 * @param args
+	 * @param form
+	 */
+	private void setEditedTplAgs(Map<String, Object> args, Form form) {
+		SystemContext context = (SystemContext) this.getContext();
+		ActorHistory author = form.getAuthor();
+		ActorHistory modifier = form.getModifier();
+		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
+		String modifiedDate = DateUtils.formatCalendar2Second(form
+				.getModifiedDate());
+		String uid = form.getUid();
+		String type = form.getType();
+		String code = form.getCode();
+		Long pid = form.getPid();
+		String subject = form.getSubject();
+
+		args.put("context", context);
+		args.put("form_author", author.getName());
+		args.put("form_fileDate", fileDate);
+		args.put("form_modifier", modifier.getName());
+		args.put("form_modifiedDate", modifiedDate);
+		args.put("form_uid", uid);
+		args.put("form_status", form.getStatus());
+		args.put("form_isNew", false);
+		args.put("form_type", type);
+		args.put("form_code", code);
+		args.put("form_pid", pid);
+		args.put("form_subject", subject);
+		args.put("form_id", id);
+	}
+
+	/**
+	 * 新建编辑时设置表单信息
+	 * 
+	 * @param form
+	 * @throws JSONException
+	 */
+	private String setEditedFormInfo(Form form) throws JSONException {
+		ActorHistory author = form.getAuthor();
+		ActorHistory modifier = form.getModifier();
+		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
+		String modifiedDate = DateUtils.formatCalendar2Second(form
+				.getModifiedDate());
+		String uid = form.getUid();
+		String type = form.getType();
+		String code = form.getCode();
+		Long pid = form.getPid();
+		String subject = form.getSubject();
+
+		// 设置${from_info}参数对应的值
+		JSONObject infoJson = new JSONObject();
+		infoJson.put("author", author.getName());
+		infoJson.put("fileDate", fileDate);
+		infoJson.put("modifier", modifier.getName());
+		infoJson.put("modifiedDate", modifiedDate);
+		infoJson.put("uid", uid);
+		infoJson.put("status", form.getStatus());
+		infoJson.put("isNew", false);
+		infoJson.put("type", type);
+		infoJson.put("code", code);
+		infoJson.put("pid", pid);
+		infoJson.put("tpl", tpl);
+		infoJson.put("subject", subject);
+		infoJson.put("id", id);
+
+		return infoJson.toString();
+	}
+
+	/**
+	 * 新建时设置表单信息
+	 * 
+	 * @throws JSONException
+	 */
+	private String setCreatedFormInfo() {
+		SystemContext context = (SystemContext) this.getContext();
+		ActorHistory author = context.getUserHistory();
+		String fileDate = DateUtils.formatCalendar2Second(Calendar
+				.getInstance());
+		String uid = this.idGeneratorService.next(Form.ATTACH_TYPE);
+
+		// 设置${from_info}参数对应的值
+		Json infoJson = new Json();
+		infoJson.put("subject", subject);
+		infoJson.put("type", type);
+		infoJson.put("code", code);
+		infoJson.put("pid", pid);
+		infoJson.put("tpl", tpl);
+		infoJson.put("uid", uid);
+		infoJson.put("isNew", true);
+		infoJson.put("status", BCConstants.STATUS_DRAFT);
+		infoJson.put("authorId", author.getId());
+		infoJson.put("fileDate", fileDate);
+
+		return infoJson.toString();
 	}
 }

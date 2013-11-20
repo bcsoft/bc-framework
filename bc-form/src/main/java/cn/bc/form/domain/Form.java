@@ -21,9 +21,9 @@ public class Form extends RichFileEntityImpl {
 	public static final int STATUS_DRAFT = BCConstants.STATUS_DRAFT;
 	/** 状态：正常 */
 	public static final int STATUS_ENABLED = BCConstants.STATUS_ENABLED;
-	private Long pid;
+	private Long pid; //其他模块调用此模块时，该模块记录的id
 	private String type;// 类别
-	private String code;// 编码
+	private String code;// 其他模块调用此模块时，使用的编码
 	private String subject;// 标题
 	private String tpl;// 模板编码
 	public static final String ATTACH_TYPE = Form.class.getSimpleName();
