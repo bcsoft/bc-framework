@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -13,12 +14,15 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.form.domain.Form;
+import cn.bc.form.service.FormService;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
+import cn.bc.web.ui.json.Json;
 
 /**
  * 自定义表单字段视图Action
@@ -29,9 +33,14 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class FieldsAction extends ViewAction<Map<String, Object>> {
-
 	private static final long serialVersionUID = 1L;
-	public String id;
+	public String formId;
+	private FormService formService;
+
+	@Autowired
+	public void setFormService(FormService formService) {
+		this.formService = formService;
+	}
 
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
@@ -40,8 +49,10 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ff.id as id, ff.pid as pid, ff.name_ as name,");
-		sql.append("ff.type_ as type, ff.value_ as value, ff.label_ as label");
+		sql.append("ff.type_ as type, ff.value_ as value, ff.label_ as label,");
+		sql.append("f.subject as formSubject,f.type_ as formType");
 		sql.append(" from bc_form_field ff");
+		sql.append(" inner join bc_form f on f.id = ff.pid");
 		sqlObject.setSql(sql.toString());
 		// 注入参数
 		sqlObject.setArgs(null);
@@ -57,6 +68,9 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 				map.put("type", rs[i++]);
 				map.put("value", rs[i++]);
 				map.put("label", rs[i++]);
+				map.put("formSubject", rs[i++]);
+				map.put("formType", rs[i++]);
+				map.put("fieldTitle", "字段名称为" + rs[3]);
 				return map;
 			}
 		});
@@ -68,8 +82,11 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("w.id", "id"));
 
-		columns.add(new TextColumn4MapKey("ff.pid", "pid",
-				getText("field.pid"), 100).setSortable(true));
+		columns.add(new TextColumn4MapKey("f.subject", "formSubject",
+				getText("field.formSubject"), 100).setSortable(true));
+
+		columns.add(new TextColumn4MapKey("f.type_", "formType",
+				getText("field.formType"), 100).setSortable(true));
 
 		columns.add(new TextColumn4MapKey("ff.name_", "name",
 				getText("field.name"), 100).setSortable(true));
@@ -87,16 +104,27 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getHtmlPageTitle() {
-		return this.getText("form.title");
+		if(formId != null && !formId.equals("")) {
+			Form f = formService.load(new Long(formId));
+			return f.getSubject() + "的字段管理";
+		} else {
+			return this.getText("field.title.all");
+		}
 	}
-	
+
 	@Override
 	protected Condition getGridSpecalCondition() {
 		/** 当前记录id条件 */
-		Condition condition = ConditionUtils
-				.toConditionByComma4IntegerValue(this.id, "ff.pid");
+		Condition condition = ConditionUtils.toConditionByComma4IntegerValue(
+				this.formId, "ff.pid");
 
 		return condition;
+	}
+
+	@Override
+	protected void extendGridExtrasData(Json json) {
+		if (this.formId != null && !formId.equals(""))
+			json.put("formId", this.formId);
 	}
 
 	@Override
@@ -124,19 +152,18 @@ public class FieldsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String getGridRowLabelExpression() {
-		return "['name']";
+		return "['fieldTitle']";
 	}
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "ff.type_", "ff.name_","ff.label_" };
+		return new String[] { "f.subject", "f.type_", "ff.type_", "ff.name_",
+				"ff.label_" };
 	}
 
 	@Override
 	protected String getFormActionName() {
 		return "fieldManage";
 	}
-
-	
 
 }

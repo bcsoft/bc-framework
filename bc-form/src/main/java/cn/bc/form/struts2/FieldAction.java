@@ -55,5 +55,14 @@ public class FieldAction extends EntityAction<Long, Field> implements
 		option.addButton(getDefaultSaveButtonOption());
 
 	}
+	
+	@Override
+	public String save() throws Exception {
+		Field e = this.getE();
+		this.beforeSave(e);
+		this.getCrudService().save(e);
+		this.afterSave(e);
+		return "saveSuccess";
+	}
 
 }
