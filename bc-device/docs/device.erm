@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2012-06-08 10:14:54</creation_date>
-			<updated_date>2013-11-21 09:52:09</updated_date>
+			<updated_date>2013-11-21 13:38:30</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -310,7 +310,7 @@
 			<args></args>
 			<description>如应用的ID</description>
 			<logical_name>来源</logical_name>
-			<physical_name>SOURCE</physical_name>
+			<physical_name>SOURCE_</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
@@ -385,7 +385,7 @@
 			<connections>
 				<relation>
 					<id>0</id>
-					<source>2</source>
+					<source>1</source>
 					<target>0</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
@@ -402,7 +402,7 @@
 				</relation>
 				<relation>
 					<id>1</id>
-					<source>2</source>
+					<source>1</source>
 					<target>0</target>
 					<child_cardinality>1..n</child_cardinality>
 					<parent_cardinality>1</parent_cardinality>
@@ -885,25 +885,8 @@
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
-		<note>
-			<id>1</id>
-			<height>167</height>
-			<width>335</width>
-				<font_name>微软雅黑</font_name>
-				<font_size>9</font_size>
-			<x>14</x>
-			<y>407</y>
-			<color>
-				<r>255</r>
-				<g>128</g>
-				<b>192</b>
-			</color>
-			<connections>
-			</connections>
-			<text>说明：&#x0D;&#x0A;常用事件类型：&#x0D;&#x0A;1）connect - 应用连接到设备&#x0D;&#x0A;2）break - 应用断开与设备的连接&#x0D;&#x0A;3）ok - 如打一次卡或一次识别成功&#x0D;&#x0A;4）error - 设备异常</text>
-		</note>
 		<table>
-			<id>2</id>
+			<id>1</id>
 			<height>-1</height>
 			<width>-1</width>
 				<font_name>微软雅黑</font_name>
@@ -966,6 +949,23 @@
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
+		<note>
+			<id>2</id>
+			<height>167</height>
+			<width>335</width>
+				<font_name>微软雅黑</font_name>
+				<font_size>9</font_size>
+			<x>14</x>
+			<y>407</y>
+			<color>
+				<r>255</r>
+				<g>128</g>
+				<b>192</b>
+			</color>
+			<connections>
+			</connections>
+			<text>常用事件类型：&#x0D;&#x0A;1）connect - 应用连接到设备&#x0D;&#x0A;2）break - 应用断开与设备的连接&#x0D;&#x0A;3）ok - 如打一次卡或一次识别成功&#x0D;&#x0A;4）error - 设备异常</text>
+		</note>
 		<table>
 			<id>3</id>
 			<height>-1</height>
@@ -1040,15 +1040,6 @@
 				</normal_column>
 			</columns>
 			<indexes>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>BCIDX_DEVICE_EVENT_STATUS</name>
-					<type></type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>
@@ -1063,7 +1054,7 @@
 			<width>-1</width>
 				<font_name>微软雅黑</font_name>
 				<font_size>9</font_size>
-			<x>382</x>
+			<x>384</x>
 			<y>112</y>
 			<color>
 				<r>128</r>
@@ -1291,15 +1282,6 @@
 				</normal_column>
 			</columns>
 			<indexes>
-				<inidex>
-					<full_text>false</full_text>
-					<non_unique>true</non_unique>
-					<name>BCIDX_DEVICE_EVENT_STATUS</name>
-					<type></type>
-					<description></description>
-					<columns>
-					</columns>
-				</inidex>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>
