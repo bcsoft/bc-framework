@@ -43,7 +43,7 @@
 		<module>bc-template</module>
 		<module>bc-investigate</module>
 		<module>bc-netdisk</module>
-		
+		<module>bc-photo</module>
 		<module>bc-form</module>
 
 		<module>bc-remoting-common</module>
