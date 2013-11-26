@@ -408,7 +408,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_subject", subject);
 		args.put("form_id", id);
 		args.put("form_tpl", tpl);
-
+	}
 	/**
 	 * 新建编辑时设置表单信息
 	 * 
