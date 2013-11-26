@@ -1,5 +1,6 @@
 package cn.bc.form.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.service.DefaultCrudService;
+import cn.bc.core.util.DateUtils;
 import cn.bc.form.dao.FieldDao;
 import cn.bc.form.domain.Field;
+import cn.bc.form.domain.FieldLog;
 import cn.bc.form.domain.Form;
+import cn.bc.identity.domain.ActorHistory;
+import cn.bc.identity.web.SystemContextHolder;
 
 /**
  * 表单字段Service
@@ -20,6 +25,12 @@ import cn.bc.form.domain.Form;
 
 public class FieldServiceImpl extends DefaultCrudService<Field> implements FieldService {
 	private FieldDao fieldDao;
+	private FieldLogService fieldLogService;
+	
+	@Autowired
+	public void setFieldLogService(FieldLogService fieldLogService) {
+		this.fieldLogService = fieldLogService;
+	}
 
 	@Autowired
 	public void setFromDao(FieldDao fieldDao) {
@@ -40,5 +51,19 @@ public class FieldServiceImpl extends DefaultCrudService<Field> implements Field
 		} else {
 			return this.createQuery().condition(ac).list().get(0);
 		}
+	}
+	
+	@Override
+	public Field save(Field entity) {
+		ActorHistory actor = SystemContextHolder.get().getUserHistory();
+		FieldLog fieldLog = new FieldLog();
+		fieldLog.setField(entity);
+		fieldLog.setValue(entity.getValue());
+		fieldLog.setUpdator(actor);
+		fieldLog.setUpdateTime(Calendar.getInstance());
+		fieldLog.setBatchNo(DateUtils.formatCalendar(
+				Calendar.getInstance(), "yyyyMMddHmmssSSSS"));
+		this.fieldLogService.save(fieldLog);
+		return super.save(entity);
 	}
 }
