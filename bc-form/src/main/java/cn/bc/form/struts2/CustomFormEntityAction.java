@@ -409,6 +409,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		String code = form.getCode();
 		Long pid = form.getPid();
 		String subject = form.getSubject();
+		String tpl = form.getTpl();
 		
 		args.put("context", context);
 		args.put("form_author", author.getName());
@@ -423,6 +424,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_pid", pid);
 		args.put("form_subject", subject);
 		args.put("form_id", id);
+		args.put("form_tpl", tpl);
 
 		// 设置${from_info}参数对应的值
 		JSONObject infoJson = new JSONObject();
@@ -438,6 +440,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		infoJson.put("pid", pid);
 		infoJson.put("subject", subject);
 		infoJson.put("id", id);
+		infoJson.put("tpl", tpl);
 		args.put("form_info", infoJson.toString());
 
 		// 获取表单字段属性
