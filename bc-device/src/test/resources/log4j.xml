@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <!-- 控制台的日志信息配置 -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{HH:mm:ss} %5p %c{1} %m%n"/>
+			<!-- 
+			<param name="ConversionPattern" value="%d{HH:mm:ss} %5p [%c{2} %l] %m%n"/>
+			 --> 
+		</layout>  
+	</appender>
+
+    <!-- 日志文件的配置 -->
+	<appender name="rollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize"  value="1024KB"/>
+		<param name="MaxBackupIndex" value="4"/> 
+
+		<param name="File" value="bc-unit-test.log"/> 
+		
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p %c{1} %m%n"/>
+	   </layout>
+	</appender>
+	
+	
+    	
+  	<!-- 设置默认的日志级别(该设置必须放在最后,否则加载会解析出错) -->
+	<!-- 优先级别:OFF/FATAL/ERROR/WARN /INFO /DEBUG /ALL -->
+	<root>
+	   <priority value ="WARN" />
+   	   <appender-ref ref="console" />
+   	   <appender-ref ref="rollingFile" />
+	</root>
+</log4j:configuration>
