@@ -181,7 +181,12 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	// 查看自定义表单
 	public String open() throws Exception {
-		isNew = false;
+		Form f = this.formService.findByTPC(type, pid, code);
+		if (f == null) {
+			isNew = true;
+		} else {
+			isNew = false;
+		}
 		formatTpl();
 		return "page";
 	}
