@@ -10,5 +10,5 @@ import cn.bc.device.domain.Device;
  * 
  */
 public interface DeviceService extends CrudService<Device> {
-
+	
 }
