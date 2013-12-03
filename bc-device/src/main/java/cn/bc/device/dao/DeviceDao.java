@@ -12,4 +12,14 @@ import cn.bc.device.domain.Device;
  */
 public interface DeviceDao  extends CrudDao<Device>{
 
+
+	/**
+	 *  根据新建时设备编号从设备表查找id，如果id存在就重复，则设备编号就是唯一
+	 * 
+	 * @param code 
+	 * 				新建时设备编号
+	 * @return
+	 */
+	Long checkDeviceCodeIsExist(String code);
+
 }

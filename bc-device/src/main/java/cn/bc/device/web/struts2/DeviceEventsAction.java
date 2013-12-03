@@ -52,7 +52,7 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 		// 构建查询sql语句
 		StringBuffer sql = new StringBuffer(
 				"select de.id id,(case when en.id is null then 0 else 1 end) status_");
-		sql.append(" ,d.name device_name,de.type_ type_,de.trigger_time trigger_time");
+		sql.append(" ,d.name device_name,d.purpose purpose,de.type_ type_,de.trigger_time trigger_time");
 		sql.append(" from bc_device_event de");
 		sql.append(" inner join bc_device d on d.id=de.device_id");
 		sql.append(" left join bc_device_event_new en on en.id=de.id ");
@@ -66,6 +66,7 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 				map.put("id", rs[i++]);
 				map.put("status_", rs[i++]);
 				map.put("device_name", rs[i++]);
+				map.put("purpose", rs[i++]);
 				map.put("type_", rs[i++]);
 				map.put("trigger_time", rs[i++]);
 				return map;
@@ -84,8 +85,11 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(
 						new EntityStatusFormater(getDeviceEventStatus()))
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("d.device_name", "device_name",
+		columns.add(new TextColumn4MapKey("d.name", "device_name",
 				getText("deviceEvent.name"), 110).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("d.purpose", "purpose",
+				getText("deviceEvent.purpose"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("de.type_", "type_",
 				getText("deviceEvent.type"), 120).setSortable(true)

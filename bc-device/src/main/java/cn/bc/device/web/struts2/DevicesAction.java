@@ -1,6 +1,7 @@
 package cn.bc.device.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,11 +15,12 @@ import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.web.formater.CalendarFormater;
+import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -46,7 +48,7 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 		return !context.hasAnyRole("BC_DEVICE_MANAGE",
 				getText("key.role.bc.admin"));
 	}
-	
+
 	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
@@ -54,7 +56,7 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 		// 构建查询sql语句
 		StringBuffer sql = new StringBuffer(
 				"select d.id,d.status_,d.model,d.name,d.purpose,d.buy_date");
-		sql.append(",ad.actor_name author,d.file_date,md.actor_name modifier,d.modified_date");
+		sql.append(",d.code code,d.sn sn,md.actor_name modifier,d.modified_date");
 		sql.append(" from bc_device d");
 		sql.append(" inner join bc_identity_actor_history md on md.id = d.modifier_id");
 		sql.append(" inner join bc_identity_actor_history ad on ad.id = d.author_id");
@@ -70,8 +72,8 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 				map.put("name", rs[i++]);
 				map.put("purpose", rs[i++]);
 				map.put("buy_date", rs[i++]);
-				map.put("author", rs[i++]);
-				map.put("file_date", rs[i++]);
+				map.put("code", rs[i++]);
+				map.put("sn", rs[i++]);
 				map.put("modifier", rs[i++]);
 				map.put("modified_date", rs[i++]);
 				return map;
@@ -100,21 +102,28 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 				getText("device.purpose"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.buy_date", "buy_date",
-				getText("device.buyDate"), 120).setSortable(true)
+				getText("device.buyDate"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("ad.actor_name", "author",
-				getText("device.author"), 80).setSortable(true)
+		columns.add(new TextColumn4MapKey("d.code", "code",
+				getText("device.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("d.file_date", "file_date",
-				getText("device.fileDate"), 120).setSortable(true)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+		columns.add(new TextColumn4MapKey("d.sn", "sn", getText("device.sn"))
+				.setSortable(true).setUseTitleFromLabel(true));
+		// 最后修改人信息
 		columns.add(new TextColumn4MapKey("md.actor_name", "modifier",
-				getText("device.modifier"), 80).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("d.modified_date", "modified_date",
-				getText("device.modifiedDate")).setSortable(true)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd"))
-				.setUseTitleFromLabel(true));
+				getText("device.modifier"), 200).setSortable(true)
+				.setValueFormater(new AbstractFormater<Object>() {
+					@Override
+					public Object format(Object context, Object value) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return value
+								+ " ("
+								+ DateUtils.formatDateTime2Minute((Date) map
+										.get("modified_date")) + ")";
+					}
+				}).setUseTitleFromLabel(true));
+
 		return columns;
 	}
 
@@ -191,7 +200,7 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 			// 状态
 			t.addButton(Toolbar.getDefaultToolbarRadioGroup(getDeviceStatus(),
 					"status", 0, getText("title.click2changeSearchStatus")));
-		}else {
+		} else {
 			t.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		}
 		// 搜索
