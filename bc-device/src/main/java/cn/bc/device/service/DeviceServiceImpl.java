@@ -17,8 +17,16 @@ public class DeviceServiceImpl extends DefaultCrudService<Device> implements
 	
 	@Autowired
 	public void setDeviceDao(DeviceDao deviceDao) {
-		this.setCrudDao(deviceDao);
 		this.deviceDao = deviceDao;
+		this.setCrudDao(deviceDao);
+	}
+
+	public Long checkDeviceCodeIsExist(String code) {
+		return this.deviceDao.checkDeviceCodeIsExist(code);
+	}
+
+	public String findDeviceCode(Long id) {
+		return this.deviceDao.findDeviceCode(id);
 	}
 	
 }
