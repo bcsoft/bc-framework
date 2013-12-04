@@ -51,8 +51,8 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询sql语句
 		StringBuffer sql = new StringBuffer(
-				"select de.id id,(case when en.id is null then 0 else 1 end) status_");
-		sql.append(" ,d.name device_name,d.purpose purpose,de.type_ type_,de.trigger_time trigger_time");
+				"select de.id id,(case when en.id is null then 0 else 1 end) status_,de.trigger_time trigger_time");
+		sql.append(" ,d.code code,d.name device_name,d.purpose purpose,de.type_ type_");
 		sql.append(" from bc_device_event de");
 		sql.append(" inner join bc_device d on d.id=de.device_id");
 		sql.append(" left join bc_device_event_new en on en.id=de.id ");
@@ -65,10 +65,11 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 				int i = 0;
 				map.put("id", rs[i++]);
 				map.put("status_", rs[i++]);
+				map.put("trigger_time", rs[i++]);
+				map.put("code", rs[i++]);
 				map.put("device_name", rs[i++]);
 				map.put("purpose", rs[i++]);
 				map.put("type_", rs[i++]);
-				map.put("trigger_time", rs[i++]);
 				return map;
 			}
 		});
@@ -80,24 +81,27 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("de.id", "id"));
 		columns.add(new TextColumn4MapKey("en.id", "status_",
-				getText("deviceEvent.status"), 70)
+				getText("deviceEvent.status"), 60)
 				.setSortable(true)
 				.setValueFormater(
 						new EntityStatusFormater(getDeviceEventStatus()))
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("de.trigger_time", "trigger_time",
+				getText("deviceEvent.triggerTime"), 150)
+				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm:ss"))
+				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("d.code", "code",
+				getText("device.code"), 70).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.name", "device_name",
 				getText("deviceEvent.name"), 110).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.purpose", "purpose",
-				getText("deviceEvent.purpose"), 80).setSortable(true)
+				getText("deviceEvent.purpose")).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("de.type_", "type_",
 				getText("deviceEvent.type"), 120).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("de.trigger_time", "trigger_time",
-				getText("deviceEvent.triggerTime"))
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd (HH:mm:ss)"))
-				.setSortable(true).setUseTitleFromLabel(true));
 		return columns;
 	}
 
@@ -127,7 +131,12 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "d.name" };
+		return new String[] { "d.name", "de.type_", "d.code", "d.purpose" };
+	}
+
+	@Override
+	protected String getGridDblRowMethod() {
+		return null;
 	}
 
 	@Override
@@ -142,7 +151,7 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(450).setHeight(300)
+		return super.getHtmlPageOption().setWidth(730).setHeight(300)
 				.setMinWidth(300).setMinHeight(200);
 	}
 

@@ -24,5 +24,9 @@ public class DeviceServiceImpl extends DefaultCrudService<Device> implements
 	public Long checkDeviceCodeIsExist(String code) {
 		return this.deviceDao.checkDeviceCodeIsExist(code);
 	}
+
+	public String findDeviceCode(Long id) {
+		return this.deviceDao.findDeviceCode(id);
+	}
 	
 }
