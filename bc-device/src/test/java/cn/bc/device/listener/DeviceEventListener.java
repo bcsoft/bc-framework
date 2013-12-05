@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 
-import cn.bc.device.domain.DeviceEventDomain;
+import cn.bc.device.domain.DeviceEventEntity;
 import cn.bc.device.domain.DeviceEventNew;
 import cn.bc.device.event.DeviceEvent;
 import cn.bc.device.service.DeviceEventNewPublishService;
@@ -25,6 +25,7 @@ public class DeviceEventListener  implements ApplicationListener<DeviceEvent> {
 	private DeviceEventNewService deviceEventNewService;
 	private DeviceEventService deviceEventService;
 	public static boolean ok;
+	
 	@Autowired
 	public void setDeviceEventNewPublishService(
 			DeviceEventNewPublishService deviceEventNewPublishService) {

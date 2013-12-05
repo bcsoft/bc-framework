@@ -2,13 +2,16 @@ package cn.bc.device.dao.hibernate.jpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
 import cn.bc.device.dao.DeviceDao;
 import cn.bc.device.domain.Device;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
@@ -54,4 +57,6 @@ public class DeviceDaoImpl extends HibernateCrudJpaDao<Device> implements
 			return null;
 		}
 	}
+
+	
 }

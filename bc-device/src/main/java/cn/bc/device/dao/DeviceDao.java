@@ -30,5 +30,7 @@ public interface DeviceDao  extends CrudDao<Device>{
 	 * @return
 	 */
 	String findDeviceCode(Long id);
+	
+	
 
 }

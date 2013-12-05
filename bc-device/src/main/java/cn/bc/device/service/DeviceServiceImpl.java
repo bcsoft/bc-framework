@@ -2,6 +2,8 @@ package cn.bc.device.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.device.dao.DeviceDao;
 import cn.bc.device.domain.Device;
@@ -27,6 +29,16 @@ public class DeviceServiceImpl extends DefaultCrudService<Device> implements
 
 	public String findDeviceCode(Long id) {
 		return this.deviceDao.findDeviceCode(id);
+	}
+	
+	public Device loadBySn(String sn) {
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("sn", sn));
+		if (this.createQuery().condition(ac).count() == 0) {
+			return null;
+		} else {
+			return this.createQuery().condition(ac).list().get(0);
+		}
 	}
 	
 }

@@ -4,8 +4,6 @@ import java.util.Calendar;
 
 import org.springframework.context.ApplicationEvent;
 
-import cn.bc.device.domain.Device;
-
 /**
  * 将要被广播的设备事件
  * 
