@@ -1,7 +1,7 @@
 package cn.bc.device.dao.hibernate.jpa;
 
 import cn.bc.device.dao.DeviceEventDao;
-import cn.bc.device.domain.DeviceEventDomain;
+import cn.bc.device.domain.DeviceEventEntity;
 import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
 
 /**
@@ -11,7 +11,7 @@ import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
  * @author hwx
  * 
  */
-public class DeviceEventDaoImpl extends HibernateCrudJpaDao<DeviceEventDomain>
+public class DeviceEventDaoImpl extends HibernateCrudJpaDao<DeviceEventEntity>
 		implements DeviceEventDao {
 
 }

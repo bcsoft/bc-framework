@@ -18,7 +18,7 @@ import cn.bc.core.EntityImpl;
  */
 @Entity
 @Table(name = "BC_DEVICE_EVENT")
-public class DeviceEventDomain extends EntityImpl{
+public class DeviceEventEntity extends EntityImpl{
 	private static final long serialVersionUID = 1L;
 	private Device device; //设备ID
 	private String type; //事件类型
