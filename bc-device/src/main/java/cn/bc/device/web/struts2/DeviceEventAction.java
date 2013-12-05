@@ -5,7 +5,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.device.domain.DeviceEventDomain;
+import cn.bc.device.domain.DeviceEventEntity;
 import cn.bc.device.service.DeviceEventService;
 import cn.bc.web.struts2.EntityAction;
 
@@ -17,7 +17,7 @@ import cn.bc.web.struts2.EntityAction;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class DeviceEventAction extends EntityAction<Long, DeviceEventDomain> {
+public class DeviceEventAction extends EntityAction<Long, DeviceEventEntity> {
 
 	private static final long serialVersionUID = 1L;
 	private DeviceEventService deviceEventService;
