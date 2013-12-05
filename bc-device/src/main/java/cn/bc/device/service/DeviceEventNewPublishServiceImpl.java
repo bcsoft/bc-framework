@@ -52,6 +52,8 @@ public class DeviceEventNewPublishServiceImpl implements
 						.getCode(), e.getType(), e.getTriggerTime(),
 						e.getAppId(), e.getData());
 				this.eventPublisher.publishEvent(deviceEvent);
+				deviceEventNewService.delete(deviceEventNewList.get(i).getId());
+				System.out.println(e.getType());
 			}
 
 		}

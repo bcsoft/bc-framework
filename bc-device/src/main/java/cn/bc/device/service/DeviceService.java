@@ -19,4 +19,13 @@ public interface DeviceService extends CrudService<Device> {
 	 * @return
 	 */
 	Long checkDeviceCodeIsExist(String code);
+
+	/**
+	 * 根据设备id值从设备表找出相应的设备编码
+	 * 
+	 * @param id 
+	 * 				设备id值
+	 * @return
+	 */
+	String findDeviceCode(Long id);
 }

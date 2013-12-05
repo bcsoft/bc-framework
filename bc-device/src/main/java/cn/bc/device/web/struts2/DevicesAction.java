@@ -55,8 +55,8 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询sql语句
 		StringBuffer sql = new StringBuffer(
-				"select d.id,d.status_,d.model,d.name,d.purpose,d.buy_date");
-		sql.append(",d.code code,d.sn sn,md.actor_name modifier,d.modified_date");
+				"select d.id,d.status_,d.code code,d.model,d.name,d.purpose,d.buy_date");
+		sql.append(",d.sn sn,md.actor_name modifier,d.modified_date");
 		sql.append(" from bc_device d");
 		sql.append(" inner join bc_identity_actor_history md on md.id = d.modifier_id");
 		sql.append(" inner join bc_identity_actor_history ad on ad.id = d.author_id");
@@ -68,11 +68,11 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 				int i = 0;
 				map.put("id", rs[i++]);
 				map.put("status", rs[i++]);
+				map.put("code", rs[i++]);
 				map.put("model", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("purpose", rs[i++]);
 				map.put("buy_date", rs[i++]);
-				map.put("code", rs[i++]);
 				map.put("sn", rs[i++]);
 				map.put("modifier", rs[i++]);
 				map.put("modified_date", rs[i++]);
@@ -92,23 +92,23 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 				getText("device.status"), 60).setSortable(true)
 				.setValueFormater(new EntityStatusFormater(getDeviceStatus()))
 				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("d.code", "code",
+				getText("device.code"), 80).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.model", "model",
-				getText("device.model"), 60).setSortable(true)
+				getText("device.model"), 80).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.name", "name",
-				getText("device.name"), 80).setSortable(true)
+				getText("device.name"), 150).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.purpose", "purpose",
-				getText("device.purpose"), 80).setSortable(true)
+				getText("device.purpose")).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("d.buy_date", "buy_date",
 				getText("device.buyDate"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("d.code", "code",
-				getText("device.code"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("d.sn", "sn", getText("device.sn"))
-				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("d.sn", "sn", getText("device.sn"),
+				150).setSortable(true).setUseTitleFromLabel(true));
 		// 最后修改人信息
 		columns.add(new TextColumn4MapKey("md.actor_name", "modifier",
 				getText("device.modifier"), 200).setSortable(true)
@@ -154,7 +154,9 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "d.model", "d.name" };
+		// 按“型号”、“名称”、“编码”、“序列号”、“购买日期”、“用途”查找
+		return new String[] { "d.model", "d.name", "d.code", "d.sn",
+				"d.buy_date", "d.purpose" };
 	}
 
 	@Override

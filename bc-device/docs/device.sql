@@ -97,6 +97,18 @@ COMMENT ON COLUMN BC_DEVICE_EVENT_NEW.ID IS 'ID';
 COMMENT ON TABLE BC_IDENTITY_ACTOR_HISTORY IS '参与者历史';
 COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.ID IS 'ID';
 
+--插入设备事件序列
+-- Sequence: devcie_event_sequence
+-- DROP SEQUENCE devcie_event_sequence;
+CREATE SEQUENCE devcie_event_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 20;
+ALTER TABLE devcie_event_sequence
+  OWNER TO bcsystem;
+
 -- 插入资源
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS,PNAME) 
 	select NEXTVAL('CORE_SEQUENCE'), 0, false, 1, m.id, '800500','硬件设备', '', 'i0509','系统维护' 

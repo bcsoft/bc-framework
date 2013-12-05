@@ -45,13 +45,21 @@ public class DeviceAction extends FileEntityAction<Long, Device> {
 		Json json = new Json();
 		Device device = this.getE();
 		Long existsId = null;
+		String code = null;
 
 		// 保存之前检测设备编号是否唯一：仅在新建时检测
 		if (device.getId() == null) {
 			existsId = this.deviceService.checkDeviceCodeIsExist(device
 					.getCode());
+		} else { // 编辑、查看时获取设备编码
+			code = this.deviceService.findDeviceCode(device.getId());
+			if (!code.equals(device.getCode())) {
+				existsId = this.deviceService.checkDeviceCodeIsExist(device
+						.getCode());
+			} else {
+				;
+			}
 		}
-
 		if (existsId != null) {
 			json.put("success", false);
 			json.put("msg", getText("device.error.deviceCodeIsExist"));
