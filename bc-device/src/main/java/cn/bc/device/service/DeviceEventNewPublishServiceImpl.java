@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import cn.bc.device.domain.DeviceEventDomain;
+import cn.bc.device.domain.DeviceEventEntity;
 import cn.bc.device.domain.DeviceEventNew;
 import cn.bc.device.event.DeviceEvent;
 
@@ -45,7 +45,7 @@ public class DeviceEventNewPublishServiceImpl implements
 		if (deviceEventNewList != null) {
 			for (int i = 0; i < deviceEventNewList.size(); i++) {
 				// 数据库中存在的事件
-				DeviceEventDomain e = deviceEventService
+				DeviceEventEntity e = deviceEventService
 						.load(deviceEventNewList.get(i).getId());
 				// 要被广播的事件
 				DeviceEvent deviceEvent = new DeviceEvent(this, e.getDevice()
@@ -53,7 +53,6 @@ public class DeviceEventNewPublishServiceImpl implements
 						e.getAppId(), e.getData());
 				this.eventPublisher.publishEvent(deviceEvent);
 				deviceEventNewService.delete(deviceEventNewList.get(i).getId());
-				System.out.println(e.getType());
 			}
 
 		}

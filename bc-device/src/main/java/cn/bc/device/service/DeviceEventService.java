@@ -1,7 +1,7 @@
 package cn.bc.device.service;
 
 import cn.bc.core.service.CrudService;
-import cn.bc.device.domain.DeviceEventDomain;
+import cn.bc.device.domain.DeviceEventEntity;
 
 /**
  * 设备事件Service接口
@@ -9,6 +9,6 @@ import cn.bc.device.domain.DeviceEventDomain;
  * @author hwx
  *
  */
-public interface DeviceEventService extends CrudService<DeviceEventDomain>{
+public interface DeviceEventService extends CrudService<DeviceEventEntity>{
 
 }

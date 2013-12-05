@@ -46,6 +46,11 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
+	protected String getGridDblRowMethod() {
+		return "bc.page.open";
+	}
+
+	@Override
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
@@ -135,11 +140,6 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected String getGridDblRowMethod() {
-		return null;
-	}
-
-	@Override
 	protected String getModuleContextPath() {
 		return this.getContextPath() + "/bc";
 	}
@@ -158,12 +158,11 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar t = new Toolbar();
+		t.addButton(getDefaultOpenToolbarButton());
 		if (!isReadonly()) {
 			t.addButton(Toolbar.getDefaultToolbarRadioGroup(
 					getDeviceEventStatus(), "status", 0,
 					getText("title.click2changeSearchStatus")));
-		} else {
-			t.addButton(Toolbar.getDefaultEmptyToolbarButton());
 		}
 		t.addButton(getDefaultSearchToolbarButton());
 		return t;

@@ -28,4 +28,11 @@ public interface DeviceService extends CrudService<Device> {
 	 * @return
 	 */
 	String findDeviceCode(Long id);
+	
+	/**
+	 * 根据设备sn获取设备
+	 * @param sn
+	 * @return
+	 */
+	Device loadBySn (String sn);
 }
