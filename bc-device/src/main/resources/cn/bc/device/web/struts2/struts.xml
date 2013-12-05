@@ -27,5 +27,9 @@
 		<action name="export" class="deviceEventsAction" method="export" />
 		<action name="paging" class="deviceEventsAction" method="paging" />
 		<action name="data" class="deviceEventsAction" method="data" />
+		
+		<action name="open" class="deviceEventAction" method="open">
+			<result name="formr">/bc/device/event/form.jsp</result>
+		</action>
 	</package>
 </struts>

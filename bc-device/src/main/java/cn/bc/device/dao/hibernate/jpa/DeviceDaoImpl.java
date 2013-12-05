@@ -31,7 +31,7 @@ public class DeviceDaoImpl extends HibernateCrudJpaDao<Device> implements
 	}
 
 	public Long checkDeviceCodeIsExist(String code) {
-		// 查询所有状态的车辆
+		// 查询所有状态的设备
 		String sql = "select id from bc_device where code=?";
 		try {
 			return this.jdbcTemplate.queryForLong(sql, new Object[] { code });

@@ -154,9 +154,9 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		// 按“型号”、“名称”、“编码”、“序列号”、“购买日期”、“用途”查找
+		// 按“型号”、“名称”、“编码”、“序列号”、“用途”查找
 		return new String[] { "d.model", "d.name", "d.code", "d.sn",
-				"d.buy_date", "d.purpose" };
+				"d.purpose" };
 	}
 
 	@Override
@@ -191,8 +191,6 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar t = new Toolbar();
 		if (!isReadonly()) {
-			// 查看
-			t.addButton(getDefaultOpenToolbarButton());
 			// 新建
 			t.addButton(getDefaultCreateToolbarButton());
 			// 编辑
@@ -203,7 +201,8 @@ public class DevicesAction extends ViewAction<Map<String, Object>> {
 			t.addButton(Toolbar.getDefaultToolbarRadioGroup(getDeviceStatus(),
 					"status", 0, getText("title.click2changeSearchStatus")));
 		} else {
-			t.addButton(Toolbar.getDefaultEmptyToolbarButton());
+			// 查看
+			t.addButton(getDefaultOpenToolbarButton());
 		}
 		// 搜索
 		t.addButton(getDefaultSearchToolbarButton());
