@@ -14,13 +14,13 @@ public class ImageUtilsTest {
 	@Test
 	public void combineJpg() throws Exception {
 		// 需要将dll方法到jdk的bin目录下
-		File img1 = new File("E:\\t\\image\\01.jpg");
-		File img2 = new File("E:\\t\\image\\02.jpg");
-		combineImage(img1, img2, "jpg");
+		File img1 = new File("E:\\t\\image\\01.png");
+		File img2 = new File("E:\\t\\image\\02.png");
+		combineImage(img1, img2, "png");
 	}
 
 	@Test
-	public void combineHorizontal() throws Exception {
+	public void combineHorizontal4Png() throws Exception {
 		// 需要将dll方法到jdk的bin目录下
 		File img1 = new File("E:\\t\\image\\01.png");
 		File img2 = new File("E:\\t\\image\\02.png");
@@ -33,8 +33,50 @@ public class ImageUtilsTest {
 		ImageIO.write(newImg, fileType, outFile);// 写图片
 	}
 
+    @Test
+    public void combineHorizontal4Jpg() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.jpg");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        String fileType = "jpg";
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineHorizontal(images);
+        File outFile = new File("E:\\t\\image\\Horizontal." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineHorizontal4JpgAndPng1() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        String fileType = "jpg";
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineHorizontal(images);
+        File outFile = new File("E:\\t\\image\\Horizontal.s." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineHorizontal4JpgAndPng2() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        String fileType = "png";
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineHorizontal(images);
+        File outFile = new File("E:\\t\\image\\Horizontal.s." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
 	@Test
-	public void combineVertical() throws Exception {
+	public void combineVertica4Png() throws Exception {
 		// 需要将dll方法到jdk的bin目录下
 		File img1 = new File("E:\\t\\image\\01.png");
 		File img2 = new File("E:\\t\\image\\02.png");
@@ -46,6 +88,48 @@ public class ImageUtilsTest {
 		File outFile = new File("E:\\t\\image\\Vertical." + fileType);
 		ImageIO.write(newImg, fileType, outFile);// 写图片
 	}
+
+    @Test
+    public void combineVertica4Jpg() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.jpg");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "jpg";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineVertica4JpgAndPng1() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "jpg";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineVertica4JpgAndPng2() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "png";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
 
 	@Test
 	public void combineMix01() throws Exception {
@@ -115,7 +199,7 @@ public class ImageUtilsTest {
 		int width = width1 + width2;
 		int height = Math.max(height1, height2);
 		BufferedImage ImageNew = new BufferedImage(width, height,
-				BufferedImage.TYPE_INT_ARGB);
+				BufferedImage.TYPE_INT_RGB);
 		ImageNew.setRGB(0, 0, width1, height1, ImageArrayOne, 0, width1);// 设置左半部分的RGB
 		ImageNew.setRGB(width1, 0, width2, height2, ImageArrayTwo, 0, width2);// 设置右半部分的RGB
 
