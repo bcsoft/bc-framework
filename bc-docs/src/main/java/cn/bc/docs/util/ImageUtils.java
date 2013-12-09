@@ -305,8 +305,17 @@ public class ImageUtils {
             }
         }
 
+        // 创建空白图像
         BufferedImage imageNew = new BufferedImage(width, height, opaque ?
                 BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+
+        // 如果有一张图不支持透明，就设置全局背景为白色（否则保存为jpg时，空白区为黑色）
+        if (opaque) {
+            Graphics2D g = (Graphics2D) imageNew.getGraphics();
+            g.setBackground(Color.WHITE);
+            g.clearRect(0, 0, width, height);
+        }
+
         int startY = 0;
         int[] ImageArrayOne;
         for (BufferedImage image1 : images) {

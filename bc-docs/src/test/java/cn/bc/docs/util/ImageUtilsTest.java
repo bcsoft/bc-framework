@@ -76,7 +76,7 @@ public class ImageUtilsTest {
     }
 
 	@Test
-	public void combineVertical() throws Exception {
+	public void combineVertica4Png() throws Exception {
 		// 需要将dll方法到jdk的bin目录下
 		File img1 = new File("E:\\t\\image\\01.png");
 		File img2 = new File("E:\\t\\image\\02.png");
@@ -88,6 +88,48 @@ public class ImageUtilsTest {
 		File outFile = new File("E:\\t\\image\\Vertical." + fileType);
 		ImageIO.write(newImg, fileType, outFile);// 写图片
 	}
+
+    @Test
+    public void combineVertica4Jpg() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.jpg");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "jpg";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineVertica4JpgAndPng1() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "jpg";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
+
+    @Test
+    public void combineVertica4JpgAndPng2() throws Exception {
+        // 需要将dll方法到jdk的bin目录下
+        File img1 = new File("E:\\t\\image\\01.png");
+        File img2 = new File("E:\\t\\image\\02.jpg");
+        InputStream[] images = new InputStream[2];
+        images[0] = new FileInputStream(img1);
+        images[1] = new FileInputStream(img2);
+        BufferedImage newImg = ImageUtils.combineVertical(images);
+        String fileType = "png";
+        File outFile = new File("E:\\t\\image\\Vertical." + fileType);
+        ImageIO.write(newImg, fileType, outFile);// 写图片
+    }
 
 	@Test
 	public void combineMix01() throws Exception {
