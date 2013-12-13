@@ -28,7 +28,7 @@ public class ImageUtilsTest {
 		InputStream[] images = new InputStream[2];
 		images[0] = new FileInputStream(img1);
 		images[1] = new FileInputStream(img2);
-		BufferedImage newImg = ImageUtils.combineHorizontal(images);
+		BufferedImage newImg = ImageUtils.combineHorizontal(images,10);
 		File outFile = new File("E:\\t\\image\\Horizontal." + fileType);
 		ImageIO.write(newImg, fileType, outFile);// 写图片
 	}
@@ -42,7 +42,7 @@ public class ImageUtilsTest {
         InputStream[] images = new InputStream[2];
         images[0] = new FileInputStream(img1);
         images[1] = new FileInputStream(img2);
-        BufferedImage newImg = ImageUtils.combineHorizontal(images);
+        BufferedImage newImg = ImageUtils.combineHorizontal(images,10);
         File outFile = new File("E:\\t\\image\\Horizontal." + fileType);
         ImageIO.write(newImg, fileType, outFile);// 写图片
     }
@@ -83,7 +83,7 @@ public class ImageUtilsTest {
 		InputStream[] images = new InputStream[2];
 		images[0] = new FileInputStream(img1);
 		images[1] = new FileInputStream(img2);
-		BufferedImage newImg = ImageUtils.combineVertical(images);
+		BufferedImage newImg = ImageUtils.combineVertical(images, 10);
 		String fileType = "png";
 		File outFile = new File("E:\\t\\image\\Vertical." + fileType);
 		ImageIO.write(newImg, fileType, outFile);// 写图片
@@ -97,7 +97,7 @@ public class ImageUtilsTest {
         InputStream[] images = new InputStream[2];
         images[0] = new FileInputStream(img1);
         images[1] = new FileInputStream(img2);
-        BufferedImage newImg = ImageUtils.combineVertical(images);
+        BufferedImage newImg = ImageUtils.combineVertical(images,10);
         String fileType = "jpg";
         File outFile = new File("E:\\t\\image\\Vertical." + fileType);
         ImageIO.write(newImg, fileType, outFile);// 写图片

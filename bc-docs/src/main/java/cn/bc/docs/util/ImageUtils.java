@@ -226,31 +226,44 @@ public class ImageUtils {
         return type;
     }
 
-    public static BufferedImage combineHorizontal(InputStream[] imageStreams)
-            throws IOException {
+    public static BufferedImage combineHorizontal(InputStream[] imageStreams) throws IOException {
+        return combineHorizontal(imageStreams, 0);
+    }
+
+    public static BufferedImage combineHorizontal(InputStream[] imageStreams, int gap) throws IOException {
         BufferedImage[] images = new BufferedImage[imageStreams.length];
         for (int i = 0; i < imageStreams.length; i++) {
             images[i] = ImageIO.read(imageStreams[i]);
         }
-        return combineHorizontal(images);
+        return combineHorizontal(images, gap);
+    }
+
+    public static BufferedImage combineHorizontal(BufferedImage[] images) {
+        return combineHorizontal(images, 0);
     }
 
     /**
      * 将图片沿水平方向合并在一起
      *
      * @param images 要合并的图像
+     * @param gap    合并图像之间的间隙
      * @return
      * @throws IOException
      */
-    public static BufferedImage combineHorizontal(BufferedImage[] images) {
+    public static BufferedImage combineHorizontal(BufferedImage[] images, int gap) {
         int width = 0, height = 0;
         boolean opaque = false;// 要合并的图片中是否存在不透明的
+        int i = 0;
         for (BufferedImage image : images) {
             width += image.getWidth();
             height = Math.max(height, image.getHeight());
             if (image.getTransparency() == Transparency.OPAQUE) {
                 opaque = true;
             }
+
+            // 考虑间隙
+            if (i > 0) width = width + gap;
+            i++;
         }
 
         // 创建空白图像
@@ -266,12 +279,19 @@ public class ImageUtils {
 
         int startX = 0;
         int[] ImageArrayOne;
+        i = 0;
         for (BufferedImage image1 : images) {
             width = image1.getWidth();
             height = image1.getHeight();
+
             ImageArrayOne = new int[width * height];
             ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
                     0, width);
+
+            // 添加间隙
+            if (i > 0) startX = startX + gap;
+            i++;
+
             imageNew.setRGB(startX, 0, width, height, ImageArrayOne, 0, width);
             startX += width;
         }
@@ -279,30 +299,43 @@ public class ImageUtils {
         return imageNew;
     }
 
-    public static BufferedImage combineVertical(InputStream[] imageStreams)
-            throws IOException {
+    public static BufferedImage combineVertical(InputStream[] imageStreams) throws IOException {
+        return combineVertical(imageStreams, 0);
+    }
+
+    public static BufferedImage combineVertical(InputStream[] imageStreams, int gap) throws IOException {
         BufferedImage[] images = new BufferedImage[imageStreams.length];
         for (int i = 0; i < imageStreams.length; i++) {
             images[i] = ImageIO.read(imageStreams[i]);
         }
-        return combineVertical(images);
+        return combineVertical(images, gap);
+    }
+
+    public static BufferedImage combineVertical(BufferedImage[] images) {
+        return combineVertical(images, 0);
     }
 
     /**
      * 将图片沿垂直方向合并在一起
      *
-     * @param images
+     * @param images 要合并的图像
+     * @param gap    合并图像之间的间隙
      * @return
      */
-    public static BufferedImage combineVertical(BufferedImage[] images) {
+    public static BufferedImage combineVertical(BufferedImage[] images, int gap) {
         int width = 0, height = 0;
         boolean opaque = false;// 要合并的图片中是否存在不透明的
+        int i = 0;
         for (BufferedImage image : images) {
             width = Math.max(width, image.getWidth());
             height += image.getHeight();
             if (image.getTransparency() == Transparency.OPAQUE) {
                 opaque = true;
             }
+
+            // 考虑间隙
+            if (i > 0) height = height + gap;
+            i++;
         }
 
         // 创建空白图像
@@ -318,12 +351,18 @@ public class ImageUtils {
 
         int startY = 0;
         int[] ImageArrayOne;
+        i = 0;
         for (BufferedImage image1 : images) {
             width = image1.getWidth();
             height = image1.getHeight();
             ImageArrayOne = new int[width * height];
             ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
                     0, width);
+
+            // 添加间隙
+            if (i > 0) startY = startY + gap;
+            i++;
+
             imageNew.setRGB(0, startY, width, height, ImageArrayOne, 0, width);
             startY += height;
         }
@@ -331,14 +370,6 @@ public class ImageUtils {
         return imageNew;
     }
 
-    /**
-     * 安指定的配置沿水平、垂直方向混合合并图片
-     *
-     * @param imageStreams
-     * @param mixConfig    如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并
-     * @return
-     * @throws IOException
-     */
     public static BufferedImage combineMix(InputStream[] imageStreams,
                                            String mixConfig) throws IOException {
         BufferedImage[] images = new BufferedImage[imageStreams.length];
@@ -348,6 +379,14 @@ public class ImageUtils {
         return combineMix(images, mixConfig);
     }
 
+    /**
+     * 按指定的配置沿水平、垂直方向混合合并图片
+     *
+     * @param imageStreams
+     * @param mixConfig    如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并
+     * @return
+     * @throws IOException
+     */
     public static BufferedImage combineMix(BufferedImage[] images,
                                            String mixConfig) {
         String[] vertical = mixConfig.split(";");
