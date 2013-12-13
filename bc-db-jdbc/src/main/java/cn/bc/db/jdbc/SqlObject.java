@@ -61,7 +61,7 @@ public class SqlObject<T extends Object> {
 		return t;
 	}
 	public String getNativeSql() {
-		return sql;
+		return getSql();
 	}
 
 	/**
