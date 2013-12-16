@@ -176,3 +176,10 @@ INSERT INTO bc_device(
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	from bc_dual where not exists (select 0 from bc_device where code='A15.01');
+	
+--插入广播设备事件定时任务
+insert into bc_sd_job (id,status_,name,groupn,cron,bean,method,order_,memo_,ignore_error)
+	select NEXTVAL('hibernate_sequence'),0,'广播设备事件','bc','0/5 * * ? * *','deviceEventNewPublishService',
+	'publishEvent','0100','每5秒执行一次',TRUE
+	from bc_dual 
+	where not exists (select 0 from bc_sd_job where name='广播设备事件');
