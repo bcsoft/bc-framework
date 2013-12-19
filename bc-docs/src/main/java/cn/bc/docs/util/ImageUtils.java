@@ -3,6 +3,8 @@
  */
 package cn.bc.docs.util;
 
+import cn.bc.core.exception.CoreException;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -226,16 +228,128 @@ public class ImageUtils {
         return type;
     }
 
+    /**
+     * 将图片沿水平方向合并在一起
+     *
+     * @param imagers 要合并的图像配置（包含间隙的定义）
+     * @return
+     * @throws java.io.IOException
+     */
+    public static BufferedImage combineHorizontal(Imager[] imagers) {
+        int width = 0, height = 0;
+        boolean opaque = false;// 要合并的图片中是否存在不透明的
+
+        // 计算合并后图片的宽度和高度
+        for (Imager imager : imagers) {
+            width += imager.getWidth();
+            height = Math.max(height, imager.getHeight());
+            if (imager.getImage().getTransparency() == Transparency.OPAQUE) {
+                opaque = true;
+            }
+        }
+
+        // 创建新的空白图像
+        BufferedImage imageNew = new BufferedImage(width, height, opaque ?
+                BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+
+        // 如果有一张图不支持透明，就设置全局背景为白色（否则保存为jpg时，空白区为黑色）
+        if (opaque) {
+            Graphics2D g = (Graphics2D) imageNew.getGraphics();
+            g.setBackground(Color.WHITE);
+            g.clearRect(0, 0, width, height);
+        }
+
+        // 循环每张图片进行合并
+        int startX = 0, startY = 0;
+        int[] ImageArrayOne;
+        int i = 0;
+        for (Imager imager : imagers) {
+            width = imager.getRealWidth();// 原始图像宽度
+            height = imager.getRealHeight();// 原始图像高度
+            startX += imager.getLeft();// 左间隙
+            startY = imager.getTop();// 上间隙
+
+            // 原图的数据
+            ImageArrayOne = new int[width * height];
+            ImageArrayOne = imager.getImage().getRGB(0, 0, width, height, ImageArrayOne, 0, width);
+
+            // 将原图合并到新图
+            imageNew.setRGB(startX, startY, width, height, ImageArrayOne, 0, width);
+
+            // 下一起点
+            startX += width + imager.getRight();
+        }
+
+        // 返回合并后的结果
+        return imageNew;
+    }
+
+    /**
+     * 将图片沿垂直方向合并在一起
+     *
+     * @param imagers 要合并的图像配置（包含间隙的定义）
+     * @return
+     * @throws java.io.IOException
+     */
+    public static BufferedImage combineVertical(Imager[] imagers) {
+        int width = 0, height = 0;
+        boolean opaque = false;// 要合并的图片中是否存在不透明的
+
+        // 计算合并后图片的宽度和高度
+        for (Imager imager : imagers) {
+            height += imager.getHeight();
+            width = Math.max(width, imager.getWidth());
+            if (imager.getImage().getTransparency() == Transparency.OPAQUE) {
+                opaque = true;
+            }
+        }
+
+        // 创建新的空白图像
+        BufferedImage imageNew = new BufferedImage(width, height, opaque ?
+                BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
+
+        // 如果有一张图不支持透明，就设置全局背景为白色（否则保存为jpg时，空白区为黑色）
+        if (opaque) {
+            Graphics2D g = (Graphics2D) imageNew.getGraphics();
+            g.setBackground(Color.WHITE);
+            g.clearRect(0, 0, width, height);
+        }
+
+        // 循环每张图片进行合并
+        int startX = 0, startY = 0;
+        int[] ImageArrayOne;
+        int i = 0;
+        for (Imager imager : imagers) {
+            width = imager.getRealWidth();// 原始图像宽度
+            height = imager.getRealHeight();// 原始图像高度
+            startX = imager.getLeft();// 左间隙
+            startY += imager.getTop();// 上间隙
+
+            // 原图的数据
+            ImageArrayOne = new int[width * height];
+            ImageArrayOne = imager.getImage().getRGB(0, 0, width, height, ImageArrayOne, 0, width);
+
+            // 将原图合并到新图
+            imageNew.setRGB(startX, startY, width, height, ImageArrayOne, 0, width);
+
+            // 下一起点
+            startY += height + imager.getBottom();
+        }
+
+        // 返回合并后的结果
+        return imageNew;
+    }
+
     public static BufferedImage combineHorizontal(InputStream[] imageStreams) throws IOException {
         return combineHorizontal(imageStreams, 0);
     }
 
     public static BufferedImage combineHorizontal(InputStream[] imageStreams, int gap) throws IOException {
-        BufferedImage[] images = new BufferedImage[imageStreams.length];
+        Imager[] imagers = new Imager[imageStreams.length];
         for (int i = 0; i < imageStreams.length; i++) {
-            images[i] = ImageIO.read(imageStreams[i]);
+            imagers[i] = new Imager(imageStreams[i], 0, 0, 0, i > 0 ? gap : 0);// 上、右、下间隙统一为0
         }
-        return combineHorizontal(images, gap);
+        return combineHorizontal(imagers);
     }
 
     public static BufferedImage combineHorizontal(BufferedImage[] images) {
@@ -246,57 +360,16 @@ public class ImageUtils {
      * 将图片沿水平方向合并在一起
      *
      * @param images 要合并的图像
-     * @param gap    合并图像之间的间隙
+     * @param gap    合并图像之间的水平间隙
      * @return
      * @throws IOException
      */
     public static BufferedImage combineHorizontal(BufferedImage[] images, int gap) {
-        int width = 0, height = 0;
-        boolean opaque = false;// 要合并的图片中是否存在不透明的
-        int i = 0;
-        for (BufferedImage image : images) {
-            width += image.getWidth();
-            height = Math.max(height, image.getHeight());
-            if (image.getTransparency() == Transparency.OPAQUE) {
-                opaque = true;
-            }
-
-            // 考虑间隙
-            if (i > 0) width = width + gap;
-            i++;
+        Imager[] imagers = new Imager[images.length];
+        for (int i = 0; i < images.length; i++) {
+            imagers[i] = new Imager(images[i], 0, 0, 0, i > 0 ? gap : 0);// 上、右、下间隙统一为0
         }
-
-        // 创建空白图像
-        BufferedImage imageNew = new BufferedImage(width, height, opaque ?
-                BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
-
-        // 如果有一张图不支持透明，就设置全局背景为白色（否则保存为jpg时，空白区为黑色）
-        if (opaque) {
-            Graphics2D g = (Graphics2D) imageNew.getGraphics();
-            g.setBackground(Color.WHITE);
-            g.clearRect(0, 0, width, height);
-        }
-
-        int startX = 0;
-        int[] ImageArrayOne;
-        i = 0;
-        for (BufferedImage image1 : images) {
-            width = image1.getWidth();
-            height = image1.getHeight();
-
-            ImageArrayOne = new int[width * height];
-            ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
-                    0, width);
-
-            // 添加间隙
-            if (i > 0) startX = startX + gap;
-            i++;
-
-            imageNew.setRGB(startX, 0, width, height, ImageArrayOne, 0, width);
-            startX += width;
-        }
-
-        return imageNew;
+        return combineHorizontal(imagers);
     }
 
     public static BufferedImage combineVertical(InputStream[] imageStreams) throws IOException {
@@ -304,11 +377,11 @@ public class ImageUtils {
     }
 
     public static BufferedImage combineVertical(InputStream[] imageStreams, int gap) throws IOException {
-        BufferedImage[] images = new BufferedImage[imageStreams.length];
+        Imager[] imagers = new Imager[imageStreams.length];
         for (int i = 0; i < imageStreams.length; i++) {
-            images[i] = ImageIO.read(imageStreams[i]);
+            imagers[i] = new Imager(imageStreams[i], 0, 0, 0, i > 0 ? gap : 0);// 上、右、下间隙统一为0
         }
-        return combineVertical(images, gap);
+        return combineVertical(imagers);
     }
 
     public static BufferedImage combineVertical(BufferedImage[] images) {
@@ -319,55 +392,15 @@ public class ImageUtils {
      * 将图片沿垂直方向合并在一起
      *
      * @param images 要合并的图像
-     * @param gap    合并图像之间的间隙
+     * @param gap    合并图像之间的垂直间隙
      * @return
      */
     public static BufferedImage combineVertical(BufferedImage[] images, int gap) {
-        int width = 0, height = 0;
-        boolean opaque = false;// 要合并的图片中是否存在不透明的
-        int i = 0;
-        for (BufferedImage image : images) {
-            width = Math.max(width, image.getWidth());
-            height += image.getHeight();
-            if (image.getTransparency() == Transparency.OPAQUE) {
-                opaque = true;
-            }
-
-            // 考虑间隙
-            if (i > 0) height = height + gap;
-            i++;
+        Imager[] imagers = new Imager[images.length];
+        for (int i = 0; i < images.length; i++) {
+            imagers[i] = new Imager(images[i], i > 0 ? gap : 0, 0, 0, 0);// 右、下、左间隙统一为0
         }
-
-        // 创建空白图像
-        BufferedImage imageNew = new BufferedImage(width, height, opaque ?
-                BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
-
-        // 如果有一张图不支持透明，就设置全局背景为白色（否则保存为jpg时，空白区为黑色）
-        if (opaque) {
-            Graphics2D g = (Graphics2D) imageNew.getGraphics();
-            g.setBackground(Color.WHITE);
-            g.clearRect(0, 0, width, height);
-        }
-
-        int startY = 0;
-        int[] ImageArrayOne;
-        i = 0;
-        for (BufferedImage image1 : images) {
-            width = image1.getWidth();
-            height = image1.getHeight();
-            ImageArrayOne = new int[width * height];
-            ImageArrayOne = image1.getRGB(0, 0, width, height, ImageArrayOne,
-                    0, width);
-
-            // 添加间隙
-            if (i > 0) startY = startY + gap;
-            i++;
-
-            imageNew.setRGB(0, startY, width, height, ImageArrayOne, 0, width);
-            startY += height;
-        }
-
-        return imageNew;
+        return combineVertical(imagers);
     }
 
     public static BufferedImage combineMix(InputStream[] imageStreams,
@@ -382,28 +415,60 @@ public class ImageUtils {
     /**
      * 按指定的配置沿水平、垂直方向混合合并图片
      *
-     * @param imageStreams
-     * @param mixConfig    如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并
+     * @param images    要合并的图片列表
+     * @param mixConfig 合并方式，如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并；
+     *                  如果要控制合并的间隙，如"1:5 6 7 8,1;1,1"，表示第一张图片合并时上、右、下、左的间隙为5、6、7、8个像素；
+     *                  "1:5 6,1;1,1"，表示第一张图片合并时上下、左右的间隙为5、6个像素；
      * @return
      * @throws IOException
      */
-    public static BufferedImage combineMix(BufferedImage[] images,
-                                           String mixConfig) {
-        String[] vertical = mixConfig.split(";");
-        BufferedImage[] vimages = new BufferedImage[vertical.length];
-        String[][] all = new String[vertical.length][];
+    public static BufferedImage combineMix(BufferedImage[] images, String mixConfig) {
+        String[] v_cfgs = mixConfig.split(";");
+        Imager[] v_imagers = new Imager[v_cfgs.length];// 要垂直合并的图
 
-        BufferedImage[] himages;
-        int c = 0;
-        for (int i = 0; i < vertical.length; i++) {
-            all[i] = vertical[i].split(",");
-            himages = new BufferedImage[all[i].length];
-            for (int j = 0; j < himages.length; j++) {
-                himages[j] = images[c + j];
+        String[] h_cfgs, _gaps;
+        int[] gaps;
+        Imager[] h_imagers;// 要水平合并的图
+        int c = 0, left, right, top, bottom, k;
+        for (int i = 0; i < v_cfgs.length; i++) {
+            h_cfgs = v_cfgs[i].split(",");
+            h_imagers = new Imager[h_cfgs.length];
+            for (int j = 0; j < h_imagers.length; j++) {
+                // 从配置中计算出间隙
+                k = h_cfgs[j].indexOf(":");
+                if (k != -1) {
+                    _gaps = h_cfgs[j].substring(k + 1).split(" ");
+                } else {
+                    _gaps = null;
+                }
+                gaps = new int[]{0, 0, 0, 0};// 上 右 下 左
+                if (_gaps != null) {
+                    if (_gaps.length == 1) {// 统一间隙
+                        gaps[0] = Integer.parseInt(_gaps[0]);
+                        gaps[1] = gaps[0];
+                        gaps[2] = gaps[0];
+                        gaps[3] = gaps[0];
+                    } else if (_gaps.length == 2) {// 上下、左右间隙
+                        gaps[0] = Integer.parseInt(_gaps[0]);
+                        gaps[1] = Integer.parseInt(_gaps[1]);
+                        gaps[2] = gaps[0];
+                        gaps[3] = gaps[1];
+                    } else if (_gaps.length == 4) {// 上、右、下、左间隙
+                        gaps[0] = Integer.parseInt(_gaps[0]);
+                        gaps[1] = Integer.parseInt(_gaps[1]);
+                        gaps[2] = Integer.parseInt(_gaps[2]);
+                        gaps[3] = Integer.parseInt(_gaps[3]);
+                    } else {
+                        throw new CoreException("不支持的间隙配置：" + h_cfgs[j].substring(k + 1));
+                    }
+                }
+
+                // 构建图片合并对象
+                h_imagers[j] = new Imager(images[c + j], gaps[0], gaps[1], gaps[2], gaps[3]);
             }
-            c += himages.length;
-            vimages[i] = combineHorizontal(himages);
+            c += h_imagers.length;
+            v_imagers[i] = new Imager(combineHorizontal(h_imagers));
         }
-        return combineVertical(vimages);
+        return combineVertical(v_imagers);
     }
 }
