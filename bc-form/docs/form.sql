@@ -127,7 +127,7 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 
 --插入模板类型
 insert into bc_template_type (ID,STATUS_,ORDER_,CODE,NAME,IS_PATH,IS_PURE_TEXT,EXT,DESC_,FILE_DATE,AUTHOR_ID,MODIFIER_ID,MODIFIED_DATE)
-	select nextval('hibernate_sequence'),0,'0001','freeMarker','自定义表单专用模板',true,true,'ftl','自定义表单专用模板',now(),
+	select nextval('hibernate_sequence'),0,'0001','freeMarker','自定义表单专用模板',true,true,'html','自定义表单专用模板',now(),
 	(select id from bc_identity_actor_history where actor_code = 'admin' and current = true),
 	(select id from bc_identity_actor_history where actor_code = 'admin' and current = true),
 	now()
