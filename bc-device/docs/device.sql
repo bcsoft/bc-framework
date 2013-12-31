@@ -1,4 +1,4 @@
-/* Drop Tables */
+﻿/* Drop Tables */
 DROP TABLE IF EXISTS BC_DEVICE_EVENT_NEW;
 DROP TABLE IF EXISTS BC_DEVICE_EVENT;
 DROP TABLE IF EXISTS BC_DEVICE;
@@ -171,8 +171,8 @@ insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
 INSERT INTO bc_device(
 	id, uid_, status_, code, model, name, purpose, buy_date, sn, desc_ 
 	,file_date, author_id, modified_date, modifier_id)
-    select NEXTVAL('hibernate_sequence'),'D'||NEXTVAL('hibernate_sequence'),0,'A15.01','A15','人脸识别机','上下班考勤'
-	,date'2013-11-15','8123513040002281',null
+    select NEXTVAL('hibernate_sequence'),'D'||NEXTVAL('hibernate_sequence'),0,'A15.01','A15','1号考勤机','上下班考勤'
+	,date'2013-11-15','8123513040002281','汉王A15人脸识别机'
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	from bc_dual where not exists (select 0 from bc_device where code='A15.01');
