@@ -41,9 +41,8 @@
 		class="cn.bc.template.engine.TemplateEngineImpl">
 		<property name="engines">
 			<map>
-				<entry key="freeMarker" value-ref="freeMarkerEngine" />
-				<entry key="mustache" value-ref="mustacheEngine" />
-				<entry key="customForm" value-ref="freeMarkerEngine" />
+				<entry key="FREEMARKER" value-ref="freeMarkerEngine" />
+				<entry key="MUSTACHE" value-ref="mustacheEngine" />
 			</map>
 		</property>
 	</bean>
