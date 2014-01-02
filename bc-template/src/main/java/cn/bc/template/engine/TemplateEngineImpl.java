@@ -40,9 +40,9 @@ public class TemplateEngineImpl<T extends Object> implements TemplateEngine<T> {
 		// 根据模板类型获取相应的渲染引擎
 		String typeCode = tpl.getTemplateType().getCode();
 		@SuppressWarnings("rawtypes")
-		TemplateEngine engine = engines.get(typeCode);
+		TemplateEngine engine = engines.get(typeCode.toUpperCase());
 		if (engine == null) {
-			throw new CoreException("没有找到编码为'" + typeCode + "'的模板引擎!");
+			throw new CoreException("没有找到编码为'" + typeCode.toUpperCase() + "'的模板引擎!");
 		}
 
 		return (T) engine.render(tpl.getContentEx(), args);
