@@ -43,6 +43,7 @@
 			<map>
 				<entry key="freeMarker" value-ref="freeMarkerEngine" />
 				<entry key="mustache" value-ref="mustacheEngine" />
+				<entry key="customForm" value-ref="freeMarkerEngine" />
 			</map>
 		</property>
 	</bean>

@@ -2,7 +2,7 @@
 delete from BC_IDENTITY_ROLE_RESOURCE where sid in 
 	(select id from BC_IDENTITY_RESOURCE where ORDER_ in ('800440'));
 delete from BC_IDENTITY_RESOURCE where ORDER_ in ('800440');
-delete from BC_TEMPLATE_TYPE where CODE='freeMarker' AND NAME='自定义表单专用模板';
+delete from BC_TEMPLATE_TYPE where CODE='customForm' AND NAME='自定义表单专用模板';
 */
 
 --删除表单表索引
@@ -127,12 +127,12 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 
 --插入模板类型
 insert into bc_template_type (ID,STATUS_,ORDER_,CODE,NAME,IS_PATH,IS_PURE_TEXT,EXT,DESC_,FILE_DATE,AUTHOR_ID,MODIFIER_ID,MODIFIED_DATE)
-	select nextval('hibernate_sequence'),0,'0001','freeMarker','自定义表单专用模板',true,true,'html','自定义表单专用模板',now(),
+	select nextval('hibernate_sequence'),0,'0001','customForm','自定义表单专用模板',true,true,'html','自定义表单专用模板',now(),
 	(select id from bc_identity_actor_history where actor_code = 'admin' and current = true),
 	(select id from bc_identity_actor_history where actor_code = 'admin' and current = true),
 	now()
 	from bc_dual
-	where not exists (select 0 from bc_template_type where code='freeMarker' and name='自定义表单专用模板');
+	where not exists (select 0 from bc_template_type where code='customForm' and name='自定义表单专用模板');
 
 --插入函数
 --根据表单的pid、type、code和表单字段的key，查找表单字段对应的值
