@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Note" id="795" x="16" y="326" width="513" height="321" text="优点：&#xD;&#xA;1）实现任意设备的SDK开发与系统的整合&#xD;&#xA;通过数据库将设备事件和业务处理进行完全隔离&#xD;&#xA;2）SDK二次开发与系统业务模块的开发可以进行分离&#xD;&#xA;双方定义好数据规范就可以各自进行开发，互不影响&#xD;&#xA;&#xD;&#xA;缺点：&#xD;&#xA;1）事件数据通常会被保存两份&#xD;&#xA;bc-device模块保存一份，业务模块处理后再保存一份&#xD;&#xA;&#xD;&#xA;技术核心：&#xD;&#xA;1）业务模块监听事件进行处理，可能会涉及复杂的事务处理，因此 bc-device 不配置数据库事务，由业务模块自行配置数据库事务&#xD;&#xA;2）sdk应用直接将事件保存到事件数据库表，bc-device模块使用定时任务，时刻轮询事件表数据，发现新事件就将其广播给业务模块；同时将事件迁移到事件历史表，保证新事件表的数据永远保持最小、速度最快。" measuredWidth="513" measuredHeight="321" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1065" x="184" y="39" width="73" height="66" text="SDK应用1" measuredWidth="73" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1066" x="352" y="112" width="81" height="66" text="事件数据库" measuredWidth="81" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1067" x="256" y="72" width="97" height="42" text="保存事件" measuredWidth="97" measuredHeight="42" annotation="true" left="false" right="true"/>
+  <widgets xsi:type="model:Rectangle" id="1068" x="16" y="39" width="73" height="66" text="设备1" measuredWidth="73" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1070" x="528" y="112" width="81" height="66" text="bc-device" measuredWidth="81" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1071" x="432" y="145" width="97" height="8" text="读取事件" measuredWidth="97" measuredHeight="8" annotation="true"/>
+  <widgets xsi:type="model:Arrow" id="1072" x="608" y="80" width="81" height="66" text="广播事件" measuredWidth="81" measuredHeight="66" annotation="true" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:Rectangle" id="1073" x="688" y="48" width="81" height="66" text="业务模块1" measuredWidth="81" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="1074" x="168" y="9" text="监听事件或自发事件" measuredWidth="113" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1076" x="88" y="72" width="97" height="8" text="触发事件" measuredWidth="97" measuredHeight="8" annotation="true" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:VLine" id="1077" x="333" y="28" height="299" measuredWidth="6" measuredHeight="299"/>
+  <widgets xsi:type="model:VLine" id="1078" x="443" y="28" height="299" measuredWidth="6" measuredHeight="299"/>
+  <widgets xsi:type="model:Label" id="1079" x="226" y="288" text="SDK二次开发" measuredWidth="103" measuredHeight="30">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="1080" x="453" y="288" text="BC系统" measuredWidth="59" measuredHeight="30">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1081" x="688" y="177" width="81" height="66" text="业务模块n" measuredWidth="81" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1082" x="608" y="146" width="81" height="63" text="广播事件" measuredWidth="81" measuredHeight="63" annotation="true" left="false" right="true"/>
+  <widgets xsi:type="model:Text" id="1083" x="776" y="98" text="监&#xD;&#xA;听&#xD;&#xA;处&#xD;&#xA;理&#xD;&#xA;事&#xD;&#xA;件" measuredWidth="12" measuredHeight="102">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="1084" x="720" y="132" text="......" measuredWidth="23" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1085" x="184" y="177" width="73" height="66" text="SDK应用n" measuredWidth="73" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1086" x="256" y="177" width="97" height="31" text="保存事件" measuredWidth="97" measuredHeight="31" annotation="true" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:Label" id="1087" x="210" y="132" text="......" measuredWidth="23" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="1088" x="16" y="177" width="73" height="66" text="设备n" measuredWidth="73" measuredHeight="66">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="1089" x="88" y="210" width="97" height="8" text="触发事件" measuredWidth="97" measuredHeight="8" annotation="true" left="false" right="true" direction="bottom"/>
+  <widgets xsi:type="model:Label" id="1090" x="40" y="132" text="......" measuredWidth="23" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="1091" x="368" y="288" text="数据库" measuredWidth="53" measuredHeight="30">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

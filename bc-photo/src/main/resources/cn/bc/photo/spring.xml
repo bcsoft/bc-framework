@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<!-- 附件信息解析器 -->
+	<util:map id="photoExecutors" key-type="java.lang.String" value-type="cn.bc.photo.service.PhotoExecutor">
+		<entry key="attach" value-ref="photoExecutor4Attach"/>
+		<entry key="wf" value-ref="photoExecutor4FlowAttach"/>
+	</util:map>
+	<bean id="photoService" class="cn.bc.photo.service.PhotoServiceImpl" p:photoExecutors-ref="photoExecutors"/>
+
+	<!-- 标准附件 -->
+	<bean name="photoExecutor4Attach" class="cn.bc.photo.service.PhotoExecutor4Attach"/>
+	<!-- 流程附件 -->
+	<bean name="photoExecutor4FlowAttach" class="cn.bc.photo.service.PhotoExecutor4FlowAttach"/>
+</beans>

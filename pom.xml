@@ -43,8 +43,9 @@
 		<module>bc-template</module>
 		<module>bc-investigate</module>
 		<module>bc-netdisk</module>
-		
+		<module>bc-photo</module>
 		<module>bc-form</module>
+		<module>bc-device</module>
 
 		<module>bc-remoting-common</module>
 		<module>bc-remoting-client</module>

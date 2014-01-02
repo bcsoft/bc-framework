@@ -76,6 +76,10 @@ public class SystemContextImpl implements SystemContext {
 				groups.split(","));
 	}
 
+	public String getContextPath() {
+		return this.getAttr(SystemContext.KEY_SYSCONTEXTPATH);
+	}
+
 	private boolean hasAny(List<String> _roles, String[] roles) {
 		if (_roles != null && !_roles.isEmpty() && roles != null
 				&& roles.length > 0) {
