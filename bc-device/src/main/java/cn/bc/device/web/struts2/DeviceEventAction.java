@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
 import cn.bc.device.domain.DeviceEventEntity;
 import cn.bc.device.service.DeviceEventService;
 import cn.bc.web.struts2.EntityAction;

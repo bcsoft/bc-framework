@@ -109,6 +109,10 @@ CREATE SEQUENCE devcie_event_sequence
 ALTER TABLE devcie_event_sequence
   OWNER TO bcsystem;
 
+/* Create Indexes */
+-- 设备事件索引
+CREATE INDEX DEVICEEVENTIDX_DEVICEEVENT_DEVICEID_TYPE_APPID ON BC_DEVICE_EVENT USING BTREE (DEVICE_ID, TYPE_, APPID);
+
 -- 插入资源
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS,PNAME) 
 	select NEXTVAL('CORE_SEQUENCE'), 0, false, 1, m.id, '800500','硬件设备', '', 'i0509','系统维护' 
@@ -167,8 +171,15 @@ insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
 INSERT INTO bc_device(
 	id, uid_, status_, code, model, name, purpose, buy_date, sn, desc_ 
 	,file_date, author_id, modified_date, modifier_id)
-    select NEXTVAL('hibernate_sequence'),'D'||NEXTVAL('hibernate_sequence'),0,'A15.01','A15','人脸识别机','上下班考勤'
-	,date'2013-11-15','8123513040002281',null
+    select NEXTVAL('hibernate_sequence'),'D'||NEXTVAL('hibernate_sequence'),0,'A15.01','A15','1号考勤机','上下班考勤'
+	,date'2013-11-15','8123513040002281','汉王A15人脸识别机'
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	,now(),(select id from bc_identity_actor_history where actor_code='admin' and current=true)
 	from bc_dual where not exists (select 0 from bc_device where code='A15.01');
+	
+--插入广播设备事件定时任务
+insert into bc_sd_job (id,status_,name,groupn,cron,bean,method,order_,memo_,ignore_error)
+	select NEXTVAL('hibernate_sequence'),0,'广播设备事件','bc','0/5 * * ? * *','deviceEventNewPublishService',
+	'publishEvent','0100','每5秒执行一次',TRUE
+	from bc_dual 
+	where not exists (select 0 from bc_sd_job where name='广播设备事件');

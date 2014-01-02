@@ -40,5 +40,15 @@ public class DeviceServiceImpl extends DefaultCrudService<Device> implements
 			return this.createQuery().condition(ac).list().get(0);
 		}
 	}
+
+	public Device loadByCode(String code) {
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("code", code));
+		if (this.createQuery().condition(ac).count() == 0) {
+			return null;
+		} else {
+			return this.createQuery().condition(ac).list().get(0);
+		}
+	}
 	
 }
