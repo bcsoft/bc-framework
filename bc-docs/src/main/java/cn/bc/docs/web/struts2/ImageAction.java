@@ -154,7 +154,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		String appSubDir = getText("app.data.subPath");
 
 		// 新路径
-		String subFolder = new SimpleDateFormat("yyyyMM").format(now.getTime());
+		String subFolder = this.subpath+"/"+new SimpleDateFormat("yyyyMM").format(now.getTime());
 
 		// 加载附件
 		Attach attach;
@@ -324,5 +324,134 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		downloadAttach(filepath, extension);
 		return SUCCESS;
 	}
+	
+	public String ids;//合并的附件ids，多个实用逗号链接，至少两个以上
+	public String mixConfig;//合并的配置参数，如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并，默认水平合并
+	public String fileType;//新建时生成图片格式化类型 默认jpg，还有png可选择
 
+	//图片合并功能
+	public String combine() throws Exception{
+		Calendar now = Calendar.getInstance();
+		if (logger.isDebugEnabled()) {
+			logger.debug("puid=" + puid);
+			logger.debug("ptype=" + ptype);
+			logger.debug("id=" + id);
+			logger.debug("empty=" + empty);
+			logger.debug("ids=" + ids);
+			logger.debug("mixConfig=" + mixConfig);
+			logger.debug("fileType=" + fileType);
+
+		}
+		
+		// 加载附件
+		Attach attach;
+		String mixConfig="";
+		String fileType="png";
+		String newImgPath;
+		String filepath;
+		
+		String[] addIds=ids.split(",");
+		if(addIds.length<2){
+			throw new CoreException("The number of at least 2 attachs!");
+		}
+		
+		InputStream[] images = new InputStream[addIds.length];
+		int i = 0;
+		//取得多张图片的文件流
+		for(String addId:addIds){
+			attach = this.attachService.load(Long.valueOf(addId));
+			if (attach == null)
+				throw new CoreException("attach is null:id=" + addId);
+			if (attach.isAppPath())
+				filepath = WebUtils.rootPath + "/"
+						+ getText("app.data.subPath") + "/" + attach.getPath();
+			else
+				filepath = getText("app.data.realPath") + "/"
+						+ attach.getPath();
+			images[i] = new FileInputStream(new File(filepath));
+			i++;
+			
+			if(this.fileType==null||"".equals(this.fileType)){
+				if(!(attach.getPath().lastIndexOf(".png")!=-1)){
+					fileType="jpg";
+				}
+			}else{
+				fileType=this.fileType;
+			}
+			
+			if(this.mixConfig==null||"".equals(this.mixConfig)){
+				mixConfig+=mixConfig.length()>0?",1":"1";
+			}else{
+				mixConfig=this.mixConfig;
+			}
+		}
+		//根据配置，合并图片
+		BufferedImage newImg = ImageUtils.combineMix(images,mixConfig);
+
+		String appRealDir = getText("app.data.realPath");
+		String appSubDir = getText("app.data.subPath");
+
+		// 新路径
+		String subFolder = this.subpath+"/"+ new SimpleDateFormat("yyyyMM").format(now.getTime());
+		
+		if (id == null) {
+			attach = new Attach();
+			attach.setFileDate(now);
+			attach.setAppPath(false);
+			attach.setAuthor(this.getContext().getUserHistory());
+			attach.setPuid(puid);
+			attach.setPtype(ptype);
+			attach.setSubject("empty");
+			attach.setStatus(BCConstants.STATUS_ENABLED);
+			newImgPath = appRealDir + "/" + subFolder;
+		} else {
+			attach = this.attachService.load(id);
+			if (attach == null)
+				throw new CoreException("attach is null:id=" + id);
+			if (attach.isAppPath()) {
+				newImgPath = WebUtils.rootPath + "/" + appSubDir + "/"
+						+ subFolder;
+			} else {
+				newImgPath = appRealDir + "/" + subFolder;
+			}
+		}
+		attach.setFormat(fileType);
+		
+		// 构建文件要保存到的目录
+		File _fileDir = new File(newImgPath);
+		if (!_fileDir.exists()) {
+			if (logger.isFatalEnabled()) {
+				logger.fatal("mkdir=" + newImgPath);
+			}
+			_fileDir.mkdirs();
+		}
+		
+		String extension=attach.getFormat();
+		// 保存裁剪后的图片(路径与原图相同，经文件名改为当前时间)
+		String newImgName = new SimpleDateFormat("yyyyMMddHHmmssSSSS")
+				.format(now.getTime()) + "." + extension;// 不含路径的文件名
+		String newSavePath = newImgPath + "/" + newImgName;
+		logger.debug("newSavePath=" + newSavePath);
+
+		File newFile = new File(newSavePath);
+		ImageIO.write(newImg, extension, newFile);
+
+		// 更新原图对应的附件记录为裁剪后的图片
+		attach.setSize(newFile.length());
+		attach.setPath(subFolder + "/" + newImgName);
+		attach.setModifiedDate(now);
+		attach.setModifier(this.getContext().getUserHistory());
+		this.attachService.save(attach);
+
+		json = new Json();
+		json.put("success", true);
+		json.put("appPath", attach.isAppPath());
+		json.put("path", attach.getPath());
+		json.put("id", attach.getId());
+		json.put("puid", attach.getPuid());
+		json.put("ptype", attach.getPtype());
+		json.put("size", attach.getSize());
+
+		return "json";
+	}
 }
