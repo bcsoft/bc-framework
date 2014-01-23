@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.IsNotNullCondition;
 import cn.bc.core.query.condition.impl.IsNullCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
@@ -139,6 +141,11 @@ public class DeviceEventsAction extends ViewAction<Map<String, Object>> {
 		return new String[] { "d.name", "de.type_", "d.code", "d.purpose" };
 	}
 
+	@Override
+	protected OrderCondition getGridOrderCondition() {
+		return new OrderCondition("de.trigger_time", Direction.Desc);
+	}
+	
 	@Override
 	protected String getModuleContextPath() {
 		return this.getContextPath() + "/bc";
