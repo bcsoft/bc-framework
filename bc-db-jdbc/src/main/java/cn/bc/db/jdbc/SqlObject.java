@@ -355,6 +355,13 @@ public class SqlObject<T extends Object> {
 		if (index != -1) {// 使用特殊的标记区分order by的位置
 			return queryString.substring(0, index);
 		} else {
+			// 取查询sql中 最后的‘order by’和‘)’ 位置  若出‘)’在‘order by’之后  不再剔除order by
+			int last_index_or= queryString.lastIndexOf("order by");
+			int last_index_= queryString.lastIndexOf(")");
+			if(last_index_>last_index_or){
+				return queryString;
+			}
+			
 			Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
 					Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(queryString);
