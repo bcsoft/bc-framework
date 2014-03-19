@@ -1,4 +1,12 @@
-﻿drop TABLE if exists bc_placeorigin; 
+﻿/*
+-- 司机身份证读卡程序报错临时修正，报 o.full_name 不存在
+ALTER TABLE bc_placeorigin ADD COLUMN full_name varchar(1000);
+update bc_placeorigin set full_name = pname || '/' || name where pname is not null and pname != '';
+update bc_placeorigin set full_name = name where pname is null or pname = '';
+update bc_placeorigin set code = code || '0' where mod(length(code), 2) = 1;
+*/
+
+drop TABLE if exists bc_placeorigin; 
 CREATE TABLE bc_placeorigin (
   id integer NOT NULL,
   pid integer,
@@ -186,5 +194,5 @@ update bc_placeorigin set name = substring(name from 1 for length(name) - 2) whe
 select placeorigin_insert_or_update('110100', '市辖区','1100');
 update bc_placeorigin set pid=null,pname=null where code='110102';
 select placeorigin_insert_or_update('110102','西城区','1101');
-select * from bc_placeorigin order by code;
+select * from bc_placeorigin order by code desc;
 */
