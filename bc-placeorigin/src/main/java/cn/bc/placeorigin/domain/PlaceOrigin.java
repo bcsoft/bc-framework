@@ -6,6 +6,7 @@ package cn.bc.placeorigin.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import cn.bc.BCConstants;
 import cn.bc.identity.domain.FileEntityImpl;
@@ -104,5 +105,11 @@ public class PlaceOrigin extends FileEntityImpl {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	@Transient
+	public String getFullName() {
+		String pname = getPname();
+		return pname == null || pname.isEmpty() ? this.getName() : pname + "/" + this.getName();
 	}
 }

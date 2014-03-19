@@ -13,18 +13,18 @@ import cn.bc.placeorigin.domain.PlaceOrigin;
  */
 public interface PlaceOriginService extends CrudService<PlaceOrigin> {
 	/**
-	 * 通过PID找到上级名称
-	 * 
-	 * @param pid
-	 * @return 上级的名称
+	 * 获取指定编码的籍贯
+	 *
+	 * @param core 籍贯编码
+	 * @return
 	 */
-	String findPname(Long pid);
+	PlaceOrigin loadByCode(String code);
 	
 	/**
-	 * 根据编码获得籍贯对象
-	 * 
-	 * @param core 编码
-	 * @return 保存籍贯对象的集合
+	 * 根据身份证号码获取最匹配的籍贯信息
+	 *
+	 * @param cardNo 身份证号
+	 * @return
 	 */
-	List<PlaceOrigin> findPlaceOrigin(String code);
+	PlaceOrigin loadByIdentityCard(String cardNo);
 }

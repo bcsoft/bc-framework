@@ -19,7 +19,6 @@
 		<action name="list" class="placeOriginAction" method="list"/>
 		<action name="paging" class="placeOriginAction" method="paging"/>
 		<action name="data" class="placeOriginAction" method="data"/>
-		<action name="findPlaceOriginPname" class="placeOriginAction" method="findPname"/>
 	</package>
 	<package name="selectSuperiorPlace" extends="bc-default" namespace="/bc/selectSuperiorPlace">
 		<action name="save" class="selectSuperiorPlaceAction" method="save"/>
