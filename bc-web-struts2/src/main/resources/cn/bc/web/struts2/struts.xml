@@ -12,7 +12,7 @@
 				<!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
 				<param name="expires">0</param>
 				<!-- 排除下载文件的连接不作处理，否则ie<9时无法下载的 -->
-				<param name="excludePaths">/bc/attach/download*,/bc/attach/inline*</param>
+				<param name="excludePaths">/bc/attach/download*,/bc/attach/inline*,/bc/browser/download*</param>
 			</interceptor>
 			<!-- session超时 -->
 			<interceptor name="authInterceptor"
@@ -20,7 +20,7 @@
 				<!-- 登录验证信息保存到session的key -->
 				<param name="authKey">bc-context</param>
 				<!-- 排除下载文件的连接不作处理 -->
-				<param name="excludePaths">/logout*,/login*,/relogin*,/bc/login*,/bc/logout*,/bc/relogin*,/bc/attach/download*,/bc/attach/inline*,/changelog/*</param>
+				<param name="excludePaths">/logout*,/login*,/relogin*,/bc/login*,/bc/logout*,/bc/relogin*,/bc/attach/download*,/bc/attach/inline*,/changelog/*,/bc/browser/download*</param>
 			</interceptor>
 			<interceptor-stack name="noCacheStack">
 				<interceptor-ref name="noCacheInterceptor" />

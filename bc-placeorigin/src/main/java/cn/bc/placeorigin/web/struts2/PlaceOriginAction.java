@@ -49,7 +49,7 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(400).setMinWidth(300)
-				.setHeight(400).setMinHeight(200);
+				.setHeight(270).setMinHeight(200);
 	}
 
 	@Override
@@ -93,27 +93,4 @@ public class PlaceOriginAction extends FileEntityAction<Long, PlaceOrigin> {
 		this.json = json.toString();
 		return "json";
 	}
-	
-	// ======== 通过pid查找上级名称开始 ========
-	private Long pid;
-
-	public Long getPid() {
-		return pid;
-	}
-
-	public void setPid(Long pid) {
-		this.pid = pid;
-	}
-	
-	public String findPname(){
-		Json json = new Json();
-		json.put("pname", this.placeOriginService.findPname(pid));
-		this.json = json.toString();
-		return "json";
-	}
-	
-	
-	
-	// ======== 通过pid查找上级名称结束========
-	
 }

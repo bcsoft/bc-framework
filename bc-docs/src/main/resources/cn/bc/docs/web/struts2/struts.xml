@@ -52,9 +52,6 @@
 				<param name="contentDisposition">inline; filename="${filename}"</param>
 			</result>
 		</action>
-		<action name="browser" class="attachAction" method="browser">
-			<result name="success">/bc/docs/attach/browser.jsp</result>
-		</action>
 		<action name="file" class="attachAction" method="file">
 			<result name="success" type="stream">
 				<!-- 下载文件类型定义 -->
@@ -154,12 +151,25 @@
 				<param name="contentDisposition">inline</param>
 			</result>
 		</action>
+		<action name="combine" class="imageAction" method="combine"/>
 	</package>
 
 	<!-- browser -->
 	<package name="browser" extends="bc-default" namespace="/bc/browser">
 		<action name="list" class="browserAction">
-			<result name="success">/bc/docs/attach/browser.jsp</result>
+			<result name="success">/bc/browser/list.jsp</result>
 		</action>
+        <action name="download" class="browserAction" method="download">
+            <result name="success" type="stream">
+                <!-- 下载文件类型定义 -->
+                <param name="contentType">${contentType}</param>
+                <param name="contentLength">${contentLength}</param>
+                <!-- 下载文件输出流定义 -->
+                <param name="inputName">inputStream</param>
+                <param name="bufferSize">4096</param>
+                <!-- 下载文件处理方法 -->
+                <param name="contentDisposition">attachment; filename="${filename}"</param>
+            </result>
+        </action>
 	</package>
 </struts>

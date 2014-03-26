@@ -556,9 +556,4 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	protected String getJs() {
 		return this.getContextPath() + "/bc/docs/attach/list.js";
 	}
-
-	// 返回下载系统支持的浏览器列表的页面
-	public String browser() throws Exception {
-		return SUCCESS;
-	}
 }

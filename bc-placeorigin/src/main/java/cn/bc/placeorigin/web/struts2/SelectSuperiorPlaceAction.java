@@ -56,10 +56,8 @@ public class SelectSuperiorPlaceAction extends
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id as id,a.code as code, a.type_ as type,a.status_ as status");
-		sql.append(",a.name as name,a.full_name as fullname,a.full_code as fullcore");
-		sql.append(",p.name as pname,a.desc_ as desc");
+		sql.append(",a.name as name,a.pname as pname");
 		sql.append(" from bc_placeorigin a");
-		sql.append(" left join bc_placeorigin p on p.id=a.pid");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -75,9 +73,7 @@ public class SelectSuperiorPlaceAction extends
 				map.put("type", rs[i++]);
 				map.put("status", rs[i++]);
 				map.put("name", rs[i++]);
-				map.put("fullname", rs[i++]);
-				map.put("fullcode", rs[i++]);
-				map.put("pname", rs[i++]);
+				map.put("pname", rs[i]);
 				return map;
 			}
 		});
@@ -92,27 +88,15 @@ public class SelectSuperiorPlaceAction extends
 		columns.add(new TextColumn4MapKey("a.type_", "type",
 				getText("placeorigin.type"), 40).setSortable(true)
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
-		// 上级
-		columns.add(new TextColumn4MapKey("p.name", "pname",
-				getText("placeorigin.higherlevel"), 100)
-				.setUseTitleFromLabel(true));
 		// 编码
 		columns.add(new TextColumn4MapKey("a.code", "code",
-				getText("placeorigin.code"), 60).setUseTitleFromLabel(true));
+			getText("placeorigin.code"), 80).setUseTitleFromLabel(true));
 		// 名称
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("placeorigin.name"), 100).setUseTitleFromLabel(true));
-		// 全名
-		columns.add(new TextColumn4MapKey("a.full_name", "fullname",
-				getText("placeorigin.fullname"), 200)
-				.setUseTitleFromLabel(true));
-		// 全编码
-		columns.add(new TextColumn4MapKey("a.full_code", "fullcode",
-				getText("placeorigin.fullcode"), 140)
-				.setUseTitleFromLabel(true));
-		// 备注
-		columns.add(new TextColumn4MapKey("a.desc_", "desc",
-				getText("placeorigin.desc")).setUseTitleFromLabel(true));
+			getText("placeorigin.name"), 120).setUseTitleFromLabel(true));
+		// 上级
+		columns.add(new TextColumn4MapKey("p.name", "pname",
+			getText("placeorigin.pname")).setUseTitleFromLabel(true));
 		return columns;
 	}
 
@@ -146,7 +130,7 @@ public class SelectSuperiorPlaceAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name", "a.full_name","p.name" };
+		return new String[] { "a.code", "a.name","a.pname" };
 	}
 
 	@Override
@@ -204,5 +188,4 @@ public class SelectSuperiorPlaceAction extends
 	protected String getHtmlPageTitle() {
 		return this.getText("selectSuperiorPlace.title");
 	}
-
 }

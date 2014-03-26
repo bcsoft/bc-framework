@@ -24,16 +24,11 @@ public class PlaceOriginServiceImpl extends DefaultCrudService<PlaceOrigin>
 		this.setCrudDao(placeOriginDao);
 	}
 
-	public String findPname(Long pid) {
-		PlaceOrigin p=this.placeOriginDao.findPname(pid);
-		if(p!=null){
-			return p.getName();
-		}
-		return null;
+	public PlaceOrigin loadByCode(String code) {
+		return this.placeOriginDao.loadByCode(code);
 	}
 
-	public List<PlaceOrigin> findPlaceOrigin(String code) {
-		return this.placeOriginDao.findPlaceOrigin(code);
+	public PlaceOrigin loadByIdentityCard(String cardNo) {
+		return this.placeOriginDao.loadByIdentityCard(cardNo);
 	}
-
 }
