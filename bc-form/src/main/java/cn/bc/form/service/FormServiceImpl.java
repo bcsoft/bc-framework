@@ -1,5 +1,7 @@
 package cn.bc.form.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -37,6 +39,27 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements
 			return this.createQuery().condition(ac).list().get(0);
 		}
 
+	}
+	
+	public List<Form> findList(String type, Long pid) {
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("type", type));
+		ac.add(new EqualsCondition("pid", pid));
+		if (this.createQuery().condition(ac).count() == 0) {
+			return null;
+		} else {
+			return this.createQuery().condition(ac).list();
+		}
+	}
+
+	public List<Form> findList(String type) {
+		AndCondition ac = new AndCondition();
+		ac.add(new EqualsCondition("type", type));
+		if (this.createQuery().condition(ac).count() == 0) {
+			return null;
+		} else {
+			return this.createQuery().condition(ac).list();
+		}
 	}
 
 }
