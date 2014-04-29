@@ -6,19 +6,19 @@ package cn.bc.web.formater;
 import java.text.DecimalFormat;
 
 /**
- * 数字类型值的格式化
+ * 数字格式化为金额字符串
  * 
  * @author dragon
  * 
  */
-public class NubmerFormater extends AbstractFormater<String> {
+public class MoneyFormater extends AbstractFormater<String> {
 	protected DecimalFormat format;
 
-	public NubmerFormater() {
-		format = new DecimalFormat("#.#");
+	public MoneyFormater() {
+		format = new DecimalFormat("￥ ##,###,###,###.#");
 	}
 
-	public NubmerFormater(String pattern) {
+	public MoneyFormater(String pattern) {
 		format = new DecimalFormat(pattern);
 	}
 
