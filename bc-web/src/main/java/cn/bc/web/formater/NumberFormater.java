@@ -11,14 +11,14 @@ import java.text.DecimalFormat;
  * @author dragon
  * 
  */
-public class NubmerFormater extends AbstractFormater<String> {
+public class NumberFormater extends AbstractFormater<String> {
 	protected DecimalFormat format;
 
-	public NubmerFormater() {
+	public NumberFormater() {
 		format = new DecimalFormat("#.#");
 	}
 
-	public NubmerFormater(String pattern) {
+	public NumberFormater(String pattern) {
 		format = new DecimalFormat(pattern);
 	}
 
