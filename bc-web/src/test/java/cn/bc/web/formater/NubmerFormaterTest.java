@@ -8,7 +8,7 @@ public class NubmerFormaterTest {
 
 	@Test
 	public void testFloat() {
-		NubmerFormater f = new NubmerFormater("0.0");
+		NumberFormater f = new NumberFormater("0.0");
 		Assert.assertEquals("1.0", f.format(1));
 		Assert.assertEquals("1.0", f.format(1.0));
 		Assert.assertEquals("1.0", f.format(1.01));
@@ -17,7 +17,7 @@ public class NubmerFormaterTest {
 
 	@Test
 	public void testInt() {
-		NubmerFormater f = new NubmerFormater("#.#");
+		NumberFormater f = new NumberFormater("#.#");
 		Assert.assertEquals("1", f.format(1));
 		Assert.assertEquals("1", f.format(1.0));
 		Assert.assertEquals("1", f.format(1.01));
@@ -26,7 +26,7 @@ public class NubmerFormaterTest {
 
 	@Test
 	public void testMY() {
-		NubmerFormater f = new NubmerFormater("$0.0");
+		NumberFormater f = new NumberFormater("$0.0");
 		Assert.assertEquals("$1.0", f.format(1));
 		Assert.assertEquals("$1.0", f.format(1.0));
 		Assert.assertEquals("$1.0", f.format(1.01));
