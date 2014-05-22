@@ -342,7 +342,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected void extendGridExtrasData(Json json) {
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 		if (this.code != null)
 			json.put("code", this.code);

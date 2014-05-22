@@ -3,15 +3,6 @@
  */
 package cn.bc.investigate.web.struts2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
@@ -27,6 +18,16 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.json.Json;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 查看答卷人 Action
@@ -106,13 +107,11 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		// 试卷ID
 		if (this.pid != null) {
 			json.put("pid", pid);
 		}
-		return json.isEmpty() ? null : json;
 	}
 
 	@Override
@@ -120,12 +119,6 @@ public class CheckRespondsAction extends ViewAction<Map<String, Object>> {
 		Condition pidCondition = null;
 		pidCondition = new EqualsCondition("r.pid", new Long(pid));
 		return pidCondition;
-	}
-
-	@Override
-	protected void extendGridExtrasData(Json json) {
-		super.extendGridExtrasData(json);
-
 	}
 
 	@Override

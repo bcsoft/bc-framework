@@ -10,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -227,16 +229,13 @@ public class SelectUsersAction extends
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		// 状态条件
 		if (this.status != null || this.status.length() != 0) {
 			json.put("status", status);
 		}
 		json.put("history", history);
 		json.put("group", group);
-
-		return json.isEmpty() ? null : json;
 	}
 
 	@Override

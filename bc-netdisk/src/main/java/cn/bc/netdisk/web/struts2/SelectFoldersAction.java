@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -324,7 +326,7 @@ public class SelectFoldersAction extends
 	}
 
 	@Override
-	protected void extendGridExtrasData(Json json) {
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 
 		// 状态条件
@@ -335,7 +337,6 @@ public class SelectFoldersAction extends
 		if (folderId != null) {
 			json.put("folderId", folderId);
 		}
-
 	}
 
 	@Override

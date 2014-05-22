@@ -3,17 +3,6 @@
  */
 package cn.bc.investigate.web.struts2;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.Direction;
@@ -36,7 +25,13 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
-import cn.bc.web.ui.json.Json;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.*;
 
 /**
  * 调查问卷 Action
@@ -181,13 +176,6 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
-
-		return json.isEmpty() ? null : json;
-	}
-
-	@Override
 	protected Condition getGridSpecalCondition() {
 		// 状态条件
 		Condition statusCondition = null;
@@ -206,14 +194,13 @@ public class QuestionarysAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected void extendGridExtrasData(Json json) {
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 
 		// 状态条件
 		if (this.status != null && this.status.trim().length() > 0) {
 			json.put("status", status);
 		}
-
 	}
 
 	@Override

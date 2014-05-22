@@ -433,7 +433,7 @@ public class NetdiskFilesAction extends TreeViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected void extendGridExtrasData(Json json) {
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 
 		// 状态条件

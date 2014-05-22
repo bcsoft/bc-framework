@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -158,7 +160,7 @@ public abstract class AbstractActorsAction extends
 	}
 
 	@Override
-	protected void extendGridExtrasData(Json json) {
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 		if (this.status != null && this.status.trim().length() > 0) {
 			json.put("status", status);

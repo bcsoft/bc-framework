@@ -3,20 +3,6 @@
  */
 package cn.bc.log.web.struts2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -38,7 +24,15 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
-import cn.bc.web.ui.json.Json;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.*;
 
 /**
  * 操作日志视图Action
@@ -221,9 +215,7 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
-
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		// 模块条件
 		if (this.module != null && this.module.trim().length() > 0) {
 			json.put("module", module);
@@ -240,8 +232,6 @@ public class OperateLogsAction extends ViewAction<Map<String, Object>> {
 		if(this.pid != null && this.pid != ""){
 			json.put("pid", pid);
 		}
-
-		return json.isEmpty() ? null : json;
 	}
 
 	@Override

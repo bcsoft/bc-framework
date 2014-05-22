@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -167,15 +169,13 @@ public class SelectReportTemplateAction extends
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		if(status!=null&&status.length()>0){
 			json.put("status", status);
 		}
 		if(category!=null&&category.length()>0){
 			json.put("category", category);
 		}
-		return json;
 	}
 
 	@Override

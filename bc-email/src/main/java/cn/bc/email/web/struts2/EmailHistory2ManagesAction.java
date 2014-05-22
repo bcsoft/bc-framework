@@ -1,16 +1,5 @@
 package cn.bc.email.web.struts2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -28,7 +17,18 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
-import cn.bc.web.ui.json.Json;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 邮件垃圾箱视图Action
@@ -167,13 +167,9 @@ public class EmailHistory2ManagesAction extends ViewAction<Map<String, Object>> 
 	}
 	
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
-		
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		if (this.emailId != null)
 			json.put("emailId", emailId);
-		
-		return json;
 	}
 
 	

@@ -3,22 +3,9 @@
  */
 package cn.bc.template.web.struts2.select;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
-import cn.bc.core.query.condition.impl.AndCondition;
-import cn.bc.core.query.condition.impl.EqualsCondition;
-import cn.bc.core.query.condition.impl.InCondition;
-import cn.bc.core.query.condition.impl.LikeLeftCondition;
-import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.query.condition.impl.*;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.web.formater.BooleanFormater;
@@ -30,7 +17,16 @@ import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.HtmlPage;
 import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.json.Json;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 模板接口Action
@@ -179,15 +175,13 @@ public class SelectTemplateAction extends
 	}
 
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		if(status!=null&&status.length()>0){
 			json.put("status", status);
 		}
 		if(category!=null&&category.length()>0){
 			json.put("category", category);
 		}
-		return json;
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -230,8 +232,7 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 	}
 	
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		if(this.pid!=null){
 			json.put("pid", this.pid);
 		}
@@ -241,8 +242,6 @@ public class AccessHistorysAction extends ViewAction<Map<String, Object>> {
 		}
 		
 		json.put("isFromDoc",this.isFromDoc);
-		
-		return json;
 	}
 
 	// ==高级搜索代码开始==

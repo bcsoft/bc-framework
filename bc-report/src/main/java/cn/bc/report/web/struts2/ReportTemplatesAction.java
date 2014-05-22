@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -259,8 +261,7 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 	}
 	
 	@Override
-	protected Json getGridExtrasData() {
-		Json json = new Json();
+    protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		if(status != null && status.length() > 0 && !my){
 			json.put("status", status);
 		}
@@ -269,8 +270,6 @@ public class ReportTemplatesAction extends ViewAction<Map<String, Object>> {
 			json.put("my","true");
 			json.put("status", BCConstants.STATUS_ENABLED);
 		}
-		if(json.isEmpty()) return null;
-		return json;
 	}
 	
 	@Override
