@@ -151,6 +151,8 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
     protected void extendGridExportData(Map<String, Object> extras) {
         // 默认使用视图的扩展参数
         JSONObject json = getGridExtrasData();
+        if(json == null || json.length() == 0)
+            return;
         Iterator keys = json.keys();
         String key;
         try {
