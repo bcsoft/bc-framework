@@ -393,4 +393,117 @@ public class StringUtils {
 		return new StringBuffer(s).reverse().toString();
 	}
 
+
+	/**
+	 * 多位数字转换为中文繁体并且补零 如8000 转后为 捌仟零佰零拾零
+	 * @param n
+	 * @return
+	 */
+	public static  String number2Chinese(String n) {
+		String num1[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", };
+		String num2[] = { "", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾" };
+		n = n.indexOf(".") > 0 ? n.substring(0, n.indexOf(".")) : n;
+
+		int len = n.length();
+
+		if (len <= 5) {
+			String ret = "";
+			for (int i = 0; i < len; ++i) {
+				ret = ret + num1[n.substring(i, i + 1).charAt(0) - '0']
+						+ num2[len - i - 1];
+			}
+			return ret;
+		} else if (len <= 8) {
+			String ret = multiDigit2Chinese(n.substring(0, len - 4));
+			if (ret.length() != 0)
+				ret += num2[4];
+			return ret + multiDigit2Chinese(n.substring(len - 4));
+		} else {
+			String ret = multiDigit2Chinese(n.substring(0, len - 8));
+			if (ret.length() != 0)
+				ret += num2[5];
+			return ret + multiDigit2Chinese(n.substring(len - 8));
+		}
+	}
+	
+	/**
+	 * 把数字格式化为中文的金钱格式
+	 * @param n
+	 * @return
+	 */
+	public static  String multiDigit2ChineseMoney(String n){
+		String s1="",s2="";
+		if(n.indexOf(".") > 0){
+			s1 = n.substring(0, n.indexOf("."));
+			s2 = n.substring(n.indexOf(".")+1);
+		}else{
+			return number2Chinese(n)+"元零角零分";
+		}
+		String value = number2Chinese(s1)+"元";
+		String num1[] = {"角", "分"};
+		for(int i = 0;i<2&&i<s2.length();i++){
+			value+=siginDigit2Chinese(Integer.valueOf(s2.charAt(i)+""))+num1[i];
+		}
+		return value;
+	}
+	
+
+	/**
+	 * 多位数字转换为中文繁体
+	 * @param n
+	 * @return
+	 */
+	public static  String multiDigit2Chinese(String n) {
+		String num1[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", };
+		String num2[] = { "", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾" };
+		n = n.indexOf(".") > 0 ? n.substring(0, n.indexOf(".")) : n;
+
+		int len = n.length();
+
+		if (len <= 5) {
+			String ret = "";
+			for (int i = 0; i < len; ++i) {
+				if (n.charAt(i) == '0') {
+					int j = i + 1;
+					while (j < len && n.charAt(j) == '0')
+						++j;
+					if (j < len)
+						ret += "零";
+					i = j - 1;
+				} else
+					ret = ret + num1[n.substring(i, i + 1).charAt(0) - '0']
+							+ num2[len - i - 1];
+			}
+			return ret;
+		} else if (len <= 8) {
+			String ret = multiDigit2Chinese(n.substring(0, len - 4));
+			if (ret.length() != 0)
+				ret += num2[4];
+			return ret + multiDigit2Chinese(n.substring(len - 4));
+		} else {
+			String ret = multiDigit2Chinese(n.substring(0, len - 8));
+			if (ret.length() != 0)
+				ret += num2[5];
+			return ret + multiDigit2Chinese(n.substring(len - 8));
+		}
+	}
+
+	/**
+	 * 个位数字转换为中文繁体
+	 * @param n
+	 * @return
+	 */
+	public static  String siginDigit2Chinese(Object n) {
+		String num[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
+		if (n == null)
+			return null;
+		if (n instanceof Integer && Integer.parseInt(n.toString()) < 10) {
+			return num[(Integer) n];
+		} else if (n instanceof Long && Long.parseLong(n.toString()) < 10) {
+			return num[Integer.parseInt(n.toString())];
+		} else {
+			return n.toString();
+		}
+	}
+
 }
