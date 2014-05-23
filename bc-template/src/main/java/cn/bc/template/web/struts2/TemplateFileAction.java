@@ -39,6 +39,7 @@ import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.docs.util.OfficeUtils;
 import cn.bc.docs.web.AttachUtils;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
@@ -324,6 +325,11 @@ public class TemplateFileAction extends ActionSupport {
 				} else if (typeCode.equals("html")) {
 					this.to=template.getTemplateType().getExtension();
 					params=getParams(template);
+					// 添加系统上下文和时间戳的路径到替换参数
+					SystemContext context = SystemContextHolder.get();
+					params.put("htmlPageNamespace",
+							context.getAttr(SystemContext.KEY_HTMLPAGENAMESPACE));
+					params.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
 					bs=FreeMarkerUtils.format(TemplateUtils.loadText(inputStream),params).getBytes();
 					// 不使用office转换服务
 					officeConvert=false;
