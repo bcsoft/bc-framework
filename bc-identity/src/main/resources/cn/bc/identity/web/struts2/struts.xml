@@ -164,5 +164,8 @@
 			<result name="form">/bc/identity/user/password.jsp</result>
 		</action>
 		<action name="updatePassword" class="authDataAction" method="updatePassword"/>
+	</package><package name="getUsers" extends="bc-default" namespace="/bc">
+		<action name="getUsers" class="getUsersAction">
+		</action>
 	</package>
 </struts>
