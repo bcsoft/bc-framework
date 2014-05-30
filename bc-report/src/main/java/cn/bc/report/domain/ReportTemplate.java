@@ -277,21 +277,30 @@ public class ReportTemplate extends FileEntityImpl {
 			throw new CoreException(e.getMessage(), e);
 		}
 		JSONObject jColumn = null;
+        Column column;
 		for (int i = 0; i < jColumns.length(); i++) {
 			try {
 				jColumn = jColumns.getJSONObject(i);
 				if (jColumn.has("type")
 						&& "id".equals(jColumn.getString("type"))) {// IdColumn4MapKey列
-					columns.add(new IdColumn4MapKey(jColumn.getString("id"),
+                    column = new IdColumn4MapKey(jColumn.getString("id"),
 							jColumn.has("el") ? jColumn.getString("el")
-									: jColumn.getString("id")));
+									: jColumn.getString("id"));
 				} else {// 默认使用TextColumn4MapKey列
-					columns.add(new TextColumn4MapKey(jColumn.getString("id"),
+                    column = new TextColumn4MapKey(jColumn.getString("id"),
 							jColumn.has("el") ? jColumn.getString("el")
 									: jColumn.getString("id"), jColumn
 									.getString("label"),
-							jColumn.has("width") ? jColumn.getInt("width") : 0));
+							jColumn.has("width") ? jColumn.getInt("width") : 0);
 				}
+                if ((jColumn.has("useTitleFromLabel")  && jColumn.getBoolean("useTitleFromLabel"))
+                   || (jColumn.has("tip")  && jColumn.getBoolean("tip"))) {// 简写
+                    column.setUseTitleFromLabel(true);
+                }
+                if (jColumn.has("sortable")  && jColumn.getBoolean("sortable")) {
+                    column.setSortable(true);
+                }
+                columns.add(column);
 			} catch (JSONException e) {
 				throw new CoreException(e.getMessage());
 			}
