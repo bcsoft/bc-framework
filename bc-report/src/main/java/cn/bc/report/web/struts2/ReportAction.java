@@ -76,23 +76,35 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 		this.config = tpl.getConfigJson();
 
 		// 避免空指针引用
-		if (this.config == null)
-			this.config = new JSONObject();
+		if (this.config == null) {
+            this.config = new JSONObject();
+        }
+
+        // 默认提供存为历史报表按钮
+        if(!this.config.has("history")){
+            try {
+                this.config.put("history", true);
+            } catch (JSONException e) {
+            }
+        }
 	}
 
 	@Override
 	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
 		// 判断是否生成工具条
-		if (!(this.getConfig().has("search") || this.getConfig().has("tb") || this
-				.getConfig().has("condition")))
+		if (!(this.getConfig().has("search") || this.getConfig().has("tb")
+                || this.getConfig().has("condition")
+                || this.getConfig().has("history")))
 			return null;
 
 		try {
 			Toolbar tb = new Toolbar();
 
-			// 添加存为历史按钮
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-tag")
-					.setText("存为历史报表").setClick("bc.report.save2history"));
+			// 默认添加存为历史按钮
+            if (!this.getConfig().has("history") || this.getConfig().getBoolean("history")) {
+                tb.addButton(new ToolbarButton().setIcon("ui-icon-tag")
+                    .setText("存为历史报表").setClick("bc.report.save2history"));
+            }
 
 			// 添加自定义的按钮
 			if (this.getConfig().has("tb")) {
