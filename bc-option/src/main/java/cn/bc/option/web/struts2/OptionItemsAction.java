@@ -64,7 +64,7 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select g.id as pid,g.value_ as pvalue,i.id as id,i.status_ as status,i.key_ as key");
-		sql.append(",i.value_ as value,i.order_ as orderNo,i.icon as icon");
+		sql.append(",i.value_ as value,i.order_ as orderNo,i.icon as icon,i.desc_ as desc");
 		sql.append(" from bc_option_item as i");
 		sql.append(" inner join bc_option_group as g on g.id=i.pid");
 		sqlObject.setSql(sql.toString());
@@ -84,7 +84,8 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
 				map.put("key", rs[i++]);
 				map.put("value", rs[i++]);
 				map.put("orderNo", rs[i++]);
-				map.put("icon", rs[i++]);
+                map.put("icon", rs[i++]);
+                map.put("desc", rs[i++]);
 				return map;
 			}
 		});
@@ -109,8 +110,8 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("i.value_", "value",
 				getText("option.value"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
-		// columns.add(new TextColumn4MapKey("i.icon", "icon",
-		// getText("option.icon"), 60).setSortable(true));
+		columns.add(new TextColumn4MapKey("i.desc_", "desc",
+		        getText("option.desc"), 200).setSortable(false));
 
 		return columns;
 	}
