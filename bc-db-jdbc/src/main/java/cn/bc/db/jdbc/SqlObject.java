@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.bc.core.exception.CoreException;
+import cn.bc.core.query.cfg.impl.PagingQueryConfig;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 
@@ -17,14 +18,13 @@ import cn.bc.core.query.condition.impl.OrderCondition;
  * @author dragon
  * 
  */
-public class SqlObject<T extends Object> {
+public class SqlObject<T extends Object> extends PagingQueryConfig{
 	private String sql;// sql查询语句,不能带where和order by语句
 	private String select;// sql查询语句的"select ..."部分
 	private String from;// sql查询语句的"from ..."部分
 	private String where;// sql查询语句的"where ..."部分
 	private String groupBy;// sql查询语句的"group by ..."部分
 	private String orderBy;// sql查询语句的"order by ..."部分
-	private List<Object> args;// 查询参数
 	private RowMapper<T> rowMapper;// 数据映射器
 
 	public SqlObject() {
@@ -32,7 +32,7 @@ public class SqlObject<T extends Object> {
 
 	public SqlObject(String sql, List<Object> args) {
 		this.sql = sql;
-		this.args = args;
+		this.addQueryParams(args);
 	}
 
 	public String getNativeSql(Condition condition) {
@@ -182,16 +182,7 @@ public class SqlObject<T extends Object> {
                 .replaceAll("(?i)group by", "group by");
 	}
 
-	public List<Object> getArgs() {
-		return args;
-	}
-
-	public SqlObject<T> setArgs(List<Object> args) {
-		this.args = args;
-		return this;
-	}
-
-	public RowMapper<T> getRowMapper() {
+    public RowMapper<T> getRowMapper() {
 		return rowMapper;
 	}
 
@@ -386,7 +377,7 @@ public class SqlObject<T extends Object> {
 		if (index != -1) {// 使用特殊的标记区分 from y的位置
 			return queryString.substring(index + 2);
 		} else {
-			queryString = queryString.replaceAll("[\\f\\n\\r\\t\\v]", " ");// 替换所有制表符、换页符、换行符、回车符为空格
+			queryString = queryString.replaceAll("[\\f\\n\\r\\t]", " ");// 替换所有制表符、换页符、换行符、回车符为空格
 			String regex = "^select .* from ";
 			String[] ss = queryString.split(regex);
 			if (ss.length > 0) {
@@ -396,4 +387,28 @@ public class SqlObject<T extends Object> {
 			}
 		}
 	}
+
+    public List<Object> getArgs() {
+        return this.getQueryParams(null);
+    }
+
+    public SqlObject<T> setArgs(List<Object> args) {
+        this.addQueryParams(args);
+        return this;
+    }
+
+    @Override
+    public List<Object> getTotalnumQueryParams(Condition condition) {
+        return this.getQueryParams(condition);
+    }
+
+    @Override
+    public String getQueryString(Condition condition) {
+        return this.getSql(condition);
+    }
+
+    @Override
+    public String getTotalnumQueryString(Condition condition) {
+        return this.getCountSql(condition);
+    }
 }

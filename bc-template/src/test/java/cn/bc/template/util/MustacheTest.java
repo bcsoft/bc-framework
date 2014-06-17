@@ -23,7 +23,7 @@ public class MustacheTest {
 		Writer writer = new OutputStreamWriter(System.out);
 		MustacheFactory mf = new DefaultMustacheFactory();
 		Mustache mustache = mf.compile(new StringReader(
-				"{{name}}, {{feature.description}}!"), "example");
+				"{{name}}, {{feature.description}}!{{name.empty == true}}{{name.indexOf(\"s\")}}"), "example");
 		mustache.execute(writer, scopes);
 		writer.flush();
 	}
@@ -33,6 +33,7 @@ public class MustacheTest {
 
 		public Feature(String description) {
 			this.description = description;
+            //this.description.isEmpty();
 		}
 	}
 }
