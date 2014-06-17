@@ -97,7 +97,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		}
 		// 纯文本类型
 		if (tpl.isPureText())
-			return tpl.getContent();
+			return tpl.getContentEx();
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(tpl.getPath());
 		if (tpl.getTemplateType().getCode().equals("word-docx")
