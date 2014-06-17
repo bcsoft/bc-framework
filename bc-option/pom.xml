@@ -6,6 +6,7 @@
 		<version>2.4</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
+	<version>2.4.3</version>
 	<artifactId>bc-option</artifactId>
 	<description>选项</description>
 	<dependencies>
@@ -22,12 +23,12 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-docs</artifactId>
-			<version>${project.version}</version>
+			<version>2.4</version>
 		</dependency>
 	</dependencies>
 </project>
