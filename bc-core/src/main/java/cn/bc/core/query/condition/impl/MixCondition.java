@@ -69,17 +69,26 @@ public abstract class MixCondition implements Condition {
 		return this;
 	}
 
-	private void addOrder(OrderCondition condition) {
-		if (orderCondition == null)
-			this.orderCondition = new OrderCondition();
-		this.orderCondition.add(condition);
-	}
+    private void addOrder(OrderCondition condition) {
+        if (orderCondition == null)
+            this.orderCondition = new OrderCondition();
+        this.orderCondition.add(condition);
+    }
 
 	public String getExpression() {
 		return getExpression(null);
 	}
+    public String getExpression(String alias) {
+        return getExpression(alias, false);
+    }
 
-	public String getExpression(String alias) {
+    /**
+     *
+     * @param alias
+     * @param noOrderBy
+     * @return
+     */
+	public String getExpression(String alias, boolean noOrderBy) {
 		if (conditions.isEmpty()
 				&& (orderCondition == null || orderCondition.isEmpty())) {
 			return "";
@@ -101,7 +110,7 @@ public abstract class MixCondition implements Condition {
 			}
 
 			if ((!add && mc.length() > 0) || (add && mc.length() > 2)) {
-				if (this.orderCondition != null) {
+				if (this.orderCondition != null && !noOrderBy) {
 					String order = this.orderCondition.getExpression(alias);
 					if (order != null && order.length() > 0)
 						mc.append(" order by " + order);
@@ -109,7 +118,7 @@ public abstract class MixCondition implements Condition {
 
 				return mc.toString();
 			} else {
-				if (this.orderCondition != null) {
+				if (this.orderCondition != null && !noOrderBy) {
 					String order = this.orderCondition.getExpression(alias);
 					if (order != null && order.length() > 0) {
 						return "order by " + order;

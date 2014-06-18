@@ -1,29 +1,5 @@
 package cn.bc.template.service;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.commontemplate.util.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
 import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.service.DefaultCrudService;
@@ -42,6 +18,18 @@ import cn.bc.template.util.DocxUtils;
 import cn.bc.template.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Service接口的实现
@@ -97,7 +85,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		}
 		// 纯文本类型
 		if (tpl.isPureText())
-			return tpl.getContent();
+			return tpl.getContentEx();
 		// 附件的扩展名
 		String extension = StringUtils.getFilenameExtension(tpl.getPath());
 		if (tpl.getTemplateType().getCode().equals("word-docx")
@@ -334,10 +322,10 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
 	public Attach getAttach(String subject,String code, Map<String, Object> args,
 			String ptype, String puid, ActorHistory author,Map<String,Object> formatParamSql) throws Exception{
-		Assert.assertNotEmpty(subject, "subject is Empty");
-		Assert.assertNotEmpty(code, "code is Empty");
-		Assert.assertNotEmpty(ptype, "ptype is Empty");
-		Assert.assertNotEmpty(puid, "puid is Empty");
+		Assert.hasText(subject, "subject is Empty");
+		Assert.hasText(code, "code is Empty");
+		Assert.hasText(ptype, "ptype is Empty");
+		Assert.hasText(puid, "puid is Empty");
 		
 		Template template = this.templateDao.loadByCode(code);
 		if(template == null)
