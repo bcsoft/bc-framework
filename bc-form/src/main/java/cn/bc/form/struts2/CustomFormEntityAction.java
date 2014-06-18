@@ -77,9 +77,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String totle_width;//总的宽度(毫米)
 	
 	private boolean isNew;// 表单是否为新建
-	List<String> listurls = new ArrayList<String>();//保存urls集合
-	public String main_url;//保存主url
-	
+
 	/**
 	 * 模板编码 如果含字符":"，则进行分拆，前面部分为编码， 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	 */
@@ -173,7 +171,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 				details.put("page_no", jo.getString("page_no"));
 				details.put("width", jo.getString("width"));
 				details.put("name", jo.getString("name"));
-				details.put("url", listurls.get(i));
 				list.add(details);
 			}
 		}
@@ -185,9 +182,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("datails", list);
 		args.put("totle_width", totle_width);
 		args.put("name", subject);
-		args.put("mixConfig", combine);
-		args.put("mainUrl", main_url);
-		
+		args.put("mixConfig", combine);	
 	}
 
 	// 渲染表单
@@ -355,14 +350,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 			
 			int size = fields.size();
 			if (fields != null &&  size!= 0) {
-				int each = (size - 1)/2;
-				
-				main_url = fields.get(1).toString();
-				
-				for(int i = 2 ; i <= each ; i++){
-					listurls.add(fields.get(i).toString());
-				}
-				
 				for (Field f : fields) {
 					if (f.getType().equals("string")) { // 如果为字段的值为string类型
 						args.put(
