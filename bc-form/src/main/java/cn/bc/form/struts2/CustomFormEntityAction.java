@@ -101,6 +101,10 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String extraData;
 	
 	public String items;
+	
+	//public String version; //版本
+	
+	//public String desc; //备注
 
 	public void setRequest(Map<String, Object> request) {
 		this.request = request;
@@ -181,8 +185,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
 		args.put("datails", list);
 		args.put("totle_width", totle_width);
-		args.put("name", subject);
+		args.put("subject", subject);
 		args.put("mixConfig", combine);	
+		//args.put("desc", desc);	
 	}
 
 	// 渲染表单
@@ -457,6 +462,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		String code = form.getCode();
 		Long pid = form.getPid();
 		String subject = form.getSubject();
+		
+		//version = form.getVersion();
+		//desc = form.getDesc();
 
 		// 设置${from_info}参数对应的值
 		JSONObject infoJson = new JSONObject();

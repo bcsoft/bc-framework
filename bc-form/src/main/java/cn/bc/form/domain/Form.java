@@ -26,6 +26,8 @@ public class Form extends RichFileEntityImpl {
 	private String code;// 其他模块调用此模块时，使用的编码
 	private String subject;// 标题
 	private String tpl;// 模板编码
+	private String version;//版本信息
+	private String desc;//备注
 	public static final String ATTACH_TYPE = Form.class.getSimpleName();
 
 	// 获取pid
@@ -77,4 +79,23 @@ public class Form extends RichFileEntityImpl {
 	public void setTpl(String tpl) {
 		this.tpl = tpl;
 	}
+
+	@Column(name = "VERSION_")
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	@Column(name = "DESC_")
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	
+	
 }
