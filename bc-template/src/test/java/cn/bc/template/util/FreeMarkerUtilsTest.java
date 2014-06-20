@@ -117,4 +117,16 @@ public class FreeMarkerUtilsTest {
 			this.a1 = name;
 		}
 	}
+
+    @Test
+    public void teTst() {
+        String tpl = "<#assign key='f2'><#assign i=1>1:${f1}-2:${map['f2']}-3:${map[key]}-4:${map['f' + '2']}-5:${.vars['f' + i]}";
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("f1", "f1v");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("f2", "f2v");
+        args.put("map", map);
+        System.out.println(FreeMarkerUtils.format(tpl, args));;
+    }
 }
