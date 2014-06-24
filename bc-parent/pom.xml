@@ -421,11 +421,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.struts</groupId>
-				<artifactId>struts2-core</artifactId>
-				<version>${struts2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.struts</groupId>
 				<artifactId>struts2-codebehind-plugin</artifactId>
 				<version>${struts2.version}</version>
 			</dependency>
