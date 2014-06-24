@@ -10,6 +10,13 @@ COMMENT ON COLUMN BC_FORM.EXT01 IS '扩展域1';
 COMMENT ON COLUMN BC_FORM.EXT02 IS '扩展域2';
 COMMENT ON COLUMN BC_FORM.EXT03 IS '扩展域3';
 
+-- 构建唯一索引：PID+TYPE_+CODE+VER_
+DROP INDEX IF EXISTS formidx_form_type_pid_code;
+CREATE UNIQUE INDEX BCUK_FORM_PARENT ON bc_form(type_, code, pid, ver_);
+
+-- 历史数据统一版本号为1.0
+update bc_form set ver_ = '1.0';
+
 /* test
 update bc_form set ver_ = '1.0'
 	where type_ = 'CarManCert'
