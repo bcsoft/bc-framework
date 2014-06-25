@@ -1,6 +1,5 @@
 package cn.bc.form.struts2;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -73,11 +72,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	public String code; // 编码
 	public long pid;
 	public String subject;// 表单标题名称
-	public String combine;//合并的配置
-	public String totle_width;//总的宽度(毫米)
-	
 	private boolean isNew;// 表单是否为新建
-
 	/**
 	 * 模板编码 如果含字符":"，则进行分拆，前面部分为编码， 后面部分为版本号，如果没有字符":"，将获取当前状态为正常的版本后格式化
 	 */
@@ -99,12 +94,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 	 * 创建自定义表单时的额外参数,使用标准Json数据格式[{var : value,type : valueType}]
 	 */
 	public String extraData;
-	
-	public String items;
-	
-	//public String version; //版本
-	
-	//public String desc; //备注
 
 	public void setRequest(Map<String, Object> request) {
 		this.request = request;
@@ -163,31 +152,14 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	// 增加系统上下文变量参数
-	private void addSystemContextParam(Map<String, Object> args) throws JSONException {
+	private void addSystemContextParam(Map<String, Object> args) {
 		if (args == null)
 			return;
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		if (this.items != null && !this.items.equals("")) {
-			JSONArray itemsJA = new JSONArray(this.items);
-			for (int i = 0; i < itemsJA.length(); i++) {
-				JSONObject jo = itemsJA.getJSONObject(i);
-				Map<String,Object> details = new HashMap<String, Object>();
-				details.put("page_no", jo.getString("page_no"));
-				details.put("width", jo.getString("width"));
-				details.put("name", jo.getString("name"));
-				list.add(details);
-			}
-		}
-		
 		SystemContext context = SystemContextHolder.get();
 		args.put("htmlPageNamespace",
 				context.getAttr(SystemContext.KEY_HTMLPAGENAMESPACE));
 		args.put("appTs", context.getAttr(SystemContext.KEY_APPTS));
-		args.put("datails", list);
-		args.put("totle_width", totle_width);
-		args.put("subject", subject);
-		args.put("mixConfig", combine);	
-		//args.put("desc", desc);	
+
 	}
 
 	// 渲染表单
@@ -353,7 +325,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 		Form form = null;
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
-		
 		if (isNew) { //表单为新建状态时
 			//设置模板参数
 			setCreatedTplAgs(args);
@@ -371,9 +342,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 			// 设置表单字段
 			List<Field> fields = this.fieldService.findList(form);
-			
-			int size = fields.size();
-			if (fields != null &&  size!= 0) {
+			if (fields != null && fields.size() != 0) {
 				for (Field f : fields) {
 					if (f.getType().equals("string")) { // 如果为字段的值为string类型
 						args.put(
@@ -473,9 +442,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private String setEditedFormInfo(Form form) throws JSONException {
 		ActorHistory author = form.getAuthor();
 		ActorHistory modifier = form.getModifier();
-		
-		//version = form.getVersion();
-		//desc = form.getDesc();
 
 		// 设置${from_info}参数对应的值
 		JSONObject infoJson = new JSONObject();
