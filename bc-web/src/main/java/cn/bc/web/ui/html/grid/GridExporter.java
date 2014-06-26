@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bc.web.formater.ExportText;
 import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.commons.logging.Log;
@@ -194,21 +195,15 @@ public class GridExporter implements Exporter {
         for (Object rowData : data) {
             row = new ArrayList<Object>();
             for (Column column : columns) {
-                if (column instanceof IdColumn) {
+                if (column instanceof HiddenColumn) {// 忽略隐藏列
+                    continue;
+                }else if (column instanceof IdColumn) {
                     value = i;
-                    row.add(value);
-                } else {
-                    value = GridData.formatValue2Label(
-                            rowData,
-                            GridData.getValue(rowData,
-                                    column.getValueExpression(), parser),
-                            column.getValueFormater()
-                    );
-                    // row.add(value == null || value.length() == 0 ? "" :
-                    // value);
-                    // System.out.println(value.getClass());
-                    row.add(value);
+                }else {
+                    Object srcValue = GridData.getValue(rowData, column.getValueExpression(), parser);
+                    value = GridData.formatValue2Label(rowData, srcValue, column.getValueFormater());
                 }
+                row.add(value);
             }
             rows.add(row);
             i++;
