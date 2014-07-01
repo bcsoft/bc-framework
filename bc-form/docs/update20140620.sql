@@ -10,6 +10,24 @@ COMMENT ON COLUMN BC_FORM.EXT01 IS '扩展域1';
 COMMENT ON COLUMN BC_FORM.EXT02 IS '扩展域2';
 COMMENT ON COLUMN BC_FORM.EXT03 IS '扩展域3';
 
+-- 构建唯一索引：PID+TYPE_+CODE+VER_
+DROP INDEX IF EXISTS formidx_form_type_pid_code;
+DROP INDEX IF EXISTS BCUK_FORM_PARENT;
+CREATE UNIQUE INDEX BCUK_FORM_PARENT ON bc_form(type_, code, pid, ver_);
+
+-- 历史数据统一版本号为1.0
+update bc_form set ver_ = '1.0' where ver_ is null;
+update bc_form set tpl_ = 'DEFAULT_CERT_FORM' where tpl_ <> 'DEFAULT_CERT_FORM';
+
+-- 更改级联删除
+ALTER TABLE bc_form_field DROP CONSTRAINT if exists bcfk_form_field_pid;
+ALTER TABLE bc_form_field ADD CONSTRAINT bcfk_form_field_pid FOREIGN KEY (pid)
+	REFERENCES bc_form (id) ON UPDATE RESTRICT ON DELETE CASCADE;
+ALTER TABLE bc_form_field_log DROP CONSTRAINT if exists bc_form_field_log_pid;
+ALTER TABLE bc_form_field_log DROP CONSTRAINT if exists bcfk_form_field_log_pid;
+ALTER TABLE bc_form_field_log ADD CONSTRAINT bcfk_form_field_log_pid FOREIGN KEY (pid)
+	REFERENCES bc_form_field (id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
 /* test
 update bc_form set ver_ = '1.0'
 	where type_ = 'CarManCert'

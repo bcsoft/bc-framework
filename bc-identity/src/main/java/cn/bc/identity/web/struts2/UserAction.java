@@ -83,7 +83,7 @@ public class UserAction extends AbstractActorAction {
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(665);
+		return super.buildFormPageOption(editable).setWidth(665).setHeight(600);
 	}
 
 	@Override
