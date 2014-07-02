@@ -286,7 +286,7 @@ public class WebUtils implements ServletContextAware {
 	// 判断客户端的ip是否是外网访问IP
 	public static boolean isOuterNet(String ip) {
 		return !(ip.startsWith("192.168.") || ip.startsWith("10.0.")
-				|| ip.startsWith("127.0.") || ip.startsWith("localhost"));
+				|| ip.startsWith("127.0.") || ip.startsWith("localhost") || ip.startsWith("0:"));
 	}
 
 	/**
