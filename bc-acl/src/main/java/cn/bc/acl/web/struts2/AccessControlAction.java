@@ -85,7 +85,7 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 		if(isReadonly){
 			result = false;
 		}else{
-			if(this.showRole.equals("11")){
+			if(this.showRole.equals("11")){ //"11"显示查阅和编辑按钮
 				result = false;
 			}
 		}
