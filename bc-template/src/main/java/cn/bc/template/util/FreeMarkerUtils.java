@@ -64,8 +64,8 @@ public class FreeMarkerUtils {
 
 			return out.toString();
 		} catch (Exception e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
+			logger.warn(e.getMessage(), e);
+			//e.printStackTrace();
 			return null;
 		}
 	}
