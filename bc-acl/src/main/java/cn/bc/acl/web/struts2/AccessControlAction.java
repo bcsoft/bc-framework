@@ -77,9 +77,20 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
+		
+		boolean result = true;
 		// 配置权限：访问监控管理员或系统管理员
-		return !context.hasAnyRole(getText("key.role.bc.acl"),
+		boolean isReadonly =  context.hasAnyRole(getText("key.role.bc.acl"),
 				getText("key.role.bc.admin"));
+		if(isReadonly){
+			result = false;
+		}else{
+			if(this.showRole.equals("11")){ //"11"显示查阅和编辑按钮
+				result = false;
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
