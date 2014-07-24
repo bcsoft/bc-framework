@@ -125,11 +125,11 @@ public class SelectRolesAction extends
 
 	@Override
 	protected String getHtmlPageJs() {
-		return this.getHtmlPageNamespace() + "/identity/group/select.js";
+		return this.getHtmlPageNamespace() + "/identity/role/select.js";
 	}
 
 	@Override
 	protected String getClickOkMethod() {
-		return "bc.groupSelectDialog.clickOk";
+		return "bc.roleSelectDialog.clickOk";
 	}
 }
