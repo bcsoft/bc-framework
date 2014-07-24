@@ -1,11 +1,13 @@
 package cn.bc.form.domain;
 
+import cn.bc.BCConstants;
+import cn.bc.identity.domain.RichFileEntityImpl;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import cn.bc.BCConstants;
-import cn.bc.identity.domain.RichFileEntityImpl;
+import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * 表单
@@ -33,7 +35,18 @@ public class Form extends RichFileEntityImpl {
     private String ext02; // 扩展域2
     private String ext03; // 扩展域3
 
-    @Column(name = "DESC_")
+	private List<Field> fields;// 表单字段列表
+
+	@Transient
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
+	}
+
+	@Column(name = "DESC_")
     public String getDescription() {
         return description;
     }

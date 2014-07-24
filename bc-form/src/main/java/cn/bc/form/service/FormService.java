@@ -12,7 +12,16 @@ import cn.bc.form.domain.Form;
  * 
  */
 public interface FormService extends CrudService<Form> {
-	
+	/**
+	 * 查找指定业务对象的表单
+	 * @param type 类别
+	 * @param code 编码
+	 * @param pid 业务ID
+	 * @param ver 表单版本号，为空代表获取最新版本
+	 * @return
+	 */
+	public Form findByParent(String type, String code, Long pid, String ver);
+
 	/**
 	 * 查找指定的表单
 	 * @param type 类别
@@ -36,5 +45,12 @@ public interface FormService extends CrudService<Form> {
 	 */
 	public List<Form> findList(String type);
 
-	
+	/**
+	 * 删除指定的表单
+	 * @param type 类型
+	 * @param code 编码
+	 * @param pid 业务ID
+	 * @param ver 版本号
+	 */
+	void delete(String type, String code, Long pid, String ver);
 }
