@@ -150,6 +150,10 @@
 			<result>/bc/identity/group/select.jsp</result>
 		</action>
 	</package>
+	<package name="selectRoles" extends="bc-default" namespace="/bc/selectRoles">
+		<action name="paging" class="selectRolesAction" method="paging"/>
+		<action name="data" class="selectRolesAction" method="data"/>
+	</package>
 	<package name="selectUser" extends="bc-default" namespace="/bc">
 		<action name="selectUser" class="selectUserAction">
 			<result>/bc/identity/user/select.jsp</result>
@@ -164,7 +168,8 @@
 			<result name="form">/bc/identity/user/password.jsp</result>
 		</action>
 		<action name="updatePassword" class="authDataAction" method="updatePassword"/>
-	</package><package name="getUsers" extends="bc-default" namespace="/bc">
+	</package>
+	<package name="getUsers" extends="bc-default" namespace="/bc">
 		<action name="getUsers" class="getUsersAction">
 		</action>
 	</package>
