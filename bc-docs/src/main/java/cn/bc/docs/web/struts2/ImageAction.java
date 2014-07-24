@@ -454,4 +454,12 @@ public class ImageAction extends ActionSupport implements SessionAware {
 
 		return "json";
 	}
+
+	public float width;// 附件图片的实物宽度
+	// 打印附件图片
+	public String print() throws Exception {
+		// 时间戳
+		ts = new Date().getTime();
+		return SUCCESS;
+	}
 }
