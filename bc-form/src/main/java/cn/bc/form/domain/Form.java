@@ -29,7 +29,7 @@ public class Form extends RichFileEntityImpl {
     private String code;// 其他模块调用此模块时，使用的编码
     private String subject;// 标题
     private String tpl;// 模板编码
-    private String version; // 版本
+    private Float ver; // 版本
     private String description; // 备注
     private String ext01; // 扩展域1
     private String ext02; // 扩展域2
@@ -80,12 +80,12 @@ public class Form extends RichFileEntityImpl {
     }
 
     @Column(name = "VER_")
-    public String getVersion() {
-        return version;
+    public Float getVer() {
+        return ver;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVer(Float ver) {
+        this.ver = ver;
     }
 
     // 获取pid

@@ -3,10 +3,11 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 自定义表单 -->
-	<package name="customFormAPI" extends="bc-default" namespace="/bc/customForm">
+	<!-- 表单API -->
+	<package name="customFormAPI" extends="bc-default" namespace="/bc/cform">
 		<action name="render" class="renderFormAction" method="render"/>
 		<action name="delete" class="renderFormAction" method="delete"/>
+		<action name="save" class="renderFormAction" method="save" />
 	</package>
 	
 	<!-- 自定义表单 -->

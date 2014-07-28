@@ -94,6 +94,8 @@ public class PhotoAction extends ActionSupport {
 				this.fname = (String) info.get("fname");
 				this.format = (String) info.get("format");
 				this.size = (Integer) info.get("size");
+				//if(info.containsKey("ptype")) this.ptype = (String) info.get("ptype");
+				//if(info.containsKey("puid")) this.puid = (String) info.get("puid");
 			} else {// 指定文件路径的处理
 				this.path = tid[0];
 
@@ -170,7 +172,8 @@ public class PhotoAction extends ActionSupport {
 			// 保存或更新Attach
 			if (this.id != null && !this.id.isEmpty()) {
 				if (this.id.startsWith("attach:")) {// 更新现有Attach附件的信息
-					Attach attach = this.attachService.load(Long.parseLong(this.id.split(":")[1]));
+					String[] id_cfg = this.id.split(":");
+					Attach attach = this.attachService.load(Long.parseLong(id_cfg[1]));
 					attach.setModifier(SystemContextHolder.get().getUserHistory());
 					attach.setModifiedDate(Calendar.getInstance());
 					attach.setSize(_file.length());

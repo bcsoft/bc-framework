@@ -7,7 +7,6 @@ import java.util.Map;
 
 import oracle.core.lmx.CoreException;
 
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONArray;
@@ -458,7 +457,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 		infoJson.put("tpl", tpl);
 		infoJson.put("subject", form.getSubject());
 		infoJson.put("id", id);
-		infoJson.put("version", form.getVersion());
+		infoJson.put("version", form.getVer());
 
 		return infoJson.toString();
 	}
