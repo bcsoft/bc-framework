@@ -3,6 +3,8 @@
  */
 package cn.bc.web.struts2;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +20,7 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.util.StringUtils;
 
 /**
  * Html页面抽象Action
@@ -114,7 +117,18 @@ public abstract class AbstractHtmlPageAction extends ActionSupport implements
 
 	/** 页面需要另外加载的js、css文件，逗号连接多个文件 */
 	protected String getHtmlPageJs() {
-		return null;
+		Collection<String> jscss = new ArrayList<String>();
+		addHtmlPageJsCss(jscss, getContextPath());
+		return StringUtils.collectionToCommaDelimitedString(jscss);
+	}
+
+	/**
+	 * 向页面添加额外的js文件
+	 * @param jscss 已初始化好的集合
+	 * @param contextPath 上下文路径
+	 */
+	protected void addHtmlPageJsCss(Collection<String> jscss, String contextPath) {
+		// Do nothing
 	}
 
 	/** 获取访问该ation的上下文路径 */
