@@ -252,10 +252,10 @@ public class RenderFormAction extends ActionSupport {
 			String[] roles = this.role.split("\\+");
 			for (String r : roles) {
 				if (!context.hasAnyRole(r)) {
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 	}
 
