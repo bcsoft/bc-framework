@@ -8,6 +8,7 @@
 		<action name="render" class="renderFormAction" method="render"/>
 		<action name="delete" class="renderFormAction" method="delete"/>
 		<action name="save" class="renderFormAction" method="save" />
+		<action name="nextver" class="renderFormAction" method="nextVer" />
 	</package>
 	
 	<!-- 自定义表单 -->

@@ -64,4 +64,13 @@ public interface FormService extends CrudService<Form> {
 	 * @return
 	 */
 	public List<Form> findList(String type);
+
+	/**
+	 * 获取当前的最新版本号
+	 * @param type
+	 * @param code
+	 * @param pid
+	 * @return
+	 */
+	Float getNewestVer(String type, String code, Long pid);
 }

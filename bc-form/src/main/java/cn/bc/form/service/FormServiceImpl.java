@@ -166,6 +166,10 @@ public class FormServiceImpl extends DefaultCrudService<Form> implements FormSer
 		this.formDao.delete(type, code, pid, ver);
 	}
 
+	public Float getNewestVer(String type, String code, Long pid) {
+		return this.formDao.getNewestVer(type, code, pid);
+	}
+
 	public Form findByTPC(String type, Long pid, String code) {
 		AndCondition ac = new AndCondition();
 		ac.add(new EqualsCondition("type", type));
