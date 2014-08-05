@@ -255,16 +255,16 @@ public class RenderFormAction extends ActionSupport {
 
 		// 处理 | 和 +
 		SystemContext context = SystemContextHolder.get();
-		if (this.role.contains("|")) {// 任意其中一个角色的情况
-			return !context.hasAnyOneRole(this.role.replace("|", ","));
-		} else {// 必须拥有全部角色的情况
+		if (this.role.contains("+")) {// 必须拥有全部角色的情况
 			String[] roles = this.role.split("\\+");
 			for (String r : roles) {
 				if (!context.hasAnyRole(r)) {
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
+		} else {// 任意其中一个角色的情况
+			return context.hasAnyOneRole(this.role.replace("|", ","));
 		}
 	}
 
