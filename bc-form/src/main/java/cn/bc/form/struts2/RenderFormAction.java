@@ -12,6 +12,8 @@ import cn.bc.template.engine.TemplateEngine;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -29,6 +31,7 @@ import java.util.*;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class RenderFormAction extends ActionSupport {
+	private final static Log logger = LogFactory.getLog(RenderFormAction.class);
 	private static final long serialVersionUID = 1L;
 	public String type;		// 表单业务类别
 	public String code;		// 表单业务编码
@@ -59,6 +62,7 @@ public class RenderFormAction extends ActionSupport {
 		PageOption pageOption = new PageOption();
 		pageOption.setWidth(400).setMinWidth(300);
 		pageOption.setHeight(300).setMinHeight(250);
+		pageOption.put("readonly", readonly);
 
 		this.addPageButton(pageOption, readonly);
 		return pageOption;
@@ -76,7 +80,11 @@ public class RenderFormAction extends ActionSupport {
 	 */
 	protected void addPageButton(PageOption pageOption, boolean readonly) {
 		// 默认添加确认按钮
-		if(!readonly) pageOption.addButton( new ButtonOption(getText("label.ok"), null, "bc.cform.onOk"));
+		if(!readonly){
+			pageOption.addButton(new ButtonOption(getText("form.save2NewVersion"), null, "bc.cform.save2NewVersion"));
+			pageOption.addButton(new ButtonOption(getText("form.save"), null, "bc.cform.save"));
+			pageOption.addButton(new ButtonOption(getText("form.saveAndClose"), null, "bc.cform.saveAndClose"));
+		}
 	}
 
 	// 渲染表单
@@ -212,8 +220,9 @@ public class RenderFormAction extends ActionSupport {
 		form.setCode(this.code);
 		form.setPid(this.pid);
 		form.setSubject(this.subject);
-		form.setUid(this.idGeneratorService.next(Form.ATTACH_TYPE));
 		form.setVer(this.ver == null ? 1 : this.ver);// 默认版本1
+		form.setUid(this.idGeneratorService.next(Form.ATTACH_TYPE));
+		//form.setUid("Form." + form.getType() + "." + form.getCode() + "." + form.getPid() + "." + form.getVer());
 		form.setTpl(this.tpl);
 		form.setStatus(Form.STATUS_ENABLED);
 
@@ -246,9 +255,7 @@ public class RenderFormAction extends ActionSupport {
 
 		// 处理 | 和 +
 		SystemContext context = SystemContextHolder.get();
-		if (this.role.contains("|")) {// 任意其中一个角色的情况
-			return !context.hasAnyOneRole(this.role.replace("|", ","));
-		} else {// 必须拥有全部角色的情况
+		if (this.role.contains("+")) {// 必须拥有全部角色的情况
 			String[] roles = this.role.split("\\+");
 			for (String r : roles) {
 				if (!context.hasAnyRole(r)) {
@@ -256,6 +263,8 @@ public class RenderFormAction extends ActionSupport {
 				}
 			}
 			return true;
+		} else {// 任意其中一个角色的情况
+			return context.hasAnyOneRole(this.role.replace("|", ","));
 		}
 	}
 
@@ -296,10 +305,19 @@ public class RenderFormAction extends ActionSupport {
 			json.put("id", form.getId());
 			json.put("msg", "保存成功！");
 		}catch (Exception e){
+			logger.warn(e.getMessage(), e);
+			e.printStackTrace();
 			json.put("success", false);
 			json.put("msg", e.getMessage());
 		}
 		this.json = json.toString();
 		return "json";
+	}
+	// 获取表单的下一个版本
+	public String nextVer() throws Exception {
+		Float newestVer = this.formService.getNewestVer(this.type, this.code, this.pid);
+		int nextVer = newestVer != null ? newestVer.intValue() + 1 : 1;
+		this.html = nextVer + "";
+		return "page";
 	}
 }
