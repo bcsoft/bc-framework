@@ -17,7 +17,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
     protected String totalnumQueryStringTpl;        // 总数查询语句模板
     protected List<Object> totalnumQueryParams = new ArrayList<Object>();       // 总数查询语句参数
     private int offset = 0;
-    private int limit = 25;
+    private int limit = 0;
 
     public PagingQueryConfig() {
         super();
@@ -78,7 +78,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
             }
         }
         if (offset > 0) args.put("offset", this.getOffset());
-        args.put("limit", Math.max(1, this.getLimit()));
+        if (limit > 0) args.put("limit", Math.max(1, this.getLimit()));
         return format(this.queryStringTpl, args);
     }
 
