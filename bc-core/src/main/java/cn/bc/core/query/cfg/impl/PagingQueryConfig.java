@@ -1,6 +1,5 @@
 package cn.bc.core.query.cfg.impl;
 
-import cn.bc.core.query.cfg.QueryConfig;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -161,7 +160,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
 	 * @param value 值
 	 * @return this
 	 */
-	public QueryConfig addTemplateParam(String key, Object value) {
+	public PagingQueryConfig addTemplateParam(String key, Object value) {
 		this.templateParams.put(key, value);
 		return this;
 	}
@@ -172,7 +171,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
 	 * @param params 参数
 	 * @return this
 	 */
-	public QueryConfig addTemplateParam(Map<String, Object> params) {
+	public PagingQueryConfig addTemplateParam(Map<String, Object> params) {
 		this.templateParams.putAll(params);
 		return this;
 	}
