@@ -1,5 +1,6 @@
 package cn.bc.core.query.cfg.impl;
 
+import cn.bc.core.query.cfg.QueryConfig;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.query.cfg.PagingQueryConfig {
     protected String totalnumQueryStringTpl;        // 总数查询语句模板
     protected List<Object> totalnumQueryParams = new ArrayList<Object>();       // 总数查询语句参数
+	protected Map<String, Object> templateParams = new HashMap<String, Object>();   // SQL模板参数
     private int offset = 0;
     private int limit = 0;
 
@@ -79,6 +81,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
         }
         if (offset > 0) args.put("offset", this.getOffset());
         if (limit > 0) args.put("limit", Math.max(1, this.getLimit()));
+		if(!this.templateParams.isEmpty()) args.putAll(this.templateParams);
         return format(this.queryStringTpl, args);
     }
 
@@ -103,6 +106,7 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
                 args.put("condition", e);
             }
         }
+		if(!this.templateParams.isEmpty()) args.putAll(this.templateParams);
         return format(this.totalnumQueryStringTpl, args);
     }
 
@@ -149,4 +153,27 @@ public class PagingQueryConfig extends SimpleQueryConfig implements cn.bc.core.q
             this.totalnumQueryParams.addAll(params);
         return this;
     }
+
+	/**
+	 * 添加SQL模板参数
+	 *
+	 * @param key 键
+	 * @param value 值
+	 * @return this
+	 */
+	public QueryConfig addTemplateParam(String key, Object value) {
+		this.templateParams.put(key, value);
+		return this;
+	}
+
+	/**
+	 * 添加SQL模板参数
+	 *
+	 * @param params 参数
+	 * @return this
+	 */
+	public QueryConfig addTemplateParam(Map<String, Object> params) {
+		this.templateParams.putAll(params);
+		return this;
+	}
 }
