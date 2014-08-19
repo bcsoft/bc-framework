@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="385" measuredHeight="208">
+    <widgets xsi:type="model:Window" id="1" width="385" height="208" text="[ XXX ]的访问控制" measuredWidth="385" measuredHeight="208" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="5" y="50" width="385" height="122" text="(w:30). {unchecked},(w:80). 访问者,(w:120). 访问权限,最后修改&#xA;1,小明,{checked}查阅 {checked}编辑,小明 (2013-01-02 10:15)&#xA;2,小张,{checked}查阅 {checked}编辑,小明 (2013-01-01 10:15)" measuredWidth="385" measuredHeight="122" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="176" x="4" y="25" text="访问权限配置：" measuredWidth="89" measuredHeight="25">
+      <font size="12px" bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="177" x="315" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+    <widgets xsi:type="model:Icon" id="178" x="339" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="179" x="363" y="27" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="180" x="243" y="27" measuredWidth="16" measuredHeight="16" icon="user (small)"/>
+    <widgets xsi:type="model:Icon" id="181" x="267" y="27" measuredWidth="16" measuredHeight="16" icon="usergroup (small)"/>
+    <widgets xsi:type="model:Icon" id="182" x="291" y="27" measuredWidth="16" measuredHeight="16" icon="home (small)"/>
+    <widgets xsi:type="model:Button" id="183" x="336" y="175" text="确定" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="184" x="8" y="224" measuredWidth="385" measuredHeight="208">
+    <widgets xsi:type="model:Window" id="185" width="385" height="208" text="[ XXX ]的访问控制" measuredWidth="385" measuredHeight="208" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="186" y="50" width="385" height="122" text="(w:30). {unchecked},(w:80). 访问者,(w:120). 访问权限,最后修改&#xA;1,小明,{checked}编辑,小明 (2013-01-02 10:15)&#xA;2,小张,{checked}编辑,小明 (2013-01-01 10:15)" measuredWidth="385" measuredHeight="122" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="187" x="4" y="25" text="访问权限配置：" measuredWidth="89" measuredHeight="25">
+      <font size="12px" bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="188" x="315" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+    <widgets xsi:type="model:Icon" id="189" x="339" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="190" x="363" y="27" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="191" x="243" y="27" measuredWidth="16" measuredHeight="16" icon="user (small)"/>
+    <widgets xsi:type="model:Icon" id="192" x="267" y="27" measuredWidth="16" measuredHeight="16" icon="usergroup (small)"/>
+    <widgets xsi:type="model:Icon" id="193" x="291" y="27" measuredWidth="16" measuredHeight="16" icon="home (small)"/>
+    <widgets xsi:type="model:Button" id="194" x="336" y="175" text="确定" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="206" x="8" y="440" measuredWidth="385" measuredHeight="208">
+    <widgets xsi:type="model:Window" id="207" width="385" height="208" text="[ XXX ]的访问控制" measuredWidth="385" measuredHeight="208" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Table" id="208" y="50" width="385" height="122" text="(w:30). {unchecked},(w:80). 访问者,(w:120). 访问权限,最后修改&#xA;1,小明,{checked}查阅,小明 (2013-01-02 10:15)&#xA;2,小张,{checked}查阅,小明 (2013-01-01 10:15)" measuredWidth="385" measuredHeight="122" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="209" x="4" y="25" text="访问权限配置：" measuredWidth="89" measuredHeight="25">
+      <font size="12px" bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="210" x="315" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-up (small)"/>
+    <widgets xsi:type="model:Icon" id="211" x="339" y="27" measuredWidth="16" measuredHeight="16" icon="arrow-down (small)"/>
+    <widgets xsi:type="model:Icon" id="212" x="363" y="27" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+    <widgets xsi:type="model:Icon" id="213" x="243" y="27" measuredWidth="16" measuredHeight="16" icon="user (small)"/>
+    <widgets xsi:type="model:Icon" id="214" x="267" y="27" measuredWidth="16" measuredHeight="16" icon="usergroup (small)"/>
+    <widgets xsi:type="model:Icon" id="215" x="291" y="27" measuredWidth="16" measuredHeight="16" icon="home (small)"/>
+    <widgets xsi:type="model:Button" id="216" x="336" y="175" text="确定" measuredWidth="44" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
