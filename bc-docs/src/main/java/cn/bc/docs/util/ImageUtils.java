@@ -419,10 +419,15 @@ public class ImageUtils {
      * @param mixConfig 合并方式，如"1,1,1;1,1"表示前三张水平合并，后2张水平合并，之后再垂直合并；
      *                  如果要控制合并的间隙，如"1:5 6 7 8,1;1,1"，表示第一张图片合并时上、右、下、左的间隙为5、6、7、8个像素；
      *                  "1:5 6,1;1,1"，表示第一张图片合并时上下、左右的间隙为5、6个像素；
+	 *                  "h:5"代表连续水平合并，每个图片之间的合并间隙为5个像素，"h"等同于"h:0"；
+	 *                  "v:5"代表连续垂直合并，每个图片之间的合并间隙为5个像素，"v"等同于"v:0"；
      * @return
      * @throws IOException
      */
     public static BufferedImage combineMix(BufferedImage[] images, String mixConfig) {
+		// 处理"h:5"、"v:5"格式，将其转换为标准格式
+		mixConfig = rebuildSpecialMixConfig(mixConfig, images.length);
+		
         String[] v_cfgs = mixConfig.split(";");
         Imager[] v_imagers = new Imager[v_cfgs.length];// 要垂直合并的图
 
@@ -471,4 +476,28 @@ public class ImageUtils {
         }
         return combineVertical(v_imagers);
     }
+
+	// 处理"h:5"、"v:5"格式，将其转换为标准格式
+	private static String rebuildSpecialMixConfig(String mixConfig, int count) {
+		if(mixConfig != null && (mixConfig.startsWith("h") || mixConfig.startsWith("v"))){
+			int gap = 0;// 合并间隙
+			int i = mixConfig.indexOf(":");
+			if (i != -1) {
+				gap = Integer.parseInt(mixConfig.substring(i + 1));
+			}
+			String newConfig = "";
+			if(mixConfig.startsWith("h")){// 连续水平合并 h:n
+				for(i = 0; i < count; i++){
+					newConfig += (i == 0 ? "1" : ",1:0 0 0 " + gap);
+				}
+			}else if(mixConfig.startsWith("v")){// 连续垂直合并 v:n
+				for(i = 0; i < count; i++){
+					newConfig += (i == 0 ? "1" : ";1:" + gap + " 0 0 0");
+				}
+			}
+			return newConfig;
+		}else {
+			return mixConfig;
+		}
+	}
 }
