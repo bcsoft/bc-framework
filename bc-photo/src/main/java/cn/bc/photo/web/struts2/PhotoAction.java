@@ -7,7 +7,10 @@ import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
+import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContextHolder;
+import cn.bc.photo.domain.IpCamera;
+import cn.bc.photo.service.IpCameraService;
 import cn.bc.photo.service.PhotoExecutor;
 import cn.bc.photo.service.PhotoService;
 import cn.bc.web.ui.html.page.ButtonOption;
@@ -16,10 +19,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.util.DateUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import sun.misc.BASE64Decoder;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,6 +48,8 @@ public class PhotoAction extends ActionSupport {
 	private AttachService attachService;
 	@Autowired
 	private PhotoService photoService;
+	@Autowired
+	private IpCameraService ipCameraService;
 
 	public JSONObject json;// 图片处理完毕后返回的json数据：{success、path、url、fname、size、format [、dir、msg、id]}
 	/**
@@ -63,6 +67,7 @@ public class PhotoAction extends ActionSupport {
 	public Integer size;// 图片大小
 	public String ptype;// 创建Attach附件时使用
 	public String puid;// 创建Attach附件时使用
+	public List<IpCamera> ipCameras;// 可用的IP摄像头列表
 
 	@Override
 	public String execute() throws Exception {
@@ -113,6 +118,10 @@ public class PhotoAction extends ActionSupport {
 		} else {
 			// 空白窗口
 		}
+
+		// 获取可用的IP摄像头列表
+		Actor user = SystemContextHolder.get().getUser();
+		this.ipCameras = this.ipCameraService.findByOwner(user.getId());
 
 		return super.execute();
 	}
