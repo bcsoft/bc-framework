@@ -13,17 +13,17 @@ import java.text.DecimalFormat;
  */
 public class MoneyFormater extends AbstractFormater<String> {
 	protected DecimalFormat format;
-	private String pattern = "##,###,###,###.#";
+	private String pattern = "##,###,###,##0.00";
 
 	public MoneyFormater() {
-		format = new DecimalFormat("￥ " + pattern);
+		format = new DecimalFormat("￥" + pattern);
 	}
 
 	public MoneyFormater(boolean noSymble) {
 		if(noSymble){
 			format = new DecimalFormat(pattern);
 		}else{
-			format = new DecimalFormat("￥ " + pattern);
+			format = new DecimalFormat("￥" + pattern);
 		}
 	}
 
