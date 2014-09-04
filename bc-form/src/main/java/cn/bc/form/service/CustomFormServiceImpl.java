@@ -48,6 +48,7 @@ public class CustomFormServiceImpl implements CustomFormService {
         if((formInfoJO == null || formInfoJO.length() == 0) && (formDataJA == null || formDataJA.length() == 0))
             return;
 
+		Calendar now = Calendar.getInstance();
 		ActorHistory actor = SystemContextHolder.get().getUserHistory();
 		List<Field> fields = new ArrayList<Field>();
 		List<FieldLog> fieldLogs = new ArrayList<FieldLog>();
@@ -62,13 +63,15 @@ public class CustomFormServiceImpl implements CustomFormService {
 			// 表单信息处理
 			form = new Form();
             copyFormProperty(form, formInfoJO);
-            form.setAuthor(actor);
-            form.setFileDate(Calendar.getInstance());
+			form.setAuthor(actor);
+			form.setFileDate(Calendar.getInstance());
 
 			// 表单字段处理
 			JSONObject formDataJO;
 			for (int i = 0; i < formDataJA.length(); i++) {
 				Field field = new Field();
+				field.setUpdator(actor);
+				field.setUpdateTime(now);
 				formDataJO = (JSONObject) formDataJA.get(i);
 				field.setForm(form);
 				field.setName(formDataJO.getString("name"));
@@ -85,9 +88,8 @@ public class CustomFormServiceImpl implements CustomFormService {
 				fieldLog.setField(field);
 				fieldLog.setValue(formDataJO.getString("value"));
 				fieldLog.setUpdator(actor);
-				fieldLog.setUpdateTime(Calendar.getInstance());
-				fieldLog.setBatchNo(DateUtils.formatCalendar(
-						Calendar.getInstance(), "yyyyMMddHmmssSSSS"));
+				fieldLog.setUpdateTime(now);
+				fieldLog.setBatchNo(DateUtils.formatCalendar(now, "yyyyMMddHmmssSSSS"));
 				fieldLogs.add(fieldLog);
 			}
 		} else {// 编辑保存
@@ -104,6 +106,8 @@ public class CustomFormServiceImpl implements CustomFormService {
 
 				if (field == null) { // 如果字段为新添加
 					field = new Field();
+					field.setUpdator(actor);
+					field.setUpdateTime(now);
 					field.setForm(form);
 					field.setName(formDataJO.getString("name"));
 					field.setType(formDataJO.getString("type"));
@@ -133,10 +137,11 @@ public class CustomFormServiceImpl implements CustomFormService {
 
         // 表单信息处理
         form.setModifier(actor);
-        form.setModifiedDate(Calendar.getInstance());
+        form.setModifiedDate(now);
+		if(form.getVer() == null) form.setVer(new Float(1));// 默认版本1
 
-        // 保存
-        this.formService.save(form);
+		// 保存
+		this.formService.save(form);
         this.fieldService.save(fields);
         this.fieldLogService.save(fieldLogs);
 	}
@@ -149,7 +154,7 @@ public class CustomFormServiceImpl implements CustomFormService {
         if (json.has("status")) form.setStatus(json.getInt("status"));
         if (json.has("subject")) form.setSubject(json.getString("subject"));
         if (json.has("tpl")) form.setTpl(json.getString("tpl"));
-        if (json.has("version")) form.setVer(new Float(json.getString("ver")));
+        if (json.has("version")) form.setVer(new Float(json.getString("version")));
         if (json.has("description")) form.setDescription(json.getString("description"));
         if (json.has("ext01")) form.setExt01(json.getString("ext01"));
         if (json.has("ext02")) form.setExt02(json.getString("ext02"));
