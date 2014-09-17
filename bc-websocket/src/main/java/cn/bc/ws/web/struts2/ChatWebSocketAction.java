@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.bc.websocket.web.struts2;
+package cn.bc.ws.web.struts2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Controller;
 import cn.bc.chat.OnlineUser;
 import cn.bc.chat.service.OnlineUserService;
 import cn.bc.core.util.DateUtils;
-import cn.bc.websocket.jetty.ChatWebSocket;
-import cn.bc.websocket.jetty.ChatWebSocketService;
+import cn.bc.ws.jetty.ChatWebSocket;
+import cn.bc.ws.jetty.ChatWebSocketService;
 
 import com.opensymphony.xwork2.ActionSupport;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.bc.websocket.event;
+package cn.bc.ws.event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 
 import cn.bc.identity.event.LoginEvent;
-import cn.bc.websocket.jetty.ChatWebSocketService;
+import cn.bc.ws.jetty.ChatWebSocketService;
 
 /**
  * 用户登录事件的监听器：记录登录日志及在线用户
