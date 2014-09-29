@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -260,7 +261,9 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			// 使用空白图片代替
 			extension = "jpg";
 			filepath = WebUtils.rootPath + empty;
+			this.filename = "empty";
 		} else {
+			this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(), attach.getSubject());
 			extension = attach.getFormat();
 			if (attach.isAppPath())
 				filepath = WebUtils.rootPath + "/"
@@ -303,14 +306,17 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			throw new CoreException("code is null.");
 		} else {
 			Actor u = userService.loadByCode(code);
-			if (u != null)
+			if (u != null) {
 				attach = this.attachService.loadByPtype("portrait", u.getUid());
+				this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(), u.getName());
+			}
 		}
 		String filepath, extension;
 		if (attach == null) {
 			// 使用空白图片代替
 			extension = "jpg";
 			filepath = WebUtils.rootPath + empty;
+			this.filename = "empty";
 		} else {
 			extension = attach.getFormat();
 			if (attach.isAppPath())
@@ -340,6 +346,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			logger.debug("ids=" + ids);
 			logger.debug("mixConfig=" + mixConfig);
 			logger.debug("fileType=" + fileType);
+			logger.debug("filename=" + filename);
 
 		}
 		
@@ -401,7 +408,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			attach.setAuthor(this.getContext().getUserHistory());
 			attach.setPuid(puid);
 			attach.setPtype(ptype);
-			attach.setSubject("empty");
+			attach.setSubject(filename == null || filename.isEmpty() ? "empty" : filename);
 			attach.setStatus(BCConstants.STATUS_ENABLED);
 			newImgPath = appRealDir + "/" + subFolder;
 		} else {

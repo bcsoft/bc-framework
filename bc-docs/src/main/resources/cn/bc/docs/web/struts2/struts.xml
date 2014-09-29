@@ -136,7 +136,7 @@
 				<param name="inputName">inputStream</param>
 				<param name="bufferSize">4096</param>
 				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline</param>
+				<param name="contentDisposition">inline; filename="${filename}"</param>
 			</result>
 		</action>
 		<action name="userPortrait" class="imageAction" method="userPortrait">
@@ -148,7 +148,7 @@
 				<param name="inputName">inputStream</param>
 				<param name="bufferSize">4096</param>
 				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline</param>
+				<param name="contentDisposition">inline; filename="${filename}</param>
 			</result>
 		</action>
 		<action name="combine" class="imageAction" method="combine"/>
