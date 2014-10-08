@@ -6,7 +6,7 @@
 		<version>2.4</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
-	<version>2.4.4</version>
+	<version>2.4.6</version>
 	<artifactId>bc-identity</artifactId>
 	<description>系统标识</description>
 	<dependencies>
