@@ -814,6 +814,7 @@
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<properties>
 				<db.type>postgresql</db.type>
+				<db.name>bcsystem</db.name>
 				<db.port>5432</db.port>
 				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
 				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
