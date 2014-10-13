@@ -142,4 +142,12 @@ public interface TemplateService extends CrudService<Template> {
 	Attach getAttach(String subject, String code, Map<String, Object> args,
 			String ptype, String puid, ActorHistory author,
 			Map<String, Object> formatParamSql) throws Exception;
+
+	/**
+	 * 通过分类ID获得模板ID列表
+	 * 
+	 * @param pid 所属分类ID
+	 * @return 
+	 */
+	List<Long> findTemplateIdsByCategoryIdForList(Long pid);
 }

@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import cn.bc.BCConstants;
+import cn.bc.category.domain.Category;
+import cn.bc.category.service.CategoryService;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
@@ -41,11 +43,15 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	private TemplateService templateService;
 	private TemplateTypeService templateTypeService;
 	private TemplateParamService templateParamService;
+	private CategoryService categoryService;
 
 
 	// 模板类型集合
 	public List<Map<String, String>> typeList;
-	
+
+	//模板分类
+	public String templateCategoryIds;
+
 	//模板参数
 	public String templateParamIds;
 	public Set<TemplateParam> templateParams;
@@ -66,6 +72,10 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		this.templateParamService = templateParamService;
 	}
 
+	@Autowired
+	public void setCategoryService(CategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
 
 	@Override
 	public boolean isReadonly() {
@@ -80,13 +90,13 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
 			pageOption.addButton(new ButtonOption(
-					getText("template.preview.test"), null,
+					getText("template.preview"), null,
 					"bc.templateForm.inline").setId("templateInline"));
-			pageOption
-					.addButton(new ButtonOption(
-							getText("template.show.history.version"), null,
-							"bc.templateForm.showVersion")
-							.setId("templateShowVersion"));
+//			pageOption
+//					.addButton(new ButtonOption(
+//							getText("template.show.history.version"), null,
+//							"bc.templateForm.showVersion")
+//							.setId("templateShowVersion"));
 			if (editable)
 				pageOption.addButton(new ButtonOption(getText("label.save"),
 						null, "bc.templateForm.save").setId("templateSave"));
@@ -141,7 +151,46 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	@Override
 	protected void beforeSave(Template entity) {
 		super.beforeSave(entity);
-		
+
+		this.setCategorys();
+
+		this.setParams();
+	}
+
+	/**
+	 * 给实体设置模板分类
+	 */
+	private void setCategorys() {
+		Long[] ids = null;
+		if (this.templateCategoryIds != null
+				&& this.templateCategoryIds.length() > 0) {
+			String[] tpIds = this.templateCategoryIds.split(",");
+			ids = new Long[tpIds.length];
+			for (int i = 0; i < tpIds.length; i++)
+				ids[i] = new Long(tpIds[i]);
+		}
+
+		if (ids != null && ids.length > 0) {
+			Set<Category> categorys = null;
+			Category category = null;
+			for (int i = 0; i < ids.length; i++) {
+				if (i == 0)
+					categorys = new HashSet<Category>();
+				category = this.categoryService.load(ids[i]);
+				categorys.add(category);
+			}
+			if (this.getE().getCategorys() != null) {
+				this.getE().getCategorys().clear();
+				this.getE().getCategorys().addAll(categorys);
+			} else
+				this.getE().setCategorys(categorys);
+		}
+	}
+
+	/**
+	 * 给实体对象设置模板参数
+	 */
+	private void setParams() {
 		Long[] ids = null;
 		if (this.templateParamIds != null && this.templateParamIds.length() > 0) {
 			String[] tpIds = this.templateParamIds.split(",");
@@ -164,7 +213,6 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 				this.getE().getParams().addAll(params);
 			}else
 				this.getE().setParams(params);
-			
 		}
 	}
 

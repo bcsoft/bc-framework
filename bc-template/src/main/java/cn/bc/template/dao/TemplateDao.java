@@ -49,4 +49,12 @@ public interface TemplateDao extends CrudDao<Template> {
 	 * @return
 	 */
 	public List<Map<String, String>> findCategoryOption();
+
+	/**
+	 * 通过分类ID获得模板ID列表
+	 * 
+	 * @param pid 所属分类ID
+	 * @return 
+	 */
+	List<Long> findTemplateIdsByCategoryIdForList(Long pid);
 }

@@ -3,6 +3,17 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<package name="templates" extends="bc-default" namespace="/bc/templates">
+		<!-- 视图：分页 -->
+		<action name="paging" class="templatesAction" method="paging" />
+		<!-- 视图：分页数据 -->
+		<action name="data" class="templatesAction" method="data" />
+		<!-- 视图：非分页数据 -->
+		<action name="list" class="templatesAction" method="list" />
+		<!-- 点击展开子节点图标的Action -->
+		<action name="loadTreeData" class="templatesAction" method="loadTreeData" />
+	</package>
+
 	<package name="template" extends="bc-default" namespace="/bc/template">
 		<action name="create" class="templateAction" method="create">
 			<result name="form">/bc/template/form.jsp</result>

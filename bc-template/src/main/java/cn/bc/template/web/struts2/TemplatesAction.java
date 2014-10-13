@@ -1,20 +1,27 @@
 package cn.bc.template.web.struts2;
 
 import cn.bc.BCConstants;
+import cn.bc.category.service.CategoryService;
+import cn.bc.category.web.struts2.CategoryViewAction;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.DateUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.option.domain.OptionItem;
 import cn.bc.template.service.TemplateService;
 import cn.bc.template.service.TemplateTypeService;
+import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.FileSizeFormater;
 import cn.bc.web.formater.KeyValueFormater;
+import cn.bc.web.struts2.TreeViewAction;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
@@ -24,6 +31,12 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
+import cn.bc.web.ui.html.tree.Tree;
+import cn.bc.web.ui.html.tree.TreeNode;
+import cn.bc.web.ui.json.Json;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import com.sun.star.uno.Exception;
 
 import java.util.*;
 
@@ -43,10 +58,32 @@ import java.util.*;
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class TemplatesAction extends ViewAction<Map<String, Object>> {
+public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
+	private final static Log logger = LogFactory
+			.getLog(CategoryViewAction.class);
+	private TemplateService templateService;
+	private CategoryService categoryService;
+
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 	public String code;
+	private static Long ROOTID;
+	/** 当前树节点ID */
+	private Long pid;
+
+	public void setPid(Long pid) {
+		this.pid = pid;
+	}
+
+	@Autowired
+	public void setCategoryService(CategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
+
+	@Autowired
+	public void setTemplateService(TemplateService templateService) {
+		this.templateService = templateService;
+	}
 
 	@Override
 	public boolean isReadonly() {
@@ -71,7 +108,9 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		sql.append("select t.id,t.uid_,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",t.category,a.code as typeCode,t.size_ as size,t.formatted,t.content");
+		sql.append(",(select string_agg(name_, ',') from bc_category where id in");
+		sql.append(" (select bc.cid from bc_template_template_category bc where bc.tid = t.id)) as category");
+		sql.append(",a.code as typeCode,t.size_ as size,t.formatted,t.content");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
@@ -106,12 +145,13 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				map.put("size", rs[i++]);
 				map.put("formatted", rs[i++]);
 				map.put("content", rs[i++]);
-				if(map.get("content")==null||map.get("content").toString().length()==0){
+				if (map.get("content") == null
+						|| map.get("content").toString().length() == 0) {
 					map.put("isContent", "empty");
-				}else{
+				} else {
 					map.put("isContent", "full");
 				}
-				
+
 				return map;
 			}
 		});
@@ -127,47 +167,44 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
-		columns.add(new TextColumn4MapKey("t.category", "category",
-				getText("template.category"), 200)
-				.setSortable(true).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("category", "category",
+				getText("template.category"), 100).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
-				getText("template.type"), 150).setSortable(true).setUseTitleFromLabel(true));
+				getText("template.format"), 140).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject"), 250).setSortable(true).setUseTitleFromLabel(true));
+				getText("template.tfsubject")).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
-				getText("template.code"), 200).setSortable(true)
+				getText("template.code"), 160).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.version_", "version",
-				getText("template.version"), 100).setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.path", "path",
-				getText("template.tfpath")).setUseTitleFromLabel(true));
+				getText("template.version"), 60).setSortable(true)
+				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.formatted", "formatted",
-				getText("template.file.formatted"), 80).setSortable(true)
+				getText("template.file.formatted"), 40)
 				.setValueFormater(new BooleanFormater()));
-		columns.add(new TextColumn4MapKey("t.size_", "size",
-				getText("template.file.size"),110).setUseTitleFromLabel(true)
-				.setValueFormater(new FileSizeFormater()));
-		columns.add(new TextColumn4MapKey("t.desc_", "desc_",
-				getText("template.desc"), 100).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("t.inner_", "inner",
-				getText("template.inner"), 35).setSortable(true)
-				.setValueFormater(new BooleanFormater()));
-		columns.add(new TextColumn4MapKey("au.actor_name", "uname",
-				getText("template.author"), 80));
-		columns.add(new TextColumn4MapKey("t.file_date", "file_date",
-				getText("template.fileDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("am.actor_name", "mname",
-				getText("template.modifier"), 80));
+		// 最后修改
 		columns.add(new TextColumn4MapKey("t.modified_date", "modified_date",
-				getText("template.modifiedDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+				getText("template.modified"), 210).setSortable(true)
+				.setValueFormater(new AbstractFormater<Object>() {
+					@Override
+					public Object format(Object context, Object value) {
+						if (value == null || "".equals(value.toString()))
+							return null;
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return map.get("mname") + " ("
+								+ DateUtils.formatDateTime2Minute((Date) value)
+								+ "）";
+					}
+				}).setUseTitleFromLabel(true));
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		columns.add(new HiddenColumn4MapKey("uid", "uid"));
 		columns.add(new HiddenColumn4MapKey("isContent", "isContent"));
 		return columns;
 	}
-
 
 	// 状态键值转换
 	private Map<String, String> getStatuses() {
@@ -188,7 +225,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String[] getGridSearchFields() {
 		return new String[] { "t.code", "am.actor_name", "t.path", "t.subject",
-				"t.version_", "t.category","a.name" };
+				"t.version_", "category", "a.name" };
 	}
 
 	@Override
@@ -207,7 +244,7 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		Toolbar tb = new Toolbar();
 
 		if (!this.isReadonly()) {
-			if(code == null || code.length()==0){
+			if (code == null || code.length() == 0) {
 				// 新建按钮
 				tb.addButton(this.getDefaultCreateToolbarButton());
 
@@ -229,18 +266,6 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
 					.setText(getText("template.preview.inline"))
 					.setClick("bc.templateList.inline"));
-			
-			if(code == null || code.length()==0){
-				// "更多"按钮
-				ToolbarMenuButton menuButton = new ToolbarMenuButton(
-						getText("template.config"))
-						.setChange("bc.templateList.config");
-				tb.addButton(menuButton.setIcon("ui-icon-wrench"));
-				// 配置模板类型
-				menuButton.addMenuItem(getText("template.config.type"), "type");
-				// 配置模板参数
-				menuButton.addMenuItem(getText("template.config.param"), "param");
-			}
 		}
 
 		// 状态按钮组
@@ -268,58 +293,128 @@ public class TemplatesAction extends ViewAction<Map<String, Object>> {
 		} else if (code != null && code.length() > 0) {
 			statusCondition = new EqualsCondition("t.code", code);
 		}
-		return statusCondition;
+
+		// 所属分类
+		Condition categoryCondition = null;
+		if (pid != null && pid.longValue() != ROOTID.longValue()) {
+			List<Long> pids = this.templateService
+					.findTemplateIdsByCategoryIdForList(pid);
+			if (pids != null && pids.size() > 0)
+				categoryCondition = new InCondition("t.id", pids);
+			else {
+				pids.add((long) 0);
+				categoryCondition = new InCondition("t.id", pids);
+			}
+		}
+
+		// 合并多个条件
+		return ConditionUtils.mix2AndCondition(statusCondition,
+				categoryCondition);
 	}
-	
+
 	@Override
-    protected void extendGridExtrasData(JSONObject json) throws JSONException {
-		if(status != null && status.length() > 0 && code != null
-				&& code.length() > 0){
+	protected void extendGridExtrasData(JSONObject json) throws JSONException {
+		if (status != null && status.length() > 0 && code != null
+				&& code.length() > 0) {
 			json.put("status", status);
 			json.put("code", code);
-		}else if(status != null && status.length() > 0){
+		} else if (status != null && status.length() > 0) {
 			json.put("status", status);
-		}else if(code != null && code.length() > 0){
-			json.put("code", code);		
+		} else if (code != null && code.length() > 0) {
+			json.put("code", code);
 		}
+		// 父节点条件
+		json.put("pid", this.pid);
 	}
-	
 
 	@Override
-	protected String getHtmlPageJs() {
-		return this.getModuleContextPath() + "/template/list.js";
+	protected Integer getTreeWith() {
+		return 200;
 	}
-
-	// ==高级搜索代码开始==
-	@Override
-	protected boolean useAdvanceSearch() {
-		return true;
-	}
-	
-	private TemplateTypeService templateTypeService;
-	private TemplateService templateService;
-	
-	@Autowired
-	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
-		this.templateTypeService = templateTypeService;
-	}
-	
-	@Autowired
-	public void setTemplateService(TemplateService templateService) {
-		this.templateService = templateService;
-	}
-
-	public JSONArray types;
-	public JSONArray categorys;
 
 	@Override
-	protected void initConditionsFrom() throws Exception {
-		this.types=OptionItem.toLabelValues(this.templateTypeService.findTemplateTypeOption(false));
-		this.categorys=OptionItem.toLabelValues(this.templateService.findCategoryOption());
-	}
-	
-	
-	// ==高级搜索代码结束==
+	protected Tree getHtmlPageTree() {
+		// 设置Root节点
+		ROOTID = this.categoryService.getIdByFullCode("TPL");
+		this.pid = ROOTID;
+		Tree tree = new Tree(ROOTID.toString(), "全部");
+		tree.setShowRoot(true);
 
-	
+		// 点击展开子节点图标的URL
+		tree.setUrl(this.getHtmlPageNamespace() + "/loadTreeData");
+
+		// 树的参数配置
+		Json cfg = new Json();
+		// 点击节点的回调函数
+		cfg.put("clickNode", "bc.template.view.clickTreeNode");
+		tree.setCfg(cfg);
+
+		// 树的数据
+		List<Map<String, Object>> treeData;
+
+		// 构建树的子节点
+		Collection<TreeNode> treeNodes;
+		try {
+			treeData = this.categoryService.findSubNodesData(this.pid);
+			treeNodes = this.buildTreeNodes(treeData);
+			for (TreeNode treeNode : treeNodes)
+				tree.addSubNode(treeNode);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
+		return tree;
+	}
+
+	/**
+	 * 构建树节点
+	 * 
+	 * @param treeData
+	 *            树节点数据
+	 * @return
+	 */
+	private Collection<TreeNode> buildTreeNodes(
+			List<Map<String, Object>> treeData) throws Exception {
+		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
+		for (Map<String, Object> data : treeData) {
+			TreeNode node = null;
+			node = new TreeNode(String.valueOf(data.get("id")),
+					String.valueOf(data.get("name")));
+			treeNodes.add(node);
+		}
+		return treeNodes;
+	}
+
+	/**
+	 * 展开树形菜单的子节点
+	 * 
+	 * @return
+	 */
+	public String loadTreeData() {
+		JSONObject json = new JSONObject();
+		try {
+			List<Map<String, Object>> data = this.categoryService
+					.findSubNodesData(this.pid);
+			json.put("success", true);
+			json.put("subNodesCount", data.size());
+			json.put("html", TreeNode.buildSubNodes(this.buildTreeNodes(data)));
+		} catch (java.lang.Exception e) {
+			logger.error(e.getMessage());
+		}
+
+		this.json = json.toString();
+		return "json";
+	}
+
+	@Override
+	protected String getHtmlPageNamespace() {
+		return getModuleContextPath() + "/templates";
+	}
+
+	@Override
+	protected void addHtmlPageJsCss(Collection<String> jscss, String contextPath) {
+		contextPath = this.getModuleContextPath();
+		jscss.add("/bc/template/list.js");
+		jscss.add("/bc/template/templateView.js");
+	}
 }
