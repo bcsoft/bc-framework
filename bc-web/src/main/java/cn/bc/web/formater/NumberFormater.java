@@ -15,7 +15,7 @@ public class NumberFormater extends AbstractFormater<String> {
 	protected DecimalFormat format;
 
 	public NumberFormater() {
-		format = new DecimalFormat("#.#");
+		format = new DecimalFormat("#.##");
 	}
 
 	public NumberFormater(String pattern) {

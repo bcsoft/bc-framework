@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Note" id="6" x="520" y="8" width="321" height="233" text="说明：&#xD;&#xA;1) 当类型为&quot;自定义文本&quot;时，显示&quot;模板内容&quot;栏，不显示&quot;附件&quot;栏；其余类型则相反。&#xD;&#xA;2) &quot;附件&quot;保存的是文件相对于data/template目录下的相对路径名，附件右侧带3个小操作按钮&quot;上传&quot;、&quot;下载&quot;、&quot;清空&quot;。上传文件后，&quot;标题&quot;、&quot;附件&quot;的值自动生成，但用户可以自行修改标题，路径只读；下载指直接下载原始的附件文件。&#xD;&#xA;4)  编码+版本号作唯一性检测&#xD;&#xA;5) &quot;预览&quot;操作：如果模板允许格式化（使用${key}格式），弹出参数填充对话框，点击&quot;确认&quot;后再在线查看模板被格式化后的文档，否则直接预览模板。&#xD;&#xA;6）附件支持拖拉上传。" measuredWidth="321" measuredHeight="233" annotation="true" textAlignment="Left">
+    <font bold="false"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="9" x="8" y="8" measuredWidth="505" measuredHeight="332">
+    <widgets xsi:type="model:Window" id="10" width="505" height="332" text="模板配置 - 表单（带附件的类型）" measuredWidth="505" measuredHeight="332" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="11" y="292" width="504" measuredWidth="504" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="12" x="451" y="300" width="48" text="保存" measuredWidth="48" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="13" x="41" y="133" text="*标题：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="15" x="17" y="25" text="*模板格式：" measuredWidth="70" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="16" x="41" y="79" text="*编码：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="17" x="80" y="79" width="420" text="BC-SFTZ-EXCEL" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="18" x="123" y="268" text="创建：张三(2012-01-01 08:30)，最后修改：李四(2012-01-02 08:30)" measuredWidth="379" measuredHeight="25" textAlignment="Right" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="27" x="329" y="25" width="171" text="0001" measuredWidth="171" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="67" x="398" y="300" width="48" text="预览" measuredWidth="48" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="68" x="46" y="188" text="备注：" measuredWidth="41" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="98" x="17" y="52" text="*所属分类：" measuredWidth="70" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="103" x="41" y="106" text="*版本：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="104" x="80" y="106" width="420" text="1" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="109" x="45" y="214" text="状态：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="110" x="80" y="214" text="正常" measuredWidth="44" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="111" x="126" y="214" text="禁用" measuredWidth="44" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="20" x="80" y="133" width="420" text="收费通知 (EXCEL版本) " measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" id="254" x="80" y="25" width="170" text="Excel 97-2003 工作薄" measuredWidth="170" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="274" x="283" y="25" text="排序号：" measuredWidth="53" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="277" x="80" y="52" measuredWidth="420" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="100" width="420" text="[收费通知]{delete} [24小时聘任制]{delete}" measuredWidth="420" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="276" x="399" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+      <widgets xsi:type="model:VLine" id="293" x="392" height="25" measuredWidth="6" measuredHeight="25"/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="278" x="80" y="188" width="420" height="25" text="（自动高度）" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="279" x="283" y="214" text="格式化：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="280" x="330" y="214" text="是" measuredWidth="32" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="281" x="365" y="214" text="否" measuredWidth="32" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="282" x="9" y="238" text="格式化参数：" measuredWidth="77" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="290" x="80" y="238" measuredWidth="420" measuredHeight="26">
+      <widgets xsi:type="model:TextField" id="291" width="420" text="[获取流程全局参数]{delete} [经济合同履约方和非履约方信息参数]{delete}" measuredWidth="420" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="292" x="399" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+      <widgets xsi:type="model:VLine" id="295" x="392" height="26" measuredWidth="6" measuredHeight="26"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="336" x="41" y="160" text="*附件：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="337" x="80" y="160" measuredWidth="420" measuredHeight="26">
+      <widgets xsi:type="model:TextField" id="338" width="420" text="201406/201406121133270977.xls" measuredWidth="420" measuredHeight="25" state="disabled">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="339" x="398" y="5" measuredWidth="16" measuredHeight="16" icon="delete (small)"/>
+      <widgets xsi:type="model:Icon" id="340" x="380" y="5" measuredWidth="16" measuredHeight="16" icon="download2 (small)"/>
+      <widgets xsi:type="model:Icon" id="341" x="361" y="5" measuredWidth="16" measuredHeight="16" icon="upload (small)"/>
+      <widgets xsi:type="model:VLine" id="342" x="353" height="26" measuredWidth="6" measuredHeight="26" foreground="#999999"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="156" x="528" y="560" measuredWidth="242" measuredHeight="169">
+    <widgets xsi:type="model:Window" id="157" y="24" width="242" height="145" text="输入模板预览参数" measuredWidth="242" measuredHeight="145"/>
+    <widgets xsi:type="model:HLine" id="158" y="127" width="242" measuredWidth="242" measuredHeight="6"/>
+    <widgets xsi:type="model:Label" id="172" x="6" width="51" text="预览：" measuredWidth="51" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="174" x="196" y="135" width="40" text="确认" measuredWidth="40" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="177" x="5" y="48" width="61" text="姓名：" measuredWidth="61" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="178" x="60" y="48" width="178" text="张三" measuredWidth="178" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="190" x="5" y="75" width="61" text="key2：" measuredWidth="61" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="191" x="60" y="75" width="178" text="XXXX" measuredWidth="178" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="387" x="5" y="102" width="61" text="key2：" measuredWidth="61" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="388" x="60" y="102" width="178" text="XXXX" measuredWidth="178" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="263" x="8" y="900" measuredWidth="473" measuredHeight="173">
+    <widgets xsi:type="model:Window" id="264" y="24" width="473" height="149" text="选择模板信息" measuredWidth="473" measuredHeight="149" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="265" y="83" width="473" measuredWidth="473" measuredHeight="6"/>
+    <widgets xsi:type="model:Table" id="267" y="85" width="473" text="(w:30). !,标题,编码,版本号,所属分类,类型,大小,允许格式化&#xA;1,XX模板,tpl1,1,平台/登录统计,Excel,1.2MB,是" measuredWidth="473" measuredHeight="50" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="268" text="选择模板：" measuredWidth="65" measuredHeight="25">
+      <font bold="true"/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="270" x="280" y="53" width="183" measuredWidth="183" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="273" x="426" y="140" width="40" text="确认" measuredWidth="40" measuredHeight="27">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="343" x="8" y="352" measuredWidth="505" measuredHeight="377">
+    <widgets xsi:type="model:Window" id="344" width="505" height="377" text="模板配置 - 表单（自定义文本类型）" measuredWidth="505" measuredHeight="377" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="345" x="1" y="336" width="504" measuredWidth="504" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="346" x="452" y="344" width="48" text="保存" measuredWidth="48" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="347" x="41" y="133" text="*标题：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="348" x="17" y="25" text="*模板格式：" measuredWidth="70" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="349" x="41" y="79" text="*编码：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="350" x="80" y="79" width="420" text="BC-CARMANRISK-DUEDATENEXTMONTH-SUBSCRIBEEVENT-CONFIG" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="351" x="124" y="312" text="创建：张三(2012-01-01 08:30)，最后修改：李四(2012-01-02 08:30)" measuredWidth="379" measuredHeight="25" textAlignment="Right" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="352" x="329" y="25" width="171" text="0001" measuredWidth="171" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" id="353" x="399" y="344" width="48" text="预览" measuredWidth="48" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="354" x="46" y="160" text="备注：" measuredWidth="41" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="355" x="17" y="52" text="*所属分类：" measuredWidth="70" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="356" x="41" y="106" text="*版本：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="357" x="80" y="106" width="420" text="1" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="358" x="45" y="186" text="状态：" measuredWidth="41" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="359" x="80" y="186" text="正常" measuredWidth="44" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="360" x="126" y="186" text="禁用" measuredWidth="44" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="361" x="80" y="133" width="420" text="司机人意险下月到期名单事件配置" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" id="362" x="80" y="25" width="170" text="自定义文本" measuredWidth="170" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="363" x="283" y="25" text="排序号：" measuredWidth="53" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="364" x="80" y="52" measuredWidth="420" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="365" width="420" text="[司机人意险附件]{delete} " measuredWidth="420" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="366" x="399" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+      <widgets xsi:type="model:VLine" id="367" x="392" height="25" measuredWidth="6" measuredHeight="25"/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="368" x="80" y="160" width="420" height="25" text="（自动高度）" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="369" x="283" y="186" text="格式化：" measuredWidth="53" measuredHeight="25" textAlignment="Right">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="370" x="330" y="186" text="是" measuredWidth="32" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="371" x="365" y="186" text="否" measuredWidth="32" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="372" x="9" y="210" text="格式化参数：" measuredWidth="77" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="373" x="80" y="210" measuredWidth="420" measuredHeight="26">
+      <widgets xsi:type="model:TextField" id="374" width="420" text="[获取流程全局参数]{delete} [经济合同履约方和非履约方信息参数]{delete}" measuredWidth="420" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="375" x="399" y="5" measuredWidth="16" measuredHeight="16" icon="add (small)"/>
+      <widgets xsi:type="model:VLine" id="376" x="392" height="26" measuredWidth="6" measuredHeight="26"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="384" x="21" y="237" text="模板内容：" measuredWidth="65" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="385" x="80" y="237" width="420" height="76" text="（自动高度，最小高度为5行）" measuredWidth="420" measuredHeight="76">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="386" x="478" y="242" measuredWidth="16" measuredHeight="16" icon="download2 (small)"/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" id="389" x="440" y="640" width="89" height="57" measuredWidth="89" measuredHeight="57" annotation="true" foreground="#666666" left="false" right="true" direction="bottom"/>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
