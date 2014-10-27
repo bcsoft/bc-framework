@@ -1,7 +1,7 @@
 /**
  * 插入模板管理、模板分类的关联表
  */
--- DROP TABLE bc_template_template_category;
+DROP TABLE bc_template_template_category;
 
 create table bc_template_template_category(
 	cid integer not null,

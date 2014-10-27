@@ -17,7 +17,7 @@ insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL
 -------------------------------------------| 模板配置 |----------------------------------------------------
 -- 插入资源：模板配置隶属模板管理
 insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS)
-	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '80340', '模板配置', '/bc/templates/list', 'i0309'
+	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, m.id, '80340', '模板配置', '/bc/templates/paging', 'i0309'
 	from BC_IDENTITY_RESOURCE m 
 	where m.name='模板管理' -- 隶属
 	and not exists (select 0 from BC_IDENTITY_RESOURCE where NAME='模板配置');
@@ -27,6 +27,18 @@ insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID)
 	select r.id,m.id 
 	from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m 
 	where r.CODE='BC_TEMPLATE' 
+	and m.NAME='模板配置'
+	and not exists (select 0 from BC_IDENTITY_ROLE_RESOURCE rm where rm.RID=r.id and rm.SID=m.id);
+-- 插入模板配置查阅角色
+insert into BC_IDENTITY_ROLE (ID,STATUS_,INNER_,TYPE_,ORDER_,CODE,NAME) 
+	select NEXTVAL('CORE_SEQUENCE'), 0, false,  0,'0006', 'BC_TEMPLATE_READ','模板配置查阅'
+	from BC_DUAL 
+	where not exists (select 0 from BC_IDENTITY_ROLE where CODE='BC_TEMPLATE_READ');
+-- 插入模板配置查阅角色包含模板格式资源
+insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
+	select r.id,m.id 
+	from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m 
+	where r.CODE='BC_TEMPLATE_READ' 
 	and m.NAME='模板配置'
 	and not exists (select 0 from BC_IDENTITY_ROLE_RESOURCE rm where rm.RID=r.id and rm.SID=m.id);
 -- 插入模板超级管理员角色包含模板配置资源

@@ -1,5 +1,22 @@
 package cn.bc.template.web.struts2;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
 import cn.bc.BCConstants;
 import cn.bc.category.service.CategoryService;
 import cn.bc.category.web.struts2.CategoryViewAction;
@@ -10,19 +27,16 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.DateUtils;
+import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
-import cn.bc.option.domain.OptionItem;
 import cn.bc.template.service.TemplateService;
-import cn.bc.template.service.TemplateTypeService;
 import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.formater.CalendarFormater;
-import cn.bc.web.formater.FileSizeFormater;
+import cn.bc.web.formater.Icon;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.TreeViewAction;
-import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.HiddenColumn4MapKey;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -30,24 +44,11 @@ import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
-import cn.bc.web.ui.html.toolbar.ToolbarMenuButton;
 import cn.bc.web.ui.html.tree.Tree;
 import cn.bc.web.ui.html.tree.TreeNode;
 import cn.bc.web.ui.json.Json;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import com.sun.star.uno.Exception;
-
-import java.util.*;
 
 /**
  * 模板视图Action
@@ -67,6 +68,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 	public String code;
+	public long cid;
+	public String category;
 	private static Long ROOTID;
 	/** 当前树节点ID */
 	private Long pid;
@@ -105,16 +108,26 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select t.id,t.uid_,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
+		// 模板所属分类临时表
+		sql.append("with tc_json(tid, c) as (");
+		sql.append(" select t.id, row_to_json(row(string_agg(cast(c.id as text), ','), string_agg(c.name_, ',')))");
+		sql.append(" from bc_category c");
+		sql.append(" inner join bc_template_template_category tc on tc.cid = c.id");
+		sql.append(" inner join bc_template t on t.id = tc.tid");
+		sql.append(" group by t.id)");
+
+		sql.append(" !!select t.id,t.uid_,t.order_ as orderNo,t.code,a.name as type,t.desc_,t.path,t.subject");
 		sql.append(",au.actor_name as uname,t.file_date,am.actor_name as mname");
 		sql.append(",t.modified_date,t.inner_ as inner,t.status_ as status,t.version_ as version");
-		sql.append(",(select string_agg(name_, ',') from bc_category where id in");
-		sql.append(" (select bc.cid from bc_template_template_category bc where bc.tid = t.id)) as category");
+		sql.append(" ,j.c->>'f1' as cid, j.c->>'f2' as category");// 模板所属分类
+		sql.append(",(select template_get_acl_by_id_actorid(t.id, '"
+				+ this.getSystemContext().getUser().getCode() + "') as acl)");// 模板ACL
 		sql.append(",a.code as typeCode,t.size_ as size,t.formatted,t.content");
-		sql.append(" from bc_template t");
+		sql.append(" !!from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
 		sql.append(" inner join bc_identity_actor_history au on au.id=t.author_id ");
 		sql.append(" left join bc_identity_actor_history am on am.id=t.modifier_id");
+		sql.append(" left join tc_json j on j.tid = t.id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -140,7 +153,9 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				map.put("inner", rs[i++]);
 				map.put("status", rs[i++]);
 				map.put("version", rs[i++]);
+				map.put("cid", rs[i++]);
 				map.put("category", rs[i++]);
+				map.put("acl", rs[i++]);
 				map.put("typeCode", rs[i++]);
 				map.put("size", rs[i++]);
 				map.put("formatted", rs[i++]);
@@ -167,15 +182,50 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				.setValueFormater(new KeyValueFormater(this.getStatuses())));
 		columns.add(new TextColumn4MapKey("t.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
+		// 所属分类
 		columns.add(new TextColumn4MapKey("category", "category",
-				getText("template.category"), 100).setSortable(true)
-				.setUseTitleFromLabel(true));
+				getText("template.category"), 100)
+				.setValueFormater(new AbstractFormater<Object>() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public String format(Object context, Object value) {
+						Map<String, Object> map = (Map<String, Object>) context;
+						return !isReadonly() || !isManageACL(map) ? (String) map
+								.get("category")
+								: buildColumnIcon(createIcon())
+										+ (String) map.get("category");
+					}
+
+					@Override
+					public String getExportText(Object context, Object value) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return (String) map.get("category");
+					}
+				}).setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "type",
 				getText("template.format"), 140).setSortable(true)
 				.setUseTitleFromLabel(true));
+		// 标题
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject")).setSortable(true)
-				.setUseTitleFromLabel(true));
+				getText("template.tfsubject"))
+				.setValueFormater(new AbstractFormater<Object>() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public String format(Object context, Object value) {
+						Map<String, Object> map = (Map<String, Object>) context;
+						return !isReadonly() || !isManageACL(map) ? (String) map
+								.get("subject") : buildColumnIcon(delIcon())
+								+ (String) map.get("subject");
+					}
+
+					@Override
+					public String getExportText(Object context, Object value) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return (String) map.get("subject");
+					}
+				}).setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.code", "code",
 				getText("template.code"), 160).setSortable(true)
 				.setUseTitleFromLabel(true));
@@ -202,6 +252,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				}).setUseTitleFromLabel(true));
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		columns.add(new HiddenColumn4MapKey("uid", "uid"));
+		columns.add(new HiddenColumn4MapKey("cid", "cid"));
+		columns.add(new HiddenColumn4MapKey("acl", "acl"));
 		columns.add(new HiddenColumn4MapKey("isContent", "isContent"));
 		return columns;
 	}
@@ -215,6 +267,61 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				getText("template.status.disabled"));
 		statuses.put("", getText("template.status.all"));
 		return statuses;
+	}
+
+	/**
+	 * 判断ACL权限
+	 * 
+	 * @param m
+	 *            查询返回的map
+	 * @return
+	 */
+	private boolean isManageACL(Map<String, Object> m) {
+		String acl = (String) m.get("acl");
+		return !(acl == null || "".equals(acl) || "01".equals(acl));
+	}
+
+	/**
+	 * 构建视图列的图标
+	 * 
+	 * @param icons
+	 * @return
+	 */
+	private String buildColumnIcon(Icon... icons) {
+		// 返回自定义图标
+		String icon = "";
+		for (Icon i : icons)
+			icon += i.wrap();
+
+		return icon;
+	}
+
+	/**
+	 * 新建图标
+	 * 
+	 * @return
+	 */
+	private Icon createIcon() {
+		// TODO 定义回调函数，
+		Icon icon = new Icon();
+		icon.setClazz("ui-icon ui-icon-plusthick");
+		icon.setTitle("新建");// 鼠标提示信息
+		icon.setClick("bc.templateList.createByIcon");// 点击函数
+		return icon;
+	}
+
+	/**
+	 * 删除图标
+	 * 
+	 * @return
+	 */
+	private Icon delIcon() {
+		// TODO 定义回调函数
+		Icon icon = new Icon();
+		icon.setClazz("ui-icon ui-icon-close");
+		icon.setTitle("删除该模板");// 鼠标提示信息
+		icon.setClick("bc.templateList.deleteByIcon");// 点击函数
+		return icon;
 	}
 
 	@Override
@@ -255,18 +362,17 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 						.setText(getText("label.delete"))
 						.setClick("bc.templateList.deleteone"));
 			}
-
-			// 下载
-			tb.addButton(new ToolbarButton()
-					.setIcon("ui-icon-arrowthickstop-1-s")
-					.setText(getText("label.download"))
-					.setClick("bc.templateList.download"));
-
-			// 在线查看
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
-					.setText(getText("template.preview.inline"))
-					.setClick("bc.templateList.inline"));
 		}
+
+		// 下载
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthickstop-1-s")
+				.setText(getText("label.download"))
+				.setClick("bc.templateList.download"));
+
+		// 在线查看
+		tb.addButton(new ToolbarButton().setIcon("ui-icon-lightbulb")
+				.setText(getText("template.preview.inline"))
+				.setClick("bc.templateList.inline"));
 
 		// 状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
@@ -325,6 +431,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		}
 		// 父节点条件
 		json.put("pid", this.pid);
+		// 是否只读
+		json.put("isReadonly", this.isReadonly());
 	}
 
 	@Override
@@ -355,7 +463,10 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		// 构建树的子节点
 		Collection<TreeNode> treeNodes;
 		try {
-			treeData = this.categoryService.findSubNodesData(this.pid);
+			treeData = this.categoryService.findSubNodesData(this.pid, this
+					.getSystemContext().getUser().getCode(), !this
+					.getSystemContext()
+					.hasAnyRole(getText("key.role.bc.admin")));
 			treeNodes = this.buildTreeNodes(treeData);
 			for (TreeNode treeNode : treeNodes)
 				tree.addSubNode(treeNode);
@@ -394,7 +505,9 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		JSONObject json = new JSONObject();
 		try {
 			List<Map<String, Object>> data = this.categoryService
-					.findSubNodesData(this.pid);
+					.findSubNodesData(this.pid, this.getSystemContext()
+							.getUser().getCode(), !this.getSystemContext()
+							.hasAnyRole(getText("key.role.bc.admin")));
 			json.put("success", true);
 			json.put("subNodesCount", data.size());
 			json.put("html", TreeNode.buildSubNodes(this.buildTreeNodes(data)));
@@ -417,4 +530,19 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		jscss.add("/bc/template/list.js");
 		jscss.add("/bc/template/templateView.js");
 	}
+
+	@Override
+	protected String getGridDblRowMethod() {
+		return "bc.templateList.doubleClick";
+	}
+
+	/**
+	 * 获取系统上下文
+	 * 
+	 * @return
+	 */
+	private SystemContext getSystemContext() {
+		return (SystemContext) this.getContext();
+	}
+
 }

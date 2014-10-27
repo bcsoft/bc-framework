@@ -55,6 +55,12 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	//模板参数
 	public String templateParamIds;
 	public Set<TemplateParam> templateParams;
+	// 所属分类ID
+	public String cids;
+	// 所属分类名称
+	public String cNames;
+	// 是否只读（前台参数）
+	public String isReadonly;
 
 	@Autowired
 	public void setTemplateTypeService(TemplateTypeService templateTypeService) {
@@ -79,6 +85,8 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 
 	@Override
 	public boolean isReadonly() {
+		if (this.isReadonly != null && !"".equals(this.isReadonly))
+			return Boolean.parseBoolean(this.isReadonly);
 		// 模板管理员或系统管理员
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
@@ -108,6 +116,28 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 		return super.buildFormPageOption(editable).setWidth(545)
 				.setMinHeight(200).setMinWidth(300).setMaxHeight(800)
 				.setHelp("mubanguanli");
+	}
+
+	@Override
+	protected Template createEntity() {
+		Template t = super.createEntity();
+		// 给Template添加所属分类属性
+		if (cids != null && !"".equals(cids) && cNames != null && !"".equals(cNames)) {
+			String[] cidArr = cids.split(",");
+			String[] cNameArr = cNames.split(",");
+			if (cidArr.length != cNameArr.length)
+				return t;
+
+			Set<Category> categorys = new HashSet<Category>();
+			t.setCategorys(categorys);
+			for (int i = 0; i < cNameArr.length; i++) {
+				Category c = new Category();
+				c.setId(Long.parseLong(cidArr[i]));
+				c.setName_(cNameArr[i]);
+				categorys.add(c);
+			}
+		}
+		return t;
 	}
 
 	@Override
