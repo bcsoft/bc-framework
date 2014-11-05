@@ -105,11 +105,6 @@
 
 		<!-- for test -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>
 			<version>${project.version}</version>
@@ -118,7 +113,6 @@
 	</dependencies>
 	
 	<properties>
-		<struts2.version>2.2.1</struts2.version>
 		<maven.test.skip>false</maven.test.skip>
 	</properties>
 </project>

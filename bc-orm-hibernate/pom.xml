@@ -60,11 +60,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	<properties>
 		<hibernate.show_sql>false</hibernate.show_sql>

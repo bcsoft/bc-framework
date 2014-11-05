@@ -18,8 +18,8 @@ public class ExampleActionTest extends StrutsSpringTestCase {
 	private CrudService<Example> crudService;
 
 	@Override
-	protected String getContextLocations() {
-		return "classpath:spring-test.xml";
+	protected String[] getContextLocations() {
+		return new String[]{"classpath:spring-test.xml"};
 	}
 
 	@SuppressWarnings("unchecked")
