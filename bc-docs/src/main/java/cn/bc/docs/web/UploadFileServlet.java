@@ -3,26 +3,13 @@
  */
 package cn.bc.docs.web;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import cn.bc.Context;
+import cn.bc.core.exception.CoreException;
+import cn.bc.docs.domain.Attach;
+import cn.bc.docs.domain.AttachHistory;
+import cn.bc.docs.service.AttachService;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.web.util.WebUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -31,13 +18,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.bc.Context;
-import cn.bc.core.exception.CoreException;
-import cn.bc.docs.domain.Attach;
-import cn.bc.docs.domain.AttachHistory;
-import cn.bc.docs.service.AttachService;
-import cn.bc.identity.web.SystemContext;
-import cn.bc.web.util.WebUtils;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 文件上传的跨浏览器实现.

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.bc.test.mock;
 
@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
+import cn.bc.core.Entity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,13 +21,11 @@ import cn.bc.core.service.CrudService;
 
 /**
  * CrudService的内存模拟实现
- * 
+ *
+ * @param <T> 对象类型
  * @author dragon
- * 
- * @param <T>
- *            对象类型
  */
-public class CrudServiceMock<T extends RichEntity<Long>> implements CrudService<T>,
+public class CrudServiceMock<T extends Entity<Long>> implements CrudService<T>,
 		SetEntityClass<T> {
 	private static Log logger = LogFactory.getLog(CrudServiceMock.class);
 	private CrudDao<T> crudDao;
@@ -63,13 +62,13 @@ public class CrudServiceMock<T extends RichEntity<Long>> implements CrudService<
 		return entityClass;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void setEntityClass(Class<T> clazz) {
 		this.entityClass = clazz;
 		if (logger.isDebugEnabled())
 			logger.debug("setEntityClass:" + clazz);
-		if(this.crudDao instanceof SetEntityClass)
-		((SetEntityClass)this.crudDao).setEntityClass(clazz);
+		if (this.crudDao instanceof SetEntityClass)
+			((SetEntityClass) this.crudDao).setEntityClass(clazz);
 	}
 
 	public CrudDao<T> getCrudDao() {

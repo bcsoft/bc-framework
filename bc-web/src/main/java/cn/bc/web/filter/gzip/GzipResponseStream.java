@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -300,5 +301,15 @@ public class GzipResponseStream extends ServletOutputStream {
         response.addHeader("Vary", "Accept-Encoding");
         return response.containsHeader("Content-Encoding");
     }
+
+	@Override
+	public void setWriteListener(WriteListener writeListener) {
+		throw new UnsupportedOperationException("not implement");
+	}
+
+	@Override
+	public boolean isReady() {
+		return false;
+	}
 }
 

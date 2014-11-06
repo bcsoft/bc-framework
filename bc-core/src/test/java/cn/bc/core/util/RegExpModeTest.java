@@ -3,14 +3,13 @@
  */
 package cn.bc.core.util;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 /**
  * 正则表达式量词测试：贪婪量词、惰性量词、支配量词

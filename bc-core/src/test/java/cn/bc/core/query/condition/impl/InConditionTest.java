@@ -3,12 +3,11 @@
  */
 package cn.bc.core.query.condition.impl;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 
 /**

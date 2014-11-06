@@ -3,12 +3,11 @@
  */
 package cn.bc.core.util;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 /**
  * 使用正则表达式切割sql语句的测试

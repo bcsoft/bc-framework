@@ -24,6 +24,7 @@
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-core</artifactId>
@@ -46,11 +47,6 @@
 		</dependency>
 
 		<!-- for test -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>

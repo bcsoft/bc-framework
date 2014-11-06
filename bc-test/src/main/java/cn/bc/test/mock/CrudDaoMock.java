@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.bc.core.Entity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +21,7 @@ import cn.bc.core.dao.CrudDao;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.Query;
 
-public class CrudDaoMock<T extends RichEntity<Long>> implements CrudDao<T>, SetEntityClass<T> {
+public class CrudDaoMock<T extends Entity<Long>> implements CrudDao<T>, SetEntityClass<T> {
 	protected final Log logger = LogFactory.getLog(getClass());
 	private long id = 0;
 	private Map<String, T> entities = new HashMap<String, T>();

@@ -1,18 +1,14 @@
 package cn.bc.core.gson;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
-import cn.bc.core.gson.NaturalDeserializer;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class NaturalDeserializerTest {
 	@Test
