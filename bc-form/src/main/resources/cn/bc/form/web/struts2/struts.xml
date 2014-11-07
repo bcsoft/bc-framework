@@ -13,6 +13,7 @@
 	
 	<!-- 自定义表单 -->
 	<package name="customForm" extends="bc-default" namespace="/bc/customForm">
+		<action name="render" class="customFormEntityAction" method="render" />
 		<action name="create" class="customFormEntityAction" method="create" />
 		<action name="edit" class="customFormEntityAction" method="edit" />
 		<action name="open" class="customFormEntityAction" method="open" />

@@ -23,6 +23,13 @@
 	</util:map>
 	<bean id="photoService" class="cn.bc.photo.service.PhotoServiceImpl" p:photoExecutors-ref="photoExecutors"/>
 
+	<bean id="ipCameraDao" class="cn.bc.photo.dao.hibernate.jpa.IpCameraDaoImpl"
+		  p:entityClass="cn.bc.photo.domain.IpCamera"
+		  p:entityManagerFactory-ref="entityManagerFactory" />
+	<bean id="ipCameraService" class="cn.bc.photo.service.IpCameraServiceImpl"
+		  p:entityClass="cn.bc.photo.domain.IpCamera"
+		  p:ipCameraDao-ref="ipCameraDao"/>
+
 	<!-- 标准附件 -->
 	<bean name="photoExecutor4Attach" class="cn.bc.photo.service.PhotoExecutor4Attach"/>
 	<!-- 流程附件 -->
