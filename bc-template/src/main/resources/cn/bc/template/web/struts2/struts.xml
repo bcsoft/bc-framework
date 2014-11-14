@@ -5,13 +5,21 @@
 <struts>
 	<package name="templates" extends="bc-default" namespace="/bc/templates">
 		<!-- 视图：分页 -->
-		<action name="paging" class="templatesAction" method="paging" />
+		<action name="paging" class="templatesAction" method="paging">
+			<param name="rootNode">TPL</param>
+		</action>
 		<!-- 视图：分页数据 -->
-		<action name="data" class="templatesAction" method="data" />
+		<action name="data" class="templatesAction" method="data">
+			<param name="rootNode">TPL</param>
+		</action>
 		<!-- 视图：非分页数据 -->
-		<action name="list" class="templatesAction" method="list" />
-		<!-- 点击展开子节点图标的Action -->
-		<action name="loadTreeData" class="templatesAction" method="loadTreeData" />
+		<action name="list" class="templatesAction" method="list">
+			<param name="rootNode">TPL</param>
+		</action>
+		<!-- 视图：展开树形菜单的子节点 -->
+		<action name="loadTreeData" class="templatesAction" method="loadTreeData">
+			<param name="rootNode">TPL</param>
+		</action>
 	</package>
 
 	<package name="template" extends="bc-default" namespace="/bc/template">

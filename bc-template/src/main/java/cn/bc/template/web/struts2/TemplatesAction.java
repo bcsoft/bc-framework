@@ -8,8 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +25,10 @@ import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.core.util.DateUtils;
-import cn.bc.core.util.StringUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.service.TemplateService;
 import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.BooleanFormater;
@@ -45,10 +43,6 @@ import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.html.tree.Tree;
-import cn.bc.web.ui.html.tree.TreeNode;
-import cn.bc.web.ui.json.Json;
-
-import com.sun.star.uno.Exception;
 
 /**
  * 模板视图Action
@@ -61,8 +55,6 @@ import com.sun.star.uno.Exception;
 @Controller
 public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	private final static Log logger = LogFactory
-			.getLog(CategoryViewAction.class);
 	private TemplateService templateService;
 	private CategoryService categoryService;
 
@@ -70,12 +62,21 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	public String code;
 	public long cid;
 	public String category;
-	private static Long ROOTID;
-	/** 当前树节点ID */
+	/** 根节点全编码 */
+	public String rootNode;
+	/** 当前节点所属分类ID */
 	private Long pid;
 
 	public void setPid(Long pid) {
 		this.pid = pid;
+	}
+
+	public Long getPid() {
+		if (this.pid == null) {
+			return this.categoryService.getIdByFullCode(this.rootNode);
+		} else {
+			return this.pid;
+		}
 	}
 
 	@Autowired
@@ -302,7 +303,6 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	 * @return
 	 */
 	private Icon createIcon() {
-		// TODO 定义回调函数，
 		Icon icon = new Icon();
 		icon.setClazz("ui-icon ui-icon-plusthick");
 		icon.setTitle("新建");// 鼠标提示信息
@@ -316,7 +316,6 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	 * @return
 	 */
 	private Icon delIcon() {
-		// TODO 定义回调函数
 		Icon icon = new Icon();
 		icon.setClazz("ui-icon ui-icon-close");
 		icon.setTitle("删除该模板");// 鼠标提示信息
@@ -402,9 +401,10 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 
 		// 所属分类
 		Condition categoryCondition = null;
-		if (pid != null && pid.longValue() != ROOTID.longValue()) {
+		if (this.getPid() != this.categoryService.getIdByFullCode(rootNode)
+				.longValue()) {
 			List<Long> pids = this.templateService
-					.findTemplateIdsByCategoryIdForList(pid);
+					.findTemplateIdsByCategoryIdForList(this.getPid());
 			if (pids != null && pids.size() > 0)
 				categoryCondition = new InCondition("t.id", pids);
 			else {
@@ -442,58 +442,11 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 
 	@Override
 	protected Tree getHtmlPageTree() {
-		// 设置Root节点
-		ROOTID = this.categoryService.getIdByFullCode("TPL");
-		this.pid = ROOTID;
-		Tree tree = new Tree(ROOTID.toString(), "全部");
-		tree.setShowRoot(true);
-
-		// 点击展开子节点图标的URL
-		tree.setUrl(this.getHtmlPageNamespace() + "/loadTreeData");
-
-		// 树的参数配置
-		Json cfg = new Json();
-		// 点击节点的回调函数
-		cfg.put("clickNode", "bc.template.view.clickTreeNode");
-		tree.setCfg(cfg);
-
-		// 树的数据
-		List<Map<String, Object>> treeData;
-
-		// 构建树的子节点
-		Collection<TreeNode> treeNodes;
-		try {
-			treeData = this.categoryService.findSubNodesData(this.pid, this
-					.getSystemContext().getUser().getCode(), !this
-					.getSystemContext()
-					.hasAnyRole(getText("key.role.bc.admin")));
-			treeNodes = this.buildTreeNodes(treeData);
-			for (TreeNode treeNode : treeNodes)
-				tree.addSubNode(treeNode);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		return tree;
-	}
-
-	/**
-	 * 构建树节点
-	 * 
-	 * @param treeData
-	 *            树节点数据
-	 * @return
-	 */
-	private Collection<TreeNode> buildTreeNodes(
-			List<Map<String, Object>> treeData) throws Exception {
-		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
-		for (Map<String, Object> data : treeData) {
-			TreeNode node = null;
-			node = new TreeNode(String.valueOf(data.get("id")),
-					String.valueOf(data.get("name")));
-			treeNodes.add(node);
-		}
-		return treeNodes;
+		return CategoryViewAction.getCategoryTree(this.getPid(),
+				this.isReadonly(), SystemContextHolder.get().getUser()
+						.getCode(), this.getHtmlPageNamespace()
+						+ "/loadTreeData", "bc.template.view.clickTreeNode",
+				this.categoryService);
 	}
 
 	/**
@@ -502,20 +455,21 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	 * @return
 	 */
 	public String loadTreeData() {
-		JSONObject json = new JSONObject();
-		try {
-			List<Map<String, Object>> data = this.categoryService
-					.findSubNodesData(this.pid, this.getSystemContext()
-							.getUser().getCode(), !this.getSystemContext()
-							.hasAnyRole(getText("key.role.bc.admin")));
-			json.put("success", true);
-			json.put("subNodesCount", data.size());
-			json.put("html", TreeNode.buildSubNodes(this.buildTreeNodes(data)));
-		} catch (java.lang.Exception e) {
-			logger.error(e.getMessage());
-		}
+		// JSONObject json = new JSONObject();
+		// try {
+		// List<Map<String, Object>> data = this.categoryService
+		// .findSubNodesData(this.pid, this.getSystemContext()
+		// .getUser().getCode(), !this.getSystemContext()
+		// .hasAnyRole(getText("key.role.bc.admin")));
+		// json.put("success", true);
+		// json.put("subNodesCount", data.size());
+		// json.put("html", TreeNode.buildSubNodes(this.buildTreeNodes(data)));
+		// } catch (java.lang.Exception e) {
+		// logger.error(e.getMessage());
+		// }
 
-		this.json = json.toString();
+		this.json = this.categoryService.getLoadTreeData(this.isReadonly(),
+				this.getPid());
 		return "json";
 	}
 
