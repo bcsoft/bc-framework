@@ -10,14 +10,14 @@ import cn.bc.identity.domain.Resource;
 
 /**
  * 参与者Service接口
- * 
+ *
  * @author dragon
- * 
+ *
  */
 public interface ActorService extends CrudService<Actor> {
 	/**
 	 * 根据编码获取，如用户的登录名
-	 * 
+	 *
 	 * @param actorCode
 	 *            actor的编码
 	 * @return
@@ -26,7 +26,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取从属方的单一上级
-	 * 
+	 *
 	 * @param followerId
 	 *            从属方id
 	 * @param masterTypes
@@ -37,7 +37,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取从属方的所有上级
-	 * 
+	 *
 	 * @param followerId
 	 *            从属方id
 	 * @param masterTypes
@@ -48,7 +48,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取从属方指定关联关系的主控方
-	 * 
+	 *
 	 * @param followerId
 	 *            从属方id
 	 * @param relationTypes
@@ -62,7 +62,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属指定actor的所有actor
-	 * 
+	 *
 	 * @param masterId
 	 *            主控方id
 	 * @param relationTypes
@@ -76,7 +76,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属指定actor的所有子actor
-	 * 
+	 *
 	 * @param masterId
 	 *            主控方id
 	 * @param relationTypes
@@ -93,16 +93,30 @@ public interface ActorService extends CrudService<Actor> {
 			Integer[] relationTypes, Integer[] followerTypes,
 			Integer[] followerStatuses);
 
+    /**
+     * 获取隶属指定的多个actor的所有子actor
+     *
+     * @param masterIds
+     *            主控方id
+     * @param relationTypes
+     *            关联的类型，对应ActorRelation的type属性
+     * @param followerTypes
+     *            从属方的类型，对应Actor的type属性
+     * @return
+     */
+	List<Actor> findFollwerWithIds(Long[] masterIds,
+            Integer[] relationTypes, Integer[] followerTypes);
+
 	/**
 	 * 获取顶层单位信息
-	 * 
+	 *
 	 * @return
 	 */
 	List<Actor> findTopUnit();
 
 	/**
 	 * 获取所有单位信息
-	 * 
+	 *
 	 * @param statues
 	 *            状态列表
 	 * @return
@@ -111,7 +125,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属关系中的所有直接下级组织信息
-	 * 
+	 *
 	 * @param higherOrganizationId
 	 *            上级组织的id
 	 * @param lowerOrganizationTypes
@@ -123,7 +137,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属关系中的所有直接上级组织信息
-	 * 
+	 *
 	 * @param lowerOrganizationId
 	 *            下级组织的id
 	 * @param higherOrganizationTypes
@@ -135,19 +149,19 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取直接隶属于组织的人员信息
-	 * 
+	 *
 	 * @param organizationId
 	 *            上级组织的id
 	 * @return
 	 */
 	List<Actor> findUser(Long organizationId);
-	
+
 	/**
 	 * 获取直接隶属于组织的人员信息
-	 * 
+	 *
 	 * @param organizationId
 	 *            上级组织的id
-	 * @param status           
+	 * @param status
 	 *      	隶属于组织的人员的状态
 	 * @return
 	 */
@@ -155,7 +169,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属关系中的所有上级组织信息，包括上级的上级,按祖先的级别排好序
-	 * 
+	 *
 	 * @param lowerOrganizationId
 	 *            下级组织的id
 	 * @param ancestorOrganizationTypes
@@ -167,7 +181,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属关系中的所有下级组织信息，包括下级的下级
-	 * 
+	 *
 	 * @param higherOrganizationId
 	 *            上级组织的id
 	 * @param descendantOrganizationTypes
@@ -179,7 +193,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取隶属于组织的人员信息，包括组织的所有后代组织下的人员
-	 * 
+	 *
 	 * @param organizationId
 	 *            上级组织的id
 	 * @param descendantOrganizationTypes
@@ -188,14 +202,14 @@ public interface ActorService extends CrudService<Actor> {
 	 */
 	List<Actor> findDescendantUser(Long organizationId,
 			Integer... descendantOrganizationTypes);
-	
+
 	/**
 	 * 获取隶属于组织的人员信息，包括组织的所有后代组织下的人员
-	 * 
+	 *
 	 * @param organizationId
 	 *            上级组织的id
-	 * @param status           
-	 *      	隶属于组织的人员的状态           
+	 * @param status
+	 *      	隶属于组织的人员的状态
 	 * @param descendantOrganizationTypes
 	 *            下级组织的类型，对应Actor的type属性，默认为单位+部门+岗位
 	 * @return
@@ -205,7 +219,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取actor可以使用的模块列表
-	 * 
+	 *
 	 * @param actorId
 	 * @return
 	 */
@@ -227,7 +241,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取指定类型和状态的Actor
-	 * 
+	 *
 	 * @param actorTypes
 	 *            类型列表
 	 * @param actorStatues
@@ -238,7 +252,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取指定类型和状态的Actor的ActorHistory
-	 * 
+	 *
 	 * @param actorTypes
 	 *            类型列表
 	 * @param actorStatues
@@ -249,7 +263,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取指定类型和状态的Actor信息
-	 * 
+	 *
 	 * @param actorTypes
 	 *            类型列表
 	 * @param actorStatues
@@ -269,7 +283,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取指定类型和状态的ActorHistory信息
-	 * 
+	 *
 	 * @param actorTypes
 	 *            类型列表
 	 * @param actorStatues
@@ -290,7 +304,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 根据用户帐号获取用户的姓名
-	 * 
+	 *
 	 * @param userCode
 	 *            用户帐号
 	 * @return
@@ -299,7 +313,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 根据用户帐号获取用户的全名称
-	 * 
+	 *
 	 * @param userCode
 	 *            用户帐号
 	 * @return
@@ -308,7 +322,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取指定名称的Actor信息
-	 * 
+	 *
 	 * @param actorName
 	 *            Actor的名称
 	 * @param actorTypes
@@ -322,7 +336,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 判断code是否已被占用
-	 * 
+	 *
 	 * @param id
 	 *            要使用此编码的Actor的ID
 	 * @param code
@@ -335,7 +349,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取岗位内所有用户的可用电子邮件地址列表
-	 * 
+	 *
 	 * @param groupCodes
 	 * @return
 	 */
@@ -343,7 +357,7 @@ public interface ActorService extends CrudService<Actor> {
 
 	/**
 	 * 获取用户的可用电子邮件地址列表
-	 * 
+	 *
 	 * @param userCodes
 	 * @return
 	 */
