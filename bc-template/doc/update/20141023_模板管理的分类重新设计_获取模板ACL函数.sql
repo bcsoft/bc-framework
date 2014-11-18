@@ -1,6 +1,6 @@
 -- Function: template_get_acl_by_id_actorid(integer, text)
 
-DROP FUNCTION template_get_acl_by_id_actorid(integer, text);
+DROP FUNCTION if EXISTS template_get_acl_by_id_actorid(integer, text);
 
 CREATE OR REPLACE FUNCTION template_get_acl_by_id_actorid(id integer, actor_code text)
 	returns setof text as
@@ -22,4 +22,4 @@ $BODY$
 		select bit_and(acl::bit(2))::text from tc_acl;
 	end;
 $BODY$
-	LANGUAGE plpgsql VOLATILE
+	LANGUAGE plpgsql VOLATILE;

@@ -96,6 +96,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		// 配置权限：模板管理员
 		return !context.hasAnyRole(getText("key.role.bc.template"),
 				getText("key.role.bc.admin"));
+
+
 	}
 
 	@Override
@@ -479,10 +481,9 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected void addHtmlPageJsCss(Collection<String> jscss, String contextPath) {
-		contextPath = this.getModuleContextPath();
-		jscss.add("/bc/template/list.js");
-		jscss.add("/bc/template/templateView.js");
+	protected String getHtmlPageJs() {
+		return this.getContextPath() + "/bc/template/list.js,"
+				+ this.getContextPath() + "/bc/template/templateView.js";
 	}
 
 	@Override
