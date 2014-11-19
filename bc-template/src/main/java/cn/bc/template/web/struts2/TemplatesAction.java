@@ -258,6 +258,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 		columns.add(new HiddenColumn4MapKey("cid", "cid"));
 		columns.add(new HiddenColumn4MapKey("acl", "acl"));
 		columns.add(new HiddenColumn4MapKey("isContent", "isContent"));
+		columns.add(new HiddenColumn4MapKey("path", "path"));
 		return columns;
 	}
 
