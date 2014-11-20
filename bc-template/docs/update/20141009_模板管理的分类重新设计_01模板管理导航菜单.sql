@@ -22,6 +22,10 @@ insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL
 	where m.name='模板管理' -- 隶属
 	and not exists (select 0 from BC_IDENTITY_RESOURCE where NAME='模板配置');
 
+-- 模板管理角色更新为：模板配置管理角色
+update BC_IDENTITY_ROLE
+	set NAME = '模板配置管理'
+	where code = 'BC_TEMPLATE';
 -- 插入模板角色包含模板格式资源
 insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
 	select r.id,m.id 
@@ -137,3 +141,55 @@ alter table bc_template_type alter column modified_date set not null;
 -- 模板参数绑定非空约束
 alter table bc_template_param alter column modifier_id set not null;
 alter table bc_template_param alter column modified_date set not null; 
+
+
+-------------------------------------------| 插入岗位 |----------------------------------------------------
+-- 插入岗位：模板管理超级管理岗
+insert into BC_IDENTITY_ACTOR (ID,UID_,STATUS_,INNER_,TYPE_,CODE, NAME, ORDER_,PCODE,PNAME)
+	select NEXTVAL('CORE_SEQUENCE'),'group.init.'||NEXTVAL('CORE_SEQUENCE'), 0, false, 3
+	, 'TemplateAdminManageGroup','模板管理超级管理岗', '9930','[1]baochengzongbu','宝城'
+	from BC_DUAL
+	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateAdminManageGroup');
+insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
+    select 0,am.id,af.id
+    from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af
+    where am.CODE='baochengzongbu'
+	and af.CODE = 'TemplateAdminManageGroup'
+	and not exists (
+		select 0 from BC_IDENTITY_ACTOR_RELATION r
+		where r.TYPE_=0 and r.MASTER_ID=am.id and r.FOLLOWER_ID=af.id
+	);
+
+-- 插入岗位：模板管理普通管理岗
+insert into BC_IDENTITY_ACTOR (ID,UID_,STATUS_,INNER_,TYPE_,CODE, NAME, ORDER_,PCODE,PNAME)
+	select NEXTVAL('CORE_SEQUENCE'),'group.init.'||NEXTVAL('CORE_SEQUENCE'), 0, false, 3
+	, 'TemplateCommonManageGroup','模板管理普通管理岗', '9931','[1]baochengzongbu','宝城'
+	from BC_DUAL
+	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateCommonManageGroup');
+insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
+    select 0,am.id,af.id
+    from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af
+    where am.CODE='baochengzongbu'
+	and af.CODE = 'TemplateCommonManageGroup'
+	and not exists (
+		select 0 from BC_IDENTITY_ACTOR_RELATION r
+		where r.TYPE_=0 and r.MASTER_ID=am.id and r.FOLLOWER_ID=af.id
+	);
+-------------------------------------------| 岗位-角色配置 |----------------------------------------------------
+-- 模板管理超级管理岗包含角色：模板配置管理，模板分类管理，模板格式，模板参数
+insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
+	select a.id, r.id
+	from BC_IDENTITY_ACTOR a,BC_IDENTITY_ROLE r
+	where a.CODE in ('TemplateAdminManageGroup') and r.CODE in (
+		'BC_TEMPLATE', 'BC_TPL_MANAGE', 'BC_TEMPLATE_FORMAT', 'BC_TEMPLATE_PARAM'
+	)
+	and not exists (select 0 from BC_IDENTITY_ROLE_ACTOR ra where ra.AID=a.id and ra.RID=r.id);
+
+-- 模板管理普通管理岗包含角色：模板配置查阅，模板分类查阅
+insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
+	select a.id, r.id
+	from BC_IDENTITY_ACTOR a,BC_IDENTITY_ROLE r
+	where a.CODE in ('TemplateCommonManageGroup') and r.CODE in (
+		'BC_TEMPLATE_READ', 'BC_TPL_READ'
+	)
+	and not exists (select 0 from BC_IDENTITY_ROLE_ACTOR ra where ra.AID=a.id and ra.RID=r.id);
