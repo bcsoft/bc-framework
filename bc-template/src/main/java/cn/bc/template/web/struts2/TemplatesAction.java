@@ -101,7 +101,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	}
 
 	@Override
-	protected OrderCondition getGridOrderCondition() {
+	protected OrderCondition getGridDefaultOrderCondition() {
 		return new OrderCondition("t.order_");
 	}
 
