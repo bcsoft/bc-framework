@@ -144,33 +144,33 @@ alter table bc_template_param alter column modified_date set not null;
 
 
 -------------------------------------------| 插入岗位 |----------------------------------------------------
--- 插入岗位：模板管理超级管理岗
+-- 插入岗位：模板管理岗
 insert into BC_IDENTITY_ACTOR (ID,UID_,STATUS_,INNER_,TYPE_,CODE, NAME, ORDER_,PCODE,PNAME)
 	select NEXTVAL('CORE_SEQUENCE'),'group.init.'||NEXTVAL('CORE_SEQUENCE'), 0, false, 3
-	, 'TemplateAdminManageGroup','模板管理超级管理岗', '9930','[1]baochengzongbu','宝城'
+	, 'TemplateManageGroup','模板管理岗', '9930','[1]baochengzongbu','宝城'
 	from BC_DUAL
-	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateAdminManageGroup');
+	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateManageGroup');
 insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
     select 0,am.id,af.id
     from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af
     where am.CODE='baochengzongbu'
-	and af.CODE = 'TemplateAdminManageGroup'
+	and af.CODE = 'TemplateManageGroup'
 	and not exists (
 		select 0 from BC_IDENTITY_ACTOR_RELATION r
 		where r.TYPE_=0 and r.MASTER_ID=am.id and r.FOLLOWER_ID=af.id
 	);
 
--- 插入岗位：模板管理普通管理岗
+-- 插入岗位：模板查阅岗
 insert into BC_IDENTITY_ACTOR (ID,UID_,STATUS_,INNER_,TYPE_,CODE, NAME, ORDER_,PCODE,PNAME)
 	select NEXTVAL('CORE_SEQUENCE'),'group.init.'||NEXTVAL('CORE_SEQUENCE'), 0, false, 3
-	, 'TemplateCommonManageGroup','模板管理普通管理岗', '9931','[1]baochengzongbu','宝城'
+	, 'TemplateReadGroup','模板查阅岗', '9931','[1]baochengzongbu','宝城'
 	from BC_DUAL
-	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateCommonManageGroup');
+	where not exists (select 0 from BC_IDENTITY_ACTOR where CODE='TemplateReadGroup');
 insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
     select 0,am.id,af.id
     from BC_IDENTITY_ACTOR am,BC_IDENTITY_ACTOR af
     where am.CODE='baochengzongbu'
-	and af.CODE = 'TemplateCommonManageGroup'
+	and af.CODE = 'TemplateReadGroup'
 	and not exists (
 		select 0 from BC_IDENTITY_ACTOR_RELATION r
 		where r.TYPE_=0 and r.MASTER_ID=am.id and r.FOLLOWER_ID=af.id
@@ -180,7 +180,7 @@ insert into BC_IDENTITY_ACTOR_RELATION (TYPE_,MASTER_ID,FOLLOWER_ID)
 insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
 	select a.id, r.id
 	from BC_IDENTITY_ACTOR a,BC_IDENTITY_ROLE r
-	where a.CODE in ('TemplateAdminManageGroup') and r.CODE in (
+	where a.CODE in ('TemplateManageGroup') and r.CODE in (
 		'BC_TEMPLATE', 'BC_TPL_MANAGE', 'BC_TEMPLATE_FORMAT', 'BC_TEMPLATE_PARAM'
 	)
 	and not exists (select 0 from BC_IDENTITY_ROLE_ACTOR ra where ra.AID=a.id and ra.RID=r.id);
@@ -189,7 +189,7 @@ insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
 insert into BC_IDENTITY_ROLE_ACTOR (AID,RID)
 	select a.id, r.id
 	from BC_IDENTITY_ACTOR a,BC_IDENTITY_ROLE r
-	where a.CODE in ('TemplateCommonManageGroup') and r.CODE in (
+	where a.CODE in ('TemplateReadGroup') and r.CODE in (
 		'BC_TEMPLATE_READ', 'BC_TPL_READ'
 	)
 	and not exists (select 0 from BC_IDENTITY_ROLE_ACTOR ra where ra.AID=a.id and ra.RID=r.id);
