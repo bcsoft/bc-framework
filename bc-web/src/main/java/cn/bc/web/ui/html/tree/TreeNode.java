@@ -25,6 +25,7 @@ public class TreeNode extends Td {
 	private boolean borderRadius; // 是否使用圆角边框
 	private TreeNode parent; // 所隶属的上级节点，为空代表是根节点
 	private List<TreeNode> subNodes;// 子节点
+	private boolean focus; //是否获得焦点
 
 	/**
 	 * @param nodeId
@@ -112,6 +113,15 @@ public class TreeNode extends Td {
 
 	public TreeNode setOpen(boolean open) {
 		this.open = open;
+		return this;
+	}
+
+	public boolean isFocus() {
+		return focus;
+	}
+
+	public TreeNode setFocus(boolean focus) {
+		this.focus = focus;
 		return this;
 	}
 
@@ -218,7 +228,7 @@ public class TreeNode extends Td {
 	protected void renderItem(StringBuffer main) {
 		Text item = new Text("<div data-id=\""
 				+ getNodeId()
-				+ "\" class=\"item ui-widget-content ui-state-normal"
+				+ (this.focus ? "\" class=\"item ui-widget-content ui-state-focus" : "\" class=\"item ui-widget-content ui-state-normal")
 				+ (isBorderRadius() ? " ui-corner-all" : "")
 				+ "\">"
 				+ "<span class=\"nav-icon ui-icon"
