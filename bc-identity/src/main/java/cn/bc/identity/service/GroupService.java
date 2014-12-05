@@ -20,12 +20,12 @@ public interface GroupService extends ActorService {
 	Actor save(Actor group, Long[] belongIds, Long[] userIds);
 
 	/**
-	 * 通过岗位名称获得岗位集合
+	 * 在所属部门下，通过岗位名称获得岗位集合
 	 *
-	 * @param belongIds 岗位隶属的上级Id
-	 * @param names 岗位名称
-	 * @param relationTypes  关联的类型，对应ActorRelation的type属性
-	 * @param followerTypes 岗位的类型，对应Actor的type属性
+	 * @param belongIds 岗位隶属的上级Id，可以为空
+	 * @param names 岗位名称，不为空
+	 * @param relationTypes  关联的类型，对应ActorRelation的type属性，belongIds为空时为空
+	 * @param followerTypes 岗位的类型，对应Actor的type属性，不为空
 	 * @return
 	 */
 	List<Actor> findByNames(Long[] belongIds, String[] names,
@@ -34,10 +34,10 @@ public interface GroupService extends ActorService {
 	/**
 	 * 通过岗位名称获得岗位集合
 	 *
-	 * @param belongIds 岗位隶属的上级Id
-	 * @param codes 岗位编码
-	 * @param relationTypes  关联的类型，对应ActorRelation的type属性
-	 * @param followerTypes 岗位的类型，对应Actor的type属性
+	 * @param belongIds 岗位隶属的上级Id，可以为空
+	 * @param codes 岗位编码，不为空
+	 * @param relationTypes  关联的类型，对应ActorRelation的type属性，belongIds为空时为空
+	 * @param followerTypes 岗位的类型，对应Actor的type属性，不为空
 	 * @return
 	 */
 	List<Actor> findByCodes(Long[] belongIds, String[] codes,
