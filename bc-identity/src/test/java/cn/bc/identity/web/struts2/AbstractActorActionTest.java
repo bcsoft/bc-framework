@@ -9,8 +9,8 @@ import cn.bc.web.struts2.AbstractEntityActionTest;
 
 public abstract class AbstractActorActionTest extends AbstractEntityActionTest<Long, Actor> {
 	@Override
-	protected String getContextLocations() {
-		return "classpath:spring-test4struts.xml";
+	protected String[] getContextLocations() {
+		return new String[] {"classpath:spring-test4struts.xml"};
 	}
 
 	protected Class<Actor> getEntityClass() {

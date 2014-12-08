@@ -3,17 +3,14 @@
  */
 package cn.bc.core.util;
 
+import cn.bc.core.gson.GsonPerson;
+import com.google.gson.JsonParseException;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
-import cn.bc.core.gson.GsonPerson;
-
-import com.google.gson.JsonParseException;
 
 /**
  * 

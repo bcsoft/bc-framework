@@ -1,12 +1,8 @@
 package cn.bc.orm.hibernate.jpa;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.Assert;
-
+import cn.bc.orm.hibernate.AbstractSpringManageDaoTest;
+import cn.bc.orm.hibernate.Domain;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,8 +11,10 @@ import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.orm.hibernate.AbstractSpringManageDaoTest;
-import cn.bc.orm.hibernate.Domain;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

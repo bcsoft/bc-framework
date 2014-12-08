@@ -3,12 +3,11 @@
  */
 package cn.bc.core.util;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
 
 /**
  * 
@@ -80,6 +79,6 @@ public class StringUtilsTest {
 		html.append("<a>");
 		html.append("	<span>test</span>\r\n");
 		html.append("</a><br/>");
-		System.out.println(StringUtils.compressHtml(html.toString()));
+		//System.out.println(StringUtils.compressHtml(html.toString()));
 	}
 }

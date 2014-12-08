@@ -17,8 +17,8 @@ public class EntityActionTest extends StrutsSpringTestCase {
 	private CrudService<Example> crudService;
 
 	@Override
-	protected String getContextLocations() {
-		return "classpath:spring-test.xml";
+	protected String[] getContextLocations() {
+		return new String[]{"classpath:spring-test.xml"};
 	}
 
 	@SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ public class EntityActionTest extends StrutsSpringTestCase {
 	public void testExecute() throws Exception {
 		//在调用getActionProxy方法前设置请求的参数
 		request.setParameter("id", "1");
-		
+
 		// 测试ActionProxy的配置
 		ActionProxy proxy = getActionProxy("/entity");
 		assertNotNull(proxy);
@@ -71,7 +71,7 @@ public class EntityActionTest extends StrutsSpringTestCase {
 				results.containsKey("delete"));
 		assertTrue("No 'view' result defined for action 'entity'",
 				results.containsKey("view"));
-		
+
 		//测试配置文件的位置
 		assertTrue(
 				"Not config from '...classes/struts.xml'",
@@ -80,7 +80,7 @@ public class EntityActionTest extends StrutsSpringTestCase {
 
 		// 测试action中的service是否通过spring注入了
 		@SuppressWarnings("unchecked")
-		EntityAction<Long,Example> action = (EntityAction<Long,Example>) proxy
+		EntityAction<Long, Example> action = (EntityAction<Long, Example>) proxy
 				.getAction();
 		assertNotNull(action);
 		assertNotNull(action.getCrudService());
@@ -88,7 +88,7 @@ public class EntityActionTest extends StrutsSpringTestCase {
 
 		//action未执行前参数值应未设置
 		assertNull(action.getId());
-		
+
 		//运行action并检验返回值
 		String result = proxy.execute();
 		assertEquals(Action.SUCCESS, result);
@@ -96,17 +96,17 @@ public class EntityActionTest extends StrutsSpringTestCase {
 		//action执行后检验参数的值
 		assertEquals("1", action.getId().toString());
 	}
-	
+
 	// 测试Action的运行
 	public void testOpen() throws Exception {
 		//保存一个对象
 		Example e = new Example();
 		this.crudService.save(e);
 		Long id = e.getId();
-		
+
 		//在调用getActionProxy方法前设置请求的参数
 		request.setParameter("id", id.toString());
-		
+
 		// 测试ActionProxy的配置
 		// ActionProxy proxy = getActionProxy("/example");
 		ActionProxy proxy = getActionProxy("/entity!open.action");
@@ -115,10 +115,10 @@ public class EntityActionTest extends StrutsSpringTestCase {
 
 		// 测试action中的service是否通过spring注入了
 		@SuppressWarnings("unchecked")
-		EntityAction<Long,Example> action = (EntityAction<Long,Example>) proxy.getAction();
+		EntityAction<Long, Example> action = (EntityAction<Long, Example>) proxy.getAction();
 		assertNotNull(action);
 		assertNotNull(action.getCrudService());
-		
+
 		//运行action并检验返回值
 		String result = proxy.execute();
 		assertEquals("formr", result);
@@ -126,6 +126,6 @@ public class EntityActionTest extends StrutsSpringTestCase {
 		//action执行后检验参数的值
 		assertEquals(id, action.getId());
 		assertNotNull(action.getE());
-		assertEquals(id,action.getE().getId());
+		assertEquals(id, action.getE().getId());
 	}
 }

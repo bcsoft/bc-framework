@@ -47,12 +47,25 @@
 				<filtering>true</filtering>
 			</testResource>
 		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<!-- 3.2(2014-10-09), 3.1(2013-04-03), 3.0(2011-11-16), // 3.x编译有bug
+						2.5.1(2012-05-31), 2.3.2(2010-09-04)-->
+					<version>2.5.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -62,15 +75,34 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.4.3</version>
+					<version>2.7</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<webResources>
+							<resource>
+								<!-- this is relative to the pom.xml directory -->
+								<directory>src/main/webapp</directory>
+								<filtering>true</filtering>
+							</resource>
+						</webResources>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.8</version>
+					<version>2.17</version>
 					<configuration>
 						<includes>
 							<include>**/*Test.java</include>
@@ -121,7 +153,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.6</version>
+					<version>1.7</version>
 					<executions>
 						<execution>
 							<phase>package</phase>
@@ -151,7 +183,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.5.1</version>
 					<configuration>
 						<!--<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
 					</configuration>
@@ -160,7 +192,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.5</version>
+					<version>1.9.2</version>
 					<configuration>
 						<!--<goals>install</goals> -->
 						<connectionType>developerConnection</connectionType>
@@ -170,90 +202,115 @@
 		</pluginManagement>
 	</build>
 	<dependencies>
+		<!-- log -->
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf</groupId>
-			<artifactId>pinyin4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
-		<!-- for test -->
+		<!-- unit test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- jpa -->
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- default database-->
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>provided</scope>
 		</dependency>
+
+		<!-- servlet3.x, jsp -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- servlet2.x, jsp
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency> -->
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>ognl</groupId>
 				<artifactId>ognl</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.8</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
-				<version>1.1.1</version>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
-				<version>2.1</version>
+				<version>2.6</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
-				<version>1.8.0</version>
+				<version>1.9.2</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
-				<version>3.1</version>
+				<version>3.2.1</version>
 			</dependency>
+
+			<!-- slf4j：jcl-over-slf4j 用于桥接commons-logging 到 slf4j  -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.7.7</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
 				<version>1.7.7</version>
 			</dependency>
 			<dependency>
@@ -266,11 +323,7 @@
 				<artifactId>log4j-over-slf4j</artifactId>
 				<version>1.7.7</version>
 			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.14</version>
-			</dependency>
+
 			<!-- logback -->
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
@@ -292,19 +345,44 @@
 				<artifactId>logback-site</artifactId>
 				<version>1.1.2</version>
 			</dependency>
+
+			<!-- log4j-->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.7</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
-				<version>1.6.8</version>
+				<version>1.8.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
 				<version>${spring.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<!-- 从3.1开始，包含支持缓存Cache（ehcache）、JCA、JMX、邮件服务（Java Mail、COS Mail）、任务计划Scheduling（Timer、Quartz）方面的类 -->
+				<artifactId>spring-context-support</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
@@ -347,10 +425,11 @@
 				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			<!-- 最后版本为 3.2.11.RELEASE(2014-09-04) ,仅适用于 struts1 -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-struts</artifactId>
-				<version>${spring.version}</version>
+				<version>3.2.11.RELEASE</version>
 				<exclusions>
 					<exclusion>
 						<groupId>struts</groupId>
@@ -358,11 +437,6 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<!-- <dependency> -->
-			<!-- <groupId>org.springframework</groupId> -->
-			<!-- <artifactId>spring-webmvc-struts</artifactId> -->
-			<!-- <version>${spring.version}</version> -->
-			<!-- </dependency> -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
@@ -382,7 +456,7 @@
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.0-api</artifactId>
-				<version>1.0.0.Final</version>
+				<version>1.0.1.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -392,7 +466,7 @@
 			<dependency>
 				<groupId>javax.persistence</groupId>
 				<artifactId>persistence-api</artifactId>
-				<version>1.0</version>
+				<version>1.0.2</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -403,7 +477,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.8.1</version>
+				<version>4.11</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -443,7 +517,7 @@
 			<dependency>
 				<groupId>org.freemarker</groupId>
 				<artifactId>freemarker</artifactId>
-				<version>2.3.16</version>
+				<version>2.3.21</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.struts</groupId>
@@ -501,6 +575,21 @@
 				<version>${struts2.version}</version>
 			</dependency>
 
+			<!-- 3.1.0(2013-04-26), 3.0.1(2011-07-13) 3.x版与2.x版的artifactId不一样-->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>javax.servlet.jsp-api</artifactId>
+				<version>2.3.1</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- 2.5(2006-07-17), 2.4(2005-11-09) -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
@@ -516,7 +605,7 @@
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>jstl</artifactId>
-				<version>1.1.2</version>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>taglibs</groupId>
@@ -541,10 +630,11 @@
 				<version>2.3</version>
 				<classifier>jdk15</classifier>
 			</dependency>
+			<!-- 20140107, 20131018, 20090211, 20080701-->
 			<dependency>
 				<groupId>org.json</groupId>
 				<artifactId>json</artifactId>
-				<version>20080701</version>
+				<version>20140107</version>
 			</dependency>
 			<dependency>
 				<groupId>org.commontemplate</groupId>
@@ -572,11 +662,23 @@
 				<groupId>net.sf.jxls</groupId>
 				<artifactId>jxls-core</artifactId>
 				<version>1.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.jxls</groupId>
 				<artifactId>jxls-reader</artifactId>
 				<version>1.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.poi</groupId>
@@ -622,10 +724,18 @@
 
 			<!-- 数据库jdbc驱动 -->
 			<dependency>
+				<!-- 从9.2版开始转用此新的 groupId -->
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<!-- 9.3-1102-jdbc41, 9.3-1102-jdbc4, 9.2-1004-jdbc41, 9.2-1004-jdbc4 -->
+				<version>9.3-1102-jdbc41</version>
+			</dependency>
+			<dependency>
+				<!-- <=9.1版使用此旧的 groupId -->
 				<groupId>postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<!--<version>8.4-701.jdbc4</version> -->
-				<version>9.1-901.jdbc4</version>
+				<!-- 9.1-901-1.jdbc4, 9.1-901.jdbc4, 8.4-701.jdbc4 -->
+				<version>9.1-901-1.jdbc4</version>
 			</dependency>
 			<dependency>
 				<groupId>mysql</groupId>
@@ -676,6 +786,12 @@
 				<groupId>org.springframework.ws</groupId>
 				<artifactId>spring-ws-core</artifactId>
 				<version>${spring-ws.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.ws</groupId>
@@ -686,11 +802,23 @@
 				<groupId>org.springframework.ws</groupId>
 				<artifactId>spring-ws-support</artifactId>
 				<version>${spring-ws.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.ws</groupId>
 				<artifactId>spring-xml</artifactId>
 				<version>${spring-ws.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>net.sf</groupId>
@@ -700,7 +828,7 @@
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache-core</artifactId>
-				<version>2.4.6</version>
+				<version>2.6.9</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
@@ -741,11 +869,23 @@
 				<groupId>commons-httpclient</groupId>
 				<artifactId>commons-httpclient</artifactId>
 				<version>3.1</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>4.0.3</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- jacob -->
@@ -786,17 +926,23 @@
 				<groupId>com.google.zxing</groupId>
 				<artifactId>core</artifactId>
 				<version>2.2</version>
-		    </dependency>			
+		    </dependency>
 		    <dependency>
 			    <groupId>com.google.zxing</groupId>
 			    <artifactId>javase</artifactId>
 			    <version>2.2</version>
 			</dependency>
+
+			<dependency>
+				<groupId>p6spy</groupId>
+				<artifactId>p6spy</artifactId>
+				<version>2.1.2</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<properties>
-		<jdk.version>1.5</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<!--Jetty的各种版本：
 			8.1.0.v20120127,
 			8.0.4.v20111024,8.0.3.v20111011,8.0.2.v20111006,8.0.1.v20110908,8.0.0.v20110901,
@@ -812,19 +958,28 @@
 		<jetty.path>/</jetty.path>
 		<maven.test.skip>false</maven.test.skip>
 
-		<spring.version>3.0.5.RELEASE</spring.version>
-		<hibernate.version>3.6.6.Final</hibernate.version>
+		<!-- 4.1.1.RELEASE(2014-10-01), 4.0.7.RELEASE(2014-09-04),
+			3.2.11.RELEASE(2014-09-04), 3.1.4.RELEASE(2013-01-23),
+			3.0.7.RELEASE(2011-12-24), 3.0.5.RELEASE(2010-10-21) -->
+		<spring.version>3.2.11.RELEASE</spring.version>
+		<!-- 4.3.7.Final(2014-10-30), 4.2.16.Final(2014-10-30),
+			4.1.12.Final(2013-04-25), 4.0.1.Final(2012-01-12),
+			3.6.10.Final(2012-02-09), 3.6.6.Final(2011-07-21) -->
+		<hibernate.version>3.6.10.Final</hibernate.version>
+		<!-- 1.3.10(2008-12-08), 1.3.5(2006-08-17) -->
 		<struts.version>1.3.10</struts.version>
-		<struts2.version>2.2.1</struts2.version>
-		<spring-ws.version>2.0.2.RELEASE</spring-ws.version>
+		<!-- 2.3.16.3(2014-05-02), 2.2.3.1(2011-09-06), 2.2.1(2010-07-11) -->
+		<struts2.version>2.3.16.3</struts2.version>
+		<!-- 2.2.0.RELEASE(2014-05-22), 2.1.4.RELEASE(2013-10-01), 2.0.5.RELEASE(2012-05), 2.0.2.RELEASE(2011-05) -->
+		<spring-ws.version>2.2.0.RELEASE</spring-ws.version>
 
 		<!-- 数据库连接配置 -->
-		<db.type>mysql</db.type>
-		<db.name>bcdemo</db.name>
+		<db.type>postgresql</db.type>
+		<db.name>bcsystem</db.name>
 		<db.ip>localhost</db.ip>
-		<db.port>3306</db.port>
-		<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
-		<db.url><![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
+		<db.port>5432</db.port>
+		<db.driverClassName>org.postgresql.Driver</db.driverClassName>
+		<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
 		<db.username>${db.name}</db.username>
 		<db.password>${db.name}</db.password>
 		<jndi.name>${db.name}</jndi.name>
@@ -847,6 +1002,9 @@
 				<db.type>postgresql</db.type>
 				<db.name>bcsystem</db.name>
 				<db.port>5432</db.port>
+				<db.username>${db.name}</db.username>
+				<db.password>${db.name}</db.password>
+				<jndi.name>${db.name}</jndi.name>
 				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
 				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
 				<db.sequence>hibernate_sequence</db.sequence>
@@ -854,8 +1012,9 @@
 			</properties>
 			<dependencies>
 				<dependency>
-					<groupId>postgresql</groupId>
+					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>

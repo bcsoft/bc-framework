@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Assert;
+import org.springframework.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -51,8 +51,8 @@ public class SubscribeActorDaoImpl extends HibernateCrudJpaDao<SubscribeActor> i
 	}
 
 	public void delete(Long aid, Long pid) {
-		Assert.assertNotNull(aid);
-		Assert.assertNotNull(pid);
+		org.springframework.util.Assert.notNull(aid);
+		Assert.notNull(pid);
 		
 		String sql="delete from bc_subscribe_actor where"
 				+" aid="+aid+" and pid="+pid;
@@ -65,8 +65,8 @@ public class SubscribeActorDaoImpl extends HibernateCrudJpaDao<SubscribeActor> i
 	}
 
 	public SubscribeActor find4aidpid(Long aid, Long pid) {
-		Assert.assertNotNull(aid);
-		Assert.assertNotNull(pid);
+		Assert.notNull(aid);
+		Assert.notNull(pid);
 		AndCondition ac = new AndCondition();
 		ac.add(new EqualsCondition("actor.id", aid));
 		ac.add(new EqualsCondition("subscribe.id", pid));
@@ -84,8 +84,8 @@ public class SubscribeActorDaoImpl extends HibernateCrudJpaDao<SubscribeActor> i
 	}
 
 	public void save(Long aid, Long pid, int type) {
-		Assert.assertNotNull(aid);
-		Assert.assertNotNull(pid);
+		Assert.notNull(aid);
+		Assert.notNull(pid);
 		
 		String sql="insert into bc_subscribe_actor (aid,pid,type_,file_date) values("
 				+aid+","+pid+","+type+",now())";

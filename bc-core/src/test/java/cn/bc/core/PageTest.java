@@ -1,12 +1,11 @@
 package cn.bc.core;
 
-import java.util.ArrayList;
-
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.core.Page;
+import java.util.ArrayList;
+
+;
 
 public class PageTest {
 	@Test

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- http://logback.qos.ch/manual/layouts.html -->
+
+	<!-- 定义属性，后续使用 ${var} 来取属性的值}-->
+	<property name="LOG_HOME" value="/"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] %class.%method:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="logFile" class="ch.qos.logback.core.FileAppender">
+		<file>logback.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%-4relative [%thread] %-5level %class - %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<appender name="htmlFile" class="ch.qos.logback.core.FileAppender">
+		<file>logback.html</file>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="ch.qos.logback.classic.html.HTMLLayout">
+				<pattern>%relative%thread%mdc%level%logger%msg</pattern>
+			</layout>
+		</encoder>
+	</appender>
+
+	<appender name="xmlFile" class="ch.qos.logback.core.FileAppender">
+		<file>logback.xml</file>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="ch.qos.logback.classic.log4j.XMLLayout">
+				<locationInfo>true</locationInfo>
+			</layout>
+		</encoder>
+	</appender>
+
+	<!-- 按照每天生成日志文件 http://blog.csdn.net/wangjunjun2008/article/details/18732019 -->
+	<appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>logback.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!--日志文件保留天数-->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出,%d:日期;%thread:线程名;%-5level：级别,从左显示5个字符宽度;%msg:日志消息;%n:换行符-->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}.%method:%line - %msg%n</pattern>
+		</encoder>
+		<!--日志文件最大的大小-->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<!--日志异步到数据库 http://logback.qos.ch/manual/appenders.html-->
+	<appender name="dataBase" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+			<dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+				<driverClass>${db.driverClassName}</driverClass>
+				<jdbcUrl>${db.url}</jdbcUrl>
+				<user>${db.username}</user>
+				<password>${db.password}</password>
+			</dataSource>
+			<!--<dataSource>POSTGRES_DIALECT</dataSource>-->
+		</connectionSource>
+		<!--<sqlDialect class="ch.qos.logback.core.db.dialect.PostgreSQLDialect" />-->
+		<!--<insertHeaders>true</insertHeaders>-->
+	</appender>
+	<appender name="async2dataBase" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="dataBase" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+
+	<logger name="cn.bc" level="WARN"/>
+	<logger name="cn.bc.core.Sl4jTest" level="DEBUG"/>
+
+	<root level="WARN">
+		<appender-ref ref="console"/>
+		<appender-ref ref="async2dataBase"/>
+		<appender-ref ref="rollingFile"/>
+	</root>
+</configuration>
