@@ -196,7 +196,7 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>2.1</version>
-					<reportSets>
+					<!-- <reportSets>
 						<reportSet>
 							<reports>
 								<report>dependency-updates-report</report>
@@ -204,7 +204,7 @@
 								<report>property-updates-report</report>
 							</reports>
 						</reportSet>
-					</reportSets>
+					</reportSets> -->
 				</plugin>
 				<!-- 版本管理工具 -->
 				<plugin>
