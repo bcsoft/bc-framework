@@ -65,16 +65,16 @@ public class GroupServiceImpl extends ActorServiceImpl implements GroupService {
 	}
 
 	public List<Actor> findByNames(Long[] belongIds, String[] names,
-			   Integer[] relationTypes, Integer[] followerTypes) {
+			   Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
 		return this.getActorDao().findFollowersWithMastersIdOrNames(
 				belongIds, names, null,
-				relationTypes, followerTypes, null);
+				relationTypes, followerTypes, followerStatuses);
 	}
 
 	public List<Actor> findByCodes(Long[] belongIds, String[] codes,
-			   Integer[] relationTypes, Integer[] followerTypes) {
+			   Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
 		return this.getActorDao().findFollowersWithMastersIdOrNames(
 				belongIds, null, codes,
-				relationTypes, followerTypes, null);
+				relationTypes, followerTypes, followerStatuses);
 	}
 }
