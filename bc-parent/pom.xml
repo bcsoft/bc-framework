@@ -1062,7 +1062,7 @@
 				<dependency>
 					<groupId>mysql</groupId>
 					<artifactId>mysql-connector-java</artifactId>
-					<scope>compile</scope>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>
