@@ -38,6 +38,7 @@ public class RenderFormAction extends ActionSupport {
 	public Long pid;		// 表单业务ID
 	public Float ver;		// 版本
 	public String subject;	// 表单标题名称
+	public String pname;	// 表单业务名称，如车辆证件是车牌号，司机证件是司机名称
 	public String tpl;		// 模板编码
 	public String role;		// 对表单进行编辑需要的角色，使用"|"连接多个角色编码代表或关系，使用"+"连接多个角色编码代表和关系
 	/**
@@ -107,6 +108,7 @@ public class RenderFormAction extends ActionSupport {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("form", form);// 使用form关键字记录表单的全局参数值
 		args.put("readonly", readonly);// 标记是否表单只读
+		args.put("pname", pname);
 
 		//-- 现有的表单字段参数
 		Map<String, Object> fields = this.convertFieldsValue(form.getFields());
