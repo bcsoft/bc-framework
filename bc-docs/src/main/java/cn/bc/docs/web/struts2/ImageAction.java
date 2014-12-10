@@ -3,26 +3,6 @@
  */
 package cn.bc.docs.web.struts2;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.SessionAware;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.exception.CoreException;
@@ -38,8 +18,25 @@ import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
 import cn.bc.web.util.WebUtils;
-
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.SessionAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 图片剪切处理Action
@@ -50,7 +47,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ImageAction extends ActionSupport implements SessionAware {
-	private static Log logger = LogFactory.getLog(ImageAction.class);
+	private static Logger logger = LoggerFactory.getLogger(ImageAction.class);
 	private static final long serialVersionUID = 1L;
 	private AttachService attachService;
 	private UserService userService;
@@ -204,9 +201,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		// 构建文件要保存到的目录
 		File _fileDir = new File(newImgPath);
 		if (!_fileDir.exists()) {
-			if (logger.isFatalEnabled()) {
-				logger.fatal("mkdir=" + newImgPath);
-			}
+			logger.warn("mkdir={}", newImgPath);
 			_fileDir.mkdirs();
 		}
 
@@ -379,7 +374,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			i++;
 			
 			if(this.fileType==null||"".equals(this.fileType)){
-				if(!(attach.getPath().lastIndexOf(".png")!=-1)){
+				if(attach.getPath().lastIndexOf(".png") == -1){
 					fileType="jpg";
 				}
 			}else{
@@ -427,9 +422,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		// 构建文件要保存到的目录
 		File _fileDir = new File(newImgPath);
 		if (!_fileDir.exists()) {
-			if (logger.isFatalEnabled()) {
-				logger.fatal("mkdir=" + newImgPath);
-			}
+			logger.warn("mkdir={}", newImgPath);
 			_fileDir.mkdirs();
 		}
 		
