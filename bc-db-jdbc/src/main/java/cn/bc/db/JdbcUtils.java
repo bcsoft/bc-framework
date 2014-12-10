@@ -15,13 +15,12 @@
  */
 package cn.bc.db;
 
+import cn.bc.db.jdbc.RowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import cn.bc.db.jdbc.RowMapper;
 
 /**
  * JDBC的辅助函数库
@@ -30,7 +29,7 @@ import cn.bc.db.jdbc.RowMapper;
  * @since 1.0.0
  */
 public class JdbcUtils {
-	static Log logger = LogFactory.getLog(JdbcUtils.class);
+	static Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
 
 	/** 数据库类型：mysql */
 	public static final String DB_MYSQL = "mysql";
@@ -79,7 +78,7 @@ public class JdbcUtils {
 
 	public void setDbtype(String dbtype) {
 		JdbcUtils.dbtype = dbtype;
-		logger.fatal("dbtype=" + dbtype);
+		logger.warn("dbtype={}", dbtype);
 	}
 
 	/**

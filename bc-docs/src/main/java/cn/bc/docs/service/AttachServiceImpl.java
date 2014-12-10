@@ -1,19 +1,5 @@
 package cn.bc.docs.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -24,6 +10,18 @@ import cn.bc.docs.dao.AttachHistoryDao;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.domain.AttachHistory;
 import cn.bc.identity.web.SystemContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 附件service接口的实现
@@ -33,7 +31,7 @@ import cn.bc.identity.web.SystemContextHolder;
  */
 public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 		AttachService {
-	private static Log logger = LogFactory.getLog(AttachServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(AttachServiceImpl.class);
 	private AttachHistoryDao attachHistoryDao;
 
 	@Autowired
@@ -80,17 +78,16 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			String toPtype, String toPuid, boolean keepAuthorInfo) {
 		// 附件的真正存储路径
 		String dataPath = Attach.DATA_REAL_PATH;
-		;
 
 		Calendar now = Calendar.getInstance();
 		if (logger.isDebugEnabled()) {
 			logger.debug("复制附件:");
-			logger.debug("dataPath=" + dataPath);
-			logger.debug("fromPtype=" + fromPtype);
-			logger.debug("fromPuid=" + fromPuid);
-			logger.debug("toPtype=" + toPtype);
-			logger.debug("toPuid=" + toPuid);
-			logger.debug("keepAuthorInfo=" + keepAuthorInfo);
+			logger.debug("dataPath={}", dataPath);
+			logger.debug("fromPtype={}", fromPtype);
+			logger.debug("fromPuid={}", fromPuid);
+			logger.debug("toPtype={}", toPtype);
+			logger.debug("toPuid={}", toPuid);
+			logger.debug("keepAuthorInfo={}", keepAuthorInfo);
 		}
 
 		// 查找要复制的附件
@@ -127,8 +124,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			// ==拷贝具体的附件
 			String sourcePath = dataPath + "/" + old.getPath();
 			// 新文件存储的相对路径（年月），避免超出目录内文件数的限制
-			String subFolder = new SimpleDateFormat("yyyyMM").format(now
-					.getTime());
+			String subFolder = new SimpleDateFormat("yyyyMM").format(now.getTime());
 			// 要保存的新物理文件
 			String realFileDir;// 所保存文件所在的目录的绝对路径名
 			String relativeFilePath;// 所保存文件的相对路径名
@@ -145,9 +141,7 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			// 构建新文件要保存到的目录
 			File _fileDir = new File(realFileDir);
 			if (!_fileDir.exists()) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("mkdir=" + realFileDir);
-				}
+				logger.debug("mkdir={}", realFileDir);
 				_fileDir.mkdirs();
 			}
 
@@ -156,16 +150,17 @@ public class AttachServiceImpl extends DefaultCrudService<Attach> implements
 			// 检测源文件是否存在
 			File source = new File(sourcePath);
 			if (!source.exists()) {
-				logger.error("源文件已不存在，忽略复制：sourcePath=" + sourcePath);
+				logger.warn("源文件已不存在，忽略复制：sourcePath={}", sourcePath);
 				break;
 			}
 
 			// 复制源文件
 			try {
-				FileUtils.copyFile(source, new File(realFilePath));
-			} catch (IOException e) {
-				logger.error("复制源文件失败，忽略不作处理：srcFile=" + sourcePath
-						+ ",destFile=" + realFilePath);
+				FileCopyUtils.copy(source, new File(realFilePath));
+				//FileUtils.copyFile(source, new File(realFilePath));
+			} catch (Exception e) {
+				logger.warn("复制源文件失败，忽略不作处理：srcFile={}, destFile={}, error={}", sourcePath, realFilePath, e.getMessage());
+				logger.info(e.getMessage(), e);
 			}
 		}
 
