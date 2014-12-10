@@ -258,14 +258,16 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			filepath = WebUtils.rootPath + empty;
 			this.filename = "empty";
 		} else {
-			this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(), attach.getSubject());
+			this.filename = attach.getSubject();
+			if(attach.getFormat() != null && !this.filename.toLowerCase().endsWith(attach.getFormat().toLowerCase())){
+				this.filename += "." + attach.getFormat();// 如果标题中没有扩展名就附加format为扩展名
+			}
+			this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(), this.filename);
 			extension = attach.getFormat();
 			if (attach.isAppPath())
-				filepath = WebUtils.rootPath + "/"
-						+ getText("app.data.subPath") + "/" + attach.getPath();
+				filepath = WebUtils.rootPath + "/" + getText("app.data.subPath") + "/" + attach.getPath();
 			else
-				filepath = getText("app.data.realPath") + "/"
-						+ attach.getPath();
+				filepath = getText("app.data.realPath") + "/" + attach.getPath();
 		}
 
 		downloadAttach(filepath, extension);
