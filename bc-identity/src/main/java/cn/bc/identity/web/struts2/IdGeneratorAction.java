@@ -19,9 +19,17 @@ public class IdGeneratorAction extends ActionSupport {
 	public String type;
 	public String pattern;
 	public String json;
+	public String html;
 
 	@Autowired
 	private IdGeneratorService idGeneratorService;
+
+	// 获取下一个ID
+	public String nextUid() throws Exception {
+		Assert.hasText(this.type, "type couldn't be empty.");
+		html = idGeneratorService.next(this.type);
+		return "page";
+	}
 
 	// 获取月度流水号：yyyyMM-nnnn
 	public String nextSN4Month() throws Exception {
