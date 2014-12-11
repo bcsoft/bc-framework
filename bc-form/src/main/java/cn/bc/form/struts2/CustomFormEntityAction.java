@@ -1,22 +1,5 @@
 package cn.bc.form.struts2;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import oracle.core.lmx.CoreException;
-
-import org.apache.struts2.interceptor.RequestAware;
-import org.apache.struts2.interceptor.SessionAware;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.exception.*;
@@ -327,11 +310,10 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 格式化模板 
-	 * @param form
 	 * @throws JSONException
 	 */
 	private void formatTpl() throws JSONException {
-		Form form = null;
+		Form form;
 		// 构建格式化模板参数
 		Map<String, Object> args = new HashMap<String, Object>();
 		if (isNew) { //表单为新建状态时
@@ -391,7 +373,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	/**
 	 * 新建时设置模板参数
 	 * 
-	 * @param args
+	 * @param args args
 	 */
 	private void setCreatedTplAgs(Map<String, Object> args) {
 		SystemContext context = (SystemContext) this.getContext();
@@ -411,8 +393,8 @@ public class CustomFormEntityAction extends ActionSupport implements
 	/**
 	 * 编辑时设置模板参数
 	 * 
-	 * @param args
-	 * @param form
+	 * @param args args
+	 * @param form form
 	 */
 	private void setEditedTplAgs(Map<String, Object> args, Form form) {
 		SystemContext context = (SystemContext) this.getContext();
@@ -445,7 +427,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 	/**
 	 * 新建编辑时设置表单信息
 	 * 
-	 * @param form
+	 * @param form form
 	 * @throws JSONException
 	 */
 	private String setEditedFormInfo(Form form) throws JSONException {
@@ -474,14 +456,11 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 新建时设置表单信息
-	 * 
-	 * @throws JSONException
 	 */
 	private String setCreatedFormInfo() {
 		SystemContext context = (SystemContext) this.getContext();
 		ActorHistory author = context.getUserHistory();
-		String fileDate = DateUtils.formatCalendar2Second(Calendar
-				.getInstance());
+		String fileDate = DateUtils.formatCalendar2Second(Calendar.getInstance());
 		String uid = this.idGeneratorService.next(Form.ATTACH_TYPE);
 
 		// 设置${from_info}参数对应的值
