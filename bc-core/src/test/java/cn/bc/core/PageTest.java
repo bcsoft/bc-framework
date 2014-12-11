@@ -46,4 +46,10 @@ public class PageTest {
 		Assert.assertEquals(2,page.getPageCount());
 		Assert.assertNotNull(page.getData());
 	}
+
+	@Test
+	public void t1() {
+		Assert.assertEquals("a,b,c", "a|b|c".replace("|", ","));
+		Assert.assertEquals(3, "a+b+c".split("\\+").length);
+	}
 }

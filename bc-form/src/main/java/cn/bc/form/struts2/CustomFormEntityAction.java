@@ -1,5 +1,22 @@
 package cn.bc.form.struts2;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import oracle.core.lmx.CoreException;
+
+import org.apache.struts2.interceptor.RequestAware;
+import org.apache.struts2.interceptor.SessionAware;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
 import cn.bc.BCConstants;
 import cn.bc.Context;
 import cn.bc.core.exception.*;
@@ -192,18 +209,36 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	// 保存自定义表单
 	public String save() throws Exception {
-		JSONObject formInfoJO = new JSONObject(this.formInfo);
-		JSONArray formDataJA = new JSONArray(this.formData);
-		JSONObject jo = new JSONObject();
+		JSONObject form = new JSONObject(this.formInfo);
+		JSONArray _fields = new JSONArray(this.formData);
+		JSONObject json = new JSONObject();
+
+        // 处理scope=form的情况 - add by dragon 2014-06-20
+        JSONArray fields = dealDataScope(form, _fields);
 		
-		this.customFormService.save(formInfoJO, formDataJA);
-		jo.put("success", true);
-		jo.put("msg", "保存成功");
-		this.json = jo.toString();
+		this.customFormService.save(form, fields);
+		json.put("success", true);
+		json.put("msg", "保存成功");
+		this.json = json.toString();
 		return "json";
 	}
 
-	// 删除自定义表单
+    private JSONArray dealDataScope(JSONObject form, JSONArray fields) throws JSONException {
+        JSONArray newFields = new JSONArray();
+        JSONObject field;
+        for (int i = 0; i < fields.length(); i++){
+            field = fields.getJSONObject(i);
+            if(field.has("scope") && "form".equalsIgnoreCase(field.getString("scope"))){// form变量
+                form.put(field.getString("name")
+                    , StringUtils.convertValueByType(field.getString("type"),field.getString("value")));
+            }else{// field变量
+                newFields.put(field);
+            }
+        }
+        return newFields;
+    }
+
+    // 删除自定义表单
 	public String delete() throws Exception {
 		Json _json = new Json();
 		try {
@@ -312,6 +347,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 			// 设置表单信息
 			String formInfoJsonStr = setEditedFormInfo(form);
 			args.put("form_info", formInfoJsonStr);
+			args.put("form", form);
 
 			// 设置表单字段
 			List<Field> fields = this.fieldService.findList(form);
@@ -415,30 +451,23 @@ public class CustomFormEntityAction extends ActionSupport implements
 	private String setEditedFormInfo(Form form) throws JSONException {
 		ActorHistory author = form.getAuthor();
 		ActorHistory modifier = form.getModifier();
-		String fileDate = DateUtils.formatCalendar2Second(form.getFileDate());
-		String modifiedDate = DateUtils.formatCalendar2Second(form
-				.getModifiedDate());
-		String uid = form.getUid();
-		String type = form.getType();
-		String code = form.getCode();
-		Long pid = form.getPid();
-		String subject = form.getSubject();
 
 		// 设置${from_info}参数对应的值
 		JSONObject infoJson = new JSONObject();
 		infoJson.put("author", author.getName());
-		infoJson.put("fileDate", fileDate);
+		infoJson.put("fileDate", DateUtils.formatCalendar2Second(form.getFileDate()));
 		infoJson.put("modifier", modifier.getName());
-		infoJson.put("modifiedDate", modifiedDate);
-		infoJson.put("uid", uid);
+		infoJson.put("modifiedDate", DateUtils.formatCalendar2Second(form.getModifiedDate()));
+		infoJson.put("uid", form.getUid());
 		infoJson.put("status", form.getStatus());
 		infoJson.put("isNew", false);
-		infoJson.put("type", type);
-		infoJson.put("code", code);
-		infoJson.put("pid", pid);
+		infoJson.put("type", form.getType());
+		infoJson.put("code", form.getCode());
+		infoJson.put("pid", form.getPid());
 		infoJson.put("tpl", tpl);
-		infoJson.put("subject", subject);
+		infoJson.put("subject", form.getSubject());
 		infoJson.put("id", id);
+		infoJson.put("version", form.getVer());
 
 		return infoJson.toString();
 	}

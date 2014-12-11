@@ -355,8 +355,8 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		String filepath;
 		
 		String[] addIds=ids.split(",");
-		if(addIds.length<2){
-			throw new CoreException("The number of at least 2 attachs!");
+		if(addIds.length<1){
+			throw new CoreException("The number of at least 1 attachs!");
 		}
 		
 		InputStream[] images = new InputStream[addIds.length];
@@ -455,5 +455,13 @@ public class ImageAction extends ActionSupport implements SessionAware {
 		json.put("size", attach.getSize());
 
 		return "json";
+	}
+
+	public float width;// 附件图片的实物宽度
+	// 打印附件图片
+	public String print() throws Exception {
+		// 时间戳
+		ts = new Date().getTime();
+		return SUCCESS;
 	}
 }

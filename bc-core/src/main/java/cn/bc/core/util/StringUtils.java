@@ -302,14 +302,10 @@ public class StringUtils {
 			return new Integer(value);
 		} else if (type.equals("string")) {
 			return value;
-		} else if (type.equals("long")) {
-			return new Long(value);
-		} else if (type.equals("Long")) {
-			if (value == null || value.length() == 0)
-				return null;
-			return new Long(value);
+		} else if (type.equalsIgnoreCase("long")) {
+			return value == null || value.isEmpty() ? null : new Long(value);
 		} else if (type.equals("float")) {
-			return new Float(value);
+			return value == null || value.isEmpty() ? null : new Float(value);
 		} else if (type.equals("date")) {
 			return DateUtils.getDate(value);
 		} else if (type.equals("startDate")) {
@@ -331,7 +327,7 @@ public class StringUtils {
 			DateUtils.setToMaxTime(calendar);
 			return calendar;
 		} else if (type.equals("boolean")) {
-			return new Boolean(value);
+			return value == null || value.isEmpty() ? null : new Boolean(value);
 		} else if (type.equals("list")) {
 			return JsonUtils.toCollection(value);
 		} else if (type.equals("map")) {

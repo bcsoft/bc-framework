@@ -3,6 +3,14 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<!-- 表单API -->
+	<package name="customFormAPI" extends="bc-default" namespace="/bc/cform">
+		<action name="render" class="renderFormAction" method="render"/>
+		<action name="delete" class="renderFormAction" method="delete"/>
+		<action name="save" class="renderFormAction" method="save" />
+		<action name="nextver" class="renderFormAction" method="nextVer" />
+	</package>
+	
 	<!-- 自定义表单 -->
 	<package name="customForm" extends="bc-default" namespace="/bc/customForm">
 		<action name="render" class="customFormEntityAction" method="render" />
@@ -12,7 +20,7 @@
 		<action name="save" class="customFormEntityAction" method="save" />
 		<action name="delete" class="customFormEntityAction" method="delete" />
 	</package>
-	
+
 	<!-- 自定义表单管理 -->
 	<package name="formManages" extends="bc-default" namespace="/bc/formManages">
 		<!-- 分页视图 -->

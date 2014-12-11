@@ -7,7 +7,10 @@ import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.service.AttachService;
+import cn.bc.identity.domain.Actor;
 import cn.bc.identity.web.SystemContextHolder;
+import cn.bc.photo.domain.IpCamera;
+import cn.bc.photo.service.IpCameraService;
 import cn.bc.photo.service.PhotoExecutor;
 import cn.bc.photo.service.PhotoService;
 import cn.bc.web.ui.html.page.ButtonOption;
@@ -27,6 +30,7 @@ import sun.misc.BASE64Decoder;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +48,8 @@ public class PhotoAction extends ActionSupport {
 	private AttachService attachService;
 	@Autowired
 	private PhotoService photoService;
+	@Autowired
+	private IpCameraService ipCameraService;
 
 	public JSONObject json;// 图片处理完毕后返回的json数据：{success、path、url、fname、size、format [、dir、msg、id]}
 	/**
@@ -61,6 +67,7 @@ public class PhotoAction extends ActionSupport {
 	public Integer size;// 图片大小
 	public String ptype;// 创建Attach附件时使用
 	public String puid;// 创建Attach附件时使用
+	public List<IpCamera> ipCameras;// 可用的IP摄像头列表
 
 	@Override
 	public String execute() throws Exception {
@@ -92,6 +99,8 @@ public class PhotoAction extends ActionSupport {
 				this.fname = (String) info.get("fname");
 				this.format = (String) info.get("format");
 				this.size = (Integer) info.get("size");
+				//if(info.containsKey("ptype")) this.ptype = (String) info.get("ptype");
+				//if(info.containsKey("puid")) this.puid = (String) info.get("puid");
 			} else {// 指定文件路径的处理
 				this.path = tid[0];
 
@@ -109,6 +118,10 @@ public class PhotoAction extends ActionSupport {
 		} else {
 			// 空白窗口
 		}
+
+		// 获取可用的IP摄像头列表
+		Actor user = SystemContextHolder.get().getUser();
+		this.ipCameras = this.ipCameraService.findByOwner(user.getId());
 
 		return super.execute();
 	}
@@ -168,7 +181,8 @@ public class PhotoAction extends ActionSupport {
 			// 保存或更新Attach
 			if (this.id != null && !this.id.isEmpty()) {
 				if (this.id.startsWith("attach:")) {// 更新现有Attach附件的信息
-					Attach attach = this.attachService.load(Long.parseLong(this.id.split(":")[1]));
+					String[] id_cfg = this.id.split(":");
+					Attach attach = this.attachService.load(Long.parseLong(id_cfg[1]));
 					attach.setModifier(SystemContextHolder.get().getUserHistory());
 					attach.setModifiedDate(Calendar.getInstance());
 					attach.setSize(_file.length());

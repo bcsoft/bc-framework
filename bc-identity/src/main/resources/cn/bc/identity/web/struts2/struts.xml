@@ -176,4 +176,7 @@
 		<action name="getUsers" class="getUsersAction">
 		</action>
 	</package>
+	<package name="nextUid" extends="bc-default" namespace="/bc">
+		<action name="nextuid" class="idGeneratorAction" method="nextUid"/>
+	</package>
 </struts>

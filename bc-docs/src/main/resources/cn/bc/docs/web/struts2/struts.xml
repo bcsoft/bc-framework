@@ -152,6 +152,9 @@
 			</result>
 		</action>
 		<action name="combine" class="imageAction" method="combine"/>
+		<action name="print" class="imageAction" method="print">
+			<result name="success">/bc/docs/image/print.jsp</result>
+		</action>
 	</package>
 
 	<!-- browser -->
