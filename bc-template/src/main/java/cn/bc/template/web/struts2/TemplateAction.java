@@ -45,6 +45,8 @@ public class TemplateAction extends FileEntityAction<Long, Template> {
 	private TemplateParamService templateParamService;
 	private CategoryService categoryService;
 
+	/** 命名空间 */
+	public String namespace;
 
 	// 模板类型集合
 	public List<Map<String, String>> typeList;
