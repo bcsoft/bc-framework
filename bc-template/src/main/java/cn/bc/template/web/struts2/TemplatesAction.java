@@ -308,7 +308,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	private Icon createIcon() {
 		Icon icon = new Icon();
 		icon.setClazz("ui-icon ui-icon-plusthick");
-		icon.setTitle("新建");// 鼠标提示信息
+		icon.setTitle("在此分类下新建模板");// 鼠标提示信息
 		icon.setClick("bc.templateList.createByIcon");// 点击函数
 		return icon;
 	}
@@ -321,7 +321,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	private Icon delIcon() {
 		Icon icon = new Icon();
 		icon.setClazz("ui-icon ui-icon-close");
-		icon.setTitle("删除该模板");// 鼠标提示信息
+		icon.setTitle("删除此模板");// 鼠标提示信息
 		icon.setClick("bc.templateList.deleteByIcon");// 点击函数
 		return icon;
 	}
