@@ -7,22 +7,18 @@
 		<!-- 视图：分页 -->
 		<action name="paging" class="templatesAction" method="paging">
 			<param name="rootNode">TPL</param>
-			<param name="namespace">/tpl</param>
 		</action>
 		<!-- 视图：分页数据 -->
 		<action name="data" class="templatesAction" method="data">
 			<param name="rootNode">TPL</param>
-			<param name="namespace">/tpl</param>
 		</action>
 		<!-- 视图：非分页数据 -->
 		<action name="list" class="templatesAction" method="list">
 			<param name="rootNode">TPL</param>
-			<param name="namespace">/tpl</param>
 		</action>
 		<!-- 视图：展开树形菜单的子节点 -->
 		<action name="loadTreeData" class="templatesAction" method="loadTreeData">
 			<param name="rootNode">TPL</param>
-			<param name="namespace">/tpl</param>
 		</action>
 	</package>
 
