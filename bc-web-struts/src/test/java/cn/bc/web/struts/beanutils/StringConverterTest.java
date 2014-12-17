@@ -1,11 +1,9 @@
 package cn.bc.web.struts.beanutils;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.beanutils.Converter;
 import org.junit.Test;
-
-import cn.bc.web.struts.beanutils.StringConverter;
 
 public class StringConverterTest {
 	@Test

@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;

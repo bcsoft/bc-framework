@@ -1,6 +1,6 @@
 package cn.bc.db.jdbc;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

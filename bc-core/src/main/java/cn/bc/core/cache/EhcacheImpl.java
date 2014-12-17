@@ -35,7 +35,7 @@ public class EhcacheImpl implements Cache {
 	public <V> V get(String key) {
 		Element element = getCache().get(key);
 		if (element != null) {
-			return (V) element.getValue();
+			return (V) element.getObjectValue();
 		}
 		return null;
 	}

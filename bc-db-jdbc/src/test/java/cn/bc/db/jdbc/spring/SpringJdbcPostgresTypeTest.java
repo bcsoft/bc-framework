@@ -1,8 +1,6 @@
 package cn.bc.db.jdbc.spring;
 
-import cn.bc.core.Page;
 import cn.bc.core.query.Query;
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.postgresql.util.PGobject;
