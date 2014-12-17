@@ -92,7 +92,7 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 
 	@Override
 	protected String[] getSearchFields() {
-		return new String[] { "cfgName", "cfgCron", "cfgBean", "cfgMethod" };
+		return new String[] { "cfgName" };
 	}
 
 	@Override
