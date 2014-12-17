@@ -2,7 +2,7 @@ package cn.bc.web.struts;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.struts.action.ActionForm;

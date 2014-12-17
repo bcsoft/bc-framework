@@ -2,16 +2,13 @@ package cn.bc.web.struts.beanutils;
 
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.beanutils.Converter;
 import org.junit.Before;
 import org.junit.Test;
 
 import cn.bc.core.exception.CoreException;
-import cn.bc.web.struts.beanutils.Date2Minute;
-import cn.bc.web.struts.beanutils.Date2MinuteConverter;
-
 
 public class Date2MinuteConverterTest {
 	private Converter c;
