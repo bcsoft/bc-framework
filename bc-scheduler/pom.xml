@@ -6,6 +6,7 @@
 		<version>2.6</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
+	<version>2.6.1</version>
 	<artifactId>bc-scheduler</artifactId>
 	<description>任务调度</description>
 	<dependencies>
@@ -17,12 +18,12 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-orm-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
