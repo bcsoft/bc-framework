@@ -3,21 +3,19 @@
  */
 package cn.bc.test.mock;
 
+import cn.bc.core.Entity;
+import cn.bc.core.SetEntityClass;
+import cn.bc.core.dao.CrudDao;
+import cn.bc.core.query.Query;
+import cn.bc.core.service.CrudService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
-
-import cn.bc.core.Entity;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import cn.bc.core.RichEntity;
-import cn.bc.core.SetEntityClass;
-import cn.bc.core.dao.CrudDao;
-import cn.bc.core.query.Query;
-import cn.bc.core.service.CrudService;
 
 /**
  * CrudService的内存模拟实现
@@ -27,7 +25,7 @@ import cn.bc.core.service.CrudService;
  */
 public class CrudServiceMock<T extends Entity<Long>> implements CrudService<T>,
 		SetEntityClass<T> {
-	private static Log logger = LogFactory.getLog(CrudServiceMock.class);
+	private static Logger logger = LoggerFactory.getLogger(CrudServiceMock.class);
 	private CrudDao<T> crudDao;
 	protected Class<T> entityClass;
 
@@ -44,8 +42,7 @@ public class CrudServiceMock<T extends Entity<Long>> implements CrudService<T>,
 			if (type instanceof Class) {
 				this.entityClass = (Class<T>) type;
 				if (logger.isInfoEnabled())
-					logger.info("auto judge entityClass to '"
-							+ this.entityClass + "' [" + this.getClass() + "]");
+					logger.info("auto judge entityClass to '{}' [{}]", this.entityClass, this.getClass());
 			}
 		}
 
@@ -66,7 +63,7 @@ public class CrudServiceMock<T extends Entity<Long>> implements CrudService<T>,
 	public void setEntityClass(Class<T> clazz) {
 		this.entityClass = clazz;
 		if (logger.isDebugEnabled())
-			logger.debug("setEntityClass:" + clazz);
+			logger.debug("setEntityClass:{}", clazz);
 		if (this.crudDao instanceof SetEntityClass)
 			((SetEntityClass) this.crudDao).setEntityClass(clazz);
 	}
