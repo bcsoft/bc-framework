@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import cn.bc.core.exception.CoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -64,9 +65,9 @@ public class FreeMarkerUtils {
 
 			return out.toString();
 		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			//e.printStackTrace();
-			return null;
+			throw new CoreException(e.getMessage(), e);
+			//logger.warn(e.getMessage(), e);
+			//return null;
 		}
 	}
 }
