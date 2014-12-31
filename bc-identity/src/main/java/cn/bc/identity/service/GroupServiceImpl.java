@@ -1,13 +1,13 @@
 package cn.bc.identity.service;
 
+import cn.bc.identity.dao.ActorRelationDao;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorRelation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.bc.identity.dao.ActorRelationDao;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.ActorRelation;
 
 /**
  * 岗位Service接口的实现
@@ -62,5 +62,19 @@ public class GroupServiceImpl extends ActorServiceImpl implements GroupService {
 
 		// 返回
 		return group;
+	}
+
+	public List<Actor> findByNames(Long[] belongIds, String[] names,
+			   Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
+		return this.getActorDao().findFollowersWithMastersIdOrNames(
+				belongIds, names, null,
+				relationTypes, followerTypes, followerStatuses);
+	}
+
+	public List<Actor> findByCodes(Long[] belongIds, String[] codes,
+			   Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
+		return this.getActorDao().findFollowersWithMastersIdOrNames(
+				belongIds, null, codes,
+				relationTypes, followerTypes, followerStatuses);
 	}
 }
