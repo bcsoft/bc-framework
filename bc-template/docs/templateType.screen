@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="7" x="8" y="8" measuredWidth="753" measuredHeight="537">
+    <widgets xsi:type="model:Window" id="1" width="753" height="537" text="模板类型 - 视图" measuredWidth="753" measuredHeight="537" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="705" measuredWidth="705" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="6" y="26" text="新建, 编辑, 删除" measuredWidth="134" measuredHeight="30">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="新建"/>
+      <items x="45" y="0" width="44" height="30" text="编辑"/>
+      <items x="89" y="0" width="45" height="30" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" y="61" width="753" text="(w:30). !,(w:30). 状态,(w:30). 排序号,(w:30). 编码,名称,(w:30). 纯文本,(w:30). 关联附件,(w:30). 附件扩展名,(w:40). 最后修改&#xA;1,正常,1000,custom,自定义文本,是,否,&#xA;1,正常,1101,word-docx,Word 2007+ 文档,否,是,docx&#xA;1,正常,1102,word-doc,Word 97-2003 文档,否,是,doc&#xA;1,正常,1103,word-2003xml,Word 2003 XML 文档,是,是,xml&#xA;1,正常,1104,word-2007xml,Word 2007+ XML 文档,是,是,xml&#xA;1,正常,1201,xls,Excel 97-2003 工作簿,否,是,xls&#xA;1,正常,1202,xlsx,Excel 2007+ 工作簿,否,是,xls&#xA;1,正常,1203,excel-2003xml,Excel 2003 XML,是,是,xml&#xA;1,正常,1204,excel-2007xml,Excel 2007+ XML,是,是,xml&#xA;1,正常,1301,pptx,PowerPoint 2007+ 演示文稿,否,是,pptx&#xA;1,正常,1302,ppt,PowerPoint 97-2003 演示文稿,否,是,ppt&#xA;1,正常,1400,rtf,RTF 文档,是,是,rtf&#xA;1,正常,1500,txt,TXT 纯文本,是,是,txt&#xA;1,正常,1600,xml,XML 文档,是,是,xml&#xA;1,正常,1700,sql,SQL 数据库脚本,是,是,sql&#xA;1,正常,1800,csv,CSV (逗号分隔),是,是,csv&#xA;1,正常,1901,odt,OpenDocument 文档,否,是,odt&#xA;1,正常,1902,ods,OpenDocument 电子表格,否,是,ods&#xA;1,正常,9999,other,其它附件,否,是" measuredWidth="753" measuredHeight="464" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="30" x="560" y="29" measuredWidth="183" measuredHeight="25">
+      <widgets xsi:type="model:SearchField" id="31" width="183" measuredWidth="183" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="148" x="152" y="26" text="正常,禁用,全部" measuredWidth="134" measuredHeight="30" selection="0">
+      <font/>
+      <items x="0" y="0" width="45" height="30" text="正常"/>
+      <items x="45" y="0" width="44" height="30" text="禁用"/>
+      <items x="89" y="0" width="45" height="30" text="全部"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="6" x="512" y="768" width="249" height="73" text="表单说明：&#xD;&#xA;1) 当关联附件为&quot;是&quot;时才显示附件扩展名。&#xD;&#xA;2）备注栏跟随文本自动高度。" measuredWidth="249" measuredHeight="73" annotation="true" textAlignment="Left">
+    <font bold="false"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="9" x="8" y="552" measuredWidth="505" measuredHeight="289">
+    <widgets xsi:type="model:Window" id="10" width="505" height="289" text="模板类型 - 表单" measuredWidth="505" measuredHeight="289" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="11" y="248" width="504" measuredWidth="504" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="12" x="449" y="256" width="48" text="保存" measuredWidth="48" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="13" x="34" y="56" text="*名称：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="18" x="188" y="224" text="创建：张三(2012-01-01)，最后修改：李四(2012-01-02)" measuredWidth="309" measuredHeight="25" textAlignment="Right" foreground="#999999">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="27" x="79" y="56" width="420" text="Word 2007+ 文档" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="68" x="39" y="191" text="备注：" measuredWidth="41" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextArea" id="69" x="79" y="191" width="419" height="25" text="（自动高度）" measuredWidth="419" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="98" x="34" y="29" text="*编码：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="100" x="79" y="29" width="420" text="word-docx" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="103" x="27" y="83" text="排序号：" measuredWidth="53" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="104" x="79" y="83" width="420" text="1001" measuredWidth="420" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="109" x="39" y="167" text="状态：" measuredWidth="41" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="110" x="79" y="167" text="正常" measuredWidth="44" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="111" x="130" y="167" text="禁用" measuredWidth="44" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="255" x="79" y="112" text="是" measuredWidth="32" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="256" x="130" y="112" text="否" measuredWidth="32" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="257" x="15" y="112" text="关联附件：" measuredWidth="65" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="259" x="188" y="112" text="*附件扩展名：" measuredWidth="82" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="260" x="269" y="112" width="230" text="docx" measuredWidth="230" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="261" x="79" y="139" text="是" measuredWidth="32" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="262" x="130" y="139" text="否" measuredWidth="32" measuredHeight="25" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="263" x="27" y="139" text="纯文本：" measuredWidth="53" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

@@ -1,6 +1,7 @@
 package cn.bc.template.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.DateUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.BooleanFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
@@ -106,7 +109,7 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 				getText("template.code"), 100).setSortable(true)
 				.setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("template.name"), 180).setUseTitleFromLabel(true));
+				getText("template.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.is_pure_text", "isPureText",
 				getText("templateType.isPureText"), 50)
 				.setValueFormater(new BooleanFormater()));
@@ -115,18 +118,24 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new BooleanFormater()));
 		columns.add(new TextColumn4MapKey("a.ext", "ext",
 				getText("templateType.ext"), 80).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("template.desc")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.actor_name", "actor_name",
-				getText("template.author"), 80));
-		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("template.fileDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("template.modifier"), 80));
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("template.modifiedDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+				getText("template.finalUpdate"), 190)
+				.setValueFormater(new AbstractFormater<Object>() {
+					@Override
+					public Object format(Object context, Object value) {
+						if (value == null || "".equals(value.toString()))
+							return null;
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return map.get("mname") + 
+								" (" +DateUtils.formatDateTime2Minute((Date)value) + "）";
+					}
+				}).setUseTitleFromLabel(true));
+//		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
+//				getText("template.modifier"), 80));
+//		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
+//				getText("template.modifiedDate"), 130)
+//				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
 		return columns;
 	}
 
@@ -144,6 +153,11 @@ public class TemplateTypesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String getGridRowLabelExpression() {
 		return "['name']";
+	}
+
+	@Override
+	protected String getHtmlPageTitle() {
+		return getText("templateFormat.title");
 	}
 
 	@Override
