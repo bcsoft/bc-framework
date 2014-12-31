@@ -35,6 +35,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.util.FileCopyUtils;
 
 import cn.bc.BCConstants;
+import cn.bc.category.domain.Category;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.RichFileEntityImpl;
@@ -66,13 +67,12 @@ public class Template extends RichFileEntityImpl {
 	private boolean inner;// 内置：是、否，默认否
 	private String desc;// 备注
 	private String version;// 版本号
-	private String category;// 所属分类
 	private TemplateType templateType;
 	private Long size;// 文件的大小(单位为字节) 默认0
 	private boolean formatted;// 格式化：模板是否允许格式化 默认否
-	private Set<TemplateParam> params;//模板所使用的参数
-	
-	
+	private Set<TemplateParam> params;// 模板所使用的参数
+	private Set<Category> categorys;// 所属分类
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "BC_TEMPLATE_TEMPLATE_PARAM", joinColumns = @JoinColumn(name = "TID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PID", referencedColumnName = "ID"))
 	@OrderBy("orderNo asc")
@@ -82,6 +82,16 @@ public class Template extends RichFileEntityImpl {
 
 	public void setParams(Set<TemplateParam> params) {
 		this.params = params;
+	}
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "BC_TEMPLATE_TEMPLATE_CATEGORY", joinColumns = @JoinColumn(name = "TID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "CID", referencedColumnName = "ID"))
+	public Set<Category> getCategorys() {
+		return categorys;
+	}
+
+	public void setCategorys(Set<Category> categorys) {
+		this.categorys = categorys;
 	}
 
 	@Column(name = "SIZE_")
@@ -110,14 +120,6 @@ public class Template extends RichFileEntityImpl {
 
 	public void setTemplateType(TemplateType templateType) {
 		this.templateType = templateType;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 
 	@Column(name = "VERSION_")
@@ -376,7 +378,8 @@ public class Template extends RichFileEntityImpl {
 				out.close();
 			} else if ("html".equalsIgnoreCase(this.getTemplateType()
 					.getExtension())) {// html
-				String s = FreeMarkerUtils.format(TemplateUtils.loadText(this.getInputStream()),params);
+				String s = FreeMarkerUtils.format(
+						TemplateUtils.loadText(this.getInputStream()), params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				out.write(s.getBytes());
 				out.close();
