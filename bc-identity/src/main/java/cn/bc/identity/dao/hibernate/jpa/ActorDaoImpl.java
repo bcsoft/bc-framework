@@ -149,6 +149,12 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 				followerTypes, null);
 	}
 
+	public List<Actor> findFollowersByMastersId(Long[] mastersId,
+			Integer[] relationTypes, Integer[] followerTypes) {
+		return this.findFollowersWithMastersIdOrNames(mastersId,
+				null, null, relationTypes, followerTypes, null);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Actor> findFollowerWithName(Long masterId, String followerName,
 			Integer[] relationTypes, Integer[] followerTypes,
@@ -215,6 +221,123 @@ public class ActorDaoImpl extends HibernateCrudJpaDao<Actor> implements
 		if (followerName != null && followerName.length() > 0) {
 			hql.append(" and f.name=?");
 			args.add(followerName);
+		}
+
+		// 排序
+		hql.append(" order by ar.type,ar.orderNo,f.type,f.orderNo");
+		if (logger.isDebugEnabled()) {
+			logger.debug("hql=" + hql.toString());
+			logger.debug("args="
+					+ StringUtils.collectionToCommaDelimitedString(args));
+		}
+		return this.getJpaTemplate().find(hql.toString(), args.toArray());
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Actor> findFollowersWithMastersIdOrNames(Long[] masterIds,
+			 String[] followerNames, String[] followerCodes, Integer[] relationTypes,
+			 Integer[] followerTypes, Integer[] followerStatuses) {
+
+		ArrayList<Object> args = new ArrayList<Object>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select f from Actor f,ActorRelation ar,Actor m");
+		hql.append(" where f.id=ar.follower.id");
+		hql.append(" and m.id=ar.master.id");
+
+		// 所属的Id，对应ActorRelation的master属性
+		if (masterIds != null && masterIds.length > 0) {
+			if (masterIds.length == 1) {
+				hql.append(" and m.id=?");
+				args.add(masterIds[0]);
+			} else {
+				hql.append(" and m.id in (?");
+				args.add(masterIds[0]);
+				for (int i = 1; i < masterIds.length; i++) {
+					hql.append(",?");
+					args.add(masterIds[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 关联的类型，对应ActorRelation的type属性
+		if (relationTypes != null && relationTypes.length > 0) {
+			if (relationTypes.length == 1) {
+				hql.append(" and ar.type=?");
+				args.add(relationTypes[0]);
+			} else {
+				hql.append(" and ar.type in (?");
+				args.add(relationTypes[0]);
+				for (int i = 1; i < relationTypes.length; i++) {
+					hql.append(",?");
+					args.add(relationTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的类型，对应Actor的type属性
+		if (followerTypes != null && followerTypes.length > 0) {
+			if (followerTypes.length == 1) {
+				hql.append(" and f.type=?");
+				args.add(followerTypes[0]);
+			} else {
+				hql.append(" and f.type in (?");
+				args.add(followerTypes[0]);
+				for (int i = 1; i < followerTypes.length; i++) {
+					hql.append(",?");
+					args.add(followerTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的状态，对应Actor的status属性
+		if (followerStatuses != null && followerStatuses.length > 0) {
+			if (followerStatuses.length == 1) {
+				hql.append(" and f.status=?");
+				args.add(followerStatuses[0]);
+			} else {
+				hql.append(" and f.status in (?");
+				args.add(followerStatuses[0]);
+				for (int i = 1; i < followerStatuses.length; i++) {
+					hql.append(",?");
+					args.add(followerStatuses[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的名称，对应Actor的name属性
+		if (followerNames != null && followerNames.length > 0) {
+			if (followerNames.length == 1) {
+				hql.append(" and f.name=?");
+				args.add(followerNames[0]);
+			} else {
+				hql.append(" and f.name in (?");
+				args.add(followerNames[0]);
+				for (int i = 1; i < followerNames.length; i++) {
+					hql.append(",?");
+					args.add(followerNames[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的编码，对应Actor的code属性
+		if (followerCodes != null && followerCodes.length > 0) {
+			if (followerCodes.length == 1) {
+				hql.append(" and f.code=?");
+				args.add(followerCodes[0]);
+			} else {
+				hql.append(" and f.code in (?");
+				args.add(followerCodes[0]);
+				for (int i = 1; i < followerCodes.length; i++) {
+					hql.append(",?");
+					args.add(followerCodes[i]);
+				}
+				hql.append(")");
+			}
 		}
 
 		// 排序
