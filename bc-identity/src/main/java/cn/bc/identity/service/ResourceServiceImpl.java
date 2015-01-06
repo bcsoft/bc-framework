@@ -34,7 +34,7 @@ public class ResourceServiceImpl extends DefaultCrudService<Resource> implements
 		return this.resourceDao.find4option(types, statues);
 	}
 
-	@Cacheable(value = "identity.resource", key = "allResources", unless = "#result == null")
+	@Cacheable(value = "identity.resource", key = "'allResources'", unless = "#result == null")
 	public Map<Long, Resource> findAll() {
 		logger.warn("find all resource from db.");
 		List<Resource> all = this.createQuery()
