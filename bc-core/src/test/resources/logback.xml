@@ -74,7 +74,7 @@
 	</appender>
 
 	<logger name="cn.bc" level="WARN"/>
-	<logger name="cn.bc.core.Sl4jTest" level="DEBUG"/>
+	<logger name="cn.bc.core.util.TemplateUtils" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="console"/>
