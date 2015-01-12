@@ -7,8 +7,9 @@ package cn.bc.core.cache;
  * 简易缓存接口
  * 
  * @author dragon
- * 
+ * @deprecated use spring cache instead
  */
+@Deprecated
 public interface Cache {
 	/** 默认的缓存键 */
 	public final static String KEY = "cn.bc.cache.framework";

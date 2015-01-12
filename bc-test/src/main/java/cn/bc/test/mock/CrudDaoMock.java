@@ -1,5 +1,14 @@
 package cn.bc.test.mock;
 
+import cn.bc.core.Entity;
+import cn.bc.core.SetEntityClass;
+import cn.bc.core.dao.CrudDao;
+import cn.bc.core.exception.CoreException;
+import cn.bc.core.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -10,19 +19,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.bc.core.Entity;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
-
-import cn.bc.core.RichEntity;
-import cn.bc.core.SetEntityClass;
-import cn.bc.core.dao.CrudDao;
-import cn.bc.core.exception.CoreException;
-import cn.bc.core.query.Query;
-
 public class CrudDaoMock<T extends Entity<Long>> implements CrudDao<T>, SetEntityClass<T> {
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	private long id = 0;
 	private Map<String, T> entities = new HashMap<String, T>();
 	private Class<T> entityClass;
