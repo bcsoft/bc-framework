@@ -8,8 +8,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import cn.bc.core.exception.CoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 使用FreeMarker的模板工具类
@@ -18,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public class FreeMarkerUtils {
-	protected static Log logger = LogFactory.getLog(FreeMarkerUtils.class);
+	protected static Logger logger = LoggerFactory.getLogger(FreeMarkerUtils.class);
 
 	private FreeMarkerUtils() {
 	}
@@ -64,9 +67,9 @@ public class FreeMarkerUtils {
 
 			return out.toString();
 		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			//e.printStackTrace();
-			return null;
+			throw new CoreException(e.getMessage(), e);
+			//logger.warn(e.getMessage(), e);
+			//return null;
 		}
 	}
 }
