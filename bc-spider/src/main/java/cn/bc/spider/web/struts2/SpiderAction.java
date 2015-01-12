@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -94,30 +95,35 @@ public class SpiderAction extends ActionSupport {
             logger.debug("url=" + url);
             logger.debug("group=" + group);
         }
+        JSONObject json = new JSONObject();
 
-        // 附加当前用户的编码到group中,避免不同用户之间的查询互相影响
-        String userCode = SystemContextHolder.get().getUser().getCode();
+        try {
+            // 附加当前用户的编码到group中,避免不同用户之间的查询互相影响
+            String userCode = SystemContextHolder.get().getUser().getCode();
 
-        // 获取验证码图片的文件路径
-        String path = this.spiderService.getCaptcha(group + LINK_SYMBLE + userCode, url);
-        if (logger.isDebugEnabled()) {
-            logger.debug("path=" + path);
+            // 获取验证码图片的文件路径
+            String path = this.spiderService.getCaptcha(group + LINK_SYMBLE + userCode, url);
+            if (logger.isDebugEnabled()) {
+				logger.debug("path=" + path);
+			}
+            if (path == null) {
+				throw new CoreException("can't get captcha file from " + url);
+			} else {
+				json.put("success", true);
+				json.put("path", path);
+
+				// 尝试破解验证码
+				String captcha = crackCaptcha(path);
+				if (captcha != null) {
+					json.put("captcha", captcha);
+				}
+			}
+        } catch (Exception e) {
+            json.put("success", false);
+            json.put("msg", e.getMessage());
         }
-        if (path == null) {
-            throw new CoreException("can't get captcha file from " + url);
-        } else {
-            JSONObject json = new JSONObject();
-            json.put("path", path);
 
-            // 尝试破解验证码
-            String captcha = crackCaptcha(path);
-            if (captcha != null) {
-                json.put("captcha", captcha);
-            }
-
-            this.json = json.toString();
-        }
-
+        this.json = json.toString();
         return "json";
     }
 

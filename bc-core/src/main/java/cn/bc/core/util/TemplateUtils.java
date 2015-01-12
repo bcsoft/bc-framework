@@ -1,10 +1,15 @@
 package cn.bc.core.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
+import org.commontemplate.tools.TemplateRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.FileCopyUtils;
+
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +17,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.commontemplate.tools.TemplateRenderer;
-
-import cn.bc.BCConstants;
-
 /**
  * 使用commontemplate的模板工具类
  * 
  * @author dragon
  */
 public class TemplateUtils {
-	protected static Log logger = LogFactory.getLog(TemplateUtils.class);
+	/* 模板附件保存的根路径 */
+	public static final String ROOT_PATH = "/bcdata/template";
+	protected static Logger logger = LoggerFactory.getLogger(TemplateUtils.class);
 
 	private TemplateUtils() {
 	}
@@ -177,6 +178,64 @@ public class TemplateUtils {
 				out.close();
 			} catch (IOException ex) {
 			}
+		}
+	}
+
+	/**
+	 * 获取指定编码模板对象的字符串内容信息
+	 * <p>
+	 * 如果模板为带附件类型的，而且此附件的内容是纯文本类型，则自动读取此附件的内容返回。
+	 * 此方法用于解耦对 bc-template 模块 cn.bc.template.service.TemplateService.getContent(String)的依赖
+	 * </p>
+	 *
+	 * @param code 模板编码，如果含字符":"，则进行分拆，前面部分为编码，后面部分为版本号，如果没有字符":"，将获取当前最新版本
+	 * @return 如果模板不是纯文本类型或无法查询到，返回 null，否则返回模板内容
+	 */
+	public static String getContent(String code){
+		if (code == null || code.isEmpty()) return null;
+
+		// 解析出编码和版本
+		int i = code.indexOf(":");
+		String version = null;
+		if (i != -1) {
+			version = code.substring(i + 1);
+			code = code.substring(0, i);
+		}
+
+		JdbcTemplate jdbcTemplate = SpringUtils.getBean(JdbcTemplate.class);
+		if(jdbcTemplate == null) throw new CoreException("must config JdbcTemplate instance in Spring Context.");
+
+		// 构建查询语句
+		String sql = "select tt.is_path as is_attach, t.content as content, t.path as path" +
+				"\n  from bc_template t" +
+				"\n  inner join bc_template_type tt on tt.id = t.type_id" +
+				"\n  where t.code = ?";
+		boolean hasVersion = (version != null && !version.isEmpty());
+		if(hasVersion) sql += "\n  and t.version_ = ?";
+		sql += "\n  order by t.status_ asc, t.version_ desc limit 1";
+
+		try {
+			logger.debug("code={}, version={}, sql={}", code, version, sql);
+			// 获取查询结果
+			Map<String, Object> m;
+			if(hasVersion) m = jdbcTemplate.queryForMap(sql, code, version);
+			else m = jdbcTemplate.queryForMap(sql, code);
+
+			// 解析处理
+			boolean isAttach = (boolean) m.get("is_attach");
+			if(!isAttach){
+				return (String) m.get("content");
+			}else{
+				String path = ROOT_PATH + "/"  + m.get("path");
+				logger.debug("path={}", path);
+				return FileCopyUtils.copyToString(new FileReader(path));
+			}
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		} catch (FileNotFoundException e) {
+			throw new CoreException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new CoreException(e.getMessage(), e);
 		}
 	}
 }
