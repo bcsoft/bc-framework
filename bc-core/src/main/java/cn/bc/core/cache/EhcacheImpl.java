@@ -11,8 +11,10 @@ import net.sf.ehcache.Element;
  * Ehcache缓存实现
  * 
  * @author dragon
+ * @deprecated use spring cache instead
  * 
  */
+@Deprecated
 public class EhcacheImpl implements Cache {
 	private final String cacheName;
 	private final CacheManager cacheManager;

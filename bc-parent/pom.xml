@@ -669,6 +669,26 @@
 				<artifactId>json</artifactId>
 				<version>20080701</version>
 			</dependency>
+
+			<!-- json: JSR-353 API 2013-04-25 -->
+			<dependency>
+				<groupId>javax.json</groupId>
+				<artifactId>javax.json-api</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<!-- json: JSR-353 glassfish implements https://json-processing-spec.java.net 2013-11-19 -->
+			<dependency>
+				<groupId>org.glassfish</groupId>
+				<artifactId>javax.json</artifactId>
+				<version>1.0.4</version>
+			</dependency>
+			<!-- json: JSR-353 FasterXml implements https://github.com/FasterXML/jackson-datatype-jsr353 2014-10-04 -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr353</artifactId>
+				<version>2.4.3</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.commontemplate</groupId>
 				<artifactId>commontemplate</artifactId>

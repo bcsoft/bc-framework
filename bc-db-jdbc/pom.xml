@@ -25,16 +25,23 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- hibernate3绑定了slf4必须要配置 -->
+
+		<!-- test -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>test</scope>
+			<artifactId>jcl-over-slf4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
 		</dependency>
 	</dependencies>
+	<properties>
+		<maven.test.skip>true</maven.test.skip>
+	</properties>
 </project>
