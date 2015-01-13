@@ -24,10 +24,14 @@ import java.util.regex.Pattern;
  */
 public class TemplateUtils {
 	/* 模板附件保存的根路径 */
-	public static final String ROOT_PATH = "/bcdata/template";
+	public static String ROOT_PATH = "/bcdata/template";
 	protected static Logger logger = LoggerFactory.getLogger(TemplateUtils.class);
 
 	private TemplateUtils() {
+	}
+
+	public void setRootPath(String rootPath) {
+		ROOT_PATH = rootPath;
 	}
 
 	/**
