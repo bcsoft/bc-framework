@@ -121,38 +121,29 @@
 					</configuration>
 				</plugin>
 
-				<!-- <plugin> <groupId>org.mortbay.jetty</groupId> <artifactId>maven-jetty-plugin</artifactId> 
-					<version>6.1.9</version> </plugin> -->
+				<!-- http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html
+					jetty6: groupId=org.mortbay.jetty, artifactId=maven-jetty-plugin
+					jetty7: groupId=org.mortbay.jetty, artifactId=jetty-maven-plugin
+					jetty9: groupId=org.eclipse.jetty, artifactId=jetty-maven-plugin
+				-->
 				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
+					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
 					<version>${jetty.version}</version>
 					<!-- 修改端口：mvn jetty:run -Djetty.port=8081 -->
 
-					<!-- 配置参考：http://wiki.eclipse.org/Jetty/Feature/Jetty_Maven_Plugin -->
+					<!-- 配置参考：http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
 					<configuration>
-						<!--<scanIntervalSeconds>10</scanIntervalSeconds> -->
-						<webAppConfig>
+						<scanIntervalSeconds>5</scanIntervalSeconds>
+						<httpConnector>
+							<port>${jetty.port}</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</httpConnector>
+						<webApp>
 							<contextPath>${jetty.path}</contextPath><!--默认为： /${project.artifactId} -->
 							<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
-						</webAppConfig>
-						<connectors>
-							<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-								<port>${jetty.port}</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
+						</webApp>
 					</configuration>
-
-					<dependencies>
-						<!-- adding a dependency on jetty-servlets:GZip compression and other 
-							jetty extensions -->
-						<dependency>
-							<groupId>org.eclipse.jetty</groupId>
-							<artifactId>jetty-servlets</artifactId>
-							<version>${jetty.version}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -1000,7 +991,7 @@
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<!--Jetty的各种版本：
-			9.2.3.v20140905,9.2.2.v20140723,9.2.1.v20140609,9.2.0.v20140526,
+			9.2.6.v20141205,9.2.3.v20140905,9.2.2.v20140723,9.2.1.v20140609,9.2.0.v20140526,
 			9.1.4.v20140401,9.1.3.v20140225,9.1.2.v20140210,9.1.1.v20140108,9.1.0.v20131115,
 			9.0.7.v20131107,9.0.6.v20130930,9.0.5.v20130815,9.0.4.v20130625,9.0.3.v20130506,
 			9.0.2.v20130417,9.0.1.v20130408,9.0.0.v20130308,
@@ -1022,7 +1013,7 @@
 			注：使用8.0.4启动将延时35秒左右，使用7.5.4则无延时，使用7.0.1编译不通过
 			7.0到7.3使用接口WebSocket.Outbound,
 			7.4开始接口大变为WebSocket.OnTextMessage、WebSocket.OnBinaryMessage等 -->
-		<jetty.version>9.2.3.v20140905</jetty.version>
+		<jetty.version>9.2.6.v20141205</jetty.version>
 		<jetty.port>8082</jetty.port>
 		<jetty.path>/</jetty.path>
 		<maven.test.skip>false</maven.test.skip>

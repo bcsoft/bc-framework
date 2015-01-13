@@ -30,15 +30,6 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
@@ -52,57 +43,50 @@
 			<artifactId>bc-remoting-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- log -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-site</artifactId>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
-	
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<plugins>
-			<!-- 配置打包是生成类路径 -->
+			<!-- jetty -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-						<manifestEntries>
-							<Version>${project.version}</Version>
-						</manifestEntries>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>cn.bc.remoting.server.ConsoleMain</mainClass>
-							<classpathPrefix>libs/</classpathPrefix>
-						</manifest>
-					</archive>
-				</configuration>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
 			</plugin>
-			<!-- 包依赖管理工具 -->
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/libs</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<artifactItems>
-				                <artifactItem>
-				                  <groupId>${project.groupId}</groupId>
-				                  <artifactId>${project.artifactId}</artifactId>
-				                  <version>${project.version}</version>
-				                  <type>${project.packaging}</type>
-				                </artifactItem>
-				            </artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+
 			<!-- 包组装工具 -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
