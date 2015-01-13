@@ -8,6 +8,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cn.bc.core.EntityImpl;
+import cn.bc.core.util.JsonUtils;
+import cn.bc.identity.domain.ActorHistory;
+
+import java.util.Calendar;
 
 /**
  * 表单字段
@@ -24,6 +28,8 @@ public class Field extends EntityImpl {
 	private String label;// 标签
 	private String type;// 值类型
 	private String value;// 值
+	private Calendar updateTime;// 更新时间
+	private ActorHistory updator;// 更新人
 
 	@JoinColumn(name = "PID", referencedColumnName = "ID")
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -71,8 +77,27 @@ public class Field extends EntityImpl {
 		this.value = value;
 	}
 
+	@Column(name = "UPDATE_TIME")
+	public Calendar getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Calendar updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "UPDATOR", referencedColumnName = "ID")
+	public ActorHistory getUpdator() {
+		return updator;
+	}
+
+	public void setUpdator(ActorHistory updator) {
+		this.updator = updator;
+	}
+
 	@Override
 	public String toString() {
-		return this.getValue();
+		return JsonUtils.toJson(this);
 	}
 }

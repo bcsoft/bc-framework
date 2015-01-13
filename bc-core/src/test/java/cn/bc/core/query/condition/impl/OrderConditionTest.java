@@ -3,12 +3,9 @@
  */
 package cn.bc.core.query.condition.impl;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-
 import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrderCondition;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 

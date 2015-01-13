@@ -3,34 +3,6 @@
  */
 package cn.bc.docs.web;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import cn.bc.Context;
 import cn.bc.core.exception.CoreException;
 import cn.bc.docs.domain.Attach;
@@ -38,6 +10,22 @@ import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.util.WebUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 文件上传的跨浏览器实现.
@@ -56,7 +44,7 @@ import cn.bc.web.util.WebUtils;
  */
 public class UploadFileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(UploadFileServlet.class);
+	private static Logger logger = LoggerFactory.getLogger(UploadFileServlet.class);
 	private static String appSubDir; // 上传文件存储的相对路径，相对于应用部署目录下的相对路径，开头及末尾不要带"/"
 	private static String appRealDir; // 上传文件存储的绝对路径，开头带"/"，末尾不要带"/"
 	private static String extensions;// 上传类型限制，如 "jpg,jpeg,bmp,gif,png"，为空代表无限制
@@ -77,9 +65,7 @@ public class UploadFileServlet extends HttpServlet {
 		File absoluteDir = new File(WebUtils.rootPath + File.separator
 				+ appSubDir);
 		if (!absoluteDir.exists()) {
-			if (logger.isFatalEnabled()) {
-				logger.fatal("mkdir=" + appSubDir);
-			}
+			logger.warn("mkdir={}", appSubDir);
 			absoluteDir.mkdir();// 自动创建目录
 		}
 
@@ -92,9 +78,7 @@ public class UploadFileServlet extends HttpServlet {
 			appRealDir = "/bcdata";
 		absoluteDir = new File(appRealDir);
 		if (!absoluteDir.exists()) {
-			if (logger.isFatalEnabled()) {
-				logger.fatal("mkdir=" + appRealDir);
-			}
+			logger.warn("mkdir={}", appRealDir);
 			absoluteDir.mkdir();// 自动创建目录
 		}
 
@@ -110,11 +94,11 @@ public class UploadFileServlet extends HttpServlet {
 		}
 
 		// debug
-		if (logger.isFatalEnabled()) {
-			logger.fatal("appSubDir=" + appSubDir);
-			logger.fatal("appRealDir=" + appRealDir);
-			logger.fatal("extensions=" + extensions);
-			logger.fatal("maxSize=" + AttachUtils.getSizeInfo(maxSize));
+		if (logger.isWarnEnabled()) {
+			logger.warn("appSubDir={}", appSubDir);
+			logger.warn("appRealDir={}", appRealDir);
+			logger.warn("extensions={}", extensions);
+			logger.warn("maxSize={}", AttachUtils.getSizeInfo(maxSize));
 		}
 	}
 
@@ -122,10 +106,10 @@ public class UploadFileServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("type=" + request.getParameter("type"));
-			logger.debug("ptype=" + request.getParameter("ptype"));
-			logger.debug("puid=" + request.getParameter("puid"));
-			logger.debug("absolute=" + "1".equals(request.getParameter("a")));
+			logger.debug("type={}", request.getParameter("type"));
+			logger.debug("ptype={}", request.getParameter("ptype"));
+			logger.debug("puid={}", request.getParameter("puid"));
+			logger.debug("absolute={}", "1".equals(request.getParameter("a")));
 		}
 
 		// 防止缓存的设置
@@ -182,7 +166,7 @@ public class UploadFileServlet extends HttpServlet {
 
 			// 获取上传文件流
 			int i = request.getContentLength();
-			logger.debug("contentLength=" + i);
+			logger.debug("contentLength={}", i);
 			byte buffer[] = new byte[i];
 			int j = 0;
 			while (j < i) {
@@ -231,9 +215,7 @@ public class UploadFileServlet extends HttpServlet {
 			// 构建文件要保存到的目录
 			File _fileDir = new File(realFileDir);
 			if (!_fileDir.exists()) {
-				if (logger.isFatalEnabled()) {
-					logger.fatal("mkdir=" + realFileDir);
-				}
+				logger.warn("mkdir={}", realFileDir);
 				_fileDir.mkdirs();
 			}
 
@@ -396,9 +378,7 @@ public class UploadFileServlet extends HttpServlet {
 			// 构建文件要保存到的目录
 			File _fileDir = new File(realFileDir);
 			if (!_fileDir.exists()) {
-				if (logger.isFatalEnabled()) {
-					logger.fatal("mkdir=" + realFileDir);
-				}
+				logger.warn("mkdir={}", realFileDir);
 				_fileDir.mkdirs();
 			}
 
@@ -449,8 +429,7 @@ public class UploadFileServlet extends HttpServlet {
 		int iFindEnd = dispoString.indexOf("\"", iFindStart);
 		iFindStart = dispoString.indexOf("filename=\"") + 10;
 		iFindEnd = dispoString.indexOf("\"", iFindStart);
-		String sFileName = dispoString.substring(iFindStart, iFindEnd);
-		return sFileName;
+		return dispoString.substring(iFindStart, iFindEnd);
 	}
 
 	// 获取文件的扩展名，如"png"

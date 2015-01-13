@@ -1,6 +1,6 @@
 package cn.bc.identity;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.springframework.util.DigestUtils;

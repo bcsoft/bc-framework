@@ -1,12 +1,11 @@
 package cn.bc.core;
 
-import java.util.ArrayList;
-
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.core.Page;
+import java.util.ArrayList;
+
+;
 
 public class PageTest {
 	@Test
@@ -46,5 +45,11 @@ public class PageTest {
 		Assert.assertEquals(50,Page.getFirstResult(2,50));
 		Assert.assertEquals(2,page.getPageCount());
 		Assert.assertNotNull(page.getData());
+	}
+
+	@Test
+	public void t1() {
+		Assert.assertEquals("a,b,c", "a|b|c".replace("|", ","));
+		Assert.assertEquals(3, "a+b+c".split("\\+").length);
 	}
 }

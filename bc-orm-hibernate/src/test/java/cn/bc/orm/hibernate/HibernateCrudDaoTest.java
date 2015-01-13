@@ -1,14 +1,13 @@
 package cn.bc.orm.hibernate;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional

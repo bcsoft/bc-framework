@@ -15,22 +15,20 @@
  */
 package cn.bc.web.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import cn.bc.core.exception.CoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import cn.bc.core.exception.CoreException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
 
 /**
  * WebUI的辅助函数库
@@ -39,7 +37,7 @@ import cn.bc.core.exception.CoreException;
  * @since 1.0.0
  */
 public class WebUtils implements ServletContextAware {
-	static Log logger = LogFactory.getLog(WebUtils.class);
+	static Logger logger = LoggerFactory.getLogger(WebUtils.class);
 	private static ServletContext servletContext = null;
 	private static WebApplicationContext wac = null;
 
@@ -53,7 +51,7 @@ public class WebUtils implements ServletContextAware {
 		rootPath = servletContext.getRealPath("/");
 		if (null == rootPath)
 			throw new CoreException("Error occured when getting context path.");
-		logger.fatal("rootPath=" + rootPath);
+		logger.warn("rootPath={}", rootPath);
 	}
 
 	public static String rootPath = "";// File.separator
@@ -258,7 +256,7 @@ public class WebUtils implements ServletContextAware {
 		}
 		client[0] = clientIp;
 		if (trace) {// name+ip获取方式+mac
-			logger.info("start traceClientMachine...:clientIp=" + clientIp);
+			logger.info("start traceClientMachine...:clientIp={}", clientIp);
 			if ("127.0.0.1".equals(clientIp) || "localhost".equals(clientIp)) {
 				// 排除本机的解析(会导致死掉)
 				client[1] = clientIp + "|" + key;

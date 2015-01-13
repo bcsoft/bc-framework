@@ -1,19 +1,17 @@
 package cn.bc.test;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.bc.core.CrudOperations;
 import cn.bc.core.Entity;
 import cn.bc.core.Page;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.InCondition;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CrudDao和CrudService实现类的测试基类,测试相关的CURD操作

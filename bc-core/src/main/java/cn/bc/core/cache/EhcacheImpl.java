@@ -11,8 +11,10 @@ import net.sf.ehcache.Element;
  * Ehcache缓存实现
  * 
  * @author dragon
+ * @deprecated use spring cache instead
  * 
  */
+@Deprecated
 public class EhcacheImpl implements Cache {
 	private final String cacheName;
 	private final CacheManager cacheManager;
@@ -35,7 +37,7 @@ public class EhcacheImpl implements Cache {
 	public <V> V get(String key) {
 		Element element = getCache().get(key);
 		if (element != null) {
-			return (V) element.getValue();
+			return (V) element.getObjectValue();
 		}
 		return null;
 	}

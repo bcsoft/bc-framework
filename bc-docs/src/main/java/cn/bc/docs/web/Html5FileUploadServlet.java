@@ -3,34 +3,26 @@
  */
 package cn.bc.docs.web;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cn.bc.Context;
 import cn.bc.docs.domain.Attach;
 import cn.bc.docs.domain.AttachHistory;
 import cn.bc.docs.service.AttachService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.util.WebUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Html5文件上传的实现.
@@ -43,7 +35,7 @@ import cn.bc.web.util.WebUtils;
  */
 public class Html5FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(Html5FileUploadServlet.class);
+	private static Logger logger = LoggerFactory.getLogger(Html5FileUploadServlet.class);
 	private static String extensions;// 上传类型限制，如 "jpg,jpeg,bmp,gif,png"，为空代表无限制
 	private static long maxSize;// 上传文件大小限制，单位为字节，默认10M
 
@@ -52,17 +44,14 @@ public class Html5FileUploadServlet extends HttpServlet {
 	}
 
 	public void init() throws ServletException {
-		// debug
-		if (logger.isFatalEnabled()) {
-			logger.fatal("dataRealDir=" + Attach.DATA_REAL_PATH);
-		}
+		logger.warn("dataRealDir={}", Attach.DATA_REAL_PATH);
 	}
 
 	// 上传文件数据处理过程
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("subdir=" + request.getParameter("subdir"));
+			logger.debug("subdir={}", request.getParameter("subdir"));
 		}
 
 		// 防止缓存的设置
@@ -119,7 +108,7 @@ public class Html5FileUploadServlet extends HttpServlet {
 
 			// 获取上传文件流
 			int i = request.getContentLength();
-			logger.debug("contentLength=" + i);
+			logger.debug("contentLength={}", i);
 			byte buffer[] = new byte[i];
 			int j = 0;
 			InputStream in = request.getInputStream();
@@ -162,8 +151,7 @@ public class Html5FileUploadServlet extends HttpServlet {
 			File file = new File(realpath);
 			if (!file.getParentFile().exists()) {
 				if (logger.isWarnEnabled()) {
-					logger.warn("mkdir="
-							+ file.getParentFile().getAbsolutePath());
+					logger.warn("mkdir={}", file.getParentFile().getAbsolutePath());
 				}
 				file.getParentFile().mkdirs();
 			}
@@ -230,8 +218,7 @@ public class Html5FileUploadServlet extends HttpServlet {
 		int iFindEnd = dispoString.indexOf("\"", iFindStart);
 		iFindStart = dispoString.indexOf("filename=\"") + 10;
 		iFindEnd = dispoString.indexOf("\"", iFindStart);
-		String sFileName = dispoString.substring(iFindStart, iFindEnd);
-		return sFileName;
+		return dispoString.substring(iFindStart, iFindEnd);
 	}
 
 	// 获取文件的扩展名，如"png"

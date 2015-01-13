@@ -3,6 +3,13 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<package name="aclAPI" extends="bc-default" namespace="/bc/acl">
+		<action name="config" class="aclConfigAction" method="config">
+			<result name="success">/bc/acl/config/config.jsp</result>
+		</action>
+		<action name="saveConfig" class="aclConfigAction" method="saveConfig"/>
+	</package>
+
 	<package name="accessControl" extends="bc-default" namespace="/bc/accessControl">
 		<action name="create" class="accessControlAction" method="create">
 			<result name="form">/bc/acl/control/form.jsp</result>

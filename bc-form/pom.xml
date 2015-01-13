@@ -22,11 +22,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-orm-hibernate</artifactId>
 			<version>${project.version}</version>

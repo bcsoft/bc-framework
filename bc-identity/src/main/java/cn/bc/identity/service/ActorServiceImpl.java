@@ -77,6 +77,12 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 				relationTypes, followerTypes, followerStatuses);
 	}
 
+	public List<Actor> findFollwerWithIds(Long[] masterIds,
+		   Integer[] relationTypes, Integer[] followerTypes) {
+		return this.actorDao.findFollowersByMastersId(masterIds,
+				relationTypes, followerTypes);
+	}
+
 	public List<Actor> findTopUnit() {
 		return this.actorDao.findTopUnit();
 	}

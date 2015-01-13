@@ -94,6 +94,42 @@ public interface ActorDao extends CrudDao<Actor> {
 			Integer[] followerStatuses);
 
 	/**
+	 * 获取隶属指定的多个actor的所有子actor
+	 *
+	 * @param mastersId
+	 *            主控方id
+	 * @param relationTypes
+	 *            关联的类型，对应ActorRelation的type属性
+	 * @param followerTypes
+	 *            从属方的类型，对应Actor的type属性
+	 * @return
+	 */
+	List<Actor> findFollowersByMastersId(Long[] mastersId,
+			Integer[] relationTypes, Integer[] followerTypes);
+
+	/**
+	 * 获取隶属指定的多个actor的所有子actor
+	 *
+	 * @param masterIds
+	 *            主控方id
+	 * @param relationTypes
+	 *            关联的类型，对应ActorRelation的type属性
+	 * @param followerTypes
+	 *            从属方的类型，对应Actor的type属性
+	 * @param followerNames
+	 *            从属方的名称
+	 * @param followerCodes
+	 *            从属方的编码
+	 * @param followerStatuses
+	 *            从属方的状态，对应Actor的status属性
+	 * @return
+	 */
+	List<Actor> findFollowersWithMastersIdOrNames(Long[] masterIds,
+			  String[] followerNames, String[] followerCodes,
+			  Integer[] relationTypes, Integer[] followerTypes,
+			  Integer[] followerStatuses);
+
+	/**
 	 * 获取顶层单位信息
 	 * 
 	 * @return

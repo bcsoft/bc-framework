@@ -1,6 +1,7 @@
 package cn.bc.template.web.struts2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.core.util.DateUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.AbstractFormater;
 import cn.bc.web.formater.CalendarFormater;
 import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
@@ -58,8 +61,8 @@ public class TemplateParamsAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.name,a.config,a.desc_ as desc");
-		sql.append(",b.actor_name,a.file_date,c.actor_name as mname,a.modified_date");
+		sql.append("select a.id,a.status_ as status,a.order_ as orderNo,a.name,a.config");
+		sql.append(",c.actor_name as mname,a.modified_date");
 		sql.append(" from bc_template_param a");
 		sql.append(" inner join bc_identity_actor_history b on b.id=a.author_id");
 		sql.append(" left join bc_identity_actor_history c on c.id=a.modifier_id");
@@ -78,9 +81,6 @@ public class TemplateParamsAction extends ViewAction<Map<String, Object>> {
 				map.put("orderNo", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("config", rs[i++]);
-				map.put("desc", rs[i++]);
-				map.put("actor_name", rs[i++]);
-				map.put("file_date", rs[i++]);
 				map.put("mname", rs[i++]);
 				map.put("modified_date", rs[i++]);
 				return map;
@@ -99,19 +99,21 @@ public class TemplateParamsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("a.order_", "orderNo",
 				getText("template.order"), 60).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("template.name"), 180).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.desc_", "desc_",
-				getText("template.desc")).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("b.actor_name", "actor_name",
-				getText("template.author"), 80));
-		columns.add(new TextColumn4MapKey("a.file_date", "file_date",
-				getText("template.fileDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
-		columns.add(new TextColumn4MapKey("c.actor_name", "mname",
-				getText("template.modifier"), 80));
+				getText("template.name")).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("a.modified_date", "modified_date",
-				getText("template.modifiedDate"), 130)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd HH:mm")));
+				getText("template.finalUpdate"), 190)
+				.setValueFormater(new AbstractFormater<Object>() {
+					@Override
+					public Object format(Object context, Object value) {
+						if (value == null || "".equals(value.toString()))
+							return null;
+						@SuppressWarnings("unchecked")
+						Map<String, Object> map = (Map<String, Object>) context;
+						return map.get("mname") + 
+								" (" +DateUtils.formatDateTime2Minute((Date)value) + "）";
+					}
+				}));
+
 		return columns;
 	}
 
@@ -143,7 +145,7 @@ public class TemplateParamsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(600).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 

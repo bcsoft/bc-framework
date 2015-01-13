@@ -1,8 +1,13 @@
 package cn.bc.template.dao.hibernate.jpa;
 
+import java.sql.Array;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
@@ -23,6 +28,12 @@ import cn.bc.template.domain.Template;
  */
 public class TemplateDaoImpl extends HibernateCrudJpaDao<Template> implements
 		TemplateDao {
+	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	public Template loadByCode(String code) {
 		if (code == null)
@@ -88,5 +99,10 @@ public class TemplateDaoImpl extends HibernateCrudJpaDao<Template> implements
 					return oi;
 				}
 		});
+	}
+
+	public List<Long> findTemplateIdsByCategoryIdForList(Long pid) {
+		String sql = "select tid from bc_template_template_category where cid = ?";
+		return this.jdbcTemplate.queryForList(sql, Long.class, pid);
 	}
 }

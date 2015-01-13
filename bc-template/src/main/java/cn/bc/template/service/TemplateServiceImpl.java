@@ -393,4 +393,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
 	}
 
+	public List<Long> findTemplateIdsByCategoryIdForList(Long pid) {
+		return this.templateDao.findTemplateIdsByCategoryIdForList(pid);
+	}
 }

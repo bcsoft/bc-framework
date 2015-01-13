@@ -1,11 +1,5 @@
 package cn.bc.subscribe.service;
 
-import java.util.Calendar;
-import java.util.List;
-
-import org.junit.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.service.IdGeneratorService;
@@ -16,6 +10,11 @@ import cn.bc.log.service.OperateLogService;
 import cn.bc.subscribe.dao.SubscribeDao;
 import cn.bc.subscribe.domain.Subscribe;
 import cn.bc.subscribe.domain.SubscribeActor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * 订阅Service接口的默认实现
@@ -55,7 +54,7 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doAddActor4Personal(Subscribe subscribe) {
-		Assert.assertNotNull(subscribe);
+		Assert.notNull(subscribe);
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		this.subscribeActorService.save(actor.getId(), subscribe.getId(), 0);
@@ -65,7 +64,7 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doAddActor4Personal(List<Subscribe> subscribes) {
-		Assert.assertNotNull(subscribes);
+		Assert.notNull(subscribes);
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		
@@ -78,8 +77,8 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doAddActor4Manager(Subscribe subscribe, Actor actor) {
-		Assert.assertNotNull(subscribe);
-		Assert.assertNotNull(actor);
+		Assert.notNull(subscribe);
+		Assert.notNull(actor);
 		SystemContext context = SystemContextHolder.get();
 		Actor operater=context.getUser();
 		this.subscribeActorService.save(actor.getId(), subscribe.getId(), 1);
@@ -89,8 +88,8 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doAddActor4Manager(Subscribe subscribe, List<Actor> actors) {
-		Assert.assertNotNull(subscribe);
-		Assert.assertNotNull(actors);
+		Assert.notNull(subscribe);
+		Assert.notNull(actors);
 		SystemContext context = SystemContextHolder.get();
 		Actor operater=context.getUser();
 		String actorNames = "";
@@ -106,7 +105,7 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 	
 	public void doDeleteActor4Personal(Subscribe subscribe) {
-		Assert.assertNotNull(subscribe);
+		Assert.notNull(subscribe);
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		this.subscribeActorService.delete(actor.getId(), subscribe.getId());
@@ -117,7 +116,7 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doDeleteActor4Personal(List<Subscribe> subscribes) {
-		Assert.assertNotNull(subscribes);
+		Assert.notNull(subscribes);
 		SystemContext context = SystemContextHolder.get();
 		Actor actor=context.getUser();
 		
@@ -130,8 +129,8 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doDeleteActor4Manager(Subscribe subscribe, Actor actor) {
-		Assert.assertNotNull(subscribe);
-		Assert.assertNotNull(actor);
+		Assert.notNull(subscribe);
+		Assert.notNull(actor);
 		SystemContext context = SystemContextHolder.get();
 		Actor operater=context.getUser();
 		SubscribeActor sa=this.subscribeActorService.find4aidpid(actor.getId(), subscribe.getId());
@@ -143,8 +142,8 @@ public class SubscribeServiceImpl extends DefaultCrudService<Subscribe> implemen
 	}
 
 	public void doDeleteActor4Manager(Subscribe subscribe, List<Actor> actors) {
-		Assert.assertNotNull(subscribe);
-		Assert.assertNotNull(actors);
+		Assert.notNull(subscribe);
+		Assert.notNull(actors);
 		SystemContext context = SystemContextHolder.get();
 		Actor operater=context.getUser();
 		String actorNames = "";

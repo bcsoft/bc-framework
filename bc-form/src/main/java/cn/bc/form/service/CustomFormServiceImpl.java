@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,6 +45,10 @@ public class CustomFormServiceImpl implements CustomFormService {
 
 	public void save(JSONObject formInfoJO, JSONArray formDataJA)
 			throws Exception {
+        if((formInfoJO == null || formInfoJO.length() == 0) && (formDataJA == null || formDataJA.length() == 0))
+            return;
+
+		Calendar now = Calendar.getInstance();
 		ActorHistory actor = SystemContextHolder.get().getUserHistory();
 		List<Field> fields = new ArrayList<Field>();
 		List<FieldLog> fieldLogs = new ArrayList<FieldLog>();
@@ -57,21 +62,16 @@ public class CustomFormServiceImpl implements CustomFormService {
 		if (form == null) {
 			// 表单信息处理
 			form = new Form();
-			form.setPid(pid);
-			form.setUid(formInfoJO.getString("uid"));
-			form.setType(type);
-			form.setCode(code);
-			form.setStatus(formInfoJO.getInt("status"));
-			form.setSubject(formInfoJO.getString("subject"));
-			form.setTpl(formInfoJO.getString("tpl"));
+            copyFormProperty(form, formInfoJO);
 			form.setAuthor(actor);
-			form.setFileDate(DateUtils.getCalendar(formInfoJO
-					.getString("fileDate")));
+			form.setFileDate(Calendar.getInstance());
 
 			// 表单字段处理
 			JSONObject formDataJO;
 			for (int i = 0; i < formDataJA.length(); i++) {
 				Field field = new Field();
+				field.setUpdator(actor);
+				field.setUpdateTime(now);
 				formDataJO = (JSONObject) formDataJA.get(i);
 				field.setForm(form);
 				field.setName(formDataJO.getString("name"));
@@ -88,12 +88,14 @@ public class CustomFormServiceImpl implements CustomFormService {
 				fieldLog.setField(field);
 				fieldLog.setValue(formDataJO.getString("value"));
 				fieldLog.setUpdator(actor);
-				fieldLog.setUpdateTime(Calendar.getInstance());
-				fieldLog.setBatchNo(DateUtils.formatCalendar(
-						Calendar.getInstance(), "yyyyMMddHmmssSSSS"));
+				fieldLog.setUpdateTime(now);
+				fieldLog.setBatchNo(DateUtils.formatCalendar(now, "yyyyMMddHmmssSSSS"));
 				fieldLogs.add(fieldLog);
 			}
 		} else {// 编辑保存
+            // 表单处理
+            copyFormProperty(form, formInfoJO);
+
 			// 表单字段处理
 			JSONObject formDataJO;
 			for (int i = 0; i < formDataJA.length(); i++) {
@@ -104,6 +106,8 @@ public class CustomFormServiceImpl implements CustomFormService {
 
 				if (field == null) { // 如果字段为新添加
 					field = new Field();
+					field.setUpdator(actor);
+					field.setUpdateTime(now);
 					field.setForm(form);
 					field.setName(formDataJO.getString("name"));
 					field.setType(formDataJO.getString("type"));
@@ -130,18 +134,34 @@ public class CustomFormServiceImpl implements CustomFormService {
 				fieldLogs.add(fieldLog);
 			}
 		}
-		if (fields.size() > 0) {
-			// 表单信息处理
-			form.setModifier(actor);
-			form.setModifiedDate(Calendar.getInstance());
-			this.formService.save(form);
-			this.fieldService.save(fields);
-			this.fieldLogService.save(fieldLogs);
-		}
 
+        // 表单信息处理
+        form.setModifier(actor);
+        form.setModifiedDate(now);
+		if(form.getVer() == null) form.setVer(new Float(1));// 默认版本1
+
+		// 保存
+		this.formService.save(form);
+        this.fieldService.save(fields);
+        this.fieldLogService.save(fieldLogs);
 	}
 
-	public void delete(String type, long pid, String code) {
+    private void copyFormProperty(Form form, JSONObject json) throws JSONException {
+        if (json.has("pid")) form.setPid(json.getLong("pid"));
+        if (json.has("uid")) form.setUid(json.getString("uid"));
+        if (json.has("type"))  form.setType(json.getString("type"));
+        if (json.has("code")) form.setCode(json.getString("code"));
+        if (json.has("status")) form.setStatus(json.getInt("status"));
+        if (json.has("subject")) form.setSubject(json.getString("subject"));
+        if (json.has("tpl")) form.setTpl(json.getString("tpl"));
+        if (json.has("version")) form.setVer(new Float(json.getString("version")));
+        if (json.has("description")) form.setDescription(json.getString("description"));
+        if (json.has("ext01")) form.setExt01(json.getString("ext01"));
+        if (json.has("ext02")) form.setExt02(json.getString("ext02"));
+        if (json.has("ext03")) form.setExt03(json.getString("ext03"));
+    }
+
+    public void delete(String type, long pid, String code) {
 		// 根据自定义表单type、pid、code，获取相应的自定义表单表单对象
 		Form form = this.formService.findByTPC(type, pid, code);
 

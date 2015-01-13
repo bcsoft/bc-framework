@@ -1,12 +1,9 @@
 package cn.bc.orm.hibernate.jpa;
 
-import java.util.List;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import junit.framework.Assert;
-
+import cn.bc.core.Page;
+import cn.bc.core.query.Query;
+import cn.bc.db.jdbc.SqlObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.core.Page;
-import cn.bc.core.query.Query;
-import cn.bc.db.jdbc.SqlObject;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional

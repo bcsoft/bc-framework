@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.springframework.beans.factory.InitializingBean;

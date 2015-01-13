@@ -3,6 +3,9 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
+	<package name="idGenerator" extends="bc-default" namespace="/bc/id">
+		<action name="nextSN4Month" class="idGeneratorAction" method="nextSN4Month"/>
+	</package>
 	<package name="resource" extends="bc-default" namespace="/bc/resource">
 		<action name="create" class="resourceAction" method="create">
 			<result name="form">/bc/identity/resource/form.jsp</result>
@@ -172,5 +175,8 @@
 	<package name="getUsers" extends="bc-default" namespace="/bc">
 		<action name="getUsers" class="getUsersAction">
 		</action>
+	</package>
+	<package name="nextUid" extends="bc-default" namespace="/bc">
+		<action name="nextuid" class="idGeneratorAction" method="nextUid"/>
 	</package>
 </struts>

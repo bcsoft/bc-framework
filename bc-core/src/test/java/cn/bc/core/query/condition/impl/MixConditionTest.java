@@ -3,13 +3,11 @@
  */
 package cn.bc.core.query.condition.impl;
 
-import java.util.regex.Pattern;
-
-import junit.framework.Assert;
-
+import cn.bc.core.query.condition.Direction;
+import org.junit.Assert;
 import org.junit.Test;
 
-import cn.bc.core.query.condition.Direction;
+import java.util.regex.Pattern;
 
 /**
  * 

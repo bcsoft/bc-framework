@@ -5,7 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,8 +57,8 @@ public abstract class AbstractEntityActionTest<K extends Serializable, E extends
 	}
 
 	@Override
-	protected String getContextLocations() {
-		return "classpath:spring-test.xml";
+	protected String[] getContextLocations() {
+		return new String[]{"classpath:spring-test.xml"};
 	}
 
 	@Override

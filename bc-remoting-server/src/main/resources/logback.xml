@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- http://logback.qos.ch/manual/layouts.html -->
+
+	<!-- 定义属性，后续使用 ${var} 来取属性的值}-->
+	<property name="LOG_HOME" value="/"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--
+			%d|%date{pattern}		输出日志的时间信息，语法与 java.text.SimpleDateFormat 兼容，如 yyyy-MM-dd HH:mm:ss.SSS
+			%p|%level		输出日志级别
+			%t|%thread		输出产生日志的线程名
+			%c|%logger{length}		输出日志的logger名,参数length的功能是缩短logger名,为0表示只输出logger最右边点符号之后的字符串
+			%C|%class{length}		输出执行记录请求的调用者的全限定名。参数与%logger一样。尽量避免使用，除非执行速度不造成任何问题
+			%M|%method		输出执行日志请求的方法名，尽量避免使用，除非执行速度不造成任何问题
+			%L|%line		输出执行日志请求的行号，尽量避免使用，除非执行速度不造成任何问题
+			%r|%relative		输出从程序启动到创建日志记录的时间，单位是毫秒
+			%m|%msg		输出应用程序提供的信息
+			%n		输出平台先关的分行符“\n”或者“\r\n”
+			%caller{depth}		输出生成日志的调用者的位置信息，整数选项表示输出信息深度，如%caller{1}可以在Console中点击类名打开链接
+			%replace(p){r, t}		p为日志内容，r是正则表达式，将p中符合r的内容替换为t，例如"%replace(%msg){'\s', ''}"
+			-->
+			<!--<pattern>%d{HH:mm:ss.SSS} %p [%thread] %c{0}.%M:%L - %msg%n</pattern>-->
+			<!--<pattern>%d{HH:mm:ss.SSS} %level [%thread] %c{0}.%M:%L - %msg%n</pattern>-->
+			<pattern>%d{HH:mm:ss.SSS} %level [%thread] %replace(%caller{1}){'\r|\n|\r\n|Caller\+0\t\sat\s',''} - %msg%n</pattern>
+			<!--<pattern>%d{HH:mm:ss.SSS} %level [%thread] %replace(%caller{1}){'.*[(]{1}|[)]{1}[\s\S]*',''} - %msg%n</pattern>-->
+		</encoder>
+	</appender>
+
+	<!-- 按照每天生成日志文件 http://blog.csdn.net/wangjunjun2008/article/details/18732019 -->
+	<appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>logback.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!--日志文件保留天数-->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出,%d:日期;%thread:线程名;%-5level：级别,从左显示5个字符宽度;%msg:日志消息;%n:换行符-->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}.%method:%line - %msg%n</pattern>
+		</encoder>
+		<!--日志文件最大的大小-->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<!-- spring -->
+	<logger name="org.springframework" level="WARN"/>
+	<!-- spring：设为INFO，查看加载了哪些xml配置文件 -->
+	<logger name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader" level="WARN"/>
+
+	<!-- bc -->
+	<logger name="cn.bc.remoting" level="WARN"/>
+
+	<!-- 设置默认的日志级别: TRACE < DEBUG < INFO < WARN < ERROR -->
+	<root level="ERROR">
+		<appender-ref ref="console"/>
+		<appender-ref ref="rollingFile"/>
+	</root>
+</configuration>
