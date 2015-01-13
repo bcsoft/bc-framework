@@ -15,7 +15,7 @@ import cn.bc.template.dao.TemplateDao;
 import cn.bc.template.domain.Template;
 import cn.bc.template.domain.TemplateParam;
 import cn.bc.template.util.DocxUtils;
-import cn.bc.template.util.FreeMarkerUtils;
+import cn.bc.core.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
 import org.apache.commons.logging.Log;
@@ -33,9 +33,9 @@ import java.util.*;
 
 /**
  * Service接口的实现
- * 
+ *
  * @author lbj
- * 
+ *
  */
 public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		TemplateService {
@@ -56,12 +56,12 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 	public void setOperateLogService(OperateLogService operateLogService) {
 		this.operateLogService = operateLogService;
 	}
-	
+
 	@Autowired
 	public void setActorHistoryService(ActorHistoryService actorHistoryService) {
 		this.actorHistoryService = actorHistoryService;
 	}
-	
+
 	@Autowired
 	public void setAttachService(AttachService attachService) {
 		this.attachService = attachService;
@@ -95,11 +95,11 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		if (tpl.getTemplateType().getCode().equals("xls")
 				&& extension.equals("xls"))
 			return XlsUtils.loadText(tpl.getInputStream());
-		
+
 		if (tpl.getTemplateType().getCode().equals("xlsx")
 				&& extension.equals("xlsx"))
 			return XlsxUtils.loadText(tpl.getInputStream());
-		
+
 		if (tpl.getTemplateType().getCode().equals("html")
 				&& extension.equals("html"))
 			return TemplateUtils.loadText(tpl.getInputStream());
@@ -129,7 +129,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			logger.warn("没有找到编码为'" + code + "'的模板!");
 		if(tpl.isFormatted())
 			logger.warn("code="+code+",模板不可格式化。");
-		
+
 		// 纯文本类型
 		if (tpl.isPureText()) {
 			String source = this.getContent(code);
@@ -147,7 +147,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			}
 		} else {
 			InputStream is = tpl.getInputStream();
-			
+
 			// 附件的扩展名
 			String extension = StringUtils.getFilenameExtension(tpl.getPath());
 
@@ -167,7 +167,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 					} catch (IOException ex) {
 					}
 				}
-				
+
 			} else if ("xls".equals(tpl.getTemplateType().getCode())
 					&& "xls".equals(extension)) {
 				HSSFWorkbook xls = XlsUtils.format(is, args);
@@ -184,10 +184,10 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 					} catch (IOException ex) {
 					}
 				}
-			
+
 			} else if ("xlsx".equals(tpl.getTemplateType().getCode())
 					&& "xlsx".equals(extension)) {// Excel2007+
-				
+
 				XSSFWorkbook xlsx = XlsxUtils.format(is, args);
 				try {
 					xlsx.write(out);
@@ -202,7 +202,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 					} catch (IOException ex) {
 					}
 				}
-				
+
 			} else if ("html".equals(tpl.getTemplateType().getCode())
 					&& "html".equals(extension)) {// html
 				String source = FreeMarkerUtils.format(TemplateUtils.loadText(is),args);
@@ -285,7 +285,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			subject="更新模板：" + entity.getSubject();
 			operate=OperateLog.OPERATE_UPDATE;
 		}
-		
+
 		//正常
 		if(entity.getStatus()==BCConstants.STATUS_ENABLED){
 			Template oldTpl = this.templateDao.loadByCodeAndId(entity.getCode(),
@@ -326,14 +326,14 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 		Assert.hasText(code, "code is Empty");
 		Assert.hasText(ptype, "ptype is Empty");
 		Assert.hasText(puid, "puid is Empty");
-		
+
 		Template template = this.templateDao.loadByCode(code);
 		if(template == null)
 			throw new CoreException("Template code:"+code+" not find entity!");
-		
+
 		if(args == null)
 				args = new HashMap<String, Object>();
-		
+
 		if(author == null){
 			if(SystemContextHolder.get() == null){
 				author = this.actorHistoryService.loadByCode("admin");
@@ -341,9 +341,9 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 				author = SystemContextHolder.get().getUserHistory();
 			}
 		}
-		
+
 		Map<String, Object> args4Param=this.getMapParams(template.getId(), formatParamSql);
-		
+
 		if(args4Param != null)
 		//最终替换参数
 		args.putAll(this.getMapParams(template.getId(), formatParamSql));
@@ -378,11 +378,11 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 			}
 			file.getParentFile().mkdirs();
 		}
-		
+
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-		
+
 		this.formatTo(template.getCode(), args, out);
-		
+
 		// 设置附件大小
 		attach.setSize(new File(realpath).length());
 

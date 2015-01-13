@@ -41,7 +41,7 @@ import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.RichFileEntityImpl;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.util.DocxUtils;
-import cn.bc.template.util.FreeMarkerUtils;
+import cn.bc.core.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
 
