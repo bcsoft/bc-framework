@@ -48,37 +48,37 @@ public class ResourceServiceImpl extends DefaultCrudService<Resource> implements
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public void delete(Serializable id) {
 		super.delete(id);
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public void delete(Serializable[] ids) {
 		super.delete(ids);
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public Resource save(Resource entity) {
 		return super.save(entity);
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public void save(Collection<Resource> entities) {
 		super.save(entities);
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public void update(Serializable id, Map<String, Object> attributes) {
 		super.update(id, attributes);
 	}
 
 	@Override
-	@CacheEvict(value = "identity.resource", key = "allResources")
+	@CacheEvict(value = "identity.resource", key = "'allResources'")
 	public void update(Serializable[] ids, Map<String, Object> attributes) {
 		super.update(ids, attributes);
 	}
