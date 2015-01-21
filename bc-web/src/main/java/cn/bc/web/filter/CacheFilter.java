@@ -63,11 +63,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * &lt;filter-mapping&gt;
  *  &lt;filter-name&gt;foreverCacheFilter&lt;/filter-name&gt;
- *  &lt;servlet-name&gt;your-servlet&lt;/servlet-name&gt;
+ *  &lt;demo-name&gt;your-demo&lt;/demo-name&gt;
  * &lt;/filter-mapping&gt;
  *
- * &lt;servlet&gt;
- *  &lt;servlet-name&gt;your-servlet&lt;/servlet-name&gt;
+ * &lt;demo&gt;
+ *  &lt;demo-name&gt;your-demo&lt;/demo-name&gt;
  * ... </pre>
  *
  * 若要排除某些目录或文件不作处理，

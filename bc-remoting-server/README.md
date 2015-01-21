@@ -1,6 +1,6 @@
 一）打包部署：
 1. 打包命令：
->mvn clean assembly:assembly
+>mvn clean package -Pproduct
 
 2. 启动服务：
 >java -classpath bc-rmi-1.0.jar cn.bc.rmi.server.ConsoleMain

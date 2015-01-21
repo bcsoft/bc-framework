@@ -42,11 +42,11 @@ import cn.bc.web.util.WebUtils;
  *
  * &lt;filter-mapping&gt;
  *  &lt;filter-name&gt;gzip-filter&lt;/filter-name&gt;
- *  &lt;servlet-name&gt;your-servlet&lt;/servlet-name&gt;
+ *  &lt;demo-name&gt;your-demo&lt;/demo-name&gt;
  * &lt;/filter-mapping&gt;
  *
- * &lt;servlet&gt;
- *  &lt;servlet-name&gt;your-servlet&lt;/servlet-name&gt;
+ * &lt;demo&gt;
+ *  &lt;demo-name&gt;your-demo&lt;/demo-name&gt;
  * ... </pre>
  *
  * 若要排除某些目录或文件不作处理，
@@ -100,7 +100,7 @@ public class GzipFilter extends CanExcludeFilter {
 	protected String gzipExtend = "gz";
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 * @see javax.demo.Filter#init(javax.demo.FilterConfig)
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
 		//初始化排除配置
@@ -126,13 +126,13 @@ public class GzipFilter extends CanExcludeFilter {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.Filter#destroy()
+	 * @see javax.demo.Filter#destroy()
 	 */
 	public void destroy() {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 * @see javax.demo.Filter#doFilter(javax.demo.ServletRequest, javax.demo.ServletResponse, javax.demo.FilterChain)
 	 */
 	public void doFilter(ServletRequest servletRequest,
 			ServletResponse servletResponse, FilterChain chain)

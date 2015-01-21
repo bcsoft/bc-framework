@@ -111,12 +111,12 @@ public class WebUtils implements ServletContextAware {
 		// Servlet 2.3 specification.
 
 		String path = (String) request
-				.getAttribute("javax.servlet.include.servlet_path");
+				.getAttribute("javax.demo.include.servlet_path");
 
 		// Also take into account the PathInfo stated on
 		// SRV.4.4 Request Path Elements.
 		String info = (String) request
-				.getAttribute("javax.servlet.include.path_info");
+				.getAttribute("javax.demo.include.path_info");
 
 		if (path == null) {
 			path = request.getServletPath();

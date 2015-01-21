@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
 	<!-- http://logback.qos.ch/manual/layouts.html -->
-
 	<!-- 定义属性，后续使用 ${var} 来取属性的值}-->
 	<property name="LOG_HOME" value="/"/>
 
@@ -46,13 +45,9 @@
 		</triggeringPolicy>
 	</appender>
 
-	<!-- spring -->
-	<logger name="org.springframework" level="WARN"/>
-	<!-- spring：设为INFO，查看加载了哪些xml配置文件 -->
-	<logger name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader" level="WARN"/>
-
-	<!-- bc -->
+	<!-- this -->
 	<logger name="cn.bc.remoting" level="WARN"/>
+	<logger name="cn.bc.remoting.demo" level="DEBUG"/>
 
 	<!-- 设置默认的日志级别: TRACE < DEBUG < INFO < WARN < ERROR -->
 	<root level="ERROR">

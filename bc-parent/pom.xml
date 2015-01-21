@@ -134,10 +134,10 @@
 
 					<!-- 配置参考：http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
 					<configuration>
-						<scanIntervalSeconds>5</scanIntervalSeconds>
+						<!--<scanIntervalSeconds>5</scanIntervalSeconds>-->
 						<httpConnector>
 							<port>${jetty.port}</port>
-							<maxIdleTime>60000</maxIdleTime>
+							<idleTimeout>60000</idleTimeout>
 						</httpConnector>
 						<webApp>
 							<contextPath>${jetty.path}</contextPath><!--默认为： /${project.artifactId} -->
@@ -272,12 +272,12 @@
 
 		<!-- servlet2.x, jsp
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<groupId>javax.demo</groupId>
+			<artifactId>demo-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
+			<groupId>javax.demo</groupId>
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
 		</dependency> -->
@@ -597,6 +597,26 @@
 				<groupId>org.apache.struts</groupId>
 				<artifactId>struts2-portlet-plugin</artifactId>
 				<version>${struts2.version}</version>
+			</dependency>
+
+			<!-- websocket API: 1.1_20140807, 1.0_20130510-->
+			<dependency>
+				<groupId>javax.websocket</groupId>
+				<artifactId>javax.websocket-api</artifactId>
+				<version>1.1</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.websocket</groupId>
+				<artifactId>javax.websocket-all</artifactId>
+				<version>1.1</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.websocket</groupId>
+				<artifactId>javax.websocket-client-api</artifactId>
+				<version>1.1</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- 3.1.0(2013-04-26), 3.0.1(2011-07-13) 3.x版与2.x版的artifactId不一样-->
@@ -991,7 +1011,7 @@
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<!--Jetty的各种版本：
-			9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905,9.2.2.v20140723,9.2.1.v20140609,9.2.0.v20140526,
+			9.2.7.v20150116,9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905,9.2.2.v20140723,9.2.1.v20140609,9.2.0.v20140526,
 			9.1.4.v20140401,9.1.3.v20140225,9.1.2.v20140210,9.1.1.v20140108,9.1.0.v20131115,
 			9.0.7.v20131107,9.0.6.v20130930,9.0.5.v20130815,9.0.4.v20130625,9.0.3.v20130506,
 			9.0.2.v20130417,9.0.1.v20130408,9.0.0.v20130308,
@@ -1013,7 +1033,7 @@
 			注：使用8.0.4启动将延时35秒左右，使用7.5.4则无延时，使用7.0.1编译不通过
 			7.0到7.3使用接口WebSocket.Outbound,
 			7.4开始接口大变为WebSocket.OnTextMessage、WebSocket.OnBinaryMessage等 -->
-		<jetty.version>9.2.6.v20141205</jetty.version>
+		<jetty.version>9.2.7.v20150116</jetty.version>
 		<jetty.port>8082</jetty.port>
 		<jetty.path>/</jetty.path>
 		<maven.test.skip>false</maven.test.skip>

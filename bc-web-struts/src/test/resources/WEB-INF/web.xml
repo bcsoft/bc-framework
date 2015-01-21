@@ -21,11 +21,11 @@
 <!--		<param-value>classpath:qc/web/struts/StrutsCRUDActionTest-context.xml</param-value>-->
 <!--	</context-param>-->
 <!--	-->
-<!--	<servlet>-->
-<!--		<servlet-name>context</servlet-name>-->
-<!--		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>-->
+<!--	<demo>-->
+<!--		<demo-name>context</demo-name>-->
+<!--		<demo-class>org.springframework.web.context.ContextLoaderServlet</demo-class>-->
 <!--		<load-on-startup>1</load-on-startup>-->
-<!--	</servlet>-->
+<!--	</demo>-->
 	
 	<servlet>
 		<servlet-name>action</servlet-name>
