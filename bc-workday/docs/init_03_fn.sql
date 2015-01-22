@@ -55,20 +55,23 @@ $BODY$
 			-- 常规工作日数: 剔除周末、不考虑节假日和调休
 			workday__calculate_default_working_days($1, $2)
 			-- 减节假日、加调休日
-			+ (
+			+ coalesce((
 				select sum((
 					case when w.dayoff then 
 						-1 * workday__calculate_default_working_days(w.from_date, w.to_date)
 					else
 						w.to_date - w.from_date + 1 - workday__calculate_default_working_days(w.from_date, w.to_date)
 					end)) from (select * from BC_WORKDAY w0 where w0.from_date >= $1 and w0.to_date <= $2) w
-			) into _days;
+			), 0) into _days;
 		--raise info 'days=%', _days;
 
 		-- 返回
 		return _days;
 	END;
 $BODY$ LANGUAGE plpgsql;
+
+select workday__calculate_default_working_days(date '2015-01-19', date '2015-01-22');
+select workday__calculate_real_working_days(date '2015-01-19', date '2015-01-22');
 
 /*
 -- 9>8
