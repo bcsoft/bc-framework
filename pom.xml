@@ -46,6 +46,7 @@
 		<module>bc-photo</module>
 		<module>bc-form</module>
 		<module>bc-device</module>
+		<module>bc-workday</module>
 
 		<module>bc-remoting-common</module>
 		<module>bc-remoting-client</module>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 工作日管理视图 -->
+	<package name="workDayView" extends="bc-default" namespace="/bc/workday">
+		<action name="paging" class="workdaysAction" method="paging"/>
+		<action name="export" class="workdaysAction" method="export"/>
+		<action name="list" class="workdaysAction" method="list"/>
+		<action name="data" class="workdaysAction" method="data"/>
+	</package>
+	<!-- 工作日管理 表单 -->
+	<package name="workdayForm" extends="bc-default" namespace="/bc/workday">		
+		<action name="save" class="workdayAction" method="save"/>
+		<action name="delete" class="workdayAction" method="delete"/>
+		<action name="open" class="workdayAction" method="open">
+			<result name="formr">/modules/bc/workday/form.jsp</result>
+		</action>	
+		<action name="edit" class="workdayAction" method="edit">
+			<result name="form">/modules/bc/workday/form.jsp</result>
+		</action>	
+		<action name="create" class="workdayAction" method="create">
+			<result name="form">/modules/bc/workday/form.jsp</result>
+		</action>	
+	</package>
+</struts>

@@ -10,5 +10,27 @@
 	<description>工作日管理</description>
 	<name>bc-workday</name>
 	<dependencies>
+	    <dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-form</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-web</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-orm-hibernate</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.bc</groupId>
+			<artifactId>bc-identity</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
     </dependencies>
 </project>
