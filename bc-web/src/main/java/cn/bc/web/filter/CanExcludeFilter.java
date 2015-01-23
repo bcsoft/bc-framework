@@ -47,7 +47,7 @@ public abstract class CanExcludeFilter implements Filter {
     protected List<String> excludeFiles = new ArrayList<String>();
 
 	/* (non-Javadoc)
-	 * @see javax.demo.Filter#init(javax.demo.FilterConfig)
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
 		//排除处理的文件、文件夹配置
@@ -72,7 +72,7 @@ public abstract class CanExcludeFilter implements Filter {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.demo.Filter#destroy()
+	 * @see javax.servlet.Filter#destroy()
 	 */
 	public void destroy() {
 		excludeDirs = null;

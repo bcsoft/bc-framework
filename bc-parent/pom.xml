@@ -272,12 +272,12 @@
 
 		<!-- servlet2.x, jsp
 		<dependency>
-			<groupId>javax.demo</groupId>
-			<artifactId>demo-api</artifactId>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.demo</groupId>
+			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
 		</dependency> -->

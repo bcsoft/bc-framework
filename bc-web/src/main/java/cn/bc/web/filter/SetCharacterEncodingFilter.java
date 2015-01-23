@@ -95,12 +95,12 @@ public class SetCharacterEncodingFilter implements Filter {
      * Select and set (if specified) the character encoding to be used to
      * interpret request parameters for this request.
      *
-     * @param request The demo request we are processing
-     * @param result The demo response we are creating
+     * @param request The servlet request we are processing
+     * @param result The servlet response we are creating
      * @param chain The filter chain we are processing
      *
      * @exception IOException if an input/output error occurs
-     * @exception ServletException if a demo error occurs
+     * @exception ServletException if a servlet error occurs
      */
     public void doFilter(ServletRequest request, ServletResponse response,
 						 FilterChain chain) throws IOException, ServletException {

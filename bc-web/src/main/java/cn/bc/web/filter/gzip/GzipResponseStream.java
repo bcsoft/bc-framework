@@ -44,14 +44,14 @@ public class GzipResponseStream extends ServletOutputStream {
      */
     protected int length = -1;
 
-    /** The response with which this demo output stream is associated. */
+    /** The response with which this servlet output stream is associated. */
     protected HttpServletResponse response = null;
 
-    /** The request with which this demo is associated. */
+    /** The request with which this servlet is associated. */
     protected HttpServletRequest request;
 
     /**
-     * The underlying output stream, either gzipped or demo, to which we
+     * The underlying output stream, either gzipped or servlet, to which we
      * should write data.
      */
     protected OutputStream output = null;
@@ -59,7 +59,7 @@ public class GzipResponseStream extends ServletOutputStream {
     // ----------------------------------------------------------- Constructors
 
     /**
-     * Construct a demo output stream associated with the specified Response.
+     * Construct a servlet output stream associated with the specified Response.
      *
      * @param response The associated response
      * @param request The associated request
@@ -98,7 +98,7 @@ public class GzipResponseStream extends ServletOutputStream {
         if (!closed) {
 
             // Don't close if this is a server side include
-            if (request.getAttribute("javax.demo.include.request_uri") != null) {
+            if (request.getAttribute("javax.servlet.include.request_uri") != null) {
                 flush();
 
             } else {

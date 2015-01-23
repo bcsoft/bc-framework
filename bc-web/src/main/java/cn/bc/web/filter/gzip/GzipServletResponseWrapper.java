@@ -17,7 +17,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper {
      * Calls the parent constructor which creates a ServletResponse adaptor
      * wrapping the given response object.
      *
-     * @param response the demo response to wrap
+     * @param response the servlet response to wrap
      * @param request The associated request
      */
     public GzipServletResponseWrapper(HttpServletResponse response, HttpServletRequest request) {
@@ -31,7 +31,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper {
     /** Original response. */
     protected HttpServletResponse origResponse = null;
 
-    /** The request with which this demo is associated. */
+    /** The request with which this servlet is associated. */
     protected HttpServletRequest origRequest;
 
     /** Descriptive information about this Response implementation. */
@@ -83,7 +83,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper {
      * Create and return a ServletOutputStream to write the content
      * associated with this Response.
      *
-     * @return a new compressed demo output stream
+     * @return a new compressed servlet output stream
      * @exception IOException if an input/output error occurs
      */
     public ServletOutputStream createOutputStream() throws IOException {
@@ -128,9 +128,9 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper {
     }
 
     /**
-     * Return the demo output stream associated with this Response.
+     * Return the servlet output stream associated with this Response.
      *
-     * @return the demo output stream associated with this response
+     * @return the servlet output stream associated with this response
      * @exception IllegalStateException if <code>getWriter</code> has
      *  already been called for this response
      * @exception IOException if an input/output error occurs
@@ -153,7 +153,7 @@ public class GzipServletResponseWrapper extends HttpServletResponseWrapper {
     /**
      * Return the writer associated with this Response.
      *
-     * @return the demo print writer
+     * @return the servlet print writer
      * @exception IllegalStateException if <code>getOutputStream</code> has
      *  already been called for this response
      * @exception IOException if an input/output error occurs
