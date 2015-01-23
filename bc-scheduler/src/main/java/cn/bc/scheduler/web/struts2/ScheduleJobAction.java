@@ -56,7 +56,7 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin"));// 超级管理角色
+		return schedulerManage.isDisabled() || !context.hasAnyRole(getText("key.role.bc.admin"));// 超级管理角色
 	}
 
 	@Autowired
@@ -66,7 +66,11 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 
 	@Override
 	protected Grid buildGrid() {
-		return super.buildGrid().setSingleSelect(true);
+		return super.buildGrid().setSingleSelect(true).setDblClickRow(getGridDblClickRowFn());
+	}
+
+	private String getGridDblClickRowFn() {
+		return this.isReadonly() ? "" : "bc.page.edit";
 	}
 
 	@Override
@@ -91,21 +95,26 @@ public class ScheduleJobAction extends EntityAction<Long, ScheduleJob>
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
 
-		// 新建
-		tb.addButton(getDefaultCreateToolbarButton());
+		if(!this.isReadonly()) {
+			// 新建
+			tb.addButton(getDefaultCreateToolbarButton());
 
-		// 编辑
-		tb.addButton(getDefaultEditToolbarButton());
+			// 编辑
+			tb.addButton(getDefaultEditToolbarButton());
 
-		// 启动/重置
-		tb.addButton(new ToolbarButton().setIcon("ui-icon ui-icon-lightbulb")
-				.setText(getText("scheduleJob.button.start"))
-				.setClick("bc.scheduleJobList.start"));
+			// 启动/重置
+			tb.addButton(new ToolbarButton().setIcon("ui-icon ui-icon-lightbulb")
+					.setText(getText("scheduleJob.button.start"))
+					.setClick("bc.scheduleJobList.start"));
 
-		// 停止/禁用
-		tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
-				.setText(getText("scheduleJob.button.stop"))
-				.setClick("bc.scheduleJobList.stop"));
+			// 停止/禁用
+			tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
+					.setText(getText("scheduleJob.button.stop"))
+					.setClick("bc.scheduleJobList.stop"));
+		}else{
+			// 查看
+			tb.addButton(getDefaultOpenToolbarButton());
+		}
 
 		// 查看调度日志
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-calendar")

@@ -18,8 +18,7 @@ public class ConsoleMain {
 
 		// 初始化 Spring
 		// ClassPathXmlApplicationContext
-		Resource sresource = new ClassPathResource(
-				"cn/bc/remoting/spring.xml");
+		Resource sresource = new ClassPathResource("cn/bc/remoting/spring.xml");
 		BeanFactory sfactory = new XmlBeanFactory(sresource);
 
 		// 注册 RMI

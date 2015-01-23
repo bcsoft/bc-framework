@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.bc.websocket.event;
+package cn.bc.ws.event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationListener;
 
 import cn.bc.identity.web.SystemContext;
 import cn.bc.web.event.SessionDestroyedEvent;
-import cn.bc.websocket.jetty.ChatWebSocketService;
+import cn.bc.ws.jetty.ChatWebSocketService;
 
 /**
  * Session销毁的事件监听处理：webSocket下线处理

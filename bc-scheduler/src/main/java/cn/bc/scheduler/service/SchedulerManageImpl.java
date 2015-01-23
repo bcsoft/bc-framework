@@ -1,23 +1,22 @@
 package cn.bc.scheduler.service;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import cn.bc.BCConstants;
+import cn.bc.core.exception.CoreException;
+import cn.bc.scheduler.domain.ScheduleJob;
+import cn.bc.scheduler.spring.MethodInvokingJobEx;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.MethodInvoker;
 
-import cn.bc.BCConstants;
-import cn.bc.core.exception.CoreException;
-import cn.bc.scheduler.domain.ScheduleJob;
-import cn.bc.scheduler.spring.MethodInvokingJobEx;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 调度任务管理器的实现，注意该类不要配置事务管理
@@ -30,11 +29,19 @@ import cn.bc.scheduler.spring.MethodInvokingJobEx;
  */
 public class SchedulerManageImpl implements SchedulerManage,
 		ApplicationContextAware, InitializingBean {
-	private static final Log logger = LogFactory
-			.getLog(SchedulerManageImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerManageImpl.class);
 	private Scheduler scheduler;
 	private SchedulerService schedulerService;
 	private ApplicationContext applicationContext;
+	private boolean disabled = false;
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
 
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
@@ -50,9 +57,14 @@ public class SchedulerManageImpl implements SchedulerManage,
 	}
 
 	public void afterPropertiesSet() throws Exception {
+		// 禁用就不再处理
+		if(isDisabled()){
+			logger.warn("SchedulerManage was config to disabled");
+			return;
+		}
+
 		// 立即计划所有可用的调度任务
-		List<ScheduleJob> jobs = this.schedulerService
-				.findAllEnabledScheduleJob();
+		List<ScheduleJob> jobs = this.schedulerService.findAllEnabledScheduleJob();
 		logger.warn("scheduling " + jobs.size() + " jobs");
 		for (ScheduleJob job : jobs) {
 			this.scheduleJob(job.getId());

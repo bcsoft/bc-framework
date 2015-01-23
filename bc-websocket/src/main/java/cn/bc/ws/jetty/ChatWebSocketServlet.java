@@ -1,4 +1,4 @@
-package cn.bc.websocket.jetty;
+package cn.bc.ws.jetty;
 
 import java.io.IOException;
 
