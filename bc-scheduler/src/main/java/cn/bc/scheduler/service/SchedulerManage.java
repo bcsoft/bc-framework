@@ -9,6 +9,9 @@ import java.util.Date;
  * @since 2011-08-30
  */
 public interface SchedulerManage {
+	/* 定时任务管理器是否处于禁用状态 */
+	boolean isDisabled();
+
 	/**
 	 * 停止调度
 	 * 

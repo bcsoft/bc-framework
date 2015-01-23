@@ -14,7 +14,7 @@
 		</action>
 		<!-- 只读表单 -->
 		<action name="open" class="scheduleJobAction" method="open">
-			<result name="formr">/bc/schedule/job/formr.jsp</result>
+			<result name="formr">/bc/schedule/job/form.jsp</result>
 		</action>
 		<!-- 保存 -->
 		<action name="save" class="scheduleJobAction" method="save" />
