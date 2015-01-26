@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="cache" extends="bc-default" namespace="/bc/cache">
+		<action name="paging" class="cacheViewAction" method="paging" />
+		<action name="list" class="cacheViewAction" method="list" />
+		<action name="data" class="cacheViewAction" method="data" />
+		<action name="export" class="cacheViewAction" method="export" />
+
+		<action name="deleteAll" class="cacheViewAction" method="deleteAll" />
+		<action name="delContainer" class="cacheViewAction" method="delContainer" />
+		<action name="delCacheKey" class="cacheViewAction" method="delCacheKey" />
+	</package>
+</struts>
