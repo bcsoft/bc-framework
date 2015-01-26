@@ -105,6 +105,19 @@ public class WorkdayDaoImpl extends HibernateCrudJpaDao<Workday> implements Work
 			}});
 		return count > 0 ? true : false;
 	}
+	
+	@Override
+	public int getRealWorkingdays(Date fromDate, Date toDate,
+			int workdaysEveryWeeks) {
+		String sql = "select workday__calculate_real_working_days(?,?,?) ct ;";
+		return this.jdbcTemplate.queryForObject(sql, new Object[]{fromDate, toDate, workdaysEveryWeeks},  new RowMapper<Integer>(){
 
+			@Override
+			public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getInt("ct");
+			}
+			
+		});	
+	}
 	
 }

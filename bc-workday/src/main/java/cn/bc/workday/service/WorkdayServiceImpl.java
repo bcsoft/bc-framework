@@ -31,4 +31,10 @@ public class WorkdayServiceImpl extends DefaultCrudService<Workday> implements W
 	public boolean checkDateIsCross(long id, Date fromDate, Date toDate) {
 		return this.workdayDao.checkDateIsCross( id,fromDate, toDate);
 	}
+
+	@Override
+	public int getRealWorkingdays(Date fromDate, Date toDate,
+			int workdaysEveryWeeks) {
+		return this.workdayDao.getRealWorkingdays(fromDate, toDate, workdaysEveryWeeks);
+	}
 }
