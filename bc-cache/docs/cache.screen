@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="225" x="8" y="8" measuredWidth="625" measuredHeight="150">
+    <widgets xsi:type="model:Window" id="1" width="625" height="150" text="缓存管理" measuredWidth="625" measuredHeight="150" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="6" y="24" width="75" height="27" text="清空全部" measuredWidth="75" measuredHeight="27">
+      <font/>
+      <items x="0" y="0" width="74" height="27" text="清空全部"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" y="54" width="625" text="(w:30). !,(w:150). 容器, 数据&#xA;1, {trash}identity.resource, {trash}Resources&#xA;2, {trash}wfDeployResource, {trash}a&#xA;3, {trash}wfDeployResource, {trash}b" measuredWidth="625" measuredHeight="96" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="6" x="471" y="25" measuredWidth="148" measuredHeight="25">
+      <widgets xsi:type="model:SearchField" id="7" width="148" measuredWidth="148" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="223" x="8" y="168" width="626" height="89" text="说明：&#xD;&#xA;1）点击容器列前的{trash}按钮，清空此容器内的所有缓存。&#xD;&#xA;2）点击数据列前的{trash}按钮，仅清空此数据的缓存。&#xD;&#xA;3）模糊搜索容器和数据列。" measuredWidth="626" measuredHeight="89" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
