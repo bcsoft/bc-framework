@@ -2,7 +2,7 @@ package cn.bc.template.engine;
 
 import java.util.Map;
 
-import cn.bc.template.util.FreeMarkerUtils;
+import cn.bc.core.util.FreeMarkerUtils;
 
 /**
  * 使用FreeMarker的模板引擎实现

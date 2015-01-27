@@ -6,6 +6,7 @@ package cn.bc.template.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.bc.core.util.FreeMarkerUtils;
 import org.junit.Assert;
 
 import org.junit.Test;

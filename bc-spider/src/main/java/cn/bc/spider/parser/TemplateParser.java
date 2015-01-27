@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.SpringUtils;
 import cn.bc.template.service.TemplateService;
-import cn.bc.template.util.FreeMarkerUtils;
+import cn.bc.core.util.FreeMarkerUtils;
 
 /**
  * 基于模版的数据格式化处理

@@ -1,6 +1,6 @@
 package cn.bc.spider.parser;
 
-import cn.bc.template.util.FreeMarkerUtils;
+import cn.bc.core.util.FreeMarkerUtils;
 
 /**
  * 基于FreeMarker模版的数据格式化处理
