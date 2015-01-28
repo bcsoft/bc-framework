@@ -20,6 +20,9 @@ insert into BC_WORKDAY (DAYOFF, FROM_DATE, TO_DATE, DESC_) VALUES
 delete from BC_WORKDAY where date_part('year', FROM_DATE) = 2015;
 insert into BC_WORKDAY (DAYOFF, FROM_DATE, TO_DATE, DESC_) VALUES
 	(true, '2015-01-01', '2015-01-03', '元旦'),
-	(false, '2015-01-04', '2015-01-04', '元旦调休');
+	(false, '2015-01-04', '2015-01-04', '元旦调休'),
+	(false, '2015-02-15', '2015-02-15', '春节调休'),
+	(true, '2015-02-18', '2015-02-24', '春节'),
+	(false, '2015-02-28', '2015-02-28', '春节调休');
 
 -- select * from BC_WORKDAY order by FROM_DATE desc;
