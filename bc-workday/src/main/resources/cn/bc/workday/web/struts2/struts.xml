@@ -15,13 +15,13 @@
 		<action name="save" class="workdayAction" method="save"/>
 		<action name="delete" class="workdayAction" method="delete"/>
 		<action name="open" class="workdayAction" method="open">
-			<result name="formr">/modules/bc/workday/form.jsp</result>
+			<result name="formr">/bc/workday/form.jsp</result>
 		</action>	
 		<action name="edit" class="workdayAction" method="edit">
-			<result name="form">/modules/bc/workday/form.jsp</result>
+			<result name="form">/bc/workday/form.jsp</result>
 		</action>	
 		<action name="create" class="workdayAction" method="create">
-			<result name="form">/modules/bc/workday/form.jsp</result>
+			<result name="form">/bc/workday/form.jsp</result>
 		</action>	
 	</package>
 </struts>
