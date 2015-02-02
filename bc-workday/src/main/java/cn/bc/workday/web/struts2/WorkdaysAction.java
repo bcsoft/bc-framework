@@ -88,21 +88,21 @@ public class WorkdaysAction extends ViewAction<Map<String, Object>> {
 
 		// 类别
 		columns.add(new TextColumn4MapKey("w.dayoff", "dayoff",
-				getText("workday.dayoff"), 40).setSortable(true)
+				getText("workday.dayoff"), 50).setSortable(true)
 				.setValueFormater(new AbstractFormater<String>() {
 
 					@Override
 					public String format(Object context, Object value) {
 						if (Boolean.valueOf(String.valueOf(value))) {
-							return "休假";
+							return "放假";
 						} else {
 							return "上班";
 						}
 					}
-				}));
+		}));
 
 		// 日期
-		columns.add(new TextColumn4MapKey("", "", getText("workday.date"), 60)
+		columns.add(new TextColumn4MapKey("", "", getText("workday.date"), 180)
 				.setSortable(true).setValueFormater(
 						new AbstractFormater<Object>() {
 							@Override
@@ -119,7 +119,7 @@ public class WorkdaysAction extends ViewAction<Map<String, Object>> {
 
 		// 备注
 		columns.add(new TextColumn4MapKey("w.desc_", "desc_",
-				getText("workday.desc"), 60).setSortable(true));
+				getText("workday.desc")).setSortable(true));
 
 		return columns;
 	}
@@ -131,7 +131,7 @@ public class WorkdaysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(670).setMinWidth(610)
+		return super.getHtmlPageOption().setWidth(500).setMinWidth(450)
 				.setHeight(400).setMinHeight(200);
 	}
 
@@ -173,6 +173,6 @@ public class WorkdaysAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "w.from_date", "w.to_date", "w.desc_" };
+		return new String[] {"w.desc_" };
 	}
 }
