@@ -145,7 +145,7 @@ public class CacheViewAction extends ViewAction {
 
     @Override
     protected PageOption getHtmlPageOption() {
-        return super.getHtmlPageOption().setWidth(400).setHeight(450);
+        return super.getHtmlPageOption().setWidth(700).setHeight(441);
     }
 
     @Override
