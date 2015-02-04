@@ -61,6 +61,7 @@ public class WorkdayAction extends EntityAction<Long, Workday>{
     protected boolean useFormPrint() {
         return false;
     }
+  
     
     @Override
     protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
@@ -80,15 +81,14 @@ public class WorkdayAction extends EntityAction<Long, Workday>{
   //类别的下拉列表
   	private Map<Object, Object> getDayoffList() {
   		Map<Object, Object> map = new LinkedHashMap<Object, Object>();
-  		map.put(true, "休假");
+  		map.put(true, "放假");
   		map.put(false, "上班");
   		return map;
   	}
   	
   	@Override
   	public String save() throws Exception {
-  		
-  		
+ 		
   		Workday e = this.getE();
   		boolean isCross;
   		if(e.isNew())
@@ -98,7 +98,7 @@ public class WorkdayAction extends EntityAction<Long, Workday>{
   		
   			if (isCross) {//出现交叉
   				JSONObject resultJson = new JSONObject();
-  				String msg = "输入的时间出现交叉，请认真核实!";
+  				String msg = "已经存在所输入日期的工作日配置，系统不允许日期出现重叠或交叉，请核实后重新输入！";
   				resultJson.put("success", false);
   				resultJson.put("msg", msg);
   				this.json = resultJson.toString();

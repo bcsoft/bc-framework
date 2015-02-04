@@ -102,7 +102,7 @@ public class WorkdaysAction extends ViewAction<Map<String, Object>> {
 		}));
 
 		// 日期
-		columns.add(new TextColumn4MapKey("", "", getText("workday.date"), 180)
+		columns.add(new TextColumn4MapKey("w.from_date", "from_date", getText("workday.date"), 180)
 				.setSortable(true).setValueFormater(
 						new AbstractFormater<Object>() {
 							@Override
