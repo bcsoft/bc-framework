@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="29" x="8" y="8" measuredWidth="673" measuredHeight="243">
+    <widgets xsi:type="model:Window" id="1" width="673" height="243" text="工作日管理" measuredWidth="673" measuredHeight="243" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="2" y="59" width="625" measuredWidth="625" measuredHeight="6"/>
+    <widgets xsi:type="model:ButtonBar" id="3" x="4" y="23" width="181" text="{new}新建,{edit}编辑,{delete}删除" measuredWidth="181" measuredHeight="30">
+      <font/>
+      <items x="0" y="0" width="61" height="30" text="{new}新建"/>
+      <items x="61" y="0" width="60" height="30" text="{edit}编辑"/>
+      <items x="121" y="0" width="60" height="30" text="{delete}删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="5" y="55" width="673" text="(w:30). !,(w:40). 类别,(w:150). 日期,备注&#xA;1,上班,2015-01-04,元旦调休&#xA;2,放假,2015-01-01~01-03,元旦&#xA;3,上班,2014-10-11,国庆节调休&#xA;4,放假,2014-10-01~10-07,国庆节&#xA;5,上班,2014-09-28,国庆节调休&#xA;6,放假,2014-09-08,中秋节&#xA;7,放假,2014-06-02,端午节&#xA;" measuredWidth="673" measuredHeight="188" alternative="#eeeeee">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="192" x="483" y="26" measuredWidth="183" measuredHeight="25">
+      <widgets xsi:type="model:SearchField" id="193" width="183" measuredWidth="183" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="194" x="156" y="6" height="14" measuredWidth="16" measuredHeight="14" icon="desc (small)"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="259" x="8" y="264" measuredWidth="289" measuredHeight="174">
+    <widgets xsi:type="model:Window" id="260" width="289" height="174" text="工作日配置" measuredWidth="289" measuredHeight="174" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:HLine" id="261" y="134" width="289" measuredWidth="289" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" id="262" x="230" y="142" width="53" text="确定" measuredWidth="53" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="269" x="10" y="29" text="*类别：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="270" x="49" y="29" text="上班" measuredWidth="44" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" id="271" x="97" y="29" text="放假" measuredWidth="44" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="272" x="10" y="53" text="*日期：从" measuredWidth="58" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="277" x="67" y="53" measuredWidth="97" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="263" width="97" text="2015-01-01" measuredWidth="97" measuredHeight="25">
+        <font italic="false"/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="273" x="75" y="4" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="275" x="168" y="53" text="到" measuredWidth="17" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="278" x="184" y="53" measuredWidth="97" measuredHeight="25">
+      <widgets xsi:type="model:TextField" id="274" width="97" text="2015-01-03" measuredWidth="97" measuredHeight="25">
+        <font italic="false"/>
+      </widgets>
+      <widgets xsi:type="model:Icon" id="276" x="75" y="4" measuredWidth="16" measuredHeight="16" icon="calendar (small)"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="279" x="10" y="80" text="*备注：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="281" x="49" y="80" width="232" text="元旦" measuredWidth="232" measuredHeight="25">
+      <font italic="false"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="285" x="10" y="110" text="注：标准工作日（如周一到周五）不需要配置。" measuredWidth="257" measuredHeight="25" textAlignment="Right" foreground="#999999">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" id="283" x="8" y="448" width="361" text="说明：&#xD;&#xA;1) 管理角色：工作日管理 (BC_WORKDAY_MANAGE)&#xD;&#xA;2) 表单保存时需要约束不同记录不能存在时间出现交叉的情况。" measuredWidth="361" measuredHeight="65" annotation="true" textAlignment="Left">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
