@@ -1,31 +1,22 @@
 package cn.bc.remoting.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.rmi.RemoteException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import cn.bc.remoting.msoffice.ExcelSaveFormat;
 import cn.bc.remoting.msoffice.PowerPointSaveFormat;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import cn.bc.remoting.msoffice.WordSaveFormat;
+import cn.bc.remoting.service.WordService;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
-import cn.bc.remoting.msoffice.ExcelSaveFormat;
-import cn.bc.remoting.msoffice.WordSaveFormat;
-import cn.bc.remoting.service.WordService;
-
-import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.Dispatch;
+import java.io.*;
+import java.rmi.RemoteException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 文档转换服务接口的实现
@@ -151,7 +142,7 @@ public class WordServiceImpl implements WordService {
         InputStream t = convert(token, new ByteArrayInputStream(source), fromFormat, toFormat);
         try {
             return FileCopyUtils.copyToByteArray(t);
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.warn(e.getMessage(), e);
             throw new RemoteException(e.getMessage(), e);
         }
@@ -323,14 +314,14 @@ public class WordServiceImpl implements WordService {
 
             // 调用 Workbooks 对象的 Open 方法打开文档，并返回打开的文档对象 Workbook
             // see: https://msdn.microsoft.com/en-us/library/office/ff194819(v=office.15).aspx
-            Dispatch workbook = Dispatch.call(workbooks, "Open",
-                    fromFile,   // Excel 文件全路径名
-                    false,      // UpdateLinks
-                    true,       // ReadOnly
-                    5,          // Format: Nothing
-                    "bc",       // Password: 打开文件的密码，若有密码则进行匹配，无会直接打开
-                    "bc",         // WriteResPassword: 编辑文件的密码
-                    true        // IgnoreReadOnlyRecommended: 对只读文件是否不显示只读提示框
+            Dispatch workbook = Dispatch.call(workbooks, "Open"
+                    , fromFile   // Excel 文件全路径名
+                    , false      // UpdateLinks
+                    , true       // ReadOnly
+                    , 5          // Format: Nothing
+                    , "bc"       // Password: 打开文件的密码，若有密码则进行匹配，无会直接打开
+                    , "bc"         // WriteResPassword: 编辑文件的密码
+                    , true        // IgnoreReadOnlyRecommended: 对只读文件是否不显示只读提示框
             ).toDispatch();
 
             // 检测目标文件是否存在，存在就先删除
@@ -354,10 +345,12 @@ public class WordServiceImpl implements WordService {
 
             // 关闭文档
             Dispatch.call(workbook, "Close", false);
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage(), e);
-        } finally {
+        }
+//        catch (Exception e) {
+//            logger.warn(e.getMessage(), e);
+//            throw new RuntimeException(e.getMessage(), e);
+//        }
+        finally {
             if (excelApp != null) {
                 try {
                     logger.info("----Excel: Quit----");

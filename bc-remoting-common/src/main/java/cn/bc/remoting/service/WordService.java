@@ -21,8 +21,7 @@ public interface WordService extends CommonService {
 	 * @return 成功返回true
 	 * @throws RemoteException
 	 */
-	boolean convertFormat(String token, String fromFile, String toFile)
-			throws RemoteException;
+	boolean convertFormat(String token, String fromFile, String toFile) throws RemoteException;
 
 	/**
 	 * 将文档转换为指定格式
@@ -38,6 +37,5 @@ public interface WordService extends CommonService {
 	 * @return 返回转换后文档的字节数据
 	 * @throws RemoteException
 	 */
-	byte[] convertFormat(String token, byte[] source, String fromFormat,
-			String toFormat) throws RemoteException;
+	byte[] convertFormat(String token, byte[] source, String fromFormat, String toFormat) throws RemoteException;
 }

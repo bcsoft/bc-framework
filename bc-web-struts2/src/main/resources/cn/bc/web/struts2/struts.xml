@@ -48,10 +48,14 @@
 			</result>
 			<!-- 导出视图数据为Excel文件 -->
 			<result name="export" type="stream" />
-		</global-results>
 
-		<!-- <global-exception-mappings> <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping> 
-			</global-exception-mappings> -->
+            <!-- 全局异常 -->
+            <result name="error" type="freemarker">/cn/bc/web/struts2/error.ftl</result>
+		</global-results>
+        <!-- 全局异常 -->
+        <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
 	</package>
 	
 	<!-- 使用通配符的默认配置 -->
