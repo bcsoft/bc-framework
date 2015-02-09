@@ -102,11 +102,9 @@ public class OfficeUtils {
 
 			String fromType = StringUtils.getFilenameExtension(fromFile)
 					.toLowerCase();
-			if (useMSOfficeService(fromType)) {// 使用远程服务执行转换:暂时只支持doc、docx、docm、xls、xlsx、xlsm文档
-				if (logger.isInfoEnabled())
-					logger.info("--use wordService--");
-				getWordService()
-						.convertFormat(REMOTING_TOKEN, fromFile, toFile);
+			if (useMSOfficeService(fromType)) {// 使用远程服务执行转换:暂时只支持doc、docx、docm、xls、xlsx、xlsm、ppt、pptx、pptm文档
+				if (logger.isInfoEnabled()) logger.info("--use wordService--");
+				getWordService().convertFormat(REMOTING_TOKEN, fromFile, toFile);
 
 				// 返回转换成的文件
 				return new FileInputStream(_toFile);
@@ -147,11 +145,12 @@ public class OfficeUtils {
 	 * @return
 	 */
 	private static boolean useMSOfficeService(String fromType) {
-		// 使用远程服务执行转换:暂时只支持Word和Excel文档
+		// 使用远程服务执行转换
 		return useRemotingService
-				&& (fromType.equals("doc") || fromType.equals("docx")
-						|| fromType.equals("docm") || fromType.equals("xls")
-						|| fromType.equals("xlsx") || fromType.equals("xlsm"));
+				&& (fromType.equals("doc") || fromType.equals("docx") || fromType.equals("docm")
+                || fromType.equals("txt") || fromType.equals("rtf")
+                || fromType.equals("xls") || fromType.equals("xlsx") || fromType.equals("xlsm")
+                || fromType.equals("ppt") || fromType.equals("pptx") || fromType.equals("pptm"));
 	}
 
 	/**

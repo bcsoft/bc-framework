@@ -9,7 +9,7 @@ import cn.bc.core.exception.CoreException;
  * 调用Word的SaveAs2方法转换文档格式时使用的格式参数常数定义
  * 
  * @author dragon
- * @see Word 2010 VBA 中 WdSaveFormat 权举的定义
+ * @see Word 2010 VBA 中 WdSaveFormat 权举的定义 https://msdn.microsoft.com/en-us/library/office/ff839952.aspx
  */
 public enum WordSaveFormat {
 	/** PDF 格式 (*.pdf) */
