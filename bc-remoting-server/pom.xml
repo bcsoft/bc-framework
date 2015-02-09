@@ -12,6 +12,9 @@
 	<description>远程服务服务端</description>
 	
 	<properties>
+		<!-- 解决打包成 war 文件，html文件内中文乱码问题 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<app.debug>false</app.debug>
 		<!-- 临时目录 -->
 		<app.tempDir>/temp</app.tempDir>
@@ -29,8 +32,8 @@
 		<!-- jetty 配置 -->
 		<jetty.port>8083</jetty.port>
 		<jetty.path>/rm</jetty.path>
-		<!-- 9.2.7.v20150116,9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905 -->
-		<jetty.version>9.2.7.v20150116</jetty.version>
+		<!-- 9.2.7.v20150116,9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905
+		<jetty.version>9.2.7.v20150116</jetty.version> -->
 	</properties>
 	<dependencies>
 		<!-- demo 3 -->

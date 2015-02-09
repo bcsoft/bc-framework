@@ -46,8 +46,8 @@
 	</appender>
 
 	<!-- this -->
-	<logger name="cn.bc.remoting" level="WARN"/>
-	<logger name="cn.bc.remoting.demo" level="DEBUG"/>
+	<logger name="cn.bc.remoting" level="ERROR"/>
+	<logger name="cn.bc.remoting.demo" level="ERROR"/>
 
 	<!-- 设置默认的日志级别: TRACE < DEBUG < INFO < WARN < ERROR -->
 	<root level="ERROR">
