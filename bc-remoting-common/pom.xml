@@ -6,6 +6,7 @@
 		<version>2.6</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
+	<version>2.6.10</version>
 	<artifactId>bc-remoting-common</artifactId>
 	<description>远程服务公共接口</description>
 
@@ -13,7 +14,7 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-web</artifactId>
-			<version>${project.version}</version>
+			<version>2.6</version>
 		</dependency>
 	</dependencies>
 </project>

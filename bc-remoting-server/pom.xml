@@ -6,6 +6,7 @@
 		<version>2.6</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
+	<version>2.6.10</version>
 	<artifactId>bc-remoting-server</artifactId>
 	<packaging>war</packaging>
 	<description>远程服务服务端</description>
@@ -52,7 +53,7 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-remoting-common</artifactId>
-			<version>${project.version}</version>
+			<version>2.6.10</version>
 		</dependency>
 
 		<!-- log -->
@@ -107,7 +108,7 @@
 						<!-- <descriptor>src/main/assembly/linux-gtk.xml</descriptor> -->
 						<!-- <descriptor>src/main/assembly/macosx.xml</descriptor> -->
 					</descriptors>
-					<finalName>${project.artifactId}-${project.version}</finalName>
+					<finalName>${project.artifactId}-2.6.10</finalName>
 				</configuration>
 			</plugin>
 		</plugins>
