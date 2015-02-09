@@ -29,6 +29,7 @@ public class WordServiceImpl implements WordService {
     private static String FROM_ROOT_DIR = "/data_rmi/source";
     private static String TO_ROOT_DIR = "/data_rmi/convert";
     private boolean compatible = false;
+    private int officeVersion = 2010;// office版本号：2007|2010|2013
     private DateFormat df4fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
     private DateFormat df4yearMonth = new SimpleDateFormat("yyyyMM");
 
@@ -46,6 +47,10 @@ public class WordServiceImpl implements WordService {
 
     public void setCompatible(boolean compatible) {
         this.compatible = compatible;
+    }
+
+    public void setOfficeVersion(int officeVersion) {
+        this.officeVersion = officeVersion;
     }
 
     public boolean test(String token) throws RemoteException {
@@ -384,32 +389,27 @@ public class WordServiceImpl implements WordService {
             Dispatch presentations = ppApp.getProperty("Presentations").toDispatch();
 
             Dispatch presentation;
-            try {
-                // 调用 Presentations 对象中 Open 方法打开文档，并返回打开的文档对象 Document
-                // see: https://msdn.microsoft.com/en-us/library/office/ff746171(v=office.15).aspx
-                presentation = Dispatch.call(presentations, "Open"  // 调用Documents对象的Open方法
-                        , fromFile      // 文件全路径名
-                        , true          // ReadOnly
-                        , true         // Untitled: 指定文件是否有标题
-                        , false          // WithWindow: 指定文件是否可见
-                ).toDispatch();
-            } catch (Exception e){// 如果文件有密码就会有异常，进入这里，尝试使用其他方法打开
-                logger.warn("Open PowerPoint File with special way ...fromFile={}", fromFile);
-                // 获取 Application 对象的 ProtectedViewWindows 属性
-                // https://msdn.microsoft.com/en-us/library/microsoft.office.interop.powerpoint.protectedviewwindows.open(v=office.14).aspx
-                Dispatch protectedViewWindows = ppApp.getProperty("ProtectedViewWindows").toDispatch();
 
-                // 调用 ProtectedViewWindows 对象中 Open 方法打开密码文档，并返回 ProtectedViewWindow
-                // https://msdn.microsoft.com/en-us/library/microsoft.office.interop.powerpoint.protectedviewwindow(v=office.14).aspx
-                Dispatch protectedViewWindow = Dispatch.call(protectedViewWindows, "Open"  // 调用Documents对象的Open方法
-                        , fromFile      // 文件全路径名
-                        , "bc"          // ReadPassword: 密码
-                        , false         // OpenAndRepair
-                ).toDispatch();
-
-                // 激活 Presentation
-                presentation = Dispatch.call(protectedViewWindow, "Edit", "").toDispatch();
+            if(this.officeVersion >= 2013) {
+                // tested for office2013
+                try {
+                    // 调用 Presentations 对象中 Open 方法打开文档，并返回打开的文档对象 Document
+                    // see: https://msdn.microsoft.com/en-us/library/office/ff746171(v=office.15).aspx
+                    // 以下方法在 Office2013 中不会询问密码，在 Office2010 中会弹出询问输入密码的对话框
+                    presentation = Dispatch.call(presentations, "Open"  // 调用Documents对象的Open方法
+                            , fromFile      // 文件全路径名
+                            , true          // ReadOnly
+                            , true         // Untitled: 指定文件是否有标题
+                            , false          // WithWindow: 指定文件是否可见
+                    ).toDispatch();
+                } catch (Exception e) {// 如果文件有密码就会有异常，进入这里，尝试使用其他方法打开
+                    presentation = doSpecialPowerPointConvert(ppApp, fromFile, "bc");
+                }
+            }else {
+                // tested for office2010
+                presentation = doSpecialPowerPointConvert(ppApp, fromFile, "bc");
             }
+
 
             // 检测目标文件是否存在，存在就先删除
             File f = new File(toFile);
@@ -447,5 +447,24 @@ public class WordServiceImpl implements WordService {
                 }
             }
         }
+    }
+
+    private Dispatch doSpecialPowerPointConvert(ActiveXComponent ppApp, String file, String password) {
+        logger.warn("Open PowerPoint File with special way ...file={}", file);
+        // 获取 Application 对象的 ProtectedViewWindows 属性
+        // https://msdn.microsoft.com/en-us/library/microsoft.office.interop.powerpoint.protectedviewwindows.open(v=office.14).aspx
+        Dispatch protectedViewWindows = ppApp.getProperty("ProtectedViewWindows").toDispatch();
+
+        // 调用 ProtectedViewWindows 对象中 Open 方法打开密码文档，并返回 ProtectedViewWindow
+        // https://msdn.microsoft.com/en-us/library/microsoft.office.interop.powerpoint.protectedviewwindow(v=office.14).aspx
+        Dispatch protectedViewWindow = Dispatch.call(protectedViewWindows, "Open"  // 调用Documents对象的Open方法
+                , file      // 文件全路径名
+                , password      // ReadPassword: 密码
+                , false         // OpenAndRepair
+        ).toDispatch();
+
+        // 激活 Presentation
+        Dispatch presentation = Dispatch.call(protectedViewWindow, "Edit", "").toDispatch();
+        return presentation;
     }
 }
