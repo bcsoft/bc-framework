@@ -3,6 +3,10 @@
  */
 package cn.bc.identity.web.struts2;
 
+import cn.bc.BCConstants;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -10,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import cn.bc.identity.domain.Actor;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 单位Action
@@ -47,4 +54,31 @@ public class UnitAction extends AbstractActorAction {
 	protected Integer[] getBelongTypes() {
 		return new Integer[] { Actor.TYPE_UNIT };
 	}
+
+    /**
+     * 查找分公司
+     *
+     * @return [{"id":xx, "name":xx, "code":xx}, ...]
+     */
+    public String findBranchOffice() throws JSONException {
+        JSONArray branchOffice = new JSONArray();
+        List<Actor> unitList = this.getActorService().findAllUnit(BCConstants.STATUS_ENABLED);
+
+        // 迭代获取分公司列表
+        for (Actor actor : unitList) {
+            if (actor.getName().indexOf("分公司") != -1) {
+                JSONObject j = new JSONObject();
+                j.put("id", actor.getId());
+                j.put("name", actor.getName());
+                j.put("code", actor.getCode());
+                branchOffice.put(j);
+            }
+        }
+
+        JSONObject json = new JSONObject();
+        json.put("success", branchOffice.length() > 0);
+        json.put("branchOffice", branchOffice.toString());
+        this.json = json.toString();
+        return "json";
+    }
 }
