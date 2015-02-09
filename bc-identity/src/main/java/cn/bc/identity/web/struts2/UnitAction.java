@@ -77,7 +77,7 @@ public class UnitAction extends AbstractActorAction {
 
         JSONObject json = new JSONObject();
         json.put("success", branchOffice.length() > 0);
-        json.put("branchOffice", branchOffice.toString());
+        json.put("branchOffice", branchOffice);
         this.json = json.toString();
         return "json";
     }
