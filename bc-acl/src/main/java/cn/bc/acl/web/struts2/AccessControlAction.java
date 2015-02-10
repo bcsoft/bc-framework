@@ -1,25 +1,11 @@
 package cn.bc.acl.web.struts2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.acl.domain.AccessActor;
 import cn.bc.acl.domain.AccessDoc;
 import cn.bc.acl.service.AccessActorService;
 import cn.bc.acl.service.AccessDocService;
-import cn.bc.core.exception.ConstraintViolationException;
-import cn.bc.core.exception.InnerLimitedException;
-import cn.bc.core.exception.NotExistsException;
-import cn.bc.core.exception.PermissionDeniedException;
+import cn.bc.core.exception.*;
+import cn.bc.core.util.JsonUtils;
 import cn.bc.identity.service.ActorService;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.struts2.FileEntityAction;
@@ -28,6 +14,14 @@ import cn.bc.option.service.OptionService;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 访问控制表单Action
@@ -132,43 +126,26 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 		categoryList = optionItems.get(OptionConstants.OPERATELOG_PTYPE);
 	}
 
-	// 解释访问者字符串为对象
-	private List<AccessActor> parse() {
-		List<AccessActor> accessActors = new ArrayList<AccessActor>();
-		try {
-			if (this.accessActors != null && this.accessActors.length() > 0) {
-				AccessActor accessActor;
-				JSONArray jsons = new JSONArray(this.accessActors);
-				JSONObject json;
-				for (int i = 0; i < jsons.length(); i++) {
-					json = jsons.getJSONObject(i);
-					accessActor = new AccessActor();
-					accessActor.setActor(this.actorService.load(json
-							.getLong("aid")));
-					accessActor.setOrderNo(json.getInt("orderNo"));
-					accessActor.setRole(json.getString("role"));
-					accessActors.add(accessActor);
-				}
-			}
-
-		} catch (JSONException e) {
-			logger.error(e.getMessage(), e);
-			try {
-				throw e;
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		return accessActors;
-	}
+    /**
+     * 实体对象验证。格式不正确抛异常
+     */
+    private void entityValidate() {
+        if (this.getE().getDocId() == null || this.getE().getDocType() == null) {
+            throw new CoreException("accessDoc 对象：docId、docType 不能为空\t"
+                    + "docId:" + this.getE().getDocId() + " docType:" + this.getE().getDocType());
+        }
+    }
 
 	@Override
 	public String save() throws Exception {
-		this.beforeSave(this.getE());
-		this.accessDocService.save4AccessActors(this.getE(), this.parse());
-		this.afterSave(this.getE());
-		return "saveSuccess";
+        // 健壮性验证（accessDoc 对象：docId、docType 不能为空）
+        this.entityValidate();
+
+        Collection<Map<String, Object>> details = JsonUtils.toCollection(this.accessActors);
+        this.accessDocService.saveConfig(this.getE().getDocType(),this.getE().getDocId(),
+                this.getE().getDocName(), details);
+
+        return "saveSuccess";
 	}
 
 	@Override
