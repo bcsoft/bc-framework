@@ -188,7 +188,6 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 				.setText(getText("label.read"))
 				.setClick("bc.email2ManageViewBase.open"));
 
-
 		// 搜索按钮
 		tb.addButton(this.getDefaultSearchToolbarButton());
 

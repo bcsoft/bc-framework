@@ -147,7 +147,10 @@ public class EmailTosAction extends ViewAction<Map<String, Object>> {
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail"));
-		
+
+		// 查看按钮
+		tb.addButton(Toolbar.getDefaultOpenToolbarButton(getText("label.read")).setClick("bc.emailViewBase.open").setAction(null));
+
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
 				"read",2,
 				getText("title.click2changeSearchStatus")));

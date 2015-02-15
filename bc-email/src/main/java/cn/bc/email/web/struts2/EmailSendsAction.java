@@ -152,7 +152,10 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 				.setText(getText("email.write"))
 				.setClick("bc.emailViewBase.writeEmail")
 				.addClazz("bc-email-vriteEmail-send"));
-		
+
+		// 查看按钮
+		tb.addButton(Toolbar.getDefaultOpenToolbarButton(getText("label.read")).setClick("bc.emailViewBase.open").setAction(null));
+
 		//转发
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-arrowthick-1-e")
 				.setText(getText("email.forwoard"))
