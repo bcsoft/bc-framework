@@ -142,7 +142,10 @@ public class EmailTrashsAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected Toolbar getHtmlPageToolbar() {
 		Toolbar tb = new Toolbar();
-		
+
+		// 查看按钮
+		tb.addButton(Toolbar.getDefaultOpenToolbarButton(getText("label.read")).setClick("bc.emailViewBase.open").setAction(null));
+
 		//还原
 		tb.addButton(new ToolbarButton().setIcon("ui-icon-pencil")
 				.setText(getText("emailTrash.restore"))
