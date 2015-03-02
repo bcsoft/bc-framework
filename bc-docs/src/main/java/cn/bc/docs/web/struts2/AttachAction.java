@@ -199,8 +199,10 @@ public class AttachAction extends EntityAction<Long, Attach> implements
 	private void downloadFile(String ext, String path, String filename)
 			throws FileNotFoundException {
 		this.contentType = AttachUtils.getContentType(ext);
-		this.filename = WebUtils.encodeFileName(
-				ServletActionContext.getRequest(), filename);
+		if(ext != null && !filename.toLowerCase().endsWith(ext.toLowerCase())){
+			filename += "." + ext;// 如果标题中没有扩展名就附加 ext 为扩展名
+		}
+		this.filename = WebUtils.encodeFileName(ServletActionContext.getRequest(), filename);
 		File file = new File(path);
 		this.contentLength = file.length();
 		this.inputStream = new FileInputStream(file);
