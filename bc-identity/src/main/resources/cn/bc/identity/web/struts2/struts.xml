@@ -86,6 +86,8 @@
 		<action name="paging" class="unitAction" method="paging"/>
 		<action name="data" class="unitAction" method="data"/>
 		<action name="export" class="unitAction" method="export"/>
+
+        <action name="findBranchOffice" class="unitAction" method="findBranchOffice"/>
 	</package>
 	<package name="department" extends="bc-default" namespace="/bc/department">
 		<action name="create" class="departmentAction" method="create">
