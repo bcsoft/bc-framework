@@ -1,12 +1,12 @@
 -- 修复部分用户打开视图报错的问题
--- DROP FUNCTION getusersharfileid(integer);
-CREATE OR REPLACE FUNCTION getusersharfileid(uid integer) RETURNS character varying AS
+DROP FUNCTION getusersharfileid(integer);
+CREATE OR REPLACE FUNCTION getusersharfileid(uid integer) RETURNS text AS
 $BODY$
 	DECLARE
-		fileId varchar(4000);
+		fileId text;
 	BEGIN
 		with recursive n as(
-			select * from bc_netdisk_file where id in (select pid from bc_netdisk_share where aid = uid)
+			select * from bc_netdisk_file where id in (select pid from bc_netdisk_share where aid = $1)
 			union
 			select f.* from bc_netdisk_file f,n where f.pid = n.id
 		)
@@ -16,16 +16,16 @@ $BODY$
 $BODY$ LANGUAGE plpgsql;
 
 
--- DROP FUNCTION getusersharfileid2all(integer);
-CREATE OR REPLACE FUNCTION getusersharfileid2all(uid integer) RETURNS character varying AS
+DROP FUNCTION getusersharfileid2all(integer);
+CREATE OR REPLACE FUNCTION getusersharfileid2all(uid integer) RETURNS text AS
 $BODY$
 	DECLARE
-		fileId varchar(4000);
+		fileId text;
 	BEGIN
 		with recursive n as(
-			select * from bc_netdisk_file
-				where id in (select pid from bc_netdisk_share where aid = uid) 
-				or id in (select id from bc_netdisk_file where author_id in (select id from bc_identity_actor_history where actor_id = uid))
+			select * from bc_netdisk_file 
+				where id in (select pid from bc_netdisk_share where aid = $1) 
+				or id in (select id from bc_netdisk_file where author_id in (select id from bc_identity_actor_history where actor_id = $1))
 			union
 			select f.* from bc_netdisk_file f,n where f.pid = n.id
 		)
