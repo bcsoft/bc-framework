@@ -5,6 +5,7 @@ package cn.bc.template.web.struts2.select;
 
 import cn.bc.BCConstants;
 import cn.bc.core.query.condition.Condition;
+import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.*;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -45,7 +46,7 @@ public class SelectTemplateAction extends
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认排序方向：排序号
-		return new OrderCondition("t.order_");
+		return new OrderCondition("c.sn", Direction.Asc).add("t.order_", Direction.Asc);
 	}
 	
 	@Override
@@ -55,12 +56,14 @@ public class SelectTemplateAction extends
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
 		sql.append("select t.id,t.code,a.name as type,t.subject,t.path");
-		sql.append(",t.version_ as version,t.category,a.code as typeCode,t.formatted,t.size_ as size,t.desc_");
+		sql.append(",t.version_ as version,c.name_,a.code as typeCode,t.formatted,t.size_ as size,t.desc_");
 		sql.append(",(select string_agg(b.pid||'',',') from  bc_template_template_param b " +
 				"where b.tid=t.id" +
 				") as params");
 		sql.append(" from bc_template t");
 		sql.append(" inner join bc_template_type a on a.id=t.type_id ");
+		sql.append(" inner join bc_template_template_category tc on tc.tid = t.id");
+		sql.append(" inner join category_belong() c on c.id = tc.cid");// category_belong() 是存储函数
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -77,20 +80,12 @@ public class SelectTemplateAction extends
 				map.put("subject", rs[i++]);
 				map.put("path", rs[i++]);
 				map.put("version", rs[i++]);
-				map.put("category", rs[i++]);
+				map.put("name", rs[i++]);
 				map.put("typeCode", rs[i++]);
 				map.put("formatted", rs[i++]);
 				map.put("size", rs[i++]);
 				map.put("desc_", rs[i++]);
 				map.put("params", rs[i++]);
-				//取最后‘/’之后的信息
-				String category=map.get("category").toString();
-				int index=category.lastIndexOf("/");
-				if(index==-1||index==0||(index+1)==category.length()){
-					map.put("categoryEx",category);
-				}else{
-					map.put("categoryEx",category.substring(index+1));
-				}
 				return map;
 			}
 		});
@@ -101,7 +96,8 @@ public class SelectTemplateAction extends
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("t.id", "id"));
-		columns.add(new TextColumn4MapKey("t.category", "categoryEx",
+        // 所属分类
+		columns.add(new TextColumn4MapKey("c.name_", "name",
 				getText("template.category"), 100).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
 				getText("template.tfsubject"), 300).setUseTitleFromLabel(true));
@@ -128,7 +124,7 @@ public class SelectTemplateAction extends
 	
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[]{"t.code", "t.subject","t.version_", "t.category","a.name"};
+		return new String[]{"t.code", "t.subject","t.version_", "c.code", "c.name_", "c.category","a.name"};
 	}
 
 	@Override
@@ -166,9 +162,9 @@ public class SelectTemplateAction extends
 		
 		if(category!=null&&category.length()>0){
 			if(category.indexOf(",")==-1){
-				andCondition.add(new LikeLeftCondition("t.category", category));
+				andCondition.add(new LikeCondition("c.category", category));
 			}else{
-				andCondition.add(new InCondition("t.category", category.split(",")));
+				andCondition.add(new InCondition("c.category", category.split(",")));
 			}
 		}
 		return andCondition;
