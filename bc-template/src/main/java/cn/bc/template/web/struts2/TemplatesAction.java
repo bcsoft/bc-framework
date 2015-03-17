@@ -192,7 +192,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 					@Override
 					public String format(Object context, Object value) {
 						Map<String, Object> map = (Map<String, Object>) context;
-                        return isReadonly() && !isManageACL(map) // 只读状态，且没有ACL管理权限
+                        return isReadonly() && isManageACL(map) // 只读状态，且有ACL管理权限，显示操作按钮
                                 ? buildColumnIcon(createIcon()) + map.get("category")
                                 : (String) map.get("category");
 					}
@@ -215,7 +215,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 					@Override
 					public String format(Object context, Object value) {
 						Map<String, Object> map = (Map<String, Object>) context;
-                        return isReadonly() && !isManageACL(map) // 只读状态，且没有ACL管理权限
+                        return isReadonly() && isManageACL(map) // 只读状态，且有ACL管理权限，显示操作按钮
                                 ? buildColumnIcon(delIcon()) + map.get("subject")
                                 : (String) map.get("subject");
 					}
