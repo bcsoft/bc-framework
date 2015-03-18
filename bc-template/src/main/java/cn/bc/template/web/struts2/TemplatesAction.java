@@ -1,7 +1,6 @@
 package cn.bc.template.web.struts2;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -187,16 +186,15 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				getText("template.order"), 60).setSortable(true));
 		// 所属分类
 		columns.add(new TextColumn4MapKey("category", "category",
-				getText("template.category"), 100)
+				getText("template.category"), 150)
 				.setValueFormater(new AbstractFormater<Object>() {
 					@SuppressWarnings("unchecked")
 					@Override
 					public String format(Object context, Object value) {
 						Map<String, Object> map = (Map<String, Object>) context;
-						return !isReadonly() || !isManageACL(map) ? (String) map
-								.get("category")
-								: buildColumnIcon(createIcon())
-										+ (String) map.get("category");
+                        return isReadonly() && isManageACL(map) // 只读状态，且有ACL管理权限，显示操作按钮
+                                ? buildColumnIcon(createIcon()) + map.get("category")
+                                : (String) map.get("category");
 					}
 
 					@Override
@@ -211,15 +209,15 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 				.setUseTitleFromLabel(true));
 		// 标题
 		columns.add(new TextColumn4MapKey("t.subject", "subject",
-				getText("template.tfsubject"))
+				getText("template.tfsubject"), 220)
 				.setValueFormater(new AbstractFormater<Object>() {
 					@SuppressWarnings("unchecked")
 					@Override
 					public String format(Object context, Object value) {
 						Map<String, Object> map = (Map<String, Object>) context;
-						return !isReadonly() || !isManageACL(map) ? (String) map
-								.get("subject") : buildColumnIcon(delIcon())
-								+ (String) map.get("subject");
+                        return isReadonly() && isManageACL(map) // 只读状态，且有ACL管理权限，显示操作按钮
+                                ? buildColumnIcon(delIcon()) + map.get("subject")
+                                : (String) map.get("subject");
 					}
 
 					@Override
@@ -253,6 +251,9 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 								+ "）";
 					}
 				}).setUseTitleFromLabel(true));
+        //空列
+        columns.add(new TextColumn4MapKey("", "",""));
+
 		columns.add(new HiddenColumn4MapKey("typeCode", "typeCode"));
 		columns.add(new HiddenColumn4MapKey("uid", "uid"));
 		columns.add(new HiddenColumn4MapKey("cid", "cid"));
@@ -334,7 +335,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 	@Override
 	protected String[] getGridSearchFields() {
 		return new String[] { "t.code", "am.actor_name", "t.path", "t.subject",
-				"t.version_", "category", "a.name" };
+				"t.version_", "a.name", "j.c->>'f2'"// 模板所属分类
+        };
 	}
 
 	@Override
@@ -344,8 +346,8 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(850).setMinWidth(400)
-				.setHeight(400).setMinHeight(300).setHelp("mubanguanli");
+		return super.getHtmlPageOption().setWidth(920).setMinWidth(450)
+				.setHeight(450).setMinHeight(300).setHelp("mubanguanli");
 	}
 
 	@Override
