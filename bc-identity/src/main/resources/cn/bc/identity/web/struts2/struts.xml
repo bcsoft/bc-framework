@@ -159,6 +159,10 @@
 		<action name="paging" class="selectRolesAction" method="paging"/>
 		<action name="data" class="selectRolesAction" method="data"/>
 	</package>
+	<package name="selectResources" extends="bc-default" namespace="/bc/selectResources">
+		<action name="paging" class="selectResourcesAction" method="paging"/>
+		<action name="data" class="selectResourcesAction" method="data"/>
+	</package>
 	<package name="selectUser" extends="bc-default" namespace="/bc">
 		<action name="selectUser" class="selectUserAction">
 			<result>/bc/identity/user/select.jsp</result>
