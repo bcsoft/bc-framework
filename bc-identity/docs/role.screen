@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="607" x="8" y="8" measuredWidth="585" measuredHeight="121">
+    <widgets xsi:type="model:Window" id="608" width="585" height="121" text="角色信息" measuredWidth="585" measuredHeight="121" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:ButtonBar" id="609" x="4" y="23" height="25" text="新建,编辑,删除" measuredWidth="134" measuredHeight="25">
+      <font/>
+      <items x="0" y="0" width="45" height="25" text="新建"/>
+      <items x="45" y="0" width="44" height="25" text="编辑"/>
+      <items x="89" y="0" width="45" height="25" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="610" y="50" width="585" height="71" text="(w:30). {unchecked},(w:30). 排序号,(w:20). 编码,(w:20). 名称&#xD;&#xA;1,0000,BC_COMMON,通用角色&#xD;&#xA;2,0001,BC_ADMIN,超级管理员" measuredWidth="585" measuredHeight="71" alternative="#eeeeee">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="612" x="398" y="23" width="183" measuredWidth="183" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="1240" x="8" y="136" measuredWidth="585" measuredHeight="203">
+    <widgets xsi:type="model:Window" id="1154" width="585" height="203" text="通用角色" measuredWidth="585" measuredHeight="203" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:Button" id="1155" x="539" y="172" width="41" text="保存" measuredWidth="41" measuredHeight="27">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TabbedPane" id="1156" y="19" width="585" height="150" text="基本信息,资源分配,权限分配" measuredWidth="585" measuredHeight="150" selection="0">
+      <items x="10" y="0" width="68" height="30" text="基本信息"/>
+      <items x="78" y="0" width="68" height="30" text="资源分配"/>
+      <items x="146" y="0" width="68" height="30" text="权限分配"/>
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="1159" x="41" y="55" text="*名称：" measuredWidth="46" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="1162" x="380" y="55" width="200" text="BC_COMMON" measuredWidth="200" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="1164" x="29" y="82" text="*排序号：" measuredWidth="58" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="1168" x="84" y="82" width="200" text="0000" measuredWidth="200" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" id="1169" x="84" y="55" width="200" text="通用角色" measuredWidth="200" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="1187" x="328" y="55" text="*编码：" measuredWidth="46" measuredHeight="25">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:Text" id="1239" x="10" y="112" width="570" height="57" text="备注：&#xD;&#xA;1. 如果分配的资源类型为分类，则自动包含该资源下的隶属资源。&#xD;&#xA;2. 如果分配的权限类型为单位、部门，则该单位、部门下所有子单位、子部门、用户均继承该权限。" measuredWidth="570" measuredHeight="57" foreground="#999999">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="1262" x="8" y="344" measuredWidth="585" measuredHeight="173">
+    <widgets xsi:type="model:Window" id="1242" width="585" height="173" text="通用角色" measuredWidth="585" measuredHeight="173" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:TabbedPane" id="1244" y="19" width="585" height="154" text="基本信息,资源分配,权限分配" measuredWidth="585" measuredHeight="154" selection="1">
+      <items x="10" y="0" width="68" height="30" text="基本信息"/>
+      <items x="78" y="0" width="68" height="30" text="资源分配"/>
+      <items x="146" y="0" width="68" height="30" text="权限分配"/>
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="1257" x="4" y="53" height="25" text="添加,删除" measuredWidth="90" measuredHeight="25">
+      <font/>
+      <items x="0" y="0" width="45" height="25" text="添加"/>
+      <items x="45" y="0" width="45" height="25" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="1258" y="80" width="585" height="93" text="(w:30). {unchecked},(w:60). 类型,(w:120). 名称,所属分类&#xD;&#xA;1,内部链接,我的待办,我的事务&#xD;&#xA;2,内部链接,待办监控,我的事务/我的监控&#xD;&#xA;3,分类,我的邮箱,我的事务" measuredWidth="585" measuredHeight="93" alternative="#eeeeee">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="1260" x="398" y="53" width="183" measuredWidth="183" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="1269" x="8" y="523" measuredWidth="585" measuredHeight="173">
+    <widgets xsi:type="model:Window" id="1264" width="585" height="173" text="通用角色" measuredWidth="585" measuredHeight="173" minimizeButton="true" maximizeButton="true"/>
+    <widgets xsi:type="model:TabbedPane" id="1265" y="19" width="585" height="154" text="基本信息,资源分配,权限分配" measuredWidth="585" measuredHeight="154" selection="2">
+      <items x="10" y="0" width="68" height="30" text="基本信息"/>
+      <items x="78" y="0" width="68" height="30" text="资源分配"/>
+      <items x="146" y="0" width="68" height="30" text="权限分配"/>
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:ButtonBar" id="1266" x="4" y="53" height="25" text="添加单位或部门,添加岗位,添加用户,删除" measuredWidth="286" measuredHeight="25">
+      <font/>
+      <items x="0" y="0" width="105" height="25" text="添加单位或部门"/>
+      <items x="105" y="0" width="68" height="25" text="添加岗位"/>
+      <items x="173" y="0" width="68" height="25" text="添加用户"/>
+      <items x="241" y="0" width="45" height="25" text="删除"/>
+    </widgets>
+    <widgets xsi:type="model:Table" id="1267" y="80" width="585" height="93" text="(w:30). {unchecked},(w:60).类型,(w:120).名称,所属上级&#xD;&#xA;1,单位,宝城&#xD;&#xA;2,部门,营运中心,宝城&#xD;&#xA;3,岗位,开发组,宝城/行政办公室&#xD;&#xA;4,用户,小明,宝城/行政办公室/开发组&#xD;&#xA;5,用户,小张,宝城/行政办公室/开发组" measuredWidth="585" measuredHeight="93" alternative="#eeeeee">
+      <font bold="false"/>
+    </widgets>
+    <widgets xsi:type="model:SearchField" id="1268" x="398" y="53" width="183" measuredWidth="183" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
