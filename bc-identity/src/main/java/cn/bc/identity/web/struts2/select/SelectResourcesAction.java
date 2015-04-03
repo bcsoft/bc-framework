@@ -10,6 +10,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Resource;
@@ -32,8 +34,9 @@ public class SelectResourcesAction extends
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id as id,a.type_ as type,a.name as name,a.pname as pname");
+		sql.append("select a.id as id,a.type_ as type,a.name as name,b.name as pname");
 		sql.append(" from  bc_identity_resource a");
+		sql.append(" inner join  bc_identity_resource b on a.belong=b.id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -54,6 +57,7 @@ public class SelectResourcesAction extends
 		return sqlObject;
 	}
 
+	
 	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
@@ -66,11 +70,17 @@ public class SelectResourcesAction extends
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("resource.name"),100)
 				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("a.pname", "pname",
+		columns.add(new TextColumn4MapKey("b.name", "pname",
 				getText("resource.belong"),100)
 				.setUseTitleFromLabel(true));
 
 		return columns;
+	}
+	
+	@Override
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认排序方向：排序号
+		return new OrderCondition("a.order_", Direction.Asc);
 	}
 
 	@Override
