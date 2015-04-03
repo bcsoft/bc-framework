@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -52,6 +54,11 @@ public class SelectResourcesAction extends
 			}
 		});
 		return sqlObject;
+	}
+
+	@Override
+	protected OrderCondition getGridDefaultOrderCondition() {
+		return new OrderCondition("a.order_", Direction.Asc);
 	}
 
 	@Override
