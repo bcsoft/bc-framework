@@ -12,8 +12,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.query.condition.Direction;
-import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Resource;
@@ -84,11 +82,6 @@ public class SelectResourcesAction extends
 		return columns;
 	}
 	
-	@Override
-	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认排序方向：排序号
-		return new OrderCondition("a.order_", Direction.Asc);
-	}
 
 	@Override
 	protected String getGridRowLabelExpression() {
