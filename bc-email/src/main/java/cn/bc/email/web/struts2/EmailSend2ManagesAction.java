@@ -184,7 +184,7 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(650).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(810).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
