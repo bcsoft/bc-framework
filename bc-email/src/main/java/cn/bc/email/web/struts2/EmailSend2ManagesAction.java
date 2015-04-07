@@ -61,17 +61,19 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 	protected SqlObject<Map<String, Object>> getSqlObject() {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
-		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+        //region 构建查询语句
 		StringBuffer sql = new StringBuffer();
-		sql.append("select e.id,e.status_,e.subject,e.send_date,getemailreceiver2json(e.id),a.name,e.type_");
+		sql.append("select e.id,e.status_,e.subject,e.send_date,a.name,e.type_,v.type_str,v.receiver_str");
 		sql.append(" from bc_email e");
-		sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
+        sql.append(" inner join bc_identity_actor a on a.id=e.sender_id");
+        sql.append(" inner join view_bc_email_to_receiver_info v on v.id = e.id");// 邮件收件箱收件人信息视图
 		sqlObject.setSql(sql.toString());
+        //endregion
 
 		// 注入参数
 		sqlObject.setArgs(null);
 
-		// 数据映射器
+        //region 数据映射器
 		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
 			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -80,12 +82,14 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 				map.put("status", rs[i++]);
 				map.put("subject", rs[i++]);
 				map.put("sendDate", rs[i++]);
-				map.put("receiver", rs[i++]);
 				map.put("name", rs[i++]);
 				map.put("type", rs[i++]);
+				map.put("type_str", rs[i++]);
+				map.put("receiver_str", rs[i++]);
 				return map;
 			}
 		});
+        //endregion
 		return sqlObject;
 	}
 
@@ -101,27 +105,31 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 				.setValueFormater(new KeyValueFormater(this.getTypes())));
 		columns.add(new TextColumn4MapKey("a.name", "name",
 				getText("email.sender"), 60).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("", "receiver",
+		columns.add(new TextColumn4MapKey("", "receiver_str",
 				getText("email.receiver"), 150).setUseTitleFromLabel(true)
 				.setValueFormater(new AbstractFormater<String>() {
-
 					@Override
 					public String format(Object context, Object value) {
 						if (value == null)return null;
-						Map<String,Object> map=JsonUtils.toMap(value.toString());
-						String receiver="";
-						if(map.get("receiver").toString().length()>0)
-							receiver=map.get("receiver").toString()+"; ";
-						
-						if(map.get("cc").toString().length()>0)
-							receiver+=getText("email.cc")+"--["+map.get("cc").toString()+"]; ";
-						
-						if(map.get("bcc").toString().length()>0)
-							receiver+=getText("email.bcc")+"--["+map.get("bcc").toString()+"]; ";
-							
+
+                        Map<String, Object> map = (Map<String, Object>) context;
+                        String type_str = (String) map.get("type_str");
+                        String[] types = type_str.split(",");
+                        String[] receivers = String.valueOf(value).split(";");
+
+                        String receiver = "";
+                        for (int i = 0; i < types.length; i++) {
+                            if("0".equals(types[i]))
+                                receiver += receivers[i] + "; ";
+                            if("1".equals(types[i]))
+                                receiver += getText("email.cc") + "--[" + receivers[i] + "]; ";
+                            if("2".equals(types[i]))
+                                receiver += getText("email.bcc") + "--[" + receivers[i] + "]; ";
+                        }
+
 						if(receiver.length()>0)
 						receiver=receiver.substring(0,receiver.lastIndexOf(";"));
-						
+
 						return receiver;
 					}
 				}));
@@ -166,7 +174,7 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name","e.subject"};
+		return new String[] { "a.name","e.subject","v.receiver_str"};
 	}
 
 	@Override
@@ -176,7 +184,7 @@ public class EmailSend2ManagesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(650).setMinWidth(400)
+		return super.getHtmlPageOption().setWidth(810).setMinWidth(400)
 				.setHeight(400).setMinHeight(300);
 	}
 
