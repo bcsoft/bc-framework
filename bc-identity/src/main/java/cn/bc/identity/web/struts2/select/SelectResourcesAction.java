@@ -36,7 +36,7 @@ public class SelectResourcesAction extends
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id as id,a.type_ as type,a.name as name,b.name as pname");
 		sql.append(" from  bc_identity_resource a");
-		sql.append(" inner join  bc_identity_resource b on a.belong=b.id");
+		sql.append(" left join  bc_identity_resource b on a.belong=b.id");
 		sqlObject.setSql(sql.toString());
 
 		// 注入参数
@@ -90,7 +90,7 @@ public class SelectResourcesAction extends
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "a.name"};
+		return new String[] { "a.name", "b.name"};
 	}
 	
 	@Override
@@ -131,5 +131,10 @@ public class SelectResourcesAction extends
 	@Override
 	protected String getClickOkMethod() {
 		return "bc.resourceSelectDialog.clickOK";
+	}
+
+	@Override
+	protected boolean canExport() {
+		return false;
 	}
 }
