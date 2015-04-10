@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 基于hibernate的查询接口实现
+ * 基于 JdbcTemplate 的分页查询接口实现
  *
  * @param <T>
  * @author dragon
