@@ -16,6 +16,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -60,6 +61,15 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
     private V respone;
     private String responseText;
     private Object payload;
+    private HttpContext httpContext;
+
+    public HttpContext getHttpContext() {
+        return httpContext;
+    }
+
+    public void setHttpContext(HttpContext httpContext) {
+        this.httpContext = httpContext;
+    }
 
     public Result<V> call() throws Exception {
         String url = getUrl();
@@ -89,6 +99,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
                 }
                 HttpEntity entity = new UrlEncodedFormEntity(formData,
                         getEncoding());
+
                 post.setEntity(entity);
             } else if (payload != null) {
                 if (logger.isInfoEnabled())
@@ -130,7 +141,12 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
         if (logger.isDebugEnabled()) {
             debug(request);
         }
-        HttpResponse response = httpClient.execute(request);
+        HttpResponse response;
+        if(httpContext == null) {
+            response = httpClient.execute(request);
+        }else{
+            response = httpClient.execute(request, httpContext);
+        }
         this.responseEntity = response.getEntity();
         if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
             // 解析响应的结果
