@@ -6,7 +6,7 @@
 		<version>2.6</version>
 		<relativePath>../bc-parent/pom.xml</relativePath>
 	</parent>
-	<version>2.6.7</version>
+	<version>2.7.5</version>
 	<artifactId>bc-spider</artifactId>
 	<description>网络抓取</description>
 	<name>bc-spider</name>
