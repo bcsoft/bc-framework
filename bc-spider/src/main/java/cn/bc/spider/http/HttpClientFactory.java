@@ -9,10 +9,12 @@ import java.util.Map;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -68,6 +70,9 @@ public class HttpClientFactory {
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
 		//请求超时
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000);
+		
+//		HttpHost proxy = new HttpHost("127.0.0.1", 8888);
+//		httpClient.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY, proxy);
 		 
 		return httpClient;
 	}

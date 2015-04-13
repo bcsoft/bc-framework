@@ -61,90 +61,97 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
     private String responseText;
     private Object payload;
 
-    public Result<V> call() throws Exception {
-        String url = getUrl();
-        if (logger.isInfoEnabled()) {
-            logger.info("url=" + url);
-            logger.info("method=" + method);
-            logger.info("type=" + type);
-            logger.info("group=" + group);
-            logger.info("encoding=" + encoding);
-            logger.info("userAgent=" + userAgent);
-        }
-        Map<String, String> kvs;
-
-        // 创建请求
-        HttpUriRequest request;
-        if ("post".equalsIgnoreCase(method)) {
-            HttpPost post = new HttpPost(url);
-            // 设置表单参数
-            kvs = getFormData();
-            if (logger.isInfoEnabled())
-                logger.info("formData=" + kvs);
-            if (kvs != null && !kvs.isEmpty()) {
-                List<NameValuePair> formData = new ArrayList<NameValuePair>();
-                for (Entry<String, String> e : kvs.entrySet()) {
-                    formData.add(new BasicNameValuePair(e.getKey(), e
-                            .getValue()));
-                }
-                HttpEntity entity = new UrlEncodedFormEntity(formData,
-                        getEncoding());
-                post.setEntity(entity);
-            } else if (payload != null) {
-                if (logger.isInfoEnabled())
-                    logger.info("payload=" + payload);
-                if (payload instanceof String) {
-                    post.setEntity(new StringEntity((String) payload));
-                }
-            }
-            request = post;
-        } else {// 默认为get
-            HttpGet get = new HttpGet(url);
-            request = get;
-        }
-
-        // 设置http参数
-        kvs = getHttpParams();
-        if (logger.isInfoEnabled())
-            logger.info("httpParams=" + kvs);
-        if (kvs != null && !kvs.isEmpty()) {
-            HttpParams httpParams = request.getParams();
-            for (Entry<String, String> e : kvs.entrySet()) {
-                httpParams.setParameter(e.getKey(), e.getValue());
-            }
-            request.setParams(httpParams);
-        }
-
-        // 设置请求的头
-        kvs = getHeaders();
-        if (logger.isInfoEnabled())
-            logger.info("headers=" + kvs);
-        if (kvs != null && !kvs.isEmpty()) {
-            for (Entry<String, String> e : kvs.entrySet()) {
-                request.addHeader(e.getKey(), e.getValue());
-            }
-        }
-
-        // 提交请求
-        HttpClient httpClient = getHttpClient();
-        if (logger.isDebugEnabled()) {
-            debug(request);
-        }
-        HttpResponse response = httpClient.execute(request);
-        this.responseEntity = response.getEntity();
-        if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
-            // 解析响应的结果
-            // parseResponse();
-
-            // 返回结果
-            return getResult();
-        } else {// 请求失败
-            return new Result<V>(new RuntimeException(
-                    "request's respone is not ok. StatusCode="
-                            + response.getStatusLine().getStatusCode()
-                            + ",Reason="
-                            + response.getStatusLine().getReasonPhrase()));
-        }
+    public Result<V> call() {
+    	// 创建请求
+        HttpUriRequest request = null;
+    	try {
+	        String url = getUrl();
+	        if (logger.isInfoEnabled()) {
+	            logger.info("url=" + url);
+	            logger.info("method=" + method);
+	            logger.info("type=" + type);
+	            logger.info("group=" + group);
+	            logger.info("encoding=" + encoding);
+	            logger.info("userAgent=" + userAgent);
+	        }
+	        Map<String, String> kvs;
+	
+	        
+	        if ("post".equalsIgnoreCase(method)) {
+	            HttpPost post = new HttpPost(url);
+	            // 设置表单参数
+	            kvs = getFormData();
+	            if (logger.isInfoEnabled())
+	                logger.info("formData=" + kvs);
+	            if (kvs != null && !kvs.isEmpty()) {
+	                List<NameValuePair> formData = new ArrayList<NameValuePair>();
+	                for (Entry<String, String> e : kvs.entrySet()) {
+	                    formData.add(new BasicNameValuePair(e.getKey(), e
+	                            .getValue()));
+	                }
+	                HttpEntity entity = new UrlEncodedFormEntity(formData,
+	                        getEncoding());
+	                post.setEntity(entity);
+	            } else if (payload != null) {
+	                if (logger.isInfoEnabled())
+	                    logger.info("payload=" + payload);
+	                if (payload instanceof String) {
+	                    post.setEntity(new StringEntity((String) payload));
+	                }
+	            }
+	            request = post;
+	        } else {// 默认为get
+	            HttpGet get = new HttpGet(url);
+	            request = get;
+	        }
+	
+	        // 设置http参数
+	        kvs = getHttpParams();
+	        if (logger.isInfoEnabled())
+	            logger.info("httpParams=" + kvs);
+	        if (kvs != null && !kvs.isEmpty()) {
+	            HttpParams httpParams = request.getParams();
+	            for (Entry<String, String> e : kvs.entrySet()) {
+	                httpParams.setParameter(e.getKey(), e.getValue());
+	            }
+	            request.setParams(httpParams);
+	        }
+	
+	        // 设置请求的头
+	        kvs = getHeaders();
+	        if (logger.isInfoEnabled())
+	            logger.info("headers=" + kvs);
+	        if (kvs != null && !kvs.isEmpty()) {
+	            for (Entry<String, String> e : kvs.entrySet()) {
+	                request.addHeader(e.getKey(), e.getValue());
+	            }
+	        }
+	
+	        // 提交请求
+	        HttpClient httpClient = getHttpClient();
+	        if (logger.isDebugEnabled()) {
+	            debug(request);
+	        }
+	        HttpResponse response = httpClient.execute(request);
+	        this.responseEntity = response.getEntity();
+	        if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
+	            // 解析响应的结果
+	            // parseResponse();
+	
+	            // 返回结果
+	            return getResult();
+	        } else {// 请求失败
+	            return new Result<V>(new RuntimeException(
+	                    "request's respone is not ok. StatusCode="
+	                            + response.getStatusLine().getStatusCode()
+	                            + ",Reason="
+	                            + response.getStatusLine().getReasonPhrase()));
+	        }
+    	} catch (Exception e) {
+    		throw new RuntimeException();
+    	} finally {
+    		request.abort();
+    	}
     }
 
     private void debug(HttpUriRequest request) {
