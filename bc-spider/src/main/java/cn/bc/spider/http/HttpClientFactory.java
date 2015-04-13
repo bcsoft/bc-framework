@@ -19,6 +19,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
@@ -60,6 +61,14 @@ public class HttpClientFactory {
 		HttpClient httpClient = createThreadSafeHttpClient();
 		httpClient.getParams().setParameter(HttpMethodParams.USER_AGENT,
 				userAgents.get("Win7IE9"));
+		
+		//从连接池中取连接的超时时间
+		ConnManagerParams.setTimeout(httpClient.getParams(), 5000);
+		//连接超时
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
+		//请求超时
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000);
+		
 		return httpClient;
 	}
 
