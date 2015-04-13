@@ -68,7 +68,7 @@ public class HttpClientFactory {
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
 		//请求超时
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000);
-		
+		 
 		return httpClient;
 	}
 
