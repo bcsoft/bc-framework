@@ -44,7 +44,7 @@ import java.util.concurrent.Callable;
 public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	private static Logger logger = LoggerFactory.getLogger("cn.bc.spider.callable.BaseCallable");
 	private static ExpressionParser parser = new SpelExpressionParser();
-	private HttpEntity responseEntity;// 响应的实体信息
+	protected HttpEntity responseEntity;// 响应的实体信息
 	private String method;// 请求方法：get|post
 	private String type;// 响应的类型：json、html、stream:jpg、...
 	private String url;// 请求的地址
