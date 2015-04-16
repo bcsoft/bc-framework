@@ -102,6 +102,21 @@ public class HttpClientFactory {
 
 		return httpClient;
 	}
+	
+	/**
+	 * 根据分组设置超时时间
+	 * @param id
+	 */
+	public static void setHttpClientTimeOut(String id,int timeOut) {
+		if(id==null) return;
+		HttpClient httpClient = cache.get(id);
+		//从连接池中取连接的超时时间
+		ConnManagerParams.setTimeout(httpClient.getParams(), timeOut);
+		//连接超时
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeOut);
+		//请求超时
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeOut);
+	}
 
 	private static HttpClient createThreadSafeHttpClient() {
 		// Create and initialize HTTP parameters
