@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -35,9 +36,8 @@ import cn.bc.spider.http.HttpClientFactory;
 
 /**
  * 基于HttpClient的基础 Callable
- * 
+ *
  * @author dragon
- * 
  */
 public class HttpClientCallable<V> implements Callable<Result<V>> {
 	protected static Log logger = LogFactory
@@ -59,6 +59,16 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 	protected HttpEntity entity;// 响应的实体信息
 	protected Object content;// 响应的内容：文本或流
 	protected Document document;// 请求的响应文本对应的jsop文档对象
+	private int timeout = 0;// 超时(ms)，默认不设置
+
+	/**
+	 * 设置超时时间，单位毫秒，设为0代表不设置，默认不设置
+	 *
+	 * @param timeout
+	 */
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
 
 	public HttpClientCallable() {
 	}
@@ -98,7 +108,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 				HttpGet get = new HttpGet(url);
 				request = get;
 			}
-	
+
 			// 设置http参数
 			kvs = getHttpParams();
 			if (logger.isInfoEnabled())
@@ -110,7 +120,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 				}
 				request.setParams(httpParams);
 			}
-	
+
 			// 设置请求的头
 			kvs = getHeaders();
 			if (logger.isInfoEnabled())
@@ -120,14 +130,14 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 					request.addHeader(e.getKey(), e.getValue());
 				}
 			}
-	
+
 			// 提交请求
 			HttpResponse response = getHttpClient().execute(request);
 			this.entity = response.getEntity();
 			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
 				// 解析响应的结果
 				parseResponse();
-	
+
 				// 返回结果
 				return getResult();
 			} else {// 请求失败
@@ -138,7 +148,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 								+ response.getStatusLine().getReasonPhrase()));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		} finally {
 			request.abort();
 		}
@@ -146,7 +156,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 设置请求的头
-	 * 
+	 *
 	 * @return
 	 */
 	protected Map<String, String> getHeaders() {
@@ -157,7 +167,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 解析响应
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void parseResponse() throws Exception {
@@ -177,7 +187,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 解析响应为文本
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	protected void parseHtml() throws Exception {
@@ -228,6 +238,10 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 			c.getParams().setParameter(HttpMethodParams.USER_AGENT,
 					this.userAgent);
 		}
+		if (this.timeout > 0) {
+			c.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);//连接时间
+			c.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, timeout);//数据传输时间
+		}
 		return c;
 	}
 
@@ -261,7 +275,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 解析请求响应返回的信息
-	 * 
+	 *
 	 * @return
 	 */
 	protected void parseHtml2Document() throws Exception {
@@ -273,7 +287,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取请求的编码
-	 * 
+	 *
 	 * @return
 	 */
 	public String getEncoding() {
@@ -290,7 +304,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取POST请求需提交的表单参数
-	 * 
+	 *
 	 * @return
 	 */
 	protected Map<String, String> getFormData() {
@@ -301,7 +315,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取请求需提交的http参数
-	 * 
+	 *
 	 * @return
 	 */
 	public Map<String, String> getHttpParams() {
@@ -312,11 +326,9 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一个POST提交参数
-	 * 
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
+	 *
+	 * @param key   键
+	 * @param value 值
 	 */
 	public void addFormData(String key, String value) {
 		if (this.formData == null)
@@ -326,7 +338,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一堆POST提交参数
-	 * 
+	 *
 	 * @param params
 	 */
 	public void addFormData(Map<String, String> params) {
@@ -339,11 +351,9 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一个请求参数
-	 * 
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
+	 *
+	 * @param key   键
+	 * @param value 值
 	 */
 	public void addHttpParam(String key, String value) {
 		if (this.httpParams == null)
@@ -353,7 +363,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一堆POST提交参数
-	 * 
+	 *
 	 * @param params
 	 */
 	public void addHttpParam(Map<String, String> params) {
@@ -366,11 +376,9 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一个请求头参数
-	 * 
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
+	 *
+	 * @param key   键
+	 * @param value 值
 	 */
 	public void addHeader(String key, String value) {
 		if (this.headers == null)
@@ -380,7 +388,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 添加一堆请求头参数
-	 * 
+	 *
 	 * @param params
 	 */
 	public void addHeader(Map<String, String> params) {
@@ -403,7 +411,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取返回值
-	 * 
+	 *
 	 * @return 如果设置了resultExpression则返回此表达式计算的结果，否则返回isSuccess()用于判断请求是否成功
 	 */
 	public Result<V> getResult() throws Exception {
@@ -419,7 +427,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 解析通过spel获取的数据
-	 * 
+	 *
 	 * @return
 	 */
 	protected V parseData() throws Exception {
@@ -438,7 +446,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 判断请求是否成功
-	 * 
+	 *
 	 * @return
 	 */
 	public Boolean isSuccess() {
