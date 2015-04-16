@@ -4,8 +4,6 @@ import cn.bc.core.exception.CoreException;
 import cn.bc.spider.Result;
 import cn.bc.spider.http.HttpClientFactory;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -17,6 +15,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,7 @@ import java.util.concurrent.Callable;
  * @author dragon
  */
 public abstract class BaseCallable<V> implements Callable<Result<V>> {
-	private static Log logger = LogFactory.getLog("cn.bc.spider.callable.BaseCallable");
+	private static Logger logger = LoggerFactory.getLogger("cn.bc.spider.callable.BaseCallable");
 	private static ExpressionParser parser = new SpelExpressionParser();
 	private HttpEntity responseEntity;// 响应的实体信息
 	private String method;// 请求方法：get|post
@@ -141,7 +142,12 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 				debug(request);
 			}
 			HttpResponse response;
-			response = httpClient.execute(request);
+			try {
+				response = getHttpClient().execute(request);
+			} catch (SocketTimeoutException e) {
+				logger.warn("连接超时,url={}", request.getURI());
+				return new Result<V>(e);
+			}
 			this.responseEntity = response.getEntity();
 			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
 				// 解析响应的结果

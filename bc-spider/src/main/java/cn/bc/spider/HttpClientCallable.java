@@ -2,6 +2,7 @@ package cn.bc.spider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -40,8 +43,7 @@ import cn.bc.spider.http.HttpClientFactory;
  * @author dragon
  */
 public class HttpClientCallable<V> implements Callable<Result<V>> {
-	protected static Log logger = LogFactory
-			.getLog("cn.bc.spider.HttpClientCallable");
+	protected static Logger logger = LoggerFactory.getLogger("cn.bc.spider.HttpClientCallable");
 	private String method;// 请求方法：get|post
 	private String type;// 响应的类型：json、html、stream:jpg、...
 	private String url;// 请求的地址
@@ -132,7 +134,13 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 			}
 
 			// 提交请求
-			HttpResponse response = getHttpClient().execute(request);
+			HttpResponse response;
+			try {
+				response = getHttpClient().execute(request);
+			} catch (SocketTimeoutException e) {
+				logger.warn("连接超时,url={}", request.getURI());
+				return new Result<V>(e);
+			}
 			this.entity = response.getEntity();
 			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
 				// 解析响应的结果
