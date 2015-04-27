@@ -82,4 +82,13 @@ public class RoleAction extends EntityAction<Long, Role> {
 			this.getE().setResources(resources);
 		}
 	}
+	
+	@Override
+	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+		boolean readonly = this.isReadonly();
+		if (editable && !readonly) {
+				pageOption
+				.addButton(new ButtonOption(getText("label.save"), "save"));
+		}
+	}
 }

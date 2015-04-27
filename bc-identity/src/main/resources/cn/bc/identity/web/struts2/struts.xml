@@ -37,6 +37,17 @@
 		<action name="export" class="roleAction" method="export"/>
 	</package>
 	
+	<package name="privilege" extends="bc-default" namespace="/bc/privilege">
+		<action name="addUser" class="privilegeByRoleAction" method="addUser"/>
+		<action name="addGroup" class="privilegeByRoleAction" method="addGroup"/>
+		<action name="addUnitOrDep" class="privilegeByRoleAction" method="addUnitOrDep"/>
+		<action name="addResource" class="privilegeByRoleAction" method="addResource"/>
+		<action name="deleteActor" class="privilegeByRoleAction" method="deleteActor"/>
+		<action name="deleteResource" class="privilegeByRoleAction" method="deleteResource"/>
+		<action name="actor/paging" class="privilegeByRolesAction" method="paging"/>
+		<action name="resource/paging" class="resourceByRolesAction" method="paging"/>
+	</package>
+	
 	<package name="selectResource" extends="bc-default" namespace="/bc">
 		<action name="selectResource" class="selectResourceAction">
 			<result>/bc/identity/resource/select.jsp</result>
