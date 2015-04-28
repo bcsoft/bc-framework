@@ -42,8 +42,8 @@
 		<action name="addResource" class="privilegeByRoleAction" method="addResource"/>
 		<action name="deleteActor" class="privilegeByRoleAction" method="deleteActor"/>
 		<action name="deleteResource" class="privilegeByRoleAction" method="deleteResource"/>
-		<action name="actor/paging" class="privilegeByRolesAction" method="paging"/>
-		<action name="resource/paging" class="resourceByRolesAction" method="paging"/>
+		<action name="actor/list" class="privilegeByRolesAction" method="list"/>
+		<action name="resource/list" class="resourceByRolesAction" method="list"/>
 	</package>
 	
 	<package name="selectResource" extends="bc-default" namespace="/bc">

@@ -26,9 +26,10 @@ public class PrivilegeByRoleAction extends AbstractActorAction {
 	public String addUser() {
 		Json json = new Json();
 		Long roleId = Long.valueOf(this.roleId);
-		Long userId = Long.valueOf(this.userId);
-		boolean success = privilegeService.addUser(roleId, userId);
-		json.put("success", success);
+		String[] userIds = userId.split(",");
+		for(String u : userIds) {
+			privilegeService.addUser(roleId, Long.valueOf(u));
+		}
 		this.json = json.toString();
 		return "json";
 	}
@@ -36,9 +37,10 @@ public class PrivilegeByRoleAction extends AbstractActorAction {
 	public String addGroup() {
 		Json json = new Json();
 		Long roleId = Long.valueOf(this.roleId);
-		Long groupId = Long.valueOf(this.groupId);
-		boolean success = privilegeService.addGroup(roleId, groupId);
-		json.put("success", success);
+		String[] groupIds = groupId.split(",");
+		for(String g : groupIds) {
+			privilegeService.addGroup(roleId, Long.valueOf(g));
+		}
 		this.json = json.toString();
 		return "json";
 	}
@@ -46,9 +48,10 @@ public class PrivilegeByRoleAction extends AbstractActorAction {
 	public String addUnitOrDep() {
 		Json json = new Json();
 		Long roleId = Long.valueOf(this.roleId);
-		Long unitOrDepId = Long.valueOf(this.unitOrDepId);
-		boolean success = privilegeService.addUnitOrDep(roleId, unitOrDepId);
-		json.put("success", success);
+		String[] unitOrDepIds = unitOrDepId.split(",");
+		for(String u : unitOrDepIds) {
+			privilegeService.addUnitOrDep(roleId, Long.valueOf(u));
+		}
 		this.json = json.toString();
 		return "json";
 	}
@@ -67,9 +70,10 @@ public class PrivilegeByRoleAction extends AbstractActorAction {
 	public String addResource() {
 		Json json = new Json();
 		Long roleId = Long.valueOf(this.roleId);
-		Long resourceId = Long.valueOf(this.resourceId);
-		boolean success = privilegeService.addResource(roleId, resourceId);
-		json.put("success", success);
+		String[] resourceIds = resourceId.split(",");
+		for(String r : resourceIds) {
+			privilegeService.addResource(roleId, Long.valueOf(r));
+		}
 		this.json = json.toString();
 		return "json";
 	}
