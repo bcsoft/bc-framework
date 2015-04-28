@@ -169,4 +169,9 @@ public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
 	protected String getGridDblRowMethod() {
 		return "bc.privilege.LookActor";
 	}
+	
+	@Override
+	protected String getDefaultExportFileName() {
+		return "导出通用角色的权限分配";
+	}
 }

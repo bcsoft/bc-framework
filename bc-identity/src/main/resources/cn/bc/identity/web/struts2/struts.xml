@@ -35,9 +35,7 @@
 		<action name="paging" class="roleAction" method="paging"/>
 		<action name="data" class="roleAction" method="data"/>
 		<action name="export" class="roleAction" method="export"/>
-	</package>
-	
-	<package name="privilege" extends="bc-default" namespace="/bc/privilege">
+		
 		<action name="addUser" class="privilegeByRoleAction" method="addUser"/>
 		<action name="addGroup" class="privilegeByRoleAction" method="addGroup"/>
 		<action name="addUnitOrDep" class="privilegeByRoleAction" method="addUnitOrDep"/>

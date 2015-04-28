@@ -79,7 +79,7 @@ public class ResourceByRolesAction extends ViewAction<Map<String, Object>> {
 				.setSortable(true)
 				.setValueFormater(new EntityStatusFormater(getModuleTypes())));
 		columns.add(new TextColumn4MapKey("s.name", "name",
-				getText("label.name"),160).setSortable(true));
+				getText("label.name"),130).setSortable(true));
 		columns.add(new TextColumn4MapKey("p.name", "pname",
 				getText("privilege.belong")).setSortable(true));
 		return columns;
@@ -165,4 +165,8 @@ public class ResourceByRolesAction extends ViewAction<Map<String, Object>> {
 		return this.getModuleContextPath() + "/resource/edit";
 	}
 	
+	@Override
+	protected String getDefaultExportFileName() {
+		return "导出通用角色的资源分配";
+	}
 }
