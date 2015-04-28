@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
+import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.EqualsCondition;
+import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Actor;
@@ -37,7 +39,7 @@ public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id , a.type_, a.name, a.pname");
+		sql.append("select a.id , a.type_, a.name, a.pname, a.order_");
 		sql.append(" from bc_identity_role r");
 		sql.append(" inner join bc_identity_role_actor ra on r.id = ra.rid");
 		sql.append(" inner join bc_identity_actor a on a.id = ra.aid");
@@ -63,17 +65,23 @@ public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
+	protected OrderCondition getGridDefaultOrderCondition() {
+		// 默认的排序方法
+		return new OrderCondition("a.order_", Direction.Asc);
+	}
+	
+	@Override
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<Column>();
 		columns.add(new IdColumn4MapKey("a.id", "id"));
 		columns.add(new TextColumn4MapKey("a.type_", "type",
-				getText("privilege.type"), 80)
+				getText("privilege.type"), 60)
 				.setSortable(true)
 				.setValueFormater(new EntityStatusFormater(getActorStatuses3())));
 		columns.add(new TextColumn4MapKey("a.name", "name",
-				getText("label.name"), 100).setSortable(true));
+				getText("label.name"),160).setSortable(true));
 		columns.add(new TextColumn4MapKey("a.pname", "pname",
-				getText("resource.belong"), 90).setSortable(true));
+				getText("privilege.parent")).setSortable(true));
 		return columns;
 	}
 
