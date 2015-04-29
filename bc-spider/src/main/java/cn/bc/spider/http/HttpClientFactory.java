@@ -9,16 +9,19 @@ import java.util.Map;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
@@ -60,6 +63,17 @@ public class HttpClientFactory {
 		HttpClient httpClient = createThreadSafeHttpClient();
 		httpClient.getParams().setParameter(HttpMethodParams.USER_AGENT,
 				userAgents.get("Win7IE9"));
+		
+		//从连接池中取连接的超时时间
+		ConnManagerParams.setTimeout(httpClient.getParams(), 5000);
+		//连接超时
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
+		//请求超时
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000);
+		
+//		HttpHost proxy = new HttpHost("127.0.0.1", 8888);
+//		httpClient.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY, proxy);
+		 
 		return httpClient;
 	}
 

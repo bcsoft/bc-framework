@@ -31,6 +31,11 @@
 	<bean id="idGeneratorDao" class="cn.bc.identity.dao.IdGeneratorDaoImpl"
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	<bean id="idGeneratorService" class="cn.bc.identity.service.IdGeneratorServiceImpl" />
+	
+	<!-- Privilege -->
+	<bean id="privilegeDao" class="cn.bc.identity.dao.PrivilegeDaoImpl" />
+	<bean id="privilegeService" class="cn.bc.identity.service.PrivilegeServiceImpl" />
+	
 	<aop:config>
 		<aop:pointcut id="idGeneratorServiceMethod"
 			expression="within(cn.bc.identity.service.IdGeneratorServiceImpl)" />

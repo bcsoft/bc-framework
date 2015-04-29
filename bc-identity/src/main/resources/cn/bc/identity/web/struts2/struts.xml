@@ -35,6 +35,15 @@
 		<action name="paging" class="roleAction" method="paging"/>
 		<action name="data" class="roleAction" method="data"/>
 		<action name="export" class="roleAction" method="export"/>
+		
+		<action name="addUser" class="privilegeByRoleAction" method="addUser"/>
+		<action name="addGroup" class="privilegeByRoleAction" method="addGroup"/>
+		<action name="addUnitOrDep" class="privilegeByRoleAction" method="addUnitOrDep"/>
+		<action name="addResource" class="privilegeByRoleAction" method="addResource"/>
+		<action name="deleteActor" class="privilegeByRoleAction" method="deleteActor"/>
+		<action name="deleteResource" class="privilegeByRoleAction" method="deleteResource"/>
+		<action name="actor/list" class="privilegeByRolesAction" method="list"/>
+		<action name="resource/list" class="resourceByRolesAction" method="list"/>
 	</package>
 	
 	<package name="selectResource" extends="bc-default" namespace="/bc">

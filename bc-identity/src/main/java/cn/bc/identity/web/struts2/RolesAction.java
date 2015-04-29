@@ -110,4 +110,5 @@ public class RolesAction extends ViewAction<Map<String, Object>> {
 		return super.getHtmlPageOption().setWidth(600).setHeight(400)
 				.setMinWidth(300).setMinHeight(200);
 	}
+	
 }
