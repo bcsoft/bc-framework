@@ -1,6 +1,7 @@
 package cn.bc.identity.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.dao.PrivilegeDao;
@@ -57,6 +58,11 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 			privilegeDao.addResourceByRole(roleId, resourceId);
 		}
 		return true;
+	}
+
+	@Override
+	public String getRoleNameById(long roleId) {
+		return privilegeDao.getRoleNameById(roleId);
 	}
 
 }

@@ -60,5 +60,11 @@ public class PrivilegeDaoImpl implements PrivilegeDao {
 		return jdbcTemplate.update(sql, roleId, resourceId);
 	}
 
+	@Override
+	public String getRoleNameById(long roleId) {
+		String sql = "select name from bc_identity_role where id=?";
+		return jdbcTemplate.query(sql, new Object[]{roleId}, new ColumnMapRowMapper()).get(0).get("name").toString();
+	}
+
 
 }

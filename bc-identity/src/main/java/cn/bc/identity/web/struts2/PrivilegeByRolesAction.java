@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.PrivilegeService;
 import cn.bc.web.formater.EntityStatusFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -31,7 +33,8 @@ import cn.bc.web.ui.html.toolbar.ToolbarButton;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
-
+	@Autowired
+	private PrivilegeService privilegeService;
 	public Long roleId;
 
 	@Override
@@ -172,6 +175,6 @@ public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
 	
 	@Override
 	protected String getDefaultExportFileName() {
-		return "导出通用角色的权限分配";
+		return "导出"+privilegeService.getRoleNameById(roleId)+"的权限分配";
 	}
 }

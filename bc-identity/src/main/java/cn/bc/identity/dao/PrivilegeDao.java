@@ -58,4 +58,10 @@ public interface PrivilegeDao {
 	 * @return
 	 */
 	long addResourceByRole(long roleId, long resourceId);
+	/**
+	 * 根据id获取名字
+	 * @param roleId
+	 * @return
+	 */
+	String getRoleNameById(long roleId);
 }
