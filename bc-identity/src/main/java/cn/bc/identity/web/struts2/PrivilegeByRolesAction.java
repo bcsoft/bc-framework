@@ -69,8 +69,7 @@ public class PrivilegeByRolesAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认的排序方法
-		return new OrderCondition("a.order_", Direction.Asc);
+		return new OrderCondition("a.type_", Direction.Asc).add("a.order_", Direction.Asc);
 	}
 	
 	@Override
