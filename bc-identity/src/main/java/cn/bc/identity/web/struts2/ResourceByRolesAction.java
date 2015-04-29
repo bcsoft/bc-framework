@@ -70,7 +70,7 @@ public class ResourceByRolesAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected OrderCondition getGridDefaultOrderCondition() {
 		// 默认的排序方法
-		return new OrderCondition("s.order_", Direction.Asc);
+		return new OrderCondition("s.type_", Direction.Asc).add("s.order_", Direction.Asc);
 	}
 	
 	@Override
