@@ -165,9 +165,13 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 								+ response.getStatusLine().getReasonPhrase()));
 			}
 		} catch (Exception e) {
+			logger.warn("throw call Exception: " + e.getMessage());
 			throw new RuntimeException(e);
 		} finally {
-			if (request != null) request.abort();
+			if (request != null) {
+				logger.info("abort request");
+				request.abort();
+			}
 		}
 	}
 
