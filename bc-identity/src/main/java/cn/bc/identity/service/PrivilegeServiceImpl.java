@@ -17,7 +17,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 	@Override
 	public boolean addUser(long roleId, long userId) {
 		long actorId = privilegeDao.getActorbyHistoryActor(userId);
-		if(privilegeDao.ActorRelationIsExist(roleId, userId)<=0) {
+		if(privilegeDao.ActorRelationIsExist(roleId, actorId)<=0) {
 			privilegeDao.addUser(roleId, actorId);
 		}
 		return true;
