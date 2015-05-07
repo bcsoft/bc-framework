@@ -15,6 +15,8 @@ public class Result<V> {
 	public Result(boolean success, V data) {
 		this.success = success;
 		this.data = data;
+		if(!success)
+			this.error = new RuntimeException(String.valueOf(data));
 	}
 
 	public Result(Throwable e) {
