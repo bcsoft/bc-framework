@@ -32,6 +32,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,6 +61,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
 	public String ptype;// 图片所属文档的类型
 	public Long id;// 附件的id
 	public String empty = "/bc/docs/image/empty.jpg";
+	public String notFound = "/bc/docs/image/notFound.jpg";
 	public String subpath = "images";// 图片附件处理后保存到的相对路径(相对于${app.data.realPath}目录下的路径)
 	public boolean absolute;
 	protected Map<String, Object> session;
@@ -288,6 +290,17 @@ public class ImageAction extends ActionSupport implements SessionAware {
 			File file = new File(filepath);
 			contentLength = file.length();
 			inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			// 使用 NotFound 图片代替
+			contentType = AttachUtils.getContentType(extension);
+			File file = new File(WebUtils.rootPath + notFound);
+			this.filename = "notFound";
+			contentLength = file.length();
+			try {
+				inputStream = new FileInputStream(file);
+			} catch (FileNotFoundException e1) {
+				logger.error(e.getMessage(), e);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
