@@ -30,12 +30,6 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 
-		<!-- http -->
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-		</dependency>
-
 		<!-- 导出Excel需要的包 -->
 		<dependency>
 			<groupId>net.sf.jxls</groupId>
