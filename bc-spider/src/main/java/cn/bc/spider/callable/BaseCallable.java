@@ -3,16 +3,17 @@ package cn.bc.spider.callable;
 import cn.bc.core.exception.CoreException;
 import cn.bc.spider.Result;
 import cn.bc.spider.http.HttpClientFactory;
-import org.apache.http.*;
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.SocketTimeoutException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,16 +57,14 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	private Map<String, String> formData;// 表单参数
 	private Map<String, String> httpParams;// http参数
 	private HashMap<String, String> headers;
-	private boolean hadParseRespone;
-	private V respone;
+	private boolean hadParseResponse;
+	private V response;
 	private String responseText;
 	private Object payload;
 	private int timeout = 0;// 超时(ms)，默认不设置
 
 	/**
 	 * 设置超时时间，单位毫秒，设为0代表不设置，默认不设置
-	 *
-	 * @param timeout
 	 */
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
@@ -73,146 +73,112 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	public Result<V> call() {
 		String url = getUrl();
 		if (logger.isInfoEnabled()) {
-			logger.info("url=" + url);
-			logger.info("method=" + method);
-			logger.info("type=" + type);
-			logger.info("group=" + group);
-			logger.info("encoding=" + encoding);
-			logger.info("userAgent=" + userAgent);
+			logger.info("method={}, type={}, group={}, encoding={}", method, type, group, encoding);
+			logger.info("url={}" + url);
+			logger.info("userAgent={}" + userAgent);
 		}
-		Map<String, String> kvs;
 		HttpUriRequest request = null;
+		CloseableHttpResponse response = null;
 		try {
-			// 创建请求
-			if ("post".equalsIgnoreCase(method)) {
-				HttpPost post = new HttpPost(url);
-				// 设置表单参数
-				kvs = getFormData();
-				if (logger.isInfoEnabled())
-					logger.info("formData=" + kvs);
-				if (kvs != null && !kvs.isEmpty()) {
-					List<NameValuePair> formData = new ArrayList<NameValuePair>();
-					for (Entry<String, String> e : kvs.entrySet()) {
-						formData.add(new BasicNameValuePair(e.getKey(), e
-								.getValue()));
-					}
-					HttpEntity entity = new UrlEncodedFormEntity(formData,
-							getEncoding());
+			// 初始化请求构建器
+			RequestBuilder requestBuilder = RequestBuilder.create(method.toUpperCase()).setUri(this.url);
 
-					post.setEntity(entity);
-				} else if (payload != null) {
-					if (logger.isInfoEnabled())
-						logger.info("payload=" + payload);
-					if (payload instanceof String) {
-						StringEntity en = new StringEntity((String) payload, this.getEncoding());
-						//logger.info("StringEntity2={}", EntityUtils.toString(en));
-						post.setEntity(en);
-					} else {
-						throw new RuntimeException("unsupport payload type: " + payload.getClass());
-					}
-				}
-				request = post;
-			} else {// 默认为get
-				HttpGet get = new HttpGet(url);
-				request = get;
+			// 请求头
+			for (Entry<String, String> e : getHeaders().entrySet()) {
+				requestBuilder.addHeader(e.getKey(), e.getValue());
 			}
 
-			// 设置http参数
-			kvs = getHttpParams();
-			if (logger.isInfoEnabled())
-				logger.info("httpParams=" + kvs);
-			if (kvs != null && !kvs.isEmpty()) {
-				HttpParams httpParams = request.getParams();
+			// http参数
+			for (Entry<String, String> e : getHttpParams().entrySet()) {
+				requestBuilder.addParameter(e.getKey(), e.getValue());
+			}
+			if (this.userAgent != null) {
+				requestBuilder.addParameter("User-Agent", this.userAgent);
+			}
+
+			// 编码
+			if (this.encoding != null) requestBuilder.setCharset(Charset.forName(this.encoding.toUpperCase()));
+
+			// 超时
+			if (this.timeout > 0) {
+				requestBuilder.setConfig(RequestConfig.custom()
+						.setSocketTimeout(timeout)
+						.setConnectTimeout(timeout)
+						.setConnectionRequestTimeout(timeout).build());
+			}
+
+			// 表单参数
+			Map<String, String> kvs = getFormData();
+			if (!kvs.isEmpty()) {
+				List<NameValuePair> formData = new ArrayList<>();
 				for (Entry<String, String> e : kvs.entrySet()) {
-					httpParams.setParameter(e.getKey(), e.getValue());
+					formData.add(new BasicNameValuePair(e.getKey(), e.getValue()));
 				}
-				request.setParams(httpParams);
+				requestBuilder.setEntity(new UrlEncodedFormEntity(formData, getEncoding()));
+			} else if (payload != null) {
+				logger.debug("payload={}", payload);
+				if (payload instanceof String) {
+					StringEntity en = new StringEntity((String) payload, this.getEncoding());
+					requestBuilder.setEntity(en);
+				} else {
+					throw new RuntimeException("unsupport payload type: " + payload.getClass());
+				}
 			}
 
-			// 设置请求的头
-			kvs = getHeaders();
-			if (logger.isInfoEnabled())
-				logger.info("headers=" + kvs);
-			if (kvs != null && !kvs.isEmpty()) {
-				for (Entry<String, String> e : kvs.entrySet()) {
-					request.addHeader(e.getKey(), e.getValue());
-				}
-			}
+			// 构建请求
+			request = requestBuilder.build();
 
 			// 提交请求
-			HttpClient httpClient = getHttpClient();
-			if (logger.isDebugEnabled()) {
-				debug(request);
-			}
-			HttpResponse response;
-			try {
-				response = getHttpClient().execute(request);
-			} catch (SocketTimeoutException e) {
-				logger.warn("连接超时,url={}", request.getURI());
-				return new Result<V>(e);
-			}
+			response = getHttpClient().execute(request);
+
+			// 解析请求
 			this.responseEntity = response.getEntity();
 			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
-				// 解析响应的结果
-				// parseResponse();
-
-				// 返回结果
+				// 解析响应返回结果
 				return getResult();
 			} else {// 请求失败
-				return new Result<V>(new RuntimeException(
-						"request's respone is not ok. StatusCode="
-								+ response.getStatusLine().getStatusCode()
-								+ ",Reason="
-								+ response.getStatusLine().getReasonPhrase()));
+				return new Result<>(new RuntimeException(
+						"response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
+								+ ",Reason=" + response.getStatusLine().getReasonPhrase()));
 			}
+		} catch (SocketTimeoutException e) {
+			logger.info("连接超时, url={}", request.getURI());
+			return new Result<>(e);
 		} catch (Exception e) {
-			logger.warn("throw call Exception: " + e.getMessage());
-			throw new RuntimeException(e);
+			logger.info("throw call Exception: " + e.getMessage());
+			return new Result<>(e);
 		} finally {
-			if (request != null) {
-				logger.info("abort request");
-				request.abort();
+			if (request != null) request.abort();
+			if (response != null) {
+				try {
+					response.close();
+				} catch (IOException e) {
+					logger.warn(e.getMessage());
+				}
 			}
 		}
-	}
-
-	private void debug(HttpUriRequest request) {
-		logger.debug("request:");
-		logger.debug("  requestLine=" + request.getRequestLine());
-		logger.debug("  headers:");
-		for (Header h : request.getAllHeaders()) {
-			logger.debug("      " + h.getName() + "=" + h.getValue());
-		}
-		logger.debug("  params=" + request.getParams());
 	}
 
 	/**
-	 * 设置请求的头
-	 *
-	 * @return
+	 * 获取请求头
 	 */
 	protected Map<String, String> getHeaders() {
 		if (this.headers == null)
-			this.headers = new HashMap<String, String>();
+			this.headers = new HashMap<>();
 		return this.headers;
 	}
 
 	/**
 	 * 解析响应
-	 *
-	 * @throws IOException
 	 */
 	public abstract V parseResponse() throws Exception;
 
-	/**
-	 * @return
-	 */
 	public V getResponse() throws Exception {
-		if (!hadParseRespone) {
-			respone = parseResponse();
-			hadParseRespone = true;
+		if (!hadParseResponse) {
+			response = parseResponse();
+			hadParseResponse = true;
 		}
-		return respone;
+		return response;
 	}
 
 	public Object getPayload() {
@@ -241,19 +207,12 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 		return this;
 	}
 
-	public HttpClient getHttpClient() {
-		HttpClient c;
+	public CloseableHttpClient getHttpClient() {
+		CloseableHttpClient c;
 		if (this.group == null) {
 			c = HttpClientFactory.create();
 		} else {
 			c = HttpClientFactory.get(this.group);
-		}
-		if (this.userAgent != null) {
-			c.getParams().setParameter("User-Agent", this.userAgent);
-		}
-		if (this.timeout > 0) {
-			c.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);//连接时间
-			c.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, timeout);//数据传输时间
 		}
 		return c;
 	}
@@ -284,8 +243,6 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取请求的编码
-	 *
-	 * @return
 	 */
 	public String getEncoding() {
 		return encoding;
@@ -297,98 +254,88 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 获取POST请求需提交的表单参数
-	 *
-	 * @return
 	 */
 	protected Map<String, String> getFormData() {
 		if (this.formData == null)
-			this.formData = new HashMap<String, String>();
+			this.formData = new HashMap<>();
 		return this.formData;
 	}
 
 	/**
 	 * 获取请求需提交的http参数
-	 *
-	 * @return
 	 */
 	public Map<String, String> getHttpParams() {
 		if (this.httpParams == null)
-			this.httpParams = new HashMap<String, String>();
+			this.httpParams = new HashMap<>();
 		return httpParams;
 	}
 
 	/**
-	 * 添加一个POST提交参数
+	 * 添加一个表单参数
 	 *
 	 * @param key   键
 	 * @param value 值
 	 */
 	public void addFormData(String key, String value) {
 		if (this.formData == null)
-			this.formData = new HashMap<String, String>();
+			this.formData = new HashMap<>();
 		this.formData.put(key, value);
 	}
 
 	/**
-	 * 添加一堆POST提交参数
-	 *
-	 * @param params
+	 * 添加表单参数
 	 */
 	public void addFormData(Map<String, String> params) {
 		if (params == null)
 			return;
 		if (this.formData == null)
-			this.formData = new HashMap<String, String>();
+			this.formData = new HashMap<>();
 		this.formData.putAll(params);
 	}
 
 	/**
-	 * 添加一个请求参数
+	 * 添加请求参数
 	 *
 	 * @param key   键
 	 * @param value 值
 	 */
 	public void addHttpParam(String key, String value) {
 		if (this.httpParams == null)
-			this.httpParams = new HashMap<String, String>();
+			this.httpParams = new HashMap<>();
 		this.httpParams.put(key, value);
 	}
 
 	/**
-	 * 添加一堆POST提交参数
-	 *
-	 * @param params
+	 * 添加请求参数
 	 */
 	public void addHttpParam(Map<String, String> params) {
 		if (params == null)
 			return;
 		if (this.httpParams == null)
-			this.httpParams = new HashMap<String, String>();
+			this.httpParams = new HashMap<>();
 		this.httpParams.putAll(params);
 	}
 
 	/**
-	 * 添加一个请求头参数
+	 * 添加请求头
 	 *
 	 * @param key   键
 	 * @param value 值
 	 */
 	public void addHeader(String key, String value) {
 		if (this.headers == null)
-			this.headers = new HashMap<String, String>();
+			this.headers = new HashMap<>();
 		this.headers.put(key, value);
 	}
 
 	/**
-	 * 添加一堆请求头参数
-	 *
-	 * @param params
+	 * 添加请求头
 	 */
 	public void addHeader(Map<String, String> params) {
 		if (params == null)
 			return;
 		if (this.headers == null)
-			this.headers = new HashMap<String, String>();
+			this.headers = new HashMap<>();
 		this.headers.putAll(params);
 	}
 
@@ -402,17 +349,10 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	}
 
 	protected EvaluationContext getExpressionContextObject() throws Exception {
-		StandardEvaluationContext context = new StandardEvaluationContext(
-				getResponse());
+		StandardEvaluationContext context = new StandardEvaluationContext(getResponse());
 		context.setVariable("httpParams", this.httpParams);
 		context.setVariable("formData", this.formData);
 		return context;
-		// return this;
-		// return new Object() {
-		// public Object getR() throws Exception {
-		// return BaseCallable.this.getResponse();
-		// }
-		// };
 	}
 
 	/**
@@ -426,14 +366,14 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 			boolean success = isSuccess();
 			Result<V> r;
 			if (!success) {
-				r = new Result<V>(success, (V) getFailedData());
+				r = new Result<>(false, (V) getFailedData());
 			} else {
-				r = new Result<V>(success, parseResultData());
+				r = new Result<>(true, parseResultData());
 			}
 			return r;
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
-			return new Result<V>(e);
+			return new Result<>(e);
 		}
 	}
 
@@ -442,32 +382,26 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	}
 
 	/**
-	 * 解析通过spel获取的数据
-	 *
-	 * @return
+	 * 解析通过 spel 获取的数据
 	 */
 	protected V parseResultData() throws Exception {
 		if (resultExpression != null) {
 			return parseResultData(getExpressionValue(this.resultExpression,
 					Object.class));
 		} else {
-			// 默认返回getRespone()的结果
+			// 默认返回getResponse()的结果
 			return parseResultData(getExpressionValue("#root", Object.class));
-			// return (V) getResponeText();
 		}
 	}
 
 	/**
 	 * 获取响应的文本信息
-	 *
-	 * @return
-	 * @throws IOException
 	 */
 	protected String getResponseText() throws IOException {
 		if (responseText == null) {
 			responseText = EntityUtils.toString(this.responseEntity);
 			if (logger.isDebugEnabled()) {
-				logger.debug("responeText=" + responseText);
+				logger.debug("responseText=" + responseText);
 			}
 			if (responseText == null) {
 				responseText = "";
@@ -483,8 +417,6 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 判断请求是否成功
-	 *
-	 * @return
 	 */
 	public Boolean isSuccess() {
 		if (this.successExpression != null)
@@ -511,9 +443,6 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 导出请求结果到文件
-	 *
-	 * @param out
-	 * @throws Exception
 	 */
 	public void export(OutputStream out) throws Exception {
 		Object r = this.getResponse();
@@ -522,7 +451,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 		} else if (r instanceof InputStream) {
 			FileCopyUtils.copy((InputStream) r, out);
 		} else {
-			// do nothing
+			throw new CoreException("unsupport type");
 		}
 	}
 }
