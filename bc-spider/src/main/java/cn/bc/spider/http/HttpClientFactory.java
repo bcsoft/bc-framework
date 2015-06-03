@@ -3,10 +3,6 @@
  */
 package cn.bc.spider.http;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -21,6 +17,9 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author dragon
@@ -80,7 +79,7 @@ public class HttpClientFactory {
 	public static HttpClient create() {
 		// HttpClient httpClient = createSimpleHttpClient();
 		HttpClient httpClient = createThreadSafeHttpClient();
-		httpClient.getParams().setParameter(HttpMethodParams.USER_AGENT, userAgents.get("Win7IE9"));
+		httpClient.getParams().setParameter("User-Agent", userAgents.get("Win7IE9"));
 
 		// 设置代理
 		if (proxy != null) {
