@@ -1,13 +1,5 @@
 package cn.bc.test.springws;
 
-import javax.xml.namespace.QName;
-
-import org.apache.axiom.om.OMText;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.rpc.client.RPCServiceClient;
-import org.junit.Test;
-
 public class SpringWSTest {
 	//@Test
 	public void test01() throws Exception {

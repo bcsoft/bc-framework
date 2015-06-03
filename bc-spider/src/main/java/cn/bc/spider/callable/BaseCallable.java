@@ -3,7 +3,6 @@ package cn.bc.spider.callable;
 import cn.bc.core.exception.CoreException;
 import cn.bc.spider.Result;
 import cn.bc.spider.http.HttpClientFactory;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -106,7 +105,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 						logger.info("payload=" + payload);
 					if (payload instanceof String) {
 						post.setEntity(new StringEntity((String) payload));
-					}else{
+					} else {
 						throw new RuntimeException("unsupport payload type: " + payload.getClass());
 					}
 				}
@@ -248,7 +247,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 			c = HttpClientFactory.get(this.group);
 		}
 		if (this.userAgent != null) {
-			c.getParams().setParameter(HttpMethodParams.USER_AGENT, this.userAgent);
+			c.getParams().setParameter("User-Agent", this.userAgent);
 		}
 		if (this.timeout > 0) {
 			c.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);//连接时间

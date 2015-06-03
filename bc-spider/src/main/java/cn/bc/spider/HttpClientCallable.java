@@ -1,18 +1,6 @@
 package cn.bc.spider;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import cn.bc.spider.http.HttpClientFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -35,7 +23,15 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import cn.bc.spider.http.HttpClientFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 /**
  * 基于HttpClient的基础 Callable
@@ -243,8 +239,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 			c = HttpClientFactory.get(this.group);
 		}
 		if (this.userAgent != null) {
-			c.getParams().setParameter(HttpMethodParams.USER_AGENT,
-					this.userAgent);
+			c.getParams().setParameter("User-Agent", this.userAgent);
 		}
 		if (this.timeout > 0) {
 			c.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);//连接时间
