@@ -104,7 +104,9 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 					if (logger.isInfoEnabled())
 						logger.info("payload=" + payload);
 					if (payload instanceof String) {
-						post.setEntity(new StringEntity((String) payload));
+						StringEntity en = new StringEntity((String) payload, this.getEncoding());
+						//logger.info("StringEntity2={}", EntityUtils.toString(en));
+						post.setEntity(en);
 					} else {
 						throw new RuntimeException("unsupport payload type: " + payload.getClass());
 					}
