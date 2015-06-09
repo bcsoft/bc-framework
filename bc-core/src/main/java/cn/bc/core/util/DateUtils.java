@@ -1,8 +1,11 @@
 package cn.bc.core.util;
 
-import java.text.DateFormat;
+import cn.bc.core.exception.CoreException;
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -10,50 +13,36 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import cn.bc.core.exception.CoreException;
-
 /**
  * 时间日期处理帮助类
- * 
+ *
  * @author dragon
  */
 public class DateUtils {
-	private final static Log logger = LogFactory.getLog(DateUtils.class);
+	private final static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatDate(Date date) {
 		if (null == date)
 			return "";
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		FastDateFormat df = FastDateFormat.getInstance("yyyy-MM-dd");
 		return df.format(date);
 	}
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatCalendar2Day(Calendar calendar) {
 		if (null == calendar)
 			return "";
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		FastDateFormat df = FastDateFormat.getInstance("yyyy-MM-dd");
 		return df.format(calendar.getTime());
 	}
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm:ss
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatDateTime(Date date) {
 		return formatDateTime(date, "yyyy-MM-dd HH:mm:ss");
@@ -61,20 +50,13 @@ public class DateUtils {
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm:ss
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatCalendar2Second(Calendar calendar) {
-		return formatDateTime(calendar != null ? calendar.getTime() : null,
-				"yyyy-MM-dd HH:mm:ss");
+		return formatDateTime(calendar != null ? calendar.getTime() : null, "yyyy-MM-dd HH:mm:ss");
 	}
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatDateTime2Minute(Date date) {
 		return formatDateTime(date, "yyyy-MM-dd HH:mm");
@@ -82,50 +64,36 @@ public class DateUtils {
 
 	/**
 	 * 将参数中的时间格式化为：yyyy-MM-dd HH:mm
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static String formatCalendar2Minute(Calendar calendar) {
-		return formatDateTime(calendar != null ? calendar.getTime() : null,
-				"yyyy-MM-dd HH:mm");
+		return formatDateTime(calendar != null ? calendar.getTime() : null, "yyyy-MM-dd HH:mm");
 	}
 
 	/**
 	 * 将参数中的时间格式化为指定的格式
-	 * 
-	 * @param date
-	 * @param format
-	 *            格式
-	 * @return
+	 *
+	 * @param date   日期
+	 * @param format 格式
 	 */
 	public static String formatDateTime(Date date, String format) {
 		if (null == date)
 			return "";
-		DateFormat df = new SimpleDateFormat(format);
+		FastDateFormat df = FastDateFormat.getInstance(format);
 		return df.format(date);
 	}
 
 	/**
 	 * 将参数中的时间格式化为指定的格式
-	 * 
-	 * @param date
-	 * @param format
-	 *            格式
-	 * @return
 	 */
 	public static String formatCalendar(Calendar calendar, String format) {
 		if (null == calendar)
 			return "";
-		DateFormat df = new SimpleDateFormat(format);
+		FastDateFormat df = FastDateFormat.getInstance(format);
 		return df.format(calendar.getTime());
 	}
 
 	/**
 	 * 取得指定日期中的小时数
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static int getHour(Date date) {
 		if (null == date)
@@ -137,9 +105,6 @@ public class DateUtils {
 
 	/**
 	 * 取得指定日期中的分钟数
-	 * 
-	 * @param date
-	 * @return
 	 */
 	public static int getMinute(Date date) {
 		if (null == date)
@@ -151,9 +116,8 @@ public class DateUtils {
 
 	/**
 	 * 指定的字符串时间转换成Calendar
-	 * 
-	 * @param dateTime
-	 *            所要转换的时间
+	 *
+	 * @param dateTime 所要转换的时间
 	 */
 	public static Calendar getCalendar(String dateTime) {
 		Date date = getDate(dateTime);
@@ -168,26 +132,25 @@ public class DateUtils {
 
 	/**
 	 * 指定的字符串时间转换成Date
-	 * 
-	 * @param dateTime
-	 *            所要转换的时间
+	 *
+	 * @param dateTime 所要转换的时间
 	 */
 	public static Date getDate(String dateTime) {
 		if (null == dateTime || dateTime.length() == 0)
 			return null;
-		DateFormat df = null;
+		FastDateFormat df;
 		if (dateTime.length() == "yyyy-MM-dd HH:mm:ss".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			df = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 		} else if (dateTime.length() == "yyyy-MM-dd HH:mm".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			df = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 		} else if (dateTime.length() == "yyyy-MM-dd".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
+			df = FastDateFormat.getInstance("yyyy-MM-dd");
 		} else if (dateTime.length() == "yyyy-M-d".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
+			df = FastDateFormat.getInstance("yyyy-MM-dd");
 		} else if (dateTime.length() == "yyyy-MM-d".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
+			df = FastDateFormat.getInstance("yyyy-MM-dd");
 		} else if (dateTime.length() == "yyyy-M-dd".length()) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
+			df = FastDateFormat.getInstance("yyyy-MM-dd");
 		} else {
 			return null;
 		}
@@ -202,8 +165,9 @@ public class DateUtils {
 	}
 
 	public static Map<String, String> dateFormats;
+
 	static {
-		dateFormats = new LinkedHashMap<String, String>();
+		dateFormats = new LinkedHashMap<>();
 		dateFormats.put("yyyy-MM-dd HH:mm:ss",
 				"^\\d{4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}$");
 		dateFormats.put("yyyy-MM-dd HH:mm",
@@ -225,17 +189,13 @@ public class DateUtils {
 		dateFormats.put("yyyy年MM月dd日", "^\\d{4}年\\d{1,2}月\\d{1,2}日$");
 	}
 
-	private static SimpleDateFormat df4ex = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
-
 	/**
 	 * 指定的字符串时间转换成Date
 	 * <p>
 	 * yyyy-MM-dd HH:mm:ss|yyyy.MM.dd HH:mm:ss|yyyy年MM月dd日
 	 * </p>
-	 * 
-	 * @param dateTime
-	 *            所要转换的时间
+	 *
+	 * @param dateTime 所要转换的时间
 	 */
 	public static Date getDateEx(String dateTime) {
 		if (dateTime == null)
@@ -246,7 +206,7 @@ public class DateUtils {
 
 		for (Entry<String, String> e : dateFormats.entrySet()) {
 			if (Pattern.matches(e.getValue(), dateTime)) {
-				df4ex.applyPattern(e.getKey());
+				FastDateFormat df4ex = FastDateFormat.getInstance(e.getKey());
 				try {
 					return df4ex.parse(dateTime);
 				} catch (ParseException e1) {
@@ -265,9 +225,8 @@ public class DateUtils {
 	 * <p>
 	 * yyyy-MM-dd HH:mm:ss|yyyy.MM.dd HH:mm:ss|yyyy年MM月dd日
 	 * </p>
-	 * 
-	 * @param dateTime
-	 *            所要转换的时间
+	 *
+	 * @param dateTime 所要转换的时间
 	 */
 	public static Calendar getCalendarEx(String dateTime) {
 		Date date = getDateEx(dateTime);
@@ -278,25 +237,22 @@ public class DateUtils {
 
 	/**
 	 * 获取月份的第一天(类似yyyy-MM-01 00:00:00)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static Calendar getFirstDayOfMonth(Calendar calendar) {
 		if (calendar == null)
 			return null;
 		Calendar to = Calendar.getInstance();
-		to.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0,
-				0, 0);
+		to.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
 		to.set(Calendar.MILLISECOND, 0);
 		return to;
 	}
 
 	/**
 	 * 获取月份的最后一天(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static Calendar getLastDayOfMonth(Calendar calendar) {
 		if (calendar == null)
@@ -309,9 +265,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期设为其所在月份的第一天(类似yyyy-MM-01 00:00:00)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static void setToFirstDayOfMonth(Calendar calendar) {
 		if (calendar == null)
@@ -323,9 +278,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期设为其所在月份的最后一天(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static void setToLastDayOfMonth(Calendar calendar) {
 		if (calendar == null)
@@ -337,9 +291,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期时分秒设为0(类似yyyy-MM-dd 00:00:00)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static void setToZeroTime(Calendar calendar) {
 		if (calendar == null)
@@ -352,9 +305,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期时分秒设为0(类似yyyy-MM-dd 00:00:00)
-	 * 
-	 * @param date
-	 *            要处理的日期
+	 *
+	 * @param date 要处理的日期
 	 */
 	@SuppressWarnings("deprecation")
 	public static void setToZeroTime(Date date) {
@@ -367,9 +319,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期时分秒设为最大值(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static void setToMaxTime(Calendar calendar) {
 		if (calendar == null)
@@ -382,9 +333,8 @@ public class DateUtils {
 
 	/**
 	 * 将日期时分秒设为最大值(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param date
-	 *            要处理的日期
+	 *
+	 * @param date 要处理的日期
 	 */
 	@SuppressWarnings("deprecation")
 	public static void setToMaxTime(Date date) {
@@ -397,9 +347,8 @@ public class DateUtils {
 
 	/**
 	 * 获取指定日期的起始时间(类似yyyy-MM-dd 00:00:00)
-	 * 
-	 * @param date
-	 *            指定的日期
+	 *
+	 * @param date 指定的日期
 	 * @return 转换后的日期
 	 */
 	public static Date getZeroTimeDate(Date date) {
@@ -413,9 +362,8 @@ public class DateUtils {
 
 	/**
 	 * 获取指定日期的结束时间(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param date
-	 *            指定日期
+	 *
+	 * @param date 指定日期
 	 * @return 转换后的日期
 	 */
 	public static Date getMaxTimeDate(Date date) {
@@ -429,10 +377,8 @@ public class DateUtils {
 
 	/**
 	 * 计算指定时间到当前时间之间的耗时描述信息
-	 * 
-	 * @param fromDate
-	 *            开始时间
-	 * @return
+	 *
+	 * @param fromDate 开始时间
 	 */
 	public static String getWasteTime(Date fromDate) {
 		return getWasteTime(fromDate, new Date());
@@ -444,12 +390,9 @@ public class DateUtils {
 
 	/**
 	 * 计算指定时间范围内的耗时描述信息
-	 * 
-	 * @param startDate
-	 *            开始时间
-	 * @param endDate
-	 *            结束时间
-	 * @return
+	 *
+	 * @param startDate 开始时间
+	 * @param endDate   结束时间
 	 */
 	public static String getWasteTime(Date startDate, Date endDate) {
 		long wt = endDate.getTime() - startDate.getTime();
@@ -463,10 +406,8 @@ public class DateUtils {
 
 	/**
 	 * 计算指定时间范围内的耗时描述信息
-	 * 
-	 * @param wt
-	 *            毫秒值
-	 * @return
+	 *
+	 * @param wt 毫秒值
 	 */
 	public static String getWasteTime(long wt) {
 		if (wt < 1000) {// 小于1秒
@@ -514,12 +455,9 @@ public class DateUtils {
 
 	/**
 	 * 计算两个日期之间的年龄:以实际足月年龄计算
-	 * 
-	 * @param startDate
-	 *            开始日期
-	 * @param endDate
-	 *            结束日期
-	 * @return
+	 *
+	 * @param startDate 开始日期
+	 * @param endDate   结束日期
 	 */
 	public static float getAge(Date startDate, Date endDate) {
 		Calendar start = Calendar.getInstance();// 创建新日期
@@ -531,34 +469,27 @@ public class DateUtils {
 
 	/**
 	 * 计算两个日期之间的年龄:以实际足月年龄计算
-	 * 
-	 * @param startDate
-	 *            开始日期
-	 * @param endDate
-	 *            结束日期
-	 * @return
+	 *
+	 * @param startDate 开始日期
+	 * @param endDate   结束日期
 	 */
 	public static float getAge(Calendar startDate, Calendar endDate) {
-		int startYeay = startDate.get(Calendar.YEAR);// 获取日期的年份
+		int startYear = startDate.get(Calendar.YEAR);// 获取日期的年份
 		int startMonth = startDate.get(Calendar.MONTH);
-		int endYeay = endDate.get(Calendar.YEAR);
+		int endYear = endDate.get(Calendar.YEAR);
 		int endMonth = endDate.get(Calendar.MONTH);
 
 		// 月份的天数相加
-		int dday = getLastDayOfMonth(startDate).get(Calendar.DATE)
+		int day = getLastDayOfMonth(startDate).get(Calendar.DATE)
 				- startDate.get(Calendar.DATE) + 1 + endDate.get(Calendar.DATE);
 
-		return (endYeay - startYeay - 1)
-				+ ((float) (11 - startMonth + endMonth + (float) dday / 30))
-				/ 12;
+		return (endYear - startYear - 1) + (11 - startMonth + endMonth + (float) day / 30) / 12;
 	}
 
 	/**
 	 * 计算指定出生日期的当前年龄:以实际足月年龄计算
-	 * 
-	 * @param birthDate
-	 *            出生日期
-	 * @return
+	 *
+	 * @param birthDate 出生日期
 	 */
 	public static float getAge(Calendar birthDate) {
 		return getAge(birthDate, Calendar.getInstance());
@@ -569,11 +500,9 @@ public class DateUtils {
 	 * <p>
 	 * 如1年零两个月加10天
 	 * </p>
-	 * 
-	 * @param startDate
-	 *            开始日期
-	 * @param endDate
-	 *            结束日期
+	 *
+	 * @param startDate 开始日期
+	 * @param endDate   结束日期
 	 * @return 0-实际流逝的年数,1-不足一年的月数,2-不足一月的天数
 	 */
 	public static int[] getAgeDetail(Calendar startDate, Calendar endDate) {
@@ -599,57 +528,52 @@ public class DateUtils {
 		}
 		return detail;
 	}
-	
+
 	/**
 	 * 计算指定时间为星期几
-	 * 
-	 * @param date
-	 * @return
 	 */
-	public static String getWeekCN(Calendar date){
-		if(date == null)
+	public static String getWeekCN(Calendar date) {
+		if (date == null)
 			date = Calendar.getInstance();
-		
-		int week = date.get(Calendar.DAY_OF_WEEK);	
-		
-		if(week == Calendar.MONDAY){
+
+		int week = date.get(Calendar.DAY_OF_WEEK);
+
+		if (week == Calendar.MONDAY) {
 			return "星期一";
-		}else if(week == Calendar.TUESDAY){
+		} else if (week == Calendar.TUESDAY) {
 			return "星期二";
-		}else if(week == Calendar.WEDNESDAY){
+		} else if (week == Calendar.WEDNESDAY) {
 			return "星期三";
-		}else if(week == Calendar.THURSDAY){
+		} else if (week == Calendar.THURSDAY) {
 			return "星期四";
-		}else if(week == Calendar.FRIDAY){
+		} else if (week == Calendar.FRIDAY) {
 			return "星期五";
-		}else if(week == Calendar.SATURDAY){
+		} else if (week == Calendar.SATURDAY) {
 			return "星期六";
-		}else if(week == Calendar.SUNDAY){
+		} else if (week == Calendar.SUNDAY) {
 			return "星期日";
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * 获取下个月份的第一天(类似yyyy-MM-01 00:00:00)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static Calendar getFirstDayOfNextMonth(Calendar calendar) {
 		if (calendar == null)
 			return null;
-		Calendar to=getFirstDayOfMonth(calendar);//本月第一天
+		Calendar to = getFirstDayOfMonth(calendar);//本月第一天
 		to.add(Calendar.MONTH, 1);//下月第一天
 		return to;
 	}
 
 	/**
 	 * 获取下个月份的最后一天(类似yyyy-MM-dd 23:59:59)
-	 * 
-	 * @param calendar
-	 *            要处理的日期
+	 *
+	 * @param calendar 要处理的日期
 	 */
 	public static Calendar getLastDayOfNextMonth(Calendar calendar) {
 		if (calendar == null)
@@ -659,49 +583,49 @@ public class DateUtils {
 		to.add(Calendar.SECOND, -1);// 缩减1秒变为上月最后一天
 		return to;
 	}
-	
+
 	/**
 	 * 获取根据幅度增加后的日期
-	 * @param calendar
-	 *            要处理的日期
-	 * @param rangeConfig
-	 * 			  幅度 ：	1h 表示增加1小时
-	 * 					1d 表示增加1天
-	 * 				 	1m 表示增加1个月
-	 * 					1y 表示增加1年			
+	 *
+	 * @param calendar    要处理的日期
+	 * @param rangeConfig 幅度 ：	1h 表示增加1小时
+	 *                    1d 表示增加1天
+	 *                    1m 表示增加1个月
+	 *                    1y 表示增加1年
 	 */
-	public static Calendar getDate4Range(Calendar calendar,String rangeConfig){
+	public static Calendar getDate4Range(Calendar calendar, String rangeConfig) {
 		if (calendar == null)
 			return null;
-		Calendar to =Calendar.getInstance();
+		Calendar to = Calendar.getInstance();
 		to.set(calendar.get(Calendar.YEAR)
 				, calendar.get(Calendar.MONTH)
 				, calendar.get(Calendar.DAY_OF_MONTH)
 				, calendar.get(Calendar.HOUR_OF_DAY)
 				, calendar.get(Calendar.MINUTE)
 				, calendar.get(Calendar.SECOND));
-		
-		if(rangeConfig.matches("\\b\\d*h")){//1h
+
+		if (rangeConfig.matches("\\b\\d*h")) {//1h
 			to.add(Calendar.HOUR_OF_DAY, Integer.valueOf(rangeConfig.replace("h", "")));
-		}else if(rangeConfig.matches("\\b\\d*d")){//1d
+		} else if (rangeConfig.matches("\\b\\d*d")) {//1d
 			to.add(Calendar.DAY_OF_MONTH, Integer.valueOf(rangeConfig.replace("d", "")));
-		}else if(rangeConfig.matches("\\b\\d*m")){
+		} else if (rangeConfig.matches("\\b\\d*m")) {
 			to.add(Calendar.MONTH, Integer.valueOf(rangeConfig.replace("m", "")));
-		}else if(rangeConfig.matches("\\b\\d*y")){
+		} else if (rangeConfig.matches("\\b\\d*y")) {
 			to.add(Calendar.YEAR, Integer.valueOf(rangeConfig.replace("y", "")));
 		}
-		
+
 		return to;
 	}
-	
+
 	/**
 	 * 判断日期是否为月末
-	 * @return true 是月末  false非月末，
+	 *
+	 * @return true 是月末  false非月末
 	 */
-	public static boolean isMonthEnd(Calendar calendar){
+	public static boolean isMonthEnd(Calendar calendar) {
 		if (calendar == null)
 			return false;
-		Calendar date =Calendar.getInstance();
+		Calendar date = Calendar.getInstance();
 		date.set(calendar.get(Calendar.YEAR)
 				, calendar.get(Calendar.MONTH)
 				, calendar.get(Calendar.DAY_OF_MONTH)
@@ -712,6 +636,6 @@ public class DateUtils {
 		//加1日
 		date.add(Calendar.DAY_OF_MONTH, 1);
 		int _month = date.get(Calendar.MONTH);
-		return month!=_month;
+		return month != _month;
 	}
 }
