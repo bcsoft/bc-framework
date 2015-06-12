@@ -74,6 +74,8 @@ public class RoleAction extends EntityAction<Long, Role> {
 				resource.setId(new Long(resourceId));
 				resources.add(resource);
 			}
+		} else {
+			resources = this.getCrudService().load(this.getE().getId()).getResources();
 		}
 		if (this.getE().getResources() != null) {
 			this.getE().getResources().clear();
