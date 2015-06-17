@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.bc.web.struts2;
 
@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.json.JSONArray;
 import org.springframework.util.StringUtils;
 
 import cn.bc.BCConstants;
@@ -62,9 +63,8 @@ import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Entity的CRUD通用Action
- * 
+ *
  * @author dragon
- * 
  */
 public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		ActionSupport implements SetEntityClass<E>, SessionAware, RequestAware {
@@ -119,7 +119,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 判断表单是否只读的方法，需要权限控制时由基类复写
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isReadonly() {
@@ -240,7 +240,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 编辑表单
 	public String edit() throws Exception {
-		e = this.getCrudService().load(this.getId());
+		e = loadEntity();
 		this.formPageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
@@ -251,10 +251,16 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/**
+	 * 根据请求的实体标识参数加载实体对象
+	 */
+	protected E loadEntity() {
+		return this.getCrudService().load(this.getId());
+	}
+
+	/**
 	 * 初始化表单的其他配置，如下拉框列表等
-	 * 
-	 * @param editable
-	 *            是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
+	 *
+	 * @param editable 是否按照可编辑方式执行表单的初始化：create、edit-true,open-false
 	 */
 	protected void initForm(boolean editable) throws Exception {
 	}
@@ -268,7 +274,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 只读表单
 	public String open() throws Exception {
-		e = this.getCrudService().load(this.getId());
+		e = loadEntity();
 
 		// 强制表单只读
 		this.formPageOption = buildFormPageOption(false);
@@ -286,7 +292,9 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	protected void afterOpen(E entity) {
 	}
 
-	/** 通过浏览器的代理判断多文件上传是否必须使用flash方式 */
+	/**
+	 * 通过浏览器的代理判断多文件上传是否必须使用flash方式
+	 */
 	public static boolean isFlashUpload() {
 		// TODO Opera;
 		return isIE();
@@ -294,7 +302,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 判断客户端的浏览器是否是IE浏览器
-	 * 
+	 *
 	 * @return
 	 */
 	public static boolean isIE() {
@@ -306,7 +314,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 判断当前请求是否是ajax请求
-	 * 
+	 *
 	 * @return
 	 */
 	protected boolean isAjaxRequest() {
@@ -383,7 +391,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 获取删除操作的异常提示信息
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getDeleteExceptionMsg(Exception e) {
@@ -402,7 +410,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 删除操作平台没有处理的异常的默认处理
-	 * 
+	 *
 	 * @param json
 	 * @param e
 	 */
@@ -530,7 +538,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建表格列头
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -543,7 +551,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建数据部分的html
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -563,7 +571,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 根据请求的条件查找列表对象
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -574,7 +582,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 根据请求的条件查找分页信息对象
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -593,7 +601,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建排序条件
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -622,7 +630,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建默认的排序条件，通常用于子类复写
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -632,7 +640,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建特殊的条件，通常用于子类复写
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -642,7 +650,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建查询条件
-	 * 
+	 *
 	 * @return
 	 */
 	protected OrCondition getSearchCondition() {
@@ -674,7 +682,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 查询条件中要匹配的域，通常用于子类复写
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -685,9 +693,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建分页视图页面的html
-	 * 
-	 * @param page
-	 *            分页信息对象
+	 *
+	 * @param page 分页信息对象
 	 * @return
 	 */
 	@Deprecated
@@ -718,7 +725,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建非分页视图页面的html
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -726,25 +733,36 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		return this.buildHtml4Paging();
 	}
 
-	/** 请使用buildFormPageOption(boolean editable)代替 */
+	/**
+	 * 请使用buildFormPageOption(boolean editable)代替
+	 */
 	@Deprecated
 	protected PageOption buildListPageOption() {
 		return new PageOption().setMinWidth(250).setMinHeight(200)
 				.setModal(false);
 	}
 
-	/** 构建表单页面的对话框初始化配置 */
+	/**
+	 * 构建表单页面的对话框初始化配置
+	 */
 	@Deprecated
 	protected PageOption buildFormPageOption() {
 		return buildFormPageOption(false);
 	}
 
 	/**
-	 * 构建表单的对话框初始化配置
-	 * 
-	 * @param editable
-	 *            是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 * 获取页面 data-option 属性的配置
+	 *
 	 * @return
+	 */
+	public PageOption getPageOption() {
+		return this.formPageOption;
+	}
+
+	/**
+	 * 构建表单的对话框初始化配置
+	 *
+	 * @param editable 是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
 	 */
 	protected PageOption buildFormPageOption(boolean editable) {
 		PageOption pageOption = new PageOption().setMinWidth(250)
@@ -770,10 +788,9 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 添加表单操作按钮，默认为保存按钮
-	 * 
+	 *
 	 * @param pageOption
-	 * @param editable
-	 *            是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 * @param editable   是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
 	 */
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		boolean readonly = this.isReadonly();
@@ -791,14 +808,14 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 是否使用表单打印功能
-	 * 
-	 * @return
 	 */
 	protected boolean useFormPrint() {
-		return true;
+		return false;
 	}
 
-	/** 构建视图页面的工具条 */
+	/**
+	 * 构建视图页面的工具条
+	 */
 	@Deprecated
 	protected Toolbar buildToolbar() {
 		Toolbar tb = new Toolbar();
@@ -854,19 +871,24 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 				.getDefaultSearchToolbarButton(getText("title.click2search"));
 	}
 
-	/** 创建默认的表单保存按钮 */
+	/**
+	 * 创建默认的表单保存按钮
+	 */
 	protected ButtonOption getDefaultSaveButtonOption() {
 		return new ButtonOption(getText("label.save"), "save")
 				.setId("bcSaveBtn");
 	}
 
-	/** 创建默认的表单打印按钮 */
+	/**
+	 * 创建默认的表单打印按钮
+	 */
 	protected ButtonOption getDefaultPrintButtonOption() {
-		return new ButtonOption(getText("label.print"), "print")
-				.setId("bcPrintBtn");
+		return new ButtonOption(getText("label.print"), "print").setId("bcPrintBtn");
 	}
 
-	/** 构建视图页面的表格 */
+	/**
+	 * 构建视图页面的表格
+	 */
 	@Deprecated
 	protected Grid buildGrid() {
 		List<Column> columns = this.buildGridColumns();
@@ -907,18 +929,19 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * <li>
 	 * 3)导出状态，用户选定的某些列</li>
 	 * </ul>
-	 * 
-	 * @param key
-	 *            列的标识
+	 *
+	 * @param key 列的标识
 	 * @return
 	 */
 	protected boolean useColumn(String key) {
 		return !this.exporting
 				|| (this.exportKeys == null || this.exportKeys.length() == 0 || this.exportKeys
-						.indexOf(key) != -1);
+				.indexOf(key) != -1);
 	}
 
-	/** 构建视图页面表格底部的工具条 */
+	/**
+	 * 构建视图页面表格底部的工具条
+	 */
 	@Deprecated
 	protected GridFooter buildGridFooter(Grid grid) {
 		GridFooter footer = new GridFooter();
@@ -938,7 +961,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 					.setPageCount(page.getPageCount())
 					.setTotalCount(page.getTotalCount()));
 			footer.addButton(new PageSizeGroupButton().setActiveValue(25)
-					.setValues(new int[] { 25, 50, 100 })
+					.setValues(new int[]{25, 50, 100})
 					.setTitle(getText("label.pageSize")));
 		}
 
@@ -955,72 +978,123 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	/**
 	 * 获取访问action的前缀。 struts配置文件中package节点的namespace属性去除最后面的bean名称的部分
 	 * 如namespace="/bc/duty"，则这里应返回"/bc"
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getActionPathPrefix() {
 		return "/bc";
 	}
 
-	/** 访问的主路径 */
-	protected String getPageNamespace() {
+	/**
+	 * 访问的主路径
+	 */
+	public String getPageNamespace() {
 		return getContextPath() + this.getActionPathPrefix() + "/"
 				+ StringUtils.uncapitalize(getEntityConfigName());
 	}
 
-	/** 对话框的标题 */
+	/**
+	 * 对话框的标题
+	 */
 	protected String getPageTitle() {
-		return this.getText(StringUtils.uncapitalize(getEntityConfigName())
-				+ ".title");
+		return this.getText(StringUtils.uncapitalize(getEntityConfigName()) + ".title");
 	}
 
-	/** 编辑的url */
+	/**
+	 * 页面引用的js css文件配置
+	 */
+	public String getPageJsCss() {
+		List<String> container = new ArrayList<>();
+		addJsCss(container);
+		if (!container.isEmpty()) return new JSONArray(container).toString();
+		else return null;
+	}
+
+	/**
+	 * 向页面添加额外的js、css文件
+	 * <p>调用此方法生成的data-js属性为json数组格式，页面将使用requireJs加载这些js、css文件</p>
+	 *
+	 * @param container 已初始化好的容器
+	 */
+	protected void addJsCss(List<String> container) {
+		// Do nothing
+	}
+
+	/**
+	 * 编辑的url
+	 *
+	 * @deprecated 迁移到视图Action中
+	 */
 	protected String getEditUrl() {
 		return getPageNamespace() + "/edit";
 	}
 
-	/** 查看的url */
+	/**
+	 * 查看的url
+	 *
+	 * @deprecated 迁移到视图Action中
+	 */
 	protected String getOpenUrl() {
 		return getPageNamespace() + "/open";
 	}
 
-	/** 删除的url */
+	/**
+	 * 删除的url
+	 *
+	 * @deprecated 迁移到视图Action中
+	 */
 	protected String getDeleteUrl() {
 		return getPageNamespace() + "/delete";
 	}
 
-	/** 新建的url */
+	/**
+	 * 新建的url
+	 *
+	 * @deprecated 迁移到视图Action中
+	 */
 	protected String getCreateUrl() {
 		return getPageNamespace() + "/create";
 	}
 
-	/** 获取访问该ation的上下文路径 */
+	/**
+	 * 获取访问该ation的上下文路径
+	 */
 	protected String getContextPath() {
 		return ServletActionContext.getRequest().getContextPath();
 	}
 
-	/** 页面加载后的调用js初始化方法 */
+	/**
+	 * 页面加载后的调用js初始化方法
+	 *
+	 * @deprecated 请直接写在页面的 data-initMethod 属性内
+	 */
 	protected String getIniMethod() {
 		return null;
 	}
 
-	/** 页面需要另外加载的css文件，逗号连接多个文件 */
+	/**
+	 * 页面需要另外加载的css文件，逗号连接多个文件
+	 *
+	 * @deprecated 请直接写在页面的 data-js 属性内
+	 */
 	protected String getCss() {
 		return null;
 	}
 
-	/** 页面需要另外加载的js文件，逗号连接多个文件 */
+	/**
+	 * 页面需要另外加载的js文件，逗号连接多个文件
+	 *
+	 * @deprecated 请直接写在页面的 data-js 属性内
+	 */
 	protected String getJs() {
 		return null;
 	}
 
 	/**
 	 * 获取Entity的状态值转换列表
-	 * 
-	 * @return
 	 */
 	protected Map<String, String> getEntityStatuses() {
-		Map<String, String> statuses = new LinkedHashMap<String, String>();
+		Map<String, String> statuses = new LinkedHashMap<>();
 		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
 				getText("entity.status.enabled"));
 		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),

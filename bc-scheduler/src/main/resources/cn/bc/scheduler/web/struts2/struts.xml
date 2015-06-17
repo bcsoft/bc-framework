@@ -5,61 +5,54 @@
 <struts>
 	<!-- 定时任务 -->
 	<package name="scheduleJob" extends="bc-default" namespace="/bc/schedule/job">
-		<action name="create" class="scheduleJobAction" method="create">
+		<action name="create" class="scheduleJobFormAction" method="create">
 			<result name="form">/bc/schedule/job/form.jsp</result>
 		</action>
 		<!-- 可编辑表单 -->
-		<action name="edit" class="scheduleJobAction" method="edit">
+		<action name="edit" class="scheduleJobFormAction" method="edit">
 			<result name="form">/bc/schedule/job/form.jsp</result>
 		</action>
 		<!-- 只读表单 -->
-		<action name="open" class="scheduleJobAction" method="open">
+		<action name="open" class="scheduleJobFormAction" method="open">
 			<result name="formr">/bc/schedule/job/form.jsp</result>
 		</action>
 		<!-- 保存 -->
-		<action name="save" class="scheduleJobAction" method="save" />
-		<!-- 删除 -->
-		<action name="delete" class="scheduleJobAction" method="delete" />
-		<!-- 非分页视图 -->
-		<action name="list" class="scheduleJobAction" method="list" />
-		<!-- 分页视图 -->
-		<action name="paging" class="scheduleJobAction" method="paging" />
-		<!-- 分页数据 -->
-		<action name="data" class="scheduleJobAction" method="data" />
-		<!-- 导出 视图数据-->
-		<action name="export" class="scheduleJobAction" method="export" />
-		
-		<!-- 帮助-->
-		<action name="help" class="scheduleJobAction" method="help" />
+		<action name="save" class="scheduleJobFormAction" method="save" />
 
-		<action name="start" class="scheduleJobAction" method="start"/>
-		<action name="stop" class="scheduleJobAction" method="stop"/>
+		<!-- 删除 -->
+		<action name="delete" class="scheduleJobViewAction" method="delete" />
+		<!-- 非分页视图 -->
+		<action name="list" class="scheduleJobViewAction" method="list" />
+		<!-- 分页视图 -->
+		<action name="paging" class="scheduleJobViewAction" method="paging" />
+		<!-- 分页数据 -->
+		<action name="data" class="scheduleJobViewAction" method="data" />
+		<!-- 导出-->
+		<action name="export" class="scheduleJobViewAction" method="export" />
+		<!-- 启动/重置-->
+		<action name="start" class="scheduleJobViewAction" method="start"/>
+		<!-- 停止/禁用-->
+		<action name="stop" class="scheduleJobViewAction" method="stop"/>
 	</package>
 	
 	<!-- 定时任务调度日志 -->
 	<package name="scheduleLog" extends="bc-default" namespace="/bc/schedule/log">
-		<action name="create" class="scheduleLogAction" method="create">
-			<result name="form">/bc/schedule/log/form.jsp</result>
-		</action>
-		<!-- 可编辑表单 -->
-		<action name="edit" class="scheduleLogAction" method="edit">
-			<result name="form">/bc/schedule/log/form.jsp</result>
-		</action>
 		<!-- 只读表单 -->
-		<action name="open" class="scheduleLogAction" method="open">
+		<action name="open" class="scheduleLogFormAction" method="open">
 			<result name="formr">/bc/schedule/log/formr.jsp</result>
 		</action>
 		<!-- 保存 -->
-		<action name="save" class="scheduleLogAction" method="save" />
+		<action name="save" class="scheduleLogFormAction" method="save" />
+
 		<!-- 删除 -->
-		<action name="delete" class="scheduleLogAction" method="delete" />
+		<action name="delete" class="scheduleLogViewAction" method="delete" />
 		<!-- 非分页视图 -->
-		<action name="list" class="scheduleLogAction" method="list" />
+		<action name="list" class="scheduleLogViewAction" method="list" />
 		<!-- 分页视图 -->
-		<action name="paging" class="scheduleLogAction" method="paging" />
+		<action name="paging" class="scheduleLogViewAction" method="paging" />
 		<!-- 分页数据 -->
-		<action name="data" class="scheduleLogAction" method="data" />
+		<action name="data" class="scheduleLogViewAction" method="data" />
 		<!-- 导出 视图数据-->
-		<action name="export" class="scheduleLogAction" method="export" />
+		<action name="export" class="scheduleLogViewAction" method="export" />
 	</package>
 </struts>

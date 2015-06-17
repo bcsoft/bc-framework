@@ -74,7 +74,7 @@ public class ScheduleLogAction extends EntityAction<Long, ScheduleLog> {
 	}
 
 	@Override
-	protected String getPageNamespace() {
+	public String getPageNamespace() {
 		return getContextPath() + this.getActionPathPrefix() + "/schedule/log";
 	}
 
