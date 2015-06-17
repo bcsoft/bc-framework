@@ -4,17 +4,17 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<package name="message" extends="bc-default" namespace="/bc/message">
-		<action name="create" class="messageAction" method="create">
+		<action name="create" class="messageFormAction" method="create">
 			<result name="form">/bc/message/form.jsp</result>
 		</action>
-		<action name="edit" class="messageAction" method="edit">
+		<action name="edit" class="messageFormAction" method="edit">
 			<result name="form">/bc/message/form.jsp</result>
 		</action>
-				
-		<action name="save" class="messageAction" method="save"/>
-		<action name="delete" class="messageAction" method="delete"/>
-		<action name="list" class="messageAction" method="list"/>
-		<action name="paging" class="messageAction" method="paging"/>
-		<action name="data" class="messageAction" method="data"/>
+		<action name="save" class="messageFormAction" method="save"/>
+		<action name="delete" class="messageFormAction" method="delete"/>
+
+		<action name="list" class="messageViewAction" method="list"/>
+		<action name="paging" class="messageViewAction" method="paging"/>
+		<action name="data" class="messageViewAction" method="data"/>
 	</package>
 </struts>
