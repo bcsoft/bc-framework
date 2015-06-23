@@ -99,7 +99,7 @@ public class GradeAction extends EntityAction<Long, Grade> {
 	// 编辑表单
 	public String edit() throws Exception {
 
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);

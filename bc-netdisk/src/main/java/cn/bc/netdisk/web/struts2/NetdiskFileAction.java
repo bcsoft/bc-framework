@@ -120,7 +120,7 @@ public class NetdiskFileAction extends FileEntityAction<Long, NetdiskFile> {
 	public String createDialog() {
 
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 		NetdiskFile e = this.netdiskFileService.load(this.getId());
 		if (e.getPid() != null) {
 			folder = this.netdiskFileService.load(e.getPid()).getName();

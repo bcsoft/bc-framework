@@ -51,8 +51,18 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	public String sort; // grid的排序配置，格式为"filed1 asc,filed2 desc,..."
 	protected Map<String, Object> session;
 	protected Map<String, Object> request;
-	public PageOption formPageOption;// 表单页面的Option配置
+	/**
+	 * 表单页面 data-option 属性的配置
+	 */
+	public PageOption pageOption;
 	public long ts = new Date().getTime();// 时间戳
+
+	/**
+	 * @deprecated 请使用 pageOption 代替
+	 */
+	public PageOption getFormPageOption() {
+		return pageOption;
+	}
 
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -184,7 +194,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.setE(createEntity());
 
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);
@@ -207,7 +217,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 编辑表单
 	public String edit() throws Exception {
 		e = loadEntity();
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);
@@ -243,7 +253,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		e = loadEntity();
 
 		// 强制表单只读
-		this.formPageOption = buildFormPageOption(false);
+		this.pageOption = buildFormPageOption(false);
 
 		// 初始化表单的其他配置
 		this.initForm(false);
@@ -389,17 +399,18 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 构建表单页面的对话框初始化配置
+	 *
+	 * @deprecated 请使用 buildPageOption(boolean) 代替
 	 */
-	@Deprecated
 	protected PageOption buildFormPageOption() {
 		return buildFormPageOption(false);
 	}
 
 	/**
-	 * 获取页面 data-option 属性的配置
+	 * @deprecated 请使用 buildPageOption(boolean) 代替
 	 */
-	public PageOption getPageOption() {
-		return this.formPageOption;
+	protected PageOption buildFormPageOption(boolean editable) {
+		return buildPageOption(editable);
 	}
 
 	/**
@@ -407,34 +418,39 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 *
 	 * @param editable 是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
 	 */
-	protected PageOption buildFormPageOption(boolean editable) {
-		PageOption pageOption = new PageOption().setMinWidth(250)
-				.setMinHeight(200).setModal(false);
+	protected PageOption buildPageOption(boolean editable) {
+		PageOption pageOption = new PageOption().setMinWidth(250).setMinHeight(200).setModal(false);
 
-		if (this.useFormPrint())
-			pageOption.setPrint("default.form");
+		if (this.useFormPrint()) pageOption.setPrint("default.form");
 
 		// 只有可编辑表单才按权限配置，其它情况一律配置为只读状态
 		boolean readonly = this.isReadonly();
 		if (editable && !readonly) {
 			pageOption.put("readonly", readonly);
-
 		} else {
 			pageOption.put("readonly", true);
 		}
 
 		// 添加按钮
-		buildFormPageButtons(pageOption, editable);
+		buildPageButtons(pageOption, editable);
 
 		return pageOption;
 	}
 
 	/**
-	 * 添加表单操作按钮，默认为保存按钮
-	 *
-	 * @param editable 是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 * @deprecated 请使用 buildPageButtons(PageOption, boolean) 代替
 	 */
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+		buildPageButtons(pageOption, editable);
+	}
+
+	/**
+	 * 添加表单操作按钮，默认为保存按钮
+	 *
+	 * @param pageOption buildPageOption(editable)方法初始化好的对象
+	 * @param editable 是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 */
+	protected void buildPageButtons(PageOption pageOption, boolean editable) {
 		boolean readonly = this.isReadonly();
 
 		if (this.useFormPrint()) {
@@ -478,7 +494,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/**
-	 * 访问的主路径
+	 * 页面命名空间
 	 */
 	public String getPageNamespace() {
 		return getContextPath() + this.getActionPathPrefix() + "/" + StringUtils.uncapitalize(getEntityConfigName());
@@ -493,6 +509,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 页面引用的js css文件配置
+	 * @desc 不要试复写此方法，应使用 addJsCss(List<String> container) 为页面添加 js、css 文件的加载
 	 */
 	public String getPageJsCss() {
 		List<String> container = new ArrayList<>();

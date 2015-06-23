@@ -140,13 +140,13 @@ public class EmailAction extends EntityAction<Long, Email> {
 	}
 	
 	@Override
-	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(630)
+	protected PageOption buildPageOption(boolean editable) {
+		return super.buildPageOption(editable).setWidth(630)
 				.setMinHeight(200).setHeight(460);
 	}
 
 	@Override
-	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+	protected void buildPageButtons(PageOption pageOption, boolean editable) {
 		// 非编辑状态没有任何操作按钮
 		if (!editable)
 			return;
@@ -331,7 +331,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 		// 初始化E
 		this.setE(createEntity());
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 		this.getE().setEmail(entity);
 		this.getE().setStatus(Email.STATUS_DRAFT);
 		this.getE().setType(Email.TYPE_REPLY);
@@ -381,7 +381,7 @@ public class EmailAction extends EntityAction<Long, Email> {
 		// 初始化E
 		this.setE(createEntity());
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 		this.getE().setEmail(entity);
 		this.getE().setStatus(Email.STATUS_DRAFT);
 		this.getE().setType(Email.TYPE_FORWARD);

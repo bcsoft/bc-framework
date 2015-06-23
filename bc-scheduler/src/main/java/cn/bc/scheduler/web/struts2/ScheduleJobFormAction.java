@@ -54,13 +54,13 @@ public class ScheduleJobFormAction extends EntityAction<Long, ScheduleJob> {
 	}
 
 	@Override
-	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(635).setMinWidth(280).setMinHeight(200);
+	protected PageOption buildPageOption(boolean editable) {
+		return super.buildPageOption(editable).setWidth(635).setMinWidth(280).setMinHeight(200);
 	}
 
 	@Override
-	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
-		super.buildFormPageButtons(pageOption, editable);
+	protected void buildPageButtons(PageOption pageOption, boolean editable) {
+		super.buildPageButtons(pageOption, editable);
 	}
 
 	@Override

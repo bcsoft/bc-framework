@@ -432,14 +432,14 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		}
 
 		this.setE(e);
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 		// 初始化表单的其他配置
 		this.initForm(false);
 		this.afterOpen(e);
 		boolean isExist = IsExisUser(e);
 		if (isExist || e.getStatus() == Questionary.STATUS_END) {
 			// 强制表单只读
-			this.formPageOption = buildFormPageOption(false);
+			this.pageOption = buildFormPageOption(false);
 			score4User = this.getUserScore(userId, e);
 			return "statistics";
 		} else {

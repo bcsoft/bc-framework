@@ -25,9 +25,8 @@ import java.util.Map;
 
 /**
  * 访问控制表单Action
- * 
+ *
  * @author lbj
- * 
  */
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -43,15 +42,15 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	public String accessActors;// 保存访问者json字符串
 	public Boolean isFromDoc = false;// 判断是否从对象中创建的配置
 	public String showRole;//权限显示的配置 如"01"只显示查阅，"11"显示查阅和编辑按钮
-	
+
 	public List<Map<String, String>> categoryList;//所属模块可选列
-	
+
 
 	@Autowired
 	public void setOptionService(OptionService optionService) {
 		this.optionService = optionService;
 	}
-	
+
 	@Autowired
 	public void setAccessDocService(AccessDocService accessDocService) {
 		this.setCrudService(accessDocService);
@@ -71,43 +70,37 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
-		
+
 		boolean result = true;
 		// 配置权限：访问监控管理员或系统管理员
-		boolean isReadonly =  context.hasAnyRole(getText("key.role.bc.acl"),
+		boolean isReadonly = context.hasAnyRole(getText("key.role.bc.acl"),
 				getText("key.role.bc.admin"));
-		if(isReadonly){
+		if (isReadonly) {
 			result = false;
-		}else{
-			if(this.showRole.equals("11")){ //"11"显示查阅和编辑按钮
+		} else {
+			if (this.showRole.equals("11")) { //"11"显示查阅和编辑按钮
 				result = false;
 			}
 		}
-		
+
 		return result;
 	}
 
 	@Override
-	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
+	protected void buildPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
-			pageOption.addButton(new ButtonOption("查看"
-					+ getText("accessHistroy"), null,
-					"bc.accessControlForm.history"));
+			pageOption.addButton(new ButtonOption("查看" + getText("accessHistroy"), null, "bc.accessControlForm.history"));
 
 			if (editable) {
-				pageOption
-						.addButton(new ButtonOption(
-								isFromDoc ? getText("label.ok")
-										: getText("label.save"), null,
-								"bc.accessControlForm.save"));
+				pageOption.addButton(new ButtonOption(isFromDoc ? getText("label.ok") : getText("label.save"), null,
+						"bc.accessControlForm.save"));
 			}
 		}
-
 	}
 
 	@Override
-	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(500)
+	protected PageOption buildPageOption(boolean editable) {
+		return super.buildPageOption(editable).setWidth(500)
 				.setMinHeight(200).setMinWidth(300).setHeight(500).setMaxHeight(600);
 	}
 
@@ -118,34 +111,34 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 			this.accessActor4List = this.accessActorService.findByPid(this
 					.getE().getId());
 		}
-		
+
 		// 批量加载可选项列表
 		Map<String, List<Map<String, String>>> optionItems = optionService
-				.findOptionItemByGroupKeys(new String[] {OptionConstants.OPERATELOG_PTYPE});
-		
+				.findOptionItemByGroupKeys(new String[]{OptionConstants.OPERATELOG_PTYPE});
+
 		categoryList = optionItems.get(OptionConstants.OPERATELOG_PTYPE);
 	}
 
-    /**
-     * 实体对象验证。格式不正确抛异常
-     */
-    private void entityValidate() {
-        if (this.getE().getDocId() == null || this.getE().getDocType() == null) {
-            throw new CoreException("accessDoc 对象：docId、docType 不能为空\t"
-                    + "docId:" + this.getE().getDocId() + " docType:" + this.getE().getDocType());
-        }
-    }
+	/**
+	 * 实体对象验证。格式不正确抛异常
+	 */
+	private void entityValidate() {
+		if (this.getE().getDocId() == null || this.getE().getDocType() == null) {
+			throw new CoreException("accessDoc 对象：docId、docType 不能为空\t"
+					+ "docId:" + this.getE().getDocId() + " docType:" + this.getE().getDocType());
+		}
+	}
 
 	@Override
 	public String save() throws Exception {
-        // 健壮性验证（accessDoc 对象：docId、docType 不能为空）
-        this.entityValidate();
+		// 健壮性验证（accessDoc 对象：docId、docType 不能为空）
+		this.entityValidate();
 
-        Collection<Map<String, Object>> details = JsonUtils.toCollection(this.accessActors);
-        this.accessDocService.saveConfig(this.getE().getDocType(),this.getE().getDocId(),
-                this.getE().getDocName(), details);
+		Collection<Map<String, Object>> details = JsonUtils.toCollection(this.accessActors);
+		this.accessDocService.saveConfig(this.getE().getDocType(), this.getE().getDocId(),
+				this.getE().getDocName(), details);
 
-        return "saveSuccess";
+		return "saveSuccess";
 	}
 
 	@Override
@@ -190,7 +183,7 @@ public class AccessControlAction extends FileEntityAction<Long, AccessDoc> {
 	// 从对象中发起的配置
 	public String configureFromDoc() throws Exception {
 		// 初始化表单的配置信息
-		this.formPageOption = buildFormPageOption(true);
+		this.pageOption = buildPageOption(true);
 		AccessDoc e = this.accessDocService.load(this.docId, this.docType);
 		if (e == null) {
 			e = this.getCrudService().create();

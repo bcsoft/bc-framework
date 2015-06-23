@@ -309,7 +309,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	// -----------------------------------------------------------------
 	public String preview() {
 		Questionary e = questionaryService.load(this.getId());
-		this.formPageOption = buildPreviewFormPageOption(true);
+		this.pageOption = buildPreviewFormPageOption(true);
 		this.setE(e);
 		statusesValue = this.getBSStatuses();
 		return "form";
