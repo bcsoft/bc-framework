@@ -432,7 +432,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		}
 
 		// 添加按钮
-		buildPageButtons(pageOption, editable);
+		buildFormPageButtons(pageOption, editable);
 
 		return pageOption;
 	}
