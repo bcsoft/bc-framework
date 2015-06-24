@@ -194,7 +194,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		this.setE(createEntity());
 
 		// 初始化表单的配置信息
-		this.pageOption = buildPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);
@@ -217,7 +217,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	// 编辑表单
 	public String edit() throws Exception {
 		e = loadEntity();
-		this.pageOption = buildPageOption(true);
+		this.pageOption = buildFormPageOption(true);
 
 		// 初始化表单的其他配置
 		this.initForm(true);
@@ -253,7 +253,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 		e = loadEntity();
 
 		// 强制表单只读
-		this.pageOption = buildPageOption(false);
+		this.pageOption = buildFormPageOption(false);
 
 		// 初始化表单的其他配置
 		this.initForm(false);
