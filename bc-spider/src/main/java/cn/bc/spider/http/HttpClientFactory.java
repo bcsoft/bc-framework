@@ -11,8 +11,10 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,6 +71,10 @@ public class HttpClientFactory {
 	}
 
 	private static CloseableHttpClient createThreadSafeHttpClient() {
+		return createThreadSafeHttpClientBuilder().build();
+	}
+
+	private static HttpClientBuilder createThreadSafeHttpClientBuilder() {
 		// Multithreaded request execution: http://hc.apache.org/httpcomponents-client-4.4.x/tutorial/html/connmgmt.html#d5e405
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
@@ -106,8 +112,7 @@ public class HttpClientFactory {
 		return HttpClients.custom()
 				.setUserAgent(userAgents.get("Win7IE9"))
 				.setConnectionManager(cm)
-				.setDefaultRequestConfig(requestConfigBuilder.build())
-				.build();
+				.setDefaultRequestConfig(requestConfigBuilder.build());
 	}
 
 	/**
@@ -118,6 +123,26 @@ public class HttpClientFactory {
 			return cache.get(id);
 		} else {
 			CloseableHttpClient httpClient = create();
+			cache.put(id, httpClient);
+			logger.warn("创建 HttpClient 缓存: id=" + id);
+			return httpClient;
+		}
+	}
+
+	/**
+	 * 为WebService获取一个HttpClient实例，此示例做了特殊处理，避免如下异常的发生
+	 * org.apache.http.ProtocolException: Content-Length header already present
+	 *
+	 * @ref http://forum.spring.io/forum/spring-projects/web-services/118857-spring-ws-2-1-4-0-httpclient-proxy-content-length-header-already-present
+	 */
+	public static synchronized CloseableHttpClient get4ws(String id) {
+		if (cache.containsKey(id)) {
+			return cache.get(id);
+		} else {
+			//proxy = new HttpHost("127.0.0.1", 8888);
+			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder();
+			httpClientBuilder.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor());
+			CloseableHttpClient httpClient = httpClientBuilder.build();
 			cache.put(id, httpClient);
 			logger.warn("创建 HttpClient 缓存: id=" + id);
 			return httpClient;
