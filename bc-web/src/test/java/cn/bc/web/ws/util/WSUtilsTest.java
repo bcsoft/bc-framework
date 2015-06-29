@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import cn.bc.web.ws.dotnet.DataSet;
 import cn.bc.web.ws.dotnet.converter.DataSetConverter;
-import cn.bc.web.ws.dotnet.formater.WSCalendarFormater;
+import cn.bc.web.ws.dotnet.formater.WSCalendarFormatter;
 
 /**
  * @author dragon
@@ -48,7 +48,7 @@ public class WSUtilsTest {
 				"2011-08-31" };
 
 		DataSetConverter converter = new DataSetConverter();
-		converter.addFormater("dateTime", new WSCalendarFormater());
+		converter.addFormater("dateTime", new WSCalendarFormatter());
 		DataSet dataSet = WSUtils.sendAndReceive(soapUrl, soapAction, msgTpl,
 				msgArgs, converter);
 		Assert.assertNotNull(dataSet);
