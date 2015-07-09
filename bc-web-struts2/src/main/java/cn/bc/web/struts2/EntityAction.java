@@ -494,6 +494,18 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	}
 
 	/**
+	 * 获取 struts 的 XML 配置文件中此 Action 配置的 namespace 的值相对于web应用上下文路径的相对路径
+	 * <p>如 &lt;package name="XXX" extends="XXX" namespace="/bc/actor"&gt;...&lt;/package&gt;
+	 * 则此方法返回 "bc/actor" 而不是 "/bc/actor"</p>
+	 * @return 包路径
+	 */
+	public String getActionNamespace() {
+		String ns = ServletActionContext.getActionMapping().getNamespace();
+		if(ns.startsWith("/")) return ns.substring(1);
+		else return ns;
+	}
+
+	/**
 	 * 页面命名空间
 	 */
 	public String getPageNamespace() {
