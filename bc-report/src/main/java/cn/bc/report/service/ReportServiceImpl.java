@@ -1,37 +1,32 @@
 package cn.bc.report.service;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaTemplate;
-import org.springframework.util.Assert;
-
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.web.SystemContextHolder;
-import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
+import cn.bc.orm.jpa.JpaNativeQuery;
 import cn.bc.report.domain.ReportHistory;
 import cn.bc.report.domain.ReportTemplate;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Map;
 
 /**
  * 报表任务Service接口的实现
- * 
+ *
  * @author lbj
- * 
  */
 public class ReportServiceImpl implements ReportService {
-	private JpaTemplate jpaTemplate;
+	@PersistenceContext
+	protected EntityManager entityManager;
 	private TemplateService templateService;
 	private ReportTemplateService reportTemplateService;
 	private ReportHistoryService reportHistoryService;
-
-	@Autowired
-	public void setJpaTemplate(JpaTemplate jpaTemplate) {
-		this.jpaTemplate = jpaTemplate;
-	}
 
 	@Autowired
 	public void setTemplateService(TemplateService templateService) {
@@ -39,21 +34,17 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Autowired
-	public void setReportTemplateService(
-			ReportTemplateService reportTemplateService) {
+	public void setReportTemplateService(ReportTemplateService reportTemplateService) {
 		this.reportTemplateService = reportTemplateService;
 	}
 
 	@Autowired
-	public void setReportHistoryService(
-			ReportHistoryService reportHistoryService) {
+	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
 		this.reportHistoryService = reportHistoryService;
 	}
 
-	public Query<Map<String, Object>> createSqlQuery(
-			SqlObject<Map<String, Object>> sqlObject) {
-		return new HibernateJpaNativeQuery<Map<String, Object>>(jpaTemplate,
-				sqlObject);
+	public Query<Map<String, Object>> createSqlQuery(SqlObject<Map<String, Object>> sqlObject) {
+		return new JpaNativeQuery<>(entityManager, sqlObject);
 	}
 
 	public Template loadTemplate(String templateCode) {

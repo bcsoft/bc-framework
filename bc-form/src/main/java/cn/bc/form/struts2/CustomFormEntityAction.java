@@ -37,9 +37,8 @@ import java.util.Map;
 
 /**
  * 自定义表单CRUD入口Action
- * 
+ *
  * @author lbj & hwx
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
@@ -72,7 +71,6 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 自定义表单数据，使用标准的Json数据格式：{name:"",value:"",type:"int|long|string|date|..."}
-	 * 
 	 */
 	public String formData;
 
@@ -196,9 +194,9 @@ public class CustomFormEntityAction extends ActionSupport implements
 		JSONArray _fields = new JSONArray(this.formData);
 		JSONObject json = new JSONObject();
 
-        // 处理scope=form的情况 - add by dragon 2014-06-20
-        JSONArray fields = dealDataScope(form, _fields);
-		
+		// 处理scope=form的情况 - add by dragon 2014-06-20
+		JSONArray fields = dealDataScope(form, _fields);
+
 		this.customFormService.save(form, fields);
 		json.put("success", true);
 		json.put("msg", "保存成功");
@@ -206,22 +204,22 @@ public class CustomFormEntityAction extends ActionSupport implements
 		return "json";
 	}
 
-    private JSONArray dealDataScope(JSONObject form, JSONArray fields) throws JSONException {
-        JSONArray newFields = new JSONArray();
-        JSONObject field;
-        for (int i = 0; i < fields.length(); i++){
-            field = fields.getJSONObject(i);
-            if(field.has("scope") && "form".equalsIgnoreCase(field.getString("scope"))){// form变量
-                form.put(field.getString("name")
-                    , StringUtils.convertValueByType(field.getString("type"),field.getString("value")));
-            }else{// field变量
-                newFields.put(field);
-            }
-        }
-        return newFields;
-    }
+	private JSONArray dealDataScope(JSONObject form, JSONArray fields) throws JSONException {
+		JSONArray newFields = new JSONArray();
+		JSONObject field;
+		for (int i = 0; i < fields.length(); i++) {
+			field = fields.getJSONObject(i);
+			if (field.has("scope") && "form".equalsIgnoreCase(field.getString("scope"))) {// form变量
+				form.put(field.getString("name")
+						, StringUtils.convertValueByType(field.getString("type"), field.getString("value")));
+			} else {// field变量
+				newFields.put(field);
+			}
+		}
+		return newFields;
+	}
 
-    // 删除自定义表单
+	// 删除自定义表单
 	public String delete() throws Exception {
 		Json _json = new Json();
 		try {
@@ -272,7 +270,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 获取删除操作的异常提示信息
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getDeleteExceptionMsg(Exception e) {
@@ -291,13 +289,13 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 删除操作平台没有处理的异常的默认处理
-	 * 
+	 *
 	 * @param json
 	 * @param e
 	 */
 	protected void dealOtherDeleteException(Json json, Exception e) {
-		if ((e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException)
-				|| (e.getCause().getCause() != null && e.getCause().getCause() instanceof org.hibernate.exception.ConstraintViolationException)) {
+		if ((e.getCause() != null && e.getCause().getClass().getSimpleName().equals("ConstraintViolationException"))
+				|| (e.getCause().getCause() != null && e.getCause().getCause().getClass().getSimpleName().equals("ConstraintViolationException"))) {
 			// 违反约束关联引发的异常
 			json.put("msg", getText("exception.delete.constraintViolation"));
 			json.put("e", e.getClass().getSimpleName());
@@ -309,7 +307,8 @@ public class CustomFormEntityAction extends ActionSupport implements
 	}
 
 	/**
-	 * 格式化模板 
+	 * 格式化模板
+	 *
 	 * @throws JSONException
 	 */
 	private void formatTpl() throws JSONException {
@@ -323,7 +322,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 			String formInfoJsonStr = setCreatedFormInfo();
 			args.put("form_info", formInfoJsonStr);
 		} else { //表单为编辑状态时
-			form = this.formService.findByTPC(type, pid,code);
+			form = this.formService.findByTPC(type, pid, code);
 			//设置模板参数
 			setEditedTplAgs(args, form);
 			// 设置表单信息
@@ -372,7 +371,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 新建时设置模板参数
-	 * 
+	 *
 	 * @param args args
 	 */
 	private void setCreatedTplAgs(Map<String, Object> args) {
@@ -392,7 +391,7 @@ public class CustomFormEntityAction extends ActionSupport implements
 
 	/**
 	 * 编辑时设置模板参数
-	 * 
+	 *
 	 * @param args args
 	 * @param form form
 	 */
@@ -424,9 +423,10 @@ public class CustomFormEntityAction extends ActionSupport implements
 		args.put("form_id", id);
 		args.put("form_tpl", tpl);
 	}
+
 	/**
 	 * 新建编辑时设置表单信息
-	 * 
+	 *
 	 * @param form form
 	 * @throws JSONException
 	 */

@@ -1,31 +1,26 @@
 package cn.bc.device.service;
 
-import java.util.List;
-
+import cn.bc.device.domain.DeviceEventEntity;
+import cn.bc.device.domain.DeviceEventNew;
+import cn.bc.device.event.DeviceEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import cn.bc.device.domain.DeviceEventEntity;
-import cn.bc.device.domain.DeviceEventNew;
-import cn.bc.device.event.DeviceEvent;
+import java.util.List;
 
 /**
  * 设备事件发布service实现
- * 
+ *
  * @author hwx
- * 
  */
-public class DeviceEventNewPublishServiceImpl implements
-		DeviceEventNewPublishService, ApplicationEventPublisherAware {
+public class DeviceEventNewPublishServiceImpl implements DeviceEventNewPublishService, ApplicationEventPublisherAware {
 	private ApplicationEventPublisher eventPublisher;
 	private DeviceEventNewService deviceEventNewService;
 	private DeviceEventService deviceEventService;
 
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.eventPublisher = applicationEventPublisher;
-
 	}
 
 	@Autowired
@@ -34,14 +29,12 @@ public class DeviceEventNewPublishServiceImpl implements
 	}
 
 	@Autowired
-	public void setDeviceEventNewService(
-			DeviceEventNewService deviceEventNewService) {
+	public void setDeviceEventNewService(DeviceEventNewService deviceEventNewService) {
 		this.deviceEventNewService = deviceEventNewService;
 	}
 
 	public void publishEvent() {
-		List<DeviceEventNew> deviceEventNewList = this.deviceEventNewService
-				.createQuery().list();
+		List<DeviceEventNew> deviceEventNewList = this.deviceEventNewService.createQuery().list();
 		if (deviceEventNewList != null) {
 			for (int i = 0; i < deviceEventNewList.size(); i++) {
 				// 数据库中存在的事件
@@ -54,8 +47,6 @@ public class DeviceEventNewPublishServiceImpl implements
 				this.eventPublisher.publishEvent(deviceEvent);
 				deviceEventNewService.delete(deviceEventNewList.get(i).getId());
 			}
-
 		}
-
 	}
 }

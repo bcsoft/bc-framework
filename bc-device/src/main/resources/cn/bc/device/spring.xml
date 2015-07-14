@@ -1,43 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--device -->
+    <bean id="deviceDao" class="cn.bc.device.dao.hibernate.jpa.DeviceDaoImpl"/>
+    <bean id="deviceService" class="cn.bc.device.service.DeviceServiceImpl"/>
 
-	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
-	<!--device -->
-	<bean id="deviceDao"
-		class="cn.bc.device.dao.hibernate.jpa.DeviceDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="deviceService" class="cn.bc.device.service.DeviceServiceImpl" />
-	
-	<!-- deviceEvent -->
-	<bean id="deviceEventDao"
-		class="cn.bc.device.dao.hibernate.jpa.DeviceEventDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="deviceEventService" class="cn.bc.device.service.DeviceEventServiceImpl" />
-	
-	<!-- deviceEventNew -->
-	<bean id="deviceEventNewDao"
-		class="cn.bc.device.dao.hibernate.jpa.DeviceEventNewDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="deviceEventNewService" class="cn.bc.device.service.DeviceEventNewServiceImpl" />
-	
-	<!-- deviceEventNewPublish -->
-	<bean id="deviceEventNewPublishService" class="cn.bc.device.service.DeviceEventNewPublishServiceImpl" />
-	
-	<!-- <aop:config>
-		http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts 
-			包或实现类使用within关键字，接口实现使用this关键字
-		<aop:pointcut id="customFormServiceMethod" expression="this(cn.bc.form.service.CustomFormService)" />
-		<aop:advisor pointcut-ref="customFormServiceMethod" advice-ref="crudServiceTxAdvice" />
-	</aop:config> -->
+    <!-- deviceEvent -->
+    <bean id="deviceEventDao" class="cn.bc.device.dao.hibernate.jpa.DeviceEventDaoImpl"/>
+    <bean id="deviceEventService" class="cn.bc.device.service.DeviceEventServiceImpl"/>
+
+    <!-- deviceEventNew -->
+    <bean id="deviceEventNewDao" class="cn.bc.device.dao.hibernate.jpa.DeviceEventNewDaoImpl"/>
+    <bean id="deviceEventNewService" class="cn.bc.device.service.DeviceEventNewServiceImpl"/>
+
+    <!-- deviceEventNewPublish -->
+    <bean id="deviceEventNewPublishService" class="cn.bc.device.service.DeviceEventNewPublishServiceImpl"/>
 </beans>

@@ -1,63 +1,49 @@
 package cn.bc.netdisk.dao.hibernate.jpa;
 
+import cn.bc.db.jdbc.RowMapper;
+import cn.bc.db.jdbc.SqlObject;
+import cn.bc.netdisk.dao.NetdiskFileDao;
+import cn.bc.netdisk.domain.NetdiskFile;
+import cn.bc.netdisk.domain.NetdiskShare;
+import cn.bc.orm.jpa.JpaCrudDao;
+import cn.bc.orm.jpa.JpaNativeQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import cn.bc.db.jdbc.RowMapper;
-import cn.bc.db.jdbc.SqlObject;
-import cn.bc.netdisk.dao.NetdiskFileDao;
-import cn.bc.netdisk.domain.NetdiskFile;
-import cn.bc.netdisk.domain.NetdiskShare;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
-import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
-
 /**
  * 网络文件DAO接口的实现
- * 
+ *
  * @author zxr
- * 
  */
-public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
-		implements NetdiskFileDao {
-	protected final Log logger = LogFactory.getLog(getClass());
-	private JdbcTemplate jdbcTemplate;
+public class NetdiskFileDaoImpl extends JpaCrudDao<NetdiskFile> implements NetdiskFileDao {
+	private static Logger logger = LoggerFactory.getLogger(NetdiskFileDaoImpl.class);
 
 	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+	private JdbcTemplate jdbcTemplate;
 
-	public NetdiskFile findNetdiskFileByName(String name, Long pid,
-			Object typeFolder, String batchNo) {
-
-		NetdiskFile netdiskFile = null;
-		List<?> list = null;
+	public NetdiskFile findNetdiskFileByName(String name, Long pid, Object typeFolder, String batchNo) {
+		NetdiskFile netdiskFile;
+		List<?> list;
 		if (typeFolder == null && pid != null) {
 			String hql = "select n from NetdiskFile n where n.name=? and n.pid=? and n.batchNo=?";
-			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, pid, batchNo });
+			list = executeQuery(hql, new Object[]{name, pid, batchNo});
 		} else if (pid == null && typeFolder != null) {
 			String hql = "select n from NetdiskFile n where n.name=? and n.type=? and n.batchNo=?";
-			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, typeFolder, batchNo });
+			list = executeQuery(hql, new Object[]{name, typeFolder, batchNo});
 		} else if (pid == null && typeFolder == null) {
 			String hql = "select n from NetdiskFile n where n.name=? and n.batchNo=?";
-			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, batchNo });
+			list = executeQuery(hql, new Object[]{name, batchNo});
 		} else {
 			String hql = "select n from NetdiskFile n where n.name=? and n.pid=? and n.type=? and n.batchNo=?";
-			list = this.getJpaTemplate().find(hql,
-					new Object[] { name, pid, typeFolder, batchNo });
+			list = executeQuery(hql, new Object[]{name, pid, typeFolder, batchNo});
 		}
 		if (list.size() == 1) {
 			netdiskFile = (NetdiskFile) list.get(0);
@@ -78,39 +64,26 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 	}
 
 	public Serializable[] getMyselfAndChildFileId(Long id) {
-		// String sql = "with recursive n as("
-		// + " select * from bc_netdisk_file where id =" + id + " union"
-		// + " select f.* from bc_netdisk_file f,n where f.pid=n.id"
-		// + " ) select string_agg(id||'',',') from n";
-
 		String sql = "select getMyselfAndChildFileId(" + id + ")";
 		logger.debug("sql" + sql + " id: " + id);
 		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
 		if (fileIds.get(0).get("getMyselfAndChildFileId") == null) {
 			return null;
 		} else {
-			String ids = fileIds.get(0).get("getMyselfAndChildFileId")
-					.toString();
-			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
-					.split(","));
+			String ids = fileIds.get(0).get("getMyselfAndChildFileId").toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids.split(","));
 		}
 
 	}
 
 	public Serializable[] getMyselfAndParentsFileId(Long id) {
-		// String sql = "with recursive n as("
-		// + " select * from bc_netdisk_file where id =" + id + " union"
-		// + " select f.* from bc_netdisk_file f,n where f.id=n.pid"
-		// + " ) select string_agg(id||'',',') from n";
 		String sql = "select getMyselfAndParentsFileId(" + id + ")";
 		List<Map<String, Object>> fileIds = this.jdbcTemplate.queryForList(sql);
 		if (fileIds.get(0).get("getMyselfAndParentsFileId") == null) {
 			return null;
 		} else {
-			String ids = fileIds.get(0).get("getMyselfAndParentsFileId")
-					.toString();
-			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
-					.split(","));
+			String ids = fileIds.get(0).get("getMyselfAndParentsFileId").toString();
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids.split(","));
 		}
 
 	}
@@ -122,17 +95,16 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			return null;
 		} else {
 			String ids = fileIds.get(0).get("getUserSharFileId").toString();
-			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
-					.split(","));
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids.split(","));
 		}
 	}
 
 	public NetdiskShare getNetdiskShare(Long aid, Long pid) {
 		NetdiskShare netdiskShare = null;
-		List<?> list = null;
+		List<?> list;
 		String hql = "select n from NetdiskShare n where n.aid=? and n.netdiskFile.id=?";
 		logger.debug("hql" + hql + " aid: " + aid + " pid： " + pid);
-		list = this.getJpaTemplate().find(hql, new Object[] { aid, pid });
+		list = executeQuery(hql, new Object[]{aid, pid});
 		if (list.size() > 0) {
 			netdiskShare = (NetdiskShare) list.get(0);
 			return netdiskShare;
@@ -148,17 +120,16 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			return null;
 		} else {
 			String ids = fileIds.get(0).get("getUserSharFileId2All").toString();
-			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
-					.split(","));
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids.split(","));
 		}
 	}
 
 	public List<Map<String, Object>> findOwnerFolder(Long ownerId, Long pid) {
 		if (ownerId == null)
-			return new ArrayList<Map<String, Object>>();
+			return new ArrayList<>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
@@ -189,14 +160,12 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 				return m;
 			}
 		});
-		return new HibernateJpaNativeQuery<Map<String, Object>>(
-				getJpaTemplate(), sqlObject).list();
+		return new JpaNativeQuery<>(getEntityManager(), sqlObject).list();
 	}
 
-	public List<Map<String, Object>> findShareRootFolders(Long sharerId,
-			boolean isEdit) {
+	public List<Map<String, Object>> findShareRootFolders(Long sharerId, boolean isEdit) {
 		if (sharerId == null)
-			return new ArrayList<Map<String, Object>>();
+			return new ArrayList<>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
@@ -231,8 +200,7 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 				return m;
 			}
 		});
-		return new HibernateJpaNativeQuery<Map<String, Object>>(
-				getJpaTemplate(), sqlObject).list();
+		return new JpaNativeQuery<>(getEntityManager(), sqlObject).list();
 	}
 
 	public Long[] getUserPublicFileId() {
@@ -242,19 +210,17 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 			return null;
 		} else {
 			String ids = fileIds.get(0).get("getPublicFileId").toString();
-			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids
-					.split(","));
+			return cn.bc.core.util.StringUtils.stringArray2LongArray(ids.split(","));
 		}
 	}
 
-	public List<Map<String, Object>> findChildFolder(Long pid, boolean isEdit,
-			Long userId) {
+	public List<Map<String, Object>> findChildFolder(Long pid, boolean isEdit, Long userId) {
 		if (pid == null)
-			return new ArrayList<Map<String, Object>>();
+			return new ArrayList<>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
-		List<Object> args = new ArrayList<Object>();
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
+		List<Object> args = new ArrayList<>();
 		StringBuffer sql = new StringBuffer();
 		// 选择有编辑权限的文件夹
 		if (isEdit) {
@@ -287,13 +253,12 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 				return m;
 			}
 		});
-		return new HibernateJpaNativeQuery<Map<String, Object>>(
-				getJpaTemplate(), sqlObject).list();
+		return new JpaNativeQuery<>(getEntityManager(), sqlObject).list();
 	}
 
 	public List<Map<String, Object>> findPublicRootFolder() {
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select f.id,f.status_,f.pid,f.type_,f.name from bc_netdisk_file f");
@@ -307,7 +272,7 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 		// 数据映射器
 		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
 			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> m = new HashMap<String, Object>();
+				Map<String, Object> m = new HashMap<>();
 				int i = 0;
 				m.put("id", rs[i++]);
 				m.put("status", rs[i++]);
@@ -317,7 +282,6 @@ public class NetdiskFileDaoImpl extends HibernateCrudJpaDao<NetdiskFile>
 				return m;
 			}
 		});
-		return new HibernateJpaNativeQuery<Map<String, Object>>(
-				getJpaTemplate(), sqlObject).list();
+		return new JpaNativeQuery<>(getEntityManager(), sqlObject).list();
 	}
 }

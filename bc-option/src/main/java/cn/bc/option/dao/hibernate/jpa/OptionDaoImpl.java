@@ -1,92 +1,60 @@
 package cn.bc.option.dao.hibernate.jpa;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.jpa.JpaCallback;
-import org.springframework.orm.jpa.JpaTemplate;
-import org.springframework.util.StringUtils;
-
 import cn.bc.BCConstants;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.option.dao.OptionDao;
 import cn.bc.option.domain.OptionGroup;
 import cn.bc.option.domain.OptionItem;
-import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
+import cn.bc.orm.jpa.JpaUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
 
 /**
  * 选项Dao接口的实现
- * 
+ *
  * @author dragon
- * 
  */
 public class OptionDaoImpl implements OptionDao {
-	private static Log logger = LogFactory.getLog(OptionDaoImpl.class);
-	private JpaTemplate jpaTemplate;
-
-	public void setEntityManagerFactory(
-			EntityManagerFactory entityManagerFactory) {
-		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
-	}
+	private static Logger logger = LoggerFactory.getLogger(OptionDaoImpl.class);
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public String getItemValue(final String groupKey, final String itemKey) {
 		if (groupKey == null || itemKey == null)
 			return null;
 
 		// 构建sql
-		final StringBuffer hql = new StringBuffer(
-				"select i.value_ from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id = i.pid where g.key_=? and i.key_=?");
+		String hql = "select i.value_ from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id = i.pid where g.key_=? and i.key_=?";
 
 		// 执行查询
-		return this.jpaTemplate.execute(new JpaCallback<String>() {
-			public String doInJpa(EntityManager em) throws PersistenceException {
-				Query queryObject = em.createNativeQuery(hql.toString());
-
-				// 注入参数:jpa的索引号从1开始
-				queryObject.setParameter(1, groupKey);
-				queryObject.setParameter(2, itemKey);
-				@SuppressWarnings("unchecked")
-				List<Object> list = queryObject.getResultList();
-				if (list == null || list.isEmpty()) {
-					return null;
-				} else {
-					if (list.size() > 1) {
-						logger.warn("查询到多个值,仅返回第一个:groupKey" + groupKey
-								+ ",itemKey=" + itemKey);
-					}
-					return list.get(0).toString();
-				}
+		List<String> list = JpaUtils.executeNativeQuery(entityManager, hql, new Object[]{groupKey, itemKey});
+		if (list == null || list.isEmpty()) {
+			return null;
+		} else {
+			if (list.size() > 1) {
+				logger.warn("查询到多个值,仅返回第一个:groupKey={}, itemKey={}", groupKey, itemKey);
 			}
-		});
+			return list.get(0);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<OptionGroup> findOptionGroup() {
 		String hql = "from OptionGroup _alias order by _alias.orderNo";
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
-		}
-		return (List<OptionGroup>) this.jpaTemplate.find(hql);
+		return JpaUtils.executeQuery(entityManager, hql, (Objects[]) null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<OptionItem> findOptionItemByGroupValue(String optionGroupValue) {
 		String hql = "from OptionItem _alias where _alias.optionGroup.value = ? order by _alias.orderNo";
 		if (logger.isDebugEnabled()) {
 			logger.debug("hql=" + hql);
 			logger.debug("optionGroupValue=" + optionGroupValue);
 		}
-		return (List<OptionItem>) this.jpaTemplate.find(hql, optionGroupValue);
+		return JpaUtils.executeQuery(entityManager, hql, new Object[]{optionGroupValue});
 	}
 
 	public Map<String, List<OptionItem>> findOptionItemByGroupValues(
@@ -116,12 +84,10 @@ public class OptionDaoImpl implements OptionDao {
 			logger.debug("args="
 					+ StringUtils.arrayToCommaDelimitedString(args));
 		}
-		@SuppressWarnings("unchecked")
-		List<OptionItem> all = (List<OptionItem>) this.jpaTemplate.find(hql,
-				args);
+		List<OptionItem> all = JpaUtils.executeQuery(entityManager, hql, args);
 
 		// 生成列表
-		Map<String, List<OptionItem>> map = new LinkedHashMap<String, List<OptionItem>>();
+		Map<String, List<OptionItem>> map = new LinkedHashMap<>();
 		List<OptionItem> sub = null;
 		String key = null;
 		for (OptionItem oi : all) {
@@ -131,7 +97,7 @@ public class OptionDaoImpl implements OptionDao {
 				}
 
 				key = oi.getOptionGroup().getValue();
-				sub = new ArrayList<OptionItem>();
+				sub = new ArrayList<>();
 				sub.add(oi);
 			} else {
 				sub.add(oi);
@@ -143,32 +109,25 @@ public class OptionDaoImpl implements OptionDao {
 	@SuppressWarnings("unchecked")
 	public List<OptionItem> findOptionItemByGroupKey(String optionGroupKey) {
 		String hql = "from OptionItem _alias where _alias.optionGroup.key = ? order by _alias.orderNo";
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
-			logger.debug("optionGroupKey=" + optionGroupKey);
-		}
-		return (List<OptionItem>) this.jpaTemplate.find(hql, optionGroupKey);
+		return JpaUtils.executeQuery(entityManager, hql, new Object[]{optionGroupKey});
 	}
 
 	public Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
 			String[] optionGroupValues) {
-		return this.findOptionItemByGroupKeys(optionGroupValues, (int[]) null);
+		return this.findOptionItemByGroupKeys(optionGroupValues, null);
 	}
 
-	public Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(
-			String[] optionGroupKeys) {
-		return this.findOptionItemByGroupKeys(optionGroupKeys,
-				new int[] { BCConstants.STATUS_ENABLED });
+	public Map<String, List<Map<String, String>>> findActiveOptionItemByGroupKeys(String[] optionGroupKeys) {
+		return this.findOptionItemByGroupKeys(optionGroupKeys, new int[]{BCConstants.STATUS_ENABLED});
 	}
 
-	private Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(
-			String[] optionGroupKeys, int[] statuses) {
+	private Map<String, List<Map<String, String>>> findOptionItemByGroupKeys(String[] optionGroupKeys, int[] statuses) {
 		if (optionGroupKeys == null || optionGroupKeys.length == 0)
 			return null;
 
 		String hql = "select g.key_ as gkey,i.key_ as key,i.value_ as value,i.id as id from BC_OPTION_ITEM i inner join BC_OPTION_GROUP g on g.id=i.pid";
 		hql += " where g.key_";
-		List<Object> args = new ArrayList<Object>();
+		List<Object> args = new ArrayList<>();
 
 		// 分组
 		if (optionGroupKeys.length == 1) {
@@ -201,33 +160,25 @@ public class OptionDaoImpl implements OptionDao {
 		}
 
 		hql += " order by g.order_,i.order_";
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
-		}
-		List<Map<String, String>> all = HibernateJpaNativeQuery
-				.executeNativeSql(jpaTemplate, hql, args.toArray(),
-						new RowMapper<Map<String, String>>() {
-							public Map<String, String> mapRow(Object[] rs,
-									int rowNum) {
-								Map<String, String> oi = new HashMap<String, String>();
-								int i = 0;
-								oi.put("gkey", rs[i++].toString());// 保存group的key用于下面的判断
-								oi.put("key", rs[i++].toString());
-								oi.put("value", rs[i++].toString());
-								return oi;
-							}
-						});
+		List<Map<String, String>> all = JpaUtils.executeNativeQuery(entityManager, hql, args, new RowMapper<Map<String, String>>() {
+			public Map<String, String> mapRow(Object[] rs, int rowNum) {
+				Map<String, String> oi = new HashMap<>();
+				int i = 0;
+				oi.put("gkey", rs[i++].toString());// 保存group的key用于下面的判断
+				oi.put("key", rs[i++].toString());
+				oi.put("value", rs[i].toString());
+				return oi;
+			}
+		});
 
 		// 生成列表
-		Map<String, List<Map<String, String>>> map = new LinkedHashMap<String, List<Map<String, String>>>();
+		Map<String, List<Map<String, String>>> map = new LinkedHashMap<>();
 		List<Map<String, String>> sub = null;
 		String key = null;
 		for (Map<String, String> oi : all) {
 			if (!oi.get("gkey").equals(key)) {
 				key = oi.get("gkey");
-				sub = new ArrayList<Map<String, String>>();
+				sub = new ArrayList<>();
 				map.put(key, sub);
 				sub.add(oi);
 			} else {
@@ -236,7 +187,7 @@ public class OptionDaoImpl implements OptionDao {
 		}
 
 		// 对没有的groupKey,生成一个空的list
-		List<String> empty = new ArrayList<String>();
+		List<String> empty = new ArrayList<>();
 		for (String key1 : optionGroupKeys) {
 			key = null;
 			for (String key2 : map.keySet()) {
@@ -258,10 +209,9 @@ public class OptionDaoImpl implements OptionDao {
 			StringBuffer t = new StringBuffer();
 			for (String k : optionGroupKeys) {
 				list = map.get(k);
-				t.append(k + "(" + list.size() + "):\r\n");
+				t.append(k).append("(").append(list.size()).append("):\r\n");
 				for (Map<String, String> oi : list) {
-					t.append("  " + oi.get("key") + "=" + oi.get("value")
-							+ "\r\n");
+					t.append("  ").append(oi.get("key")).append("=").append(oi.get("value")).append("\r\n");
 				}
 			}
 			logger.debug(t.toString());
@@ -294,17 +244,10 @@ public class OptionDaoImpl implements OptionDao {
 			hql += ")";
 		}
 		hql += " order by _alias.optionGroup.orderNo,_alias.orderNo";
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql);
-			logger.debug("args="
-					+ StringUtils.arrayToCommaDelimitedString(args));
-		}
-		@SuppressWarnings("unchecked")
-		List<OptionItem> all = (List<OptionItem>) this.jpaTemplate.find(hql,
-				args);
+		List<OptionItem> all = JpaUtils.executeQuery(entityManager, hql, args);
 
 		// 生成列表
-		Map<String, List<OptionItem>> map = new LinkedHashMap<String, List<OptionItem>>();
+		Map<String, List<OptionItem>> map = new LinkedHashMap<>();
 		List<OptionItem> sub = null;
 		String key = null;
 		for (OptionItem oi : all) {
@@ -314,7 +257,7 @@ public class OptionDaoImpl implements OptionDao {
 				}
 
 				key = oi.getOptionGroup().getKey();
-				sub = new ArrayList<OptionItem>();
+				sub = new ArrayList<>();
 				sub.add(oi);
 			} else {
 				sub.add(oi);

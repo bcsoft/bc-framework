@@ -16,21 +16,6 @@
 			<artifactId>quartz</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-web-struts2</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
 			<version>${project.version}</version>
@@ -56,13 +41,6 @@
 			<artifactId>bc-scheduler</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- 
-		<dependency>
-			<groupId>org.one2team.highcharts</groupId>
-			<artifactId>highcharts-serverside-export</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency> -->
 
 		<!-- 导出Excel需要的包 -->
 		<dependency>

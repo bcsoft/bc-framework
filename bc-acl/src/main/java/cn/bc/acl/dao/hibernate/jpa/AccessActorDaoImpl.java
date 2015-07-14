@@ -1,25 +1,22 @@
 package cn.bc.acl.dao.hibernate.jpa;
 
-import java.util.List;
-
-import org.springframework.util.Assert;
-
 import cn.bc.acl.dao.AccessActorDao;
 import cn.bc.acl.domain.AccessActor;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.jpa.JpaCrudDao;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * 访问者DAO接口的实现
- * 
+ *
  * @author lbj
- * 
  */
-public class AccessActorDaoImpl extends HibernateCrudJpaDao<AccessActor> implements AccessActorDao {
-	
+public class AccessActorDaoImpl extends JpaCrudDao<AccessActor> implements AccessActorDao {
 	public AccessActor load(Long pid, Long aid) {
 		Assert.notNull(pid);
 		Assert.notNull(aid);
@@ -38,13 +35,13 @@ public class AccessActorDaoImpl extends HibernateCrudJpaDao<AccessActor> impleme
 	}
 
 	public void delete(AccessActor accessActor) {
-		this.getJpaTemplate().remove(accessActor);
+		this.getEntityManager().remove(accessActor);
 	}
 
 	public void delete(List<AccessActor> accessActors) {
 		if (accessActors != null)
 			for (AccessActor aa : accessActors)
-				this.getJpaTemplate().remove(aa);
+				this.getEntityManager().remove(aa);
 	}
 
 	public List<AccessActor> findByAid(Long id) {
@@ -72,8 +69,7 @@ public class AccessActorDaoImpl extends HibernateCrudJpaDao<AccessActor> impleme
 		return this.createQuery().condition(condition).list();
 	}
 
-	public List<AccessActor> findByDocIdType(Long id, String docId,
-			String docType) {
+	public List<AccessActor> findByDocIdType(Long id, String docId, String docType) {
 		Assert.notNull(id);
 		Assert.notNull(docId);
 		Assert.notNull(docType);

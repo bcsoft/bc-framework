@@ -1,67 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-		
-	<!-- scheduler事务 -->
-	<aop:config>
-		<!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
-			包或实现类使用within关键字，接口实现使用this关键字
-		 -->
-		<aop:pointcut id="schedulerServiceMethod"
-			expression="this(cn.bc.scheduler.service.SchedulerService)" />
-		<aop:advisor pointcut-ref="schedulerServiceMethod" advice-ref="schedulerServiceTxAdvice" />
-	</aop:config>
-	<tx:advice id="schedulerServiceTxAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="save*" propagation="REQUIRED" read-only="false" />
-			<tx:method name="delete*" propagation="REQUIRED" read-only="false" />
-		</tx:attributes>
-	</tx:advice>
-	
-	<!-- scheduler服务配置 -->
-	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-	</bean>
-	<bean id="scheduleJobDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleJobDaoImpl">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-	</bean>
-	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl">
-		<property name="scheduleJobDao" ref="scheduleJobDao"/>
-		<property name="scheduleLogDao" ref="scheduleLogDao"/>
-	</bean>
-	<bean id="scheduleJobService" class="cn.bc.core.service.DefaultCrudService">
-		<property name="entityClass" value="cn.bc.scheduler.domain.ScheduleJob"/>
-		<property name="crudDao" ref="scheduleJobDao"/>
-	</bean>
-	<bean id="scheduleLogService" class="cn.bc.core.service.DefaultCrudService">
-		<property name="entityClass" value="cn.bc.scheduler.domain.ScheduleLog"/>
-		<property name="crudDao" ref="scheduleLogDao"/>
-	</bean>
+    <!-- scheduler事务 -->
+    <aop:config>
+        <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+            包或实现类使用within关键字，接口实现使用this关键字
+         -->
+        <aop:pointcut id="schedulerServiceMethod" expression="this(cn.bc.scheduler.service.SchedulerService)"/>
+        <aop:advisor pointcut-ref="schedulerServiceMethod" advice-ref="schedulerServiceTxAdvice"/>
+    </aop:config>
+    <tx:advice id="schedulerServiceTxAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>
 
-	<!-- 旧scheduler配置
-	<bean id="bcCronTrigger" class="cn.bc.scheduler.spring.CronTriggerBeanEx"
-		scope="prototype">
-	</bean>
-	<bean id="bcSchedulerFactoryBean" class="cn.bc.scheduler.spring.SchedulerFactoryBeanEx"
-		p:schedulerService-ref="schedulerService" />
+    <!-- scheduler服务配置 -->
+    <bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"/>
+    <bean id="scheduleJobDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleJobDaoImpl"/>
+    <bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl">
+        <property name="scheduleJobDao" ref="scheduleJobDao"/>
+        <property name="scheduleLogDao" ref="scheduleLogDao"/>
+    </bean>
+    <bean id="scheduleJobService" class="cn.bc.core.service.DefaultCrudService">
+        <property name="entityClass" value="cn.bc.scheduler.domain.ScheduleJob"/>
+        <property name="crudDao" ref="scheduleJobDao"/>
+    </bean>
+    <bean id="scheduleLogService" class="cn.bc.core.service.DefaultCrudService">
+        <property name="entityClass" value="cn.bc.scheduler.domain.ScheduleLog"/>
+        <property name="crudDao" ref="scheduleLogDao"/>
+    </bean>
 
-	<bean id="triggerCfgDao" class="cn.bc.scheduler.dao.hibernate.jpa.TriggerCfgDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl"
-		p:triggerCfgDao-ref="triggerCfgDao" p:scheduleLogDao-ref="scheduleLogDao" />
-	-->
-
-	<!-- 测试Mock -->
-	<bean id="schedulerTestMock" class="cn.bc.scheduler.service.SchedulerTestMock"/>
+    <!-- 测试Mock -->
+    <bean id="schedulerTestMock" class="cn.bc.scheduler.service.SchedulerTestMock"/>
 </beans>

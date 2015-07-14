@@ -4,21 +4,18 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.AndCondition;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.NotEqualsCondition;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.jpa.JpaCrudDao;
 import cn.bc.report.dao.ReportTemplateDao;
 import cn.bc.report.domain.ReportTemplate;
 
 /**
  * 报表模板Dao接口的实现
- * 
+ *
  * @author dragon
- * 
  */
-public class ReportTemplateDaoImpl extends HibernateCrudJpaDao<ReportTemplate>
-		implements ReportTemplateDao {
+public class ReportTemplateDaoImpl extends JpaCrudDao<ReportTemplate> implements ReportTemplateDao {
 	public ReportTemplate loadByCode(String code) {
-		return this.createQuery().condition(new EqualsCondition("code", code))
-				.singleResult();
+		return this.createQuery().condition(new EqualsCondition("code", code)).singleResult();
 	}
 
 	public boolean isUniqueCode(Long currentId, String code) {
@@ -27,8 +24,9 @@ public class ReportTemplateDaoImpl extends HibernateCrudJpaDao<ReportTemplate>
 			c = new EqualsCondition("code", code);
 
 		} else {
-			c = new AndCondition().add(new EqualsCondition("code", code)).add(
-					new NotEqualsCondition("id", currentId));
+			c = new AndCondition()
+					.add(new EqualsCondition("code", code))
+					.add(new NotEqualsCondition("id", currentId));
 		}
 		return this.createQuery().condition(c).count() > 0;
 	}

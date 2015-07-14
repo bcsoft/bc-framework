@@ -1,47 +1,35 @@
 package cn.bc.identity.dao.hibernate.jpa;
 
+import cn.bc.identity.dao.AuthDataDao;
+import cn.bc.identity.domain.AuthData;
+import cn.bc.orm.jpa.JpaUtils;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.jpa.JpaCallback;
-import org.springframework.orm.jpa.JpaTemplate;
-import org.springframework.util.StringUtils;
-
-import cn.bc.identity.dao.AuthDataDao;
-import cn.bc.identity.domain.AuthData;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
-
 /**
  * 认证信息Dao接口的实现
- * 
+ *
  * @author dragon
- * 
  */
+@Component
 public class AuthDataDaoImpl implements AuthDataDao {
-	private static final Log logger = LogFactory.getLog(AuthDataDaoImpl.class);
-	private JpaTemplate jpaTemplate;
-
-	public void setEntityManagerFactory(
-			EntityManagerFactory entityManagerFactory) {
-		this.jpaTemplate = new JpaTemplate(entityManagerFactory);
-	}
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public AuthData load(Long id) {
-		return jpaTemplate.find(AuthData.class, id);
+		return entityManager.find(AuthData.class, id);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<AuthData> find(Long[] ids) {
 		if (ids == null || ids.length == 0)
-			return new ArrayList<AuthData>();
+			return new ArrayList<>();
 
-		ArrayList<Object> args = new ArrayList<Object>();
+		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("from AuthData a");
 
@@ -58,19 +46,14 @@ public class AuthDataDaoImpl implements AuthDataDao {
 			}
 			hql.append(")");
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql.toString());
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
-		}
-		return jpaTemplate.find(hql.toString(), args.toArray());
+		return JpaUtils.executeQuery(entityManager, hql.toString(), args);
 	}
 
 	public int updatePassword(Long[] ids, String password) {
 		if (ids == null || ids.length == 0)
 			return 0;
 
-		final List<Object> args = new ArrayList<Object>();
+		final List<Object> args = new ArrayList<>();
 		final StringBuffer hql = new StringBuffer();
 		hql.append("update AuthData a set a.password=?");
 		args.add(password);
@@ -90,23 +73,15 @@ public class AuthDataDaoImpl implements AuthDataDao {
 			hql.append(")");
 		}
 
-		Object obj = this.jpaTemplate.execute(new JpaCallback<Object>() {
-			public Object doInJpa(EntityManager em) throws PersistenceException {
-				javax.persistence.Query query = HibernateCrudJpaDao
-						.createQuery(em, hql.toString(), args.toArray());
-				jpaTemplate.prepareQuery(query);
-				return query.executeUpdate();
-			}
-		});
-		return Integer.parseInt(String.valueOf(obj));
+		return JpaUtils.executeUpdate(entityManager, hql.toString(), args);
 	}
 
 	public AuthData save(AuthData authData) {
 		if (null != authData) {
 			if (authData.getId() > 0) {
-				authData = this.jpaTemplate.merge(authData);
+				authData = this.entityManager.merge(authData);
 			} else {
-				this.jpaTemplate.persist(authData);
+				this.entityManager.persist(authData);
 			}
 		}
 		return authData;
@@ -116,8 +91,8 @@ public class AuthDataDaoImpl implements AuthDataDao {
 		if (ids == null || ids.length == 0)
 			return;
 
-		final List<Object> args = new ArrayList<Object>();
-		final StringBuffer hql = new StringBuffer();
+		List<Object> args = new ArrayList<>();
+		StringBuffer hql = new StringBuffer();
 		hql.append("delete AuthData a");
 		if (ids.length == 1) {
 			hql.append(" where a.id=?");
@@ -132,18 +107,10 @@ public class AuthDataDaoImpl implements AuthDataDao {
 			}
 			hql.append(")");
 		}
-		this.jpaTemplate.execute(new JpaCallback<Object>() {
-			public Object doInJpa(EntityManager em) throws PersistenceException {
-				javax.persistence.Query query = HibernateCrudJpaDao
-						.createQuery(em, hql.toString(), args.toArray());
-				jpaTemplate.prepareQuery(query);
-				return query.executeUpdate();
-			}
-		});
+		JpaUtils.executeUpdate(entityManager, hql.toString(), args);
 	}
 
 	public void delete(Long id) {
-		if (id != null)
-			this.delete(new Long[] { id });
+		if (id != null) this.delete(new Long[]{id});
 	}
 }

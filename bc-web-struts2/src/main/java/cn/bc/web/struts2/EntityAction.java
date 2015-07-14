@@ -385,8 +385,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 删除操作平台没有处理的异常的默认处理
 	 */
 	protected void dealOtherDeleteException(Json json, Exception e) {
-		if ((e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException)
-				|| (e.getCause().getCause() != null && e.getCause().getCause() instanceof org.hibernate.exception.ConstraintViolationException)) {
+		if ((e.getCause() != null && e.getCause().getClass().getSimpleName().equals("ConstraintViolationException"))
+				|| (e.getCause().getCause() != null && e.getCause().getCause().getClass().getSimpleName().equals("ConstraintViolationException"))) {
 			// 违反约束关联引发的异常
 			json.put("msg", getText("exception.delete.constraintViolation"));
 			json.put("e", e.getClass().getSimpleName());
@@ -448,7 +448,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 添加表单操作按钮，默认为保存按钮
 	 *
 	 * @param pageOption buildPageOption(editable)方法初始化好的对象
-	 * @param editable 是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
+	 * @param editable   是否为可编辑表单的配置,当调用create、edit方法时为true，调用open方法时为false
 	 */
 	protected void buildPageButtons(PageOption pageOption, boolean editable) {
 		boolean readonly = this.isReadonly();
@@ -488,6 +488,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	/**
 	 * 获取访问action的前缀。 struts配置文件中package节点的namespace属性去除最后面的bean名称的部分
 	 * 如namespace="/bc/duty"，则这里应返回"/bc"
+	 *
+	 * @deprecated 使用 getPageNamespace() 的默认行为代替
 	 */
 	protected String getActionPathPrefix() {
 		return "/bc";
@@ -497,19 +499,35 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 * 获取 struts 的 XML 配置文件中此 Action 配置的 namespace 的值相对于web应用上下文路径的相对路径
 	 * <p>如 &lt;package name="XXX" extends="XXX" namespace="/bc/actor"&gt;...&lt;/package&gt;
 	 * 则此方法返回 "bc/actor" 而不是 "/bc/actor"</p>
+	 *
 	 * @return 包路径
 	 */
 	public String getActionNamespace() {
 		String ns = ServletActionContext.getActionMapping().getNamespace();
-		if(ns.startsWith("/")) return ns.substring(1);
+		if (ns.startsWith("/")) return ns.substring(1);
 		else return ns;
+	}
+
+	/**
+	 * 是否启用兼容模式
+	 * <p>子类不想使用兼容模式时，推荐在属性配置文件中添加 quirksMode=false 配置。
+	 * 也可以复写此方法返回 false。新增此方法是为了使旧代码不需要修改也可以正常使用。
+	 * </p>
+	 *
+	 * @return 如果子类没有复写、属性文件有没有配置quirksMode则默认返回true
+	 */
+	protected boolean isQuirksMode() {
+		return !"false".equals(getText("quirksMode"));
 	}
 
 	/**
 	 * 页面命名空间
 	 */
 	public String getPageNamespace() {
-		return getContextPath() + this.getActionPathPrefix() + "/" + StringUtils.uncapitalize(getEntityConfigName());
+		if (isQuirksMode())
+			return getContextPath() + this.getActionPathPrefix() + "/" + StringUtils.uncapitalize(getEntityConfigName());
+		else
+			return getActionNamespace();
 	}
 
 	/**
@@ -521,7 +539,8 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	/**
 	 * 页面引用的js css文件配置
-	 * @desc 不要试复写此方法，应使用 addJsCss(List<String> container) 为页面添加 js、css 文件的加载
+	 *
+	 * @desc 不要复写此方法，应使用 addJsCss(List<String> container) 为页面添加 js、css 文件的加载
 	 */
 	public String getPageJsCss() {
 		List<String> container = new ArrayList<>();

@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.bc</groupId>
+        <artifactId>bc-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../bc-parent/pom.xml</relativePath>
+    </parent>
+    <artifactId>bc-orm-jpa-test-hibernate</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>cn.bc</groupId>
+            <artifactId>bc-orm-jpa</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- log -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+
+        <!-- hibernate jpa -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- for test -->
+        <dependency>
+            <groupId>cn.bc</groupId>
+            <artifactId>bc-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <properties>
+        <!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件，
+            hibernate3在启动时会执行 -->
+        <hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+        <hibernate.show_sql>true</hibernate.show_sql>
+    </properties>
+</project>

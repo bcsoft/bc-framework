@@ -8,11 +8,6 @@
 	</parent>
 	<artifactId>bc-web-struts2</artifactId>
 	<dependencies>
-		<!--<dependency>-->
-			<!--<groupId>javax.persistence</groupId>-->
-			<!--<artifactId>persistence-api</artifactId>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
 		<dependency>
 		  <groupId>ognl</groupId>
 		  <artifactId>ognl</artifactId>
@@ -29,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
-			<artifactId>bc-orm-hibernate</artifactId>
+			<artifactId>bc-orm-jpa</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -53,29 +48,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 		</dependency>
-
-		<!-- 
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-testng-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-codebehind-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-tiles-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-rest-plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-osgi-plugin</artifactId>
-		</dependency>
-		-->
 
 		<!-- for test -->
 		<dependency>

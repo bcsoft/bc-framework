@@ -1,14 +1,5 @@
 package cn.bc.identity.dao.hibernate.jpa;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.AndCondition;
@@ -17,16 +8,21 @@ import cn.bc.core.query.condition.impl.InCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.dao.ActorRelationDao;
 import cn.bc.identity.domain.ActorRelation;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.jpa.JpaCrudDao;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 参与者Service接口的实现
- * 
+ *
  * @author dragon
- * 
  */
-public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
-		implements ActorRelationDao {
+public class ActorRelationDaoImpl extends JpaCrudDao<ActorRelation> implements ActorRelationDao {
 	private static Log logger = LogFactory.getLog(ActorRelationDaoImpl.class);
 
 	public List<ActorRelation> findByMaster(Integer type, Long masterId) {
@@ -54,8 +50,7 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 		return findByFollower(type, followerId, null);
 	}
 
-	public List<ActorRelation> findByFollower(Integer type, Long followerId,
-			Integer[] masterTypes) {
+	public List<ActorRelation> findByFollower(Integer type, Long followerId, Integer[] masterTypes) {
 		Assert.notNull(type);
 		Assert.notNull(followerId);
 		AndCondition condition = new AndCondition();
@@ -64,8 +59,7 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 
 		if (masterTypes != null && masterTypes.length > 0) {
 			if (masterTypes.length == 1) {
-				condition
-						.add(new EqualsCondition("master.type", masterTypes[0]));
+				condition.add(new EqualsCondition("master.type", masterTypes[0]));
 			} else {
 				condition.add(new InCondition("master.type", masterTypes));
 			}
@@ -81,9 +75,9 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 	@SuppressWarnings("unchecked")
 	public List<ActorRelation> findByMasterOrFollower(Serializable[] mfIds) {
 		if (mfIds == null || mfIds.length == 0)
-			return new ArrayList<ActorRelation>();
+			return new ArrayList<>();
 
-		ArrayList<Object> args = new ArrayList<Object>();
+		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select f from ActorRelation ar");
 
@@ -109,15 +103,14 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 			}
 			hql.append(t.toString());
 		}
-		return (List<ActorRelation>) this.getJpaTemplate().find(hql.toString(),
-				args.toArray());
+		return executeQuery(hql.toString(), args);
 	}
 
 	public void deleteByMasterOrFollower(Serializable[] mfIds) {
 		if (mfIds == null || mfIds.length == 0)
 			return;
 
-		ArrayList<Object> args = new ArrayList<Object>();
+		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("delete ActorRelation ar");
 
@@ -143,17 +136,11 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 			}
 			hql.append(t.toString());
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql.toString());
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
-		}
 		this.executeUpdate(hql.toString(), args);
 	}
 
 	public ActorRelation load4Belong(Long followerId, Integer[] masterTypes) {
-		List<ActorRelation> ars = this.findByFollower(
-				ActorRelation.TYPE_BELONG, followerId, masterTypes);
+		List<ActorRelation> ars = this.findByFollower(ActorRelation.TYPE_BELONG, followerId, masterTypes);
 		if (ars != null && !ars.isEmpty()) {
 			if (ars.size() > 1) {
 				throw new CoreException("no unique for load4Belong!");
@@ -166,12 +153,11 @@ public class ActorRelationDaoImpl extends HibernateCrudJpaDao<ActorRelation>
 	}
 
 	public void delete(ActorRelation actorRelation) {
-		this.getJpaTemplate().remove(actorRelation);
+		this.getEntityManager().remove(actorRelation);
 	}
 
 	public void delete(List<ActorRelation> actorRelations) {
 		if (actorRelations != null)
-			for (ActorRelation ar : actorRelations)
-				this.getJpaTemplate().remove(ar);
+			for (ActorRelation ar : actorRelations) getEntityManager().remove(ar);
 	}
 }

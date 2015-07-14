@@ -1,31 +1,28 @@
 package cn.bc.desktop.dao.hibernate.jpa;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
 import cn.bc.desktop.dao.ShortcutDao;
 import cn.bc.desktop.domain.Shortcut;
 import cn.bc.identity.dao.ActorDao;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.domain.Role;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.jpa.JpaCrudDao;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * ShortcutDao接口的实现
- * 
+ *
  * @author dragon
- * 
  */
-public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
-		ShortcutDao {
+public class ShortcutDaoImpl extends JpaCrudDao<Shortcut> implements ShortcutDao {
 	private static Log logger = LogFactory.getLog(ShortcutDaoImpl.class);
 	private ActorDao actorDao;
 
@@ -34,17 +31,14 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 		this.actorDao = actorDao;
 	}
 
-	public List<Shortcut> findByActor(Long actorId, boolean includeAncestor,
-			boolean includeCommon) {
-		return this.findByActor(actorId, includeAncestor, includeCommon, null,
-				null, null);
+	public List<Shortcut> findByActor(Long actorId, boolean includeAncestor, boolean includeCommon) {
+		return this.findByActor(actorId, includeAncestor, includeCommon, null, null, null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Shortcut> findByActor(Long actorId, boolean includeAncestor,
-			boolean includeCommon, Set<Actor> ancestorOrganizations,
-			Set<Role> roles, Set<Resource> resources) {
-		ArrayList<Object> args = new ArrayList<Object>();
+	public List<Shortcut> findByActor(Long actorId, boolean includeAncestor, boolean includeCommon
+			, Set<Actor> ancestorOrganizations, Set<Role> roles, Set<Resource> resources) {
+		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select s from Shortcut s");
 
@@ -65,31 +59,31 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 
 				// 汇总所有可以访问的角色、模块列表
 				if (resources == null)
-					resources = new LinkedHashSet<Resource>();
+					resources = new LinkedHashSet<>();
 				if (roles == null)
-					roles = new LinkedHashSet<Role>();
-				
+					roles = new LinkedHashSet<>();
+
 				// --隶属的父组织拥有的角色
 				for (Actor a : parents) {
 					if (a.getRoles() != null)
 						roles.addAll(a.getRoles());
 				}
-				
+
 				// --自己拥有的角色
 				if (actor.getRoles() != null)
 					roles.addAll(actor.getRoles());
-				
+
 				// --角色中包含的模块
 				for (Role r : roles) {
 					if (r.getResources() != null)
 						resources.addAll(r.getResources());
 				}
-				
+
 				// --模块的id列表
 				for (Resource m : resources) {
 					mids.add(m.getId());
 				}
-				
+
 				// --父组织及自己的id列表
 				for (Actor a : parents) {
 					aids.add(a.getId());
@@ -135,10 +129,10 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 				hql.append(" where sa.id=?");
 				args.add(actorId);
 			}
-			if (includeCommon){
+			if (includeCommon) {
 				// 不要使用sa is null：a.id is null
 				// 全系统通用的快捷方式
-				 hql.append(" or (s.actor is null and s.resource is null)");
+				hql.append(" or (s.actor is null and s.resource is null)");
 			}
 			hql.append(" order by s.order");
 		}
@@ -147,6 +141,6 @@ public class ShortcutDaoImpl extends HibernateCrudJpaDao<Shortcut> implements
 			logger.debug("args="
 					+ StringUtils.collectionToCommaDelimitedString(args));
 		}
-		return this.getJpaTemplate().find(hql.toString(), args.toArray());
+		return executeQuery(hql.toString(), args);
 	}
 }

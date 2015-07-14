@@ -10,29 +10,14 @@
 	<description>电子公告</description>
 	<dependencies>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
-			<artifactId>bc-orm-hibernate</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
 			<artifactId>bc-docs</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

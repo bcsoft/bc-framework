@@ -1,36 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- optionGroup -->
+    <bean id="optionGroupDao" class="cn.bc.orm.jpa.JpaCrudDao"
+          p:entityClass="cn.bc.option.domain.OptionGroup"/>
+    <bean id="optionGroupService" class="cn.bc.core.service.DefaultCrudService"
+          p:entityClass="cn.bc.option.domain.OptionGroup" p:crudDao-ref="optionGroupDao"/>
 
-	<!-- 需要在主配置文件配置entityManagerFactory和transactionManager的实现 -->
+    <!-- optionItem -->
+    <bean id="optionItemDao" class="cn.bc.orm.jpa.JpaCrudDao"
+          p:entityClass="cn.bc.option.domain.OptionItem"/>
+    <bean id="optionItemService" class="cn.bc.core.service.DefaultCrudService"
+          p:entityClass="cn.bc.option.domain.OptionItem" p:crudDao-ref="optionItemDao"/>
 
-	<!-- optionGroup -->
-	<bean id="optionGroupDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
-		p:entityClass="cn.bc.option.domain.OptionGroup"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="optionGroupService" class="cn.bc.core.service.DefaultCrudService"
-		p:entityClass="cn.bc.option.domain.OptionGroup" p:crudDao-ref="optionGroupDao" />
-
-	<!-- optionItem -->
-	<bean id="optionItemDao" class="cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao"
-		p:entityClass="cn.bc.option.domain.OptionItem"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="optionItemService" class="cn.bc.core.service.DefaultCrudService"
-		p:entityClass="cn.bc.option.domain.OptionItem" p:crudDao-ref="optionItemDao" />
-
-	<!-- option -->
-	<bean id="optionDao" class="cn.bc.option.dao.hibernate.jpa.OptionDaoImpl"
-		p:entityManagerFactory-ref="entityManagerFactory" />
-	<bean id="optionService" class="cn.bc.option.service.OptionServiceImpl"
-		p:optionDao-ref="optionDao" />
+    <!-- option -->
+    <bean id="optionDao" class="cn.bc.option.dao.hibernate.jpa.OptionDaoImpl"/>
+    <bean id="optionService" class="cn.bc.option.service.OptionServiceImpl" p:optionDao-ref="optionDao"/>
 </beans>

@@ -6,44 +6,58 @@
 	<package name="idGenerator" extends="bc-default" namespace="/bc/id">
 		<action name="nextSN4Month" class="idGeneratorAction" method="nextSN4Month"/>
 	</package>
-	<package name="resource" extends="bc-default" namespace="/bc/resource">
-		<action name="create" class="resourceAction" method="create">
+	<package name="identity/resource" extends="bc-default" namespace="/bc/identity/resource">
+		<!-- 表单 -->
+		<action name="create" class="resourceFormAction" method="create">
 			<result name="form">/bc/identity/resource/form.jsp</result>
 		</action>
-		<action name="edit" class="resourceAction" method="edit">
+		<action name="edit" class="resourceFormAction" method="edit">
 			<result name="form">/bc/identity/resource/form.jsp</result>
 		</action>
-				
-		<action name="save" class="resourceAction" method="save"/>
-		<action name="delete" class="resourceAction" method="delete"/>
-		<action name="list" class="resourceAction" method="list"/>
-		<action name="paging" class="resourceAction" method="paging"/>
-		<action name="data" class="resourceAction" method="data"/>
-		<action name="export" class="resourceAction" method="export"/>
+		<action name="save" class="resourceFormAction" method="save"/>
+		<action name="delete" class="resourceFormAction" method="delete"/>
+
+		<!-- 视图-->
+		<action name="list" class="resourceViewAction" method="list"/>
+		<action name="paging" class="resourceViewAction" method="paging"/>
+		<action name="data" class="resourceViewAction" method="data"/>
+		<action name="export" class="resourceViewAction" method="export"/>
 	</package>
-	<package name="role" extends="bc-default" namespace="/bc/role">
-		<action name="create" class="roleAction" method="create">
+
+	<!-- 角色 -->
+	<package name="bc/identity/role" extends="bc-default" namespace="/bc/identity/role">
+		<!-- 表单 -->
+		<action name="create" class="roleFormAction" method="create">
 			<result name="form">/bc/identity/role/form.jsp</result>
 		</action>
-		<action name="edit" class="roleAction" method="edit">
+		<action name="edit" class="roleFormAction" method="edit">
 			<result name="form">/bc/identity/role/form.jsp</result>
 		</action>
-				
-		<action name="save" class="roleAction" method="save"/>
-		<action name="delete" class="roleAction" method="delete"/>
-		<action name="list" class="roleAction" method="list"/>
-		<action name="paging" class="roleAction" method="paging"/>
-		<action name="data" class="roleAction" method="data"/>
-		<action name="export" class="roleAction" method="export"/>
-		
+		<action name="save" class="roleFormAction" method="save"/>
+		<action name="delete" class="roleFormAction" method="delete"/>
+
+		<!-- 视图-->
+		<action name="list" class="roleViewAction" method="list"/>
+		<action name="paging" class="roleViewAction" method="paging"/>
+		<action name="data" class="roleViewAction" method="data"/>
+		<action name="export" class="roleViewAction" method="export"/>
+	</package>
+	<!-- 角色表单的资源分配页签 -->
+	<package name="bc/identity/role/resource" extends="bc-default" namespace="/bc/identity/role/resource">
+		<action name="list" class="roleResourceTabAction" method="list"/>
+		<action name="data" class="roleResourceTabAction" method="data"/>
+		<action name="export" class="roleResourceTabAction" method="export"/>
+		<action name="add" class="roleResourceTabAction" method="addResource"/>
+		<action name="delete" class="roleResourceTabAction" method="deleteResource"/>
+	</package>
+
+	<package name="role_old" extends="bc-default" namespace="/bc/role">
+		<!-- 其它-->
 		<action name="addUser" class="privilegeByRoleAction" method="addUser"/>
 		<action name="addGroup" class="privilegeByRoleAction" method="addGroup"/>
 		<action name="addUnitOrDep" class="privilegeByRoleAction" method="addUnitOrDep"/>
-		<action name="addResource" class="privilegeByRoleAction" method="addResource"/>
 		<action name="deleteActor" class="privilegeByRoleAction" method="deleteActor"/>
-		<action name="deleteResource" class="privilegeByRoleAction" method="deleteResource"/>
 		<action name="actor/list" class="privilegeByRolesAction" method="list"/>
-		<action name="resource/list" class="resourceByRolesAction" method="list"/>
 	</package>
 	
 	<package name="selectResource" extends="bc-default" namespace="/bc">

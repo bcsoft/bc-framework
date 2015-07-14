@@ -182,14 +182,14 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 				.addClazz("bc-page");
 		listPage.setAttr("data-name", this.getHtmlPageTitle());
 
-		// To Delete: 使用getHtmlPageNamespace()的默认行为代替
-		if (!"true".equals(getText("useDefaultBehavior"))) initDefaultActionUrl(listPage);
-
-		// 引用额外的js、css文件
-		listPage.addJs(getHtmlPageJs());// 兼容旧的代码
-		List<String> container = new ArrayList<>();
-		addJsCss(container);
-		if (!container.isEmpty()) listPage.setAttr("data-js", new JSONArray(container).toString());
+		if (isQuirksMode()) {// 兼容模式
+			initDefaultActionUrl(listPage);
+			listPage.addJs(getHtmlPageJs());    // 引用额外的js、css文件
+		}else{// 新模式
+			List<String> container = new ArrayList<>();
+			addJsCss(container);
+			if (!container.isEmpty()) listPage.setAttr("data-js", new JSONArray(container).toString());
+		}
 
 		// 附加头部信息
 		listPage.addChild(getHtmlPageHeader());
@@ -202,10 +202,21 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 		// 额外参数配置
 		JSONObject json = this.getGridExtrasData();
-		if (json != null)
-			listPage.setAttr("data-extras", json.toString());
+		if (json != null) listPage.setAttr("data-extras", json.toString());
 
 		return listPage;
+	}
+
+	/**
+	 * 是否启用兼容模式
+	 * <p>子类不想使用兼容模式时，推荐在属性配置文件中添加 quirksMode=false 配置。
+	 * 也可以复写此方法返回 false。新增此方法是为了使旧代码不需要修改也可以正常使用。
+	 * </p>
+	 *
+	 * @return 如果子类没有复写、属性文件有没有配置quirksMode则默认返回true
+	 */
+	protected boolean isQuirksMode() {
+		return !"false".equals(getText("quirksMode"));
 	}
 
 	/**
@@ -256,7 +267,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 	 * @deprecated 使用getHtmlPageNamespace()的默认行为代替：[namespace]/create|open|edit|delete
 	 */
 	protected String getFormActionName() {
-		return null;
+		// 从类名解析出domain名
+		return org.springframework.util.StringUtils.uncapitalize(this.getClass().getSimpleName()
+				.replaceAll("Action|sAction|ViewAction|FormAction", ""));
 	}
 
 	/**
@@ -270,11 +283,12 @@ public abstract class AbstractGridPageAction<T extends Object> extends
 
 	/**
 	 * 默认使用此命名空间构建CRUD的Action路径
+	 *
 	 * @return
 	 */
 	@Override
 	protected String getHtmlPageNamespace() {
-		return this.getModuleContextPath() + "/" + getViewActionName();
+		return isQuirksMode() ? this.getModuleContextPath() + "/" + getViewActionName() : getActionNamespace();
 	}
 
 	/**

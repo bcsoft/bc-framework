@@ -67,25 +67,4 @@ public class PrivilegeByRoleAction extends AbstractActorAction {
 		this.json = json.toString();
 		return "json";
 	}
-	public String addResource() {
-		Json json = new Json();
-		Long roleId = Long.valueOf(this.roleId);
-		String[] resourceIds = resourceId.split(",");
-		for(String r : resourceIds) {
-			privilegeService.addResource(roleId, Long.valueOf(r));
-		}
-		this.json = json.toString();
-		return "json";
-	}
-	public String deleteResource() {
-		Json json = new Json();
-		Long roleId = Long.valueOf(this.roleId);
-		String[] resourceIds = resourceId.split(",");
-		for(String r : resourceIds) {
-			privilegeService.deleteResource(roleId, Long.valueOf(r));
-		}
-		this.json = json.toString();
-		return "json";
-	}
-	
 }

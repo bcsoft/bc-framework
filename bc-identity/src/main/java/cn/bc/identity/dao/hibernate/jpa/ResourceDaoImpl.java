@@ -1,33 +1,24 @@
 package cn.bc.identity.dao.hibernate.jpa;
 
+import cn.bc.db.jdbc.RowMapper;
+import cn.bc.identity.dao.ResourceDao;
+import cn.bc.identity.domain.Resource;
+import cn.bc.orm.jpa.JpaCrudDao;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-
-import cn.bc.db.jdbc.RowMapper;
-import cn.bc.identity.dao.ResourceDao;
-import cn.bc.identity.domain.Resource;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
-import cn.bc.orm.hibernate.jpa.HibernateJpaNativeQuery;
-
 /**
  * 资源Dao接口的实现
- * 
+ *
  * @author dragon
- * 
  */
-public class ResourceDaoImpl extends HibernateCrudJpaDao<Resource> implements
-		ResourceDao {
-	private static Log logger = LogFactory.getLog(ResourceDaoImpl.class);
-
-	public List<Map<String, String>> find4option(Integer[] actorTypes,
-			Integer[] actorStatues) {
-		ArrayList<Object> args = new ArrayList<Object>();
+public class ResourceDaoImpl extends JpaCrudDao<Resource> implements ResourceDao {
+	public List<Map<String, String>> find4option(Integer[] actorTypes, Integer[] actorStatues) {
+		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select a.id,a.type_,a.name,a.pname");
 		hql.append(" from BC_IDENTITY_RESOURCE a");
@@ -68,25 +59,18 @@ public class ResourceDaoImpl extends HibernateCrudJpaDao<Resource> implements
 
 		// 排序
 		hql.append(" order by a.order_");
-		if (logger.isDebugEnabled()) {
-			logger.debug("hql=" + hql.toString());
-			logger.debug("args="
-					+ StringUtils.collectionToCommaDelimitedString(args));
-		}
 
-		return HibernateJpaNativeQuery.executeNativeSql(getJpaTemplate(),
-				hql.toString(), args.toArray(),
-				new RowMapper<Map<String, String>>() {
-					public Map<String, String> mapRow(Object[] rs, int rowNum) {
-						Map<String, String> map = new HashMap<String, String>();
-						int i = 0;
-						map.put("id", rs[i++].toString());
-						map.put("type", rs[i++].toString());
-						map.put("name", rs[i++].toString());
-						map.put("pname", rs[i] != null ? rs[i].toString() : null);
-						return map;
-					}
-				});
+		return executeNativeQuery(hql.toString(), args, new RowMapper<Map<String, String>>() {
+			public Map<String, String> mapRow(Object[] rs, int rowNum) {
+				Map<String, String> map = new HashMap<>();
+				int i = 0;
+				map.put("id", rs[i++].toString());
+				map.put("type", rs[i++].toString());
+				map.put("name", rs[i++].toString());
+				map.put("pname", rs[i] != null ? rs[i].toString() : null);
+				return map;
+			}
+		});
 	}
 
 	@Override

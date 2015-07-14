@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.bc.BCConstants;
 import cn.bc.identity.dao.IdGeneratorDao;
 import cn.bc.identity.domain.IdGenerator;
+import org.springframework.stereotype.Service;
 
 /**
  * 标识生成器Service接口的实现

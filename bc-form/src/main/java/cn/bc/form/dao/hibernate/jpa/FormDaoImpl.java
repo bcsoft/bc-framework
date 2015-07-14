@@ -2,7 +2,7 @@ package cn.bc.form.dao.hibernate.jpa;
 
 import cn.bc.form.dao.FormDao;
 import cn.bc.form.domain.Form;
-import cn.bc.orm.hibernate.jpa.HibernateCrudJpaDao;
+import cn.bc.orm.jpa.JpaCrudDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,13 +16,13 @@ import java.sql.SQLException;
  * @author hwx
  */
 
-public class FormDaoImpl extends HibernateCrudJpaDao<Form> implements FormDao {
+public class FormDaoImpl extends JpaCrudDao<Form> implements FormDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	public void delete(String type, String code, Long pid, Float ver) {
 		String sql = "delete from bc_form where type_=? and code=? and pid=? and ver_=?";
-		this.executeSql(sql, new Object[]{type, code, pid, ver});
+		this.executeNativeUpdate(sql, new Object[]{type, code, pid, ver});
 	}
 
 	public Float getNewestVer(String type, String code, Long pid) {

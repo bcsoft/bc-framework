@@ -18,8 +18,6 @@
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-core</artifactId>
 			<version>${project.version}</version>
-			<!-- <exclusions> <exclusion> <groupId>javax.persistence</groupId> <artifactId>persistence-api</artifactId> 
-				</exclusion> </exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -54,11 +52,6 @@
 			<artifactId>jsoup</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.apache.httpcomponents</groupId>-->
-			<!--<artifactId>httpclient</artifactId>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
@@ -80,8 +73,4 @@
 			<artifactId>activation</artifactId>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
 </project>

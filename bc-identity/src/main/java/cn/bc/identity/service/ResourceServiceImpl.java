@@ -7,8 +7,10 @@ import cn.bc.identity.dao.ResourceDao;
 import cn.bc.identity.domain.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,6 +27,7 @@ public class ResourceServiceImpl extends DefaultCrudService<Resource> implements
 	private static Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
 	private ResourceDao resourceDao;
 
+	@Autowired
 	public void setResourceDao(ResourceDao resourceDao) {
 		this.resourceDao = resourceDao;
 		this.setCrudDao(resourceDao);
@@ -40,7 +43,7 @@ public class ResourceServiceImpl extends DefaultCrudService<Resource> implements
 		List<Resource> all = this.createQuery()
 				.condition(new OrderCondition("orderNo", Direction.Asc))
 				.list();
-		Map<Long, Resource> ss = new LinkedHashMap<Long, Resource>();
+		Map<Long, Resource> ss = new LinkedHashMap<>();
 		for (Resource resource : all) {
 			ss.put(resource.getId(), resource);
 		}

@@ -10,11 +10,6 @@
 	<description>系统标识</description>
 	<dependencies>
 		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
@@ -37,7 +32,7 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
-			<artifactId>bc-orm-hibernate</artifactId>
+			<artifactId>bc-orm-jpa</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
