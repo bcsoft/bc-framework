@@ -10,48 +10,9 @@
 	<description>系统标识</description>
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-web-struts2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-orm-jpa</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-db-jdbc</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!-- for test -->
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-test</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
-	<properties>
-		<hibernate.show_sql>false</hibernate.show_sql>
-		<logLevel-bc.orm.hibernate>ERROR</logLevel-bc.orm.hibernate>
-	</properties>
 </project>

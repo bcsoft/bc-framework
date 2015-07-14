@@ -6,6 +6,8 @@
 	<package name="idGenerator" extends="bc-default" namespace="/bc/id">
 		<action name="nextSN4Month" class="idGeneratorAction" method="nextSN4Month"/>
 	</package>
+
+	<!-- 资源 -->
 	<package name="identity/resource" extends="bc-default" namespace="/bc/identity/resource">
 		<!-- 表单 -->
 		<action name="create" class="resourceFormAction" method="create">
@@ -49,6 +51,14 @@
 		<action name="export" class="roleResourceTabAction" method="export"/>
 		<action name="add" class="roleResourceTabAction" method="addResource"/>
 		<action name="delete" class="roleResourceTabAction" method="deleteResource"/>
+	</package>
+	<!-- 角色表单的权限分配页签 -->
+	<package name="bc/identity/role/actor" extends="bc-default" namespace="/bc/identity/role/actor">
+		<action name="list" class="roleActorTabAction" method="list"/>
+		<action name="data" class="roleActorTabAction" method="data"/>
+		<action name="export" class="roleActorTabAction" method="export"/>
+		<action name="add" class="roleActorTabAction" method="addActor"/>
+		<action name="delete" class="roleActorTabAction" method="deleteActor"/>
 	</package>
 
 	<package name="role_old" extends="bc-default" namespace="/bc/role">

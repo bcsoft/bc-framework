@@ -52,4 +52,22 @@ public interface RoleService extends CrudService<Role> {
 	 * @return 实际删除的条数
 	 */
 	int deleteResource(Long roleId, Long[] resourceIds);
+
+	/**
+	 * 为角色分配 Actor
+	 *
+	 * @param roleId   角色ID
+	 * @param actorIds Actor的ID列表
+	 * @return 实际添加的条数
+	 */
+	int addActor(Long roleId, Long[] actorIds);
+
+	/**
+	 * 删除Actor与角色的关联
+	 *
+	 * @param roleId   角色ID
+	 * @param actorIds Actor的ID列表
+	 * @return 实际删除的条数
+	 */
+	int deleteActor(Long roleId, Long[] actorIds);
 }

@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -23,11 +25,13 @@ import java.util.Map;
  *
  * @author dragon
  */
+@Singleton
+@Named("resourceService")
 public class ResourceServiceImpl extends DefaultCrudService<Resource> implements ResourceService {
 	private static Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
 	private ResourceDao resourceDao;
 
-	@Autowired
+	@Inject
 	public void setResourceDao(ResourceDao resourceDao) {
 		this.resourceDao = resourceDao;
 		this.setCrudDao(resourceDao);

@@ -6,6 +6,10 @@ import cn.bc.identity.domain.Resource;
 import cn.bc.orm.jpa.JpaCrudDao;
 import org.springframework.stereotype.Component;
 
+import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Scope;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +20,8 @@ import java.util.Map;
  *
  * @author dragon
  */
+@Singleton
+@Named("resourceDao")
 public class ResourceDaoImpl extends JpaCrudDao<Resource> implements ResourceDao {
 	public List<Map<String, String>> find4option(Integer[] actorTypes, Integer[] actorStatues) {
 		ArrayList<Object> args = new ArrayList<>();

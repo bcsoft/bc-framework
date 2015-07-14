@@ -3,10 +3,11 @@ package cn.bc.identity.service;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.RoleDao;
 import cn.bc.identity.domain.Role;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,12 @@ import java.util.Map;
  *
  * @author dragon
  */
-public class RoleServiceImpl extends DefaultCrudService<Role> implements
-		RoleService {
+@Singleton
+@Named("roleService")
+public class RoleServiceImpl extends DefaultCrudService<Role> implements RoleService {
 	private RoleDao roleDao;
 
-	@Autowired
+	@Inject
 	public void setRoleDao(RoleDao roleDao) {
 		this.roleDao = roleDao;
 		this.setCrudDao(roleDao);
@@ -44,5 +46,15 @@ public class RoleServiceImpl extends DefaultCrudService<Role> implements
 	@Transactional
 	public int deleteResource(Long roleId, Long[] resourceIds) {
 		return this.roleDao.deleteResource(roleId, resourceIds);
+	}
+
+	@Override
+	public int addActor(Long roleId, Long[] actorIds) {
+		return this.roleDao.addActor(roleId, actorIds);
+	}
+
+	@Override
+	public int deleteActor(Long roleId, Long[] actorIds) {
+		return this.roleDao.deleteActor(roleId, actorIds);
 	}
 }

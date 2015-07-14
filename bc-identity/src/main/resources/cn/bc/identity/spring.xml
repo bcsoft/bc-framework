@@ -9,17 +9,17 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- resource -->
+    <!-- resource
     <bean id="resourceDao" class="cn.bc.identity.dao.hibernate.jpa.ResourceDaoImpl"
           p:entityClass="cn.bc.identity.domain.Resource"/>
     <bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
-          p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao"/>
+          p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao"/> -->
 
-    <!-- Role -->
+    <!-- Role
     <bean id="roleDao" class="cn.bc.identity.dao.hibernate.jpa.RoleDaoImpl"
         p:entityClass="cn.bc.identity.domain.Role"/>
     <bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
-        p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" />
+        p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" /> -->
 
     <!-- IdGenerator -->
     <bean id="idGeneratorDao" class="cn.bc.identity.dao.IdGeneratorDaoImpl"/>

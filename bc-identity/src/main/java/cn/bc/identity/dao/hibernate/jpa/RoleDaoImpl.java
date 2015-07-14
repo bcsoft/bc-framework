@@ -7,9 +7,10 @@ import cn.bc.orm.jpa.JpaCrudDao;
 import cn.bc.orm.jpa.JpaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.Map;
  *
  * @author dragon
  */
+@Singleton
+@Named("roleDao")
 public class RoleDaoImpl extends JpaCrudDao<Role> implements RoleDao {
 	private static Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
 
@@ -89,6 +92,8 @@ public class RoleDaoImpl extends JpaCrudDao<Role> implements RoleDao {
 
 	@Override
 	public int addResource(Long roleId, Long[] resourceIds) {
+		Assert.notNull(roleId);
+		Assert.notEmpty(resourceIds);
 		int p = 2;
 		String sql = "insert into bc_identity_role_resource (rid, sid)\n";
 		for (int i = 0; i < resourceIds.length; i++) {
@@ -119,6 +124,43 @@ public class RoleDaoImpl extends JpaCrudDao<Role> implements RoleDao {
 		List<Object> sids = new ArrayList<>();
 		for (Long sid : resourceIds) sids.add(sid);
 		query.setParameter("sids", sids);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int addActor(Long roleId, Long[] actorIds) {
+		Assert.notNull(roleId);
+		Assert.notEmpty(actorIds);
+		int p = 2;
+		String sql = "insert into bc_identity_role_actor (rid, aid)\n";
+		for (int i = 0; i < actorIds.length; i++) {
+			if (i > 0) sql += "\n  union\n";
+			sql += "  select ?1, ?" + p + " from bc_dual where not exists (" +
+					"select 0 from bc_identity_role_actor where rid = ?1 and aid = ?" + p +
+					")";
+			p++;
+		}
+		Query query = getEntityManager().createNativeQuery(sql);
+		query.setParameter(1, roleId);
+		for (int j = 0; j < actorIds.length; j++) {
+			query.setParameter(j + 2, actorIds[j]);
+		}
+
+		logger.debug("roleId={}, actorIds={}, sql={}", roleId, actorIds, sql);
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int deleteActor(Long roleId, Long[] actorIds) {
+		Assert.notNull(roleId);
+		Assert.notEmpty(actorIds);
+		String sql = "delete from bc_identity_role_actor where rid = :rid and aid in :aids";
+		logger.debug("roleId={}, actorIds={}, sql={}", roleId, actorIds, sql);
+		Query query = getEntityManager().createNativeQuery(sql);
+		query.setParameter("rid", roleId);
+		List<Object> aids = new ArrayList<>();
+		for (Long aid : actorIds) aids.add(aid);
+		query.setParameter("aids", aids);
 		return query.executeUpdate();
 	}
 }
