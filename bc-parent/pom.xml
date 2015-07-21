@@ -751,11 +751,14 @@
                 <version>2.3</version>
                 <classifier>jdk15</classifier>
             </dependency>
-            <!-- 20140107, 20131018, 20090211, 20080701-->
+            <!-- 20141113(jdk1.8+),
+                20140107(jdk1.7+), 20131018(jdk1.7+ JSONException开始改为非捕获异常),
+                20090211(jdk1.6+),
+                20080701(jdk1.5+), 20070829(jdk1.5+) -->
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
-                <version>20080701</version>
+                <version>20140107</version>
             </dependency>
 
             <!-- json: JSR-353 API 2013-04-25 -->
