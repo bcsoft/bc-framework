@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -58,6 +59,7 @@ public class JpaUtils {
 	 * @return 构建好的查询对象
 	 */
 	public static Query createQuery(EntityManager em, String jpql, Object[] args) {
+		logger.debug("args={}, jpql={}", args, jpql);
 		Query queryObj = em.createQuery(jpql);
 		if (null != args && args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
@@ -80,6 +82,7 @@ public class JpaUtils {
 	 * @return 构建好的查询对象
 	 */
 	public static Query createNativeQuery(EntityManager em, String sql, Object[] args, Class resultClass) {
+		logger.debug("args={}, resultClass={}, sql={}", args, resultClass, sql);
 		Query queryObj = resultClass == null ? em.createNativeQuery(sql) : em.createNativeQuery(sql, resultClass);
 		if (null != args && args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
@@ -179,7 +182,7 @@ public class JpaUtils {
 	public static <T> T getSingleResult(Query query) {
 		try {
 			return (T) query.getSingleResult();
-		} catch (EmptyResultDataAccessException e) {
+		} catch (NoResultException | EmptyResultDataAccessException e) {
 			return null;
 		}
 	}

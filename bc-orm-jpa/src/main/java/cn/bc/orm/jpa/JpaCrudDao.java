@@ -234,6 +234,10 @@ public class JpaCrudDao<T extends Object> implements CrudDao<T>, SetEntityClass<
 		return JpaUtils.executeNativeUpdate(getEntityManager(), sql, args);
 	}
 
+	protected int executeNativeUpdate(String sql) {
+		return JpaUtils.executeNativeUpdate(getEntityManager(), sql, (Object[])null);
+	}
+
 	protected int executeNativeUpdate(String sql, List<Object> args) {
 		return JpaUtils.executeNativeUpdate(getEntityManager(), sql, args);
 	}
