@@ -5,9 +5,14 @@ package cn.bc.core.util;
 
 import cn.bc.core.gson.GsonPerson;
 import com.google.gson.JsonParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -136,5 +141,45 @@ public class JsonUtilsTest {
 		Assert.assertEquals(1, array[1]);
 		Assert.assertEquals(Boolean.class, array[2].getClass());
 		Assert.assertEquals(new Boolean(true), array[2]);
+	}
+
+	@Test
+	public void stripComment() throws Exception {
+		//String source = FileCopyUtils.copyToString(new FileReader("d:\\test.json"));
+		String source = "// 中文\n  \t// \ttest\n" +
+				"{\n" +
+				"  // comment11\n" +
+				"  k11: \"v11\",\n" +
+				"  k12: \"v12\",  \t// comment12\n" +
+				"  //comment13  \t\n" +
+				"  k13: \"v13\",  \t// \tcomment13  \t\n" +
+				"\n" +
+				"  /* comment21 */\n" +
+				"  k21: \"v21\",\n" +
+				"  k22: \"v22\",  \t/* comment22 */\n" +
+				"  /*comment23*/  \t\n" +
+				"  k23: \"v23\",  \t/* \tcomment23*/  \t\n" +
+				"\n" +
+				"  /* line311\n" +
+				"   * line312\n" +
+				"   */\n" +
+				"  k31: \"v31\",\n" +
+				"  /** line321\n" +
+				"   * line322\n" +
+				"   */\n" +
+				"  k32: \"v32\",\n" +
+				"  /**\n" +
+				"   * line331\n" +
+				"   * line332\n" +
+				"   */\n" +
+				"  k33: \"v33\",\n" +
+				"  ke:0\n" +
+				"}";
+		System.out.println("source=" + source);
+		String result = JsonUtils.stripComment(source);
+		System.out.println("result=" + result);
+		JSONObject json = new JSONObject(result);
+		//JSONArray json = new JSONArray(result);
+		System.out.println("json=" + json);
 	}
 }

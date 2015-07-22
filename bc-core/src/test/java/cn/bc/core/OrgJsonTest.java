@@ -3,7 +3,10 @@ package cn.bc.core;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,7 +38,7 @@ public class OrgJsonTest {
 	}
 
 	@Test
-	public void t01_mapValue() {
+	public void t02_mapValue() {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("s", "");
 		map.put("n", 1);
@@ -48,5 +51,13 @@ public class OrgJsonTest {
 
 		JSONObject json = new JSONObject(map);
 		Assert.assertEquals("{\"rn\":null,\"b\":false,\"s\":\"\",\"n\":1}", json.toString());
+	}
+
+	@Test
+	public void t03_withComment() throws Exception {
+		String s = FileCopyUtils.copyToString(new FileReader("d:\\test.json"));
+		System.out.println("s=" + s);
+		JSONObject json = new JSONObject(s);
+		System.out.println("json=" + json);
 	}
 }

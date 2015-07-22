@@ -29,8 +29,18 @@ public class JsonUtils {
 	}
 
 	/**
+	 * 删除 json 字符串中的注释信息
+	 * <p>标准的 json 是不允许带注释的，大部分 json 框架都不支持带注释 json 字符串的解析</p>
+	 * @param source 原始 json 字符串
+	 * @return 无注释信息的 json 字符串
+	 */
+	public static String stripComment(String source) {
+		return source == null ? null : source.replaceAll("\\s*//.*|(?s)\\s*/\\*(.*?)\\*/[ \\t]*", "");
+	}
+
+	/**
 	 * 获取对象的Json字符串表示
-	 * 
+	 *
 	 * @param source
 	 *            原始对象
 	 * @return
