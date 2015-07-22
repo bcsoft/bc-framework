@@ -14,7 +14,7 @@
     </util:map>
     <bean id="photoService" class="cn.bc.photo.service.PhotoServiceImpl" p:photoExecutors-ref="photoExecutors"/>
 
-    <bean id="ipCameraDao" class="cn.bc.photo.dao.hibernate.jpa.IpCameraDaoImpl"
+    <bean id="ipCameraDao" class="cn.bc.photo.dao.jpa.IpCameraDaoImpl"
           p:entityClass="cn.bc.photo.domain.IpCamera"/>
     <bean id="ipCameraService" class="cn.bc.photo.service.IpCameraServiceImpl"
           p:entityClass="cn.bc.photo.domain.IpCamera"

@@ -4,23 +4,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- questionary -->
-    <bean id="questionaryDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionaryDaoImpl"/>
+    <bean id="questionaryDao" class="cn.bc.investigate.dao.jpa.QuestionaryDaoImpl"/>
     <bean id="questionaryService" class="cn.bc.investigate.service.QuestionaryServiceImpl"
           p:crudDao-ref="questionaryDao"/>
     <!-- question -->
-    <bean id="questionDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionDaoImpl"/>
+    <bean id="questionDao" class="cn.bc.investigate.dao.jpa.QuestionDaoImpl"/>
     <bean id="questionService" class="cn.bc.investigate.service.QuestionServiceImpl" p:crudDao-ref="questionDao"/>
     <!-- questionItem -->
-    <bean id="questionItemDao" class="cn.bc.investigate.dao.hibernate.jpa.QuestionItemDaoImpl"/>
+    <bean id="questionItemDao" class="cn.bc.investigate.dao.jpa.QuestionItemDaoImpl"/>
     <bean id="questionItemService" class="cn.bc.investigate.service.QuestionItemServiceImpl"
           p:crudDao-ref="questionItemDao"/>
     <!-- grade -->
-    <bean id="gradeDao" class="cn.bc.investigate.dao.hibernate.jpa.GradeDaoImpl"/>
+    <bean id="gradeDao" class="cn.bc.investigate.dao.jpa.GradeDaoImpl"/>
     <bean id="gradeService" class="cn.bc.investigate.service.GradeServiceImpl" p:crudDao-ref="gradeDao"/>
     <!-- answer -->
-    <bean id="answerDao" class="cn.bc.investigate.dao.hibernate.jpa.AnswerDaoImpl"/>
+    <bean id="answerDao" class="cn.bc.investigate.dao.jpa.AnswerDaoImpl"/>
     <bean id="answerService" class="cn.bc.investigate.service.AnswerServiceImpl" p:crudDao-ref="answerDao"/>
     <!-- respond -->
-    <bean id="respondDao" class="cn.bc.investigate.dao.hibernate.jpa.RespondDaoImpl"/>
+    <bean id="respondDao" class="cn.bc.investigate.dao.jpa.RespondDaoImpl"/>
     <bean id="respondService" class="cn.bc.investigate.service.RespondServiceImpl" p:crudDao-ref="respondDao"/>
 </beans>

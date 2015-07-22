@@ -4,19 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- email -->
-    <bean id="emailDao" class="cn.bc.email.dao.hibernate.jpa.EmailDaoImpl"
+    <bean id="emailDao" class="cn.bc.email.dao.jpa.EmailDaoImpl"
           p:entityClass="cn.bc.email.domain.Email"/>
     <bean id="emailService" class="cn.bc.email.service.EmailServiceImpl"
           p:entityClass="cn.bc.email.domain.Email"
           p:emailDao-ref="emailDao"/>
 
-    <bean id="emailTrashDao" class="cn.bc.email.dao.hibernate.jpa.EmailTrashDaoImpl"
+    <bean id="emailTrashDao" class="cn.bc.email.dao.jpa.EmailTrashDaoImpl"
           p:entityClass="cn.bc.email.domain.EmailTrash"/>
     <bean id="emailTrashService" class="cn.bc.email.service.EmailTrashServiceImpl"
           p:entityClass="cn.bc.email.domain.EmailTrash"
           p:emailTrashDao-ref="emailTrashDao"/>
 
-    <bean id="emailHistoryDao" class="cn.bc.email.dao.hibernate.jpa.EmailHistoryDaoImpl"
+    <bean id="emailHistoryDao" class="cn.bc.email.dao.jpa.EmailHistoryDaoImpl"
           p:entityClass="cn.bc.email.domain.EmailHistory"/>
     <bean id="emailHistoryService" class="cn.bc.email.service.EmailHistoryServiceImpl"
           p:entityClass="cn.bc.email.domain.EmailHistory"

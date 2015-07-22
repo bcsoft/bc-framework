@@ -27,7 +27,7 @@
     </tx:advice>
 
     <!-- 网络抓取：Service -->
-    <bean id="spiderConfigDao" class="cn.bc.spider.dao.hibernate.jpa.SpiderConfigDaoImpl"
+    <bean id="spiderConfigDao" class="cn.bc.spider.dao.jpa.SpiderConfigDaoImpl"
           p:entityClass="cn.bc.spider.domain.SpiderConfig"/>
     <bean id="spiderService" class="cn.bc.spider.service.SpiderServiceImpl"/>
 </beans>

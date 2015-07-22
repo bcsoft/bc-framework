@@ -24,7 +24,7 @@
 	   </layout>
 	</appender>
 	
-	<category name="cn.bc.identity.dao.hibernate.jpa.ActorHistoryDaoImpl">
+	<category name="cn.bc.identity.dao.jpa.ActorHistoryDaoImpl">
 	  <priority value="WARN" />
 	</category>
     	

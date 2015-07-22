@@ -8,17 +8,17 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <bean id="reportTemplateDao" class="cn.bc.report.dao.hibernate.jpa.ReportTemplateDaoImpl"/>
+    <bean id="reportTemplateDao" class="cn.bc.report.dao.jpa.ReportTemplateDaoImpl"/>
     <bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl"/>
 
     <!-- reportTask -->
-    <bean id="reportTaskDao" class="cn.bc.report.dao.hibernate.jpa.ReportTaskDaoImpl"
+    <bean id="reportTaskDao" class="cn.bc.report.dao.jpa.ReportTaskDaoImpl"
           p:entityClass="cn.bc.report.domain.ReportTask"/>
     <bean id="reportTaskService" class="cn.bc.report.service.ReportTaskServiceImpl"
           p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
 
     <!-- reportHistory -->
-    <bean id="reportHistoryDao" class="cn.bc.report.dao.hibernate.jpa.ReportHistoryDaoImpl"
+    <bean id="reportHistoryDao" class="cn.bc.report.dao.jpa.ReportHistoryDaoImpl"
           p:entityClass="cn.bc.report.domain.ReportHistory"/>
     <bean id="reportHistoryService" class="cn.bc.report.service.ReportHistoryServiceImpl"
           p:entityClass="cn.bc.report.domain.ReportHistory" p:crudDao-ref="reportHistoryDao"/>

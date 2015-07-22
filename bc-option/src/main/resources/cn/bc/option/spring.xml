@@ -16,6 +16,6 @@
           p:entityClass="cn.bc.option.domain.OptionItem" p:crudDao-ref="optionItemDao"/>
 
     <!-- option -->
-    <bean id="optionDao" class="cn.bc.option.dao.hibernate.jpa.OptionDaoImpl"/>
+    <bean id="optionDao" class="cn.bc.option.dao.jpa.OptionDaoImpl"/>
     <bean id="optionService" class="cn.bc.option.service.OptionServiceImpl" p:optionDao-ref="optionDao"/>
 </beans>

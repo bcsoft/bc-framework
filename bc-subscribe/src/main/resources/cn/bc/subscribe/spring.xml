@@ -4,13 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- subscribe -->
-    <bean id="subscribeDao" class="cn.bc.subscribe.dao.hibernate.jpa.SubscribeDaoImpl"
+    <bean id="subscribeDao" class="cn.bc.subscribe.dao.jpa.SubscribeDaoImpl"
           p:entityClass="cn.bc.subscribe.domain.Subscribe"/>
     <bean id="subscribeService" class="cn.bc.subscribe.service.SubscribeServiceImpl"
           p:entityClass="cn.bc.subscribe.domain.Subscribe"
           p:subscribeDao-ref="subscribeDao"/>
 
-    <bean id="subscribeActorDao" class="cn.bc.subscribe.dao.hibernate.jpa.SubscribeActorDaoImpl"
+    <bean id="subscribeActorDao" class="cn.bc.subscribe.dao.jpa.SubscribeActorDaoImpl"
           p:entityClass="cn.bc.subscribe.domain.SubscribeActor"/>
     <bean id="subscribeActorService" class="cn.bc.subscribe.service.SubscribeActorServiceImpl"
           p:entityClass="cn.bc.subscribe.domain.SubscribeActor"

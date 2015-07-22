@@ -24,7 +24,7 @@
 	   </layout>
 	</appender>
 	
-	<category name="cn.bc.template.dao.hibernate.jpa.TemplateDaoImpl">
+	<category name="cn.bc.template.dao.jpa.TemplateDaoImpl">
 	  <priority value="WARN" />
 	</category>
  	<!-- hibernate：设为DEBUG，查看实际的sql语句，相当于hibernate.show_sql=true (org.hibernate.jdbc.util.SQLStatementLogger) -->

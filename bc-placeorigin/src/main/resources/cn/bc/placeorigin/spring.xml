@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- placeOrigin -->
-    <bean id="placeOriginDao" class="cn.bc.placeorigin.dao.hibernate.jpa.PlaceOriginDaoImpl"
+    <bean id="placeOriginDao" class="cn.bc.placeorigin.dao.jpa.PlaceOriginDaoImpl"
           p:entityClass="cn.bc.placeorigin.domain.PlaceOrigin"/>
     <bean id="placeOriginService" class="cn.bc.placeorigin.service.PlaceOriginServiceImpl"
           p:entityClass="cn.bc.placeorigin.domain.PlaceOrigin" p:placeOriginDao-ref="placeOriginDao"/>

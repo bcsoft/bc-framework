@@ -4,20 +4,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- 模板 -->
-    <bean id="templateDao" class="cn.bc.template.dao.hibernate.jpa.TemplateDaoImpl"
+    <bean id="templateDao" class="cn.bc.template.dao.jpa.TemplateDaoImpl"
           p:entityClass="cn.bc.template.domain.Template"/>
     <bean id="templateService" class="cn.bc.template.service.TemplateServiceImpl"
           p:entityClass="cn.bc.template.domain.Template" p:templateDao-ref="templateDao"/>
 
     <!-- 模板类型 -->
-    <bean id="templateTypeDao" class="cn.bc.template.dao.hibernate.jpa.TemplateTypeDaoImpl"
+    <bean id="templateTypeDao" class="cn.bc.template.dao.jpa.TemplateTypeDaoImpl"
           p:entityClass="cn.bc.template.domain.TemplateType"/>
     <bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
           p:entityClass="cn.bc.template.domain.TemplateType"
           p:templateTypeDao-ref="templateTypeDao"/>
 
     <!-- 模板参数 -->
-    <bean id="templateParamDao" class="cn.bc.template.dao.hibernate.jpa.TemplateParamDaoImpl"
+    <bean id="templateParamDao" class="cn.bc.template.dao.jpa.TemplateParamDaoImpl"
           p:entityClass="cn.bc.template.domain.TemplateParam"/>
     <bean id="templateParamService" class="cn.bc.template.service.TemplateParamServiceImpl"
           p:entityClass="cn.bc.template.domain.TemplateParam"

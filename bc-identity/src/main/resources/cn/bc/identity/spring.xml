@@ -10,13 +10,13 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- resource
-    <bean id="resourceDao" class="cn.bc.identity.dao.hibernate.jpa.ResourceDaoImpl"
+    <bean id="resourceDao" class="ResourceDaoImpl"
           p:entityClass="cn.bc.identity.domain.Resource"/>
     <bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
           p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao"/> -->
 
     <!-- Role
-    <bean id="roleDao" class="cn.bc.identity.dao.hibernate.jpa.RoleDaoImpl"
+    <bean id="roleDao" class="RoleDaoImpl"
         p:entityClass="cn.bc.identity.domain.Role"/>
     <bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
         p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" /> -->
@@ -45,22 +45,22 @@
     <bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao"/>
 
     <!-- ActorRelation -->
-    <bean id="actorRelationDao" class="cn.bc.identity.dao.hibernate.jpa.ActorRelationDaoImpl"
+    <bean id="actorRelationDao" class="cn.bc.identity.dao.jpa.ActorRelationDaoImpl"
           p:entityClass="cn.bc.identity.domain.ActorRelation"/>
     <bean id="actorRelationService" class="cn.bc.identity.service.ActorRelationServiceImpl"
           p:entityClass="cn.bc.identity.domain.ActorRelation" p:crudDao-ref="actorRelationDao"/>
 
     <!-- AuthData -->
-    <bean id="authDataDao" class="cn.bc.identity.dao.hibernate.jpa.AuthDataDaoImpl"/>
+    <bean id="authDataDao" class="cn.bc.identity.dao.jpa.AuthDataDaoImpl"/>
 
     <!-- Actor -->
-    <bean id="actorDao" class="cn.bc.identity.dao.hibernate.jpa.ActorDaoImpl"
+    <bean id="actorDao" class="cn.bc.identity.dao.jpa.ActorDaoImpl"
           p:entityClass="cn.bc.identity.domain.Actor"/>
     <bean id="actorService" class="cn.bc.identity.service.ActorServiceImpl"
           p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"/>
 
     <!-- ActorHistory -->
-    <bean id="actorHistoryDao" class="cn.bc.identity.dao.hibernate.jpa.ActorHistoryDaoImpl"
+    <bean id="actorHistoryDao" class="cn.bc.identity.dao.jpa.ActorHistoryDaoImpl"
           p:entityClass="cn.bc.identity.domain.ActorHistory"/>
     <bean id="actorHistoryService" class="cn.bc.identity.service.ActorHistoryServiceImpl"
           p:entityClass="cn.bc.identity.domain.ActorHistory"

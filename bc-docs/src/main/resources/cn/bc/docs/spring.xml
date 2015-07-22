@@ -9,7 +9,7 @@
           p:entityClass="cn.bc.docs.domain.Attach" p:crudDao-ref="attachDao"/>
 
     <!-- attachHistory -->
-    <bean id="attachHistoryDao" class="cn.bc.docs.dao.hibernate.jpa.AttachHistoryDaoImpl"/>
+    <bean id="attachHistoryDao" class="cn.bc.docs.dao.jpa.AttachHistoryDaoImpl"/>
     <bean id="attachHistoryService" class="cn.bc.core.service.DefaultCrudService"
           p:entityClass="cn.bc.docs.domain.AttachHistory" p:crudDao-ref="attachHistoryDao"/>
 </beans>

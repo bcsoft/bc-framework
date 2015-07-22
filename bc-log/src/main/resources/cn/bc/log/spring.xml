@@ -4,12 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- syslog -->
-    <bean id="syslogDao" class="cn.bc.log.dao.hibernate.jpa.SyslogDaoImpl"
+    <bean id="syslogDao" class="cn.bc.log.dao.jpa.SyslogDaoImpl"
           p:entityClass="cn.bc.log.domain.Syslog"/>
     <bean id="syslogService" class="cn.bc.log.service.SyslogServiceImpl"
           p:entityClass="cn.bc.log.domain.Syslog"/>
 
     <!-- operateLog -->
-    <bean id="operateLogDao" class="cn.bc.log.dao.hibernate.jpa.OperateLogDaoImpl"/>
+    <bean id="operateLogDao" class="cn.bc.log.dao.jpa.OperateLogDaoImpl"/>
     <bean id="operateLogService" class="cn.bc.log.service.OperateLogServiceImpl" p:crudDao-ref="operateLogDao"/>
 </beans>

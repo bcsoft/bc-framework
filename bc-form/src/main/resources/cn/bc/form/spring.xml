@@ -7,15 +7,15 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
     <!--form -->
-    <bean id="formDao" class="cn.bc.form.dao.hibernate.jpa.FormDaoImpl"/>
+    <bean id="formDao" class="cn.bc.form.dao.jpa.FormDaoImpl"/>
     <bean id="formService" class="cn.bc.form.service.FormServiceImpl"/>
 
     <!-- field -->
-    <bean id="fieldDao" class="cn.bc.form.dao.hibernate.jpa.FieldDaoImpl"/>
+    <bean id="fieldDao" class="cn.bc.form.dao.jpa.FieldDaoImpl"/>
     <bean id="fieldService" class="cn.bc.form.service.FieldServiceImpl"/>
 
     <!-- fieldLog -->
-    <bean id="fieldLogDao" class="cn.bc.form.dao.hibernate.jpa.FieldLogDaoImpl"/>
+    <bean id="fieldLogDao" class="cn.bc.form.dao.jpa.FieldLogDaoImpl"/>
     <bean id="fieldLogService" class="cn.bc.form.service.FieldLogServiceImpl"/>
 
     <!-- customForm -->

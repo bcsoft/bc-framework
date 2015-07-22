@@ -26,8 +26,8 @@
     </tx:advice>
 
     <!-- scheduler服务配置 -->
-    <bean id="scheduleLogDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleLogDaoImpl"/>
-    <bean id="scheduleJobDao" class="cn.bc.scheduler.dao.hibernate.jpa.ScheduleJobDaoImpl"/>
+    <bean id="scheduleLogDao" class="cn.bc.scheduler.dao.jpa.ScheduleLogDaoImpl"/>
+    <bean id="scheduleJobDao" class="cn.bc.scheduler.dao.jpa.ScheduleJobDaoImpl"/>
     <bean id="schedulerService" class="cn.bc.scheduler.service.SchedulerServiceImpl">
         <property name="scheduleJobDao" ref="scheduleJobDao"/>
         <property name="scheduleLogDao" ref="scheduleLogDao"/>

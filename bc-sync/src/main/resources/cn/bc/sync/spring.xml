@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- syncBase -->
-    <bean id="syncBaseDao" class="cn.bc.sync.dao.hibernate.jpa.SyncBaseDaoImpl"/>
+    <bean id="syncBaseDao" class="cn.bc.sync.dao.jpa.SyncBaseDaoImpl"/>
     <bean id="syncBaseService" class="cn.bc.sync.service.SyncBaseServiceImpl" p:syncBaseDao-ref="syncBaseDao"/>
 </beans>

@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- feedback -->
-    <bean id="feedbackDao" class="cn.bc.feedback.dao.hibernate.jpa.FeedbackDaoImpl"/>
+    <bean id="feedbackDao" class="cn.bc.feedback.dao.jpa.FeedbackDaoImpl"/>
     <bean id="feedbackService" class="cn.bc.feedback.service.FeedbackServiceImpl" p:crudDao-ref="feedbackDao"/>
 </beans>

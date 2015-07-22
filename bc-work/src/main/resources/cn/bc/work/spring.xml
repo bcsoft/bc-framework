@@ -4,19 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- work -->
-    <bean id="workDao" class="cn.bc.work.dao.hibernate.jpa.WorkDaoImpl"
+    <bean id="workDao" class="cn.bc.work.dao.jpa.WorkDaoImpl"
           p:entityClass="cn.bc.work.domain.Work"/>
     <bean id="workService" class="cn.bc.work.service.WorkServiceImpl"
           p:entityClass="cn.bc.work.domain.Work"/>
 
     <!-- todoWork -->
-    <bean id="todoWorkDao" class="cn.bc.work.dao.hibernate.jpa.TodoWorkDaoImpl"
+    <bean id="todoWorkDao" class="cn.bc.work.dao.jpa.TodoWorkDaoImpl"
           p:entityClass="cn.bc.work.domain.TodoWork"/>
     <bean id="todoWorkService" class="cn.bc.work.service.TodoWorkServiceImpl"
           p:entityClass="cn.bc.work.domain.TodoWork"/>
 
     <!-- doneWork -->
-    <bean id="doneWorkDao" class="cn.bc.work.dao.hibernate.jpa.DoneWorkDaoImpl"
+    <bean id="doneWorkDao" class="cn.bc.work.dao.jpa.DoneWorkDaoImpl"
           p:entityClass="cn.bc.work.domain.DoneWork"/>
     <bean id="doneWorkService" class="cn.bc.work.service.DoneWorkServiceImpl"
           p:entityClass="cn.bc.work.domain.DoneWork"/>
