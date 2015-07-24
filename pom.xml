@@ -4,7 +4,7 @@
     <parent>
         <groupId>cn.bc</groupId>
         <artifactId>bc-parent</artifactId>
-        <version>2.9-SNAPSHOT</version>
+        <version>2.9</version>
         <relativePath>bc-parent/pom.xml</relativePath>
     </parent>
     <artifactId>bc-framework</artifactId>
