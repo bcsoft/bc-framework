@@ -19,8 +19,7 @@ import cn.bc.web.ui.html.toolbar.Toolbar;
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public abstract class AbstractSelectPageAction<T extends Object> extends
-		ViewAction<T> {
+public abstract class AbstractSelectPageAction<T extends Object> extends ViewAction<T> {
 	private static final long serialVersionUID = 1L;
 
 	/** 获取点击确认按钮的回调函数名 */
@@ -65,8 +64,7 @@ public abstract class AbstractSelectPageAction<T extends Object> extends
 		tb.addButton(Toolbar.getDefaultEmptyToolbarButton());
 
 		// 添加搜索按钮
-		tb.addButton(Toolbar
-				.getDefaultSearchToolbarButton(getText("title.click2search")));
+		tb.addButton(Toolbar.getDefaultSearchToolbarButton(getText("title.click2search")));
 
 		return tb;
 	}
@@ -74,6 +72,7 @@ public abstract class AbstractSelectPageAction<T extends Object> extends
 	@Override
 	protected String getFormActionName() {
 		// TODO Auto-generated method stub
+		super.getFormActionName();
 		return null;
 	}
 }

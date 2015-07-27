@@ -55,10 +55,8 @@
         <module>bc-remoting-server</module>
     </modules>
     <scm>
-        <connection>scm:git:git://github.com/rongjihuang/bc-framework.git</connection>
-        <developerConnection>
-            scm:git:[fetch=]git://github.com/rongjihuang/bc-framework.git[push=]git@github.com:rongjihuang/bc-framework.git
-        </developerConnection>
-        <url>https://github.com/rongjihuang/bc-framework</url>
+        <connection>scm:git:git@bitbucket.org:bctaxi/bc-framework.git</connection>
+        <developerConnection>scm:git:git@bitbucket.org:bctaxi/bc-framework.git</developerConnection>
+        <url>https://bitbucket.org/bctaxi/bc-framework</url>
     </scm>
 </project>
