@@ -25,6 +25,11 @@
 		<action name="data" class="resourceViewAction" method="data"/>
 		<action name="export" class="resourceViewAction" method="export"/>
 	</package>
+	<!-- 选择资源 -->
+	<package name="identity/resource/select" extends="bc-default" namespace="/bc/identity/resource/select">
+		<action name="paging" class="selectResourceAction" method="paging"/>
+		<action name="data" class="selectResourceAction" method="data"/>
+	</package>
 
 	<!-- 角色 -->
 	<package name="bc/identity/role" extends="bc-default" namespace="/bc/identity/role">
@@ -60,26 +65,10 @@
 		<action name="add" class="roleActorTabAction" method="addActor"/>
 		<action name="delete" class="roleActorTabAction" method="deleteActor"/>
 	</package>
-
-	<package name="role_old" extends="bc-default" namespace="/bc/role">
-		<!-- 其它-->
-		<action name="addUser" class="privilegeByRoleAction" method="addUser"/>
-		<action name="addGroup" class="privilegeByRoleAction" method="addGroup"/>
-		<action name="addUnitOrDep" class="privilegeByRoleAction" method="addUnitOrDep"/>
-		<action name="deleteActor" class="privilegeByRoleAction" method="deleteActor"/>
-		<action name="actor/list" class="privilegeByRolesAction" method="list"/>
-	</package>
-	
-	<package name="selectResource" extends="bc-default" namespace="/bc">
-		<action name="selectResource" class="selectResourceAction">
-			<result>/bc/identity/resource/select.jsp</result>
-		</action>
-	</package>
-	
-	<package name="selectRole" extends="bc-default" namespace="/bc">
-		<action name="selectRole" class="selectRoleAction">
-			<result>/bc/identity/role/select.jsp</result>
-		</action>
+	<!-- 选择角色 -->
+	<package name="identity/role/select" extends="bc-default" namespace="/bc/identity/role/select">
+		<action name="paging" class="selectRoleAction" method="paging"/>
+		<action name="data" class="selectRoleAction" method="data"/>
 	</package>
 
 	<package name="duty" extends="bc-default" namespace="/bc/duty">
@@ -187,14 +176,6 @@
 		<action name="selectGroup" class="selectGroupAction">
 			<result>/bc/identity/group/select.jsp</result>
 		</action>
-	</package>
-	<package name="selectRoles" extends="bc-default" namespace="/bc/selectRoles">
-		<action name="paging" class="selectRolesAction" method="paging"/>
-		<action name="data" class="selectRolesAction" method="data"/>
-	</package>
-	<package name="selectResources" extends="bc-default" namespace="/bc/selectResources">
-		<action name="paging" class="selectResourcesAction" method="paging"/>
-		<action name="data" class="selectResourcesAction" method="data"/>
 	</package>
 	<package name="selectUser" extends="bc-default" namespace="/bc">
 		<action name="selectUser" class="selectUserAction">

@@ -1,119 +1,114 @@
-/**
- * 
- */
 package cn.bc.identity.web.struts2.select;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.OrderCondition;
+import cn.bc.db.jdbc.RowMapper;
+import cn.bc.db.jdbc.SqlObject;
+import cn.bc.identity.domain.Resource;
+import cn.bc.web.formater.KeyValueFormater;
+import cn.bc.web.struts2.AbstractSelectPageAction;
+import cn.bc.web.ui.html.grid.Column;
+import cn.bc.web.ui.html.grid.IdColumn4MapKey;
+import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import cn.bc.web.ui.html.page.PageOption;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.BCConstants;
-import cn.bc.identity.domain.Resource;
-import cn.bc.identity.service.ResourceService;
+import java.util.*;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-/**
- * 选择资源信息
- * 
- * @author dragon
- * 
- */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
-public class SelectResourceAction extends ActionSupport {
-	private static final long serialVersionUID = 1L;
-	private List<Map<String, String>> es;
-	private ResourceService resourceService;
-	public String selecteds;// 当前选中项的id值，多个用逗号连接
-	public String excludes;// 当前选中项的id值，多个用逗号连接
-	public String types;// 资源类型，多个用逗号连接
-	private boolean multiple;// 是否可以多选
+public class SelectResourceAction extends AbstractSelectPageAction<Map<String, Object>> {
+	@Override
+	protected SqlObject<Map<String, Object>> getSqlObject() {
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 
-	@Autowired
-	public void setResourceService(ResourceService resourceService) {
-		this.resourceService = resourceService;
-	}
+		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+		sqlObject.setSql("select a.id as id, a.type_ as type, a.name as name, b.name as pname"
+				+ " from bc_identity_resource a"
+				+ " left join bc_identity_resource b on a.belong = b.id");
 
-	public long[] getSelected() {
-		if (selecteds != null && selecteds.length() > 0) {
-			String[] ss = selecteds.split(",");
-			long[] ids = new long[ss.length];
-			for (int i = 0; i < ss.length; i++) {
-				ids[i] = Long.parseLong(ss[i]);
+		// 数据映射
+		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+				Map<String, Object> map = new HashMap<>();
+				int i = 0;
+				map.put("id", rs[i++]);
+				map.put("type", rs[i++]);
+				map.put("name", rs[i++]);
+				map.put("pname", rs[i]);
+				return map;
 			}
-			return ids;
-		} else {
-			return new long[0];
-		}
+		});
+		return sqlObject;
 	}
 
-	public long[] getExclude() {
-		if (excludes != null && excludes.length() > 0) {
-			String[] ss = excludes.split(",");
-			long[] ids = new long[ss.length];
-			for (int i = 0; i < ss.length; i++) {
-				ids[i] = Long.parseLong(ss[i]);
-			}
-			return ids;
-		} else {
-			return new long[0];
-		}
+
+	@Override
+	protected OrderCondition getGridDefaultOrderCondition() {
+		return new OrderCondition("a.order_", Direction.Asc);
 	}
 
-	public Integer[] getType() {
-		if (types != null && types.length() > 0) {
-			String[] ss = types.split(",");
-			Integer[] ids = new Integer[ss.length];
-			for (int i = 0; i < ss.length; i++) {
-				ids[i] = new Integer(ss[i]);
-			}
-			return ids;
-		} else {
-			return Resource.getAllTypes();
-		}
+	@Override
+	protected List<Column> getGridColumns() {
+		List<Column> columns = new ArrayList<>();
+		columns.add(new IdColumn4MapKey("id", "id"));
+		columns.add(new TextColumn4MapKey("a.type_", "type", getText("resource.type"), 40)
+						.setValueFormater(new KeyValueFormater(getTypes()))
+		);
+		columns.add(new TextColumn4MapKey("a.name", "name", getText("resource.name"), 100).setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("b.name", "pname", getText("resource.belong"), 100).setUseTitleFromLabel(true));
+		return columns;
 	}
 
-	public List<Map<String, String>> getEs() {
-		return es;
+
+	@Override
+	protected String getGridRowLabelExpression() {
+		return "['name']";
 	}
 
-	public void setEs(List<Map<String, String>> es) {
-		this.es = es;
+	@Override
+	protected String[] getGridSearchFields() {
+		return new String[]{"a.name", "b.name"};
 	}
 
-	public boolean isMultiple() {
-		return multiple;
+	@Override
+	protected String getHtmlPageTitle() {
+		return this.getText("resource.title.select");
 	}
 
-	public void setMultiple(boolean multiple) {
-		this.multiple = multiple;
+	private Map<String, String> getTypes() {
+		Map<String, String> types = new LinkedHashMap<>();
+		types.put(String.valueOf(Resource.TYPE_FOLDER), getText("resource.type.folder"));
+		types.put(String.valueOf(Resource.TYPE_INNER_LINK), getText("resource.type.innerLink"));
+		types.put(String.valueOf(Resource.TYPE_OUTER_LINK), getText("resource.type.outerLink"));
+		types.put(String.valueOf(Resource.TYPE_HTML), getText("resource.type.html"));
+		return types;
 	}
 
-	public String execute() throws Exception {
-		this.es = this.resourceService.find4option(getType(),
-				new Integer[] { BCConstants.STATUS_ENABLED });
+	@Override
+	protected PageOption getHtmlPageOption() {
+		return super.getHtmlPageOption().setWidth(400).setHeight(450);
+	}
 
-		// 排除不能选择的
-		long[] exclude = this.getExclude();
-		if (exclude != null && exclude.length > 0) {
-			List<Map<String, String>> ex = new ArrayList<Map<String, String>>();
-			for (Map<String, String> m : this.es) {
-				for (int i = 0; i < exclude.length; i++) {
-					if (m.get("id").equals(exclude[i])) {
-						ex.add(m);
-						break;
-					}
-				}
-			}
-			this.es.removeAll(ex);
-		}
+	@Override
+	protected void addJsCss(List<String> container) {
+		container.add(this.getActionNamespace() + "/select.js");
+	}
 
-		return SUCCESS;
+	@Override
+	protected String getClickOkMethod() {
+		return "onOk";
+	}
+
+	@Override
+	protected boolean canExport() {
+		return false;
+	}
+
+	@Override
+	protected boolean isQuirksMode() {
+		return false;
 	}
 }
