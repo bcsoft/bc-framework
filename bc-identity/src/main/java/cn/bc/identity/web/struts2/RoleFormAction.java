@@ -51,12 +51,14 @@ public class RoleFormAction extends EntityAction<Long, Role> {
 	@Override
 	protected void beforeSave(Role entity) {
 		// 避免保存时丢失与资源关系的处理
-		Set<Resource> resources = this.getCrudService().load(this.getE().getId()).getResources();
-		if (this.getE().getResources() != null) {
-			this.getE().getResources().clear();
-			this.getE().getResources().addAll(resources);
-		} else {
-			this.getE().setResources(resources);
+		if(!this.getE().isNew()) {
+			Set<Resource> resources = this.getCrudService().load(this.getE().getId()).getResources();
+			if (this.getE().getResources() != null) {
+				this.getE().getResources().clear();
+				this.getE().getResources().addAll(resources);
+			} else {
+				this.getE().setResources(resources);
+			}
 		}
 	}
 

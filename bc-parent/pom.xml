@@ -524,6 +524,13 @@
                 <version>4.3.0.Final</version>
             </dependency>
 
+            <!-- Java IOC -->
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>1</version>
+            </dependency>
+
             <!-- 1.0.2(2007-07-23), 2.0(2009-12-10) -->
             <dependency>
                 <groupId>javax.persistence</groupId>

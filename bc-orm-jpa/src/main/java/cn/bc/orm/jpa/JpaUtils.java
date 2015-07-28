@@ -69,8 +69,12 @@ public class JpaUtils {
 		return queryObj;
 	}
 
-	public static Query createNativeQuery(EntityManager em, String sql, Object[] args) {
-		return createNativeQuery(em, sql, args, null);
+	public static Query createQuery(EntityManager em, String jpql, List<Object> args) {
+		return createQuery(em, jpql, args != null ? args.toArray() : null);
+	}
+
+	public static Query createQuery(EntityManager em, String jpql) {
+		return createQuery(em, jpql, (Object[]) null);
 	}
 
 	/**
@@ -92,16 +96,20 @@ public class JpaUtils {
 		return queryObj;
 	}
 
+	public static Query createNativeQuery(EntityManager em, String sql) {
+		return createNativeQuery(em, sql, (Object[]) null);
+	}
+
+	public static Query createNativeQuery(EntityManager em, String sql, Object[] args) {
+		return createNativeQuery(em, sql, args, null);
+	}
+
 	public static Query createNativeQuery(EntityManager em, String sql, List<Object> args, Class resultClass) {
 		return createNativeQuery(em, sql, args != null ? args.toArray() : null, resultClass);
 	}
 
 	public static Query createNativeQuery(EntityManager em, String sql, List<Object> args) {
 		return createNativeQuery(em, sql, args != null ? args.toArray() : null);
-	}
-
-	public static Query createQuery(EntityManager em, String jpql, List<Object> args) {
-		return createQuery(em, jpql, args != null ? args.toArray() : null);
 	}
 
 	public static int executeUpdate(EntityManager entityManager, String jpql, List<Object> args) {
@@ -130,6 +138,10 @@ public class JpaUtils {
 		return c;
 	}
 
+	public static <T> List<T> executeQuery(EntityManager entityManager, String jpql) {
+		return executeQuery(entityManager, jpql, (Object[]) null);
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> executeQuery(EntityManager entityManager, String jpql, Object[] args, RowMapper<T> rowMapper) {
 		if (logger.isDebugEnabled())
@@ -152,6 +164,10 @@ public class JpaUtils {
 
 	public static <T> List<T> executeQuery(EntityManager entityManager, String jpql, List<Object> args, RowMapper<T> rowMapper) {
 		return executeQuery(entityManager, jpql, args != null ? args.toArray() : null, rowMapper);
+	}
+
+	public static <T> List<T> executeNativeQuery(EntityManager entityManager, String sql) {
+		return executeNativeQuery(entityManager, sql, (Object[]) null);
 	}
 
 	public static <T> List<T> executeNativeQuery(EntityManager entityManager, String sql, List<Object> args, RowMapper<T> rowMapper) {
