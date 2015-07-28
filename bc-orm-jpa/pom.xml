@@ -10,9 +10,14 @@
     <dependencies>
         <!-- jpa api -->
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--<dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- 平台 -->
         <dependency>
