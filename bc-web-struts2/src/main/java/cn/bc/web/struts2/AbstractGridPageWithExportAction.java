@@ -211,7 +211,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	 * @return
 	 */
 	protected String getDefaultExportFileName() {
-		return getText("export.default.fileName") + getText(getModuleType());// 默认的文件名
+		return getText("export.default.fileName") + getText(StringUtils.uncapitalize(getModuleType()));// 默认的文件名
 	}
 
 	@Override
