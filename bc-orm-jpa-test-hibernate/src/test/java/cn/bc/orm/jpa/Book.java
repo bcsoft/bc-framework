@@ -1,66 +1,56 @@
 package cn.bc.orm.jpa;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
- * Created by dragon on 2015/7/1.
+ * 书本
+ *
+ * @author dragon 2015-07-29
  */
 @Entity
 @Table(name = "bc_jpa_book")
-public class Book implements Serializable {
-	private Long id;
-	private String code;
-	private BookDetail detail;
-	private BookDetail2 detail2;
+public class Book extends IdEntity<Long> implements Serializable {
+    private String name;// 书名
 
-	public Book() {
-	}
+    public Book() {
+    }
 
-	public Book(String code) {
-		this();
-		this.code = code;
-	}
+    public Book(String name) {
+        this();
+        this.name = name;
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long getId() {
-		return id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    //@Transient
+//	@OneToOne
+//	@PrimaryKeyJoinColumn
+//	public BookDetail getDetail() {
+//		return detail;
+//	}
+//	public void setDetail(BookDetail detail) {
+//		this.detail = detail;
+//	}
+//
+//	@OneToOne(cascade=CascadeType.ALL, optional = true)
+//	@PrimaryKeyJoinColumn
+//	public BookDetail2 getDetail2() {
+//		return detail2;
+//	}
+//	public void setDetail2(BookDetail2 detail2) {
+//		this.detail2 = detail2;
+//	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	//@Transient
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	public BookDetail getDetail() {
-		return detail;
-	}
-	public void setDetail(BookDetail detail) {
-		this.detail = detail;
-	}
-
-	@OneToOne(cascade=CascadeType.ALL, optional = true)
-	@PrimaryKeyJoinColumn
-	public BookDetail2 getDetail2() {
-		return detail2;
-	}
-	public void setDetail2(BookDetail2 detail2) {
-		this.detail2 = detail2;
-	}
-
-	@Override
-	public String toString() {
-		return "{id: " + id + ", code: " + code + "}";
-	}
+    @Override
+    public String toString() {
+        return "{id: " + getId() + ", name: " + getName() + "}";
+    }
 }

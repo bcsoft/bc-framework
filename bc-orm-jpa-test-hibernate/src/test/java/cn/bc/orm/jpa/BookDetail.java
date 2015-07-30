@@ -4,47 +4,40 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Created by dragon on 2015/7/1.
+ * 书本明细信息
+ * 主键直接关联 Book 对象
+ * @author dragon 2015-07-29
  */
 @Entity
 @Table(name = "bc_jpa_book_detail")
 public class BookDetail implements Serializable {
-	private Book book;
-	private String info;
+    private Book id; // 所属书
+    private String publisher;// 出版社
 
-	public BookDetail() {
-	}
+    public BookDetail() {
+    }
 
-	public BookDetail(Book book, String info) {
-		this();
-		this.book = book;
-		this.info = info;
-	}
+    @Id
+    @OneToOne(optional = false)
+    @JoinColumn(name = "ID")
+    public Book getId() {
+        return id;
+    }
 
-	//@Column(name="ID") // @Column(s) not allowed on a @OneToOne property
-	@Id
-	//@MapsId
-	@OneToOne(optional = false)
-	@JoinColumn(name = "ID")
-	//@PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "ID")
-	public Book getBook() {
-		return book;
-	}
+    public void setId(Book book) {
+        this.id = book;
+    }
 
-	public void setBook(Book book) {
-		this.book = book;
-	}
+    public String getPublisher() {
+        return publisher;
+    }
 
-	public String getInfo() {
-		return info;
-	}
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
-	public void setInfo(String info) {
-		this.info = info;
-	}
-
-	@Override
-	public String toString() {
-		return "{id: " + book.getId() + ", info: " + info + "}";
-	}
+    @Override
+    public String toString() {
+        return "{id: " + id.getId() + ", publisher: " + getPublisher() + "}";
+    }
 }

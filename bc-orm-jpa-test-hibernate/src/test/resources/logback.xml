@@ -25,31 +25,11 @@
 		</triggeringPolicy>
 	</appender>
 
-	<!--日志异步到数据库 http://logback.qos.ch/manual/appenders.html-->
-	<appender name="dataBase" class="ch.qos.logback.classic.db.DBAppender">
-		<connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
-			<dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
-				<driverClass>${db.driverClassName}</driverClass>
-				<jdbcUrl>${db.url}</jdbcUrl>
-				<user>${db.username}</user>
-				<password>${db.password}</password>
-			</dataSource>
-			<!--<dataSource>POSTGRES_DIALECT</dataSource>-->
-		</connectionSource>
-		<!--<sqlDialect class="ch.qos.logback.core.db.dialect.PostgreSQLDialect" />-->
-		<!--<insertHeaders>true</insertHeaders>-->
-	</appender>
-	<appender name="async2dataBase" class="ch.qos.logback.classic.AsyncAppender">
-		<appender-ref ref="dataBase" />
-		<includeCallerData>true</includeCallerData>
-	</appender>
-
 	<logger name="cn.bc" level="WARN"/>
 	<logger name="cn.bc.jpa" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="console"/>
-		<appender-ref ref="async2dataBase"/>
 		<appender-ref ref="rollingFile"/>
 	</root>
 </configuration>
