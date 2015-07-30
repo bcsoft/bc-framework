@@ -26,7 +26,7 @@ public class BookDao {
 		Book book = em.find(Book.class, id);
 		if (book != null) {
 			BookDetail detail = em.find(BookDetail.class, id);
-			book.setDetail(detail);
+			//book.setDetail(detail);
 		}
 		return book;
 	}
