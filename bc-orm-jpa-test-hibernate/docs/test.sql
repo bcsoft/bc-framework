@@ -3,7 +3,11 @@ DROP TABLE if exists bc_jpa_book;
 
 CREATE TABLE bc_jpa_book (
   id serial NOT NULL PRIMARY key,
-  name character varying(255) -- 书名
+  name character varying(255), -- 书名
+  bool boolean,
+  date Date,
+  time time,
+  timestamp timestamp
 );
 
 CREATE TABLE bc_jpa_book_detail (
