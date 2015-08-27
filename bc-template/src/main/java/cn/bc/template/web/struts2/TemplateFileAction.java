@@ -167,11 +167,11 @@ public class TemplateFileAction extends ActionSupport {
 				out.close();
 				this.contentLength=this.inputStream.available();
 			} else {
-				this.contentLength = template.getSize();
+				this.contentLength = inputStream.available();
 				this.inputStream = inputStream;
 			}
 		}else{
-			this.contentLength = template.getSize();
+			this.contentLength = inputStream.available();
 			this.inputStream = inputStream;
 		}
 
@@ -205,7 +205,7 @@ public class TemplateFileAction extends ActionSupport {
 			out.close();
 			this.contentLength=this.inputStream.available();
 		}else{
-			this.contentLength = template.getSize();
+			this.contentLength = inputStream.available();//template.getSize();
 			this.inputStream = inputStream;
 		}
 
