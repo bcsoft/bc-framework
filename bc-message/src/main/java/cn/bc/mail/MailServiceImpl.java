@@ -282,7 +282,7 @@ public class MailServiceImpl implements MailService {
 				String key;
 				while (itor.hasNext()) {
 					key = itor.next();
-					ps.setProperty(key, json.getString(key));
+					ps.setProperty(key, String.valueOf(json.get(key)));
 				}
 			} catch (JSONException e) {
 				logger.error(e.getMessage(), e);
