@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.bc.core;
 
@@ -11,7 +11,8 @@ import javax.persistence.Transient;
 
 /**
  * 基本实体接口的实现
- * 
+ * (主键使用 AUTO 生成策略)
+ *
  * @author dragon
  */
 @MappedSuperclass
