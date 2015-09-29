@@ -73,8 +73,10 @@ public class RoleViewAction extends ViewAction<Map<String, Object>> {
 		columns.add(new IdColumn4MapKey("r.id", "id"));
 		columns.add(new TextColumn4MapKey("r.order_", "orderNo", getText("label.order"), 80).setSortable(true)
 				.setDir(Direction.Asc));
-		columns.add(new TextColumn4MapKey("r.code", "code", getText("label.code"), 200).setSortable(true));
-		columns.add(new TextColumn4MapKey("r.name", "name", getText("label.name")).setSortable(true));
+		columns.add(new TextColumn4MapKey("r.code", "code", getText("label.code"), 300).setSortable(true)
+				.setUseTitleFromLabel(true));
+		columns.add(new TextColumn4MapKey("r.name", "name", getText("label.name")).setSortable(true)
+				.setUseTitleFromLabel(true));
 		return columns;
 	}
 
