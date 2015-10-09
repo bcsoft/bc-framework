@@ -3,17 +3,7 @@ package cn.bc.investigate.domain;
 import java.util.Calendar;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.ActorHistory;
@@ -122,6 +112,7 @@ public class Questionary extends FileEntityImpl {
 	}
 
 	@Column(name = "START_DATE")
+	@Temporal(TemporalType.DATE)
 	public Calendar getStartDate() {
 		return startDate;
 	}
@@ -131,6 +122,7 @@ public class Questionary extends FileEntityImpl {
 	}
 
 	@Column(name = "END_DATE")
+	@Temporal(TemporalType.DATE)
 	public Calendar getEndDate() {
 		return endDate;
 	}

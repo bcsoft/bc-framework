@@ -1106,7 +1106,7 @@
 				<groupId>net.sf.jacob-project</groupId>
 				<artifactId>jacob</artifactId>
 				<version>1.16.1</version>
-				<classifier>x64</classifier>
+				<classifier>x86</classifier>
 				<type>dll</type>
 			</dependency>
 
