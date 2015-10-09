@@ -32,7 +32,7 @@ public abstract class FileEntityImpl2 extends EntityImpl2 implements FileEntity<
 		this.fileDate = fileDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
 	public ActorHistory getAuthor() {
 		return author;
@@ -52,7 +52,7 @@ public abstract class FileEntityImpl2 extends EntityImpl2 implements FileEntity<
 		this.modifiedDate = modifiedDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "MODIFIER_ID", referencedColumnName = "ID")
 	public ActorHistory getModifier() {
 		return modifier;
