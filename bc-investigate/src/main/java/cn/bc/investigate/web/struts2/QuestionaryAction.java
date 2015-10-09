@@ -1,18 +1,19 @@
 /**
- * 
+ *
  */
 package cn.bc.investigate.web.struts2;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import cn.bc.core.exception.PermissionDeniedException;
+import cn.bc.core.util.TemplateUtils;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.service.ActorService;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.struts2.FileEntityAction;
+import cn.bc.investigate.domain.*;
+import cn.bc.investigate.service.QuestionaryService;
+import cn.bc.web.ui.html.page.ButtonOption;
+import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.json.Json;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,27 +22,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.exception.PermissionDeniedException;
-import cn.bc.core.util.TemplateUtils;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.service.ActorService;
-import cn.bc.identity.web.SystemContext;
-import cn.bc.identity.web.struts2.FileEntityAction;
-import cn.bc.investigate.domain.Answer;
-import cn.bc.investigate.domain.Question;
-import cn.bc.investigate.domain.QuestionItem;
-import cn.bc.investigate.domain.Questionary;
-import cn.bc.investigate.domain.Respond;
-import cn.bc.investigate.service.QuestionaryService;
-import cn.bc.web.ui.html.page.ButtonOption;
-import cn.bc.web.ui.html.page.PageOption;
-import cn.bc.web.ui.json.Json;
+import java.util.*;
 
 /**
  * 调查问卷的Action
- * 
+ *
  * @author dragon
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
@@ -138,121 +124,95 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 	protected void beforeSave(Questionary entity) {
 		super.beforeSave(entity);
 		// 插入题目
-		try {
-			Set<Question> question = null;
-			Set<QuestionItem> questionItem = null;
-			if (this.topics != null && this.topics.length() > 0) {
-				question = new LinkedHashSet<Question>();
-				Question questionResource;
-				JSONArray jsons = new JSONArray(this.topics);
-				JSONObject json;
-				for (int i = 0; i < jsons.length(); i++) {
-					json = jsons.getJSONObject(i);
-					questionResource = new Question();
-					if (json.has("id"))
-						questionResource.setId(json.getLong("id"));
-					questionResource.setOrderNo(Integer.parseInt(json
-							.getString("orderNo")));
-					questionResource.setRequired(Boolean.valueOf(json
-							.getString("required")));
-					// 题型
-					int type = Integer.parseInt(json.getString("type"));
-					questionResource.setType(type);
-					// 多选题才有全选方得分的概念
-					if (type == Question.TYPE_CHECKBOX) {
-						questionResource.setSeperateScore(Boolean.valueOf(json
-								.getString("seperateScore")));
-					}
-					// 问答题是否需要评分
-					if (type == Question.TYPE_QA) {
-						questionResource.setGrade(Boolean.valueOf(json
-								.getString("grade")));
-
-					}
-					// questionResource.setSeperateScore(true);
-					// 布局
-					// 选择题才有布局
-					// if (type == 0 || type == 1) {
-					// questionResource.setConfig("{layout_orientation:"
-					// + json.getString("config") + "}");
-					// }
-					// questionResource.setConfig(null);
-					questionResource.setSubject(json.getString("subject"));
-					questionResource.setScore(json.getInt("score"));
-					questionResource.setQuestionary(this.getE());
-					// 问题选项
-					optionItemsValue = json.getString("optionItemsValue");
-					try {
-						if (optionItemsValue != null
-								&& optionItemsValue.length() > 0) {
-							questionItem = new LinkedHashSet<QuestionItem>();
-							QuestionItem questionItemResource;
-							JSONArray items = new JSONArray(
-									json.getString("optionItemsValue"));
-							JSONObject item;
-							for (int n = 0; n < items.length(); n++) {
-								item = items.getJSONObject(n);
-								questionItemResource = new QuestionItem();
-								if (item.has("id"))
-									questionResource.setId(item.getLong("id"));
-								// 填空题的标准答案配置
-								if (type == 2) {
-									questionItemResource.setConfig(item
-											.getString("config"));
-								}
-								// questionItemResource.setConfig(null);
-								questionItemResource.setOrderNo(n);
-								questionItemResource.setScore(0);
-								// 选择题
-								if (type == 1 || type == 0) {
-									questionItemResource
-											.setStandard(Boolean.valueOf(item
-													.getString("standard")));
-									questionItemResource.setScore(item
-											.getInt("score"));
-								}
-
-								questionItemResource.setSubject(item
-										.getString("subject"));
-								questionItemResource
-										.setQuestion(questionResource);
-								questionItem.add(questionItemResource);
+		Set<Question> question = null;
+		Set<QuestionItem> questionItem = null;
+		if (this.topics != null && this.topics.length() > 0) {
+			question = new LinkedHashSet<>();
+			Question questionResource;
+			JSONArray jsons = new JSONArray(this.topics);
+			JSONObject json;
+			for (int i = 0; i < jsons.length(); i++) {
+				json = jsons.getJSONObject(i);
+				questionResource = new Question();
+				if (json.has("id")) questionResource.setId(json.getLong("id"));
+				questionResource.setOrderNo(Integer.parseInt(json.getString("orderNo")));
+				questionResource.setRequired(json.getBoolean("required"));
+				// 题型
+				int type = Integer.parseInt(json.getString("type"));
+				questionResource.setType(type);
+				// 多选题才有全选方得分的概念
+				if (type == Question.TYPE_CHECKBOX) {
+					questionResource.setSeperateScore(json.getBoolean("seperateScore"));
+				}
+				// 问答题是否需要评分
+				if (type == Question.TYPE_QA) {
+					questionResource.setGrade(json.getBoolean("grade"));
+				}
+				// questionResource.setSeperateScore(true);
+				// 布局
+				// 选择题才有布局
+				// if (type == 0 || type == 1) {
+				// questionResource.setConfig("{layout_orientation:"
+				// + json.getString("config") + "}");
+				// }
+				// questionResource.setConfig(null);
+				questionResource.setSubject(json.getString("subject"));
+				questionResource.setScore(json.getInt("score"));
+				questionResource.setQuestionary(this.getE());
+				// 问题选项
+				optionItemsValue = json.getString("optionItemsValue");
+				try {
+					if (optionItemsValue != null && optionItemsValue.length() > 0) {
+						questionItem = new LinkedHashSet<>();
+						QuestionItem questionItemResource;
+						JSONArray items = new JSONArray(json.getString("optionItemsValue"));
+						JSONObject item;
+						for (int n = 0; n < items.length(); n++) {
+							item = items.getJSONObject(n);
+							questionItemResource = new QuestionItem();
+							if (item.has("id")) questionResource.setId(item.getLong("id"));
+							// 填空题的标准答案配置
+							if (type == 2) {
+								questionItemResource.setConfig(item.getString("config"));
+							}
+							// questionItemResource.setConfig(null);
+							questionItemResource.setOrderNo(n);
+							questionItemResource.setScore(0);
+							// 选择题
+							if (type == 1 || type == 0) {
+								questionItemResource.setStandard(item.getBoolean("standard"));
+								questionItemResource.setScore(item.getInt("score"));
 							}
 
-						}
-						if (questionResource.getItems() != null) {
-							questionResource.getItems().clear();
-							questionResource.getItems().addAll(questionItem);
-						} else {
-							questionResource.setItems(questionItem);
-						}
-					} catch (JSONException e) {
-						logger.error(e.getMessage(), e);
-						try {
-							throw e;
-						} catch (JSONException e1) {
-							e1.printStackTrace();
+							questionItemResource.setSubject(item.getString("subject"));
+							questionItemResource.setQuestion(questionResource);
+							questionItem.add(questionItemResource);
 						}
 					}
-
-					question.add(questionResource);
-
+					if (questionResource.getItems() != null) {
+						questionResource.getItems().clear();
+						questionResource.getItems().addAll(questionItem);
+					} else {
+						questionResource.setItems(questionItem);
+					}
+				} catch (JSONException e) {
+					logger.error(e.getMessage(), e);
+					try {
+						throw e;
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
 				}
-			}
-			if (this.getE().getQuestions() != null) {
-				this.getE().getQuestions().clear();
-				this.getE().getQuestions().addAll(question);
 
-			} else {
-				this.getE().setQuestions(question);
+				question.add(questionResource);
 			}
-		} catch (JSONException e) {
-			logger.error(e.getMessage(), e);
-			try {
-				throw e;
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
+		}
+		if (this.getE().getQuestions() != null) {
+			this.getE().getQuestions().clear();
+			this.getE().getQuestions().addAll(question);
+
+		} else {
+			this.getE().setQuestions(question);
 		}
 		this.getE().setResponds(new LinkedHashSet<Respond>());
 		// 保存用户
@@ -284,9 +244,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 			} else {
 				this.getE().setActors(users);
 			}
-
 		}
-
 	}
 
 	@Override
@@ -334,7 +292,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	// 发布按钮
 	protected void buildPreviewFormPageButtons(PageOption pageOption,
-			boolean editable) {
+											   boolean editable) {
 		pageOption.addButton(new ButtonOption(getText("questionary.issue"),
 				null, "bc.questionaryForm.issue"));
 
@@ -481,7 +439,7 @@ public class QuestionaryAction extends FileEntityAction<Long, Questionary> {
 
 	/**
 	 * 状态值转换列表：待发布|已发布|已归档|全部
-	 * 
+	 *
 	 * @return
 	 */
 	protected Map<String, String> getBSStatuses() {

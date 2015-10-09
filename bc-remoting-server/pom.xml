@@ -55,6 +55,18 @@
 			<artifactId>jacob</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.jacob-project</groupId>
+			<artifactId>jacob</artifactId>
+			<type>dll</type>
+			<classifier>x64</classifier>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jacob-project</groupId>
+			<artifactId>jacob</artifactId>
+			<type>dll</type>
+			<classifier>x64</classifier>
+		</dependency>
+		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-remoting-common</artifactId>
 			<version>${project.version}</version>

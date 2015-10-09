@@ -3,19 +3,19 @@
  */
 package cn.bc.identity.domain;
 
-import cn.bc.core.EntityImpl;
+import cn.bc.core.EntityImpl2;
 
 import javax.persistence.*;
 import java.util.Calendar;
 
 /**
  * 文档实体基类：包含创建人信息和最后修改人信息
- * (主键使用 AUTO 生成策略)
+ * (主键使用 IDENTITY 生成策略)
  *
  * @author dragon
  */
 @MappedSuperclass
-public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Long> {
+public abstract class FileEntityImpl2 extends EntityImpl2 implements FileEntity<Long> {
 	private static final long serialVersionUID = 1L;
 	private Calendar fileDate;// 创建时间
 	private ActorHistory author;// 创建人
@@ -32,7 +32,7 @@ public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Lo
 		this.fileDate = fileDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
 	public ActorHistory getAuthor() {
 		return author;
@@ -52,7 +52,7 @@ public abstract class FileEntityImpl extends EntityImpl implements FileEntity<Lo
 		this.modifiedDate = modifiedDate;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "MODIFIER_ID", referencedColumnName = "ID")
 	public ActorHistory getModifier() {
 		return modifier;

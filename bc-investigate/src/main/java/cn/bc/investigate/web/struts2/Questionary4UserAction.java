@@ -1,19 +1,17 @@
 /**
- * 
+ *
  */
 package cn.bc.investigate.web.struts2;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import cn.bc.core.util.TemplateUtils;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.struts2.FileEntityAction;
+import cn.bc.investigate.domain.*;
+import cn.bc.investigate.service.QuestionItemService;
+import cn.bc.investigate.service.QuestionaryService;
+import cn.bc.web.ui.html.page.ButtonOption;
+import cn.bc.web.ui.html.page.PageOption;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,25 +20,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.core.util.TemplateUtils;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.web.SystemContext;
-import cn.bc.identity.web.struts2.FileEntityAction;
-import cn.bc.investigate.domain.Answer;
-import cn.bc.investigate.domain.Question;
-import cn.bc.investigate.domain.QuestionItem;
-import cn.bc.investigate.domain.Questionary;
-import cn.bc.investigate.domain.Respond;
-import cn.bc.investigate.service.QuestionItemService;
-import cn.bc.investigate.service.QuestionaryService;
-import cn.bc.web.ui.html.page.ButtonOption;
-import cn.bc.web.ui.html.page.PageOption;
+import java.util.*;
 
 /**
  * 调查问卷的Action
- * 
+ *
  * @author dragon
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
@@ -132,12 +117,11 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 	@Override
 	protected void beforeSave(Questionary entity) {
 		super.beforeSave(entity);
-		Questionary questionary = this.questionaryService.load(this.getE()
-				.getId());
+		Questionary questionary = this.questionaryService.load(this.getE().getId());
 		this.setE(questionary);
 		SystemContext context = (SystemContext) this.getContext();
-		Set<Respond> respond = new LinkedHashSet<Respond>();
-		Set<Answer> answer = new LinkedHashSet<Answer>();
+		Set<Respond> respond = new LinkedHashSet<>();
+		Set<Answer> answer = new LinkedHashSet<>();
 		Set<JSONObject> answerItems4OneQuestion;
 		Respond respondResource;
 		respondResource = new Respond();
@@ -148,143 +132,119 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 		respondResource.setFileDate(Calendar.getInstance());
 		respondResource.setQuestionary(this.getE());
 
-		try {
-			if (topics != null && topics.length() > 0) {
-				Answer answerResource;
-				JSONArray questionJsons = new JSONArray(this.topics);
-				JSONObject questionJson;
-				questionJson = new JSONObject();
-				JSONObject answerItem;
-				for (int n = 0; n < questionJsons.length(); n++) {
-					questionJson = questionJsons.getJSONObject(n);
-					JSONArray answerItems = new JSONArray(
-							questionJson.getString("optionItemsValue"));
-					answerItems4OneQuestion = new LinkedHashSet<JSONObject>();
-					// 判断此问题是否全答对才有分
-					allRight = false;
-					allRightPoint = 0;
-					if (questionJson.getInt("type") == Question.TYPE_CHECKBOX) {
-						// 记录需要处理的多选题
-						Set<Question> question = questionary.getQuestions();
-						Iterator<Question> qu = question.iterator();
-						long qid = questionJson.getLong("questionId");
-						while (qu.hasNext()) {
-							Question oneQuestion = qu.next();
-							if (qid == oneQuestion.getId()) {
-								if (oneQuestion.isSeperateScore()) {
-									allRight = true;
-									allRightPoint = oneQuestion.getScore();
-								}
+		if (topics != null && topics.length() > 0) {
+			Answer answerResource;
+			JSONArray questionJsons = new JSONArray(this.topics);
+			JSONObject questionJson;
+			JSONObject answerItem;
+			for (int n = 0; n < questionJsons.length(); n++) {
+				questionJson = questionJsons.getJSONObject(n);
+				JSONArray answerItems = new JSONArray(questionJson.getString("optionItemsValue"));
+				answerItems4OneQuestion = new LinkedHashSet<>();
+				// 判断此问题是否全答对才有分
+				allRight = false;
+				allRightPoint = 0;
+				if (questionJson.getInt("type") == Question.TYPE_CHECKBOX) {
+					// 记录需要处理的多选题
+					Set<Question> question = questionary.getQuestions();
+					Iterator<Question> qu = question.iterator();
+					long qid = questionJson.getLong("questionId");
+					while (qu.hasNext()) {
+						Question oneQuestion = qu.next();
+						if (qid == oneQuestion.getId()) {
+							if (oneQuestion.isSeperateScore()) {
+								allRight = true;
+								allRightPoint = oneQuestion.getScore();
 							}
 						}
-					}
-
-					for (int i = 0; i < answerItems.length(); i++) {
-						answerItem = answerItems.getJSONObject(i);
-						QuestionItem questionItem = new QuestionItem();
-						questionItem.setId(answerItem.getLong("itemId"));
-						answerResource = new Answer();
-						// 选择题
-						if (questionJson.getInt("type") == Question.TYPE_RADIO
-								|| questionJson.getInt("type") == Question.TYPE_CHECKBOX) {
-							QuestionItem q = this.questionItemService
-									.load(answerItem.getLong("itemId"));
-							answerResource.setRespond(respondResource);
-							answerResource.setItem(questionItem);
-							answerResource.setScore(q.getScore());
-							if (allRight) {
-								answerItems4OneQuestion.add(answerItem);
-							} else {
-								score += q.getScore();
-							}
-						}
-						// 简答题
-						if (questionJson.getInt("type") == Question.TYPE_QA) {
-							answerResource.setRespond(respondResource);
-							answerResource.setItem(questionItem);
-							answerResource.setContent(answerItem
-									.getString("subject"));
-							// 如果需要评分的不作计分处理
-							boolean grade = answerItem.getBoolean("grade");
-							if (!grade) {
-								Question oneQuestion = getQuestionObject(questionJson
-										.getLong("questionId"));
-								int Jquizscore = oneQuestion.getScore();
-								answerResource.setScore(Jquizscore);
-								score += Jquizscore;
-							} else {
-								answerResource.setGrade(grade);
-								respondResource.setGrade(grade);
-							}
-						}
-						// 填空题
-						if (questionJson.getInt("type") == Question.TYPE_FILL_IN) {
-							answerResource.setRespond(respondResource);
-							answerResource.setItem(questionItem);
-							// 获取填空题的分数
-							JSONArray answer4Completion = new JSONArray(
-									answerItem.getString("completions"));
-							JSONArray config = getCompletionConfig(questionJson
-									.getLong("questionId"));
-							answerResource.setContent(answer4Completion
-									.toString());
-							Map<String, Object> anwerMsp = getAnswerMap(answer4Completion);
-							// answerResource.setScore(getCompletionScore(config,
-							// anwerMsp));
-							score += getCompletionScore(config, anwerMsp);
-							// answerResource.setContent(answerItem.getString("subject"));
-						}
-						answer.add(answerResource);
-					}
-
-					// 对多选题特殊处理
-					if (allRight && answerItems4OneQuestion != null
-							&& !answerItems4OneQuestion.isEmpty()) {
-						// 获取用户的选项数组
-						List<Long> answerList = new LinkedList<Long>();
-						Long[] answertArray = null;
-						Iterator<JSONObject> aiq = answerItems4OneQuestion
-								.iterator();
-						while (aiq.hasNext()) {
-							JSONObject oneAnswerItems = aiq.next();
-							answerList.add(oneAnswerItems.getLong("itemId"));
-						}
-						answertArray = answerList.toArray(new Long[answerList
-								.size()]);
-						Arrays.sort(answertArray);
-						// 对比获取用户的选项数组与获取标准答案的选择项数组
-						// 判断用户是否全对
-						Long[] questionArray = getResultArray(questionary,
-								questionJson);
-						if (Arrays.equals(questionArray, answertArray)) {
-							score += allRightPoint;
-						}
-
 					}
 				}
-				respondResource.setScore(score);
+
+				for (int i = 0; i < answerItems.length(); i++) {
+					answerItem = answerItems.getJSONObject(i);
+					QuestionItem questionItem = new QuestionItem();
+					questionItem.setId(answerItem.getLong("itemId"));
+					answerResource = new Answer();
+					// 选择题
+					if (questionJson.getInt("type") == Question.TYPE_RADIO
+							|| questionJson.getInt("type") == Question.TYPE_CHECKBOX) {
+						QuestionItem q = this.questionItemService.load(answerItem.getLong("itemId"));
+						answerResource.setRespond(respondResource);
+						answerResource.setItem(questionItem);
+						answerResource.setScore(q.getScore());
+						if (allRight) {
+							answerItems4OneQuestion.add(answerItem);
+						} else {
+							score += q.getScore();
+						}
+					}
+					// 简答题
+					if (questionJson.getInt("type") == Question.TYPE_QA) {
+						answerResource.setRespond(respondResource);
+						answerResource.setItem(questionItem);
+						answerResource.setContent(answerItem.getString("subject"));
+						// 如果需要评分的不作计分处理
+						boolean grade = answerItem.getBoolean("grade");
+						if (!grade) {
+							Question oneQuestion = getQuestionObject(questionJson.getLong("questionId"));
+							int Jquizscore = oneQuestion.getScore();
+							answerResource.setScore(Jquizscore);
+							score += Jquizscore;
+						} else {
+							answerResource.setGrade(grade);
+							respondResource.setGrade(grade);
+						}
+					}
+					// 填空题
+					if (questionJson.getInt("type") == Question.TYPE_FILL_IN) {
+						answerResource.setRespond(respondResource);
+						answerResource.setItem(questionItem);
+						// 获取填空题的分数
+						JSONArray answer4Completion = answerItem.getJSONArray("completions");
+						JSONArray config = getCompletionConfig(questionJson.getLong("questionId"));
+						answerResource.setContent(answer4Completion.toString());
+						Map<String, Object> anwerMsp = getAnswerMap(answer4Completion);
+						// answerResource.setScore(getCompletionScore(config,
+						// anwerMsp));
+						score += getCompletionScore(config, anwerMsp);
+						// answerResource.setContent(answerItem.getString("subject"));
+					}
+					answer.add(answerResource);
+				}
+
+				// 对多选题特殊处理
+				if (allRight && answerItems4OneQuestion != null && !answerItems4OneQuestion.isEmpty()) {
+					// 获取用户的选项数组
+					List<Long> answerList = new LinkedList<>();
+					Long[] answertArray;
+					Iterator<JSONObject> aiq = answerItems4OneQuestion.iterator();
+					while (aiq.hasNext()) {
+						JSONObject oneAnswerItems = aiq.next();
+						answerList.add(oneAnswerItems.getLong("itemId"));
+					}
+					answertArray = answerList.toArray(new Long[answerList.size()]);
+					Arrays.sort(answertArray);
+					// 对比获取用户的选项数组与获取标准答案的选择项数组
+					// 判断用户是否全对
+					Long[] questionArray = getResultArray(questionary, questionJson);
+					if (Arrays.equals(questionArray, answertArray)) {
+						score += allRightPoint;
+					}
+				}
 			}
-			// }
-			if (respondResource.getAnswers() != null) {
-				// respondResource.getAnswers().clear();
-				respondResource.getAnswers().addAll(answer);
-			} else {
-				respondResource.setAnswers(answer);
-			}
-		} catch (JSONException e) {
-			logger.error(e.getMessage(), e);
-			try {
-				throw e;
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
+			respondResource.setScore(score);
+		}
+		if (respondResource.getAnswers() != null) {
+			// respondResource.getAnswers().clear();
+			respondResource.getAnswers().addAll(answer);
+		} else {
+			respondResource.setAnswers(answer);
 		}
 
 		respond.add(respondResource);
 		if (questionary.getResponds() != null) {
 			// questionary.getResponds().clear();
 			questionary.getResponds().addAll(respond);
-
 		} else {
 			questionary.setResponds(respond);
 		}
@@ -292,14 +252,12 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取填空题分数
-	 * 
-	 * @param completionConfig
-	 *            填空题的答案配置
-	 * @param answerMap
-	 *            用户答题的选项map
+	 *
+	 * @param completionConfig 填空题的答案配置
+	 * @param answerMap        用户答题的选项map
 	 */
 	private int getCompletionScore(JSONArray completionConfig,
-			Map<String, Object> answerMap) {
+								   Map<String, Object> answerMap) {
 		int score = 0;// 分数
 		int score4Config;
 		try {
@@ -321,7 +279,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户答题的map
-	 * 
+	 *
 	 * @param answer4Completion
 	 */
 	private Map<String, Object> getAnswerMap(JSONArray answer4Completion) {
@@ -343,9 +301,8 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取填空题的特殊配置
-	 * 
-	 * @param long1
-	 *            问题项ID
+	 *
+	 * @param long1 问题项ID
 	 */
 	private JSONArray getCompletionConfig(long qid) {
 		JSONArray config = null;
@@ -368,7 +325,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	// 获取标准答案的选择项数组
 	private Long[] getResultArray(Questionary questionary,
-			JSONObject questionJson) throws JSONException {
+								  JSONObject questionJson) throws JSONException {
 		Set<Question> question2 = questionary.getQuestions();
 		Iterator<Question> qu2 = question2.iterator();
 		long qid2 = questionJson.getLong("questionId");
@@ -449,7 +406,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户分数
-	 * 
+	 *
 	 * @param userId2用户ID
 	 * @return
 	 */
@@ -482,7 +439,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 用户是否答卷
-	 * 
+	 *
 	 * @param e
 	 * @return
 	 */
@@ -589,8 +546,8 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 									+ userAnswer
 									+ "' style='width:45px;border-width: 0 0 1px 0;text-align: center;'"
 									+ (userAnswer.equals(standardValue) ? " class='ui-widget-content'/>"
-											: " class='ui-widget-content ui-state-error' title='"
-													+ standardValue + "' />"));
+									: " class='ui-widget-content ui-state-error' title='"
+									+ standardValue + "' />"));
 				}
 			}
 		} catch (JSONException e) {
@@ -602,7 +559,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户填空题中每个空的相关的信息
-	 * 
+	 *
 	 * @param answerValue
 	 * @param marker
 	 * @return
@@ -623,7 +580,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户的填空题的作答结果
-	 * 
+	 *
 	 * @param qid
 	 * @return
 	 */
@@ -647,7 +604,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户的作答对象
-	 * 
+	 *
 	 * @param qid
 	 * @return
 	 */
@@ -683,7 +640,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 根据问题Id获取问题对象
-	 * 
+	 *
 	 * @param qid
 	 * @return
 	 */
@@ -702,7 +659,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 获取用户简答题的作答结果
-	 * 
+	 *
 	 * @param qid
 	 * @return
 	 */
@@ -721,7 +678,7 @@ public class Questionary4UserAction extends FileEntityAction<Long, Questionary> 
 
 	/**
 	 * 状态值转换列表：待发布|已发布|已归档|全部
-	 * 
+	 *
 	 * @return
 	 */
 	protected Map<String, String> getBSStatuses() {
