@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>bc-investigate</artifactId>
 	<description>问卷调查</description>
+	<version>2.9.1</version>
 	<dependencies>
 		<dependency>
 			<groupId>cn.bc</groupId>
