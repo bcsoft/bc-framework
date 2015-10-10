@@ -3,6 +3,8 @@ package cn.bc.identity.service;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.RoleDao;
 import cn.bc.identity.domain.Role;
+import cn.bc.identity.web.SystemContext;
+import cn.bc.identity.web.SystemContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -25,6 +27,12 @@ public class RoleServiceImpl extends DefaultCrudService<Role> implements RoleSer
 	public void setRoleDao(RoleDao roleDao) {
 		this.roleDao = roleDao;
 		this.setCrudDao(roleDao);
+	}
+
+	@Override
+	public boolean hasAnyRole(String... roles) {
+		if(roles == null || roles.length == 0) return false;
+		return SystemContextHolder.get().hasAnyRole(roles);
 	}
 
 	public List<Map<String, String>> find4option(Integer[] types, Integer[] statues) {

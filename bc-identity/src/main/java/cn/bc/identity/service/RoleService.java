@@ -13,6 +13,13 @@ import java.util.Map;
  */
 public interface RoleService extends CrudService<Role> {
 	/**
+	 * 判断当前用户是否有指定的任一角色之一
+	 * @param roles 角色编码列表
+	 * @return 有返回true，否则返回false
+	 */
+	boolean hasAnyRole(String... roles);
+
+	/**
 	 * 获取指定类型和状态的Role信息
 	 *
 	 * @param types   类型列表
