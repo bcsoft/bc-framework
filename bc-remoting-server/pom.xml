@@ -64,7 +64,7 @@
 			<groupId>net.sf.jacob-project</groupId>
 			<artifactId>jacob</artifactId>
 			<type>dll</type>
-			<classifier>x64</classifier>
+			<classifier>x86</classifier>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
