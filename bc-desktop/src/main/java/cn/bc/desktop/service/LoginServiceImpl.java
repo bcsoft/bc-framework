@@ -90,7 +90,8 @@ public class LoginServiceImpl implements LoginService {
 					return map;
 				}
 			}.mapRow((Object[]) query.getSingleResult(), 0);
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException | NoResultException e) {
+			logger.warn("NoResultException: actorCode={}", actorCode);
 			return new HashMap<>(0);
 		}
 	}
