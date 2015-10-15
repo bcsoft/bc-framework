@@ -58,7 +58,7 @@ public class JdbcTemplatePagingQuery<T extends Object> implements cn.bc.core.que
         if(logger.isDebugEnabled()){
             logger.debug("args=" + StringUtils.collectionToCommaDelimitedString(args) + ";sql=" + sql);
         }
-        return this.jdbcTemplate.queryForInt(sql , (args != null && !args.isEmpty() ? args.toArray() : null));
+        return this.jdbcTemplate.queryForObject(sql, (args != null && !args.isEmpty() ? args.toArray() : null), Integer.class);
     }
 
     public List<T> list(int pageNo, int pageSize) {
@@ -66,7 +66,7 @@ public class JdbcTemplatePagingQuery<T extends Object> implements cn.bc.core.que
     }
 
     public Page<T> page(int pageNo, int pageSize) {
-        return new Page<T>(pageNo, pageSize, this.count(), this.list(pageNo, pageSize));
+        return new Page<>(pageNo, pageSize, this.count(), this.list(pageNo, pageSize));
     }
 
     public T singleResult() {

@@ -20,7 +20,7 @@ import java.util.List;
  * @param <T> Domain类
  * @author dragon
  */
-public class JpaQuery<T extends Object> implements cn.bc.core.query.Query<T> {
+public class JpaQuery<T> implements cn.bc.core.query.Query<T> {
 	private static Logger logger = LoggerFactory.getLogger("cn.bc.orm.jpa.JpaQuery");
 	private EntityManager entityManager;
 	private Class<T> entityClass;

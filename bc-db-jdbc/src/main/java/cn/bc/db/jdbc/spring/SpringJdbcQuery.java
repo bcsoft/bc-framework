@@ -23,12 +23,11 @@ import cn.bc.core.query.condition.Condition;
  * 
  * @param <T>
  */
-public class SpringJdbcQuery<T extends Object> implements
-		cn.bc.core.query.Query<T> {
+public class SpringJdbcQuery<T extends Object> implements cn.bc.core.query.Query<T> {
 	private JdbcTemplate jdbcTemplate;
 	private Condition condition;
 	private String sql;
-	private List<Object> sqlArgs = new ArrayList<Object>();
+	private List<Object> sqlArgs = new ArrayList<>();
 	private RowMapper<T> rowMapper;// 行包装器
 
 	public void setSqlArgs(List<Object> sqlArgs) {
@@ -52,8 +51,6 @@ public class SpringJdbcQuery<T extends Object> implements
 
 	/**
 	 * 构造一个基于jdbc的Query实现
-	 * 
-	 * @param session
 	 */
 	public SpringJdbcQuery(DataSource dataSource, RowMapper<T> rowMapper) {
 		this();
@@ -78,7 +75,7 @@ public class SpringJdbcQuery<T extends Object> implements
 		} else {
 			queryTemp = "select count(*) " + removeSelect(queryTemp);
 		}
-		return this.jdbcTemplate.queryForInt(queryTemp, this.sqlArgs.toArray());
+		return this.jdbcTemplate.queryForObject(queryTemp, this.sqlArgs.toArray(), Integer.class);
 	}
 
 	public T singleResult() {
@@ -96,14 +93,11 @@ public class SpringJdbcQuery<T extends Object> implements
 	}
 
 	public List<T> list(int pageNo, int pageSize) {
-		return this.jdbcTemplate.query(getSql(),
-				new SplitPageRowMapperResultSetExtractor<T>(rowMapper, pageNo,
-						pageSize));
+		return this.jdbcTemplate.query(getSql(), new SplitPageRowMapperResultSetExtractor<>(rowMapper, pageNo, pageSize));
 	}
 
 	public Page<T> page(int pageNo, int pageSize) {
-		return new Page<T>(pageNo, pageSize, this.count(), this.list(pageNo,
-				pageSize));
+		return new Page<>(pageNo, pageSize, this.count(), this.list(pageNo, pageSize));
 	}
 
 	public List<Object> listWithSelect(String select) {
