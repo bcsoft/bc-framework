@@ -3,6 +3,7 @@
  */
 package cn.bc.identity.web;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import cn.bc.identity.domain.ActorHistory;
  * @author dragon
  * 
  */
-public class SystemContextImpl implements SystemContext {
+public class SystemContextImpl implements SystemContext, Serializable {
 	private Map<String, Object> attrs = new HashMap<String, Object>();
 
 	@SuppressWarnings("unchecked")
