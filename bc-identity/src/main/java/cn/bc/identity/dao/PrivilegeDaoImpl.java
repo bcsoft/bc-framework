@@ -1,26 +1,24 @@
 package cn.bc.identity.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class PrivilegeDaoImpl implements PrivilegeDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
 	@Override
 	public int addUser(Long roleId, Long userId) {
-		
-		String sqlsql = "insert into bc_identity_role_actor (aid,rid) values(?,?)";
-		return jdbcTemplate.update(sqlsql, userId, roleId);
+		String sql = "insert into bc_identity_role_actor (aid,rid) values(?,?)";
+		return jdbcTemplate.update(sql, userId, roleId);
 	}
 
 	@Override
 	public long addActorByRole(Long roleId, Long actorId) {
-			String insql = "insert into bc_identity_role_actor (rid,aid) values(?,?)" ;
-			return jdbcTemplate.update(insql, roleId, actorId);
+		String sql = "insert into bc_identity_role_actor (rid,aid) values(?,?)";
+		return jdbcTemplate.update(sql, roleId, actorId);
 	}
 
 	@Override
@@ -32,14 +30,18 @@ public class PrivilegeDaoImpl implements PrivilegeDao {
 	@Override//10114209
 	public Long getActorbyHistoryActor(Long id) {
 		String sql = "select actor_id from bc_identity_actor_history where id=?";
-		
-		return jdbcTemplate.queryForLong(sql, id);
+
+		try {
+			return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
 	public int ActorRelationIsExist(Long roleId, Long actorId) {
 		String sql = "select count(*) from bc_identity_role_actor where rid=? and aid=?";
-		return jdbcTemplate.queryForInt(sql, roleId, actorId);
+		return jdbcTemplate.queryForObject(sql, new Object[]{roleId, actorId}, Integer.class);
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class PrivilegeDaoImpl implements PrivilegeDao {
 	@Override
 	public int RoleResouceIsExist(long roleId, long resourceId) {
 		String sql = "select count(*) from bc_identity_role_resource where rid=? and sid=?";
-		return jdbcTemplate.queryForInt(sql, roleId, resourceId);
+		return jdbcTemplate.queryForObject(sql, new Object[]{roleId, resourceId}, Integer.class);
 	}
 
 	@Override
@@ -65,6 +67,4 @@ public class PrivilegeDaoImpl implements PrivilegeDao {
 		String sql = "select name from bc_identity_role where id=?";
 		return jdbcTemplate.query(sql, new Object[]{roleId}, new ColumnMapRowMapper()).get(0).get("name").toString();
 	}
-
-
 }
