@@ -1,28 +1,20 @@
 package cn.bc.orm.hibernate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.sql.DataSource;
-
-import org.junit.Assert;
-
-import org.junit.Test;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.bc.core.Page;
 import cn.bc.core.dao.CrudDao;
 import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.db.jdbc.SimpleJdbcInsertEx;
 import cn.bc.test.TestUtils;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
+import java.util.*;
 
 
 @Transactional
@@ -30,10 +22,9 @@ import cn.bc.test.TestUtils;
 public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 	protected CrudDao<Domain> crudDao;
 	protected DataSource dataSource;
-	protected SimpleJdbcTemplate simpleJdbcTemplate;
 	private SimpleJdbcInsert jdbcInsert;
 
-	protected String getTableName(){
+	protected String getTableName() {
 		return "BC_EXAMPLE";
 	}
 	// ==dependency inject
@@ -49,7 +40,6 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		this.simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource);
 		this.jdbcInsert = new SimpleJdbcInsertEx(dataSource, TestUtils
 				.getDbSequence()).withTableName(getTableName())
 				.usingGeneratedKeyColumns("id");
@@ -109,7 +99,7 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 		Long id1 = insertOne("name");
 		Long id2 = insertOne("name1");
 
-		crudDao.delete(new Long[] { id1, id2 });
+		crudDao.delete(new Long[]{id1, id2});
 		Domain entity = crudDao.load(id1);
 		Assert.assertNull(entity);
 		entity = crudDao.load(id2);
@@ -135,7 +125,7 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 		// update
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", "newName");
-		crudDao.update(new Long[] { id1, id2 }, map);
+		crudDao.update(new Long[]{id1, id2}, map);
 
 		Domain entity = crudDao.load(id1);
 		Assert.assertNotNull(entity);
@@ -230,7 +220,7 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 		List<Object> list = q.listWithSelect(select);
 		Assert.assertNotNull(list);
 		Assert.assertTrue(list.size() == 0);
-		
+
 
 		// 插入1条
 		Long id1 = insertOne("name0");
@@ -241,7 +231,7 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 		Assert.assertNotNull(list);
 		Assert.assertTrue(list.size() == 1);
 		Assert.assertTrue(list.get(0).getClass().isArray());
-		Assert.assertEquals(id1,((Object[])list.get(0))[0]);
+		Assert.assertEquals(id1, ((Object[]) list.get(0))[0]);
 
 		// 插入10条
 		String uuid = UUID.randomUUID().toString();
@@ -360,7 +350,7 @@ public abstract class AbstractSpringManageDaoTest implements InitializingBean {
 
 	/**
 	 * 向数据库中插入一条新数据
-	 * 
+	 *
 	 * @return 返回主键的值
 	 */
 	protected abstract Long insertOne(String name);

@@ -160,8 +160,10 @@ public class HibernateCrudDao<T extends Object> implements CrudDao<T>,
 	}
 
 	public void save(Collection<T> entities) {
-		if (null != entities && !entities.isEmpty())
-			this.getHibernateTemplate().saveOrUpdateAll(entities);
+		if (null != entities && !entities.isEmpty()) {
+			throw new UnsupportedOperationException("HibernateTemplate Unsupported saveOrUpdateAll method from version 5+");
+			//this.getHibernateTemplate().saveOrUpdateAll(entities);
+		}
 	}
 
 	public void update(Serializable pk, Map<String, Object> attributes) {

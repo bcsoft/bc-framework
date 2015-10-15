@@ -25,7 +25,7 @@ public class HibernateJpaDialect extends
 	}
 
 	public void setFlushMode(String aFlushMode) {
-		flushMode = FlushMode.parse(aFlushMode);
+		flushMode = FlushMode.interpretExternalSetting(aFlushMode);
 		if (aFlushMode != null && flushMode == null) {
 			throw new IllegalArgumentException(
 					aFlushMode
