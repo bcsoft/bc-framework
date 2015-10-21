@@ -312,14 +312,23 @@ public class WebUtils implements ServletContextAware {
 		String[] server = new String[]{null, null, null};
 		try {
 			InetAddress localhost = InetAddress.getLocalHost();
-			server[0] = localhost.getHostAddress();
+			//server[0] = localhost.getHostAddress();
 			server[1] = localhost.getHostName();
+
+			// 客户端访问的域名+路由器所转发到的内部服务器的端口号
+			String s = request.getServerName() + ":" + request.getServerPort();
+			// 本地服务器的IP和端口
+			String l = request.getLocalAddr() + ":" + request.getLocalPort();
+			if (s.equals(l)) {
+				server[0] = l;
+			} else {
+				server[0] = s + "/" + l;
+			}
 		} catch (UnknownHostException e) {
 			server[0] = "unknown";
 			server[1] = "unknown";
 		}
-		server[2] = request != null ? request.getRequestURL().toString()
-				: "unknown";
+		server[2] = request != null ? request.getRequestURL().toString() : "unknown";
 		return server;
 	}
 
