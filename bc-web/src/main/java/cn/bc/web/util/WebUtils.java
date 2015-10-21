@@ -32,7 +32,7 @@ import java.net.UnknownHostException;
 
 /**
  * WebUI的辅助函数库
- * 
+ *
  * @author dragon
  * @since 1.0.0
  */
@@ -61,8 +61,6 @@ public class WebUtils implements ServletContextAware {
 	 * <p>
 	 * 这个需要在系统初始化时设置
 	 * </p>
-	 * 
-	 * @param rootPath
 	 */
 	public static void setRootPath(String rootPath) {
 		WebUtils.rootPath = rootPath;
@@ -70,36 +68,31 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 生成CSS的输出语句
-	 * 
-	 * @param cssPath
-	 *            所要输出的CSS路径
+	 *
+	 * @param cssPath 所要输出的CSS路径
 	 * @return 该CSS输出的HTML语句
 	 */
 	public static String printCSS(String cssPath) {
-		return "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssPath
-				+ "\"/>";
+		return "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssPath + "\"/>";
 	}
 
 	/**
 	 * 生成JS的输出语句
-	 * 
-	 * @param jsPath
-	 *            所要输出的CSS路径
+	 *
+	 * @param jsPath 所要输出的CSS路径
 	 * @return 该JS输出的HTML语句
 	 */
 	public static String printJS(String jsPath) {
-		return "<script type=\"text/javascript\" src=\"" + jsPath
-				+ "\"></script>";
+		return "<script type=\"text/javascript\" src=\"" + jsPath + "\"></script>";
 	}
 
 	/**
 	 * 获取请求的资源的路径信息
-	 * 
+	 * <p>
 	 * <pre>
 	 * http://www.demo.com/demo/test.htm  -->  /demo/test.htm</span>
 	 * </pre>
-	 * 
-	 * @param request
+	 *
 	 * @return 返回格式如/demo/test.htm
 	 */
 	public static String getResourcePath(HttpServletRequest request) {
@@ -110,13 +103,11 @@ public class WebUtils implements ServletContextAware {
 		// special attribute holds the correct path. See section 8.3 of the
 		// Servlet 2.3 specification.
 
-		String path = (String) request
-				.getAttribute("javax.servlet.include.servlet_path");
+		String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
 
 		// Also take into account the PathInfo stated on
 		// SRV.4.4 Request Path Elements.
-		String info = (String) request
-				.getAttribute("javax.servlet.include.path_info");
+		String info = (String) request.getAttribute("javax.servlet.include.path_info");
 
 		if (path == null) {
 			path = request.getServletPath();
@@ -132,38 +123,30 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 包装指定的js函数：函数上下文及参数不变，但函数可以延时定义
-	 * 
-	 * @param fnName
-	 *            要包装的js函数名
+	 *
+	 * @param fnName 要包装的js函数名
 	 * @return 包装好的函数
 	 */
 	public static String wrapJSFunction(String fnName) {
-		return "function(){return window['" + fnName
-				+ "'].apply(this,arguments);}";
+		return "function(){return window['" + fnName + "'].apply(this,arguments);}";
 	}
 
 	public static String wrapJSFunctionWithVar(String fnName, String varName) {
 		if (!StringUtils.hasLength(varName))
-			return "function(){return window['" + fnName
-					+ "'].apply(this,arguments);}";
+			return "function(){return window['" + fnName + "'].apply(this,arguments);}";
 		else
-			return "function(){this.pvar='" + varName + "';return window['"
-					+ fnName + "'].apply(this,arguments);}";
+			return "function(){this.pvar='" + varName + "';return window['" + fnName + "'].apply(this,arguments);}";
 	}
 
-	public static String encodeFileName(HttpServletRequest request,
-			String srcFileName) {
-		boolean isIE = request.getHeader("User-Agent").toUpperCase()
-				.indexOf("MSIE") != -1;
+	public static String encodeFileName(HttpServletRequest request, String srcFileName) {
+		boolean isIE = request.getHeader("User-Agent").toUpperCase().contains("MSIE");
 		return encodeFileName(isIE, srcFileName);
 	}
 
 	/**
 	 * 重新编码下载文件的文件名，保证中文不乱码
-	 * 
-	 * @param isIE
-	 * @param srcFileName
-	 *            原文件名
+	 *
+	 * @param srcFileName 原文件名
 	 * @return 编码后的文件名
 	 */
 	public static String encodeFileName(boolean isIE, String srcFileName) {
@@ -179,12 +162,10 @@ public class WebUtils implements ServletContextAware {
 					// 无法下载文件。这是IE的bug，参见微软的知识库文章KB816868
 					// 微软提供了一个补丁，这个补丁需要先安装ie6 sp1
 					String guessCharset = "gb2312"; // 根据request的locale得出可能的编码，中文操作系统通常是gb2312
-					_fileName = new String(srcFileName.getBytes(guessCharset),
-							"ISO8859-1");
+					_fileName = new String(srcFileName.getBytes(guessCharset), "ISO8859-1");
 				}
 			} else {// 非IE核心的浏览器:不能使用URLEncoder.encode，否则文件名为一长串的url编码
-				_fileName = new String(srcFileName.getBytes("UTF-8"),
-						"ISO8859-1");
+				_fileName = new String(srcFileName.getBytes("UTF-8"), "ISO8859-1");
 			}
 		} catch (UnsupportedEncodingException e) {
 			logger.warn(e.getMessage());
@@ -195,12 +176,9 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取产生请求的客户端IP地址信息
-	 * 
-	 * @param request
-	 * @return
 	 */
 	public static String getClientIP(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");// apache转发
+		String ip = request.getHeader("X-Forwarded-For");// 反向代理转发
 		logger.debug("get clientIP by request.getHeader(\"x-forwarded-for\")");
 		if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
 			ip = request.getHeader("Proxy-Client-IP");// 使用代理
@@ -225,12 +203,9 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取客户端信息:[0]-IP地址,[1]-名称,[2]-User Agent,[3]-mac
-	 * 
-	 * @param request
-	 * @return
 	 */
 	public static String[] getClient(HttpServletRequest request) {
-		String[] client = new String[] { null, null, null, null };
+		String[] client = new String[]{null, null, null, null};
 
 		// 客户端User Agent信息
 		client[2] = request.getHeader("User-Agent");
@@ -239,18 +214,15 @@ public class WebUtils implements ServletContextAware {
 		String key = "X-Forwarded-For";
 
 		String clientIp = request.getHeader(key);
-		if (clientIp == null || clientIp.length() == 0
-				|| "unknown".equalsIgnoreCase(clientIp)) {
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
 			key = "Proxy-Client-IP";
 			clientIp = request.getHeader(key);
 		}
-		if (clientIp == null || clientIp.length() == 0
-				|| "unknown".equalsIgnoreCase(clientIp)) {
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
 			key = "WL-Proxy-Client-IP"; // Weblogic集群获取客户端IP
 			clientIp = request.getHeader(key);
 		}
-		if (clientIp == null || clientIp.length() == 0
-				|| "unknown".equalsIgnoreCase(clientIp)) {
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
 			key = "RemoteAddr";
 			clientIp = request.getRemoteAddr();// 获得客户端电脑的名字，若失败则返回客户端电脑的ip地址
 		}
@@ -289,9 +261,6 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 判断浏览器的用户代理是否是移动设备
-	 * 
-	 * @param userAgent
-	 * @return
 	 */
 	public static boolean isMobile(String userAgent) {
 		if (userAgent == null || userAgent.isEmpty())
@@ -299,7 +268,7 @@ public class WebUtils implements ServletContextAware {
 
 		String ua = userAgent.toLowerCase();
 		for (String m : mobiles) {
-			if (ua.indexOf(m) != -1)
+			if (ua.contains(m))
 				return true;
 		}
 
@@ -309,7 +278,7 @@ public class WebUtils implements ServletContextAware {
 	/**
 	 * 移动设备标识符
 	 */
-	private static String[] mobiles = new String[] { "android", "x11",
+	private static String[] mobiles = new String[]{"android", "x11",
 			"iphone", "iPod", "webos", "midp", "j2me", "avant", "docomo",
 			"novarra", "palmos", "palmsource", "240x320", "opwv", "chtml",
 			"pda", "windows ce", "mmp/", "blackberry", "mib/", "symbian",
@@ -320,12 +289,10 @@ public class WebUtils implements ServletContextAware {
 			"benq", "java", "pt", "pg", "vox", "amoi", "bird", "compal", "kg",
 			"voda", "sany", "kdd", "dbt", "sendo", "sgh", "gradi", "jb",
 			"dddi", "moto", "incognito", "webmate", "dream", "cupcake",
-			"s8000", "bada", "googlebot-mobile" };
+			"s8000", "bada", "googlebot-mobile"};
 
 	/**
 	 * 获取Server IP地址信息
-	 * 
-	 * @return
 	 */
 	public static String getServerIP() {
 		String ip;
@@ -340,11 +307,9 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取Server信息:[0]-IP地址,[1]-名称,[2]-url
-	 * 
-	 * @return
 	 */
 	public static String[] getServer(HttpServletRequest request) {
-		String[] server = new String[] { null, null, null };
+		String[] server = new String[]{null, null, null};
 		try {
 			InetAddress localhost = InetAddress.getLocalHost();
 			server[0] = localhost.getHostAddress();
@@ -360,9 +325,7 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取指定ip的mac地址
-	 * 
-	 * @param ip
-	 * @return
+	 *
 	 * @throws Exception
 	 */
 	public static String getMac(String ip) throws Exception {
@@ -373,21 +336,17 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取 WebApplicationContext 对象
-	 * 
-	 * @return
 	 */
 	public static synchronized WebApplicationContext getWac() {
 		if (null == wac)
-			wac = WebApplicationContextUtils
-					.getRequiredWebApplicationContext(servletContext);
+			wac = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		return wac;
 	}
 
 	/**
 	 * 获取Spring对象
-	 * 
-	 * @param name
-	 *            bean的配置名称
+	 *
+	 * @param name bean的配置名称
 	 * @return bean对象
 	 */
 	public static <T> T getBean(String name, Class<T> requiredType) {
@@ -400,9 +359,6 @@ public class WebUtils implements ServletContextAware {
 
 	/**
 	 * 获取客户端浏览器的标识信息
-	 * 
-	 * @param request
-	 * @return
 	 */
 	public static String getBrowser(HttpServletRequest request) {
 		return request.getHeader("User-Agent");
