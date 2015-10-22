@@ -852,7 +852,7 @@
 			<dependency>
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz</artifactId>
-				<!-- 2.2.2(2015-10-12), 1.8.5(2011-04-14) -->
+				<!-- 2.2.2(2015-10-12), 1.8.6(2012-01-13), 1.8.5(2011-04-14) -->
 				<version>2.2.2</version>
 			</dependency>
 			<dependency>

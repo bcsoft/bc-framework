@@ -1,26 +1,27 @@
 package cn.bc.scheduler.spring;
 
+import cn.bc.scheduler.domain.ScheduleJob;
+import cn.bc.scheduler.domain.ScheduleLog;
+import cn.bc.scheduler.service.SchedulerService;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean.MethodInvokingJob;
+import org.springframework.util.MethodInvoker;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.SchedulerException;
-import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean.MethodInvokingJob;
-import org.springframework.util.MethodInvoker;
-
-import cn.bc.scheduler.domain.ScheduleJob;
-import cn.bc.scheduler.domain.ScheduleLog;
-import cn.bc.scheduler.service.SchedulerService;
+import static org.quartz.JobKey.jobKey;
+import static org.quartz.TriggerKey.triggerKey;
 
 public class MethodInvokingJobEx extends MethodInvokingJob {
-	private static final Log logger = LogFactory
-			.getLog(MethodInvokingJobEx.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodInvokingJobEx.class);
 	private MethodInvoker methodInvoker;
 	private SchedulerService schedulerService;
 	private ScheduleJob scheduleJob;
@@ -64,10 +65,10 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 
 	private void stopInError(JobExecutionContext context) {
 		try {
-			logger.error("因发生异常,终止任务\"" + scheduleJob.getName() + "\"的后续调度");
+			logger.error("因发生异常,终止任务\"{}\"的后续调度", scheduleJob.getName());
 			// 把老的任务给停止、删除
-			context.getScheduler().unscheduleJob(scheduleJob.getName(), scheduleJob.getGroupn());
-			context.getScheduler().deleteJob(scheduleJob.getName(), scheduleJob.getGroupn());
+			context.getScheduler().unscheduleJob(triggerKey(scheduleJob.getName(), scheduleJob.getGroupn()));
+			context.getScheduler().deleteJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -84,7 +85,7 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 		writer.close();
 		scheduleLog.setMsg(strWriter.toString());
 		this.schedulerService.saveScheduleLog(scheduleLog);
-		logger.error("任务\"" + scheduleJob.getName() + "\"执行过程发生错误,请检查任务的错误日志信息");
+		logger.error("任务\"{}\"执行过程发生错误,请检查任务的错误日志信息", scheduleJob.getName());
 
 		if (!scheduleJob.isIgnoreError())
 			stopInError(context);
@@ -93,11 +94,9 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 	/**
 	 * Invoke the method via the MethodInvoker.
 	 */
-	protected void executeInternal(JobExecutionContext context)
-			throws JobExecutionException {
+	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		long startTime = new Date().getTime();
-		logger.warn("正在执行任务\"" + scheduleJob.getName() + "\"("
-				+ scheduleJob.getMemo() + ")");
+		logger.warn("正在执行任务\"{}\"({})", scheduleJob.getName(), scheduleJob.getMemo());
 		// 创建日志
 		scheduleLog = new ScheduleLog();
 		scheduleLog.setStartDate(Calendar.getInstance());
@@ -138,7 +137,7 @@ public class MethodInvokingJobEx extends MethodInvokingJob {
 			// throw new JobMethodInvocationFailedException(this.methodInvoker,
 			// ex);
 		}
-		logger.warn("任务\"" + scheduleJob.getName() + "\"执行完毕,耗时"
-				+ this.buildTime(startTime));
+		if (logger.isWarnEnabled())
+			logger.warn("任务\"{}\"执行完毕,耗时{}", scheduleJob.getName(), this.buildTime(startTime));
 	}
 }
