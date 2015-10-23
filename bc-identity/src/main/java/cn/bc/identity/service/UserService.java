@@ -4,6 +4,8 @@ import cn.bc.core.query.condition.Condition;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.AuthData;
 
+import java.util.List;
+
 /**
  * 用户Service接口
  *
@@ -58,4 +60,11 @@ public interface UserService extends ActorService {
      * @return
      */
     Long[] getCurrenUserUnitInfoLimitedIds();
+
+    /**
+     * 获取隶属指定岗位的所有用户的编码
+     * @param groupCode 岗位编码
+     * @param userStatuses 用户的状态
+     */
+    List<String> findAllUserCodeByGroup(String groupCode, Integer[] userStatuses);
 }

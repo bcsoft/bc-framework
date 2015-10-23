@@ -189,4 +189,10 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 			Integer[] status, Integer... descendantOrganizationTypes) {
 		return this.actorDao.findDescendantUser(organizationId, status, descendantOrganizationTypes);
 	}
+
+	@Override
+	public List<String> findFollowerCode(String masterCode, Integer[] relationTypes
+			, Integer[] followerTypes, Integer[] followerStatuses) {
+		return this.actorDao.findFollowerCode(masterCode, relationTypes, followerTypes, followerStatuses);
+	}
 }

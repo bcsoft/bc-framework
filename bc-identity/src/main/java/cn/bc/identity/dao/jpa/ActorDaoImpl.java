@@ -1029,4 +1029,68 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 		List result = executeNativeQuery(hql.toString(), args.toArray());
 		return ((List<String>) result).toArray(new String[0]);
 	}
+
+	public List<String> findFollowerCode(String masterCode, Integer[] relationTypes
+			, Integer[] followerTypes, Integer[] followerStatuses) {
+		if (masterCode == null) return new ArrayList<>();
+
+		ArrayList<Object> args = new ArrayList<>();
+		StringBuffer hql = new StringBuffer();
+		hql.append("select f.code from Actor f, ActorRelation ar, Actor m");
+		hql.append(" where f.id = ar.follower.id");
+		hql.append(" and m.id = ar.master.id and m.code = ?");
+		args.add(masterCode);
+
+		// 关联的类型，对应ActorRelation的type属性
+		if (relationTypes != null && relationTypes.length > 0) {
+			if (relationTypes.length == 1) {
+				hql.append(" and ar.type = ?");
+				args.add(relationTypes[0]);
+			} else {
+				hql.append(" and ar.type in (?");
+				args.add(relationTypes[0]);
+				for (int i = 1; i < relationTypes.length; i++) {
+					hql.append(", ?");
+					args.add(relationTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的类型，对应Actor的type属性
+		if (followerTypes != null && followerTypes.length > 0) {
+			if (followerTypes.length == 1) {
+				hql.append(" and f.type = ?");
+				args.add(followerTypes[0]);
+			} else {
+				hql.append(" and f.type in (?");
+				args.add(followerTypes[0]);
+				for (int i = 1; i < followerTypes.length; i++) {
+					hql.append(", ?");
+					args.add(followerTypes[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 从属方的状态，对应Actor的status属性
+		if (followerStatuses != null && followerStatuses.length > 0) {
+			if (followerStatuses.length == 1) {
+				hql.append(" and f.status = ?");
+				args.add(followerStatuses[0]);
+			} else {
+				hql.append(" and f.status in (?");
+				args.add(followerStatuses[0]);
+				for (int i = 1; i < followerStatuses.length; i++) {
+					hql.append(", ?");
+					args.add(followerStatuses[i]);
+				}
+				hql.append(")");
+			}
+		}
+
+		// 排序
+		hql.append(" order by ar.type, ar.orderNo, f.type, f.orderNo");
+		return executeQuery(hql.toString(), args);
+	}
 }

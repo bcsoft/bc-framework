@@ -362,4 +362,15 @@ public interface ActorService extends CrudService<Actor> {
 	 * @return
 	 */
 	String[] findMailAddressByUser(String[] userCodes);
+
+	/**
+	 * 获取隶属指定actor的所有actor的编码
+	 *
+	 * @param masterCode 主控方编码
+	 * @param relationTypes 关联的类型，对应ActorRelation的type属性
+	 * @param followerTypes 从属方的类型，对应Actor的type属性
+	 * @param followerStatuses 从属方的状态，对应Actor的status属性
+	 * @return
+	 */
+	List<String> findFollowerCode(String masterCode, Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses);
 }
