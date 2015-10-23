@@ -1,21 +1,7 @@
 /**
- * 
+ *
  */
 package cn.bc.report.web.struts2;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
@@ -27,28 +13,35 @@ import cn.bc.report.domain.ReportTemplate;
 import cn.bc.report.service.ReportService;
 import cn.bc.template.domain.Template;
 import cn.bc.web.struts2.ViewAction;
-import cn.bc.web.ui.html.grid.Column;
-import cn.bc.web.ui.html.grid.Grid;
-import cn.bc.web.ui.html.grid.GridExporter;
-import cn.bc.web.ui.html.grid.GridFooter;
-import cn.bc.web.ui.html.grid.PageSizeGroupButton;
-import cn.bc.web.ui.html.grid.SeekGroupButton;
+import cn.bc.web.ui.html.grid.*;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.html.toolbar.Toolbar;
 import cn.bc.web.ui.html.toolbar.ToolbarButton;
 import cn.bc.web.ui.json.Json;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报表执行Action
- * 
+ *
  * @author dragon
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ReportAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(ReportAction.class);
+	private static Logger logger = LoggerFactory.getLogger(ReportAction.class);
 	public String code;// 报表模板的编码
 	private ReportService reportService;
 	private ReportTemplate tpl;// 报表模板
@@ -77,34 +70,31 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 		// 避免空指针引用
 		if (this.config == null) {
-            this.config = new JSONObject();
-        }
+			this.config = new JSONObject();
+		}
 
-        // 默认提供存为历史报表按钮
-        if(!this.config.has("history")){
-            try {
-                this.config.put("history", true);
-            } catch (JSONException e) {
-            }
-        }
+		// 默认提供存为历史报表按钮
+		if (!this.config.has("history")) {
+			this.config.put("history", true);
+		}
 	}
 
 	@Override
 	protected Toolbar getHtmlPageToolbar(boolean useDisabledReplaceDelete) {
 		// 判断是否生成工具条
 		if (!(this.getConfig().has("search") || this.getConfig().has("tb")
-                || this.getConfig().has("condition")
-                || this.getConfig().has("history")))
+				|| this.getConfig().has("condition")
+				|| this.getConfig().has("history")))
 			return null;
 
 		try {
 			Toolbar tb = new Toolbar();
 
 			// 默认添加存为历史按钮
-            if (!this.getConfig().has("history") || this.getConfig().getBoolean("history")) {
-                tb.addButton(new ToolbarButton().setIcon("ui-icon-tag")
-                    .setText("存为历史报表").setClick("bc.report.save2history"));
-            }
+			if (!this.getConfig().has("history") || this.getConfig().getBoolean("history")) {
+				tb.addButton(new ToolbarButton().setIcon("ui-icon-tag")
+						.setText("存为历史报表").setClick("bc.report.save2history"));
+			}
 
 			// 添加自定义的按钮
 			if (this.getConfig().has("tb")) {
@@ -200,8 +190,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	/**
 	 * 执行报表
-	 * 
-	 * @return
+	 *
 	 * @throws Exception
 	 */
 	public String run() throws Exception {
@@ -308,8 +297,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	/**
 	 * 将报表运行结果存为历史
-	 * 
-	 * @return
+	 *
 	 * @throws Exception
 	 */
 	public String save2history() throws Exception {
@@ -343,7 +331,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 					.setPageCount(this.getPage().getPageCount())
 					.setTotalCount(this.getPage().getTotalCount()));
 			footer.addButton(new PageSizeGroupButton().setActiveValue(25)
-					.setValues(new int[] { 25, 50, 100 })
+					.setValues(new int[]{25, 50, 100})
 					.setTitle(getText("label.pageSize")));
 		}
 
@@ -354,7 +342,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	}
 
 	@Override
-    protected void extendGridExtrasData(JSONObject json) throws JSONException {
+	protected void extendGridExtrasData(JSONObject json) throws JSONException {
 		super.extendGridExtrasData(json);
 		if (this.code != null)
 			json.put("code", this.code);
@@ -425,10 +413,7 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 	@Override
 	protected String[] getGridSearchFields() {
 		if (this.getConfig().has("search")) {
-			try {
-				return this.getConfig().getString("search").split(",");
-			} catch (JSONException e) {
-			}
+			return this.getConfig().getString("search").split(",");
 		}
 		return null;
 	}

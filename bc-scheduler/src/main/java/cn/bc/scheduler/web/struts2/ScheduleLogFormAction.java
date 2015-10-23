@@ -50,7 +50,7 @@ public class ScheduleLogFormAction extends EntityAction<Long, ScheduleLog> {
 	}
 
 	@Override
-	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(618).setMinWidth(250).setMinHeight(150);
+	protected PageOption buildPageOption(boolean editable) {
+		return super.buildPageOption(editable).setWidth(618).setMinWidth(250).setMinHeight(150);
 	}
 }

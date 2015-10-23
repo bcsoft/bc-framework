@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bc.web.ui.html.grid.TextColumn;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -70,29 +71,27 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 		sqlObject.setArgs(null);
 
 		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				int i = 0;
-				map.put("id", rs[i++]);
-				map.put("type", rs[i++]);
-				map.put("subject", rs[i++]);
-				map.put("fileDate", rs[i++]);
-				map.put("authorId", rs[i++]);
-				map.put("authorName", rs[i++]);
-				map.put("authorDepart", rs[i++]);
-				map.put("clientIp", rs[i++]);
-				map.put("clientInfo", rs[i++]);
-				map.put("serverIp", rs[i++]);
-				return map;
-			}
+		sqlObject.setRowMapper((rs, rowNum) -> {
+			Map<String, Object> map = new HashMap<>();
+			int i = 0;
+			map.put("id", rs[i++]);
+			map.put("type", rs[i++]);
+			map.put("subject", rs[i++]);
+			map.put("fileDate", rs[i++]);
+			map.put("authorId", rs[i++]);
+			map.put("authorName", rs[i++]);
+			map.put("authorDepart", rs[i++]);
+			map.put("clientIp", rs[i++]);
+			map.put("clientInfo", rs[i++]);
+			map.put("serverIp", rs[i++]);
+			return map;
 		});
 		return sqlObject;
 	}
 
 	@Override
 	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
+		List<Column> columns = new ArrayList<>();
 		columns.add(new IdColumn4MapKey("l.id", "id"));
 		columns.add(new TextColumn4MapKey("l.file_date", "fileDate",
 				getText("syslog.createDate"), 130).setSortable(true)
@@ -106,15 +105,16 @@ public class SyslogsAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("l.c_ip", "clientIp",
 				getText("syslog.clientIp"), 110).setSortable(true));
 		columns.add(new TextColumn4MapKey("h.pname", "authorDepart",
-				getText("syslog.departName")).setSortable(true)
+				getText("syslog.departName"), 200).setSortable(true)
 				.setUseTitleFromLabel(true));
 		if (!my)
-			columns.add(new TextColumn4MapKey("l.s_ip", "serverIp",
-					getText("syslog.serverIp"), 110).setSortable(true));
+			columns.add(new TextColumn4MapKey("l.s_ip", "serverIp",getText("syslog.serverIp"), 240)
+					.setSortable(true).setUseTitleFromLabel(true));
 		columns.add(new TextColumn4MapKey("l.c_info", "clientInfo",
-				getText("syslog.clientInfo"), 200).setSortable(true)
+				getText("syslog.clientInfo"), 800).setSortable(true)
 				.setUseTitleFromLabel(true));
 
+		columns.add(new TextColumn());
 		return columns;
 	}
 

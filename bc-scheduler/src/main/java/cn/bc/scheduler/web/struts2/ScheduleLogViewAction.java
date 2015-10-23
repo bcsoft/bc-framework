@@ -5,12 +5,9 @@ package cn.bc.scheduler.web.struts2;
 
 import cn.bc.core.query.condition.Direction;
 import cn.bc.core.query.condition.impl.OrderCondition;
-import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
-import cn.bc.scheduler.domain.ScheduleLog;
 import cn.bc.scheduler.service.SchedulerManage;
 import cn.bc.web.formater.BooleanFormater;
-import cn.bc.web.formater.CalendarRangeFormaterEx;
 import cn.bc.web.formater.DateRangeFormaterEx;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
@@ -90,17 +87,15 @@ public class ScheduleLogViewAction extends ViewAction<Map<String, Object>> {
 		sqlObject.setArgs(null);
 
 		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<>();
-				int i = 0;
-				map.put("id", rs[i++]);
-				map.put("success", rs[i++]);
-				map.put("cfg_name", rs[i++]);
-				map.put("start_date", rs[i++]);
-				map.put("end_date", rs[i]);
-				return map;
-			}
+		sqlObject.setRowMapper((rs, rowNum) -> {
+			Map<String, Object> map = new HashMap<>();
+			int i = 0;
+			map.put("id", rs[i++]);
+			map.put("success", rs[i++]);
+			map.put("cfg_name", rs[i++]);
+			map.put("start_date", rs[i++]);
+			map.put("end_date", rs[i]);
+			return map;
 		});
 		return sqlObject;
 	}
@@ -116,6 +111,7 @@ public class ScheduleLogViewAction extends ViewAction<Map<String, Object>> {
 		columns.add(new TextColumn4MapKey("start_date", "start_date", getText("scheduleLog.startDate2endDate"), 310)
 				.setSortable(true).setDir(Direction.Desc).setValueFormater(new DateRangeFormaterEx() {
 					@Override
+					@SuppressWarnings("unchecked")
 					public Date getToDate(Object context, Object value) {
 						return (Date) ((Map<String, Object>) context).get("end_date");
 					}

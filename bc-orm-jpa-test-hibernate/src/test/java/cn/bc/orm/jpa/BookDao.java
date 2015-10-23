@@ -1,6 +1,6 @@
 package cn.bc.orm.jpa;
 
-import org.hibernate.impl.QueryImpl;
+import org.hibernate.jpa.internal.QueryImpl;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +90,8 @@ public class BookDao {
 		 * OpenJPA的 QueryImpl> impl = q.unwrap(QueryImpl.class); impl.setResultClass(Map.class);
 		 */
 		Query query = em.createQuery(jpql);
-		query.unwrap(QueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		//TODO for hibernate 5
+		//query.unwrap(QueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 
 		return (List<Map<String, Object>>) query.getResultList();
 	}
