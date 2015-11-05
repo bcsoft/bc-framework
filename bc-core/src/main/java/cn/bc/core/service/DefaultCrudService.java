@@ -1,7 +1,17 @@
 /**
- * 
+ *
  */
 package cn.bc.core.service;
+
+import cn.bc.core.SetEntityClass;
+import cn.bc.core.dao.CrudDao;
+import cn.bc.core.exception.CoreException;
+import cn.bc.core.exception.PermissionDeniedException;
+import cn.bc.core.exception.UniqueConstraintException;
+import cn.bc.core.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -9,28 +19,15 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
-
-import cn.bc.core.SetEntityClass;
-import cn.bc.core.dao.CrudDao;
-import cn.bc.core.exception.CoreException;
-import cn.bc.core.query.Query;
-
 
 /**
  * CrudService接口
- * 
+ *
+ * @param <T> 对象类型
  * @author dragon
- * 
- * @param <T>
- *            对象类型
  */
-public class DefaultCrudService<T extends Object> implements CrudService<T>,
-		SetEntityClass<T> , InitializingBean{
-	private static Log logger = LogFactory.getLog(DefaultCrudService.class);
-	//protected final Log logger = LogFactory.getLog(getClass());
+public class DefaultCrudService<T> implements CrudService<T>, SetEntityClass<T>, InitializingBean {
+	private static Logger logger = LoggerFactory.getLogger(DefaultCrudService.class);
 	private CrudDao<T> crudDao;
 	protected Class<T> entityClass;
 
@@ -46,7 +43,7 @@ public class DefaultCrudService<T extends Object> implements CrudService<T>,
 		Type type = this.getClass().getGenericSuperclass();
 		if (type instanceof ParameterizedType) {
 			type = ((ParameterizedType) type).getActualTypeArguments()[0];
-			if (type instanceof Class){
+			if (type instanceof Class) {
 				this.entityClass = (Class<T>) type;
 				if (logger.isDebugEnabled())
 					logger.debug("auto judge entityClass to '" + this.entityClass + "' [" + this.getClass() + "]");
@@ -68,7 +65,7 @@ public class DefaultCrudService<T extends Object> implements CrudService<T>,
 //		}else{
 //			clazz = this.getEntityClass();
 //		}
-		
+
 		//如果dao没有注入entityClass属性，则尝试自动设置
 		if (this.getCrudDao() == null) {
 			throw new CoreException("must inject crudDao [" + this.getClass() + "]");
@@ -97,6 +94,26 @@ public class DefaultCrudService<T extends Object> implements CrudService<T>,
 			logger.debug("setEntityClass:" + clazz);
 	}
 
+	/**
+	 * 验证当前用户的权限
+	 *
+	 * @param readonly false-验证管理权限、true-验证查阅权限
+	 * @throws PermissionDeniedException 当前用户没有指定的权限时
+	 */
+	protected void validatePrivilege(boolean readonly) throws PermissionDeniedException {
+		// do nothing: 基类中复写此方法自定义权限验证;
+	}
+
+	/**
+	 * 实体对象唯一性检测
+	 *
+	 * @param entity 要检测的实体对象
+	 * @throws UniqueConstraintException
+	 */
+	protected void validateUniqueConstraint(T entity) throws UniqueConstraintException {
+		// do nothing: 基类中复写此方法自定义验证;
+	}
+
 	public CrudDao<T> getCrudDao() {
 		return this.crudDao;
 	}
@@ -106,38 +123,48 @@ public class DefaultCrudService<T extends Object> implements CrudService<T>,
 	}
 
 	public void delete(Serializable id) {
+		validatePrivilege(false);
 		this.crudDao.delete(id);
 	}
 
 	public void delete(Serializable[] ids) {
+		validatePrivilege(false);
 		this.crudDao.delete(ids);
 	}
 
 	public T load(Serializable id) {
+		validatePrivilege(true);
 		return this.crudDao.load(id);
 	}
 
 	public T forceLoad(Serializable id) {
+		validatePrivilege(true);
 		return this.crudDao.forceLoad(id);
 	}
 
 	public T create() {
+		validatePrivilege(false);
 		return this.crudDao.create();
 	}
 
 	public T save(T entity) {
+		validatePrivilege(false);
+		validateUniqueConstraint(entity);
 		return this.crudDao.save(entity);
 	}
 
 	public void save(Collection<T> entities) {
+		validatePrivilege(false);
 		this.crudDao.save(entities);
 	}
 
 	public void update(Serializable id, Map<String, Object> attributes) {
+		validatePrivilege(false);
 		this.crudDao.update(id, attributes);
 	}
 
 	public void update(Serializable[] ids, Map<String, Object> attributes) {
+		validatePrivilege(false);
 		this.crudDao.update(ids, attributes);
 	}
 }
