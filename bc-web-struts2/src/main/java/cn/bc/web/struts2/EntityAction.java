@@ -19,6 +19,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -300,10 +301,22 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 
 	// 保存
 	public String save() throws Exception {
-		this.beforeSave(e);
-		this.getCrudService().save(e);
-		this.afterSave(e);
-		return "saveSuccess";
+		JSONObject json = new JSONObject();
+		try {
+			this.beforeSave(e);
+			this.getCrudService().save(e);
+			this.afterSave(e);
+			json.put("success", true);
+			json.put("id", e.getId());
+			json.put("msg", getText("form.save.success"));
+		} catch (Exception e1) {
+			logger.warn(e1.getMessage(), e1);
+			json.put("success", false);
+			json.put("msg", getSaveExceptionMsg(e1));
+			json.put("e", e.getClass().getSimpleName());
+		}
+		this.json = json.toString();
+		return "json";
 	}
 
 	/**
@@ -369,20 +382,43 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 */
 	protected String getDeleteExceptionMsg(Exception e) {
 		if (e instanceof PermissionDeniedException) {
-			return getText("exception.delete.permissionDenied");
+			return e.getMessage() == null ? getText("exception.delete.permissionDenied") : e.getMessage();
 		} else if (e instanceof InnerLimitedException) {
-			return getText("exception.delete.innerLimited");
+			return e.getMessage() == null ? getText("exception.delete.innerLimited") : e.getMessage();
 		} else if (e instanceof NotExistsException) {
-			return getText("exception.delete.notExists");
-		} else if (e instanceof ConstraintViolationException) {
-			return getText("exception.delete.constraintViolation");
+			return e.getMessage() == null ? getText("exception.delete.notExists") : e.getMessage();
+		} else if (e instanceof ConstraintViolationException            // 数据约束
+				|| e.getClass().getName().contains("ConstraintViolationException")
+				|| (e.getCause() != null && e.getCause().getClass().getName().contains("ConstraintViolationException"))) {
+			return e.getMessage() == null ? getText("exception.delete.constraintViolation") : e.getMessage();
 		} else {
 			return e.getMessage();
 		}
 	}
 
 	/**
-	 * 删除操作平台没有处理的异常的默认处理
+	 * 获取保存操作的异常提示信息
+	 */
+	protected String getSaveExceptionMsg(Exception e) {
+		if (e instanceof PermissionDeniedException) {                   // 没有权限
+			return e.getMessage() == null ? getText("exception.save.permissionDenied") : e.getMessage();
+		} else if (e instanceof InnerLimitedException) {                // 修改内置对象
+			return e.getMessage() == null ? getText("exception.save.innerLimited") : e.getMessage();
+		} else if (e instanceof NotExistsException) {                   // 对象不存在
+			return e.getMessage() == null ? getText("exception.save.notExists") : e.getMessage();
+		} else if (e instanceof UniqueConstraintException) {            // 唯一性检测失败
+			return e.getMessage() == null ? getText("exception.save.uniqueConstraint") : e.getMessage();
+		} else if (e instanceof ConstraintViolationException            // 数据约束
+				|| e.getClass().getName().contains("ConstraintViolationException")
+				|| (e.getCause() != null && e.getCause().getClass().getName().contains("ConstraintViolationException"))) {
+			return e.getMessage() == null ? getText("exception.save.constraintViolation") : e.getMessage();
+		} else {
+			return e.getMessage();
+		}
+	}
+
+	/**
+	 * 删除操作 平台没有处理的异常的默认处理
 	 */
 	protected void dealOtherDeleteException(Json json, Exception e) {
 		if ((e.getCause() != null && e.getCause().getClass().getSimpleName().equals("ConstraintViolationException"))

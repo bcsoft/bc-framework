@@ -41,7 +41,7 @@ public class RoleResourceTabAction extends ViewAction<Map<String, Object>> {
 		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		sqlObject.setSql("select s.id,s.type_,s.name,p.name pname, r.id, s.order_"
+		sqlObject.setSql("select s.id sid,s.type_,s.name,p.name pname, r.id rid, s.order_"
 				+ " from bc_identity_resource as s"
 				+ " left join bc_identity_resource as p on p.id = s.belong"
 				+ " inner join bc_identity_role_resource as rs on rs.sid = s.id"
