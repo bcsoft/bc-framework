@@ -682,6 +682,26 @@
 				<version>${struts2.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.struts.xwork</groupId>
+				<artifactId>xwork-core</artifactId>
+				<version>${struts2.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>asm</groupId>
+						<artifactId>asm</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>asm</groupId>
+						<artifactId>asm-commons</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-java8-support-plugin</artifactId>
+				<version>${struts2.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.struts</groupId>
 				<artifactId>struts2-codebehind-plugin</artifactId>
 				<version>${struts2.version}</version>
