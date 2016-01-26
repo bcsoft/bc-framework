@@ -1,5 +1,6 @@
 package cn.bc.report.web.struts2;
 
+import cn.bc.scheduler.service.SchedulerManage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +28,9 @@ import cn.bc.web.ui.json.Json;
 public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 	private static final long serialVersionUID = 1L;
 
+	@Autowired
+	private SchedulerManage schedulerManage;
+
 	public ReportTaskService reportTaskService;
 
 	@Autowired
@@ -39,7 +43,7 @@ public class ReportTaskAction extends FileEntityAction<Long, ReportTask> {
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：报表管理员，报表任务管理员、超级管理员
-		return !context.hasAnyRole(getText("key.role.bc.report"),
+		return schedulerManage.isDisabled() || !context.hasAnyRole(getText("key.role.bc.report"),
 				getText("key.role.bc.report.Task"),
 				getText("key.role.bc.admin"));
 	}
