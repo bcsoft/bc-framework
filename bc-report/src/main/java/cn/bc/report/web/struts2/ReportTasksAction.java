@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bc.scheduler.service.SchedulerManage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -40,11 +42,14 @@ public class ReportTasksAction extends ViewAction<Map<String, Object>> {
 	private static final long serialVersionUID = 1L;
 	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 
+	@Autowired
+	private SchedulerManage schedulerManage;
+
 	@Override
 	public boolean isReadonly() {
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：报表管理员，报表任务管理员、超级管理员
-		return !context.hasAnyRole(getText("key.role.bc.report"),
+		return schedulerManage.isDisabled() || !context.hasAnyRole(getText("key.role.bc.report"),
 				getText("key.role.bc.report.Task"),
 				getText("key.role.bc.admin"));
 	}

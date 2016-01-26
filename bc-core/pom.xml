@@ -40,6 +40,10 @@
 
 		<!-- json -->
 		<dependency>
+			<groupId>com.owlike</groupId>
+			<artifactId>genson</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 		</dependency>

@@ -11,6 +11,7 @@ import cn.bc.log.service.OperateLogService;
 import cn.bc.report.dao.ReportTaskDao;
 import cn.bc.report.domain.ReportTask;
 import cn.bc.report.scheduler.RunReportTemplateJobBean;
+import cn.bc.scheduler.service.SchedulerManage;
 import cn.bc.scheduler.service.SchedulerService;
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -42,6 +43,8 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implem
 	private ActorHistoryService actorHistoryService;
 	private ReportService reportService;
 	private IdGeneratorService idGeneratorService;
+	@Autowired
+	private SchedulerManage schedulerManage;
 
 	@Autowired
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
@@ -80,6 +83,12 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implem
 	}
 
 	public void afterPropertiesSet() throws Exception {
+		// 禁用就不再处理
+		if (schedulerManage.isDisabled()) {
+			logger.warn("ReportTask was config to disabled");
+			return;
+		}
+
 		// 立即计划所有可用的调度任务
 		List<ReportTask> tasks = this.reportTaskDao.findAllEnabled();
 		logger.warn("scheduling {} reportTasks", tasks.size());
