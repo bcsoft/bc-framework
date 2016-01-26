@@ -145,6 +145,7 @@
 		</action>
 		<action name="open" class="reportHistoryAction" method="open">
 			<result name="formr">/bc/report/history/form.jsp</result>
-		</action> 
+		</action>
+		<action name="delete" class="reportHistoryAction" method="delete" />
 	</package>
 </struts>

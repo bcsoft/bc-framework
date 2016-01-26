@@ -41,9 +41,9 @@ import cn.bc.web.ui.json.Json;
 
 /**
  * 历史报表视图Action
- * 
+ *
  * @author lbj
- * 
+ *
  */
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -181,6 +181,9 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 				.setText(getText("reportHistory.priview.inline"))
 				.setClick("bc.reportHistoryList.inline"));
 
+		// 删除
+		tb.addButton(getDefaultDeleteToolbarButton());
+
 		// 状态按钮组
 		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
 				"success", 0, getText("report.status.tips")));
@@ -233,7 +236,7 @@ public class ReportHistorysAction extends ViewAction<Map<String, Object>> {
 			andCondition.add(
 				new OrCondition(
 						new AndCondition(
-							new EqualsCondition("a.author_id", context.getUserHistory().getId()), 
+							new EqualsCondition("a.author_id", context.getUserHistory().getId()),
 							new EqualsCondition("a.source_type",getText("reportHistory.source2.user"))
 							).setAddBracket(true)
 						,new AndCondition(
