@@ -11,7 +11,7 @@
 	
 	<properties>
 		<!-- 平台的版本号 -->
-		<framework.version>1.0-SNAPSHOT</framework.version>
+		<framework.version>3.0-SNAPSHOT</framework.version>
 		<app.debug>false</app.debug>
 	</properties>
 	<dependencies>
