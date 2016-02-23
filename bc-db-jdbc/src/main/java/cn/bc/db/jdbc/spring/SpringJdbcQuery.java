@@ -71,7 +71,14 @@ public class SpringJdbcQuery<T extends Object> implements cn.bc.core.query.Query
 	public int count() {
 		String queryTemp = removeOrderBy(getSql());
 		if (!queryTemp.startsWith("select")) {
-			queryTemp = "select count(*) " + queryTemp;
+			if(queryTemp.startsWith("!!with")){
+				int i = queryTemp.indexOf("!!select");
+				int y=queryTemp.indexOf("!!from");
+				String toReplace=queryTemp.substring(i,y);
+				queryTemp=queryTemp.replace(toReplace,"select count(*) ").replace("!!","");
+			}else {
+				queryTemp = "select count(*) " + queryTemp;
+			}
 		} else {
 			queryTemp = "select count(*) " + removeSelect(queryTemp);
 		}
@@ -88,12 +95,12 @@ public class SpringJdbcQuery<T extends Object> implements cn.bc.core.query.Query
 	}
 
 	public List<T> list() {
-		return this.jdbcTemplate.query(getSql(), this.sqlArgs.toArray(),
+		return this.jdbcTemplate.query(getSql().replace("!!",""), this.sqlArgs.toArray(),
 				this.rowMapper);
 	}
 
 	public List<T> list(int pageNo, int pageSize) {
-		return this.jdbcTemplate.query(getSql(), new SplitPageRowMapperResultSetExtractor<>(rowMapper, pageNo, pageSize));
+		return this.jdbcTemplate.query(getSql().replace("!!",""), new SplitPageRowMapperResultSetExtractor<>(rowMapper, pageNo, pageSize));
 	}
 
 	public Page<T> page(int pageNo, int pageSize) {
@@ -105,15 +112,20 @@ public class SpringJdbcQuery<T extends Object> implements cn.bc.core.query.Query
 	}
 
 	private static String removeOrderBy(String queryString) {
-		Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
-				Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(queryString);
-		StringBuffer sb = new StringBuffer();
-		while (m.find()) {
-			m.appendReplacement(sb, "");
+		if(!queryString.startsWith("!!")) {
+			Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*",
+					Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(queryString);
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, "");
+			}
+			m.appendTail(sb);
+			return sb.toString();
+		}else{
+			int i = queryString.indexOf("!!order by");
+			return queryString.substring(0, i);
 		}
-		m.appendTail(sb);
-		return sb.toString();
 	}
 
 	private static String removeSelect(String queryString) {
