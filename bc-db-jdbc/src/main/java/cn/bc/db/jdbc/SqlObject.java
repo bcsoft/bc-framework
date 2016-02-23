@@ -61,7 +61,11 @@ public class SqlObject<T extends Object> extends PagingQueryConfig{
 		return t;
 	}
 	public String getNativeSql() {
-		return getSql();
+		if (sql != null) {
+			return sql;
+		}else {
+			return getSql();
+		}
 	}
 
 	/**

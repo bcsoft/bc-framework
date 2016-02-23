@@ -885,10 +885,34 @@
 				<version>2.0.0</version>
 				<classifier>lgpl</classifier>
 			</dependency>
+
+			<!-- jxls 2.x -->
+			<dependency>
+				<groupId>org.jxls</groupId>
+				<artifactId>jxls</artifactId>
+				<version>2.2.9</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jxls</groupId>
+				<artifactId>jxls-reader</artifactId>
+				<version>2.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jxls</groupId>
+				<artifactId>jxls-poi</artifactId>
+				<version>1.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jxls</groupId>
+				<artifactId>jxls-jexcel</artifactId>
+				<version>1.0.5</version>
+			</dependency>
+
+			<!-- jxls 1.x -->
 			<dependency>
 				<groupId>net.sf.jxls</groupId>
 				<artifactId>jxls-core</artifactId>
-				<version>1.0</version>
+				<version>1.0.6</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -899,7 +923,7 @@
 			<dependency>
 				<groupId>net.sf.jxls</groupId>
 				<artifactId>jxls-reader</artifactId>
-				<version>1.0</version>
+				<version>1.0.6</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -907,6 +931,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>

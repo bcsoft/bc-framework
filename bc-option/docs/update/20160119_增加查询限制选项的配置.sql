@@ -1,6 +1,6 @@
 -- 清空数据
-delete from bc_option_item where pid = (select id from bc_option_group where key_ = 'search.limit');
-delete from bc_option_group where key_ = 'fuzzy.max.results';
+delete from bc_option_item where pid in (select id from bc_option_group where key_ = 'search.limit');
+delete from bc_option_group where key_ = 'search.limit';
 
 -- 单据样式 select * from bc_option_item where pid = (select id from bc_option_group where key_ = 'financial.receipt');
 insert into bc_option_group(id, key_, value_, order_, icon)

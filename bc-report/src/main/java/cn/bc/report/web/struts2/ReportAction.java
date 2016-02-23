@@ -172,7 +172,9 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected Query<Map<String, Object>> getQuery() {
-		return this.reportService.createSqlQuery(getSqlObject());
+		// 报表查询类型：默认为JPA查询(queryType=jpa)
+		String queryType = config.has("queryType") ? config.getString("queryType") : "jpa";
+		return this.reportService.createSqlQuery(queryType, getSqlObject());
 	}
 
 	private List<Column> columns;

@@ -3,6 +3,8 @@ package cn.bc.report.service;
 import cn.bc.core.query.Query;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.db.jdbc.SqlObject;
+import cn.bc.db.jdbc.spring.JdbcTemplatePagingQuery;
+import cn.bc.db.jdbc.spring.SpringJdbcQuery;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.orm.jpa.JpaNativeQuery;
 import cn.bc.report.domain.ReportHistory;
@@ -10,10 +12,13 @@ import cn.bc.report.domain.ReportTemplate;
 import cn.bc.template.domain.Template;
 import cn.bc.template.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 import java.util.Map;
 
 /**
@@ -22,6 +27,8 @@ import java.util.Map;
  * @author lbj
  */
 public class ReportServiceImpl implements ReportService {
+	@Autowired
+	protected DataSource dataSource;
 	@PersistenceContext
 	protected EntityManager entityManager;
 	private TemplateService templateService;
@@ -43,8 +50,15 @@ public class ReportServiceImpl implements ReportService {
 		this.reportHistoryService = reportHistoryService;
 	}
 
-	public Query<Map<String, Object>> createSqlQuery(SqlObject<Map<String, Object>> sqlObject) {
-		return new JpaNativeQuery<>(entityManager, sqlObject);
+	public Query<Map<String, Object>> createSqlQuery(String queryType, SqlObject<Map<String, Object>> sqlObject) {
+		if ("jdbc".equalsIgnoreCase(queryType)) {
+			SpringJdbcQuery<Map<String, Object>> springJdbcQuery = new SpringJdbcQuery<>(dataSource, new ColumnMapRowMapper());
+			springJdbcQuery.setSql(sqlObject.getNativeSql());
+			springJdbcQuery.setSqlArgs(sqlObject.getArgs());
+			return springJdbcQuery;
+		} else {
+			return new JpaNativeQuery<>(entityManager, sqlObject);
+		}
 	}
 
 	public Template loadTemplate(String templateCode) {

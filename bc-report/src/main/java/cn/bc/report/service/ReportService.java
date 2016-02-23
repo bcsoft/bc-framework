@@ -21,12 +21,9 @@ import cn.bc.template.domain.Template;
 public interface ReportService {
 	/**
 	 * 创建指定SqlObject的查询对象
-	 * 
-	 * @param sqlObject
-	 * @return
+	 * @param  queryType 报表查询类型：jpa 为JPA查询，jdbc 为 jdbc 查询，默认为jpa
 	 */
-	Query<Map<String, Object>> createSqlQuery(
-			SqlObject<Map<String, Object>> sqlObject);
+	Query<Map<String, Object>> createSqlQuery(String queryType, SqlObject<Map<String, Object>> sqlObject);
 
 	/**
 	 * 加载指定编码的模板

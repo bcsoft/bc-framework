@@ -110,6 +110,8 @@ public class ReportTemplate extends FileEntityImpl {
 	 * </ul>
 	 * </li>
 	 * <li>
+	 * queryType - 指定报表查询类型：jpa 为JPA查询，jdbc 为 jdbc 查询，默认为jpa</li>
+	 * <li>
 	 * export - 导出报表数据的Excel模板配置，支持2种配置模式：
 	 * <ul>
 	 * <li>从模板库中获取Excel模板，格式为"tpl:[模板的编码][:模板的版本号]"，没有版本号时使用当前版本</li>
@@ -517,7 +519,9 @@ public class ReportTemplate extends FileEntityImpl {
 		exporter.setIdLabel("序号");
 		exporter.setTitle(this.getName());
 		exporter.setColumns(columns);// 列配置
-		exporter.setData(reportService.createSqlQuery(
+		// 报表查询类型：默认为JPA查询(queryType=jpa)
+		String queryType = config.has("queryType") ? config.getString("queryType") : "jpa";
+		exporter.setData(reportService.createSqlQuery(queryType,
 				this.getConfigSqlObject(reportService, condition)).list());// 数据
 		exporter.setTemplateFile(this.getConfigExportTemplate(reportService));// 导出数据的模板
 		FileOutputStream out = new FileOutputStream(file);
