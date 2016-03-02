@@ -3,6 +3,7 @@ package cn.bc.spider.callable;
 import cn.bc.core.exception.CoreException;
 import cn.bc.spider.Result;
 import cn.bc.spider.http.HttpClientFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -59,6 +60,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	private HashMap<String, String> headers;
 	private boolean hadParseResponse;
 	private V response;
+	private Header[] httpResponseHeaders;
 	private String responseText;
 	private Object payload;
 	private int timeout = 0;// 超时(ms)，默认不设置
@@ -74,8 +76,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 		String url = getUrl();
 		if (logger.isInfoEnabled()) {
 			logger.info("method={}, type={}, group={}, encoding={}", method, type, group, encoding);
-			logger.info("url={}" + url);
-			logger.info("userAgent={}" + userAgent);
+			logger.info("url={}", url);
+			logger.info("userAgent={}", userAgent);
 		}
 		HttpUriRequest request = null;
 		CloseableHttpResponse response = null;
@@ -130,10 +132,11 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 			// 提交请求
 			response = getHttpClient().execute(request);
+			httpResponseHeaders = response.getAllHeaders();
 
 			// 解析请求
 			this.responseEntity = response.getEntity();
-			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {// 请求成功
+			if (getSuccessStatusCode() == response.getStatusLine().getStatusCode()) {// 请求成功
 				// 解析响应返回结果
 				return getResult();
 			} else {// 请求失败
@@ -157,6 +160,28 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 判断请求是否成功的响应代码
+	 * @return 默认为 200
+	 */
+	public String getResponseHeader(String name) {
+		String value = null;
+		if (httpResponseHeaders != null && httpResponseHeaders.length > 0) {
+			for (Header h : httpResponseHeaders) {
+				if (h.getName().equalsIgnoreCase(name)) return h.getValue();
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * 判断请求是否成功的响应代码
+	 * @return 默认为 200
+	 */
+	protected int getSuccessStatusCode() {
+		return HttpStatus.SC_OK;
 	}
 
 	/**
