@@ -498,7 +498,7 @@ public class ReportTemplate extends FileEntityImpl {
 
 		// 附件保存的文件名(不含路径)
 		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-				.getTime()) + "." + extension;
+				.getTime())+this.getCode() + "." + extension;
 
 		// 附件保存的绝对路径
 		String realpath = Attach.DATA_REAL_PATH + "/"
