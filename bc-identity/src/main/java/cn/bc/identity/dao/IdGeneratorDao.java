@@ -42,11 +42,4 @@ public interface IdGeneratorDao {
 	 * @param format
 	 */
 	void save(String type, Long value, String format);
-	
-	/**
-	 * 获取通过 数据库函数NEXTVAL('CORE_SEQUENCE') 取得的值
-	 * 
-	 * @return
-	 */
-	Long getNextval();
 }

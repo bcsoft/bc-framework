@@ -46,11 +46,4 @@ public class IdGeneratorDaoImpl implements IdGeneratorDao {
         String sql = "insert into bc_identity_idgenerator(type_,value_,format) values(?,?,?)";
         JpaUtils.executeNativeUpdate(entityManager, sql, new Object[]{type, value, format});
     }
-
-    public Long getNextval() {
-        String sql = "select NEXTVAL('HIBERNATE_SEQUENCE') from bc_dual";
-        Number v = JpaUtils.getSingleResult(JpaUtils.createNativeQuery(entityManager, sql, (Object[]) null));
-        if (v == null) return null;
-        return v.longValue();
-    }
 }

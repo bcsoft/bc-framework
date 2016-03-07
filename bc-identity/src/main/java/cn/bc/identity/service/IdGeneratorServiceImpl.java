@@ -46,7 +46,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 		return value;
 	}
 
-	public  String next(String type) {
+	public String next(String type) {
 		Long value;
 		IdGenerator entity = idGeneratorDao.load(type);
 		if (entity == null) {
@@ -134,9 +134,5 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 
 		// 合并返回
 		return yyyyMMdd + BCConstants.SN_SPLIT_SYMBOL + new DecimalFormat(pattern).format(num);
-	}
-
-	public String nexttvak(String type) {
-		return type+"."+this.idGeneratorDao.getNextval();
 	}
 }

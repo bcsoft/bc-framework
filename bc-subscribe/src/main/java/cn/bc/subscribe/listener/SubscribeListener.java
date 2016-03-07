@@ -166,7 +166,7 @@ public class SubscribeListener implements ApplicationListener<SubscribeEvent> {
 		Email email=new Email();
 		worklog_content+="发送方式：邮件[";
 		
-		String emailUid=this.idGeneratorService.nexttvak(Email.ATTACH_TYPE);
+		String emailUid=this.idGeneratorService.next(Email.ATTACH_TYPE + ".s");// 加 .s 避免与标准email争
 		email.setUid(emailUid);
 		email.setStatus(Email.STATUS_SENDED);
 		email.setType(Email.TYPE_NEW);
