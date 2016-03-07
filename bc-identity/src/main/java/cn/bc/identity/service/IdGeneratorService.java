@@ -70,12 +70,4 @@ public interface IdGeneratorService {
 	 * @return
 	 */
 	public String nextSN4Day(String type, String pattern);
-	
-	/**
-	 * 获取下一个值，该值是type+'.'+NEXTVAL('CORE_SEQUENCE')
-	 * @param type
-	 * 			类型
-	 * @return
-	 */
-	String nexttvak(String type);
 }
