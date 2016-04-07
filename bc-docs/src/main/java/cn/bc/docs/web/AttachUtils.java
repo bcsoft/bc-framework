@@ -28,7 +28,7 @@ public class AttachUtils {
 		} else if ("gif".equalsIgnoreCase(extend)) {
 			return "image/gif";
 		} else if ("txt".equalsIgnoreCase(extend)) {
-			return "text/plain";
+			return "text/plain;charset=UTF-8";
 		} else if ("xls".equalsIgnoreCase(extend)) {
 			return "application/vnd.ms-excel";
 		} else if ("xlsx".equalsIgnoreCase(extend)) {
@@ -39,11 +39,11 @@ public class AttachUtils {
 			return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 		} else if ("html".equalsIgnoreCase(extend)
 				|| "htm".equalsIgnoreCase(extend)) {
-			return "text/html";
+			return "text/html;charset=UTF-8";
 		} else if ("css".equalsIgnoreCase(extend)) {
-			return "text/css";
+			return "text/css;charset=UTF-8";
 		} else if ("js".equalsIgnoreCase(extend)) {
-			return "text/javascript";
+			return "text/javascript;charset=UTF-8";
 		} else if ("tif".equalsIgnoreCase(extend)
 				|| "tiff".equalsIgnoreCase(extend)) {
 			return "image/tiff";
