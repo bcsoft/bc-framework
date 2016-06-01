@@ -8,6 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -134,7 +135,12 @@ public abstract class ImportDataAction extends ActionSupport {
 		do {
 			cell = row.getCell(i);
 			if (cell != null) {
-				columnName = cell.getStringCellValue();
+				if (isMergedColumn(sheet, headerRowIndex, i)) { // 属于合并行单元格
+					columnName = (cell.getStringCellValue().trim().length() == 0 ? row.getCell(i - 1).getStringCellValue() : cell.getStringCellValue())
+							+ sheet.getRow(headerRowIndex + 1).getCell(i).getStringCellValue();
+				} else {
+					columnName = cell.getStringCellValue();
+				}
 				hasData = (columnName != null && columnName.length() > 0);
 				if (hasData)
 					columnNames.add(columnName.replaceAll("\\r\\n|\\r|\\n", ""));
@@ -152,7 +158,7 @@ public abstract class ImportDataAction extends ActionSupport {
 		// 获取数据行：从该行开始搜索直到空行为空止，从而确定最大的行数
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> rowData;
-		i = headerRowIndex + 1;
+		i = getDataRowIndex();
 		do {
 			rowData = getRowData(sheet.getRow(i), columnNames, fileType);
 			if (rowData != null) {
@@ -170,6 +176,28 @@ public abstract class ImportDataAction extends ActionSupport {
 			logger.debug("data={}", data);
 		return data;
 	}
+
+	/**
+	 * 获取表格第一条数据行索引号
+	 *
+	 * @return 索引号
+	 */
+	protected int getDataRowIndex() {
+		return headerRowIndex + 1;
+	}
+
+	/**
+	 * 验证当前单元格是否属于合并行单元格
+	 *
+	 * @param sheet               包含数据的工作表
+	 * @param row                 当前行
+	 * @param column              当前列
+	 * @return       true-属于合并行单元格；false-不属于
+	 */
+	protected boolean isMergedColumn(Sheet sheet, int row, int column) {
+		return false;
+	}
+
 
 	/**
 	 * 验证 Excel 文件的标题行是否符合规范
@@ -325,6 +353,11 @@ public abstract class ImportDataAction extends ActionSupport {
 	 * 错误的数据处理条目
 	 */
 	protected List<Map<String, Object>> errorItems = new ArrayList<>();
+
+	/**
+	 * 与系统中现有数据完全相同而被忽略数据的条目数
+	 */
+	protected int ignoreCount = 0;
 
 	/**
 	 * 添加一条导入数据异常的信息
