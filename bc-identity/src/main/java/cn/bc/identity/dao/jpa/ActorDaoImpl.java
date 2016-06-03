@@ -73,17 +73,38 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 		return this.findMaster(followerId, new Integer[]{ActorRelation.TYPE_BELONG}, masterTypes);
 	}
 
-	@SuppressWarnings("unchecked")
+	public List<Actor> findBelong(Long[] followerIds, Integer[] masterTypes) {
+		return this.findMaster(followerIds, new Integer[]{ActorRelation.TYPE_BELONG}, masterTypes);
+	}
+
 	public List<Actor> findMaster(Long followerId, Integer[] relationTypes, Integer[] masterTypes) {
-		if (followerId == null)
+		return findMaster(new Long[]{followerId}, relationTypes, masterTypes);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Actor> findMaster(Long[] followerIds, Integer[] relationTypes, Integer[] masterTypes) {
+		if (followerIds == null || followerIds.length == 0)
 			return new ArrayList<>();// TODO: 如顶层单位、底层叶子
 
 		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
 		hql.append("select m from Actor m,ActorRelation ar,Actor f");
 		hql.append(" where m.id=ar.master.id");
-		hql.append(" and f.id=ar.follower.id and f.id=?");
-		args.add(followerId);
+		hql.append(" and f.id=ar.follower.id");
+
+		// followers
+		if (followerIds.length == 1) {
+			hql.append(" and f.id=?");
+			args.add(followerIds[0]);
+		} else {
+			hql.append(" and f.id in (?");
+			args.add(followerIds[0]);
+			for (int i = 1; i < followerIds.length; i++) {
+				hql.append(",?");
+				args.add(followerIds[i]);
+			}
+			hql.append(")");
+		}
 
 		// 关联的类型，对应ActorRelation的type属性
 		if (relationTypes != null && relationTypes.length > 0) {
@@ -893,13 +914,13 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 			return null;
 		List<String> r = executeNativeQuery("select name,pname from bc_identity_actor where code = ?"
 				, new Object[]{actorCode}, new RowMapper<String>() {
-			public String mapRow(Object[] rs, int rowNum) {
-				int i = -1;
-				Object name = rs[++i];
-				Object pname = rs[++i];
-				return pname == null ? name.toString() : pname.toString() + "/" + name.toString();
-			}
-		});
+					public String mapRow(Object[] rs, int rowNum) {
+						int i = -1;
+						Object name = rs[++i];
+						Object pname = rs[++i];
+						return pname == null ? name.toString() : pname.toString() + "/" + name.toString();
+					}
+				});
 		if (r == null || r.isEmpty())
 			return actorCode;// 找不到就返回原始的帐号信息
 		else

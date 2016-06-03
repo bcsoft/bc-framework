@@ -59,6 +59,10 @@ public class ActorServiceImpl extends DefaultCrudService<Actor> implements
 		return this.actorDao.findBelong(followerId, masterTypes);
 	}
 
+	public List<Actor> findBelong(Long[] followerIds, Integer[] masterTypes) {
+		return this.actorDao.findBelong(followerIds, masterTypes);
+	}
+
 	public List<Actor> findMaster(Long followerId, Integer[] relationTypes,
 			Integer[] masterTypes) {
 		return this.actorDao.findMaster(followerId, relationTypes, masterTypes);
