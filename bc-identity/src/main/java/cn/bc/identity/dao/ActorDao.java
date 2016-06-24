@@ -45,6 +45,7 @@ public interface ActorDao extends CrudDao<Actor> {
 	 * @return
 	 */
 	List<Actor> findBelong(Long followerId, Integer[] masterTypes);
+	List<Actor> findBelong(Long[] followerIds, Integer[] masterTypes);
 
 	/**
 	 * 获取从属方指定关联关系的主控方
