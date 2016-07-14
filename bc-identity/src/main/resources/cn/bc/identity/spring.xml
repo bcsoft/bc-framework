@@ -40,9 +40,9 @@
         </tx:attributes>
     </tx:advice>
 
-    <!-- Duty -->
+    <!-- Duty
     <bean id="dutyDao" class="cn.bc.orm.jpa.JpaCrudDao"/>
-    <bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao"/>
+    <bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao"/> -->
 
     <!-- ActorRelation -->
     <bean id="actorRelationDao" class="cn.bc.identity.dao.jpa.ActorRelationDaoImpl"

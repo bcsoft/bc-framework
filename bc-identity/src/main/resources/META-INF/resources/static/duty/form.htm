@@ -1,0 +1,19 @@
+<div title="职务配置" class="bc-page" data-type='form' data-namespace='/rest/duty'
+     data-js='["static/duty/form.js"]'
+     data-option='{"minWidth":250,"width":400,"minHeight":200,"modal":false,"minimizable":true,"maximizable":true, "buttons":[{"text":"保存","click":"save"}]}'>
+	<form name="form" class="bc-form">
+		<table class="formFields" cellspacing="2" cellpadding="0" style="max-width:30em">
+			<tbody>
+			<tr>
+				<td class="label">名称：</td>
+				<td class="value"><input type="text" name="name" v-model="e.name" data-validate="required" class="ui-widget-content"></td>
+			</tr>
+			<tr>
+				<td class="label">编码：</td>
+				<td class="value"><input type="text" name="code" v-model="e.code" data-validate="required" class="ui-widget-content"></td>
+			</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="id" v-model="e.id">
+	</form>
+</div>
