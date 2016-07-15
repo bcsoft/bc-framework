@@ -428,7 +428,7 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 			json.put("e", e.getClass().getSimpleName());
 		} else {
 			// 其他异常
-			json.put("msg", e.toString());
+			json.put("msg", e.getMessage() != null ? e.getMessage() : e.toString());
 			json.put("e", e.getClass().getSimpleName());
 		}
 	}
