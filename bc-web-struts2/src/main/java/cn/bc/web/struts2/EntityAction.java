@@ -422,13 +422,13 @@ public class EntityAction<K extends Serializable, E extends Entity<K>> extends
 	 */
 	protected void dealOtherDeleteException(Json json, Exception e) {
 		if ((e.getCause() != null && e.getCause().getClass().getSimpleName().equals("ConstraintViolationException"))
-				|| (e.getCause().getCause() != null && e.getCause().getCause().getClass().getSimpleName().equals("ConstraintViolationException"))) {
+				|| (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause().getClass().getSimpleName().equals("ConstraintViolationException"))) {
 			// 违反约束关联引发的异常
 			json.put("msg", getText("exception.delete.constraintViolation"));
 			json.put("e", e.getClass().getSimpleName());
 		} else {
 			// 其他异常
-			json.put("msg", e.toString());
+			json.put("msg", e.getMessage() != null ? e.getMessage() : e.toString());
 			json.put("e", e.getClass().getSimpleName());
 		}
 	}
