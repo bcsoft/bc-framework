@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.bc.core.query.condition.impl;
 
@@ -8,11 +8,15 @@ import cn.bc.core.query.QueryOperator;
 
 /**
  * 模糊匹配条件
- * @author dragon
  *
+ * @author dragon
  */
 public class LikeCondition extends SimpleCondition {
 	public LikeCondition(String name, Object value) {
 		super(name, value, QueryOperator.Like);
+	}
+
+	public LikeCondition(String name, Object value, boolean ignoreCase) {
+		super(name, value, ignoreCase ? QueryOperator.iLike : QueryOperator.Like);
 	}
 }

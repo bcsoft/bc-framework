@@ -1,0 +1,15 @@
+<div title="职务配置" class="bc-page" data-type='list'
+     data-js='["static/duty/view.js"]'
+     data-option='{"minWidth":250,"width":700,"minHeight":200,"height":450,"modal":false,"minimizable":true,"maximizable":true}'>
+	<bc-grid v-ref:grid :columns="columns" :url="url" :pageable="true" :condition="params"
+	         @dblclick-row="dblclickRow"
+	         :exportable="true" @export="export" :class="{border: showBorder}">
+		<bc-toolbar slot="top">
+			<bc-button icon-class="ui-icon-check" text="查看" @click="open"></bc-button>
+			<bc-button icon-class="ui-icon-document" text="新建" @click="create"></bc-button>
+			<bc-button icon-class="ui-icon-pencil" text="编辑" @click="open"></bc-button>
+			<bc-button icon-class="ui-icon-trash" text="删除" @click="delete"></bc-button>
+			<bc-search :value.sync="params.searchText" @search="search" placeholder="输入关键字搜索"></bc-search>
+		</bc-toolbar>
+	</bc-grid>
+</div>

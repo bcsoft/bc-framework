@@ -1,21 +1,20 @@
 /**
- * 
+ *
  */
 package cn.bc.core.query.condition.impl;
+
+import cn.bc.core.query.QueryOperator;
+import cn.bc.core.query.condition.Condition;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
-
-import cn.bc.core.query.QueryOperator;
-import cn.bc.core.query.condition.Condition;
-
 /**
  * 简单的符号比较条件
- * 
+ *
  * @author dragon
  * @see {@link QueryOperator},{@link Condition}
  */
@@ -38,12 +37,15 @@ public class SimpleCondition implements Condition {
 					this.values.add(v);
 				}
 			}
-		} else if (operator == QueryOperator.Like) {
-			this.values.add("%" + String.valueOf(value) + "%");
-		} else if (operator == QueryOperator.LikeLeft) {
-			this.values.add(String.valueOf(value) + "%");
-		} else if (operator == QueryOperator.LikeRight) {
-			this.values.add("%" + String.valueOf(value));
+		} else if (operator == QueryOperator.Like || operator == QueryOperator.iLike) {
+			String v = String.valueOf(value);
+			this.values.add((v.startsWith("%") ? "" : "%") + v + (v.endsWith("%") ? "" : "%"));
+		} else if (operator == QueryOperator.LikeLeft || operator == QueryOperator.iLikeLeft) {
+			String v = String.valueOf(value);
+			this.values.add(v + (v.endsWith("%") ? "" : "%"));
+		} else if (operator == QueryOperator.LikeRight || operator == QueryOperator.iLikeRight) {
+			String v = String.valueOf(value);
+			this.values.add((v.startsWith("%") ? "" : "%") + v);
 		} else if (operator == QueryOperator.IsNull
 				|| operator == QueryOperator.IsNotNull) {
 
@@ -91,6 +93,6 @@ public class SimpleCondition implements Condition {
 				+ this.getExpression()
 				+ ",args="
 				+ StringUtils
-						.collectionToCommaDelimitedString(this.getValues());
+				.collectionToCommaDelimitedString(this.getValues());
 	}
 }

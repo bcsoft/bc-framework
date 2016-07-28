@@ -25,6 +25,12 @@ public enum QueryOperator {
 	LikeLeft,
 	/** like right */
 	LikeRight,
+	/** ilike */
+	iLike,
+	/** ilike left */
+	iLikeLeft,
+	/** ilike right */
+	iLikeRight,
 	/** in */
 	In,
 	/** not in */
@@ -54,6 +60,12 @@ public enum QueryOperator {
 			return "like";
 		case LikeRight:
 			return "like";
+		case iLike:
+			return "ilike";
+		case iLikeLeft:
+			return "ilike";
+		case iLikeRight:
+			return "ilike";
 		case IsNull:
 			return "is null";
 		case IsNotNull:
