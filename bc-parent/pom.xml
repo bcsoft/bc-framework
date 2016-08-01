@@ -9,12 +9,12 @@
 		<repository>
 			<id>nexus-releases</id>
 			<name>Local Nexus Repository</name>
-			<url>http://192.168.0.222:8081/nexus/content/repositories/releases/</url>
+			<url>${deploy.nexus-releases.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<name>Local Nexus Repository</name>
-			<url>http://192.168.0.222:8081/nexus/content/repositories/snapshots</url>
+			<url>${deploy.nexus-snapshots.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
