@@ -286,7 +286,8 @@ public class LoginServiceImpl implements LoginService {
 				s.put("standalone", rs[i++].toString());
 				s.put("name", rs[i] != null ? rs[i].toString() : null);
 				i++;
-				s.put("url", rs[i] != null ? rs[i].toString() : null);
+				String url = (String) rs[i];
+				s.put("url", url != null ? (url.startsWith("/") ? url.substring(1) : url): null); // 去除绝对路径
 				i++;
 				s.put("iconClass", rs[i] != null ? rs[i].toString() : null);
 				i++;
