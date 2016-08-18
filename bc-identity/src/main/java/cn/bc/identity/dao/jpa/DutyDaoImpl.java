@@ -54,7 +54,7 @@ public class DutyDaoImpl extends JpaCrudDao<Duty> implements DutyDao {
 		TypedQuery<Duty> rowsQuery;
 		if (hasSearch) {
 			String[] strings = new String[]{"code", "name"};            // 模糊查询的字段
-			c = ConditionUtils.fuzzySearch(search, strings, false);     // jpa 不支持 ilike
+			c = ConditionUtils.toFuzzyCondition(search, strings, false);     // jpa 不支持 ilike
 			countSql += " where " + c.getExpression();
 			rowsSql += " where " + c.getExpression() + orderSql;
 		} else {
@@ -107,7 +107,7 @@ public class DutyDaoImpl extends JpaCrudDao<Duty> implements DutyDao {
 		Query rowsQuery;
 		if (hasSearch) {
 			String[] strings = new String[]{"code", "name"};            // 模糊查询的字段
-			c = ConditionUtils.fuzzySearch(search, strings, true);     // jdbc 支持 ilike
+			c = ConditionUtils.toFuzzyCondition(search, strings, true);     // jdbc 支持 ilike
 			countSql += " where " + c.getExpression();
 			rowsSql += " where " + c.getExpression() + orderSql;
 		} else {

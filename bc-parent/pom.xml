@@ -9,12 +9,12 @@
 		<repository>
 			<id>nexus-releases</id>
 			<name>Local Nexus Repository</name>
-			<url>http://192.168.0.222:8081/nexus/content/repositories/releases/</url>
+			<url>${deploy.nexus-releases.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<name>Local Nexus Repository</name>
-			<url>http://192.168.0.222:8081/nexus/content/repositories/snapshots</url>
+			<url>${deploy.nexus-snapshots.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
@@ -409,6 +409,11 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>log4j-over-slf4j</artifactId>
+				<version>1.7.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
 				<version>1.7.7</version>
 			</dependency>
 
@@ -1292,7 +1297,7 @@
 		<jetty.path>/</jetty.path>
 		<maven.test.skip>false</maven.test.skip>
 
-		<!-- 4.2.1.RELEASE(2015-09-01), 4.1.1.RELEASE(2014-10-01), 4.0.7.RELEASE(2014-09-04),
+		<!-- 4.3.2.RELEASE(2016-07-28), 4.2.6.RELEASE(2016-05-06), 4.2.1.RELEASE(2015-09-01), 4.1.1.RELEASE(2014-10-01), 4.0.7.RELEASE(2014-09-04),
 			3.2.11.RELEASE(2014-09-04), 3.1.4.RELEASE(2013-01-23),
 			3.0.7.RELEASE(2011-12-24), 3.0.5.RELEASE(2010-10-21) -->
 		<spring.version>4.2.1.RELEASE</spring.version>
