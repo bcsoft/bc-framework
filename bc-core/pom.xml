@@ -50,7 +50,7 @@
 
 		<!-- other tools -->
 		<dependency>
-			<groupId>net.sf</groupId>
+			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
 		</dependency>
 		<dependency>

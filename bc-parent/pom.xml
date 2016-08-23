@@ -1090,11 +1090,20 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- 这个 maven 仓库是没有的 -->
 			<dependency>
 				<groupId>net.sf</groupId>
 				<artifactId>pinyin4j</artifactId>
 				<version>2.5.0</version>
 			</dependency>
+			<!-- https://github.com/belerweb/pinyin4j -->
+			<dependency>
+				<groupId>com.belerweb</groupId>
+				<artifactId>pinyin4j</artifactId>
+				<version>2.5.1</version>
+			</dependency>
+
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache-core</artifactId>
