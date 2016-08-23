@@ -1,5 +1,8 @@
 package cn.bc.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -12,6 +15,8 @@ import java.util.Date;
  * @author dragon 2016-02-22
  */
 public class AgeUtils {
+	private final static Logger logger = LoggerFactory.getLogger(AgeUtils.class);
+
 	/**
 	 * 按公历计算周岁年龄
 	 *
@@ -50,7 +55,11 @@ public class AgeUtils {
 	 * @return 按公历计算的周岁年龄
 	 */
 	public static int getFullAge(LocalDate fromDate, LocalDate toDate) {
-		if (fromDate.isAfter(toDate)) throw new IllegalArgumentException("fromDate can not after toDate");
+		if (fromDate.isAfter(toDate)) {
+			logger.warn("fromDate greater then toDate, just return 0. fromDate={}, toDate={}", fromDate, toDate);
+			//throw new IllegalArgumentException("fromDate can not after toDate");
+			return 0;
+		}
 		int y = toDate.getYear() - fromDate.getYear();
 		if (y == 0) {               // 同年：不足 1 周岁即 0 周岁
 			return 0;
