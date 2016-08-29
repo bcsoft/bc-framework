@@ -1,15 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.0-SNAPSHOT</version>
-		<relativePath>../bc-parent/pom.xml</relativePath>
+		<version>3.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>bc-remoting-server</artifactId>
 	<packaging>war</packaging>
 	<description>远程服务服务端</description>
-	
+
 	<properties>
 		<!-- 解决打包成 war 文件，html文件内中文乱码问题 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -132,13 +132,15 @@
 	<profiles>
 		<profile>
 			<id>test</id>
-			<activation><activeByDefault>true</activeByDefault></activation>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<app.debug>true</app.debug>
 				<app.tempDir>D:/bcdata/temp</app.tempDir>
 				<app.fromRootDir>D:/bcdata</app.fromRootDir>
 				<app.toRootDir>D:/bcdata/convert</app.toRootDir>
-                <app.officeVersion>2013</app.officeVersion>
+				<app.officeVersion>2013</app.officeVersion>
 			</properties>
 		</profile>
 		<profile>

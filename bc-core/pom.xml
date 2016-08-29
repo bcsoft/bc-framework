@@ -3,8 +3,7 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.0-SNAPSHOT</version>
-		<relativePath>../bc-parent/pom.xml</relativePath>
+		<version>3.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>bc-core</artifactId>
 	<description>平台核心</description>

@@ -3,9 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.bc</groupId>
 	<artifactId>bc-parent</artifactId>
-	<version>3.0-SNAPSHOT</version>
+	<version>3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>bc-parent</name>
+	<description>BC 平台</description>
 	<modules>
 		<module>bc-core</module>
 		<module>bc-test</module>
@@ -14,8 +15,6 @@
 		<module>bc-orm-jpa-test-hibernate</module>
 		<module>bc-orm-hibernate</module>
 		<module>bc-scheduler</module>
-		<!--<module>bc-websocket</module>-->
-		<!--<module>bc-chat</module>-->
 		<module>bc-acl</module>
 		<module>bc-email</module>
 		<module>bc-subscribe</module>
@@ -46,6 +45,9 @@
 		<module>bc-remoting-common</module>
 		<module>bc-remoting-client</module>
 		<module>bc-remoting-server</module>
+
+		<!--<module>bc-websocket</module>-->
+		<!--<module>bc-chat</module>-->
 	</modules>
 	<scm>
 		<connection>scm:git:git@github.com:bcsoft/bc-framework.git</connection>
