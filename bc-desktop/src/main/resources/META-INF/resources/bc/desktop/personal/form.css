@@ -1,0 +1,26 @@
+table.themes {
+	margin: 0 10px;
+	background-color: #000000;
+	border: 0;
+	table-layout: fixed;
+}
+
+td.theme {
+	cursor: pointer;
+	background-color: #000000;
+}
+
+td.theme div {
+	width: 90px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #cccccc;
+	text-align: center;
+}
+td.theme.over {
+	background-color: #0078a3;
+}
+td.theme.active {
+	background-color: #F58400;
+}
