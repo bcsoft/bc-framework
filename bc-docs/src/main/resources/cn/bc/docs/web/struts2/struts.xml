@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+		"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+		"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<!-- 基于Attach的附件上传、下载、查看处理 -->
 	<package name="attach" extends="bc-default" namespace="/bc/attach">
@@ -11,12 +11,12 @@
 		<action name="edit" class="attachAction" method="edit">
 			<result name="form">/bc/docs/attach/form.jsp</result>
 		</action>
-		<action name="paging" class="attachAction" method="paging" />
-		<action name="data" class="attachAction" method="data" />
-		<action name="export" class="attachAction" method="export" />
+		<action name="paging" class="attachAction" method="paging"/>
+		<action name="data" class="attachAction" method="data"/>
+		<action name="export" class="attachAction" method="export"/>
 
-		<action name="delete" class="attachAction" method="delete" />
-		<action name="deleteAll" class="attachAction" method="deleteAll" />
+		<action name="delete" class="attachAction" method="delete"/>
+		<action name="deleteAll" class="attachAction" method="deleteAll"/>
 		<action name="download" class="attachAction" method="download">
 			<result name="success" type="stream">
 				<!-- 下载文件类型定义 -->
@@ -65,7 +65,7 @@
 			</result>
 		</action>
 	</package>
-	
+
 	<!-- 直接的附件上传、下载、查看处理 -->
 	<package name="file" extends="bc-default" namespace="/bc/file">
 		<action name="download" class="fileAction" method="download">
@@ -96,9 +96,9 @@
 
 	<!-- 富文本编辑器中上传图片、flash、视频等 -->
 	<package name="upload4xheditor" extends="struts-default"
-		namespace="/bc/upload4xheditor">
+	         namespace="/bc/upload4xheditor">
 		<action name="img" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-			method="img">
+		        method="img">
 			<interceptor-ref name="fileUploadStack">
 				<!-- <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param> -->
 			</interceptor-ref>
@@ -108,13 +108,13 @@
 			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
 		</action>
 		<action name="flash" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-			method="flash">
-			<interceptor-ref name="fileUploadStack" />
+		        method="flash">
+			<interceptor-ref name="fileUploadStack"/>
 			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
 		</action>
 		<action name="media" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-			method="media">
-			<interceptor-ref name="fileUploadStack" />
+		        method="media">
+			<interceptor-ref name="fileUploadStack"/>
 			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
 		</action>
 	</package>
@@ -162,17 +162,17 @@
 		<action name="list" class="browserAction">
 			<result name="success">/bc/browser/list.jsp</result>
 		</action>
-        <action name="download" class="browserAction" method="download">
-            <result name="success" type="stream">
-                <!-- 下载文件类型定义 -->
-                <param name="contentType">${contentType}</param>
-                <param name="contentLength">${contentLength}</param>
-                <!-- 下载文件输出流定义 -->
-                <param name="inputName">inputStream</param>
-                <param name="bufferSize">4096</param>
-                <!-- 下载文件处理方法 -->
-                <param name="contentDisposition">attachment; filename="${filename}"</param>
-            </result>
-        </action>
+		<action name="download" class="browserAction" method="download">
+			<result name="success" type="stream">
+				<!-- 下载文件类型定义 -->
+				<param name="contentType">${contentType}</param>
+				<param name="contentLength">${contentLength}</param>
+				<!-- 下载文件输出流定义 -->
+				<param name="inputName">inputStream</param>
+				<param name="bufferSize">4096</param>
+				<!-- 下载文件处理方法 -->
+				<param name="contentDisposition">attachment; filename="${filename}"</param>
+			</result>
+		</action>
 	</package>
 </struts>

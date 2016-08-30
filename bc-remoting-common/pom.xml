@@ -12,7 +12,6 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-web</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

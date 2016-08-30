@@ -11,12 +11,10 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-option</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

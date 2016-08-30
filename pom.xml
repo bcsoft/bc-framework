@@ -8,6 +8,7 @@
 	<name>bc-parent</name>
 	<description>BC 平台</description>
 	<modules>
+		<module>bc-framework-bom</module>
 		<module>bc-core</module>
 		<module>bc-test</module>
 		<module>bc-db-jdbc</module>
@@ -49,11 +50,34 @@
 		<!--<module>bc-websocket</module>-->
 		<!--<module>bc-chat</module>-->
 	</modules>
+	<url>https://github.com/bcsoft/bc-framework</url>
+	<organization>
+		<name>bcsoft</name>
+		<url>https://github.com/bcsoft</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>dragon</id>
+			<name>黄荣基</name>
+			<email>rongjihuang@gmail.com</email>
+		</developer>
+	</developers>
 	<scm>
 		<connection>scm:git:git@github.com:bcsoft/bc-framework.git</connection>
 		<developerConnection>scm:git:git@github.com:bcsoft/bc-framework.git</developerConnection>
 		<url>https://github.com/bcsoft/bc-framework</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/bcsoft/bc-framework/issues</url>
+	</issueManagement>
 	<distributionManagement>
 		<repository>
 			<id>nexus-releases</id>
@@ -302,8 +326,10 @@
 					<executions>
 						<execution>
 							<id>attach-sources</id>
-							<phase>verify</phase>
+							<!-- 在打包后同时打包源码 -->
+							<phase>package</phase>
 							<goals>
+								<!-- 非交叉构建 -->
 								<goal>jar-no-fork</goal>
 							</goals>
 						</execution>
@@ -322,6 +348,8 @@
 					<executions>
 						<execution>
 							<id>attach-javadocs</id>
+							<!-- 在打包后生成 -->
+							<phase>package</phase>
 							<goals>
 								<goal>jar</goal>
 							</goals>
@@ -331,75 +359,130 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<dependencies>
-		<!-- log-api-->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
 
-		<!-- javaee-api-->
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- jpa: include in javaee-api
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency> -->
-		<!-- servlet3.x, jsp: include in javaee-api
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency> -->
+	<properties>
+		<!-- 版本：平台 -->
+		<framework.version>3.2-SNAPSHOT</framework.version>
 
-		<!-- unit test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<scope>test</scope>
-		</dependency>-->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!-- -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-		<!-- default database
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-			<scope>provided</scope>
-		</dependency>-->
-	</dependencies>
+		<jdk.version>1.8</jdk.version>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+		<source.skip>false</source.skip>
+
+		<!--Jetty的各种版本：
+			9.3.6.v20151106,9.3.5.v20151012,9.3.4.v20151007,9.3.3.v20150827,9.3.2.v20150730,9.3.1.v20150714,9.3.0.v20150612
+			注：从9.3开始主持 http2
+			9.2.13.v20150730,9.2.7.v20150116,9.2.6.v20141205,,9.2.0.v20140526,
+			9.1.4.v20140401,9.1.3.v20140225,9.1.2.v20140210,9.1.1.v20140108,9.1.0.v20131115,
+			9.0.7.v20131107,9.0.6.v20130930,9.0.5.v20130815,9.0.4.v20130625,9.0.3.v20130506,
+			9.0.2.v20130417,9.0.1.v20130408,9.0.0.v20130308,
+			8.1.16.v20140903,8.1.15.v20140411,8.1.14.v20131031,8.1.13.v20130916,8.1.12.v20130726,
+			8.1.11.v20130520,8.1.10.v20130312,8.1.9.v20130131,8.1.8.v20121106,8.1.7.v20120910,
+			8.1.6.v20120903,8.1.5.v20120716,8.1.4.v20120524,8.1.3.v20120416,8.1.2.v20120308,
+			8.1.1.v20120215,8.1.0.v20120127,
+			8.0.4.v20111024,8.0.3.v20111011,8.0.2.v20111006,8.0.1.v20110908,8.0.0.v20110901,
+			7.6.16.v20140903,7.6.15.v20140411,7.6.14.v20131031,7.6.13.v20130916,7.6.12.v20130726,
+			7.6.11.v20130520,7.6.10.v20130312,7.6.9.v20130131,7.6.8.v20121106,7.6.7.v20120910,
+			7.6.6.v20120903,7.6.5.v20120716,7.6.4.v20120524,7.6.3.v20120416,7.6.2.v20120308,
+			7.6.1.v20120215,7.6.0.v20120127,
+			7.5.4.v20111024,7.5.3.v20111011,7.5.2.v20111006,7.5.1.v20110908,7.5.0.v20110901,
+			7.4.5.v20110725,7.4.4.v20110707,7.4.0.v20110414,
+			7.3.1.v20110307,7.3.0.v20110203,
+			7.2.2.v20101205,7.2.0.v20101020,
+			7.1.6.v20100715,7.1.0.v20100505,
+			7.0.2.v20100331,7.0.0.v20091005
+			注：使用8.0.4启动将延时35秒左右，使用7.5.4则无延时，使用7.0.1编译不通过
+			7.0到7.3使用接口WebSocket.Outbound,
+			7.4开始接口大变为WebSocket.OnTextMessage、WebSocket.OnBinaryMessage等 -->
+		<jetty.version>9.3.6.v20151106</jetty.version>
+		<jetty.port>8082</jetty.port>
+		<jetty.path>/</jetty.path>
+		<maven.test.skip>false</maven.test.skip>
+
+		<!-- 4.3.2.RELEASE(2016-07-28), 4.2.6.RELEASE(2016-05-06), 4.2.1.RELEASE(2015-09-01), 4.1.1.RELEASE(2014-10-01), 4.0.7.RELEASE(2014-09-04),
+			3.2.11.RELEASE(2014-09-04), 3.1.4.RELEASE(2013-01-23),
+			3.0.7.RELEASE(2011-12-24), 3.0.5.RELEASE(2010-10-21) -->
+		<spring.version>4.2.1.RELEASE</spring.version>
+		<!-- 5.0.6.Final(2015-12-17),5.0.5.Final(2015-12-03),5.0.4.Final(2015-11-19),
+			5.0.3.Final(2015-10-29),5.0.2.Final(2015-10-01),5.0.1.Final(2015-09-03),5.0.0.Final(2015-08-21),
+			4.3.7.Final(2014-10-30), 4.2.16.Final(2014-10-30),
+			4.1.12.Final(2013-04-25), 4.0.1.Final(2012-01-12),
+			3.6.10.Final(2012-02-09), 3.6.6.Final(2011-07-21) -->
+		<hibernate.version>5.0.6.Final</hibernate.version>
+		<!-- 1.3.10(2008-12-08), 1.3.5(2006-08-17) -->
+		<struts.version>1.3.10</struts.version>
+		<!-- 2.3.24.1(2015-09-24), 2.3.16.3(2014-05-02), 2.2.3.1(2011-09-06), 2.2.1(2010-07-11) -->
+		<struts2.version>2.3.24.1</struts2.version>
+		<!-- 2.2.2.RELEASE(2015-08-11),2.2.0.RELEASE(2014-05-22 spring4),
+			2.1.4.RELEASE(2013-10-01 spring3), 2.0.5.RELEASE(2012-05), 2.0.2.RELEASE(2011-05) -->
+		<spring-ws.version>2.2.2.RELEASE</spring-ws.version>
+
+		<!-- 数据库连接配置 -->
+		<db.type>postgresql</db.type>
+		<db.name>bcsystem</db.name>
+		<db.ip>localhost</db.ip>
+		<db.port>5432</db.port>
+		<db.driverClassName>org.postgresql.Driver</db.driverClassName>
+		<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
+		<db.username>${db.name}</db.username>
+		<db.password>${db.name}</db.password>
+		<jndi.name>${db.name}</jndi.name>
+		<!-- 使用oracle数据库时设置为sequence的名称，用于测试中qc.core.jdbc.SimpleJdbcInsertEx插入数据并返回id值 -->
+		<db.sequence/>
+		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+		<hibernate.show_sql>false</hibernate.show_sql>
+		<!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件，
+			hibernate3在启动时会执行 -->
+		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+		<bc.priority>WARN</bc.priority>
+		<bc.orm.priority>WARN</bc.orm.priority>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<!-- BC Framework BOM -->
+			<dependency>
+				<groupId>cn.bc</groupId>
+				<artifactId>bc-framework-bom</artifactId>
+				<version>${framework.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Spring Framework BOM-->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<!-- 最后版本为 3.2.11.RELEASE(2014-09-04) ,仅适用于 struts1 -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-struts</artifactId>
+				<version>3.2.11.RELEASE</version>
+				<exclusions>
+					<exclusion>
+						<groupId>struts</groupId>
+						<artifactId>struts</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
 			<dependency>
 				<groupId>ognl</groupId>
 				<artifactId>ognl</artifactId>
@@ -504,101 +587,6 @@
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
 				<version>1.8.3</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<!-- 从3.1开始，包含支持缓存Cache（ehcache）、JCA、JMX、邮件服务（Java Mail、COS Mail）、任务计划Scheduling（Timer、Quartz）方面的类 -->
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-expression</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jms</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-oxm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aspects</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<!-- 最后版本为 3.2.11.RELEASE(2014-09-04) ,仅适用于 struts1 -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-struts</artifactId>
-				<version>3.2.11.RELEASE</version>
-				<exclusions>
-					<exclusion>
-						<groupId>struts</groupId>
-						<artifactId>struts</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring.version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -1315,85 +1303,73 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<dependencies>
+		<!-- log-api-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<!-- javaee-api-->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- jpa: include in javaee-api
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency> -->
+		<!-- servlet3.x, jsp: include in javaee-api
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency> -->
 
-		<jdk.version>1.8</jdk.version>
-		<maven.javadoc.skip>true</maven.javadoc.skip>
-		<source.skip>true</source.skip>
+		<!-- unit test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<scope>test</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-		<!--Jetty的各种版本：
-			9.3.6.v20151106,9.3.5.v20151012,9.3.4.v20151007,9.3.3.v20150827,9.3.2.v20150730,9.3.1.v20150714,9.3.0.v20150612
-			注：从9.3开始主持 http2
-			9.2.13.v20150730,9.2.7.v20150116,9.2.6.v20141205,,9.2.0.v20140526,
-			9.1.4.v20140401,9.1.3.v20140225,9.1.2.v20140210,9.1.1.v20140108,9.1.0.v20131115,
-			9.0.7.v20131107,9.0.6.v20130930,9.0.5.v20130815,9.0.4.v20130625,9.0.3.v20130506,
-			9.0.2.v20130417,9.0.1.v20130408,9.0.0.v20130308,
-			8.1.16.v20140903,8.1.15.v20140411,8.1.14.v20131031,8.1.13.v20130916,8.1.12.v20130726,
-			8.1.11.v20130520,8.1.10.v20130312,8.1.9.v20130131,8.1.8.v20121106,8.1.7.v20120910,
-			8.1.6.v20120903,8.1.5.v20120716,8.1.4.v20120524,8.1.3.v20120416,8.1.2.v20120308,
-			8.1.1.v20120215,8.1.0.v20120127,
-			8.0.4.v20111024,8.0.3.v20111011,8.0.2.v20111006,8.0.1.v20110908,8.0.0.v20110901,
-			7.6.16.v20140903,7.6.15.v20140411,7.6.14.v20131031,7.6.13.v20130916,7.6.12.v20130726,
-			7.6.11.v20130520,7.6.10.v20130312,7.6.9.v20130131,7.6.8.v20121106,7.6.7.v20120910,
-			7.6.6.v20120903,7.6.5.v20120716,7.6.4.v20120524,7.6.3.v20120416,7.6.2.v20120308,
-			7.6.1.v20120215,7.6.0.v20120127,
-			7.5.4.v20111024,7.5.3.v20111011,7.5.2.v20111006,7.5.1.v20110908,7.5.0.v20110901,
-			7.4.5.v20110725,7.4.4.v20110707,7.4.0.v20110414,
-			7.3.1.v20110307,7.3.0.v20110203,
-			7.2.2.v20101205,7.2.0.v20101020,
-			7.1.6.v20100715,7.1.0.v20100505,
-			7.0.2.v20100331,7.0.0.v20091005
-			注：使用8.0.4启动将延时35秒左右，使用7.5.4则无延时，使用7.0.1编译不通过
-			7.0到7.3使用接口WebSocket.Outbound,
-			7.4开始接口大变为WebSocket.OnTextMessage、WebSocket.OnBinaryMessage等 -->
-		<jetty.version>9.3.6.v20151106</jetty.version>
-		<jetty.port>8082</jetty.port>
-		<jetty.path>/</jetty.path>
-		<maven.test.skip>false</maven.test.skip>
-
-		<!-- 4.3.2.RELEASE(2016-07-28), 4.2.6.RELEASE(2016-05-06), 4.2.1.RELEASE(2015-09-01), 4.1.1.RELEASE(2014-10-01), 4.0.7.RELEASE(2014-09-04),
-			3.2.11.RELEASE(2014-09-04), 3.1.4.RELEASE(2013-01-23),
-			3.0.7.RELEASE(2011-12-24), 3.0.5.RELEASE(2010-10-21) -->
-		<spring.version>4.2.1.RELEASE</spring.version>
-		<!-- 5.0.6.Final(2015-12-17),5.0.5.Final(2015-12-03),5.0.4.Final(2015-11-19),
-			5.0.3.Final(2015-10-29),5.0.2.Final(2015-10-01),5.0.1.Final(2015-09-03),5.0.0.Final(2015-08-21),
-			4.3.7.Final(2014-10-30), 4.2.16.Final(2014-10-30),
-			4.1.12.Final(2013-04-25), 4.0.1.Final(2012-01-12),
-			3.6.10.Final(2012-02-09), 3.6.6.Final(2011-07-21) -->
-		<hibernate.version>5.0.6.Final</hibernate.version>
-		<!-- 1.3.10(2008-12-08), 1.3.5(2006-08-17) -->
-		<struts.version>1.3.10</struts.version>
-		<!-- 2.3.24.1(2015-09-24), 2.3.16.3(2014-05-02), 2.2.3.1(2011-09-06), 2.2.1(2010-07-11) -->
-		<struts2.version>2.3.24.1</struts2.version>
-		<!-- 2.2.2.RELEASE(2015-08-11),2.2.0.RELEASE(2014-05-22 spring4),
-			2.1.4.RELEASE(2013-10-01 spring3), 2.0.5.RELEASE(2012-05), 2.0.2.RELEASE(2011-05) -->
-		<spring-ws.version>2.2.2.RELEASE</spring-ws.version>
-
-		<!-- 数据库连接配置 -->
-		<db.type>postgresql</db.type>
-		<db.name>bcsystem</db.name>
-		<db.ip>localhost</db.ip>
-		<db.port>5432</db.port>
-		<db.driverClassName>org.postgresql.Driver</db.driverClassName>
-		<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
-		<db.username>${db.name}</db.username>
-		<db.password>${db.name}</db.password>
-		<jndi.name>${db.name}</jndi.name>
-		<!-- 使用oracle数据库时设置为sequence的名称，用于测试中qc.core.jdbc.SimpleJdbcInsertEx插入数据并返回id值 -->
-		<db.sequence/>
-		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
-		<hibernate.show_sql>false</hibernate.show_sql>
-		<!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件，
-			hibernate3在启动时会执行 -->
-		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
-		<bc.priority>WARN</bc.priority>
-		<bc.orm.priority>WARN</bc.orm.priority>
-	</properties>
-
+		<!-- default database
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<scope>provided</scope>
+		</dependency>-->
+	</dependencies>
 	<profiles>
 		<profile>
 			<id>postgresql</id>

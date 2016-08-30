@@ -11,14 +11,12 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- 远程服务 -->
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-remoting-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- zip打包压缩解决中文乱码需要的包，jdk自带的会乱码 -->

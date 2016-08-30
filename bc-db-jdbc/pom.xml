@@ -15,13 +15,11 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 
