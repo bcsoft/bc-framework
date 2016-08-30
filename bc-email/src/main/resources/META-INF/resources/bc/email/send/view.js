@@ -1,0 +1,5 @@
+bc.emailSendView = {
+	open:function(){
+		
+	}
+};
