@@ -1,0 +1,51 @@
+.feedback {
+	
+}
+
+.feedback .replies {
+	font-weight: normal;
+}
+
+.feedback .replies .reply {
+	margin: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 0;
+}
+
+.feedback .replies .reply .replyHeader {
+	font-style: italic;
+	border-width: 0;
+	padding: 2px 10px;
+	font-weight: normal;
+}
+.feedback .replies .reply .replyHeader .right{
+	float: right;
+	margin:auto 2px;
+}
+.feedback .replies .reply .replyHeader a.right{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.feedback .replies .reply .replyContent {
+	border-width: 0;
+	padding: 6px 10px;
+	margin: 0;
+}
+.feedback .replies .reply .replyContent .deleteInfo{
+	color: #ccc;
+	font-style: italic;
+}
+.feedback .newReply {
+	position: relative;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 0;
+	text-align: left;
+	padding:8px;
+}
+.feedback .newReply textarea{
+	width:99%;
+	min-height: 70px;
+}
