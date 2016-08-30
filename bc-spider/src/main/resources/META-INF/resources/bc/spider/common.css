@@ -1,0 +1,129 @@
+.spider {
+	font-weight: normal;
+}
+
+.spider #status {
+	font-weight: normal;
+	font-style: italic;
+}
+
+.spider .result {
+	margin: 0px;
+	padding: 0px;
+	overflow: auto;
+}
+
+.spider .error {
+	color: red
+}
+
+.spider .item {
+	width: 20em;
+	display: inline-block;
+}
+
+.spider .field {
+	display: -webkit-box;
+	display: -moz-box;
+	display: box;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	box-orient: horizontal;
+	-webkit-box-pack: left;
+	-webkit-box-align: center;
+	box-pack: left;
+	box-align: center;
+}
+
+.spider .field>.label {
+	width: 6em;
+	text-align: right;
+	padding-right: 0.25em;
+}
+
+.spider .field>.value {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+	position: relative;
+}
+
+.spider .field>.value>input {
+	width: 100%;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.spider .field>.value>input.captcha {
+	width: 50%;
+}
+
+.spider img.captcha {
+	vertical-align: middle;
+	cursor: pointer;
+	width: 50%;
+	box-sizing: border-box;
+}
+
+.spider .vlayout {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-pack: top;
+	-webkit-box-align: left;
+}
+
+.spider .vlayout>.flex {
+	-webkit-box-flex: 1;
+}
+
+.spider .result>table {
+	table-layout: fixed;
+	width: 0;
+	outline-width: 0;
+	max-width: none;
+	max-height: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 0;
+	border-width: 0;
+	empty-cells: show;
+}
+
+.spider .result>table>thead,.spider .result>table th {
+	text-align: center;
+}
+
+.spider .result>table>tbody {
+	text-align: left;
+}
+
+.spider .result>table>tbody>tr,.spider .result>table>thead>tr {
+	border-width: 0;
+}
+
+.spider .result>table>thead>tr:first-child>* {
+	border-top-width: 0;
+}
+
+.spider .result>table>tbody>tr>:first-child,.spider .result>table>thead>tr>:first-child
+	{
+	border-left-width: 0;
+}
+
+.spider .result>table td,.spider .result>table th {
+	padding: 0.25em;
+	background: none;
+	empty-cells: show;
+}
+
+.spider .params {
+	padding: 4px;
+}
+
+.spider .desc {
+	padding: 4px;
+	border-width: 1px 0 0 0;
+	border-style: dotted;
+	font-style: italic;
+}
