@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>摄像头处理</title>
+<link rel="stylesheet" type="text/css" href="camera.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../ui-libs/jquery-ui/1.9.2/themes/base/jquery-ui.css" />
+</head>
+<body>
+	<div>
+		<button id="startButton">打开摄像头</button>
+		<button id="stopButton" value="0">停止</button>
+		图片放大率:<input id="scale" type="range" min="0.5" max="5" value="1"
+			step="0.1"><span id="scaleValue">1</span>, 截图格式：<input
+			type="radio" name="type" value="image/jpeg" checked="checked">jpg
+		<input type="radio" name="type" value="image/png">png <input
+			type="radio" name="type" value="image/webp">webp <select>
+			<option value=""></option>
+			<option value="ShenFenZheng">身份证</option>
+			<option value="FuWuZiGeZheng">服务资格证</option>
+			<option value="A4">A4</option>
+		</select>
+	</div>
+	<div>
+		<span id="msg"></span>
+	</div>
+	<div class="container centerBox">
+		<div class="scanContainer">
+			<video id="screenshot-stream" autoplay></video>
+			<div class="sizer centerBox">
+				<div class="dice top-left"></div>
+				<div class="dice top-center"></div>
+				<div class="dice top-right"></div>
+				<div class="dice left-center"></div>
+				<div class="dice right-center"></div>
+				<div class="dice bottom-left"></div>
+				<div class="dice bottom-center"></div>
+				<div class="dice bottom-right"></div>
+				<div class="info">ok</div>
+			</div>
+		</div>
+	</div>
+	<div class="showContainer">
+		<canvas id="screenshot-canvas"></canvas>
+		<img id="screenshot">
+	</div>
+
+	<script type="text/javascript"
+		src="../../ui-libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../../ui-libs/jquery-ui/1.9.2/ui/minified/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="camera.js"></script>
+</body>
+</html>
