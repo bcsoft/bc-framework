@@ -1,0 +1,31 @@
+.userFormTable {
+	margin: 8px;
+	width:600px;
+}
+
+.ownedGroups,.standbyGroups {
+	width: 200px;
+}
+
+.leftRightBtns {
+	width: 80px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.leftRightBtns input {
+	width: 60px;
+	height: 30px;
+	margin: 8px;
+}
+
+.ownedGroups select,.standbyGroups select {
+	width: 100%;
+}
+
+.userPortrait {
+	border-left: 1px solid #ccc;
+	vertical-align: top;
+	text-align: center;
+	border-left: 1px solid #ccc;
+}
