@@ -1,0 +1,97 @@
+/**总容器*/
+div.chatMsg>div.container {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	position: relative;
+	font-weight: normal;
+}
+
+/**历史消息记录区*/
+div.chatMsg>div.container>div.history {
+	position: absolute;
+	top: 0;
+	bottom: 142px;
+	left: 0;
+	right: 0;
+	overflow: auto;
+	padding: 4px;
+	overflow: auto;
+}
+
+div.chatMsg>div.container>div.history>.item {
+	
+}
+
+div.chatMsg>div.container>div.history>.item>.header.local {
+	color: green;
+}
+
+div.chatMsg>div.container>div.history>.item>.header.remote {
+	color: blue;
+}
+
+div.chatMsg>div.container>div.history>.item>.header.sys {
+	color: red;
+}
+
+div.chatMsg>div.container>div.history>.item>.content {
+	padding-left: 15px;
+}
+
+/**编辑工具条区*/
+div.chatMsg>div.container>div.editor {
+	position: absolute;
+	width: 100%;
+	bottom: 114px;
+	height: 28px;
+	border: 0;
+}
+
+/**文本输入区*/
+div.chatMsg>div.container>div.inputText {
+	position: absolute;
+	width: 100%;
+	bottom: 34px;
+	height: 80px;
+	border: 0;
+}
+
+div.chatMsg>div.container>div.inputText>textarea {
+	min-width: 98%;
+	min-height: 98%;
+	position: absolute;
+	border: 0;
+	padding: 4px;
+	bottom: 0;
+	right: 0 !important;
+	left: 0;
+	top: 0;
+	resize: none; /*取消textarea的可拖动调整大小功能*/
+	outline: none;
+	position: absolute; /*取消textarea聚焦时边框变成黄色的功能*/
+}
+
+/**底部工具条区*/
+div.chatMsg>div.container>div.bottom {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	height: 34px;
+	border: 0;
+}
+
+div.chatMsg>div.container>div.bottom>.info {
+	padding-left: 4px;
+	padding-top: 10px;
+	font-weight: normal;
+}
+
+div.chatMsg>div.container>div.bottom>input#btnSend {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	height: 26px;
+	width: 100px;
+}
