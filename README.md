@@ -16,6 +16,9 @@ $ git clone https://github.com/bcsoft/bc-framework.git
 $ cd bc-framework
 $ git submodule init
 $ git submodule update
+$ cd bc-framework-bom
+$ mvn clean install
+$ cd ..
 $ mvn clean install -Dmaven.test.skip=true
 ```
 

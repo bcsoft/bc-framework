@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.bc</groupId>
 	<artifactId>bc-framework-bom</artifactId>
+	<name>bc-framework-bom</name>
 	<version>3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>bc-framework-bom</name>
 	<description>BC Framework BOM (Bill of Materials)</description>
 	<url>https://github.com/bcsoft/bc-framework</url>
 
@@ -69,6 +69,9 @@
 		<bc.category.version>2.1-SNAPSHOT</bc.category.version>
 		<bc.cert.version>2.1-SNAPSHOT</bc.cert.version>
 		<bc.express.version>2.1-SNAPSHOT</bc.express.version>
+
+		<!-- 版本：工作流 -->
+		<bc.wf.version>${framework.version}</bc.wf.version>
 	</properties>
 
 	<dependencyManagement>
@@ -285,6 +288,13 @@
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-express</artifactId>
 				<version>${bc.express.version}</version>
+			</dependency>
+
+			<!-- 工作流 -->
+			<dependency>
+				<groupId>cn.bc.workflow</groupId>
+				<artifactId>bc-workflow-core</artifactId>
+				<version>${bc.wf.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

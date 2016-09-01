@@ -1,14 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn.bc</groupId>
+	<parent>
+		<groupId>cn.bc</groupId>
+		<artifactId>bc-framework-bom</artifactId>
+		<version>3.2-SNAPSHOT</version>
+	</parent>
 	<artifactId>bc-parent</artifactId>
 	<version>3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>bc-parent</name>
 	<description>BC 平台</description>
 	<modules>
-		<module>bc-framework-bom</module>
 		<module>bc-core</module>
 		<module>bc-test</module>
 		<module>bc-db-jdbc</module>
@@ -54,6 +57,7 @@
 		<!--<module>bc-websocket</module>
 		<module>bc-chat</module>-->
 	</modules>
+
 	<url>https://github.com/bcsoft/bc-framework</url>
 	<organization>
 		<name>bcsoft</name>
@@ -94,284 +98,10 @@
 			<url>${deploy.nexus-snapshots.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
-	<build>
-		<defaultGoal>package</defaultGoal>
-		<!-- 替换文件中的${...}标记的值 -->
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-					<include>**/log4j.xml</include>
-				</includes>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<!-- 3.3(2015-03-24), 3.2(2014-10-09), 3.1(2013-04-03), 3.0(2011-11-16), // 3.x编译有bug
-						2.5.1(2012-05-31), 2.3.2(2010-09-04)-->
-					<version>3.3</version>
-					<configuration>
-						<source>${jdk.version}</source>
-						<target>${jdk.version}</target>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<!-- 2.7(2014-09-30)-->
-					<version>2.7</version>
-					<configuration>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<!-- 2.10(2015-01-24), 2.9(2014-09-19)-->
-					<version>2.10</version>
-					<configuration>
-						<artifactItems>
-							<artifactItem>
-								<groupId>${project.groupId}</groupId>
-								<artifactId>${project.artifactId}</artifactId>
-								<version>${project.version}</version>
-							</artifactItem>
-						</artifactItems>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<!-- 2.6(2015-01-09), 2.5(2014-10-09)-->
-					<version>2.6</version>
-					<configuration>
-						<webResources>
-							<resource>
-								<!-- this is relative to the pom.xml directory -->
-								<directory>src/main/webapp</directory>
-								<filtering>true</filtering>
-							</resource>
-						</webResources>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<!-- 2.18.1(2014-12-23), 2.17(2014-03-13)-->
-					<version>2.18.1</version>
-					<configuration>
-						<includes>
-							<include>**/*Test.java</include>
-							<include>**/Test*.java</include>
-							<include>**/*TestCase.java</include>
-							<include>**/*Tests.java</include>
-						</includes>
-						<excludes>
-							<exclude>**/Abstract*.java</exclude>
-						</excludes>
-						<argLine>-Xmx256m</argLine>
-					</configuration>
-				</plugin>
-
-				<!-- http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html
-					jetty6: groupId=org.mortbay.jetty, artifactId=maven-jetty-plugin
-					jetty7: groupId=org.mortbay.jetty, artifactId=jetty-maven-plugin
-					jetty9: groupId=org.eclipse.jetty, artifactId=jetty-maven-plugin
-				-->
-				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>${jetty.version}</version>
-					<!-- 修改端口：mvn jetty:run -Djetty.port=8081 -->
-
-					<!-- 配置参考：http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
-					<configuration>
-						<!--<scanIntervalSeconds>5</scanIntervalSeconds>-->
-						<httpConnector>
-							<port>${jetty.port}</port>
-							<idleTimeout>60000</idleTimeout>
-						</httpConnector>
-						<webApp>
-							<contextPath>${jetty.path}</contextPath>
-							<!-- 默认为： /${project.artifactId} -->
-							<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
-							<!-- session 持久化配置 -->
-							<sessionHandler implementation="org.eclipse.jetty.server.session.SessionHandler">
-								<sessionManager implementation="org.eclipse.jetty.server.session.HashSessionManager">
-									<storeDirectory>${project.basedir}/target/jetty-sessions</storeDirectory>
-									<!-- 默认为0秒: Configures the period in seconds after which a session is deemed idle and saved to save on session memory.-->
-									<idleSavePeriod>1</idleSavePeriod>
-									<!-- 默认30秒: the period in seconds at which a check is made for sessions to be invalidated.-->
-									<scavengePeriod>600</scavengePeriod>
-									<!-- 默认false: Delaying Session Load -->
-									<lazyLoad>true</lazyLoad>
-								</sessionManager>
-							</sessionHandler>
-						</webApp>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<!-- 1.8(2014-12-20), 1.7(2011-10-29)-->
-					<version>1.8</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<configuration>
-								<tasks>
-									<!-- 下面可以传入一些Maven变量 -->
-									<property name="compile_classpath" refid="maven.compile.classpath"/>
-									<property name="runtime_classpath" refid="maven.runtime.classpath"/>
-									<property name="test_classpath" refid="maven.test.classpath"/>
-									<property name="plugin_classpath" refid="maven.plugin.classpath"/>
-									<property name="app.name" value="${app.name}"/>
-									<property name="app.ver" value="${app.ver}"/>
-									<property name="app.data.realPath" value="${app.data.realPath}"/>
-
-									<ant antfile="${basedir}/build.xml">
-										<target name="build"/>
-									</ant>
-								</tasks>
-							</configuration>
-							<goals>
-								<goal>run</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<!-- 版本发布工具 -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<!-- 2.5.3(2015-10-14), 2.5.2(2015-06-18), 2.1(2010-10-02)-->
-					<version>2.5.3</version>
-					<configuration>
-						<!--<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<!-- 2.3(2016-07-23), 2.2(2015-06-26), 2.1(2013-01-12)-->
-					<version>2.3</version>
-					<!-- <reportSets>
-						<reportSet>
-							<reports>
-								<report>dependency-updates-report</report>
-								<report>plugin-updates-report</report>
-								<report>property-updates-report</report>
-							</reports>
-						</reportSet>
-					</reportSets> -->
-				</plugin>
-				<!-- 版本管理工具 -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-scm-plugin</artifactId>
-					<!-- 1.9.4(2015-03-28), 1.9.2(2014-09-13)-->
-					<version>1.9.4</version>
-					<configuration>
-						<!--<goals>install</goals> -->
-						<connectionType>developerConnection</connectionType>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<!-- 2.4(2014-10-08)-->
-					<version>2.4</version>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<!-- 在打包后同时打包源码 -->
-							<phase>package</phase>
-							<goals>
-								<!-- 非交叉构建 -->
-								<goal>jar-no-fork</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<!-- 2.10.3(2015-06-09)-->
-					<version>2.10.3</version>
-					<configuration>
-						<charset>UTF-8</charset>
-						<encoding>UTF-8</encoding>
-						<docencoding>UTF-8</docencoding>
-					</configuration>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<!-- 在打包后生成 -->
-							<phase>package</phase>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
 	<properties>
-		<!-- 版本：平台 -->
-		<framework.version>3.2-SNAPSHOT</framework.version>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-
 		<jdk.version>1.8</jdk.version>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<source.skip>false</source.skip>
@@ -446,15 +176,6 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<!-- BC Framework BOM -->
-			<dependency>
-				<groupId>cn.bc</groupId>
-				<artifactId>bc-framework-bom</artifactId>
-				<version>${framework.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 			<!-- Spring Framework BOM-->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -1452,4 +1173,273 @@
 			</dependencies>
 		</profile>
 	</profiles>
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<!-- 替换文件中的${...}标记的值 -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/log4j.xml</include>
+				</includes>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<!-- 3.3(2015-03-24), 3.2(2014-10-09), 3.1(2013-04-03), 3.0(2011-11-16), // 3.x编译有bug
+						2.5.1(2012-05-31), 2.3.2(2010-09-04)-->
+					<version>3.3</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<!-- 2.7(2014-09-30)-->
+					<version>2.7</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<!-- 2.10(2015-01-24), 2.9(2014-09-19)-->
+					<version>2.10</version>
+					<configuration>
+						<artifactItems>
+							<artifactItem>
+								<groupId>${project.groupId}</groupId>
+								<artifactId>${project.artifactId}</artifactId>
+								<version>${project.version}</version>
+							</artifactItem>
+						</artifactItems>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<!-- 2.6(2015-01-09), 2.5(2014-10-09)-->
+					<version>2.6</version>
+					<configuration>
+						<webResources>
+							<resource>
+								<!-- this is relative to the pom.xml directory -->
+								<directory>src/main/webapp</directory>
+								<filtering>true</filtering>
+							</resource>
+						</webResources>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<!-- 2.18.1(2014-12-23), 2.17(2014-03-13)-->
+					<version>2.18.1</version>
+					<configuration>
+						<includes>
+							<include>**/*Test.java</include>
+							<include>**/Test*.java</include>
+							<include>**/*TestCase.java</include>
+							<include>**/*Tests.java</include>
+						</includes>
+						<excludes>
+							<exclude>**/Abstract*.java</exclude>
+						</excludes>
+						<argLine>-Xmx256m</argLine>
+					</configuration>
+				</plugin>
+
+				<!-- http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html
+					jetty6: groupId=org.mortbay.jetty, artifactId=maven-jetty-plugin
+					jetty7: groupId=org.mortbay.jetty, artifactId=jetty-maven-plugin
+					jetty9: groupId=org.eclipse.jetty, artifactId=jetty-maven-plugin
+				-->
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.version}</version>
+					<!-- 修改端口：mvn jetty:run -Djetty.port=8081 -->
+
+					<!-- 配置参考：http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
+					<configuration>
+						<!--<scanIntervalSeconds>5</scanIntervalSeconds>-->
+						<httpConnector>
+							<port>${jetty.port}</port>
+							<idleTimeout>60000</idleTimeout>
+						</httpConnector>
+						<webApp>
+							<contextPath>${jetty.path}</contextPath>
+							<!-- 默认为： /${project.artifactId} -->
+							<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
+							<!-- session 持久化配置 -->
+							<sessionHandler implementation="org.eclipse.jetty.server.session.SessionHandler">
+								<sessionManager implementation="org.eclipse.jetty.server.session.HashSessionManager">
+									<storeDirectory>${project.basedir}/target/jetty-sessions</storeDirectory>
+									<!-- 默认为0秒: Configures the period in seconds after which a session is deemed idle and saved to save on session memory.-->
+									<idleSavePeriod>1</idleSavePeriod>
+									<!-- 默认30秒: the period in seconds at which a check is made for sessions to be invalidated.-->
+									<scavengePeriod>600</scavengePeriod>
+									<!-- 默认false: Delaying Session Load -->
+									<lazyLoad>true</lazyLoad>
+								</sessionManager>
+							</sessionHandler>
+						</webApp>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<!-- 1.8(2014-12-20), 1.7(2011-10-29)-->
+					<version>1.8</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<configuration>
+								<tasks>
+									<!-- 下面可以传入一些Maven变量 -->
+									<property name="compile_classpath" refid="maven.compile.classpath"/>
+									<property name="runtime_classpath" refid="maven.runtime.classpath"/>
+									<property name="test_classpath" refid="maven.test.classpath"/>
+									<property name="plugin_classpath" refid="maven.plugin.classpath"/>
+									<property name="app.name" value="${app.name}"/>
+									<property name="app.ver" value="${app.ver}"/>
+									<property name="app.data.realPath" value="${app.data.realPath}"/>
+
+									<ant antfile="${basedir}/build.xml">
+										<target name="build"/>
+									</ant>
+								</tasks>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- 版本发布工具 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<!-- 2.5.3(2015-10-14), 2.5.2(2015-06-18), 2.1(2010-10-02)-->
+					<version>2.5.3</version>
+					<configuration>
+						<!--<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<!-- 2.3(2016-07-23), 2.2(2015-06-26), 2.1(2013-01-12)-->
+					<version>2.3</version>
+					<!-- <reportSets>
+						<reportSet>
+							<reports>
+								<report>dependency-updates-report</report>
+								<report>plugin-updates-report</report>
+								<report>property-updates-report</report>
+							</reports>
+						</reportSet>
+					</reportSets> -->
+				</plugin>
+				<!-- 版本管理工具 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-plugin</artifactId>
+					<!-- 1.9.4(2015-03-28), 1.9.2(2014-09-13)-->
+					<version>1.9.4</version>
+					<configuration>
+						<!--<goals>install</goals> -->
+						<connectionType>developerConnection</connectionType>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<!-- 2.4(2014-10-08)-->
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<!-- 在打包后同时打包源码 -->
+							<phase>package</phase>
+							<goals>
+								<!-- 非交叉构建 -->
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<!-- 2.10.3(2015-06-09)-->
+					<version>2.10.3</version>
+					<configuration>
+						<charset>UTF-8</charset>
+						<encoding>UTF-8</encoding>
+						<docencoding>UTF-8</docencoding>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<!-- 在打包后生成 -->
+							<phase>package</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
