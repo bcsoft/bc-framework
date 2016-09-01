@@ -47,8 +47,12 @@
 		<module>bc-remoting-client</module>
 		<module>bc-remoting-server</module>
 
-		<!--<module>bc-websocket</module>-->
-		<!--<module>bc-chat</module>-->
+		<module>bc-category</module>
+		<module>bc-cert</module>
+		<module>bc-express</module>
+
+		<!--<module>bc-websocket</module>
+		<module>bc-chat</module>-->
 	</modules>
 	<url>https://github.com/bcsoft/bc-framework</url>
 	<organization>
