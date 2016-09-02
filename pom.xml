@@ -99,6 +99,7 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<properties>
+		<bc.rest.version>1.1-SNAPSHOT</bc.rest.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -354,6 +355,22 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
+			</dependency>
+
+			<!-- JAX-RS API: 2.0 2013-05-24、1.1 2008-10-10 -->
+			<dependency>
+				<groupId>javax.ws.rs</groupId>
+				<artifactId>javax.ws.rs-api</artifactId>
+				<version>2.0.1</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- JSR250: 1.2 2013-04-27 -->
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>javax.annotation-api</artifactId>
+				<version>1.2</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- 1.0.2(2007-07-23), 2.0(2009-12-10) -->
