@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.2-SNAPSHOT</version>
+		<version>3.2</version>
 	</parent>
 	<artifactId>bc-report</artifactId>
 	<description>报表管理</description>

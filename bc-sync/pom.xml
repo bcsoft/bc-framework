@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.2-SNAPSHOT</version>
+		<version>3.2</version>
 	</parent>
 	<artifactId>bc-sync</artifactId>
 	<description>同步处理</description>

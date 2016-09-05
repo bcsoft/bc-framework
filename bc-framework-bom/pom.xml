@@ -4,7 +4,7 @@
 	<groupId>cn.bc</groupId>
 	<artifactId>bc-framework-bom</artifactId>
 	<name>bc-framework-bom</name>
-	<version>3.2-SNAPSHOT</version>
+	<version>3.2</version>
 	<packaging>pom</packaging>
 	<description>BC Framework BOM (Bill of Materials)</description>
 	<url>https://github.com/bcsoft/bc-framework</url>
@@ -24,7 +24,7 @@
 
 	<properties>
 		<!-- 版本：平台 -->
-		<framework.version>3.2-SNAPSHOT</framework.version>
+		<framework.version>3.2</framework.version>
 		<bc.acl.version>${framework.version}</bc.acl.version>
 		<bc.bulletin.version>${framework.version}</bc.bulletin.version>
 		<bc.cache.version>${framework.version}</bc.cache.version>
@@ -66,9 +66,9 @@
 		<bc.workday.version>${framework.version}</bc.workday.version>
 
 		<!-- 版本：其它 -->
-		<bc.category.version>2.1-SNAPSHOT</bc.category.version>
-		<bc.cert.version>2.1-SNAPSHOT</bc.cert.version>
-		<bc.express.version>2.1-SNAPSHOT</bc.express.version>
+		<bc.category.version>2.1</bc.category.version>
+		<bc.cert.version>2.1</bc.cert.version>
+		<bc.express.version>2.1</bc.express.version>
 
 		<!-- 版本：工作流 -->
 		<bc.wf.version>${framework.version}</bc.wf.version>

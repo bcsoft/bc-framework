@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.2-SNAPSHOT</version>
+		<version>3.2</version>
 	</parent>
 	<artifactId>bc-placeorigin</artifactId>
 	<description>籍贯管理</description>
