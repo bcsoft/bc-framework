@@ -46,6 +46,10 @@ public abstract class AbstractGridPageWithExportAction<T extends Object>
 	public String inputName = "inputStream";// 文件输出流定义
 	public String contentDisposition;// 下载文件处理方法
 
+	public int exportScope;
+	public String exportFormat;
+	public String[] field;
+
 	public void setApplicationEventPublisher(
 			ApplicationEventPublisher applicationEventPublisher) {
 		this.eventPublisher = applicationEventPublisher;
