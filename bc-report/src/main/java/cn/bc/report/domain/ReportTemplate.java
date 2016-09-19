@@ -20,11 +20,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.expression.BeanResolver;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 
 import javax.persistence.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -420,7 +428,7 @@ public class ReportTemplate extends FileEntityImpl {
 	/**
 	 * 执行报表并生成一个历史报表对象
 	 */
-	public ReportHistory run2history(ReportService reportService, Condition condition) throws Exception {
+	public ReportHistory run2history(BeanResolver beanResolver, ReportService reportService, Condition condition) throws Exception {
 		// 初始化历史报表对象
 		Calendar now = Calendar.getInstance();
 		ReportHistory h = new ReportHistory();
@@ -430,37 +438,33 @@ public class ReportTemplate extends FileEntityImpl {
 		Assert.notNull(config, "报表模板的详细配置为空！");
 
 		// 附件保存的二级子目录
-		String dateDir = new SimpleDateFormat("yyyyMM").format(now.getTime());
+		String dateDir = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
 
 		// 附件的扩展名
 		String extension = config.has("extension") ? config.getString("extension") : "xls";
 
 		// 附件保存的文件名(不含路径)
-		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now.getTime()) + this.getCode() + "." + extension;
+		String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSS")) + this.getCode() + "." + extension;
 
 		// 附件保存的绝对路径
-		String realpath = Attach.DATA_REAL_PATH + "/" + ReportHistory.DATA_SUB_PATH + "/" + dateDir + "/" + fileName;
+		String realPath = Attach.DATA_REAL_PATH + "/" + ReportHistory.DATA_SUB_PATH + "/" + dateDir + "/" + fileName;
 
 		// 创建附件保存的目录
-		File file = new File(realpath);
-		if (!file.getParentFile().exists()) {
-			if (logger.isWarnEnabled()) logger.warn("mkdir=" + file.getParentFile().getAbsolutePath());
-			file.getParentFile().mkdirs();
+		File toFile = new File(realPath);
+		if (!toFile.getParentFile().exists()) {
+			if (logger.isWarnEnabled()) logger.warn("mkdir=" + toFile.getParentFile().getAbsolutePath());
+			toFile.getParentFile().mkdirs();
 		}
 
 		// 导出报表结果到文件
-		List<Column> columns = this.getConfigColumns();
-		GridExporter exporter = new GridExporter();
-		exporter.setIdLabel("序号");
-		exporter.setTitle(this.getName());
-		exporter.setColumns(columns);// 列配置
-		// 报表查询类型：默认为JPA查询(queryType=jpa)
-		String queryType = config.has("queryType") ? config.getString("queryType") : "jpa";
-		exporter.setData(reportService.createSqlQuery(queryType, this.getConfigSqlObject(reportService, condition)).list());// 数据
-		exporter.setTemplateFile(this.getConfigExportTemplate(reportService));// 导出数据的模板
-		FileOutputStream out = new FileOutputStream(file);
+		if (config.has("columns")) {        // 传统的自定义 sql 的配置
+			defaultExport(reportService, config, toFile, condition);
+		} else if (config.has("stream")) {  // 通过 spel 表达式配置获取报表文件流
+			streamExport(beanResolver, config, toFile, condition);
+		} else {
+			throw new IllegalArgumentException("不支持的报表模版配置！");
+		}
 		if (logger.isDebugEnabled()) logger.debug("runReportTemplate:" + DateUtils.getWasteTime(now.getTime()));
-		exporter.exportTo(out);
 
 		// 历史报表参数
 		h.setEndDate(Calendar.getInstance());// 完成时间
@@ -472,5 +476,47 @@ public class ReportTemplate extends FileEntityImpl {
 		h.setSourceId(this.getId());
 
 		return h;
+	}
+
+	StandardEvaluationContext context = new StandardEvaluationContext();
+	ExpressionParser parser = new SpelExpressionParser();
+
+	private void streamExport(BeanResolver beanResolver, JSONObject config, File toFile, Condition condition) throws IOException {
+		Assert.isTrue(config.has("stream"), "报表模板缺少 stream 参数的配置！");
+
+		// 注入spring bean 解析器
+		context.setBeanResolver(beanResolver);
+
+		// 复制配置参数为上下文的变量
+		config.keySet().forEach(key -> context.setVariable((String) key, config.get((String) key)));
+
+		// 设置固定的上下文变量
+		context.setVariable("condition", condition);   // 报表条件
+		context.setVariable("today", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));            // 当日
+		context.setVariable("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))); // 当前时间
+
+		// 获取 stream 配置的 spel 表达式 > 解析并获取文件流 > 保存为文件
+		Expression exp = parser.parseExpression(config.getString("stream"));
+		try (InputStream is = (InputStream) exp.getValue(context); FileOutputStream os = new FileOutputStream(toFile)) {
+			FileCopyUtils.copy(is, os);
+		}
+	}
+
+	/**
+	 * 默认的导出：响应 columns 的配置，使用 GridExporter
+	 */
+	private void defaultExport(ReportService reportService, JSONObject config, File toFile, Condition condition) throws Exception {
+		List<Column> columns = this.getConfigColumns();
+		GridExporter exporter = new GridExporter();
+		exporter.setIdLabel("序号");
+		exporter.setTitle(this.getName());
+		exporter.setColumns(columns);// 列配置
+		// 报表查询类型：默认为JPA查询(queryType=jpa)
+		String queryType = config.has("queryType") ? config.getString("queryType") : "jpa";
+		exporter.setData(reportService.createSqlQuery(queryType, this.getConfigSqlObject(reportService, condition)).list());// 数据
+		exporter.setTemplateFile(this.getConfigExportTemplate(reportService));// 导出数据的模板
+		try (FileOutputStream out = new FileOutputStream(toFile)) {
+			exporter.exportTo(out);
+		}
 	}
 }

@@ -13,6 +13,12 @@ import org.quartz.JobExecutionException;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.BeanResolver;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
 
@@ -36,6 +42,7 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 	private ReportTask reportTask;// 要执行的报表任务
 
 	private ScheduleLog scheduleLog;
+	private BeanResolver beanResolver;
 
 	public void setReportService(ReportService reportService) {
 		this.reportService = reportService;
@@ -51,6 +58,10 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 
 	public void setReportTask(ReportTask reportTask) {
 		this.reportTask = reportTask;
+	}
+
+	public void setBeanResolver(BeanResolver beanResolver) {
+		this.beanResolver = beanResolver;
 	}
 
 	private void stopInError(JobExecutionContext context) {
@@ -104,7 +115,7 @@ public class RunReportTemplateJobBean extends QuartzJobBean {
 			Assert.notNull(tpl, "报表任务配置的报表模板为空！");
 
 			// 执行并生成历史报表
-			ReportHistory h = tpl.run2history(this.reportService, null);
+			ReportHistory h = tpl.run2history(this.beanResolver, this.reportService, null);
 
 			// 设置报表历史的一些信息
 			h.setAuthor(this.executor);

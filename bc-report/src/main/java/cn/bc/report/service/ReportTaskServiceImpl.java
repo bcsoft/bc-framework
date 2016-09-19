@@ -16,8 +16,13 @@ import cn.bc.scheduler.service.SchedulerService;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.BeanResolver;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,8 +38,9 @@ import static org.quartz.TriggerKey.triggerKey;
  * 报表任务Service接口的实现
  *
  * @author lbj
+ * @author dragon 2016-09-20 add beanResolver
  */
-public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implements ReportTaskService, InitializingBean {
+public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implements ReportTaskService, InitializingBean, BeanFactoryAware {
 	private static Logger logger = LoggerFactory.getLogger(ReportTaskServiceImpl.class);
 	private OperateLogService operateLogService;
 	private ReportTaskDao reportTaskDao;
@@ -45,6 +51,7 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implem
 	private IdGeneratorService idGeneratorService;
 	@Autowired
 	private SchedulerManage schedulerManage;
+	private BeanResolver beanResolver;
 
 	@Autowired
 	public void setIdGeneratorService(IdGeneratorService idGeneratorService) {
@@ -82,6 +89,11 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implem
 		this.reportTaskDao = reportTaskDao;
 	}
 
+	@Autowired
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		this.beanResolver = new BeanFactoryResolver(beanFactory);
+	}
+
 	public void afterPropertiesSet() throws Exception {
 		// 禁用就不再处理
 		if (schedulerManage.isDisabled()) {
@@ -115,6 +127,7 @@ public class ReportTaskServiceImpl extends DefaultCrudService<ReportTask> implem
 			JobDataMap jobDataMap = new JobDataMap();
 			jobDataMap.put("schedulerService", this.schedulerService);
 			jobDataMap.put("reportService", this.reportService);
+			jobDataMap.put("beanResolver", this.beanResolver);
 			jobDataMap.put("executor", this.actorHistoryService.loadByCode("admin"));
 			jobDataMap.put("reportTask", reportTask);
 			JobDetail jobDetail = newJob(RunReportTemplateJobBean.class)
