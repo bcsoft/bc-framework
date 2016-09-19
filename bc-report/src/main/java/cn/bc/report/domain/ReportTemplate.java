@@ -1,43 +1,10 @@
-/**
- * 
- */
 package cn.bc.report.domain;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.util.Assert;
 
 import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.util.DateUtils;
 import cn.bc.core.util.TemplateUtils;
-import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.Actor;
@@ -48,18 +15,28 @@ import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.GridExporter;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import javax.persistence.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 报表模板
- * 
+ *
  * @author dragon
- * 
  */
 @Entity
 @Table(name = "BC_REPORT_TEMPLATE")
 public class ReportTemplate extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(ReportTemplate.class);
+	private static Logger logger = LoggerFactory.getLogger(ReportTemplate.class);
 
 	private int status;// 状态：0-正常,1-禁用
 	private String orderNo;// 排序号
@@ -232,8 +209,6 @@ public class ReportTemplate extends FileEntityImpl {
 
 	/**
 	 * 获取配置的json对象
-	 * 
-	 * @return
 	 */
 	@Transient
 	public JSONObject getConfigJson() {
@@ -242,7 +217,7 @@ public class ReportTemplate extends FileEntityImpl {
 
 		if (this.getConfig() == null || this.getConfig().length() == 0) {
 			this.configJson = null;
-			return this.configJson;
+			return null;
 		}
 
 		try {
@@ -258,51 +233,43 @@ public class ReportTemplate extends FileEntityImpl {
 
 	/**
 	 * 获取列配置
-	 * 
-	 * @return
 	 */
 	@Transient
 	public List<Column> getConfigColumns() {
-		if (columns != null)
-			return columns;
+		if (columns != null) return columns;
 
 		JSONObject config = this.getConfigJson();
-		List<Column> columns = new ArrayList<Column>();
+		columns = new ArrayList<>();
 		if (config == null || !config.has("columns"))
 			return columns;
 
 		// 初始化列的配置信息
-		JSONArray jColumns = null;
+		JSONArray jColumns;
 		try {
 			jColumns = config.getJSONArray("columns");
 		} catch (JSONException e) {
 			throw new CoreException(e.getMessage(), e);
 		}
-		JSONObject jColumn = null;
-        Column column;
+		JSONObject jColumn;
+		Column column;
 		for (int i = 0; i < jColumns.length(); i++) {
 			try {
 				jColumn = jColumns.getJSONObject(i);
-				if (jColumn.has("type")
-						&& "id".equals(jColumn.getString("type"))) {// IdColumn4MapKey列
-                    column = new IdColumn4MapKey(jColumn.getString("id"),
-							jColumn.has("el") ? jColumn.getString("el")
-									: jColumn.getString("id"));
+				if (jColumn.has("type") && "id".equals(jColumn.getString("type"))) {// IdColumn4MapKey列
+					column = new IdColumn4MapKey(jColumn.getString("id"), jColumn.has("el") ? jColumn.getString("el") : jColumn.getString("id"));
 				} else {// 默认使用TextColumn4MapKey列
-                    column = new TextColumn4MapKey(jColumn.getString("id"),
-							jColumn.has("el") ? jColumn.getString("el")
-									: jColumn.getString("id"), jColumn
-									.getString("label"),
+					column = new TextColumn4MapKey(jColumn.getString("id"),
+							jColumn.has("el") ? jColumn.getString("el") : jColumn.getString("id"), jColumn.getString("label"),
 							jColumn.has("width") ? jColumn.getInt("width") : 0);
 				}
-                if ((jColumn.has("useTitleFromLabel")  && jColumn.getBoolean("useTitleFromLabel"))
-                   || (jColumn.has("tip")  && jColumn.getBoolean("tip"))) {// 简写
-                    column.setUseTitleFromLabel(true);
-                }
-                if (jColumn.has("sortable")  && jColumn.getBoolean("sortable")) {
-                    column.setSortable(true);
-                }
-                columns.add(column);
+				if ((jColumn.has("useTitleFromLabel") && jColumn.getBoolean("useTitleFromLabel"))
+						|| (jColumn.has("tip") && jColumn.getBoolean("tip"))) {// 简写
+					column.setUseTitleFromLabel(true);
+				}
+				if (jColumn.has("sortable") && jColumn.getBoolean("sortable")) {
+					column.setSortable(true);
+				}
+				columns.add(column);
 			} catch (JSONException e) {
 				throw new CoreException(e.getMessage());
 			}
@@ -312,14 +279,10 @@ public class ReportTemplate extends FileEntityImpl {
 
 	/**
 	 * 获取配置的导出文件模板流
-	 * 
-	 * @param reportService
-	 * @return
 	 */
 	public InputStream getConfigExportTemplate(ReportService reportService) {
 		JSONObject config = this.getConfigJson();
-		if (config == null || !config.has("export"))
-			return null;
+		if (config == null || !config.has("export")) return null;
 
 		try {
 			String export = config.getString("export");
@@ -328,16 +291,14 @@ public class ReportTemplate extends FileEntityImpl {
 				if (tpl != null) {
 					return tpl.getInputStream();
 				} else {
-					throw new CoreException("template is not exists:export="
-							+ export);
+					throw new CoreException("template is not exists:export=" + export);
 				}
 			} else {
 				File file = new File(Attach.DATA_REAL_PATH + "/" + export);
 				try {
 					return new FileInputStream(file);
 				} catch (FileNotFoundException e) {
-					throw new CoreException("template is not exists:file="
-							+ file.getAbsolutePath());
+					throw new CoreException("template is not exists:file=" + file.getAbsolutePath());
 				}
 			}
 		} catch (JSONException e) {
@@ -345,13 +306,11 @@ public class ReportTemplate extends FileEntityImpl {
 		}
 	}
 
-	public SqlObject<Map<String, Object>> getConfigSqlObject(
-			ReportService reportService, Condition condition) {
+	public SqlObject<Map<String, Object>> getConfigSqlObject(ReportService reportService, Condition condition) {
 		JSONObject config = this.getConfigJson();
-		if (config == null || !config.has("sql"))
-			return null;
+		if (config == null || !config.has("sql")) return null;
 
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		try {
@@ -361,8 +320,7 @@ public class ReportTemplate extends FileEntityImpl {
 			if (sql instanceof JSONObject) {// 使用特殊的 from、where、orderBy 分离配置
 				buildSqlWithJson(sqlObject, (JSONObject) sql);
 			} else {// 默认的整个sql字符串配置
-				buildSqlWithParams(reportService, sqlObject, (String) sql,
-						params);
+				buildSqlWithParams(reportService, sqlObject, (String) sql, params);
 			}
 
 			// 注入参数
@@ -374,35 +332,30 @@ public class ReportTemplate extends FileEntityImpl {
 		}
 
 		// 获取所有列的值表达式，作为数据映射的键值
-		final List<String> mapKeys = new ArrayList<String>();
+		final List<String> mapKeys = new ArrayList<>();
 		for (Column column : this.getConfigColumns()) {
 			if (column instanceof TextColumn4MapKey)
-				mapKeys.add(((TextColumn4MapKey) column)
-						.getOriginValueExpression());
+				mapKeys.add(((TextColumn4MapKey) column).getOriginValueExpression());
 			else if (column instanceof IdColumn4MapKey)
-				mapKeys.add(((IdColumn4MapKey) column)
-						.getOriginValueExpression());
+				mapKeys.add(((IdColumn4MapKey) column).getOriginValueExpression());
 			else
 				mapKeys.add(column.getValueExpression());
 		}
 
 		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new LinkedHashMap<String, Object>();
-				int i = 0;
-				for (String key : mapKeys) {
-					map.put(key, rs[i]);
-					i++;
-				}
-				return map;
+		sqlObject.setRowMapper((rs, rowNum) -> {
+			Map<String, Object> map = new LinkedHashMap<>();
+			int i = 0;
+			for (String key : mapKeys) {
+				map.put(key, rs[i]);
+				i++;
 			}
+			return map;
 		});
 		return sqlObject;
 	}
 
-	private void buildSqlWithJson(SqlObject<Map<String, Object>> sqlObject,
-			JSONObject jsql) throws JSONException {
+	private void buildSqlWithJson(SqlObject<Map<String, Object>> sqlObject, JSONObject jsql) throws JSONException {
 		if (jsql.has("select")) {
 			sqlObject.setSelect(jsql.getString("select"));
 		}
@@ -417,40 +370,33 @@ public class ReportTemplate extends FileEntityImpl {
 		}
 	}
 
-	private void buildSqlWithParams(ReportService reportService,
-			SqlObject<Map<String, Object>> sqlObject, String sourceSql,
-			Map<String, Object> params) {
+	private void buildSqlWithParams(ReportService reportService, SqlObject<Map<String, Object>> sqlObject, String sourceSql, Map<String, Object> params) {
 		if (sourceSql.startsWith("tpl:")) {// 基于字符串模板的配置
 			Template tpl = reportService.loadTemplate(sourceSql.substring(4));
 			if (tpl != null) {
 				if (tpl.isPureText()) {
 					sqlObject.setSql(tpl.getContentEx(params).trim());
 				} else {
-					throw new CoreException(
-							"sql template is not pure text:sql=" + sourceSql);
+					throw new CoreException("sql template is not pure text:sql=" + sourceSql);
 				}
 			} else {
-				throw new CoreException("sql template is not exists:sql="
-						+ sourceSql);
+				throw new CoreException("sql template is not exists:sql=" + sourceSql);
 			}
 		} else if (sourceSql.startsWith("json:tpl:")) {// 基于json模板(内容格式为{from:"...",where:"...",orderBy:"..."})的配置
 			Template tpl = reportService.loadTemplate(sourceSql.substring(9));
 			if (tpl != null) {
 				if (tpl.isPureText()) {
 					try {
-						JSONObject jsql = new JSONObject(tpl.getContentEx(
-								params).trim());
+						JSONObject jsql = new JSONObject(tpl.getContentEx(params).trim());
 						this.buildSqlWithJson(sqlObject, jsql);
 					} catch (JSONException e) {
 						throw new CoreException("JSONException", e);
 					}
 				} else {
-					throw new CoreException(
-							"sql template is not pure text:sql=" + sourceSql);
+					throw new CoreException("sql template is not pure text:sql=" + sourceSql);
 				}
 			} else {
-				throw new CoreException("sql template is not exists:sql="
-						+ sourceSql);
+				throw new CoreException("sql template is not exists:sql=" + sourceSql);
 			}
 		} else {// 基于字符串的配置
 			sqlObject.setSql(TemplateUtils.format(sourceSql, params).trim());
@@ -458,7 +404,7 @@ public class ReportTemplate extends FileEntityImpl {
 	}
 
 	public static Map<String, Object> buildParams(Condition condition) {
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		Map<String, Object> params = new LinkedHashMap<>();
 		if (condition != null) {
 			if (condition instanceof MixCondition) {
 				if (!((MixCondition) condition).isEmpty()) {
@@ -473,14 +419,8 @@ public class ReportTemplate extends FileEntityImpl {
 
 	/**
 	 * 执行报表并生成一个历史报表对象
-	 * 
-	 * @param reportService
-	 * @param condition
-	 * @return
-	 * @throws Exception
 	 */
-	public ReportHistory run2history(ReportService reportService,
-			Condition condition) throws Exception {
+	public ReportHistory run2history(ReportService reportService, Condition condition) throws Exception {
 		// 初始化历史报表对象
 		Calendar now = Calendar.getInstance();
 		ReportHistory h = new ReportHistory();
@@ -493,23 +433,18 @@ public class ReportTemplate extends FileEntityImpl {
 		String dateDir = new SimpleDateFormat("yyyyMM").format(now.getTime());
 
 		// 附件的扩展名
-		String extension = config.has("extension") ? config
-				.getString("extension") : "xls";
+		String extension = config.has("extension") ? config.getString("extension") : "xls";
 
 		// 附件保存的文件名(不含路径)
-		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-				.getTime())+this.getCode() + "." + extension;
+		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now.getTime()) + this.getCode() + "." + extension;
 
 		// 附件保存的绝对路径
-		String realpath = Attach.DATA_REAL_PATH + "/"
-				+ ReportHistory.DATA_SUB_PATH + "/" + dateDir + "/" + fileName;
+		String realpath = Attach.DATA_REAL_PATH + "/" + ReportHistory.DATA_SUB_PATH + "/" + dateDir + "/" + fileName;
 
 		// 创建附件保存的目录
 		File file = new File(realpath);
 		if (!file.getParentFile().exists()) {
-			if (logger.isWarnEnabled()) {
-				logger.warn("mkdir=" + file.getParentFile().getAbsolutePath());
-			}
+			if (logger.isWarnEnabled()) logger.warn("mkdir=" + file.getParentFile().getAbsolutePath());
 			file.getParentFile().mkdirs();
 		}
 
@@ -521,13 +456,10 @@ public class ReportTemplate extends FileEntityImpl {
 		exporter.setColumns(columns);// 列配置
 		// 报表查询类型：默认为JPA查询(queryType=jpa)
 		String queryType = config.has("queryType") ? config.getString("queryType") : "jpa";
-		exporter.setData(reportService.createSqlQuery(queryType,
-				this.getConfigSqlObject(reportService, condition)).list());// 数据
+		exporter.setData(reportService.createSqlQuery(queryType, this.getConfigSqlObject(reportService, condition)).list());// 数据
 		exporter.setTemplateFile(this.getConfigExportTemplate(reportService));// 导出数据的模板
 		FileOutputStream out = new FileOutputStream(file);
-		if (logger.isDebugEnabled())
-			logger.debug("runReportTemplate:"
-					+ DateUtils.getWasteTime(now.getTime()));
+		if (logger.isDebugEnabled()) logger.debug("runReportTemplate:" + DateUtils.getWasteTime(now.getTime()));
 		exporter.exportTo(out);
 
 		// 历史报表参数
