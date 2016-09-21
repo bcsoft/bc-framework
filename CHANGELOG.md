@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2 (2016-08-30)
+- bc-parent 重构及增添 bc-framework-bom 来管理版本号
+- 迁移前端仓库的文件到此
+- 添加子模块 bc-cert、bc-category、bc-express
+
 ## release v0.7 (2012-01-?)
 ### 新特征：
 1. 整合activiti流转引擎，实现模块的业务流程处理，流程图的绘制不是一般的酷哦
