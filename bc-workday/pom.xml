@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.2</version>
+		<version>3.2.1</version>
 	</parent>
 	<artifactId>bc-workday</artifactId>
 	<description>工作日管理</description>
