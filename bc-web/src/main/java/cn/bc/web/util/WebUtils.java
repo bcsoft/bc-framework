@@ -138,6 +138,10 @@ public class WebUtils implements ServletContextAware {
 			return "function(){this.pvar='" + varName + "';return window['" + fnName + "'].apply(this,arguments);}";
 	}
 
+	public static String encodeFileName(String srcFileName) {
+		return encodeFileName(false, srcFileName);
+	}
+
 	public static String encodeFileName(HttpServletRequest request, String srcFileName) {
 		boolean isIE = request.getHeader("User-Agent").toUpperCase().contains("MSIE");
 		return encodeFileName(isIE, srcFileName);

@@ -1,25 +1,28 @@
 package cn.bc.core.util;
 
+import cn.bc.core.exception.CoreException;
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.FileCopyUtils;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import cn.bc.core.exception.CoreException;
-
-import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import java.util.Map;
 
 /**
  * 字符串辅助工具类
- * 
+ *
  * @author dragon
  */
 public class StringUtils {
-	protected static Log logger = LogFactory.getLog(StringUtils.class);
+	protected static Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
 	private StringUtils() {
 	}
@@ -31,7 +34,7 @@ public class StringUtils {
 
 	/**
 	 * 获取对象的字符串表示
-	 * 
+	 *
 	 * @param source
 	 * @return
 	 */
@@ -41,7 +44,7 @@ public class StringUtils {
 
 	/**
 	 * 获取对象的字符串表示,null值转换为长度为0的字符串
-	 * 
+	 *
 	 * @param source
 	 * @return
 	 */
@@ -51,7 +54,7 @@ public class StringUtils {
 
 	/**
 	 * 将指定的字符串转换成toEncode的编码
-	 * 
+	 *
 	 * @param isoString
 	 * @return
 	 */
@@ -67,7 +70,7 @@ public class StringUtils {
 
 	/**
 	 * 将指定的字符串转换成fromEncode的编码
-	 * 
+	 *
 	 * @param cnString
 	 * @return
 	 */
@@ -79,18 +82,15 @@ public class StringUtils {
 
 	/**
 	 * 对字符串进行转码
-	 * 
-	 * @param srcString
-	 *            所要转换的字符串
-	 * @param fromEncode
-	 *            字符串源编码
-	 * @param toEncode
-	 *            字符串目标编码
+	 *
+	 * @param srcString  所要转换的字符串
+	 * @param fromEncode 字符串源编码
+	 * @param toEncode   字符串目标编码
 	 * @return 转换后的字符串
 	 * @since 4.4.0
 	 */
 	public static String encode(String srcString, String fromEncode,
-			String toEncode) {
+	                            String toEncode) {
 		if (srcString == null || srcString.length() == 0)
 			return "";
 
@@ -104,13 +104,12 @@ public class StringUtils {
 	}
 
 	// ============================== 字符串格式化 ==============================
+
 	/**
 	 * 对字符串进行格式化，格式化的方式为：对源字符串(sourceString)中的{n}(其中n表示数字，从0开始)进行替换
-	 * 
-	 * @param sourceString
-	 *            源字符串
-	 * @param args
-	 *            所要格式化的参数信息
+	 *
+	 * @param sourceString 源字符串
+	 * @param args         所要格式化的参数信息
 	 * @return 返回格式化后的字符串
 	 */
 	public static String formater(String sourceString, Object[] args) {
@@ -123,9 +122,8 @@ public class StringUtils {
 
 	/**
 	 * 验证字符串是否是可转换为数字格式
-	 * 
-	 * @param value
-	 *            要验证的字符串
+	 *
+	 * @param value 要验证的字符串
 	 * @return 如果输入的字符串可转换为数字格式则返回true，否则返回false
 	 */
 	public static boolean isNumeric(String value) {
@@ -146,9 +144,8 @@ public class StringUtils {
 
 	/**
 	 * 将字符串编码成16进制数字,适用于所有字符（包括中文）
-	 * 
-	 * @param str
-	 *            所要转换的字符串
+	 *
+	 * @param str 所要转换的字符串
 	 * @return 返回以16进制表示的字符串
 	 */
 	public static String String2Hex(String str) {
@@ -165,9 +162,8 @@ public class StringUtils {
 
 	/**
 	 * 将16进制数字解码成字符串,适用于所有字符（包括中文）
-	 * 
-	 * @param bytes
-	 *            所要解码的字符串
+	 *
+	 * @param bytes 所要解码的字符串
 	 * @return 返回解码后的字符串
 	 */
 	public static String Hex2String(String bytes) {
@@ -183,7 +179,7 @@ public class StringUtils {
 
 	/**
 	 * 将字符串数组转换成Long数组
-	 * 
+	 *
 	 * @param sArray
 	 * @return
 	 */
@@ -203,7 +199,7 @@ public class StringUtils {
 
 	/**
 	 * 将字符串数组转换成Integer数组
-	 * 
+	 *
 	 * @param sArray
 	 * @return
 	 */
@@ -223,9 +219,8 @@ public class StringUtils {
 
 	/**
 	 * 在字符串两边添加双引号
-	 * 
-	 * @param str
-	 *            源字符串
+	 *
+	 * @param str 源字符串
 	 * @return
 	 */
 	public static String wrapQuota(String str) {
@@ -236,9 +231,8 @@ public class StringUtils {
 
 	/**
 	 * 压缩Html代码
-	 * 
-	 * @param html
-	 *            要压缩Html代码
+	 *
+	 * @param html 要压缩Html代码
 	 * @return
 	 */
 	public static String compressHtml(String html) {
@@ -247,7 +241,7 @@ public class StringUtils {
 
 	/**
 	 * 计算子串出现的次数
-	 * 
+	 *
 	 * @param str
 	 * @param sub
 	 * @return
@@ -270,9 +264,8 @@ public class StringUtils {
 
 	/**
 	 * 格式化文件大小为易读的格式，如10Bytes、10.2KB、20.3MB
-	 * 
-	 * @param size
-	 *            已字节为单位的文件大小
+	 *
+	 * @param size 已字节为单位的文件大小
 	 * @return
 	 */
 	public static String formatSize(long size) {
@@ -286,12 +279,10 @@ public class StringUtils {
 
 	/**
 	 * 转换字符串值到指定的数据类型
-	 * 
-	 * @param type
-	 *            值类型："int"|"long"|"Long"|"float"|"date"|"startDate"|"endDate"|
-	 *            "calendar"| "startCalendar"|"endCalendar"
-	 * @param value
-	 *            字符串值
+	 *
+	 * @param type  值类型："int"|"long"|"Long"|"float"|"date"|"startDate"|"endDate"|
+	 *              "calendar"| "startCalendar"|"endCalendar"
+	 * @param value 字符串值
 	 * @return
 	 */
 	public static Object convertValueByType(String type, String value) {
@@ -381,7 +372,7 @@ public class StringUtils {
 
 	/**
 	 * 字符串反转
-	 * 
+	 *
 	 * @param s
 	 * @return
 	 */
@@ -392,12 +383,13 @@ public class StringUtils {
 
 	/**
 	 * 多位数字转换为中文繁体并且补零 如8000 转后为 捌仟零佰零拾零
+	 *
 	 * @param n
 	 * @return
 	 */
-	public static  String number2Chinese(String n) {
-		String num1[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", };
-		String num2[] = { "", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾" };
+	public static String number2Chinese(String n) {
+		String num1[] = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖",};
+		String num2[] = {"", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾"};
 		n = n.indexOf(".") > 0 ? n.substring(0, n.indexOf(".")) : n;
 
 		int len = n.length();
@@ -421,37 +413,39 @@ public class StringUtils {
 			return ret + multiDigit2Chinese(n.substring(len - 8));
 		}
 	}
-	
+
 	/**
 	 * 把数字格式化为中文的金钱格式
+	 *
 	 * @param n
 	 * @return
 	 */
-	public static  String multiDigit2ChineseMoney(String n){
-		String s1="",s2="";
-		if(n.indexOf(".") > 0){
+	public static String multiDigit2ChineseMoney(String n) {
+		String s1 = "", s2 = "";
+		if (n.indexOf(".") > 0) {
 			s1 = n.substring(0, n.indexOf("."));
-			s2 = n.substring(n.indexOf(".")+1);
-		}else{
-			return number2Chinese(n)+"元零角零分";
+			s2 = n.substring(n.indexOf(".") + 1);
+		} else {
+			return number2Chinese(n) + "元零角零分";
 		}
-		String value = number2Chinese(s1)+"元";
+		String value = number2Chinese(s1) + "元";
 		String num1[] = {"角", "分"};
-		for(int i = 0;i<2&&i<s2.length();i++){
-			value+=siginDigit2Chinese(Integer.valueOf(s2.charAt(i)+""))+num1[i];
+		for (int i = 0; i < 2 && i < s2.length(); i++) {
+			value += siginDigit2Chinese(Integer.valueOf(s2.charAt(i) + "")) + num1[i];
 		}
 		return value;
 	}
-	
+
 
 	/**
 	 * 多位数字转换为中文繁体
+	 *
 	 * @param n
 	 * @return
 	 */
-	public static  String multiDigit2Chinese(String n) {
-		String num1[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", };
-		String num2[] = { "", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾" };
+	public static String multiDigit2Chinese(String n) {
+		String num1[] = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖",};
+		String num2[] = {"", "拾", "佰", "仟", "万", "亿", "兆", "吉", "太", "拍", "艾"};
 		n = n.indexOf(".") > 0 ? n.substring(0, n.indexOf(".")) : n;
 
 		int len = n.length();
@@ -486,11 +480,12 @@ public class StringUtils {
 
 	/**
 	 * 个位数字转换为中文繁体
+	 *
 	 * @param n
 	 * @return
 	 */
-	public static  String siginDigit2Chinese(Object n) {
-		String num[] = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
+	public static String siginDigit2Chinese(Object n) {
+		String num[] = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
 		if (n == null)
 			return null;
 		if (n instanceof Integer && Integer.parseInt(n.toString()) < 10) {
@@ -502,4 +497,21 @@ public class StringUtils {
 		}
 	}
 
+	/**
+	 * 从类资源文件中获取文本内容并格式化
+	 *
+	 * @param path 资源路径
+	 * @param args 格式化参数
+	 * @return 用 FreeMarker 格式化后的内容
+	 */
+	public static String getContentFromClassResource(String path, Map<String, Object> args) {
+		InputStream in = StringUtils.class.getClassLoader().getResourceAsStream(path);
+		try {
+			String sql = FreeMarkerUtils.format(FileCopyUtils.copyToString(new InputStreamReader(in)), args);
+			logger.debug("sql={}", sql);
+			return sql;
+		} catch (IOException e) {
+			throw new CoreException(e);
+		}
+	}
 }
