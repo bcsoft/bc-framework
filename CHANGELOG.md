@@ -1,5 +1,12 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.1 (2016-09-21)
+- bc-parent: poi 升级到 3.14，添加 org.jxls:jxls 2.3.0
+- bc-core: StringUtils 增加从类资源文件中获取文本内容并格式化的方法
+- bc-web: 添加 WebUtils.encodeFileName 的参数简化版 (不再理会 IE 了)
+- bc-db-jdbc: 增加将 0 指转换为 null 的存储函数 zero2null(numeric)
+- bc-report: 报表模版扩展为支持通过 spel 来获取报表文件流及使用现有的视图作为报表执行界面
+
 ## release v3.2 (2016-08-30)
 - bc-parent 重构及增添 bc-framework-bom 来管理版本号
 - 迁移前端仓库的文件到此
