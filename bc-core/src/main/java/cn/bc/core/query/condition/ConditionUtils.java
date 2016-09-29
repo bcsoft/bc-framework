@@ -156,39 +156,88 @@ public class ConditionUtils {
 	/**
 	 * 生成查询条件（混合模糊查询和高级查询）
 	 *
-	 * @param query       查询配置，如果为json数组字符串则按高级查询处理，否则按模糊查询处理
-	 * @param fuzzyFields 模糊查询的字段列表
-	 * @param ignoreCase  模糊查询条件是否忽略大小写
+	 * @param query       查询配置，支持如下 3 种格式：<br>
+	 *                    1）简单字符串，按模糊查询处理<br>
+	 *                    2）json 对象格式的字符串（包含 id、operator、value、[type] 键），按高级查询处理<br>
+	 *                    3）json 数组格式的字符串，按高级查询处理<br>
+	 * @param fuzzyFields 模糊查询的字段列表，非模糊查询时忽略此参数
+	 * @param ignoreCase  模糊查询条件是否忽略大小写，非模糊查询时忽略此参数
+	 * @throws IllegalArgumentException 如果 query 参数不符合规范
 	 */
 	public static Condition toCondition(String query, String[] fuzzyFields, boolean ignoreCase) {
 		if (query == null) return null;
 		query = query.trim();
 		if (query.isEmpty()) return null;
 
-		// 非高级查询的处理
-		boolean isAdvance = query.startsWith("[");
-		if (!isAdvance) return toFuzzyCondition(query, fuzzyFields, ignoreCase);
-
-		// 高级查询的处理: [{id, value, operator[, type][, label]}]
-		JsonArray qs = Json.createReader(new StringReader(query)).readArray();
-		if (qs.isEmpty()) return null;
-		JsonObject q;
-		AndCondition and = new AndCondition();
-		and.setAddBracket(true);
-		for (int i = 0; i < qs.size(); i++) {
-			q = qs.getJsonObject(i);
-			if ("_fuzzy_".equals(q.getString("id"))) {      // 模糊查询
-				and.add(toFuzzyCondition(q.getString("value"), fuzzyFields, ignoreCase));
-			} else {                                        // 高级查询
-				and.add(toCondition(q.getString("id"), q.getString("operator"), q.getString("value"),
-						q.containsKey("type") ? q.getString("type") : null));
-			}
+		if (query.startsWith("[")) {            // json 数组格式
+			return toCondition(Json.createReader(new StringReader(query)).readArray(), fuzzyFields, ignoreCase);
+		} else if (query.startsWith("{")) {     // json 格式
+			JsonObject json = Json.createReader(new StringReader(query)).readObject();
+			if (json.containsKey("id") && "_fuzzy_".equals(json.getString("id"))) { // 转模糊查询
+				if (!json.containsKey("value"))
+					throw new IllegalArgumentException("missing 'value' mapping. json=" + json.toString());
+				return toFuzzyCondition(json.getString("value"), fuzzyFields, ignoreCase);
+			} else
+				return toCondition(json);
+		} else {                                // 模糊查询
+			return toFuzzyCondition(query, fuzzyFields, ignoreCase);
 		}
-
-		return and;
 	}
 
-	private static Condition toCondition(String id, String operator, String value, String type) {
+	/**
+	 * 生成 json 数组的查询条件
+	 *
+	 * @param jsonArray   查询配置数组，数组内每个 json 对象需包含 id、operator、value、[type] 键
+	 * @param fuzzyFields 模糊查询的字段列表，数组某个 json 元素包含 id=_fuzzy_ 时使用，否则忽略此参数
+	 * @param ignoreCase  模糊查询条件是否忽略大小写，数组某个 json 元素包含 id=_fuzzy_ 时使用，否则忽略此参数
+	 * @throws IllegalArgumentException 如果 json 对象的格式不正确
+	 */
+	private static Condition toCondition(JsonArray jsonArray, String[] fuzzyFields, boolean ignoreCase) {
+		if (jsonArray == null || jsonArray.isEmpty()) return null;
+
+		AndCondition and = new AndCondition();
+		and.setAddBracket(true);
+		JsonObject json;
+		for (int i = 0; i < jsonArray.size(); i++) {
+			json = jsonArray.getJsonObject(i);
+			if ("_fuzzy_".equals(json.getString("id"))) {       // 转模糊查询
+				if (!json.containsKey("value"))
+					throw new IllegalArgumentException("missing 'value' mapping. json=" + json.toString());
+				and.add(toFuzzyCondition(json.getString("value"), fuzzyFields, ignoreCase));
+			} else {                                            // 高级查询
+				and.add(toCondition(json));
+			}
+		}
+		return and.isEmpty() ? null : and;
+	}
+
+	/**
+	 * 生成 json 数组的查询条件
+	 *
+	 * @param jsonArray 查询配置数组，数组内每个 json 对象需包含 id、operator、value、[type] 键
+	 * @throws IllegalArgumentException 如果 json 对象的格式不正确
+	 */
+	private static Condition toCondition(JsonArray jsonArray) {
+		return toCondition(jsonArray, null, false);
+	}
+
+	/**
+	 * 生成 json 对象的查询条件
+	 *
+	 * @param json 查询配置对象，需包含 id、operator、value、[type] 键
+	 * @throws IllegalArgumentException 如果 json 对象的格式不正确
+	 */
+	private static Condition toCondition(JsonObject json) {
+		if (json == null) return null;
+
+		// 验证json结构的有效性
+		if (!(json.containsKey("id") && json.containsKey("operator") && json.containsKey("value")))
+			throw new IllegalArgumentException("missing 'id', 'value' or 'operator' mapping, json=" + json.toString());
+
+		String id = json.getString("id");
+		String operator = json.getString("operator");
+		String value = json.getString("value");
+		String type = json.containsKey("type") ? json.getString("type") : null;
 		Object v = StringUtils.convertValueByType(type, value);
 		Condition c;
 		if ("=".equals(operator)) {
@@ -206,10 +255,10 @@ public class ConditionUtils {
 		} else if ("in".equals(operator)) {
 			if (v instanceof Collection) c = new InCondition(id, (Collection<Object>) v);
 			else if (v instanceof Serializable[]) c = new InCondition(id, (Serializable[]) v);
-			else throw new CoreException("un support value type: " + value.getClass() +
-						" (id=" + id + ", operator=" + operator + ", value=" + value + ", type=" + type + ")");
+			else
+				throw new CoreException("un support value type: " + value.getClass() + " (json=" + json.toString() + ")");
 		} else {
-			throw new CoreException("un support operator: " + operator + " (id=" + id + ", value=" + value + ", type=" + type + ")");
+			throw new CoreException("un support operator: " + operator + " (json=" + json.toString() + ")");
 		}
 		return c;
 	}
