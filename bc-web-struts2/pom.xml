@@ -6,6 +6,7 @@
 		<groupId>cn.bc</groupId>
 		<version>3.2.1</version>
 	</parent>
+	<version>3.2.2</version>
 	<artifactId>bc-web-struts2</artifactId>
 	<dependencies>
 		<dependency>
