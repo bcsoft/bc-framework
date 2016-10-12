@@ -177,7 +177,8 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
 	 * @param key 列的标识
 	 */
 	protected boolean isExportColumn(String key) {
-		return this.exportKeys == null || this.exportKeys.length() == 0 || this.exportKeys.contains(key);
+		return (this.exportKeys == null || this.exportKeys.isEmpty())  // 导出所有列
+				|| (key != null && this.exportKeys.contains(key));     // 用户指定要导出的列
 	}
 
 	/**
