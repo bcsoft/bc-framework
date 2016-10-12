@@ -427,7 +427,21 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.11</version>
+				<version>4.12</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hamcrest</groupId>
+						<artifactId>hamcrest-core</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<!-- https://www.mkyong.com/unittest/junit-how-to-test-a-list -->
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-library</artifactId>
+				<version>1.3</version>
+				<type>jar</type>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -735,6 +749,12 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
 				<version>${poi.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.poi</groupId>
+						<artifactId>poi-ooxml-schemas</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.poi</groupId>
@@ -750,6 +770,16 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-examples</artifactId>
 				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>ooxml-schemas</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>2.6.0</version>
 			</dependency>
 
 			<dependency>
@@ -768,8 +798,9 @@
 				<!-- 从9.2版开始转用此新的 groupId -->
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<!-- 9.3-1102-jdbc41, 9.3-1102-jdbc4, 9.2-1004-jdbc41, 9.2-1004-jdbc4 -->
-				<version>9.3-1102-jdbc41</version>
+				<!-- 9.4.1211 (jdk1.8 jdbc42 2016-09-18), 9.4.1211.jre7 (jdk1.7 jdbc41 2016-09-19), 9.4.1211.jre6 (jdk1.6 jdbc4 2016-09-19) -->
+				<!-- 9.3-1102-jdbc41 2014-07-18, 9.3-1102-jdbc4, 9.2-1004-jdbc41, 9.2-1004-jdbc4 -->
+				<version>9.4.1211</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -1076,6 +1107,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<!--

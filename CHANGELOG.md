@@ -1,5 +1,15 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.2 (2016-10-12)
+- 修正视图有空列时的导出错误
+- upgrade to org.postgresql:postgresql:9.4.1211
+- add org.apache.xmlbeans:xmlbeans:2.6.0 to fix error:
+	> java.lang.NoSuchMethodError: org.apache.xmlbeans.XmlOptions.setLoadEntityBytesLimit(T)Lorg/apache/xmlbeans/XmlOptions
+- 修正 ConditionUtils.toCondition 方法对模糊搜索的处理
+- upgrade junit to 4.12, add org.hamcrest:hamcrest-library:1.3
+- add org.apache.poi:ooxml-schemas:1.3 to fix poi3.14 error:
+	> java.lang.NoClassDefFoundError: org/openxmlformats/schemas/wordprocessingml/x2006/main/impl/CTRImpl$1TList
+
 ## release v3.2.1 (2016-09-21)
 - bc-parent: poi 升级到 3.14，添加 org.jxls:jxls 2.3.0
 - bc-core: StringUtils 增加从类资源文件中获取文本内容并格式化的方法
