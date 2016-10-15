@@ -22,7 +22,6 @@ import java.util.Map;
  */
 @Singleton
 @Named
-@Path("duty")
 public class DutyResourceImpl implements DutyResource {
 	private final static Logger logger = LoggerFactory.getLogger(DutyResourceImpl.class);
 
