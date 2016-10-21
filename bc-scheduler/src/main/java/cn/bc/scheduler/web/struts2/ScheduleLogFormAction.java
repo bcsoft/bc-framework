@@ -41,12 +41,12 @@ public class ScheduleLogFormAction extends EntityAction<Long, ScheduleLog> {
 
 	@Override
 	public String getPageNamespace() {
-		return this.getContextPath() + "/bc/schedule/job";
+		return this.getContextPath() + "/bc/schedule/log";
 	}
 
 	@Override
 	protected void addJsCss(List<String> container) {
-		container.add("bc/schedule/job/form.js");
+		container.add("bc/schedule/log/form.js");
 	}
 
 	@Override
