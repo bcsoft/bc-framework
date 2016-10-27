@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author dragon 2016-07-21
  */
-@Path("duty1")
+@Path("duty")
 public interface DutyResource {
 	/**
 	 * 获取视图数据

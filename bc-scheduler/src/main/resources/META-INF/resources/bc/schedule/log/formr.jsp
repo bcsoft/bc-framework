@@ -38,7 +38,7 @@
 		<s:if test="!e.success">
 		<div class="formTable2 ui-widget-content">
 			<s:text name="scheduleLog.msg"/>：<a id="showError" href="#" class="link" ><s:text name="scheduleLog.seeInNewWindow"/></a>
-			<pre id="msg" style="height:200px;overflow: auto;margin:0;padding:4px;"><s:property value="e.msg"/></pre>
+			<pre id="msg" style="height:200px;overflow: auto;margin:0;padding:4px;font-weight: normal"><s:property value="e.msg"/></pre>
 		</div>
 		</s:if>
 		<s:hidden name="e.id" />

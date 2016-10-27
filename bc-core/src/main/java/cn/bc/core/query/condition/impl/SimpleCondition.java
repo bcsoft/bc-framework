@@ -63,7 +63,7 @@ public class SimpleCondition implements Condition {
 		if (alias != null && alias.length() > 0)
 			name = alias + "." + name;
 		StringBuilder e = new StringBuilder(name + " "
-				+ this.operator.toSymbol());
+				+ this.operator.symbol());
 		if (operator == QueryOperator.In || operator == QueryOperator.NotIn) {
 			e.append(" (");
 			for (int i = 0; i < values.size(); i++) {

@@ -12,7 +12,7 @@ define(function () {
 			var errorWin = window.open('', 'bcErrorShow');
 			var errorDoc = errorWin.document;
 			errorDoc.open();
-			errorDoc.write("<pre>" + $form.find("#msg").html() + "</pre>");
+			errorDoc.write("<pre>" + $page.find("#msg").html() + "</pre>");
 			errorDoc.close();
 			errorWin.focus();
 			return false;

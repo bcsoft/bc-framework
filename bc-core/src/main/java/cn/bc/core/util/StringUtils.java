@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -281,7 +282,8 @@ public class StringUtils {
 	 * 转换字符串值到指定的数据类型
 	 *
 	 * @param type  值类型："int"|"long"|"Long"|"float"|"date"|"startDate"|"endDate"|
-	 *              "calendar"| "startCalendar"|"endCalendar"
+	 *              "calendar"| "startCalendar"|"endCalendar"|
+	 *              "int[]"|"long[]"|"money"
 	 * @param value 字符串值
 	 * @return
 	 */
@@ -364,6 +366,9 @@ public class StringUtils {
 				booleanArray[i] = Boolean.parseBoolean(strArray[i]);
 			}
 			return booleanArray;
+		} else if (type.equals("money")) {
+			if (value == null || value.isEmpty()) return null;
+			return new BigDecimal(value.replace(",", ""));
 		} else {
 			throw new CoreException("unsupport value type: type=" + type
 					+ ",value=" + value);
