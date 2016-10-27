@@ -6,6 +6,7 @@
 		<groupId>cn.bc</groupId>
 		<version>3.2.1</version>
 	</parent>
+	<version>3.2.3</version>
 	<artifactId>bc-scheduler</artifactId>
 	<description>定时任务</description>
 	<dependencies>
