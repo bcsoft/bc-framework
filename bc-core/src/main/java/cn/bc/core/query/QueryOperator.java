@@ -69,7 +69,23 @@ public enum QueryOperator {
 	/**
 	 * is not null
 	 */
-	IsNotNull("is not null", "不为空");
+	IsNotNull("is not null", "不为空"),
+	/**
+	 * [X, Y]
+	 */
+	Range("[]", "大于等于 X 并且小于等于 Y"),
+	/**
+	 * [X, Y)
+	 */
+	RangeGteLt("[)", "大于等于 X 并且小于 Y"),
+	/**
+	 * (X, Y]
+	 */
+	RangeGtLte("(]", "大于 X 并且小于等于 Y"),
+	/**
+	 * (X, Y)
+	 */
+	RangeGtLt("()", "大于 X 并且小于 Y");
 
 	private final String symbol;
 	private final String label;
@@ -99,5 +115,47 @@ public enum QueryOperator {
 			if (t.symbol().equals(symbol)) return t;
 		}
 		throw new IllegalArgumentException("un support QueryOperator symbol: " + symbol);
+	}
+
+	/**
+	 * 转换为查询语句
+	 *
+	 * @param key       查询的关键字
+	 * @param firstName 开始占位符的名称
+	 * @param lastName  结束占位符的名称
+	 * @return 查询语句
+	 */
+	public String toRangeQuery(String key, String firstName, String lastName) {
+		if (key == null || key.isEmpty()) throw new IllegalArgumentException("key should not be null or empty.");
+		if ((firstName == null || firstName.isEmpty()) && (lastName == null || lastName.isEmpty()))
+			throw new IllegalArgumentException("at lease has one name: firstName=" + firstName + ", lastName=" + lastName);
+
+		if (this == Range || this == RangeGteLt || this == RangeGtLte || this == RangeGtLt) {
+			StringBuffer q = new StringBuffer();
+			if (firstName != null && !firstName.isEmpty())
+				q.append(key + " " + (symbol().startsWith("[") ? ">=" : ">") + " " + firstName);
+			if (lastName != null && !lastName.isEmpty()) {
+				if (q.length() > 0) q.append(" and ");
+				q.append(key + " " + (symbol().endsWith("]") ? "<=" : "<") + " " + lastName);
+			}
+			return q.toString();
+		} else {
+			throw new UnsupportedOperationException("only support Range Operator.");
+		}
+	}
+
+	/**
+	 * 转换为查询语句
+	 *
+	 * @param key  查询的关键字
+	 * @param name 占位符名称
+	 * @return 查询语句
+	 */
+	public String toQuery(String key, String name) {
+		if (this == Range || this == RangeGteLt || this == RangeGtLte || this == RangeGtLt) {
+			throw new UnsupportedOperationException("only support not Range Operator.");
+		} else {
+			return key + " " + symbol() + " " + name;
+		}
 	}
 }

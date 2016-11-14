@@ -9,6 +9,10 @@ import cn.bc.core.util.StringUtils;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.JsonValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 高级条件配置接口的默认实现
@@ -52,9 +56,19 @@ public class SimpleAdvanceCondition implements AdvanceCondition {
 		this.id = item.getString(0);
 
 		// 值
-		String value = item.getString(1);
 		String type = item.size() > 2 ? item.getString(2) : "string";
-		this.value = StringUtils.convertValueByType(type, value);
+		JsonValue ItemValue = item.get(1);
+		if (ItemValue.getValueType() == JsonValue.ValueType.STRING) {        // 单个值
+			String value = item.getString(1);
+			this.value = StringUtils.convertValueByType(type, value);
+		} else if (ItemValue.getValueType() == JsonValue.ValueType.ARRAY) {  // 范围值
+			JsonArray value = item.getJsonArray(1);
+			List<Object> values = new ArrayList<>();
+			value.forEach(v -> values.add(StringUtils.convertValueByType(type, ((JsonString) v).getString())));
+			this.value = values;
+		} else {
+			throw new IllegalArgumentException("un support value type: valueType=" + item.getValueType() + ", jsonArray=" + item);
+		}
 
 		// 比较符
 		this.operator = item.size() > 3 ? QueryOperator.symbolOf(item.getString(3)) : QueryOperator.Equals;
