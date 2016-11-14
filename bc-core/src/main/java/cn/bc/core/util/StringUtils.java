@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -281,9 +284,10 @@ public class StringUtils {
 	/**
 	 * 转换字符串值到指定的数据类型
 	 *
-	 * @param type  值类型："int"|"long"|"Long"|"float"|"date"|"startDate"|"endDate"|
-	 *              "calendar"| "startCalendar"|"endCalendar"|
-	 *              "int[]"|"long[]"|"money"
+	 * @param type  值类型：
+	 *              int|long|Long|float|int[]|long[]|money|
+	 *              |date|startDate|endDate|calendar|startCalendar|endCalendar|
+	 *              |localDate|localDateTime|localTime
 	 * @param value 字符串值
 	 * @return
 	 */
@@ -319,6 +323,12 @@ public class StringUtils {
 			Calendar calendar = DateUtils.getCalendar(value);
 			DateUtils.setToMaxTime(calendar);
 			return calendar;
+		} else if (type.equals("localDate")) {
+			return value == null || value.isEmpty() ? null :  LocalDate.parse(value);
+		} else if (type.equals("localDateTime")) {
+			return value == null || value.isEmpty() ? null :  LocalDateTime.parse(value);
+		} else if (type.equals("localTime")) {
+			return value == null || value.isEmpty() ? null :  LocalTime.parse(value);
 		} else if (type.equals("boolean")) {
 			return value == null || value.isEmpty() ? null : new Boolean(value);
 		} else if (type.equals("list")) {
