@@ -64,7 +64,8 @@ public class SimpleAdvanceCondition implements AdvanceCondition {
 		} else if (ItemValue.getValueType() == JsonValue.ValueType.ARRAY) {  // 范围值
 			JsonArray value = item.getJsonArray(1);
 			List<Object> values = new ArrayList<>();
-			value.forEach(v -> values.add(StringUtils.convertValueByType(type, ((JsonString) v).getString())));
+			value.forEach(v -> values.add(v.getValueType() == JsonValue.ValueType.NULL ? null :
+					StringUtils.convertValueByType(type, ((JsonString) v).getString())));
 			this.value = values;
 		} else {
 			throw new IllegalArgumentException("un support value type: valueType=" + item.getValueType() + ", jsonArray=" + item);
