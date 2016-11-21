@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.4 (2016-11-21)
+- 修正新高级搜索组件解析 JsonArray 的错误添加单元测试
+- 增加范围条件的支持
+- StringUtils的值转换增加对 localDate、localDateTime、localTime 的支持
+
 ## release v3.2.3 (2016-10-27)
 - 增加对新版 vue 高级搜索组件条件数据的封装支持
 - StringUtils 增加 money 类型的转换支持
