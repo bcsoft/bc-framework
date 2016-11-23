@@ -1,5 +1,6 @@
 package cn.bc.desktop.service;
 
+import cn.bc.BCConstants;
 import cn.bc.db.JdbcUtils;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.desktop.domain.Personal;
@@ -287,7 +288,7 @@ public class LoginServiceImpl implements LoginService {
 				s.put("name", rs[i] != null ? rs[i].toString() : null);
 				i++;
 				String url = (String) rs[i];
-				s.put("url", url != null ? (url.startsWith("/") ? url.substring(1) : url): null); // 去除绝对路径
+				s.put("url", url != null ? (url.startsWith("/") ? url.substring(1) : url) : null); // 去除绝对路径
 				i++;
 				s.put("iconClass", rs[i] != null ? rs[i].toString() : null);
 				i++;
@@ -307,7 +308,7 @@ public class LoginServiceImpl implements LoginService {
 		hql.append("select distinct s.belong,s.id,s.type_,s.name,s.url,s.iconclass,s.order_,s.pname,s.option_");
 		hql.append(" from bc_identity_resource s");
 		hql.append(" inner join bc_identity_role_resource rs on rs.sid=s.id");
-		hql.append(" where rs.rid");
+		hql.append(" where s.status_ = 0 and  rs.rid");
 		if (roleIds.length == 1) {
 			hql.append(" = ?");
 		} else {
@@ -327,9 +328,26 @@ public class LoginServiceImpl implements LoginService {
 		Set<Resource> ss = new HashSet<>();
 		Map<Long, Resource> allResources = this.resourceService.findAll();
 		for (Long sid : sIds) {
-			if (allResources.containsKey(sid)) ss.add(allResources.get(sid));
+			if (allResources.containsKey(sid)) {
+				Resource r = allResources.get(sid);
+				if (isEnabled(r)) ss.add(r);
+			}
 		}
 
 		return ss;
+	}
+
+	/**
+	 * 检测指定的资源是否可用
+	 * <p>
+	 * <p>只有资源及其所隶属的祖先资源的状态都为正常，资源才可用</p>
+	 *
+	 * @param r 资源
+	 * @return 资源及其所隶属的祖先资源的状态都为正常，返回true，否则返回false
+	 */
+	private boolean isEnabled(Resource r) {
+		if (r == null) return true;
+		else if (r.getStatus() == BCConstants.STATUS_ENABLED) return isEnabled(r.getBelong());
+		else return false;
 	}
 }
