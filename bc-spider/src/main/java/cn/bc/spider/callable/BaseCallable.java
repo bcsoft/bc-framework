@@ -25,10 +25,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -52,6 +49,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	private String url;// 请求的地址
 	private String group;// 该次请求所属的分组：同组的请求使用相同的session
 	private String encoding = "UTF-8";// 请求的编码
+	private String forceResponseEncoding;// 解析响应流时强制使用的编码，默认不设置，根据响应的 Content-Type 头自动设置
 	private String successExpression;// 用于判断请求是否成功的spel表达式：表达式上下文中含有document、html、this对象可以使用
 	private String resultExpression;// 用于从文档中获取数据的spel表达式：表达式上下文中含有document、html、this对象可以使用
 	private String userAgent;// 请求时使用的用户代理
@@ -277,6 +275,14 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 		this.encoding = encoding;
 	}
 
+	public String getForceResponseEncoding() {
+		return forceResponseEncoding;
+	}
+
+	public void setForceResponseEncoding(String forceResponseEncoding) {
+		this.forceResponseEncoding = forceResponseEncoding;
+	}
+
 	/**
 	 * 获取POST请求需提交的表单参数
 	 */
@@ -424,7 +430,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 */
 	protected String getResponseText() throws IOException {
 		if (responseText == null) {
-			responseText = EntityUtils.toString(this.responseEntity);
+			responseText = entityToText(this.responseEntity);
 			if (logger.isDebugEnabled()) {
 				logger.debug("responseText=" + responseText);
 			}
@@ -433,6 +439,24 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 			}
 		}
 		return responseText;
+	}
+
+	/**
+	 * 解析响应实体为文本
+	 * <p>如果没有设置 forceResponseEncoding，使用响应体 Content-Type 头的编码设置进行解析，否则使用指定的 forceResponseEncoding 编码</p>
+	 *
+	 * @param entity the entity
+	 * @return the entity content as a String. or null if entity is null.
+	 */
+	protected String entityToText(HttpEntity entity) throws IOException {
+		if (entity == null) return null;
+		if (this.getForceResponseEncoding() == null) {  // 默认编码进行解析
+			return EntityUtils.toString(entity);
+		} else {                                        // 特定编码进行解析
+			InputStream in = this.responseEntity.getContent();
+			if (in == null) return null;
+			return FileCopyUtils.copyToString(new InputStreamReader(in, this.getForceResponseEncoding()));
+		}
 	}
 
 	@SuppressWarnings("unchecked")

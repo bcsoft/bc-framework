@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.5 (2016-12-01)
+- BaseCallable 增加对使用指定编码解析响应体的支持
+- 增加获取局域网 IP-MAC 地址对应关系的处理脚本
+
 ## release v3.2.4 (2016-11-21)
 - 修正新高级搜索组件解析 JsonArray 的错误添加单元测试
 - 增加范围条件的支持
