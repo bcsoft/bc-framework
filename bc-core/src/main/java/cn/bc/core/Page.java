@@ -12,6 +12,8 @@ import java.util.List;
  * 
  */
 public class Page<T extends Object> {
+	/** 默认的页查询容量 */
+	public static int DEFAULT_PAGE_SIZE = 25;
 	protected int pageNo;
 	protected int pageSize;
 	protected int totalCount;
