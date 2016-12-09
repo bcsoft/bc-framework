@@ -3,14 +3,20 @@ package cn.bc.core.util;
 import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import org.commontemplate.tools.TemplateRenderer;
+import org.jxls.common.Context;
+import org.jxls.util.JxlsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.FileCopyUtils;
 
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +25,7 @@ import java.util.regex.Pattern;
 
 /**
  * 使用commontemplate的模板工具类
- * 
+ *
  * @author dragon
  */
 public class TemplateUtils {
@@ -36,7 +42,7 @@ public class TemplateUtils {
 
 	/**
 	 * 对字符串进行格式化，格式化的方式为：对源字符串(sourceString)中的{n}(其中n表示数字，从0开始 )进行替换
-	 * 
+	 *
 	 * @param tpl
 	 *            源字符串
 	 * @param args
@@ -62,7 +68,7 @@ public class TemplateUtils {
 	 * 另外，参数也接受类似:obj.property的格式，更多请参考commontemplate的模板语法<br>
 	 * http://code.google.com/p/commontemplate/
 	 * </p>
-	 * 
+	 *
 	 * @param tpl
 	 *            所要格式化的字符串模板
 	 * @param args
@@ -85,7 +91,7 @@ public class TemplateUtils {
 	 * <p>
 	 * 出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param is
 	 *            纯文本文件流
 	 * @return
@@ -98,7 +104,7 @@ public class TemplateUtils {
 
 	/**
 	 * 获取纯文本文件(UTF-8编码)的文本内容
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 */
@@ -108,7 +114,7 @@ public class TemplateUtils {
 
 	/**
 	 * 获取纯文本文件流的文本内容，任何异常将导致返回null
-	 * 
+	 *
 	 * @param is
 	 * @param charsetName
 	 *            文件编码
@@ -137,7 +143,7 @@ public class TemplateUtils {
 	 * <p>
 	 * 出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<String> findMarkers(String source) {
@@ -165,7 +171,7 @@ public class TemplateUtils {
 
 	/**
 	 * 将字符串写入到流
-	 * 
+	 *
 	 * @param source
 	 *            要写入到流中的字符串
 	 * @param out
@@ -240,6 +246,42 @@ public class TemplateUtils {
 			throw new CoreException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new CoreException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * 将数据渲染为 Excel
+	 * @param data 数据
+	 * @param excelTemplate Excel 模板
+	 * @param out 输出的 Excel 数据流
+	 */
+	public static void renderExcel(Map<String, Object> data, InputStream excelTemplate, OutputStream out) {
+		try {
+			// 构建模板参数
+			Context context = new Context();
+			context.putVar("now", ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)); // 当前时间
+			if (data != null) data.forEach((k, v) -> context.putVar(k, v));
+
+			// 生成 Excel
+			JxlsHelper.getInstance().processTemplate(excelTemplate, out, context);
+		} catch (IOException e) {
+			throw new CoreException(e);
+		}
+	}
+
+	/**
+	 * 将数据渲染为 Excel
+	 *
+	 * @param data          数据
+	 * @param excelTemplate Excel 模板
+	 * @return 渲染后的 Excel 数据
+	 */
+	public static byte[] renderExcel(Map<String, Object> data, InputStream excelTemplate) {
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream(1024)) {
+			renderExcel(data, excelTemplate, out);
+			return out.toByteArray();
+		} catch (IOException e) {
+			throw new CoreException(e);
 		}
 	}
 }

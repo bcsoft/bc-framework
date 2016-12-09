@@ -80,6 +80,12 @@
 			<artifactId>commontemplate</artifactId>
 		</dependency>
 
+		<!-- jxls 2.x -->
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls</artifactId>
+		</dependency>
+
 		<!-- Html代码压缩 -->
 		<dependency>
 			<groupId>com.googlecode.htmlcompressor</groupId>
