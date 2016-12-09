@@ -1,5 +1,7 @@
 package cn.bc.identity.dao.jpa;
 
+import cn.bc.core.Page;
+import cn.bc.core.query.condition.AdvanceCondition;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.ConditionUtils;
 import cn.bc.identity.dao.DutyDao;
@@ -35,6 +37,28 @@ public class DutyDaoImpl extends JpaCrudDao<Duty> implements DutyDao {
 	private JdbcTemplate jdbcTemplate;
 	@PersistenceContext
 	private EntityManager em;
+
+	@Override
+	public Page<Duty> page(Integer pageNo, Integer pageSize, List<AdvanceCondition> condition) {
+		if (pageNo == null || pageNo < 1) pageNo = 1;
+		if (pageSize == null || pageSize < 1) pageSize = Page.DEFAULT_PAGE_SIZE;
+
+		// TODO condition
+
+		// 查一页数据
+		String ql4list = "select id, code, name from Duty";
+		List<Duty> list = em.createQuery(ql4list, Duty.class)
+				.setFirstResult((pageNo - 1) * pageSize)
+				.setMaxResults(pageSize)
+				.getResultList();
+
+		// 查总数
+		String ql4count = "select count(*) from Duty";
+		int totalCount = em.createQuery(ql4list, Integer.class)
+				.getSingleResult();
+
+		return new Page<>(pageNo, pageSize, totalCount, list);
+	}
 
 	@Override
 	public Map<String, Object> dataByJpaQuery(int pageNo, int pageSize, String search) {

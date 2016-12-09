@@ -1,5 +1,7 @@
 package cn.bc.identity.service;
 
+import cn.bc.core.Page;
+import cn.bc.core.query.condition.AdvanceCondition;
 import cn.bc.core.service.DefaultCrudService;
 import cn.bc.identity.dao.DutyDao;
 import cn.bc.identity.domain.Duty;
@@ -7,7 +9,7 @@ import cn.bc.identity.domain.Duty;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 职务 Service 实现
@@ -26,11 +28,7 @@ public class DutyServiceImpl extends DefaultCrudService<Duty> implements DutySer
 	}
 
 	@Override
-	public Map<String, Object> data(int pageNo, int pageSize, String search) {
-		boolean ignoreCase = true;
-		if (ignoreCase)
-			return dao.dataByNativeQuery(pageNo, pageSize, search);
-		else
-			return dao.dataByJpaQuery(pageNo, pageSize, search);
+	public Page<Duty> page(Integer pageNo, Integer pageSize, List<AdvanceCondition> condition) {
+		return dao.page(pageNo, pageSize, condition);
 	}
 }

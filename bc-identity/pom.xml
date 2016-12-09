@@ -12,5 +12,10 @@
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-web-struts2</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>cn.bc.rest</groupId>
+			<artifactId>bc-rest-core</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

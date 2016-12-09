@@ -1,9 +1,11 @@
 package cn.bc.identity.service;
 
+import cn.bc.core.Page;
+import cn.bc.core.query.condition.AdvanceCondition;
 import cn.bc.core.service.CrudService;
 import cn.bc.identity.domain.Duty;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 职务 Service
@@ -12,12 +14,11 @@ import java.util.Map;
  */
 public interface DutyService extends CrudService<Duty> {
 	/**
-	 * 获取视图分页数据
+	 * 获取职务列表信息
 	 *
-	 * @param pageNo   页码
-	 * @param pageSize 页容量
-	 * @param search   过滤的内容
-	 * @return
+	 * @param pageNo    页码，为空代表第一页
+	 * @param pageSize  页容量，为空代表系统默认
+	 * @param condition 过滤条件
 	 */
-	Map<String, Object> data(int pageNo, int pageSize, String search);
+	Page<Duty> page(Integer pageNo, Integer pageSize, List<AdvanceCondition> condition);
 }

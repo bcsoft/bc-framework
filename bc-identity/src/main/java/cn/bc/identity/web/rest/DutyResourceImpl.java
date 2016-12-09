@@ -1,10 +1,12 @@
 package cn.bc.identity.web.rest;
 
+import cn.bc.core.Page;
 import cn.bc.core.exception.NotExistsException;
+import cn.bc.core.query.condition.AdvanceCondition;
 import cn.bc.core.util.StringUtils;
 import cn.bc.identity.domain.Duty;
 import cn.bc.identity.service.DutyService;
-import com.owlike.genson.Genson;
+import cn.bc.rest.RestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,15 +43,26 @@ public class DutyResourceImpl implements DutyResource {
 	private DutyService service;
 
 	@Override
-	public String data(int pageNo, int pageSize, String search) {
-		Map<String, Object> data = service.data(pageNo, pageSize, search);
-		return new Genson().serialize(data);
+	public Response page(Integer pageNo, Integer pageSize, String search, String format) throws IOException {
+		// 获取数据
+		Page<Duty> page = service.page(pageNo, pageSize, AdvanceCondition.toConditions(search));
+		Map<String, Object> data = new HashMap<>();
+		data.put("rows", page.getData());
+		data.put("count", page.getTotalCount());
+
+		if (format == null || "json".equals(format)) {   // 返回 json
+			return Response.ok(data, MediaType.APPLICATION_JSON).build();
+		} else if ("xlsx".equals(format)) {              // 导出 Excel
+			return RestUtils.responseExcel(data, "cn/bc/identity/template/DutyView.xlsx", "职务");
+		} else {
+			throw new IllegalArgumentException("不支持的格式：format=" + format);
+		}
 	}
 
 	@Override
 	public Duty get(Long id) {
 		Duty e = service.load(id);
-		if(e == null) throw new NotExistsException("所要获取的职务信息不存在！");
+		if (e == null) throw new NotExistsException("所要获取的职务信息不存在！");
 		return e;
 	}
 
