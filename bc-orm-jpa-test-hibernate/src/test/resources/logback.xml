@@ -25,8 +25,39 @@
 		</triggeringPolicy>
 	</appender>
 
-	<logger name="cn.bc" level="WARN"/>
-	<logger name="cn.bc.jpa" level="DEBUG"/>
+	<!-- hibernate -->
+	<logger name="org.hibernate" level="WARN"/>
+	<logger name="org.hibernate.Version" level="WARN"/>
+	<logger name="org.hibernate.dialect" level="WARN"/>
+	<logger name="org.hibernate.internal.SessionImpl" level="WARN"/>
+	<!-- 事务 -->
+	<logger name="org.hibernate.engine.transaction" level="WARN"/>
+	<logger name="org.hibernate.jpa" level="WARN"/>
+	<!-- jpa: TRACE-元数据模型 -->
+	<logger name="org.hibernate.jpa.internal.metamodel" level="WARN"/>
+	<!-- jpa: DEBUG-persistenceUnit详细信息 -->
+	<logger name="org.hibernate.jpa.internal.util.LogHelper.logPersistenceUnitInformation" level="WARN"/>
+	<!-- cache: TRACE-jpql缓存 -->
+	<logger name="org.hibernate.engine.query.spi.QueryPlanCache" level="WARN"/>
+	<!-- jpql: TRACE-jpql语句 | -->
+	<logger name="org.hibernate.engine.query.spi.HQLQueryPlan" level="TRACE"/>
+	<!-- jpql: TRACE-jpql命名参数 | -->
+	<logger name="org.hibernate.engine.spi.QueryParameters" level="TRACE"/>
+	<!-- sql: DEBUG-sql -->
+	<logger name="org.hibernate.SQL" level="DEBUG"/>
+	<!-- sql: TRACE-sql占位参数及类型(org.hibernate.type.descriptor.sql.BasicBinder) -->
+	<logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+	<!-- jpql: DEBUG-converter | -->
+	<logger name="org.hibernate.type.descriptor.converter" level="WARN"/>
+	<!-- sql: TRACE-查询结果 | -->
+	<logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="WARN"/>
+	<!-- id: DEBUG-insert后生成的ID值 | -->
+	<logger name="org.hibernate.id.IdentifierGeneratorHelper" level="WARN"/>
+
+	<!-- hibernate：设为INFO，查看实体对象映射到哪张数据表；设为DEBUG则可以查看实体属性与表中列的映射对应关系 -->
+	<logger name="org.hibernate.cfg.HbmBinder" level="WARN"/>
+
+	<logger name="cn.bc.orm" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="console"/>

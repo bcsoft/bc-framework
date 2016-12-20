@@ -1,4 +1,4 @@
-package cn.bc.orm.jpa;
+package cn.bc.orm.jpa.po;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author dragon 2015-07-29
  */
 @Entity
-@Table(name = "bc_jpa_book_detail")
+@Table(name = "t_jpa_book_detail")
 public class BookDetail2 implements Serializable {
     private Long id;
     private Book book;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+    http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+	<sql-result-set-mapping name="PureDTOMapperByConstructorXml">
+		<constructor-result target-class="cn.bc.orm.jpa.dto.PureDTO">
+			<column name="code" class="java.lang.String"/>
+			<column name="my_name" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="PureDTOMapper1Xml">
+		<entity-result entity-class="cn.bc.orm.jpa.dto.PureDTO">
+			<field-result name="code" column="code"/>
+			<field-result name="myName" column="my_name"/>
+		</entity-result>
+	</sql-result-set-mapping>
+</entity-mappings>

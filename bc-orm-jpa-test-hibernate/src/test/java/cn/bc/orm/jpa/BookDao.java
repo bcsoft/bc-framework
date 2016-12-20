@@ -1,7 +1,7 @@
 package cn.bc.orm.jpa;
 
-import org.hibernate.jpa.internal.QueryImpl;
-import org.hibernate.transform.Transformers;
+import cn.bc.orm.jpa.po.Book;
+import cn.bc.orm.jpa.po.BookDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

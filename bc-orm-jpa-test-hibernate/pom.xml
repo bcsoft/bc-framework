@@ -72,7 +72,7 @@
 	<properties>
 		<!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件，
 			hibernate3在启动时会执行 -->
-		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
-		<hibernate.show_sql>true</hibernate.show_sql>
+		<hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
+		<hibernate.show_sql>false</hibernate.show_sql>
 	</properties>
 </project>

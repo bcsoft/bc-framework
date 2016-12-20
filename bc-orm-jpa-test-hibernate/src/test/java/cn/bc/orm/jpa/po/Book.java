@@ -1,4 +1,4 @@
-package cn.bc.orm.jpa;
+package cn.bc.orm.jpa.po;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,7 +14,7 @@ import java.util.Date;
  * @author dragon 2015-07-29
  */
 @Entity
-@Table(name = "bc_jpa_book")
+@Table(name = "t_jpa_book")
 public class Book extends IdEntity<Long> implements Serializable {
     private String name;// 书名
     private Boolean bool;

@@ -1,5 +1,8 @@
 package cn.bc.orm.jpa;
 
+import cn.bc.orm.jpa.po.Book;
+import cn.bc.orm.jpa.po.BookDetail;
+import cn.bc.orm.jpa.po.BookDetail2;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

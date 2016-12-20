@@ -1,6 +1,7 @@
 package cn.bc.orm.jpa;
 
 import cn.bc.core.util.DateUtils;
+import cn.bc.orm.jpa.po.Book;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)

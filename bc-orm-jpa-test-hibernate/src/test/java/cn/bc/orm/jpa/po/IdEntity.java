@@ -1,4 +1,4 @@
-package cn.bc.orm.jpa;
+package cn.bc.orm.jpa.po;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

@@ -1,4 +1,4 @@
-package cn.bc.orm.jpa;
+package cn.bc.orm.jpa.po;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author dragon 2015-07-29
  */
 @Entity
-@Table(name = "bc_jpa_book_detail")
+@Table(name = "t_jpa_book_detail")
 public class BookDetail implements Serializable {
     private Book id; // 所属书
     private String publisher;// 出版社
