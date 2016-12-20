@@ -43,19 +43,18 @@ public class DutyDaoImpl extends JpaCrudDao<Duty> implements DutyDao {
 		if (pageNo == null || pageNo < 1) pageNo = 1;
 		if (pageSize == null || pageSize < 1) pageSize = Page.DEFAULT_PAGE_SIZE;
 
-		// TODO condition
+		// TODO condition to where sql
 
 		// 查一页数据
-		String ql4list = "select id, code, name from Duty";
+		String ql4list = "select d from Duty d order by code";
 		List<Duty> list = em.createQuery(ql4list, Duty.class)
 				.setFirstResult((pageNo - 1) * pageSize)
 				.setMaxResults(pageSize)
 				.getResultList();
 
 		// 查总数
-		String ql4count = "select count(*) from Duty";
-		int totalCount = em.createQuery(ql4list, Integer.class)
-				.getSingleResult();
+		String ql4count = "select count(id) from Duty";
+		int totalCount = em.createQuery(ql4count, Long.class).getSingleResult().intValue();
 
 		return new Page<>(pageNo, pageSize, totalCount, list);
 	}

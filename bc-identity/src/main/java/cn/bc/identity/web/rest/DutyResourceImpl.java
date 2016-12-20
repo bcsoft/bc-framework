@@ -51,11 +51,11 @@ public class DutyResourceImpl implements DutyResource {
 		data.put("count", page.getTotalCount());
 
 		if (format == null || "json".equals(format)) {   // 返回 json
-			return Response.ok(data, MediaType.APPLICATION_JSON).build();
+			return RestUtils.responseJson(data);
 		} else if ("xlsx".equals(format)) {              // 导出 Excel
-			return RestUtils.responseExcel(data, "cn/bc/identity/template/DutyView.xlsx", "职务");
+			return RestUtils.responseExcel(data, "cn/bc/identity/template/DutyView.xlsx", "职务.xlsx", false);
 		} else {
-			throw new IllegalArgumentException("不支持的格式：format=" + format);
+			throw new UnsupportedOperationException("不支持的格式：format=" + format);
 		}
 	}
 
