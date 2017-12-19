@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10"/>
+        <property name="maxPoolSize" value="30"/>
+    </bean>
+    <!-- 平台模块配置 -->
+    <context:component-scan base-package="cn.bc.identity"/>
+    <context:component-scan base-package="cn.bc.option"/>
+    <context:component-scan base-package="cn.bc.log"/>
+
+    <import resource="classpath:cn/bc/identity/spring.xml"/>
+    <import resource="classpath:cn/bc/option/spring.xml"/>
+    <import resource="classpath:cn/bc/log/spring.xml"/>
+
+    <!-- mail 配置 -->
+    <import resource="classpath:spring-test-mail.xml"/>
+
+    <!-- 数据库配置 -->
+    <import resource="spring-test-db.xml"/>
+</beans>
