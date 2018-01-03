@@ -70,7 +70,6 @@ public class SpringJdbcPostgresTypeTest {
 			}
 		}
 
-		org.postgresql.jdbc4.Jdbc4Array a;
 		// json数组类型数据的获取 http://www.cnblogs.com/tnjin/p/3161735.html
 		java.sql.Array array = (Array) all.get(0).get("row_to_jsons"); // org.postgresql.jdbc4.Jdbc4Array
 		System.out.println(array.getArray());

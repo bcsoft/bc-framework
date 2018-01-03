@@ -522,7 +522,7 @@ public class StringUtils {
 	public static String getContentFromClassResource(String path, Map<String, Object> args) {
 		InputStream in = StringUtils.class.getClassLoader().getResourceAsStream(path);
 		try {
-			String sql = FreeMarkerUtils.format(FileCopyUtils.copyToString(new InputStreamReader(in)), args);
+			String sql = FreeMarkerUtils.format(FileCopyUtils.copyToString(new InputStreamReader(in, "UTF-8")), args);
 			logger.debug("sql={}", sql);
 			return sql;
 		} catch (IOException e) {

@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.6 (2018-01-03)
+- bc-core     : 指定 StringUtils 中 getContentFromClassResource 方法返回 UTF-8 编码格式的字符串
+- bc-desktop  : 用户登录后，被禁用的资源信息排除不显示
+- bc-identity : 资源视图增加状态列
+
 ## release v3.2.5 (2016-12-01)
 - BaseCallable 增加对使用指定编码解析响应体的支持
 - 增加获取局域网 IP-MAC 地址对应关系的处理脚本

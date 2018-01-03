@@ -9,7 +9,7 @@
 	<description>消息管理</description>
 	<dependencies>
 		<dependency>
-		    <groupId>javax.mail</groupId>
+			<groupId>javax.mail</groupId>
 		    <artifactId>mail</artifactId>
 		</dependency>
 		<dependency>
@@ -23,6 +23,27 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-log</artifactId>
+		</dependency>
+		<!-- Unit test-->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-java8</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -10,6 +10,7 @@ import cn.bc.db.jdbc.SqlObject;
 import cn.bc.identity.domain.Resource;
 import cn.bc.identity.web.ResourceTypeFormater;
 import cn.bc.identity.web.SystemContext;
+import cn.bc.web.formater.KeyValueFormater;
 import cn.bc.web.struts2.ViewAction;
 import cn.bc.web.ui.html.grid.Column;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
@@ -49,26 +50,25 @@ public class ResourceViewAction extends ViewAction<Map<String, Object>> {
 
 		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
 		sqlObject.setSql("select p.id as pid,p.name as pname,r.id as id,r.type_ as type,r.order_ as orderNo"
-				+ ",r.name as name,r.url as url,r.iconclass as iconClass,r.option_ as option_"
+				+ ",r.name as name,r.url as url,r.iconclass as iconClass,r.option_ as option_, r.status_ as status_"
 				+ " from bc_identity_resource as r"
 				+ " left join bc_identity_resource as p on p.id=r.belong");
 
 		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<>();
-				int i = -1;
-				map.put("pid", rs[++i]);
-				map.put("pname", rs[++i]);
-				map.put("id", rs[++i]);
-				map.put("type", rs[++i]);
-				map.put("orderNo", rs[++i]);
-				map.put("name", rs[++i]);
-				map.put("url", rs[++i]);
-				map.put("iconClass", rs[++i]);
-				map.put("option", rs[++i]);
-				return map;
-			}
+		sqlObject.setRowMapper((rs, rowNum) -> {
+			Map<String, Object> map = new HashMap<>();
+			int i = -1;
+			map.put("pid", rs[++i]);
+			map.put("pname", rs[++i]);
+			map.put("id", rs[++i]);
+			map.put("type", rs[++i]);
+			map.put("orderNo", rs[++i]);
+			map.put("name", rs[++i]);
+			map.put("url", rs[++i]);
+			map.put("iconClass", rs[++i]);
+			map.put("option", rs[++i]);
+			map.put("status", rs[++i]);
+			return map;
 		});
 		return sqlObject;
 	}
@@ -77,6 +77,9 @@ public class ResourceViewAction extends ViewAction<Map<String, Object>> {
 	protected List<Column> getGridColumns() {
 		List<Column> columns = new ArrayList<>();
 		columns.add(new IdColumn4MapKey("r.id", "id"));
+		columns.add(new TextColumn4MapKey("a.status_", "status",
+				getText("actor.status"), 60).setSortable(true)
+				.setValueFormater(new KeyValueFormater(getBCStatuses())));
 		columns.add(new TextColumn4MapKey("r.type_", "type", getText("resource.type"), 80).setSortable(true)
 				.setValueFormater(new ResourceTypeFormater(getModuleTypes())));
 		columns.add(new TextColumn4MapKey("p.name", "pname", getText("resource.belong"), 90).setSortable(true));
