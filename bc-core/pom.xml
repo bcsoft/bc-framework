@@ -6,7 +6,7 @@
 		<artifactId>bc-parent</artifactId>
 		<version>3.2.1</version>
 	</parent>
-	<version>3.2.4</version>
+	<version>3.2.6</version>
 	<artifactId>bc-core</artifactId>
 	<description>平台核心</description>
 	<name>bc-core</name>
