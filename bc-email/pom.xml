@@ -6,6 +6,7 @@
 		<version>3.2.1</version>
 	</parent>
 	<artifactId>bc-email</artifactId>
+	<version>3.2.7</version>
 	<description>系统内部邮箱</description>
 	<dependencies>
 		<dependency>
