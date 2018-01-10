@@ -1,5 +1,8 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.7 (2018-01-10)
+- 发件箱视图支持搜索收件人
+
 ## release v3.2.6 (2018-01-03)
 - bc-core     : 指定 StringUtils 中 getContentFromClassResource 方法返回 UTF-8 编码格式的字符串
 - bc-desktop  : 用户登录后，被禁用的资源信息排除不显示

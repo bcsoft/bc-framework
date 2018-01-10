@@ -129,7 +129,7 @@ public class EmailSendsAction extends ViewAction<Map<String, Object>> {
 
 	@Override
 	protected String[] getGridSearchFields() {
-		return new String[] { "e.subject"};
+		return new String[] { "e.subject", "getemailreceiver2json(e.id)"};
 	}
 
 	@Override
