@@ -4,6 +4,7 @@
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
 		<version>3.2-SNAPSHOT</version>
+		<relativePath/>
 	</parent>
 	<artifactId>bc-web</artifactId>
 	<dependencies>
