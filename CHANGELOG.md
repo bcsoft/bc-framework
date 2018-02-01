@@ -1,5 +1,8 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.8 (2018-02-01)
+- 添加交通平台公开查询简易信息抓取配置脚本
+
 ## release v3.2.7 (2018-01-10)
 - 发件箱视图支持搜索收件人
 
