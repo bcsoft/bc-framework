@@ -13,6 +13,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
@@ -52,6 +53,9 @@ public class HttpClientFactory {
 	}
 
 	static {
+		// fiddler default proxy for debug
+		proxy = new HttpHost("127.0.0.1", 8888);
+
 		// 可用的user-agent列表
 		userAgents.put("Win7Chrome26",
 				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
@@ -110,9 +114,11 @@ public class HttpClientFactory {
 		if (proxy != null) requestConfigBuilder.setProxy(proxy);
 
 		return HttpClients.custom()
-				.setUserAgent(userAgents.get("Win7IE9"))
-				.setConnectionManager(cm)
-				.setDefaultRequestConfig(requestConfigBuilder.build());
+			.setUserAgent(userAgents.get("Win7IE9"))
+			.setRedirectStrategy(new PostRedirectStrategy()) // enabled head/get/post method auto redirect
+			.addInterceptorFirst(new RemoveContentLengthHeaderInterceptor())
+			//.addInterceptorLast(new ReencodeFormParamInterceptor())
+			.setDefaultRequestConfig(requestConfigBuilder.build());
 	}
 
 	/**
