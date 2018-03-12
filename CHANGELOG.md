@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.8 (2018-03-12)
+- Upgrade to httpclient-4.5.5 and httpcore-4.4.9
+- 设置通过 HttpClientFactory 创建的 HttpClient 实例默认允许 post/delete 的自动重定向
+- 允许通过环境变量 BC_PROXY_PORT、BC_PROXY_HOST 设置 httpclient 的代理
+
 ## release v3.2.7 (2018-01-10)
 - 发件箱视图支持搜索收件人
 
