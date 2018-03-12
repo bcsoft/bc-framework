@@ -3,9 +3,9 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.2.1</version>
+		<version>3.2.8</version>
 	</parent>
-	<version>3.2.5</version>
+	<version>3.2.8</version>
 	<artifactId>bc-spider</artifactId>
 	<description>网络抓取</description>
 	<name>bc-spider</name>
