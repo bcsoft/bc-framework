@@ -3,8 +3,6 @@
  */
 package cn.bc.spider.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -13,7 +11,10 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author dragon
  */
 public class HttpClientFactory {
-	private static Log logger = LogFactory.getLog(HttpClientFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(HttpClientFactory.class);
 	private static Map<String, CloseableHttpClient> cache = new HashMap<>();
 	public static Map<String, String> userAgents = new HashMap<>();
 	private static HttpHost proxy;// 全局代理
@@ -54,10 +55,19 @@ public class HttpClientFactory {
 	static {
 		// 可用的user-agent列表
 		userAgents.put("Win7Chrome26",
-				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
+			"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
 		userAgents.put("Win7IE10", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)");
 		userAgents.put("Win7IE9", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)");
 		userAgents.put("Win7IE8", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0)");
+
+		// 允许通过环境变量设置代理
+		String proxyPort = System.getenv("BC_PROXY_PORT");
+		if (proxyPort != null) {
+			String proxyHost = System.getenv("BC_PROXY_HOST");
+			if (proxyHost == null) proxyHost = "127.0.0.1";
+			proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
+			logger.warn("根据环境变量 BC_PROXY_PORT、BC_PROXY_HOST 的值设置 HttpClient 代理为 {}:{}", proxyHost, proxyPort);
+		}
 	}
 
 	private HttpClientFactory() {
@@ -67,20 +77,27 @@ public class HttpClientFactory {
 	 * 初始化一个全新的默认的HttpClient实例
 	 */
 	public static CloseableHttpClient create() {
-		return createThreadSafeHttpClient();
+		return create(true);
 	}
 
-	private static CloseableHttpClient createThreadSafeHttpClient() {
-		return createThreadSafeHttpClientBuilder().build();
+	/**
+	 * 初始化一个全新的默认的HttpClient实例
+	 */
+	public static CloseableHttpClient create(boolean autoRedirectAll) {
+		return createThreadSafeHttpClient(autoRedirectAll);
 	}
 
-	private static HttpClientBuilder createThreadSafeHttpClientBuilder() {
+	private static CloseableHttpClient createThreadSafeHttpClient(boolean autoRedirectAll) {
+		return createThreadSafeHttpClientBuilder(autoRedirectAll).build();
+	}
+
+	private static HttpClientBuilder createThreadSafeHttpClientBuilder(boolean autoRedirectAll) {
 		// Multithreaded request execution: http://hc.apache.org/httpcomponents-client-4.4.x/tutorial/html/connmgmt.html#d5e405
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
 		SocketConfig socketConfig = SocketConfig.custom()
-				.setTcpNoDelay(true)
-				.build();
+			.setTcpNoDelay(true)
+			.build();
 		cm.setDefaultSocketConfig(socketConfig);
 		//cm.setSocketConfig(proxy, socketConfig);
 
@@ -92,8 +109,8 @@ public class HttpClientFactory {
 
 		// 默认编码
 		ConnectionConfig connectionConfig = ConnectionConfig.custom()
-				.setCharset(Consts.UTF_8)
-				.build();
+			.setCharset(Consts.UTF_8)
+			.build();
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
@@ -102,17 +119,22 @@ public class HttpClientFactory {
 		// 超时设置
 		if (timeout > 0) {
 			requestConfigBuilder.setSocketTimeout(timeout)
-					.setConnectTimeout(timeout)
-					.setConnectionRequestTimeout(timeout);
+				.setConnectTimeout(timeout)
+				.setConnectionRequestTimeout(timeout);
 		}
 
 		// 代理设置
 		if (proxy != null) requestConfigBuilder.setProxy(proxy);
 
-		return HttpClients.custom()
-				.setUserAgent(userAgents.get("Win7IE9"))
-				.setConnectionManager(cm)
-				.setDefaultRequestConfig(requestConfigBuilder.build());
+		HttpClientBuilder builder = HttpClients.custom()
+			.setUserAgent(userAgents.get("Win7IE9"))
+			.setConnectionManager(cm)
+			.setDefaultRequestConfig(requestConfigBuilder.build());
+
+		// enabled auto redirect post/delete method by default
+		if (autoRedirectAll) builder.setRedirectStrategy(new LaxRedirectStrategy());
+
+		return builder;
 	}
 
 	/**
@@ -140,11 +162,11 @@ public class HttpClientFactory {
 			return cache.get(id);
 		} else {
 			//proxy = new HttpHost("127.0.0.1", 8888);
-			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder();
+			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder(false);
 			httpClientBuilder.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor());
 			CloseableHttpClient httpClient = httpClientBuilder.build();
 			cache.put(id, httpClient);
-			logger.warn("创建 HttpClient 缓存: id=" + id);
+			logger.warn("创建 HttpClient 缓存: id={}", id);
 			return httpClient;
 		}
 	}
@@ -153,15 +175,12 @@ public class HttpClientFactory {
 	 * 移除对指定标识的HttpClient实例的缓存
 	 */
 	public static synchronized CloseableHttpClient remove(String id) {
-		if (id == null)
-			return null;
+		if (id == null) return null;
 
 		if (cache.containsKey(id)) {
-			logger.warn("移除 HttpClient 缓存: id=" + id);
+			logger.warn("移除 HttpClient 缓存: id={}", id);
 			return cache.remove(id);
-		} else {
-			return null;
-		}
+		} else return null;
 	}
 
 	public static int size() {
