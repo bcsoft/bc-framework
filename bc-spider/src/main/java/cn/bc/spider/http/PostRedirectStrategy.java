@@ -6,9 +6,13 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.List;
 
 public class PostRedirectStrategy extends LaxRedirectStrategy {
@@ -39,6 +43,15 @@ public class PostRedirectStrategy extends LaxRedirectStrategy {
 		parameters.forEach(nameValuePair -> {
 			if("hphm".equals(nameValuePair.getName())){
 				System.out.println("-------origin: hphm=" + nameValuePair.getValue() + ", class=" + nameValuePair.getClass());
+
+//				try {
+//					Field f=nameValuePair.getClass().getDeclaredField("value");
+//					f.setAccessible(true);// 为 true 则表示反射的对象在使用时取消 Java 语言访问检查
+//					f.set(nameValuePair, "粤A3M1G5");//URLEncoder.encode(nameValuePair.getValue(), "UTF-8"));
+//					System.out.println("-------new: hphm=" + nameValuePair.getValue() + ", class=" + nameValuePair.getClass());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 			}
 		});
 

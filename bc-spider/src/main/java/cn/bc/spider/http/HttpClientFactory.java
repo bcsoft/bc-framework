@@ -115,8 +115,8 @@ public class HttpClientFactory {
 
 		return HttpClients.custom()
 			.setUserAgent(userAgents.get("Win7IE9"))
-			.setRedirectStrategy(new PostRedirectStrategy()) // enabled head/get/post method auto redirect
-			.addInterceptorFirst(new RemoveContentLengthHeaderInterceptor())
+			.setRedirectStrategy(new LaxRedirectStrategy()) // enabled auto redirect post method
+			//.addInterceptorFirst(new RemoveContentLengthHeaderInterceptor())
 			//.addInterceptorLast(new ReencodeFormParamInterceptor())
 			.setDefaultRequestConfig(requestConfigBuilder.build());
 	}
