@@ -11,6 +11,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,14 +68,21 @@ public class HttpClientFactory {
 	 * 初始化一个全新的默认的HttpClient实例
 	 */
 	public static CloseableHttpClient create() {
-		return createThreadSafeHttpClient();
+		return create(true);
 	}
 
-	private static CloseableHttpClient createThreadSafeHttpClient() {
-		return createThreadSafeHttpClientBuilder().build();
+	/**
+	 * 初始化一个全新的默认的HttpClient实例
+	 */
+	public static CloseableHttpClient create(boolean autoRedirectAll) {
+		return createThreadSafeHttpClient(autoRedirectAll);
 	}
 
-	private static HttpClientBuilder createThreadSafeHttpClientBuilder() {
+	private static CloseableHttpClient createThreadSafeHttpClient(boolean autoRedirectAll) {
+		return createThreadSafeHttpClientBuilder(autoRedirectAll).build();
+	}
+
+	private static HttpClientBuilder createThreadSafeHttpClientBuilder(boolean autoRedirectAll) {
 		// Multithreaded request execution: http://hc.apache.org/httpcomponents-client-4.4.x/tutorial/html/connmgmt.html#d5e405
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
@@ -109,10 +117,15 @@ public class HttpClientFactory {
 		// 代理设置
 		if (proxy != null) requestConfigBuilder.setProxy(proxy);
 
-		return HttpClients.custom()
+		HttpClientBuilder builder = HttpClients.custom()
 			.setUserAgent(userAgents.get("Win7IE9"))
 			.setConnectionManager(cm)
 			.setDefaultRequestConfig(requestConfigBuilder.build());
+
+		// enabled auto redirect post/delete method by default
+		if (autoRedirectAll) builder.setRedirectStrategy(new LaxRedirectStrategy());
+
+		return builder;
 	}
 
 	/**
@@ -140,7 +153,7 @@ public class HttpClientFactory {
 			return cache.get(id);
 		} else {
 			//proxy = new HttpHost("127.0.0.1", 8888);
-			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder();
+			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder(false);
 			httpClientBuilder.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor());
 			CloseableHttpClient httpClient = httpClientBuilder.build();
 			cache.put(id, httpClient);
