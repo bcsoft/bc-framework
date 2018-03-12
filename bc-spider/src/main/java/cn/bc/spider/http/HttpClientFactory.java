@@ -3,8 +3,6 @@
  */
 package cn.bc.spider.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -14,6 +12,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @author dragon
  */
 public class HttpClientFactory {
-	private static Log logger = LogFactory.getLog(HttpClientFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(HttpClientFactory.class);
 	private static Map<String, CloseableHttpClient> cache = new HashMap<>();
 	public static Map<String, String> userAgents = new HashMap<>();
 	private static HttpHost proxy;// 全局代理
@@ -54,7 +54,7 @@ public class HttpClientFactory {
 	static {
 		// 可用的user-agent列表
 		userAgents.put("Win7Chrome26",
-				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
+			"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
 		userAgents.put("Win7IE10", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)");
 		userAgents.put("Win7IE9", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)");
 		userAgents.put("Win7IE8", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0)");
@@ -79,8 +79,8 @@ public class HttpClientFactory {
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
 		SocketConfig socketConfig = SocketConfig.custom()
-				.setTcpNoDelay(true)
-				.build();
+			.setTcpNoDelay(true)
+			.build();
 		cm.setDefaultSocketConfig(socketConfig);
 		//cm.setSocketConfig(proxy, socketConfig);
 
@@ -92,8 +92,8 @@ public class HttpClientFactory {
 
 		// 默认编码
 		ConnectionConfig connectionConfig = ConnectionConfig.custom()
-				.setCharset(Consts.UTF_8)
-				.build();
+			.setCharset(Consts.UTF_8)
+			.build();
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
@@ -102,17 +102,17 @@ public class HttpClientFactory {
 		// 超时设置
 		if (timeout > 0) {
 			requestConfigBuilder.setSocketTimeout(timeout)
-					.setConnectTimeout(timeout)
-					.setConnectionRequestTimeout(timeout);
+				.setConnectTimeout(timeout)
+				.setConnectionRequestTimeout(timeout);
 		}
 
 		// 代理设置
 		if (proxy != null) requestConfigBuilder.setProxy(proxy);
 
 		return HttpClients.custom()
-				.setUserAgent(userAgents.get("Win7IE9"))
-				.setConnectionManager(cm)
-				.setDefaultRequestConfig(requestConfigBuilder.build());
+			.setUserAgent(userAgents.get("Win7IE9"))
+			.setConnectionManager(cm)
+			.setDefaultRequestConfig(requestConfigBuilder.build());
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class HttpClientFactory {
 			httpClientBuilder.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor());
 			CloseableHttpClient httpClient = httpClientBuilder.build();
 			cache.put(id, httpClient);
-			logger.warn("创建 HttpClient 缓存: id=" + id);
+			logger.warn("创建 HttpClient 缓存: id={}", id);
 			return httpClient;
 		}
 	}
@@ -153,15 +153,12 @@ public class HttpClientFactory {
 	 * 移除对指定标识的HttpClient实例的缓存
 	 */
 	public static synchronized CloseableHttpClient remove(String id) {
-		if (id == null)
-			return null;
+		if (id == null) return null;
 
 		if (cache.containsKey(id)) {
-			logger.warn("移除 HttpClient 缓存: id=" + id);
+			logger.warn("移除 HttpClient 缓存: id={}", id);
 			return cache.remove(id);
-		} else {
-			return null;
-		}
+		} else return null;
 	}
 
 	public static int size() {
