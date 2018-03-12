@@ -59,6 +59,15 @@ public class HttpClientFactory {
 		userAgents.put("Win7IE10", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)");
 		userAgents.put("Win7IE9", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)");
 		userAgents.put("Win7IE8", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0)");
+
+		// 允许通过环境变量设置代理
+		String proxyPort = System.getenv("BC_PROXY_PORT");
+		if (proxyPort != null) {
+			String proxyHost = System.getenv("BC_PROXY_HOST");
+			if (proxyHost == null) proxyHost = "127.0.0.1";
+			proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
+			logger.warn("根据环境变量 BC_PROXY_PORT、BC_PROXY_HOST 的值设置 HttpClient 代理为 {}:{}", proxyHost, proxyPort);
+		}
 	}
 
 	private HttpClientFactory() {
