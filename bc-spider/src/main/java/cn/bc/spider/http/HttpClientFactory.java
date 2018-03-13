@@ -29,6 +29,7 @@ public class HttpClientFactory {
 	public static Map<String, String> userAgents = new HashMap<>();
 	private static HttpHost proxy;// 全局代理
 	private static int timeout = 0;// 全局超时(ms)，默认不设置
+	private static int maxRedirects = 1;
 
 	public static HttpHost getProxy() {
 		return proxy;
@@ -50,6 +51,17 @@ public class HttpClientFactory {
 	 */
 	public static void setTimeout(int timeout) {
 		HttpClientFactory.timeout = timeout;
+	}
+
+	/**
+	 * Default 2.
+	 */
+	public static int getMaxRedirects() {
+		return maxRedirects;
+	}
+
+	public static void setMaxRedirects(int maxRedirects) {
+		HttpClientFactory.maxRedirects = maxRedirects;
 	}
 
 	static {
@@ -114,7 +126,7 @@ public class HttpClientFactory {
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom().setMaxRedirects(maxRedirects);
 
 		// 超时设置
 		if (timeout > 0) {
