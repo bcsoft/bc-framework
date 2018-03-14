@@ -1,14 +1,5 @@
 package cn.bc.spider.callable;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
-import org.springframework.util.Assert;
-
 import cn.bc.core.util.JsonUtils;
 import cn.bc.core.util.SpringUtils;
 import cn.bc.spider.Result;
@@ -16,15 +7,22 @@ import cn.bc.spider.domain.SpiderConfig;
 import cn.bc.spider.parser.JSONConfigParser;
 import cn.bc.spider.parser.Parser;
 import cn.bc.spider.parser.TemplateParser;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 /**
  * 根据配置的网络请求
- * 
+ *
  * @author dragon
- * 
  */
 public class SpiderConfigCallable implements Callable<Result<Object>> {
-	private static Log logger = LogFactory.getLog(SpiderConfigCallable.class);
+	private static Logger logger = LoggerFactory.getLogger(SpiderConfigCallable.class);
 	private SpiderConfig config;// 配置
 	@SuppressWarnings("rawtypes")
 	private BaseCallable inner;// 代理
@@ -43,39 +41,30 @@ public class SpiderConfigCallable implements Callable<Result<Object>> {
 		this.init();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Result<Object> call() throws Exception {
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public Result<Object> call() {
 		try {
 			Result<Object> r = (Result<Object>) inner.call();
 			if (config.has("parser")) {// 对数据结果进行二次解析转换
 				Object parser = config.get("parser");
-				if (logger.isDebugEnabled())
-					logger.debug("parser=" + parser);
+				logger.debug("parser={}", parser);
 				Parser p = null;
 				if (parser instanceof String) {// 从spring上下文中取定义的bean
-					if (parser instanceof String) {// 字符串配置
-						if (((String) parser).startsWith("tpl:")) {// 基于模版编码的TemplateParser实例
-							p = new TemplateParser(
-									((String) parser).substring(4));
-						} else {// 从spring上下文中取定义的bean
-							p = SpringUtils.getBean((String) parser,
-									Parser.class);
-						}
-					} else if (parser instanceof Parser) {// 类
-						p = (Parser) parser;
+					if (((String) parser).startsWith("tpl:")) {// 基于模版编码的TemplateParser实例
+						p = new TemplateParser(((String) parser).substring(4));
+					} else {// 从spring上下文中取定义的bean
+						p = SpringUtils.getBean((String) parser, Parser.class);
 					}
 				} else if (parser instanceof JSONObject) {// 根据json配置自动生成
 					p = new JSONConfigParser((JSONObject) parser);
-				} else if (parser instanceof Parser) {
+				} else if (parser instanceof Parser) { // 类
 					p = (Parser) parser;
 				}
-				if (p != null) {
-					r.setData(p.parse(r.getData()));
-				}
+				if (p != null) r.setData(p.parse(r.getData()));
 			}
 			return r;
 		} catch (Exception e) {
-			return new Result<Object>(e);
+			return new Result<>(e);
 		}
 	}
 
@@ -84,9 +73,8 @@ public class SpiderConfigCallable implements Callable<Result<Object>> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void init() {
-		String type = config.get("type", String.class);// 响应类型
-		if ("collection".equalsIgnoreCase(type)
-				|| "list".equalsIgnoreCase(type)) {// 集合
+		String type = config.get("type", String.class); // 响应类型
+		if ("collection".equalsIgnoreCase(type) || "list".equalsIgnoreCase(type)) {// 集合
 			inner = new CollectionCallable();
 		} else if ("map".equalsIgnoreCase(type)) {
 			inner = new MapCallable();
@@ -94,51 +82,36 @@ public class SpiderConfigCallable implements Callable<Result<Object>> {
 			inner = new JsonCallable();
 		} else if ("dom".equalsIgnoreCase(type)) {
 			inner = new DomCallable();
-		} else if ("jsonArray".equalsIgnoreCase(type)
-				|| "jsons".equalsIgnoreCase(type)) {
+		} else if ("jsonArray".equalsIgnoreCase(type) || "jsons".equalsIgnoreCase(type)) {
 			inner = new JsonArrayCallable();
-		} else if ("text".equalsIgnoreCase(type)
-				|| "html".equalsIgnoreCase(type)
-				|| "string".equalsIgnoreCase(type) || type == null) {
+		} else if ("text".equalsIgnoreCase(type) || "html".equalsIgnoreCase(type)
+			|| "string".equalsIgnoreCase(type) || type == null) {
 			inner = new TextCallable();
 		} else if ("stream".equalsIgnoreCase(type)) {
 			inner = new StreamCallable();
-		} else if (type.startsWith("spring:")) {// 使用spring中配置的bean
-			inner = SpringUtils.getBean(type.substring("spring:".length()),
-					BaseCallable.class);
-		} else {// 默认为抓取文本信息
+		} else if (type.startsWith("spring:")) { // 使用spring中配置的bean
+			inner = SpringUtils.getBean(type.substring("spring:".length()), BaseCallable.class);
+		} else {                                 // 默认为抓取文本信息
 			inner = new TextCallable();
 		}
 
 		// 设置相关参数
-		if (config.has("group"))
-			inner.setGroup(config.get("group", String.class));
 		inner.setUrl(config.get("url", String.class));
-		if (config.has("method"))
-			inner.setMethod(config.get("method", String.class));
-		if (config.has("encoding"))
-			inner.setEncoding(config.get("encoding", String.class));
-		if (config.has("userAgent"))
-			inner.setUserAgent(config.get("userAgent", String.class));
-		if (config.has("successExpression"))
-			inner.setSuccessExpression(config.get("successExpression",
-					String.class));
-		if (config.has("resultExpression"))
-			inner.setResultExpression(config.get("resultExpression",
-					String.class));
-		if (config.has("type"))
-			inner.setType(type);
+		if (config.has("group")) inner.setGroup(config.get("group", String.class));
+		if (config.has("method")) inner.setMethod(config.get("method", String.class));
+		if (config.has("encoding")) inner.setEncoding(config.get("encoding", String.class));
+		if (config.has("userAgent")) inner.setUserAgent(config.get("userAgent", String.class));
+		if (config.has("successExpression")) inner.setSuccessExpression(config.get("successExpression", String.class));
+		if (config.has("resultExpression")) inner.setResultExpression(config.get("resultExpression", String.class));
+		if (config.has("type")) inner.setType(type);
 
 		// 附加请求参数
 		inner.addFormData(params);
 
 		// 附加请求头
 		if (config.has("headers")) {
-			Map<String, Object> m = JsonUtils.toMap(config.get("headers",
-					JSONObject.class).toString());
-			for (Entry<String, Object> e : m.entrySet()) {
-				inner.addHeader(e.getKey(), String.valueOf(e.getValue()));
-			}
+			Map<String, Object> m = JsonUtils.toMap(config.get("headers", JSONObject.class).toString());
+			for (Entry<String, Object> e : m.entrySet()) inner.addHeader(e.getKey(), String.valueOf(e.getValue()));
 		}
 	}
 }

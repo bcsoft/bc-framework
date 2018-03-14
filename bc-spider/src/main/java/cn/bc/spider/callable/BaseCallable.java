@@ -102,9 +102,9 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 			// 超时
 			if (this.timeout > 0) {
 				requestBuilder.setConfig(RequestConfig.custom()
-						.setSocketTimeout(timeout)
-						.setConnectTimeout(timeout)
-						.setConnectionRequestTimeout(timeout).build());
+					.setSocketTimeout(timeout)
+					.setConnectTimeout(timeout)
+					.setConnectionRequestTimeout(timeout).build());
 			}
 
 			// 表单参数
@@ -139,8 +139,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 				return getResult();
 			} else {// 请求失败
 				return new Result<>(new RuntimeException(
-						"response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
-								+ ",Reason=" + response.getStatusLine().getReasonPhrase()));
+					"response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
+						+ ",Reason=" + response.getStatusLine().getReasonPhrase()));
 			}
 		} catch (SocketTimeoutException e) {
 			logger.info("连接超时, url={}", request.getURI());
@@ -162,6 +162,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 判断请求是否成功的响应代码
+	 *
 	 * @return 默认为 200
 	 */
 	public String getResponseHeader(String name) {
@@ -176,6 +177,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 
 	/**
 	 * 判断请求是否成功的响应代码
+	 *
 	 * @return 默认为 200
 	 */
 	protected int getSuccessStatusCode() {
@@ -287,8 +289,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 获取POST请求需提交的表单参数
 	 */
 	protected Map<String, String> getFormData() {
-		if (this.formData == null)
-			this.formData = new HashMap<>();
+		if (this.formData == null) this.formData = new HashMap<>();
 		return this.formData;
 	}
 
@@ -296,8 +297,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 获取请求需提交的http参数
 	 */
 	public Map<String, String> getHttpParams() {
-		if (this.httpParams == null)
-			this.httpParams = new HashMap<>();
+		if (this.httpParams == null) this.httpParams = new HashMap<>();
 		return httpParams;
 	}
 
@@ -308,8 +308,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * @param value 值
 	 */
 	public void addFormData(String key, String value) {
-		if (this.formData == null)
-			this.formData = new HashMap<>();
+		if (this.formData == null) this.formData = new HashMap<>();
 		this.formData.put(key, value);
 	}
 
@@ -317,10 +316,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 添加表单参数
 	 */
 	public void addFormData(Map<String, String> params) {
-		if (params == null)
-			return;
-		if (this.formData == null)
-			this.formData = new HashMap<>();
+		if (params == null) return;
+		if (this.formData == null) this.formData = new HashMap<>();
 		this.formData.putAll(params);
 	}
 
@@ -331,8 +328,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * @param value 值
 	 */
 	public void addHttpParam(String key, String value) {
-		if (this.httpParams == null)
-			this.httpParams = new HashMap<>();
+		if (this.httpParams == null) this.httpParams = new HashMap<>();
 		this.httpParams.put(key, value);
 	}
 
@@ -340,10 +336,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 添加请求参数
 	 */
 	public void addHttpParam(Map<String, String> params) {
-		if (params == null)
-			return;
-		if (this.httpParams == null)
-			this.httpParams = new HashMap<>();
+		if (params == null) return;
+		if (this.httpParams == null) this.httpParams = new HashMap<>();
 		this.httpParams.putAll(params);
 	}
 
@@ -354,8 +348,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * @param value 值
 	 */
 	public void addHeader(String key, String value) {
-		if (this.headers == null)
-			this.headers = new HashMap<>();
+		if (this.headers == null) this.headers = new HashMap<>();
 		this.headers.put(key, value);
 	}
 
@@ -363,10 +356,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 添加请求头
 	 */
 	public void addHeader(Map<String, String> params) {
-		if (params == null)
-			return;
-		if (this.headers == null)
-			this.headers = new HashMap<>();
+		if (params == null) return;
+		if (this.headers == null) this.headers = new HashMap<>();
 		this.headers.putAll(params);
 	}
 
@@ -417,8 +408,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 */
 	protected V parseResultData() throws Exception {
 		if (resultExpression != null) {
-			return parseResultData(getExpressionValue(this.resultExpression,
-					Object.class));
+			return parseResultData(getExpressionValue(this.resultExpression, Object.class));
 		} else {
 			// 默认返回getResponse()的结果
 			return parseResultData(getExpressionValue("#root", Object.class));
@@ -431,12 +421,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	protected String getResponseText() throws IOException {
 		if (responseText == null) {
 			responseText = entityToText(this.responseEntity);
-			if (logger.isDebugEnabled()) {
-				logger.debug("responseText=" + responseText);
-			}
-			if (responseText == null) {
-				responseText = "";
-			}
+			logger.debug("responseText={}", responseText);
+			if (responseText == null) responseText = "";
 		}
 		return responseText;
 	}
@@ -468,10 +454,8 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	 * 判断请求是否成功
 	 */
 	public Boolean isSuccess() {
-		if (this.successExpression != null)
-			return getExpressionValue(this.successExpression, Boolean.class);
-		else
-			return true;
+		if (this.successExpression != null) return getExpressionValue(this.successExpression, Boolean.class);
+		else return true;
 	}
 
 	public String getMethod() {
