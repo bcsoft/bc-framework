@@ -16,6 +16,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -62,6 +63,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	private String responseText;
 	private Object payload;
 	private int timeout = 0;// 超时(ms)，默认不设置
+	private JSONObject httpOptions; // 特殊的 httpClient 配置：{"beforeRequestInterceptors": [springBeanName1, ...]}
 
 	/**
 	 * 设置超时时间，单位毫秒，设为0代表不设置，默认不设置
@@ -235,9 +237,9 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 	public CloseableHttpClient getHttpClient() {
 		CloseableHttpClient c;
 		if (this.group == null) {
-			c = HttpClientFactory.create();
+			c = HttpClientFactory.create(this.httpOptions);
 		} else {
-			c = HttpClientFactory.get(this.group);
+			c = HttpClientFactory.get(this.group, this.httpOptions);
 		}
 		return c;
 	}
@@ -486,5 +488,9 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
 		} else {
 			throw new CoreException("unsupport type");
 		}
+	}
+
+	public void setHttpOptions(JSONObject httpOptions) {
+		this.httpOptions = httpOptions;
 	}
 }

@@ -104,6 +104,7 @@ public class SpiderConfigCallable implements Callable<Result<Object>> {
 		if (config.has("successExpression")) inner.setSuccessExpression(config.get("successExpression", String.class));
 		if (config.has("resultExpression")) inner.setResultExpression(config.get("resultExpression", String.class));
 		if (config.has("type")) inner.setType(type);
+		if (config.has("httpOptions")) inner.setHttpOptions(config.getConfigJson().getJSONObject("httpOptions"));
 
 		// 附加请求参数
 		inner.addFormData(params);

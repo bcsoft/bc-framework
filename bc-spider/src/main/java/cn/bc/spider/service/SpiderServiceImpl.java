@@ -105,6 +105,11 @@ public class SpiderServiceImpl implements SpiderService {
 			try {
 				// 同一group保证session相同
 				prevConfig.getConfigJson().put("group", config.get("group"));
+
+				// 传递 httpOptions
+				if (!prevConfig.has("httpOptions") && config.has("httpOptions")) {
+					prevConfig.getConfigJson().put("httpOptions", config.get("httpOptions"));
+				}
 			} catch (JSONException e) {
 				throw new CoreException("JSONException", e);
 			}
@@ -165,9 +170,22 @@ public class SpiderServiceImpl implements SpiderService {
 	}
 
 	public String getCaptcha(String group, String url) {
+		return getCaptcha(group, url, null);
+	}
+
+	public String getCaptcha(String group, String url, String parentSpiderCode) {
 		CaptchaImageCallable c = new CaptchaImageCallable();
 		c.setGroup(group);
 		c.setUrl(url);
+
+		// 传递父抓取的 httpOptions 配置
+		if (parentSpiderCode != null && !parentSpiderCode.isEmpty()) {
+			SpiderConfig parentSpiderConfig = this.loadConfig(parentSpiderCode);
+			if (parentSpiderConfig.has("httpOptions")) {
+				c.setHttpOptions(parentSpiderConfig.getConfigJson().getJSONObject("httpOptions"));
+			}
+		}
+
 		Result<String> r = TaskExecutor.get(c);
 		if (r.isSuccess()) {
 			logger.info("captcha file={}", r.getData());

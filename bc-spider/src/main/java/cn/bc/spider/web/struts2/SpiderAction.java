@@ -95,7 +95,7 @@ public class SpiderAction extends ActionSupport {
 			String userCode = SystemContextHolder.get().getUser().getCode();
 
 			// 获取验证码图片的文件路径
-			String path = this.spiderService.getCaptcha(group + LINK_SYMBLE + userCode, url);
+			String path = this.spiderService.getCaptcha(group + LINK_SYMBLE + userCode, url, code);
 			logger.debug("path={}", path);
 			if (path == null) {
 				throw new CoreException("can't get captcha file from " + url);
