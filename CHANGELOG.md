@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.9 (2018-03-14)
+- bc-spider : 添加 httpOptions 特殊参数支持
+- bc-spider : 重构 CaptchaImageCallable  验证码图片获取类
+- bc-spider : Set HttpClient max redirect to 1 by default
+
 ## release v3.2.8 (2018-03-12)
 - Upgrade to httpclient-4.5.5 and httpcore-4.4.9
 - 设置通过 HttpClientFactory 创建的 HttpClient 实例默认允许 post/delete 的自动重定向
