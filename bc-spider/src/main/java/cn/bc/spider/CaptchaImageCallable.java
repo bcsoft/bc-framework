@@ -1,22 +1,20 @@
 package cn.bc.spider;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Date;
-
+import cn.bc.docs.domain.Attach;
+import cn.bc.spider.callable.TextCallable;
 import org.apache.tools.ant.util.DateUtils;
 import org.springframework.util.FileCopyUtils;
 
-import cn.bc.docs.domain.Attach;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 /**
  * 验证码图片的获取
- * 
+ *
  * @author dragon
- * 
  */
-public class CaptchaImageCallable extends StreamCallable<String> {
+public class CaptchaImageCallable extends TextCallable {
 	private String root = Attach.DATA_REAL_PATH;// 验证码保存到的根路径
 	private String subpath = "temp/captcha";// 验证码保存到的先对子路径
 	private String name;// 验证码保存到的文件名称（不含路径和扩展名的部分）
@@ -27,7 +25,10 @@ public class CaptchaImageCallable extends StreamCallable<String> {
 	public CaptchaImageCallable() {
 		super();
 
-		// 创建一个未i分类的默认id
+		// 默认 get
+		this.setMethod("get");
+
+		// 创建一个未分类的默认 group
 		this.setGroup("none");
 
 		// 时间搓作为默认文件名
@@ -40,7 +41,7 @@ public class CaptchaImageCallable extends StreamCallable<String> {
 	}
 
 	@Override
-	protected void parseStream(InputStream stream) throws Exception {
+	public String parseResponse() throws Exception {
 		// 复制流到指定的文件
 		String dir = this.subpath + "/" + this.getGroup();
 		File file = new File(this.root + "/" + dir);
@@ -49,11 +50,8 @@ public class CaptchaImageCallable extends StreamCallable<String> {
 		}
 		this.path = dir + "/" + name + "." + ext;
 		file = new File(this.root + "/" + this.path);
-		FileCopyUtils.copy(stream, new FileOutputStream(file));
-	}
+		FileCopyUtils.copy(this.responseEntity.getContent(), new FileOutputStream(file));
 
-	@Override
-	protected String parseData() {
 		// 返回验证码图片保存到的全路径
 		return this.path;
 	}

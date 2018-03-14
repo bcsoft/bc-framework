@@ -14,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 	protected Object content;// 响应的内容：文本或流
 	protected Document document;// 请求的响应文本对应的jsop文档对象
 	private int timeout = 0;// 超时(ms)，默认不设置
+	private JSONObject httpOptions; // 特殊的 httpClient 配置：{"beforeRequestInterceptors": [springBeanName1, ...]}
 
 	/**
 	 * 设置超时时间，单位毫秒，设为0代表不设置，默认不设置
@@ -234,9 +236,9 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 	public HttpClient getHttpClient() {
 		HttpClient c;
 		if (this.group == null) {
-			c = HttpClientFactory.create();
+			c = HttpClientFactory.create(this.httpOptions);
 		} else {
-			c = HttpClientFactory.get(this.group);
+			c = HttpClientFactory.get(this.group, this.httpOptions);
 		}
 		if (this.userAgent != null) {
 			c.getParams().setParameter("User-Agent", this.userAgent);
@@ -473,5 +475,9 @@ public class HttpClientCallable<V> implements Callable<Result<V>> {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public void setHttpOptions(JSONObject httpOptions) {
+		this.httpOptions = httpOptions;
 	}
 }

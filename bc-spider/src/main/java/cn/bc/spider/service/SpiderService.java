@@ -28,6 +28,7 @@ public interface SpiderService {
 	 * @return 本地文件路径
 	 */
 	String getCaptcha(String group, String url);
+	String getCaptcha(String group, String url, String parentSpiderCode);
 
 	/**
 	 * 执行抓取

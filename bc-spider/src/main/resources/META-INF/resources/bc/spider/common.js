@@ -245,10 +245,12 @@ bc.spider = {
 			url = field.captcha;
 		else
 			url = field.captcha.url;
+
+		var data = {group: group, url: url, code: $page.find(".hiddenFields>input[name=code]").val()};
 		$.ajax({
 			dataType: "json",
 			url: bc.root+"/bc/spider/captcha",
-			data: {group: group, url: url},
+			data: data,
 			success: function(json){
 				if(json.success) {
 					console.log(json);

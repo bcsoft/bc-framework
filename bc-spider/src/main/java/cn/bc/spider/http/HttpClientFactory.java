@@ -3,8 +3,10 @@
  */
 package cn.bc.spider.http;
 
+import cn.bc.core.util.SpringUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
@@ -13,6 +15,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
@@ -29,6 +33,10 @@ public class HttpClientFactory {
 	public static Map<String, String> userAgents = new HashMap<>();
 	private static HttpHost proxy;// 全局代理
 	private static int timeout = 0;// 全局超时(ms)，默认不设置
+	/**
+	 * 默认支持的重定向次数
+	 */
+	public static final int DEFAULT_MAX_REDIRECTS = 1;
 
 	public static HttpHost getProxy() {
 		return proxy;
@@ -66,7 +74,7 @@ public class HttpClientFactory {
 			String proxyHost = System.getenv("BC_PROXY_HOST");
 			if (proxyHost == null) proxyHost = "127.0.0.1";
 			proxy = new HttpHost(proxyHost, Integer.parseInt(proxyPort));
-			logger.warn("根据环境变量 BC_PROXY_PORT、BC_PROXY_HOST 的值设置 HttpClient 代理为 {}:{}", proxyHost, proxyPort);
+			logger.warn("根据环境变量 BC_PROXY_PORT、BC_PROXY_HOST 的值设置 HttpClient 全局代理为 {}:{}", proxyHost, proxyPort);
 		}
 	}
 
@@ -77,21 +85,25 @@ public class HttpClientFactory {
 	 * 初始化一个全新的默认的HttpClient实例
 	 */
 	public static CloseableHttpClient create() {
-		return create(true);
+		return create(null);
 	}
 
 	/**
-	 * 初始化一个全新的默认的HttpClient实例
+	 * 初始化一个全新的带特殊配置的HttpClient实例
+	 *
+	 * @param options 特殊配置
 	 */
-	public static CloseableHttpClient create(boolean autoRedirectAll) {
-		return createThreadSafeHttpClient(autoRedirectAll);
+	public static CloseableHttpClient create(JSONObject options) {
+		return createThreadSafeHttpClient(options);
 	}
 
-	private static CloseableHttpClient createThreadSafeHttpClient(boolean autoRedirectAll) {
-		return createThreadSafeHttpClientBuilder(autoRedirectAll).build();
+	private static CloseableHttpClient createThreadSafeHttpClient(JSONObject options) {
+		return createThreadSafeHttpClientBuilder(options).build();
 	}
 
-	private static HttpClientBuilder createThreadSafeHttpClientBuilder(boolean autoRedirectAll) {
+	private static HttpClientBuilder createThreadSafeHttpClientBuilder(JSONObject options) {
+		if (options == null) options = new JSONObject();
+
 		// Multithreaded request execution: http://hc.apache.org/httpcomponents-client-4.4.x/tutorial/html/connmgmt.html#d5e405
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
@@ -114,25 +126,53 @@ public class HttpClientFactory {
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom().setMaxRedirects(DEFAULT_MAX_REDIRECTS);
 
 		// 超时设置
-		if (timeout > 0) {
-			requestConfigBuilder.setSocketTimeout(timeout)
-				.setConnectTimeout(timeout)
-				.setConnectionRequestTimeout(timeout);
+		int timeout_;
+		if (options.has("timeout")) timeout_ = options.getInt("timeout");//  自定义 timeout
+		else timeout_ = timeout; // 全局 timeout
+		if (timeout_ > 0) {
+			requestConfigBuilder.setSocketTimeout(timeout_)
+				.setConnectTimeout(timeout_)
+				.setConnectionRequestTimeout(timeout_);
 		}
 
 		// 代理设置
-		if (proxy != null) requestConfigBuilder.setProxy(proxy);
+		if (options.has("proxy")) { //  自定义 proxy
+			String[] proxy = options.getString("proxy").split(":");
+			requestConfigBuilder.setProxy(new HttpHost(proxy[0], Integer.parseInt(proxy[1])));
+		} else {
+			if (proxy != null) requestConfigBuilder.setProxy(proxy); // 系统全局 proxy
+		}
 
 		HttpClientBuilder builder = HttpClients.custom()
-			.setUserAgent(userAgents.get("Win7IE9"))
 			.setConnectionManager(cm)
 			.setDefaultRequestConfig(requestConfigBuilder.build());
 
-		// enabled auto redirect post/delete method by default
-		if (autoRedirectAll) builder.setRedirectStrategy(new LaxRedirectStrategy());
+		// User-Agent
+		if (options.has("userAgent")) builder.setUserAgent(options.getString("userAgent")); // 自定义 userAgent
+		else builder.setUserAgent(userAgents.get("Win7IE9")); // 全局 userAgent
+
+		// Enabled auto redirect post/delete method by default unless set autoRedirectAll=false
+		if (!options.has("autoRedirectAll") || !options.getBoolean("autoRedirectAll"))
+			builder.setRedirectStrategy(new LaxRedirectStrategy());
+
+		// addInterceptorFirst
+		if (options.has("beforeRequestInterceptors")) {
+			JSONArray interceptors = options.getJSONArray("beforeRequestInterceptors");
+			logger.debug("beforeRequestInterceptors={}", interceptors);
+			for (int i = 0; i < interceptors.length(); i++)
+				builder.addInterceptorFirst(SpringUtils.getBean(interceptors.getString(i), HttpRequestInterceptor.class));
+		}
+
+		// addInterceptorLast
+		if (options.has("afterRequestInterceptors")) {
+			JSONArray interceptors = options.getJSONArray("afterRequestInterceptors");
+			logger.debug("afterRequestInterceptors={}", interceptors);
+			for (int i = 0; i < interceptors.length(); i++)
+				builder.addInterceptorLast(SpringUtils.getBean(interceptors.getString(i), HttpRequestInterceptor.class));
+		}
 
 		return builder;
 	}
@@ -141,10 +181,20 @@ public class HttpClientFactory {
 	 * 获取指定标识的一个HttpClient实例，如果没有就创建一个新的并缓存起来
 	 */
 	public static synchronized CloseableHttpClient get(String id) {
+		return get(id, null);
+	}
+
+	/**
+	 * 获取指定标识的一个HttpClient实例，如果没有就创建一个新的并缓存起来
+	 *
+	 * @param id             group
+	 * @param defaultOptions 如果不存在则使用 defaultOptions 创建一个ID
+	 */
+	public static synchronized CloseableHttpClient get(String id, JSONObject defaultOptions) {
 		if (cache.containsKey(id)) {
 			return cache.get(id);
 		} else {
-			CloseableHttpClient httpClient = create();
+			CloseableHttpClient httpClient = create(defaultOptions);
 			cache.put(id, httpClient);
 			logger.warn("创建 HttpClient 缓存: id=" + id);
 			return httpClient;
@@ -162,7 +212,9 @@ public class HttpClientFactory {
 			return cache.get(id);
 		} else {
 			//proxy = new HttpHost("127.0.0.1", 8888);
-			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder(false);
+			JSONObject options = new JSONObject();
+			options.put("autoRedirectAll", false);
+			HttpClientBuilder httpClientBuilder = createThreadSafeHttpClientBuilder(options);
 			httpClientBuilder.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor());
 			CloseableHttpClient httpClient = httpClientBuilder.build();
 			cache.put(id, httpClient);
