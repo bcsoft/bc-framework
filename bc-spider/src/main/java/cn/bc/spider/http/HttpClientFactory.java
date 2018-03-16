@@ -126,7 +126,12 @@ public class HttpClientFactory {
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom().setMaxRedirects(DEFAULT_MAX_REDIRECTS);
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+
+		// 重定向次数设置
+		if (options.has("maxRedirects")) { //  自定义
+			requestConfigBuilder.setMaxRedirects(options.getInt("maxRedirects"));
+		} else requestConfigBuilder.setMaxRedirects(DEFAULT_MAX_REDIRECTS); // 全局默认
 
 		// 超时设置
 		int timeout_;
