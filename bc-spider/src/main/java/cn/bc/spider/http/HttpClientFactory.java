@@ -36,7 +36,7 @@ public class HttpClientFactory {
 	/**
 	 * 默认支持的重定向次数
 	 */
-	public static final int DEFAULT_MAX_REDIRECTS = 1;
+	public static final int DEFAULT_MAX_REDIRECTS = 2;
 
 	public static HttpHost getProxy() {
 		return proxy;
@@ -126,7 +126,12 @@ public class HttpClientFactory {
 		cm.setDefaultConnectionConfig(connectionConfig);
 
 		// 全局请求配置
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom().setMaxRedirects(DEFAULT_MAX_REDIRECTS);
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+
+		// 重定向次数设置
+		if (options.has("maxRedirects")) { //  自定义
+			requestConfigBuilder.setMaxRedirects(options.getInt("maxRedirects"));
+		} else requestConfigBuilder.setMaxRedirects(DEFAULT_MAX_REDIRECTS); // 全局默认
 
 		// 超时设置
 		int timeout_;
@@ -154,8 +159,8 @@ public class HttpClientFactory {
 		if (options.has("userAgent")) builder.setUserAgent(options.getString("userAgent")); // 自定义 userAgent
 		else builder.setUserAgent(userAgents.get("Win7IE9")); // 全局 userAgent
 
-		// Enabled auto redirect post/delete method by default unless set autoRedirectAll=false
-		if (!options.has("autoRedirectAll") || !options.getBoolean("autoRedirectAll"))
+		// Enabled auto redirect post/delete method if autoRedirectAll=true
+		if (options.has("autoRedirectAll") && options.getBoolean("autoRedirectAll"))
 			builder.setRedirectStrategy(new LaxRedirectStrategy());
 
 		// addInterceptorFirst
