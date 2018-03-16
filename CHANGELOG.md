@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.10 (2018-03-16)
+- bc-spider : 设置通过 HttpClientFactory 创建的 HttpClient 实例默认不允许 post/delete 的自动重定向
+- bc-spider : 默认支持的重定向次数改为 2
+- bc-spider : 增加重定向次数的自定义设置
+
 ## release v3.2.9 (2018-03-14)
 - bc-spider : 添加 httpOptions 特殊参数支持
 - bc-spider : 重构 CaptchaImageCallable  验证码图片获取类
