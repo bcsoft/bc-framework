@@ -36,7 +36,7 @@ public class HttpClientFactory {
 	/**
 	 * 默认支持的重定向次数
 	 */
-	public static final int DEFAULT_MAX_REDIRECTS = 1;
+	public static final int DEFAULT_MAX_REDIRECTS = 2;
 
 	public static HttpHost getProxy() {
 		return proxy;
