@@ -154,8 +154,8 @@ public class HttpClientFactory {
 		if (options.has("userAgent")) builder.setUserAgent(options.getString("userAgent")); // 自定义 userAgent
 		else builder.setUserAgent(userAgents.get("Win7IE9")); // 全局 userAgent
 
-		// Enabled auto redirect post/delete method by default unless set autoRedirectAll=false
-		if (!options.has("autoRedirectAll") || !options.getBoolean("autoRedirectAll"))
+		// Enabled auto redirect post/delete method if autoRedirectAll=true
+		if (options.has("autoRedirectAll") && options.getBoolean("autoRedirectAll"))
 			builder.setRedirectStrategy(new LaxRedirectStrategy());
 
 		// addInterceptorFirst
