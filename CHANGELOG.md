@@ -1,5 +1,8 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v3.2.11 (2018-04-25)
+- bc-identity : 添加批量查询指定用户当前所属部门的简易信息接口、实现和 struts 配置
+
 ## release v3.2.10 (2018-03-16)
 - bc-spider : 设置通过 HttpClientFactory 创建的 HttpClient 实例默认不允许 post/delete 的自动重定向
 - bc-spider : 默认支持的重定向次数改为 2
