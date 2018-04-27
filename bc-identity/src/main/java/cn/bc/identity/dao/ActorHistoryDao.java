@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.bc.core.dao.CrudDao;
 import cn.bc.identity.domain.ActorHistory;
+import cn.bc.identity.dto.DepartmentByActorDto4MiniInfo;
 
 /**
  * Actor隶属信息的变动历史Dao接口
@@ -35,4 +36,12 @@ public interface ActorHistoryDao extends CrudDao<ActorHistory> {
 	 * @return
 	 */
 	List<String> findNames(List<String> actorCode);
+
+	/**
+	 * 批量获取指定用户当前所属部门的简易信息
+	 *
+	 * @param actorHistoryIds 用户历史 Id 数组
+	 * @return 用户当前所属部门的简易信息 {@link DepartmentByActorDto4MiniInfo} 集合
+	 */
+	List<DepartmentByActorDto4MiniInfo> findDepartmentMiniInfoByActors(Long[] actorHistoryIds);
 }

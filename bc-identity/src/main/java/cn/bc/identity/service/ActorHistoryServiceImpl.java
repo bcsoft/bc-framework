@@ -3,6 +3,7 @@ package cn.bc.identity.service;
 import java.util.Calendar;
 import java.util.List;
 
+import cn.bc.identity.dto.DepartmentByActorDto4MiniInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -98,5 +99,10 @@ public class ActorHistoryServiceImpl extends DefaultCrudService<ActorHistory>
 
 	public List<String> findNames(List<String> actorCode) {
 		return actorHistoryDao.findNames(actorCode);
+	}
+
+	@Override
+	public List<DepartmentByActorDto4MiniInfo> findDepartmentMiniInfoByActors(Long[] actorHistoryIds) {
+		return actorHistoryDao.findDepartmentMiniInfoByActors(actorHistoryIds);
 	}
 }
