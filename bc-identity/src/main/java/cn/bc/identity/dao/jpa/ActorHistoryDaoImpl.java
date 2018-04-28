@@ -9,6 +9,9 @@ import cn.bc.orm.jpa.JpaUtils;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import cn.bc.identity.dto.DepartmentByActorDto4MiniInfo;
+
 
 /**
  * Actor隶属信息的变动历史Service接口的实现
@@ -55,5 +58,15 @@ public class ActorHistoryDaoImpl extends JpaCrudDao<ActorHistory> implements Act
 			hql.append(")");
 		}
 		return executeQuery(hql.toString(), args);
+	}
+
+	@Override
+	public List<DepartmentByActorDto4MiniInfo> findDepartmentMiniInfoByActors(Long[] actorHistoryIds) {
+		String ql =
+			"select new cn.bc.identity.dto.DepartmentByActorDto4MiniInfo(ah.id, ah.upperId, a.code, ah.upperName) \n" +
+				"from ActorHistory ah, Actor a \n" +
+				"where a.id = ah.upperId  and ah.current = true and ah.id in (:actorHistoryIds)";
+		return getEntityManager().createQuery(ql, DepartmentByActorDto4MiniInfo.class)
+			.setParameter("actorHistoryIds", Arrays.asList(actorHistoryIds)).getResultList();
 	}
 }
