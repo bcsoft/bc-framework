@@ -16,9 +16,12 @@
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<source.skip>false</source.skip>
 
+		<!-- framework version -->
 		<revision>4.0-SNAPSHOT</revision>
 		<bc-framework.version>4.0-SNAPSHOT</bc-framework.version>
 		<bc.rest.version>1.1-SNAPSHOT</bc.rest.version>
+
+		<!-- main 3rd-party package version -->
 		<spring.version>4.2.1.RELEASE</spring.version>
 		<spring-struts.version>3.2.11.RELEASE</spring-struts.version>
 		<spring-ws.version>2.2.2.RELEASE</spring-ws.version>
