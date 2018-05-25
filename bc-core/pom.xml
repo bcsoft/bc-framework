@@ -4,10 +4,11 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.2-SNAPSHOT</version>
+		<version>${revision}</version>
+		<relativePath>../bc-parent</relativePath>
 	</parent>
 	<artifactId>bc-core</artifactId>
-	<description>平台核心</description>
+	<description>BC Framework Core</description>
 	<name>bc-core</name>
 	<dependencies>
 		<!-- log: slf4j + logback-->

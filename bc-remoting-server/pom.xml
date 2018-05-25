@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.2-SNAPSHOT</version>
+		<artifactId>bc-parent</artifactId>
+		<version>${revision}</version>
+		<relativePath>../bc-parent</relativePath>
 	</parent>
 	<artifactId>bc-remoting-server</artifactId>
 	<packaging>war</packaging>
 	<description>远程服务服务端</description>
-
 	<properties>
 		<!-- 解决打包成 war 文件，html文件内中文乱码问题 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
