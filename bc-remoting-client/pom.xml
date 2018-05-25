@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.2-SNAPSHOT</version>
+		<artifactId>bc-parent</artifactId>
+		<version>${revision}</version>
+		<relativePath>../bc-parent</relativePath>
 	</parent>
 	<artifactId>bc-remoting-client</artifactId>
 	<description>远程服务客户端</description>
-
 	<properties>
 		<app.debug>false</app.debug>
 	</properties>

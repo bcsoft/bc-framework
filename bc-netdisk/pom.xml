@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>bc-parent</artifactId>
 		<groupId>cn.bc</groupId>
-		<version>3.2-SNAPSHOT</version>
+		<version>${revision}</version>
+		<relativePath>../bc-parent</relativePath>
 	</parent>
 	<artifactId>bc-netdisk</artifactId>
 	<description>网络硬盘</description>
@@ -26,8 +28,8 @@
 		</dependency>
 		<!-- mustache模板引擎 -->
 		<dependency>
-		  <groupId>com.github.spullara.mustache.java</groupId>
-		  <artifactId>compiler</artifactId>
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
 		</dependency>
 	</dependencies>
 </project>

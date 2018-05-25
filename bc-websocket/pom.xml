@@ -4,7 +4,8 @@
 	<parent>
 		<groupId>cn.bc</groupId>
 		<artifactId>bc-parent</artifactId>
-		<version>3.2-SNAPSHOT</version>
+		<version>${revision}</version>
+		<relativePath>../bc-parent</relativePath>
 	</parent>
 	<artifactId>bc-websocket</artifactId>
 	<description>websocket (已过时不用)</description>
@@ -13,12 +14,10 @@
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-identity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-chat</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
