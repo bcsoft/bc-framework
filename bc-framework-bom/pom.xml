@@ -1,301 +1,251 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn.bc</groupId>
+	<parent>
+		<groupId>cn.bc</groupId>
+		<artifactId>bc-framework-build</artifactId>
+		<version>${revision}</version>
+		<relativePath>..</relativePath>
+	</parent>
 	<artifactId>bc-framework-bom</artifactId>
-	<name>bc-framework-bom</name>
-	<version>3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<name>bc-framework-bom</name>
 	<description>BC Framework BOM (Bill of Materials)</description>
-	<url>https://github.com/bcsoft/bc-framework</url>
-
-	<distributionManagement>
-		<repository>
-			<id>nexus-releases</id>
-			<name>Local Nexus Repository</name>
-			<url>${deploy.nexus-releases.url}</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<name>Local Nexus Repository</name>
-			<url>${deploy.nexus-snapshots.url}</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<properties>
-		<!-- 版本：平台 -->
-		<framework.version>3.2-SNAPSHOT</framework.version>
-		<bc.acl.version>${framework.version}</bc.acl.version>
-		<bc.bulletin.version>${framework.version}</bc.bulletin.version>
-		<bc.cache.version>${framework.version}</bc.cache.version>
-		<bc.chat.version>${framework.version}</bc.chat.version>
-		<bc.core.version>${framework.version}</bc.core.version>
-		<bc.db-jdbc.version>${framework.version}</bc.db-jdbc.version>
-		<bc.desktop.version>${framework.version}</bc.desktop.version>
-		<bc.device.version>${framework.version}</bc.device.version>
-		<bc.docs.version>${framework.version}</bc.docs.version>
-		<bc.email.version>${framework.version}</bc.email.version>
-		<bc.feedback.version>${framework.version}</bc.feedback.version>
-		<bc.form.version>${framework.version}</bc.form.version>
-		<bc.identity.version>${framework.version}</bc.identity.version>
-		<bc.investigate.version>${framework.version}</bc.investigate.version>
-		<bc.log.version>${framework.version}</bc.log.version>
-		<bc.message.version>${framework.version}</bc.message.version>
-		<bc.netdisk.version>${framework.version}</bc.netdisk.version>
-		<bc.option.version>${framework.version}</bc.option.version>
-		<bc.orm-hibernate.version>${framework.version}</bc.orm-hibernate.version>
-		<bc.orm-jpa.version>${framework.version}</bc.orm-jpa.version>
-		<bc.orm-jpa-test-hibernate.version>${framework.version}</bc.orm-jpa-test-hibernate.version>
-		<bc.photo.version>${framework.version}</bc.photo.version>
-		<bc.placeorigin.version>${framework.version}</bc.placeorigin.version>
-		<bc.remoting-client.version>${framework.version}</bc.remoting-client.version>
-		<bc.remoting-common.version>${framework.version}</bc.remoting-common.version>
-		<bc.remoting-server.version>${framework.version}</bc.remoting-server.version>
-		<bc.report.version>${framework.version}</bc.report.version>
-		<bc.scheduler.version>${framework.version}</bc.scheduler.version>
-		<bc.spider.version>${framework.version}</bc.spider.version>
-		<bc.subscribe.version>${framework.version}</bc.subscribe.version>
-		<bc.sync.version>${framework.version}</bc.sync.version>
-		<bc.template.version>${framework.version}</bc.template.version>
-		<bc.test.version>${framework.version}</bc.test.version>
-		<bc.web.version>${framework.version}</bc.web.version>
-		<bc.web-struts.version>${framework.version}</bc.web-struts.version>
-		<bc.web-struts2.version>${framework.version}</bc.web-struts2.version>
-		<bc.websocket.version>${framework.version}</bc.websocket.version>
-		<bc.work.version>${framework.version}</bc.work.version>
-		<bc.workday.version>${framework.version}</bc.workday.version>
-
-		<!-- 版本：其它 -->
-		<bc.category.version>2.1-SNAPSHOT</bc.category.version>
-		<bc.cert.version>2.1-SNAPSHOT</bc.cert.version>
-		<bc.express.version>2.1-SNAPSHOT</bc.express.version>
-
-		<!-- 版本：工作流 -->
-		<bc.wf.version>${framework.version}</bc.wf.version>
-	</properties>
-
 	<dependencyManagement>
 		<dependencies>
 			<!-- 平台通用 -->
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-acl</artifactId>
-				<version>${bc.acl.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-bulletin</artifactId>
-				<version>${bc.bulletin.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-cache</artifactId>
-				<version>${bc.cache.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.bc</groupId>
-				<artifactId>bc-chat</artifactId>
-				<version>${bc.chat.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-core</artifactId>
-				<version>${bc.core.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-db-jdbc</artifactId>
-				<version>${bc.db-jdbc.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-desktop</artifactId>
-				<version>${bc.desktop.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-device</artifactId>
-				<version>${bc.device.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-docs</artifactId>
-				<version>${bc.docs.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-email</artifactId>
-				<version>${bc.email.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-feedback</artifactId>
-				<version>${bc.feedback.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-form</artifactId>
-				<version>${bc.form.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-identity</artifactId>
-				<version>${bc.identity.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-investigate</artifactId>
-				<version>${bc.investigate.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-log</artifactId>
-				<version>${bc.log.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-message</artifactId>
-				<version>${bc.message.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-netdisk</artifactId>
-				<version>${bc.netdisk.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-option</artifactId>
-				<version>${bc.option.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-orm-hibernate</artifactId>
-				<version>${bc.orm-hibernate.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-orm-jpa</artifactId>
-				<version>${bc.orm-jpa.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-orm-jpa-test-hibernate</artifactId>
-				<version>${bc.orm-jpa-test-hibernate.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-photo</artifactId>
-				<version>${bc.photo.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-placeorigin</artifactId>
-				<version>${bc.placeorigin.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-remoting-client</artifactId>
-				<version>${bc.remoting-client.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-remoting-common</artifactId>
-				<version>${bc.remoting-common.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-remoting-server</artifactId>
-				<version>${bc.remoting-server.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-report</artifactId>
-				<version>${bc.report.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-scheduler</artifactId>
-				<version>${bc.scheduler.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-spider</artifactId>
-				<version>${bc.spider.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-subscribe</artifactId>
-				<version>${bc.subscribe.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-sync</artifactId>
-				<version>${bc.sync.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-template</artifactId>
-				<version>${bc.template.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-test</artifactId>
-				<version>${bc.test.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-web</artifactId>
-				<version>${bc.web.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-web-struts</artifactId>
-				<version>${bc.web-struts.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-web-struts2</artifactId>
-				<version>${bc.web-struts2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.bc</groupId>
-				<artifactId>bc-websocket</artifactId>
-				<version>${bc.websocket.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-work</artifactId>
-				<version>${bc.work.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-workday</artifactId>
-				<version>${bc.workday.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
-
-			<!-- 其它 -->
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-category</artifactId>
-				<version>${bc.category.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-cert</artifactId>
-				<version>${bc.cert.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.bc</groupId>
 				<artifactId>bc-express</artifactId>
-				<version>${bc.express.version}</version>
-			</dependency>
-
-			<!-- 工作流 -->
-			<dependency>
-				<groupId>cn.bc.workflow</groupId>
-				<artifactId>bc-workflow-core</artifactId>
-				<version>${bc.wf.version}</version>
+				<version>${bc-framework.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<flattenedPomFilename>flattened-pom.xml</flattenedPomFilename>
+							<updatePomFile>true</updatePomFile>
+							<flattenMode>clean</flattenMode>
+							<pomElements>
+								<parent>resolve</parent>
+								<properties>interpolate</properties>
+								<dependencyManagement>keep</dependencyManagement>
+								<pluginManagement>keep</pluginManagement>
+								<name>resolve</name>
+								<description>resolve</description>
+							</pomElements>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
