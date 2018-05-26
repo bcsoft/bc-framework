@@ -224,6 +224,26 @@
 				<artifactId>bc-workflow-core</artifactId>
 				<version>${bc-framework.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>cn.bc.rest</groupId>
+				<artifactId>bc-rest-parent</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.bc.rest</groupId>
+				<artifactId>bc-rest-core</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.bc.rest</groupId>
+				<artifactId>bc-rest-impl-jersey</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.bc.rest</groupId>
+				<artifactId>bc-rest-test</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
