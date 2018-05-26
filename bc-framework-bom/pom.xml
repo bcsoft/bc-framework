@@ -214,6 +214,16 @@
 				<artifactId>bc-express</artifactId>
 				<version>${bc-framework.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>cn.bc.workflow</groupId>
+				<artifactId>bc-workflow-parent</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.bc.workflow</groupId>
+				<artifactId>bc-workflow-core</artifactId>
+				<version>${bc-framework.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

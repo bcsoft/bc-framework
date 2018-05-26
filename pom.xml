@@ -78,6 +78,7 @@
 		<module>bc-category</module>
 		<module>bc-cert</module>
 		<module>bc-express</module>
+		<module>bc-workflow</module>
 	</modules>
 	<url>https://github.com/bcsoft/bc-framework</url>
 	<organization>
