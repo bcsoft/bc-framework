@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>cn.bc</groupId>
-		<artifactId>bc-framework-bom</artifactId>
+		<artifactId>bc-framework-build</artifactId>
 		<version>${revision}</version>
-		<relativePath>../bc-framework-bom</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>bc-parent</artifactId>
 	<packaging>pom</packaging>
@@ -40,9 +40,18 @@
 		<jetty.version>9.3.6.v20151106</jetty.version>
 		<jetty.port>8082</jetty.port>
 		<jetty.path>/</jetty.path>
+		<db.ip>localhost</db.ip>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<!-- BC Framework BOM-->
+			<dependency>
+				<groupId>cn.bc</groupId>
+				<artifactId>bc-framework-bom</artifactId>
+				<version>${bc-framework.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<!-- Spring Framework BOM-->
 			<dependency>
 				<groupId>org.springframework</groupId>

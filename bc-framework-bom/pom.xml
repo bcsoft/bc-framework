@@ -11,6 +11,10 @@
 	<packaging>pom</packaging>
 	<name>bc-framework-bom</name>
 	<description>BC Framework BOM (Bill of Materials)</description>
+	<url>https://github.com/bcsoft/bc-framework/tree/master/bc-framework-bom</url>
+	<scm>
+		<url>https://github.com/bcsoft/bc-framework.git</url>
+	</scm>
 	<dependencyManagement>
 		<dependencies>
 			<!-- 平台通用 -->
@@ -263,14 +267,9 @@
 							<outputDirectory>${project.build.directory}</outputDirectory>
 							<flattenedPomFilename>flattened-pom.xml</flattenedPomFilename>
 							<updatePomFile>true</updatePomFile>
-							<flattenMode>clean</flattenMode>
+							<flattenMode>oss</flattenMode>
 							<pomElements>
-								<parent>resolve</parent>
-								<properties>interpolate</properties>
-								<dependencyManagement>keep</dependencyManagement>
-								<pluginManagement>keep</pluginManagement>
-								<name>resolve</name>
-								<description>resolve</description>
+								<dependencyManagement>resolve</dependencyManagement>
 							</pomElements>
 						</configuration>
 					</execution>

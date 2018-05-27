@@ -7,14 +7,15 @@
 Sn | 名称 | 备注
 :---:|---|---
  1 | bc-framework-build  | 模块构建器，定义全局 properties 和 pluginManagement
- 2 | bc-framework-bom    | 定义全局 dependencyManagement
+ 2 | bc-framework-bom    | 定义 BC 平台所有包的 dependencyManagement
  3 | bc-parent           | 所有子模块的父模块，定义全局 dependencies 和 plugins
  4 | bc-\[other-module\] | 其它子模块
 
 Pom 继承结构 : (A : B 代表 B 是 A 的父模块)
 
 ```
-bc-parent : bc-framework-bom : bc-framework-build
+bc-parent : bc-framework-build
+bc-framework-bom : bc-framework-build
 bc-\[other-module\] : bc-parent
 ```
 

@@ -31,6 +31,8 @@
 		<poi.version>3.14</poi.version>
 	</properties>
 	<modules>
+		<module>bc-framework-bom</module>
+		<module>bc-parent</module>
 		<module>bc-core</module>
 		<module>bc-test</module>
 		<module>bc-db-jdbc</module>
