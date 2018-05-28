@@ -41,6 +41,12 @@
 		<jetty.port>8082</jetty.port>
 		<jetty.path>/</jetty.path>
 		<db.ip>localhost</db.ip>
+		<db.name>bcsystem</db.name>
+		<db.password>${db.name}</db.password>
+		<jndi.name>${db.name}</jndi.name>
+		<db.sequence>hibernate_sequence</db.sequence>
+		<hibernate.show_sql>false</hibernate.show_sql>
+		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -1098,35 +1104,6 @@
 	</profiles>
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<!-- 替换文件中的${...}标记的值 -->
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-					<include>**/log4j.xml</include>
-				</includes>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -1182,6 +1159,47 @@
 					<configuration>
 						<encoding>UTF-8</encoding>
 					</configuration>
+					<executions>
+						<execution>
+							<id>resources</id>
+							<!--<phase>process-resources</phase>-->
+							<goals>
+								<goal>resources</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>src/main/resources</directory>
+										<includes>
+											<include>**/*.properties</include>
+											<include>**/*.xml</include>
+										</includes>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>testResources</id>
+							<!--<phase>process-test-resources</phase>-->
+							<goals>
+								<goal>testResources</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>src/test/resources</directory>
+										<includes>
+											<include>**/*.properties</include>
+											<include>**/*.xml</include>
+											<include>**/log4j.xml</include>
+										</includes>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
