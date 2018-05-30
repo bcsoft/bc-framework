@@ -40,13 +40,6 @@
 		<jetty.version>9.3.6.v20151106</jetty.version>
 		<jetty.port>8082</jetty.port>
 		<jetty.path>/</jetty.path>
-		<db.ip>localhost</db.ip>
-		<db.name>bcsystem</db.name>
-		<db.password>${db.name}</db.password>
-		<jndi.name>${db.name}</jndi.name>
-		<db.sequence>hibernate_sequence</db.sequence>
-		<hibernate.show_sql>false</hibernate.show_sql>
-		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -675,12 +668,18 @@
 
 			<!-- 数据库jdbc驱动 -->
 			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<scope>runtime</scope>
+				<version>2.4.1</version>
+			</dependency>
+			<dependency>
 				<!-- 从9.2版开始转用此新的 groupId -->
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
 				<!-- 9.4.1211 (jdk1.8 jdbc42 2016-09-18), 9.4.1211.jre7 (jdk1.7 jdbc41 2016-09-19), 9.4.1211.jre6 (jdk1.6 jdbc4 2016-09-19) -->
 				<!-- 9.3-1102-jdbc41 2014-07-18, 9.3-1102-jdbc4, 9.2-1004-jdbc41, 9.2-1004-jdbc4 -->
-				<version>9.4.1211</version>
+				<version>42.2.2</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -694,7 +693,7 @@
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.6</version>
+				<version>8.0.11</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -1024,84 +1023,6 @@
 			<scope>provided</scope>
 		</dependency>-->
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>postgresql</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<db.type>postgresql</db.type>
-				<db.name>bcsystem</db.name>
-				<db.port>5432</db.port>
-				<db.username>${db.name}</db.username>
-				<db.password>${db.name}</db.password>
-				<jndi.name>${db.name}</jndi.name>
-				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
-				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
-				<db.sequence>hibernate_sequence</db.sequence>
-				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.postgresql</groupId>
-					<artifactId>postgresql</artifactId>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>mysql</id>
-			<properties>
-				<db.type>mysql</db.type>
-				<db.port>3306</db.port>
-				<db.driverClassName>com.mysql.jdbc.Driver</db.driverClassName>
-				<db.url>
-					<![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?useUnicode=true&characterEncoding=UTF-8]]></db.url>
-				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>oracle</id>
-			<properties>
-				<db.type>oracle</db.type>
-				<db.port>1521</db.port>
-				<db.driverClassName>oracle.jdbc.OracleDriver</db.driverClassName>
-				<db.url><![CDATA[jdbc:oracle:thin:@${db.ip}:${db.port}:${db.name}]]></db.url>
-				<db.sequence>hibernate_sequence</db.sequence>
-				<hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>com.oracle</groupId>
-					<artifactId>ojdbc14</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>mssql</id>
-			<properties>
-				<db.type>mssql</db.type>
-				<db.port>1433</db.port>
-				<db.driverClassName>net.sourceforge.jtds.jdbc.Driver</db.driverClassName>
-				<db.url><![CDATA[jdbc:jtds:sqlserver://${db.ip}:${db.port};DatabaseName=${db.name}]]></db.url>
-				<hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>net.sourceforge.jtds</groupId>
-					<artifactId>jtds</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<plugins>
@@ -1192,7 +1113,6 @@
 										<includes>
 											<include>**/*.properties</include>
 											<include>**/*.xml</include>
-											<include>**/log4j.xml</include>
 										</includes>
 										<filtering>true</filtering>
 									</resource>

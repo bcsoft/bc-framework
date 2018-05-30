@@ -25,8 +25,10 @@
 		</triggeringPolicy>
 	</appender>
 
+	<!-- hibernate -->
+	<logger name="org.hibernate.mapping.RootClass" level="ERROR"/>
 	<logger name="cn.bc" level="WARN"/>
-	<logger name="cn.bc.jpa" level="DEBUG"/>
+	<logger name="cn.bc.orm.jpa" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="console"/>

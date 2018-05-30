@@ -24,56 +24,123 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
-		<!-- for test -->
+		<!-- for test
 		<dependency>
 			<groupId>cn.bc</groupId>
 			<artifactId>bc-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- log -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<properties>
 		<!-- 警示：update/create-drop/create/validate，如果在classpath中有/import.sql文件，
 			hibernate3在启动时会执行 -->
 		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
-		<hibernate.show_sql>true</hibernate.show_sql>
+		<hibernate.show_sql>false</hibernate.show_sql>
 	</properties>
+	<profiles>
+		<profile>
+			<id>dev-hsql</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<datasource.type>embedded</datasource.type>
+				<hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.hsqldb</groupId>
+					<artifactId>hsqldb</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>dev-postgres</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<datasource.type>real</datasource.type>
+				<hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.PostgreSQL94Dialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<db.ip>localhost</db.ip>
+				<db.port>5432</db.port>
+				<db.name>test_bc</db.name>
+				<db.username>test</db.username>
+				<db.password>password</db.password>
+				<db.url><![CDATA[jdbc:postgresql://${db.ip}:${db.port}/${db.name}]]></db.url>
+				<db.driverClassName>org.postgresql.Driver</db.driverClassName>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>dev-mysql</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<datasource.type>real</datasource.type>
+				<hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<db.ip>localhost</db.ip>
+				<db.port>3306</db.port>
+				<db.name>test_bc</db.name>
+				<db.username>test</db.username>
+				<db.password>password</db.password>
+				<db.url><![CDATA[jdbc:mysql://${db.ip}:${db.port}/${db.name}?characterEncoding=UTF-8&amp;useSSL=false]]></db.url>
+				<db.driverClassName>com.mysql.cj.jdbc.Driver</db.driverClassName>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>

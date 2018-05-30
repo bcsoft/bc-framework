@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!--<context:property-placeholder location="classpath:db.properties"/>-->
+	<!-- jpa setup -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<!--<property name="persistenceUnitName" value="default" />-->
+		<property name="dataSource" ref="dataSource"/>
+		<property name="packagesToScan">
+			<list>
+				<value>cn.bc.orm.jpa</value>
+			</list>
+		</property>
+
+		<!-- 声明使用Hibernate的JPA适配器：注意如果不配置这个，应用异常时activiti的数据并不会回滚 -->
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+		</property>
+
+		<!-- 声明使用Hibernate的JPA方言：如果配置了jpaVendorAdapter就无需配置这个，
+				因为 HibernateJpaVendorAdapter 默认已使用了 HibernateJpaDialect
+		<property name="jpaDialect">
+				<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+		</property> -->
+
+		<property name="jpaPropertyMap">
+			<map>
+				<entry key="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}"/>
+				<entry key="hibernate.show_sql" value="${hibernate.show_sql}"/>
+				<entry key="hibernate.dialect" value="${hibernate.dialect}"/>
+			</map>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>
