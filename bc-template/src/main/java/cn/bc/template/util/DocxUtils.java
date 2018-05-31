@@ -1,7 +1,16 @@
 /**
- * 
+ *
  */
 package cn.bc.template.util;
+
+import cn.bc.BCConstants;
+import cn.bc.core.util.FreeMarkerUtils;
+import cn.bc.core.util.TemplateUtils;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,31 +20,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.bc.core.util.FreeMarkerUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-
-import cn.bc.BCConstants;
-import cn.bc.core.util.TemplateUtils;
-
 /**
  * Docx文件处理工具类
- * 
+ *
  * @author dragon
- * 
  */
 public class DocxUtils {
-	protected static Log logger = LogFactory.getLog(DocxUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(DocxUtils.class);
 	private static boolean useFreeMarker = true;
 
 	private DocxUtils() {
@@ -46,7 +37,7 @@ public class DocxUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 */
@@ -61,7 +52,7 @@ public class DocxUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param document
 	 * @return
 	 */
@@ -83,7 +74,7 @@ public class DocxUtils {
 	 * <p>
 	 * 出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<String> findMarkers(InputStream is) {
@@ -95,28 +86,26 @@ public class DocxUtils {
 
 	/**
 	 * 格式化文档
-	 * 
+	 *
 	 * @param is
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static XWPFDocument format(InputStream is,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		XWPFDocument document = loadDocument(is);
 		return format(document, markerValues);
 	}
 
 	/**
 	 * 格式化文档
-	 * 
+	 *
 	 * @param document
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static XWPFDocument format(XWPFDocument document,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		if (document == null) {
 			if (logger.isWarnEnabled())
 				logger.warn("format error:document is null");
@@ -178,7 +167,7 @@ public class DocxUtils {
 	 * @param _pattern
 	 */
 	private static void formatTables(List<XWPFTable> tables,
-			Map<String, Object> markerValues, Pattern _pattern) {
+	                                 Map<String, Object> markerValues, Pattern _pattern) {
 		if (tables == null || tables.isEmpty())
 			return;
 
@@ -219,7 +208,7 @@ public class DocxUtils {
 
 	// 格式化一个段落
 	public static void formatParagraph(XWPFParagraph paragraph,
-			Map<String, Object> markerValues, Pattern p) {
+	                                   Map<String, Object> markerValues, Pattern p) {
 		Matcher m;
 		String k;
 		String target;
@@ -234,12 +223,12 @@ public class DocxUtils {
 						logger.debug("k=" + k + ",s=" + t.getStringValue());
 					if (useFreeMarker) {
 						target = FreeMarkerUtils.format(t.getStringValue(),
-								markerValues);
+							markerValues);
 					} else {
 						target = t.getStringValue().replaceAll(
-								"\\$\\{" + k + "\\}",
-								markerValues.get(k) != null ? markerValues.get(
-										k).toString() : "");
+							"\\$\\{" + k + "\\}",
+							markerValues.get(k) != null ? markerValues.get(
+								k).toString() : "");
 					}
 					t.setStringValue(target);
 				}

@@ -4,8 +4,8 @@ import cn.bc.db.jdbc.RowMapper;
 import cn.bc.orm.jpa.JpaCrudDao;
 import cn.bc.template.dao.TemplateParamDao;
 import cn.bc.template.domain.TemplateParam;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -23,7 +23,8 @@ import java.util.Map;
  * @author lbj
  */
 public class TemplateParamDaoImpl extends JpaCrudDao<TemplateParam> implements TemplateParamDao {
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static Logger logger = LoggerFactory.getLogger(TemplateParamDaoImpl.class);
+
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
@@ -45,7 +46,7 @@ public class TemplateParamDaoImpl extends JpaCrudDao<TemplateParam> implements T
 	}
 
 	public List<Map<String, Object>> getListIncludeMap(String sql)
-			throws Exception {
+		throws Exception {
 		return jdbcTemplate.queryForList(sql);
 	}
 

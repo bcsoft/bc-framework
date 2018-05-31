@@ -1,62 +1,46 @@
 /**
- * 
+ *
  */
 package cn.bc.template.domain;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.springframework.util.FileCopyUtils;
-
 import cn.bc.BCConstants;
 import cn.bc.category.domain.Category;
+import cn.bc.core.util.FreeMarkerUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.RichFileEntityImpl;
 import cn.bc.identity.web.SystemContextHolder;
 import cn.bc.template.util.DocxUtils;
-import cn.bc.core.util.FreeMarkerUtils;
 import cn.bc.template.util.XlsUtils;
 import cn.bc.template.util.XlsxUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.FileCopyUtils;
+
+import javax.persistence.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 模板
- * 
+ *
  * @author lbj
  */
 @Entity
 @Table(name = "BC_TEMPLATE")
 public class Template extends RichFileEntityImpl {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(Template.class);
+	private static Logger logger = LoggerFactory.getLogger(Template.class);
 	public static final String ATTACH_TYPE = Template.class.getSimpleName();
-	/** 模板存储的子路径，开头末尾不要带"/" */
+	/**
+	 * 模板存储的子路径，开头末尾不要带"/"
+	 */
 	public static String DATA_SUB_PATH = "template";
 
 	private String orderNo;// 排序号
@@ -68,7 +52,7 @@ public class Template extends RichFileEntityImpl {
 	private String desc;// 备注
 	private String version;// 版本号
 	private TemplateType templateType;
-	private Long size;// 文件的大小(单位为字节) 默认0
+	private long size;// 文件的大小(单位为字节) 默认0
 	private boolean formatted;// 格式化：模板是否允许格式化 默认否
 	private Set<TemplateParam> params;// 模板所使用的参数
 	private Set<Category> categorys;// 所属分类
@@ -165,7 +149,7 @@ public class Template extends RichFileEntityImpl {
 	 * <p>
 	 * 如果附件不是纯文本类型返回null,如果是自定义文本内容直接返回配置的内容,如果是纯文本附件返回附件的内容
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	@Transient
@@ -178,9 +162,8 @@ public class Template extends RichFileEntityImpl {
 	 * <p>
 	 * 如果附件不是纯文本类型返回null,如果是自定义文本内容直接返回配置的内容,如果是纯文本附件返回附件的内容
 	 * </p>
-	 * 
-	 * @param args
-	 *            格式化参数，为空代表不执行格式化
+	 *
+	 * @param args 格式化参数，为空代表不执行格式化
 	 * @return
 	 */
 	public String getContentEx(Map<String, Object> args) {
@@ -195,16 +178,16 @@ public class Template extends RichFileEntityImpl {
 		} else {
 			// 读取文件流的字符串内容
 			String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
-					+ this.getPath();
+				+ this.getPath();
 			File file = new File(p);
 			try {
 				txt = FileCopyUtils.copyToString(new InputStreamReader(
-						new FileInputStream(file), "UTF-8"));
+					new FileInputStream(file), "UTF-8"));
 			} catch (FileNotFoundException e) {
 				logger.warn("getContent 附件文件不存在:file=" + p);
 			} catch (IOException e) {
 				logger.warn("getContent 读取模板文件错误:file=" + p + ",error="
-						+ e.getMessage());
+					+ e.getMessage());
 			}
 		}
 
@@ -220,7 +203,7 @@ public class Template extends RichFileEntityImpl {
 	 * <p>
 	 * 如果是自定义文本内容返回由此内容构成的内存流,如果是附件类型返回附件流
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	@Transient
@@ -234,7 +217,7 @@ public class Template extends RichFileEntityImpl {
 
 		// 读取文件流并返回
 		String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
-				+ this.getPath();
+			+ this.getPath();
 		File file = new File(p);
 		try {
 			return new FileInputStream(file);
@@ -249,7 +232,7 @@ public class Template extends RichFileEntityImpl {
 	 * <p>
 	 * 如果是自定义文本内容返回此内容字节的长度,如果是附件类型返回附件长度
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	@Transient
@@ -262,7 +245,7 @@ public class Template extends RichFileEntityImpl {
 		}
 		//
 		String p = Attach.DATA_REAL_PATH + "/" + DATA_SUB_PATH + "/"
-				+ this.getPath();
+			+ this.getPath();
 		File file = new File(p);
 		return file.length();
 	}
@@ -299,7 +282,7 @@ public class Template extends RichFileEntityImpl {
 
 	/**
 	 * 判断是否是纯文本型模板
-	 * 
+	 *
 	 * @return
 	 */
 	@Transient
@@ -309,7 +292,7 @@ public class Template extends RichFileEntityImpl {
 
 	/**
 	 * 用指定的参数格式化此模板，并将结果保存为附件
-	 * 
+	 *
 	 * @param params
 	 * @param ptype
 	 * @param puid
@@ -317,7 +300,7 @@ public class Template extends RichFileEntityImpl {
 	 * @throws IOException
 	 */
 	public Attach format2Attach(Map<String, Object> params, String ptype,
-			String puid) throws IOException {
+	                            String puid) throws IOException {
 		Attach attach = new Attach();
 		attach.setAuthor(SystemContextHolder.get().getUserHistory());
 		attach.setFileDate(Calendar.getInstance());
@@ -330,7 +313,7 @@ public class Template extends RichFileEntityImpl {
 			extension = "txt";
 		else
 			extension = this.getPath().substring(
-					this.getPath().lastIndexOf(".") + 1);
+				this.getPath().lastIndexOf(".") + 1);
 		attach.setFormat(extension);
 		attach.setStatus(BCConstants.STATUS_ENABLED);
 
@@ -341,7 +324,7 @@ public class Template extends RichFileEntityImpl {
 		// 要保存的物理文件
 		String realpath;// 绝对路径名
 		String fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(now
-				.getTime()) + "." + extension;// 不含路径的文件名
+			.getTime()) + "." + extension;// 不含路径的文件名
 		realpath = Attach.DATA_REAL_PATH + "/" + datedir + "/" + fileName;
 
 		// 构建文件要保存到的目录
@@ -358,28 +341,28 @@ public class Template extends RichFileEntityImpl {
 			// 格式化并保存到文件
 			if ("docx".equalsIgnoreCase(this.getTemplateType().getExtension())) {// Word2007+
 				XWPFDocument docx = DocxUtils.format(this.getInputStream(),
-						params);
+					params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				docx.write(out);
 				out.close();
 			} else if ("xls".equalsIgnoreCase(this.getTemplateType()
-					.getExtension())) {// Excel97-2003
+				.getExtension())) {// Excel97-2003
 				HSSFWorkbook xls = XlsUtils.format(this.getInputStream(),
-						params);
+					params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				xls.write(out);
 				out.close();
 			} else if ("xlsx".equalsIgnoreCase(this.getTemplateType()
-					.getExtension())) {// Excel2007+
+				.getExtension())) {// Excel2007+
 				XSSFWorkbook xlsx = XlsxUtils.format(this.getInputStream(),
-						params);
+					params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				xlsx.write(out);
 				out.close();
 			} else if ("html".equalsIgnoreCase(this.getTemplateType()
-					.getExtension())) {// html
+				.getExtension())) {// html
 				String s = FreeMarkerUtils.format(
-						TemplateUtils.loadText(this.getInputStream()), params);
+					TemplateUtils.loadText(this.getInputStream()), params);
 				FileOutputStream out = new FileOutputStream(realpath);
 				out.write(s.getBytes());
 				out.close();
@@ -392,14 +375,14 @@ public class Template extends RichFileEntityImpl {
 				if (logger.isInfoEnabled())
 					logger.info("pure copy file");
 				FileCopyUtils.copy(this.getInputStream(), new FileOutputStream(
-						realpath));
+					realpath));
 			}
 		} else {
 			// 直接复制附件
 			if (logger.isInfoEnabled())
 				logger.info("pure copy file");
 			FileCopyUtils.copy(this.getInputStream(), new FileOutputStream(
-					realpath));
+				realpath));
 		}
 
 		// 设置附件大小

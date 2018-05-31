@@ -1,30 +1,27 @@
 /**
- * 
+ *
  */
 package cn.bc.template.util;
+
+import cn.bc.core.util.TemplateUtils;
+import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.poi.hssf.extractor.ExcelExtractor;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jxls.transformer.XLSTransformer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.extractor.ExcelExtractor;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import cn.bc.core.util.TemplateUtils;
-
 /**
  * Xls文件处理工具类
- * 
+ *
  * @author dragon
- * 
  */
 public class XlsUtils {
-	protected static Log logger = LogFactory.getLog(XlsUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(XlsUtils.class);
 
 	private XlsUtils() {
 	}
@@ -34,7 +31,7 @@ public class XlsUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 */
@@ -49,7 +46,7 @@ public class XlsUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param workbook
 	 * @return
 	 */
@@ -71,7 +68,7 @@ public class XlsUtils {
 	 * <p>
 	 * 出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<String> findMarkers(InputStream is) {
@@ -82,28 +79,26 @@ public class XlsUtils {
 
 	/**
 	 * 格式化文档
-	 * 
+	 *
 	 * @param is
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static HSSFWorkbook format(InputStream is,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		HSSFWorkbook document = loadDocument(is);
 		return format(document, markerValues);
 	}
 
 	/**
 	 * 格式化文档：使用jxls组件的XLSTransformer
-	 * 
+	 *
 	 * @param workbook
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static HSSFWorkbook format(HSSFWorkbook workbook,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		if (workbook == null) {
 			if (logger.isWarnEnabled())
 				logger.warn("format error:document is null");

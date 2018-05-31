@@ -1,27 +1,24 @@
 /**
- * 
+ *
  */
 package cn.bc.template.util;
+
+import cn.bc.core.exception.CoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import cn.bc.core.exception.CoreException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 使用FreeMarker的模板工具类
- * 
+ *
  * @author dragon
- * 
  */
 public class FreeMarkerUtils {
-	protected static Logger logger = LoggerFactory.getLogger(FreeMarkerUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(FreeMarkerUtils.class);
 
 	private FreeMarkerUtils() {
 	}
@@ -36,11 +33,9 @@ public class FreeMarkerUtils {
 	 * 则返回的值为：国籍=中华人民共和国, 姓名=伏羲氏<br>
 	 * 另外，参数也接受类似:obj.property的格式，更多请参考FreeMarker的模板语法http://freemarker.org/
 	 * </p>
-	 * 
-	 * @param tpl
-	 *            所要格式化的字符串模板
-	 * @param args
-	 *            参数值
+	 *
+	 * @param tpl  所要格式化的字符串模板
+	 * @param args 参数值
 	 * @return 返回格式化好的字符串
 	 * @throws Exception
 	 */
@@ -57,7 +52,7 @@ public class FreeMarkerUtils {
 		// 构建模板
 		try {
 			freemarker.template.Template template = new freemarker.template.Template(
-					"innerName", new StringReader(tpl), null);
+				"innerName", new StringReader(tpl), null);
 
 			// 合并数据模型与模板
 			Writer out = new StringWriter();

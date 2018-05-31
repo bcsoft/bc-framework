@@ -1,7 +1,16 @@
 /**
- * 
+ *
  */
 package cn.bc.template.util;
+
+import cn.bc.core.util.TemplateUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,24 +20,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import cn.bc.core.util.TemplateUtils;
-
 /**
  * Xlsx文件处理工具类
- * 
+ *
  * @author dragon
- * 
  */
 public class XlsxUtils {
-	protected static Log logger = LogFactory.getLog(XlsxUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(XlsxUtils.class);
 
 	private XlsxUtils() {
 	}
@@ -38,7 +36,7 @@ public class XlsxUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 */
@@ -53,7 +51,7 @@ public class XlsxUtils {
 	 * <p>
 	 * 注意如果文件内含表格，其内容将在最后；加载出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @param workbook
 	 * @return
 	 */
@@ -75,7 +73,7 @@ public class XlsxUtils {
 	 * <p>
 	 * 出现的任何异常都将导致返回null值
 	 * </p>
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<String> findMarkers(InputStream is) {
@@ -86,28 +84,26 @@ public class XlsxUtils {
 
 	/**
 	 * 格式化文档
-	 * 
+	 *
 	 * @param is
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static XSSFWorkbook format(InputStream is,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		XSSFWorkbook document = loadDocument(is);
 		return format(document, markerValues);
 	}
 
 	/**
 	 * 格式化文档
-	 * 
+	 *
 	 * @param workbook
-	 * @param markerValues
-	 *            格式化参数
+	 * @param markerValues 格式化参数
 	 * @return 返回格式化后的文档
 	 */
 	public static XSSFWorkbook format(XSSFWorkbook workbook,
-			Map<String, Object> markerValues) {
+	                                  Map<String, Object> markerValues) {
 		if (workbook == null) {
 			if (logger.isWarnEnabled())
 				logger.warn("format error:document is null");
@@ -148,7 +144,7 @@ public class XlsxUtils {
 
 	// 格式化一个工作表
 	public static void formatSheet(XSSFSheet sheet,
-			Map<String, Object> markerValues, Pattern pattern) {
+	                               Map<String, Object> markerValues, Pattern pattern) {
 		Iterator<Row> rows = sheet.rowIterator();
 		while (rows.hasNext()) {
 			formatRow(rows.next(), markerValues, pattern);
@@ -157,7 +153,7 @@ public class XlsxUtils {
 
 	// 格式化一行
 	private static void formatRow(Row row, Map<String, Object> markerValues,
-			Pattern pattern) {
+	                              Pattern pattern) {
 		Iterator<Cell> cells = row.cellIterator();
 		while (cells.hasNext()) {
 			formatCell(cells.next(), markerValues, pattern);
@@ -166,7 +162,7 @@ public class XlsxUtils {
 
 	// 格式化一个单元格
 	private static void formatCell(Cell cell, Map<String, Object> markerValues,
-			Pattern pattern) {
+	                               Pattern pattern) {
 		String s = cell.getStringCellValue();
 		Matcher m;
 		String k;
@@ -177,7 +173,7 @@ public class XlsxUtils {
 			if (logger.isDebugEnabled())
 				logger.debug("k=" + k + ",s=" + s);
 			cell.setCellValue(s.replaceAll("\\$\\{" + k + "\\}", markerValues
-					.get(k) != null ? markerValues.get(k).toString() : ""));
+				.get(k) != null ? markerValues.get(k).toString() : ""));
 		}
 		if (m.find()) {
 			logger.warn("formatCell TODO: more than one matcher.");

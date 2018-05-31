@@ -1,11 +1,5 @@
 package cn.bc.template.web.struts2;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.stereotype.Controller;
-
 import cn.bc.BCConstants;
 import cn.bc.core.exception.CoreException;
 import cn.bc.identity.web.SystemContext;
@@ -15,12 +9,17 @@ import cn.bc.template.service.TemplateTypeService;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import cn.bc.web.ui.json.Json;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import javax.persistence.PersistenceException;
 
 /**
  * 模板类型表单Action
- * 
+ *
  * @author lbj
- * 
  */
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -41,22 +40,22 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		SystemContext context = (SystemContext) this.getContext();
 		// 配置权限：模板管理员
 		return !context.hasAnyRole(getText("key.role.bc.template"),
-				getText("key.role.bc.admin"));
+			getText("key.role.bc.admin"));
 	}
 
 
 	@Override
 	protected PageOption buildFormPageOption(boolean editable) {
 		return super.buildFormPageOption(editable).setWidth(510)
-				.setMinHeight(200).setMinWidth(300);
+			.setMinHeight(200).setMinWidth(300);
 	}
-	
+
 	@Override
 	protected void buildFormPageButtons(PageOption pageOption, boolean editable) {
 		if (!this.isReadonly()) {
 			if (editable)
 				pageOption.addButton(new ButtonOption(getText("label.save"),
-						null, "bc.templateTypeForm.save").setId("templateTypeSave"));
+					null, "bc.templateTypeForm.save").setId("templateTypeSave"));
 		}
 	}
 
@@ -69,7 +68,7 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		entity.setPath(true);
 		//纯文本
 		entity.setPureText(false);
-	}	
+	}
 
 	@Override
 	public String delete() throws Exception {
@@ -79,19 +78,19 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 			} else {// 删除一批
 				if (this.getIds() != null && this.getIds().length() > 0) {
 					Long[] ids = cn.bc.core.util.StringUtils
-							.stringArray2LongArray(this.getIds().split(","));
+						.stringArray2LongArray(this.getIds().split(","));
 					this.getCrudService().delete(ids);
 				} else {
 					throw new CoreException("must set property id or ids");
 				}
 			}
-		} catch (JpaSystemException e) {
+		} catch (PersistenceException e) {
 			// 处理违反外键约束导致的删除异常，提示用户因关联而无法删除
 			//throw new CoreException("JpaSystemException");
-			
+
 			Json json = new Json();
 			json.put("msg", getText("templateType.msg.delete"));
-			this.json=json.toString();
+			this.json = json.toString();
 			return "json";
 		}
 		return "deleteSuccess";
@@ -104,7 +103,7 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 	public String isUniqueCode() {
 		Json json = new Json();
 		boolean flag = this.templateTypeService.isUniqueCode(this.tid,
-				code);
+			code);
 		if (flag) {
 			json.put("result", getText("template.save.code"));
 			this.json = json.toString();
@@ -117,25 +116,25 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 	}
 
 	//id加载一个模板类型的明细
-	public String loadOneById(){
-		if(tid == null)return "json";
-		TemplateType tt=templateTypeService.load(tid);
-		if(tt == null)return "json";
-		this.json=this.setTemplateType4Json(tt);
+	public String loadOneById() {
+		if (tid == null) return "json";
+		TemplateType tt = templateTypeService.load(tid);
+		if (tt == null) return "json";
+		this.json = this.setTemplateType4Json(tt);
 		return "json";
 	}
-	
+
 	//code加载一个模板类型的明细
-	public String loadOneByCode(){
-		if(code == null&&code.length() == 0)return "json";
-		TemplateType tt=templateTypeService.loadByCode(code);
-		if(tt == null)return "json";
-		this.json=this.setTemplateType4Json(tt);
+	public String loadOneByCode() {
+		if (code == null && code.length() == 0) return "json";
+		TemplateType tt = templateTypeService.loadByCode(code);
+		if (tt == null) return "json";
+		this.json = this.setTemplateType4Json(tt);
 		return "json";
 	}
-	
+
 	//将一个对象转为json格式
-	private String setTemplateType4Json(TemplateType tt){
+	private String setTemplateType4Json(TemplateType tt) {
 		Json json = new Json();
 		json.put("id", tt.getId());
 		json.put("code", tt.getCode());
@@ -145,5 +144,5 @@ public class TemplateTypeAction extends FileEntityAction<Long, TemplateType> {
 		json.put("isPureText", tt.isPureText());
 		return json.toString();
 	}
-	
+
 }

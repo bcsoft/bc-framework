@@ -19,7 +19,6 @@ import cn.bc.identity.domain.FileEntityImpl;
 public class TemplateType extends FileEntityImpl {
 	private static final long serialVersionUID = 1L;
 
-
 	private int status;// 状态：0-正常,1-禁用
 	private String orderNo;// 排序号
 	private String code;// 编码
