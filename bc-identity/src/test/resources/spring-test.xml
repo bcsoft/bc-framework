@@ -13,7 +13,8 @@
 	<context:component-scan base-package="cn.bc"/>
 
 	<!-- 数据库连接及事务管理配置 -->
-	<import resource="classpath:spring-test-db.xml"/>
+	<import resource="classpath:spring-test-jpa.xml"/>
+	<import resource="classpath:spring-test-datasource-${datasource.type}.xml"/>
 
 	<!-- 标准的crud事务拦截配置：拦截所有实现CrudService接口的类 -->
 	<import resource="classpath:cn/bc/core/spring.xml"/>

@@ -1,21 +1,7 @@
 /**
- * 
+ *
  */
 package cn.bc.identity.web.struts2;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 
 import cn.bc.core.Page;
 import cn.bc.core.exception.CoreException;
@@ -34,21 +20,31 @@ import cn.bc.web.ui.html.grid.GridExporter;
 import cn.bc.web.ui.html.grid.IdColumn;
 import cn.bc.web.ui.html.grid.TextColumn;
 import cn.bc.web.util.WebUtils;
-
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 职务Action
- * 
+ *
  * @author dragon
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class DutyAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
-	private static Log logger = LogFactory.getLog(DutyAction.class);
-
+	private static Logger logger = LoggerFactory.getLogger(DutyAction.class);
 	private DutyService dutyService;
 	private IdGeneratorService idGeneratorService;
 	private Long id;
@@ -148,7 +144,7 @@ public class DutyAction extends ActionSupport {
 		} else {// 删除一批
 			if (this.getIds() != null && this.getIds().length() > 0) {
 				Long[] ids = StringUtils.stringArray2LongArray(this.getIds()
-						.split(","));
+					.split(","));
 				this.dutyService.delete(ids);
 			} else {
 				throw new CoreException("must set property id or ids");
@@ -165,7 +161,7 @@ public class DutyAction extends ActionSupport {
 
 	protected List<Duty> findList() {
 		return this.dutyService.createQuery()
-				.condition(this.getCondition()).list();
+			.condition(this.getCondition()).list();
 	}
 
 	// 获取列表视图页面----分页
@@ -183,19 +179,19 @@ public class DutyAction extends ActionSupport {
 
 	protected Page<Duty> findPage() {
 		return this.dutyService.createQuery()
-				.condition(this.getCondition())
-				.page(page.getPageNo(), page.getPageSize());
+			.condition(this.getCondition())
+			.page(page.getPageNo(), page.getPageSize());
 	}
 
 	// 页面条件
 	protected Condition getCondition() {
 		return new AndCondition().add(getSpecalCondition())
-				.add(getSearchCondition()).add(getOrderCondition());
+			.add(getSearchCondition()).add(getOrderCondition());
 	}
 
 	/**
 	 * 构建排序条件
-	 * 
+	 *
 	 * @return
 	 */
 	protected OrderCondition getOrderCondition() {
@@ -207,15 +203,15 @@ public class DutyAction extends ActionSupport {
 		String[] cfg = cfgs[0].split(" ");
 
 		OrderCondition oc = new OrderCondition(cfg[0],
-				cfg.length > 1 ? (Direction.Desc.toSymbol().equalsIgnoreCase(
-						cfg[1]) ? Direction.Desc : Direction.Asc)
-						: Direction.Asc);
+			cfg.length > 1 ? (Direction.Desc.toSymbol().equalsIgnoreCase(
+				cfg[1]) ? Direction.Desc : Direction.Asc)
+				: Direction.Asc);
 
 		for (int i = 1; i < cfgs.length; i++) {
 			cfg = cfgs[i].split(" ");
 			oc.add(cfg[0], cfg.length > 1 ? (Direction.Desc.toSymbol()
-					.equalsIgnoreCase(cfg[1]) ? Direction.Desc : Direction.Asc)
-					: Direction.Asc);
+				.equalsIgnoreCase(cfg[1]) ? Direction.Desc : Direction.Asc)
+				: Direction.Asc);
 		}
 
 		return oc;
@@ -223,7 +219,7 @@ public class DutyAction extends ActionSupport {
 
 	/**
 	 * 构建默认的排序条件，通常用于子类复写
-	 * 
+	 *
 	 * @return
 	 */
 	protected OrderCondition getDefaultOrderCondition() {
@@ -232,7 +228,7 @@ public class DutyAction extends ActionSupport {
 
 	/**
 	 * 构建特殊的条件，通常用于子类复写
-	 * 
+	 *
 	 * @return
 	 */
 	protected Condition getSpecalCondition() {
@@ -241,14 +237,14 @@ public class DutyAction extends ActionSupport {
 
 	/**
 	 * 构建查询条件
-	 * 
+	 *
 	 * @return
 	 */
 	protected Condition getSearchCondition() {
 		if (this.search != null && this.search.length() > 0) {
 			return new OrCondition()
-					.add(new LikeCondition("code", this.search)).add(
-							new LikeCondition("name", this.search));
+				.add(new LikeCondition("code", this.search)).add(
+					new LikeCondition("name", this.search));
 		} else {
 			return null;
 		}
@@ -258,12 +254,12 @@ public class DutyAction extends ActionSupport {
 	public String data() throws Exception {
 		if (this.page != null) {// 分页的处理
 			this.page = this.dutyService.createQuery()
-					.condition(this.getCondition())
-					.page(page.getPageNo(), page.getPageSize());
+				.condition(this.getCondition())
+				.page(page.getPageNo(), page.getPageSize());
 			this.es = page.getData();
 		} else {// 非分页的处理
 			this.es = this.dutyService.createQuery()
-					.condition(this.getCondition()).list();
+				.condition(this.getCondition()).list();
 		}
 		return "data";
 	}
@@ -285,7 +281,7 @@ public class DutyAction extends ActionSupport {
 			fileName = getText("export.default.fileName") + getText("duty");// 默认的文件名
 		String title = fileName;
 		fileName = WebUtils.encodeFileName(ServletActionContext.getRequest(),
-				fileName);
+			fileName);
 
 		// 确定下载文件处理方法
 		// contentDisposition = "inline;filename=\"" +fileName
@@ -303,7 +299,7 @@ public class DutyAction extends ActionSupport {
 		// 导出数据到Excel
 		GridExporter exporter = new GridExporter();
 		exporter.setColumns(this.buildGridColumns()).setTitle(title)
-				.setData(this.es).setIdLabel(getText("label.idLabel"));
+			.setData(this.es).setIdLabel(getText("label.idLabel"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
 		exporter.exportTo(out);
 		this.inputStream = new ByteArrayInputStream(out.toByteArray());
@@ -324,22 +320,22 @@ public class DutyAction extends ActionSupport {
 		columns.add(new IdColumn());
 		if (this.useColumn("code"))
 			columns.add(new TextColumn("code", getText("duty.code"))
-					.setSortable(true));
+				.setSortable(true));
 		if (this.useColumn("name"))
 			columns.add(new TextColumn("name", getText("duty.name"), 100)
-					.setSortable(true));
+				.setSortable(true));
 		return columns;
 	}
 
 	/**
 	 * 判断指定的列是否应该添加
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
 	protected boolean useColumn(String key) {
 		return !this.exporting
-				|| (this.exportKeys == null || this.exportKeys.length() == 0 || this.exportKeys
-						.indexOf(key) != -1);
+			|| (this.exportKeys == null || this.exportKeys.length() == 0 || this.exportKeys
+			.indexOf(key) != -1);
 	}
 }

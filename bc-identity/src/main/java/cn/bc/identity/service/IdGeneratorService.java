@@ -36,7 +36,7 @@ public interface IdGeneratorService {
 	Long nextValue(String type);
 
 	/**
-	 * 获取当前值，改值是未经任何格式的原始值
+	 * 获取当前值，该值是未经任何格式的原始值
 	 * 
 	 * @param type
 	 * @return

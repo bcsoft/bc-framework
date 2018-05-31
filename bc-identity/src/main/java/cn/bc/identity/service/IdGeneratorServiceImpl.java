@@ -1,26 +1,23 @@
 package cn.bc.identity.service;
 
+import cn.bc.BCConstants;
+import cn.bc.identity.dao.IdGeneratorDao;
+import cn.bc.identity.domain.IdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import cn.bc.BCConstants;
-import cn.bc.identity.dao.IdGeneratorDao;
-import cn.bc.identity.domain.IdGenerator;
-import org.springframework.stereotype.Service;
-
 /**
  * 标识生成器Service接口的实现
- * 
+ *
  * @author dragon
- * 
  */
 public class IdGeneratorServiceImpl implements IdGeneratorService {
-	private static Log logger = LogFactory.getLog(IdGeneratorServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(IdGeneratorServiceImpl.class);
 	protected IdGeneratorDao idGeneratorDao;
 
 	@Autowired
@@ -90,18 +87,18 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 	protected String formatValue(String type, Long value, String format) {
 		if (logger.isDebugEnabled())
 			logger.debug("formatValue:type=" + type + ";value=" + value
-					+ ";format=" + format);
+				+ ";format=" + format);
 		if (format == null || format.length() == 0) {
 			return String.valueOf(value);
 		} else {
 			// TODO:${DATE},${TIME},${S}
 			return format.replaceAll("\\$\\{T\\}", type).replaceAll(
-					"\\$\\{V\\}", value.toString());
+				"\\$\\{V\\}", value.toString());
 		}
 	}
 
 	private final static SimpleDateFormat format4month = new SimpleDateFormat(
-			"yyyyMM");
+		"yyyyMM");
 
 	public String nextSN4Month(String type, String pattern) {
 		// 获取当前月份信息yyyyMMdd
@@ -119,7 +116,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 	}
 
 	private final static SimpleDateFormat format4day = new SimpleDateFormat(
-			"yyyyMMdd");
+		"yyyyMMdd");
 
 	public String nextSN4Day(String type) {
 		return nextSN4Day(type, "0000");

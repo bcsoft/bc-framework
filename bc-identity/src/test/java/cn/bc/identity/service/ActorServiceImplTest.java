@@ -1,12 +1,8 @@
 package cn.bc.identity.service;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
+import cn.bc.BCConstants;
+import cn.bc.identity.domain.*;
+import cn.bc.test.AbstractEntityCrudTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,13 +11,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.BCConstants;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.ActorDetail;
-import cn.bc.identity.domain.ActorRelation;
-import cn.bc.identity.domain.Resource;
-import cn.bc.identity.domain.Role;
-import cn.bc.test.AbstractEntityCrudTest;
+import java.io.Serializable;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -52,7 +43,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 
 	@Autowired
 	public void setActorRelationService(
-			ActorRelationService actorRelationService) {
+		ActorRelationService actorRelationService) {
 		this.actorRelationService = actorRelationService;
 	}
 
@@ -98,23 +89,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Assert.assertNotNull(entity.getDetail().getId());
 		Assert.assertEquals(now, entity.getDetail().getCalendar("createDate"));
 		Assert.assertEquals(now,
-				((ActorDetail) entity.getDetail()).getCreateDate());
+			((ActorDetail) entity.getDetail()).getCreateDate());
 		return entity;
-	}
-
-	@Test
-	public void testLoadAdmin() {
-		String actorCode = "admin";
-		Actor _user = this.actorService.loadByCode(actorCode);
-		Assert.assertNotNull(_user);
-		// Set<Role> roles = _user.getRoles();
-		// Assert.assertNotNull(roles);
-		// for(Role role:roles){
-		// System.out.println(role.getName());
-		// for(Module m:role.getModules()){
-		// System.out.println(m.getName());
-		// }
-		// }
 	}
 
 	@Test
@@ -148,7 +124,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		Assert.assertNotNull(entity.getDetail());
 		Assert.assertEquals(now, entity.getDetail().getCalendar("createDate"));
 		Assert.assertEquals(now,
-				((ActorDetail) entity.getDetail()).getCreateDate());
+			((ActorDetail) entity.getDetail()).getCreateDate());
 	}
 
 	private Actor saveOneWithRoles() {
@@ -276,7 +252,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cunit);
 		Assert.assertNotNull(cunit.getId());
 		ActorRelation ar0 = createActorRelation(unit, cunit,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar0);
 
 		// 单位下的部门1
@@ -284,7 +260,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar1);
 
 		// 单位下的部门2
@@ -292,7 +268,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep2);
 		Assert.assertNotNull(dep2.getId());
 		ActorRelation ar2 = createActorRelation(unit, dep2,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar2);
 
 		// 部门1下的子部门1
@@ -300,13 +276,13 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar3);
 
 		// 反查单位1下的部门列表
 		List<Actor> children = this.actorService.findFollower(unit.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_DEPARTMENT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_DEPARTMENT});
 		Assert.assertNotNull(children);
 		Assert.assertEquals(2, children.size());
 		Assert.assertEquals(dep1, children.get(0));
@@ -314,16 +290,16 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 
 		// 反查单位1下的子单位列表
 		children = this.actorService.findFollower(unit.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_UNIT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_UNIT});
 		Assert.assertNotNull(children);
 		Assert.assertEquals(1, children.size());
 		Assert.assertEquals(cunit, children.get(0));
 
 		// 反查单位1下的子单位+部门列表
 		children = this.actorService.findFollower(unit.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG }, new Integer[] {
-						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
+			new Integer[]{ActorRelation.TYPE_BELONG}, new Integer[]{
+				Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT});
 		Assert.assertNotNull(children);
 		Assert.assertEquals(3, children.size());
 		Assert.assertEquals(cunit, children.get(0));
@@ -332,8 +308,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 
 		// 反查部门1下的子部门列表
 		children = this.actorService.findFollower(dep1.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_DEPARTMENT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_DEPARTMENT});
 		Assert.assertNotNull(children);
 		Assert.assertEquals(1, children.size());
 		Assert.assertEquals(cdep1, children.get(0));
@@ -351,7 +327,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cunit);
 		Assert.assertNotNull(cunit.getId());
 		ActorRelation ar0 = createActorRelation(unit, cunit,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar0);
 
 		// 单位下的部门1
@@ -359,7 +335,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 单位下的部门2
@@ -367,41 +343,41 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep2);
 		Assert.assertNotNull(dep2.getId());
 		ActorRelation ar2 = createActorRelation(unit, dep2,
-				ActorRelation.TYPE_BELONG, "01");// 隶属单位1
+			ActorRelation.TYPE_BELONG, "01");// 隶属单位1
 		actorRelationService.save(ar2);
 		ActorRelation ar22 = createActorRelation(cunit, dep2,
-				ActorRelation.TYPE_BELONG, null);// 同时隶属单位1下的子单位1: 矩阵式结构
+			ActorRelation.TYPE_BELONG, null);// 同时隶属单位1下的子单位1: 矩阵式结构
 		actorRelationService.save(ar22);
 
 		// 部门1下的子部门1
 		Actor cdep1 = this
-				.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
+			.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
-				ActorRelation.TYPE_BELONG, "01");
+			ActorRelation.TYPE_BELONG, "01");
 		actorRelationService.save(ar3);
 
 		// 反查子单位1的上级单位1
 		List<Actor> parents = this.actorService.findMaster(cunit.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_UNIT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_UNIT});
 		Assert.assertNotNull(parents);
 		Assert.assertEquals(1, parents.size());
 		Assert.assertEquals(unit, parents.get(0));
 
 		// 反查部门1的上级单位1
 		parents = this.actorService.findMaster(dep1.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_UNIT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_UNIT});
 		Assert.assertNotNull(parents);
 		Assert.assertEquals(1, parents.size());
 		Assert.assertEquals(unit, parents.get(0));
 
 		// 反查部门2的上级单位+部门
 		parents = this.actorService.findMaster(dep2.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG }, new Integer[] {
-						Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT });
+			new Integer[]{ActorRelation.TYPE_BELONG}, new Integer[]{
+				Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT});
 		Assert.assertNotNull(parents);
 		Assert.assertEquals(2, parents.size());
 		Assert.assertEquals(unit, parents.get(0));
@@ -409,8 +385,8 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 
 		// 反查子部门1的上级部门
 		parents = this.actorService.findMaster(cdep1.getId(),
-				new Integer[] { ActorRelation.TYPE_BELONG },
-				new Integer[] { Actor.TYPE_DEPARTMENT });
+			new Integer[]{ActorRelation.TYPE_BELONG},
+			new Integer[]{Actor.TYPE_DEPARTMENT});
 		Assert.assertNotNull(parents);
 		Assert.assertEquals(1, parents.size());
 		Assert.assertEquals(dep1, parents.get(0));
@@ -428,7 +404,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cunit);
 		Assert.assertNotNull(cunit.getId());
 		ActorRelation ar0 = createActorRelation(unit, cunit,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar0);
 
 		// 单位下的部门1
@@ -436,7 +412,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 反查
@@ -466,7 +442,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cunit);
 		Assert.assertNotNull(cunit.getId());
 		ActorRelation ar0 = createActorRelation(unit, cunit,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar0);
 
 		// 单位下的部门1
@@ -474,12 +450,12 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar1);
 
 		// 反查
 		List<Actor> lowerOrganizations = this.actorService
-				.findLowerOrganization(unit.getId());
+			.findLowerOrganization(unit.getId());
 		Assert.assertNotNull(lowerOrganizations);
 		Assert.assertEquals(2, lowerOrganizations.size());
 		Assert.assertEquals(cunit, lowerOrganizations.get(0));
@@ -498,12 +474,12 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 反查
 		List<Actor> higherOrganizations = this.actorService
-				.findHigherOrganization(dep1.getId());
+			.findHigherOrganization(dep1.getId());
 		Assert.assertNotNull(higherOrganizations);
 		Assert.assertEquals(1, higherOrganizations.size());
 		Assert.assertEquals(unit, higherOrganizations.get(0));
@@ -521,7 +497,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 单位下的部门2
@@ -529,21 +505,21 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep2);
 		Assert.assertNotNull(dep2.getId());
 		ActorRelation ar2 = createActorRelation(unit, dep2,
-				ActorRelation.TYPE_BELONG, "01");// 隶属单位1
+			ActorRelation.TYPE_BELONG, "01");// 隶属单位1
 		actorRelationService.save(ar2);
 
 		// 部门1下的子部门1
 		Actor cdep1 = this
-				.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
+			.createActor(Actor.TYPE_DEPARTMENT, "cdep1", "010101");
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
-				ActorRelation.TYPE_BELONG, "01");
+			ActorRelation.TYPE_BELONG, "01");
 		actorRelationService.save(ar3);
 
 		// 反查部门1祖先
 		List<Actor> ancestors = this.actorService.findAncestorOrganization(dep1
-				.getId());
+			.getId());
 		Assert.assertNotNull(ancestors);
 		Assert.assertEquals(1, ancestors.size());
 		Assert.assertEquals(unit, ancestors.get(0));
@@ -574,7 +550,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 单位下的部门2
@@ -582,7 +558,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep2);
 		Assert.assertNotNull(dep2.getId());
 		ActorRelation ar2 = createActorRelation(unit, dep2,
-				ActorRelation.TYPE_BELONG, "01");// 隶属单位1
+			ActorRelation.TYPE_BELONG, "01");// 隶属单位1
 		actorRelationService.save(ar2);
 
 		// 部门1下的子部门1
@@ -590,25 +566,25 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(cdep1);
 		Assert.assertNotNull(cdep1.getId());
 		ActorRelation ar3 = createActorRelation(dep1, cdep1,
-				ActorRelation.TYPE_BELONG, "01");
+			ActorRelation.TYPE_BELONG, "01");
 		actorRelationService.save(ar3);
 
 		// 反查部门1后代
 		List<Actor> descendants = this.actorService
-				.findDescendantOrganization(dep1.getId());
+			.findDescendantOrganization(dep1.getId());
 		Assert.assertNotNull(descendants);
 		Assert.assertEquals(1, descendants.size());
 		Assert.assertEquals(cdep1, descendants.get(0));
 
 		// 反查部门2后代
 		descendants = this.actorService
-				.findDescendantOrganization(dep2.getId());
+			.findDescendantOrganization(dep2.getId());
 		Assert.assertNotNull(descendants);
 		Assert.assertEquals(0, descendants.size());
 
 		// 反查子单位1后代
 		descendants = this.actorService
-				.findDescendantOrganization(unit.getId());
+			.findDescendantOrganization(unit.getId());
 		Assert.assertNotNull(descendants);
 		Assert.assertEquals(3, descendants.size());
 		Assert.assertEquals(dep2, descendants.get(0));
@@ -628,7 +604,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(user1);
 		Assert.assertNotNull(user1.getId());
 		ActorRelation ar1 = createActorRelation(unit, user1,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar1);
 
 		// 反查
@@ -650,7 +626,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(dep1);
 		Assert.assertNotNull(dep1.getId());
 		ActorRelation ar1 = createActorRelation(unit, dep1,
-				ActorRelation.TYPE_BELONG, "02");
+			ActorRelation.TYPE_BELONG, "02");
 		actorRelationService.save(ar1);
 
 		// 单位下的人员
@@ -658,7 +634,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(user1);
 		Assert.assertNotNull(user1.getId());
 		ActorRelation ar2 = createActorRelation(unit, user1,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar2);
 
 		// 部门1下的人员
@@ -666,7 +642,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		this.actorService.save(user2);
 		Assert.assertNotNull(user2.getId());
 		ActorRelation ar3 = createActorRelation(dep1, user2,
-				ActorRelation.TYPE_BELONG, null);
+			ActorRelation.TYPE_BELONG, null);
 		actorRelationService.save(ar3);
 
 		// 反查部门1下的人员
@@ -701,7 +677,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 	}
 
 	private ActorRelation createActorRelation(Actor master, Actor follower,
-			Integer type, String order) {
+	                                          Integer type, String order) {
 		ActorRelation ar = new ActorRelation();
 		ar.setMaster(master);
 		ar.setFollower(follower);
@@ -714,7 +690,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 	@Test
 	public void testDeleteOne() {
 		Actor entity = this.saveOneEntity(this
-				.createInstance(getDefaultConfig()));
+			.createInstance(getDefaultConfig()));
 		Long id = entity.getId();
 		crudOperations.delete(id);
 		Actor entity1 = crudOperations.forceLoad(id);
@@ -730,7 +706,7 @@ public class ActorServiceImplTest extends AbstractEntityCrudTest<Long, Actor> {
 		entity = this.saveOneEntity(this.createInstance(getDefaultConfig()));
 		Long id2 = entity.getId();
 
-		crudOperations.delete(new Serializable[] { id1, id2 });
+		crudOperations.delete(new Serializable[]{id1, id2});
 
 		entity = crudOperations.forceLoad(id1);
 		Assert.assertNotNull(entity);

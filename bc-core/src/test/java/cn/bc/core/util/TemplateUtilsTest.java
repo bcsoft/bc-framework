@@ -4,6 +4,7 @@
 package cn.bc.core.util;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  * @author dragon
  * 
  */
+@Ignore
 public class TemplateUtilsTest {
 	@Test
 	public void testFormatByMapParams() {

@@ -9,8 +9,8 @@ import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.identity.dao.ActorRelationDao;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.orm.jpa.JpaCrudDao;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author dragon
  */
 public class ActorRelationDaoImpl extends JpaCrudDao<ActorRelation> implements ActorRelationDao {
-	private static Log logger = LogFactory.getLog(ActorRelationDaoImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(ActorRelationDaoImpl.class);
 
 	public List<ActorRelation> findByMaster(Integer type, Long masterId) {
 		Assert.notNull(type);

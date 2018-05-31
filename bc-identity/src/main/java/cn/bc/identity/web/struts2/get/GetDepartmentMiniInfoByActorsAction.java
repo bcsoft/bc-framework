@@ -3,10 +3,10 @@ package cn.bc.identity.web.struts2.get;
 import cn.bc.identity.dto.DepartmentByActorDto4MiniInfo;
 import cn.bc.identity.service.ActorHistoryService;
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 public class GetDepartmentMiniInfoByActorsAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
-	private final static Log logger = LogFactory.getLog("GetUsersAction");
+	private static Logger logger = LoggerFactory.getLogger(GetDepartmentMiniInfoByActorsAction.class);
 	private ActorHistoryService actorHistoryService;
 
 	private Long[] actorHistoryIds; // 用户历史 Id 数组

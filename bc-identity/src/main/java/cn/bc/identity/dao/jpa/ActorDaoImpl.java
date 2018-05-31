@@ -15,8 +15,8 @@ import cn.bc.identity.domain.ActorHistory;
 import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.domain.Resource;
 import cn.bc.orm.jpa.JpaCrudDao;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +29,7 @@ import java.util.*;
  * @author dragon
  */
 public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
-	private static Log logger = LogFactory.getLog(ActorDaoImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(ActorDaoImpl.class);
 	private ActorRelationDao actorRelationDao;
 	private ActorHistoryDao actorHistoryDao;
 
@@ -57,7 +57,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 	public Actor loadBelong(Long followerId, Integer[] masterTypes) {
 		List<Actor> ms = this.findMaster(followerId,
-				new Integer[]{ActorRelation.TYPE_BELONG}, masterTypes);
+			new Integer[]{ActorRelation.TYPE_BELONG}, masterTypes);
 		if (ms != null && !ms.isEmpty()) {
 			if (ms.size() > 1) {
 				throw new CoreException("no unique for loadBelong!");
@@ -153,7 +153,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Actor> findFollowerWithName(Long masterId, String followerName, Integer[] relationTypes
-			, Integer[] followerTypes, Integer[] followerStatuses) {
+		, Integer[] followerTypes, Integer[] followerStatuses) {
 		if (masterId == null) return new ArrayList<>();
 
 		ArrayList<Object> args = new ArrayList<>();
@@ -224,7 +224,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Actor> findFollowersWithMastersIdOrNames(Long[] masterIds, String[] followerNames
-			, String[] followerCodes, Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
+		, String[] followerCodes, Integer[] relationTypes, Integer[] followerTypes, Integer[] followerStatuses) {
 
 		ArrayList<Object> args = new ArrayList<>();
 		StringBuffer hql = new StringBuffer();
@@ -368,7 +368,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 	public List<Actor> findAllUnit(Integer... statues) {
 		AndCondition c = new AndCondition();
 		c.add(new EqualsCondition("type", Actor.TYPE_UNIT)).add(
-				new OrderCondition("orderNo", Direction.Asc).add("code", Direction.Asc));
+			new OrderCondition("orderNo", Direction.Asc).add("code", Direction.Asc));
 		if (statues != null && statues.length > 0) {
 			if (statues.length == 1) {
 				c.add(new EqualsCondition("status", statues[0]));
@@ -385,7 +385,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 	public List<Actor> findUser(Long organizationId, Integer[] statuses) {
 		return this.findFollowerWithName(organizationId, null, new Integer[]{ActorRelation.TYPE_BELONG}
-				, new Integer[]{Actor.TYPE_USER}, statuses);
+			, new Integer[]{Actor.TYPE_USER}, statuses);
 	}
 
 	public List<Actor> findAncestorOrganization(Long lowerOrganizationId, Integer... ancestorOrganizationTypes) {
@@ -423,7 +423,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 	// 递归查找后代组织
 	private void recursiveFindDescendantOrganization(List<Actor> descendants, Long higherOrganizationId
-			, Integer[] descendantOrganizationTypes) {
+		, Integer[] descendantOrganizationTypes) {
 		List<Actor> lowers = this.findLowerOrganization(higherOrganizationId, descendantOrganizationTypes);
 		if (lowers != null && !lowers.isEmpty()) {
 			for (Actor lower : lowers) {
@@ -514,7 +514,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 
 		// 获取原来隶属的上级（单位或部门）
 		List<ActorRelation> oldArs = this.actorRelationDao.findByFollower(
-				ActorRelation.TYPE_BELONG, follower.getId(), new Integer[]{Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT});
+			ActorRelation.TYPE_BELONG, follower.getId(), new Integer[]{Actor.TYPE_UNIT, Actor.TYPE_DEPARTMENT});
 		if (belongIds != null && belongIds.length > 0) {
 			List<Actor> sameBelongs = new ArrayList<>();// 没有改变的belong
 			List<Actor> newBelongs = new ArrayList<>();// 新加的belong
@@ -913,14 +913,14 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 		if (actorCode == null || actorCode.length() == 0)
 			return null;
 		List<String> r = executeNativeQuery("select name,pname from bc_identity_actor where code = ?"
-				, new Object[]{actorCode}, new RowMapper<String>() {
-					public String mapRow(Object[] rs, int rowNum) {
-						int i = -1;
-						Object name = rs[++i];
-						Object pname = rs[++i];
-						return pname == null ? name.toString() : pname.toString() + "/" + name.toString();
-					}
-				});
+			, new Object[]{actorCode}, new RowMapper<String>() {
+				public String mapRow(Object[] rs, int rowNum) {
+					int i = -1;
+					Object name = rs[++i];
+					Object pname = rs[++i];
+					return pname == null ? name.toString() : pname.toString() + "/" + name.toString();
+				}
+			});
 		if (r == null || r.isEmpty())
 			return actorCode;// 找不到就返回原始的帐号信息
 		else
@@ -999,8 +999,8 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 		hql.append(" inner join bc_identity_actor_relation r on r.follower_id=u.id");
 		hql.append(" inner join bc_identity_actor g on g.id=r.master_id");
 		hql.append(" where u.type_=" + Actor.TYPE_USER + " and r.type_="
-				+ ActorRelation.TYPE_BELONG + " and g.type_="
-				+ Actor.TYPE_GROUP);
+			+ ActorRelation.TYPE_BELONG + " and g.type_="
+			+ Actor.TYPE_GROUP);
 		hql.append(" and u.email like '%@%'");
 		if (groupCodes.size() == 1) {
 			hql.append(" and g.code=?");
@@ -1052,7 +1052,7 @@ public class ActorDaoImpl extends JpaCrudDao<Actor> implements ActorDao {
 	}
 
 	public List<String> findFollowerCode(String masterCode, Integer[] relationTypes
-			, Integer[] followerTypes, Integer[] followerStatuses) {
+		, Integer[] followerTypes, Integer[] followerStatuses) {
 		if (masterCode == null) return new ArrayList<>();
 
 		ArrayList<Object> args = new ArrayList<>();

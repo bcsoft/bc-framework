@@ -2,6 +2,7 @@ package cn.bc.core;
 
 import cn.bc.core.util.TemplateUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-test.xml")
+@Ignore
 public class TemplateUtilsTest {
 	@Test
 	public void getContent() throws Exception{

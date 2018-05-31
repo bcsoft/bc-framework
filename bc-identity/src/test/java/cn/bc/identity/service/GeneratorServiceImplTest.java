@@ -1,9 +1,5 @@
 package cn.bc.identity.service;
 
-import java.util.UUID;
-
-import org.junit.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,59 +7,69 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ContextConfiguration("classpath:spring-test.xml")
 public class GeneratorServiceImplTest {
-	protected IdGeneratorService generatorService;
-
+	@PersistenceContext
+	private EntityManager em;
 	@Autowired
-	public void setGeneratorService(IdGeneratorService generatorService) {
-		this.generatorService = generatorService;
-	}
+	private IdGeneratorService generatorService;
 
-	// 先插入一条数据，并返回类型的值
-	private String insertTestData(Long value, String format) {
-		String uuid = UUID.randomUUID().toString();// 使用uuid避免与现有数据产生冲突
-		generatorService.currentValue(uuid);
-		return uuid;
+	// 随机初始化一个ID类型，并返回该类型
+	private String randomType(String format) {
+		String type = UUID.randomUUID().toString();// 使用uuid避免与现有数据产生冲突
+		String sql = "insert into bc_identity_idgenerator(type_,value_,format) values(:type, :value, :format)";
+		int count = em.createNativeQuery(sql)
+			.setParameter("type", type)
+			.setParameter("value", 0L)
+			.setParameter("format", format)
+			.executeUpdate();
+		assertEquals(1, count);
+		return type;
 	}
 
 	@Test
 	public void testGetCurrentValue() {
 		// 先插入一条数据
-		String uuid = insertTestData(new Long(1), null);
+		String type = randomType(null);
 
 		// 验证
-		Assert.assertEquals(new Long(1), generatorService.currentValue(uuid));
-		Assert.assertEquals("1", generatorService.current(uuid));
+		assertEquals(new Long(0), generatorService.currentValue(type));
+		assertEquals("0", generatorService.current(type));
 	}
 
 	@Test
 	public void testGetCurrentWithFormat() {
 		// 先插入一条数据
-		String uuid = insertTestData(new Long(1), "${T}-${V}");
+		String type = randomType("${T}-${V}");
 
 		// 验证
-		Assert.assertEquals(uuid + "-1", generatorService.current(uuid));
+		assertEquals(type + "-0", generatorService.current(type));
 	}
 
 	@Test
 	public void testGetNextValue() {
 		// 先插入一条数据
-		String uuid = insertTestData(new Long(1), null);
+		String uuid = randomType(null);
 
 		// 验证
-		Assert.assertEquals(new Long(2), generatorService.nextValue(uuid));
-		Assert.assertEquals("3", generatorService.next(uuid));
+		assertEquals(new Long(1), generatorService.nextValue(uuid));
+		assertEquals("2", generatorService.next(uuid));
 	}
 
 	@Test
 	public void testGetNextWithFormat() {
 		// 先插入一条数据
-		String uuid = insertTestData(new Long(1), "${T}-${V}");
+		String type = randomType("${T}-${V}");
 
 		// 验证
-		Assert.assertEquals(uuid + "-2", generatorService.next(uuid));
+		assertEquals(type + "-1", generatorService.next(type));
 	}
 }

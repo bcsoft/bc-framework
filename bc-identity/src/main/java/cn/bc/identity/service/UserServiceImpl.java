@@ -10,8 +10,8 @@ import cn.bc.identity.domain.ActorRelation;
 import cn.bc.identity.domain.AuthData;
 import cn.bc.identity.web.SystemContext;
 import cn.bc.identity.web.SystemContextHolder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.DigestUtils;
 
 import java.io.Serializable;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author dragon
  */
 public class UserServiceImpl extends ActorServiceImpl implements UserService {
-	private static final Log logger = LogFactory.getLog(UserServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	private AuthDataDao authDataDao;
 	private ActorRelationDao actorRelationDao;
 
@@ -61,7 +61,7 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 			try {
 				// 设置默认密码(32位md5加密)
 				authData.setPassword(DigestUtils.md5DigestAsHex("888888"
-						.getBytes("UTF-8")));
+					.getBytes("UTF-8")));
 			} catch (UnsupportedEncodingException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -71,8 +71,8 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 		// 处理分派的岗位信息
 		List<ActorRelation> curArs;
 		curArs = this.actorRelationDao.findByFollower(
-				ActorRelation.TYPE_BELONG, user.getId(),
-				new Integer[]{Actor.TYPE_GROUP});
+			ActorRelation.TYPE_BELONG, user.getId(),
+			new Integer[]{Actor.TYPE_GROUP});
 		Map<String, ActorRelation> gmap = new HashMap<>();
 		for (ActorRelation ar : curArs)
 			gmap.put(ar.getMaster().getId().toString(), ar);
@@ -149,6 +149,6 @@ public class UserServiceImpl extends ActorServiceImpl implements UserService {
 	@Override
 	public List<String> findAllUserCodeByGroup(String groupCode, Integer[] userStatuses) {
 		return this.findFollowerCode(groupCode, new Integer[]{ActorRelation.TYPE_BELONG}
-				, new Integer[]{Actor.TYPE_USER}, userStatuses);
+			, new Integer[]{Actor.TYPE_USER}, userStatuses);
 	}
 }

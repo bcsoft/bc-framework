@@ -1,10 +1,9 @@
 package cn.bc.identity.service;
 
-import java.util.Calendar;
-import java.util.UUID;
-
-import org.junit.Assert;
-import org.junit.Test;
+import cn.bc.BCConstants;
+import cn.bc.identity.domain.Actor;
+import cn.bc.identity.domain.ActorHistory;
+import cn.bc.test.AbstractEntityCrudTest;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,16 +11,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.bc.BCConstants;
-import cn.bc.identity.domain.Actor;
-import cn.bc.identity.domain.ActorHistory;
-import cn.bc.test.AbstractEntityCrudTest;
+import java.util.Calendar;
+import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @ContextConfiguration("classpath:spring-test.xml")
 public class ActorHistoryServiceImplTest extends
-		AbstractEntityCrudTest<Long, ActorHistory> {
+	AbstractEntityCrudTest<Long, ActorHistory> {
 	ActorService actorService;
 	ActorHistoryService actorHistoryService;
 
@@ -33,14 +30,14 @@ public class ActorHistoryServiceImplTest extends
 
 	@Autowired
 	public void setActorService(
-			@Qualifier("actorService") ActorService actorService) {
+		@Qualifier("actorService") ActorService actorService) {
 		this.actorService = actorService;
 	}
 
 	@Override
 	protected ActorHistory createInstance(String config) {
 		ActorHistory actorHistory = new ActorHistory();
-		
+
 		//生成一个Actor
 		Actor actor = createActor();
 		this.actorService.save(actor);
@@ -66,16 +63,5 @@ public class ActorHistoryServiceImplTest extends
 		actor.setName("测试");
 
 		return actor;
-	}
-
-	@Test
-	public void testLoadCurrent() {
-		String actorCode = "admin";
-		Actor user = this.actorService.loadByCode(actorCode);
-		Assert.assertNotNull(user);
-
-		ActorHistory actorHistory = actorHistoryService.loadCurrent(user.getId());
-		Assert.assertNotNull(actorHistory);
-		Assert.assertEquals(user.getId(), actorHistory.getActorId());
 	}
 }

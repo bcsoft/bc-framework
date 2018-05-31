@@ -25,9 +25,8 @@
 		</triggeringPolicy>
 	</appender>
 
+	<!-- hibernate -->
 	<logger name="cn.bc" level="WARN"/>
-	<logger name="cn.bc.core.Sl4jTest" level="DEBUG"/>
-	<logger name="cn.bc.identity.test.AppTestConfig" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="console"/>

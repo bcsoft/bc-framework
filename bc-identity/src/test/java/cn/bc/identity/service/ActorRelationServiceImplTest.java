@@ -76,7 +76,7 @@ public class ActorRelationServiceImplTest {
 		actorRelationService.save(ar);
 	}
 
-	@Test(expected = org.springframework.orm.jpa.JpaSystemException.class)
+	@Test(expected = javax.persistence.PersistenceException.class)
 	// 游离实体无法保存
 	// org.hibernate.PersistentObjectException: detached entity passed to
 	// persist: cn.bc.identity.domain.Actor

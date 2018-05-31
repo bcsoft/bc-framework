@@ -1,36 +1,31 @@
 package cn.bc.identity.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 @Entity
 @Table(name = "BC_IDENTITY_ACTOR_DETAIL")
 public class ActorDetail implements Serializable {
 	private static final long serialVersionUID = 4863625345847183773L;
-
-	private static Log logger = LogFactory.getLog(ActorDetail.class);
-	/** 性别:未定义 */
+	private static Logger logger = LoggerFactory.getLogger(ActorDetail.class);
+	/**
+	 * 性别:未定义
+	 */
 	public static final int SEX_NONE = 0;
-	/** 性别:男 */
+	/**
+	 * 性别:男
+	 */
 	public static final int SEX_MAN = 1;
-	/** 性别:女 */
+	/**
+	 * 性别:女
+	 */
 	public static final int SEX_WOMAN = 2;
 
 	private Long id;
@@ -94,7 +89,7 @@ public class ActorDetail implements Serializable {
 	}
 
 	/**
-	 * @return 性别(0-未设置,1-男,2-女)
+	 * @return 性别(0 - 未设置, 1 - 男, 2 - 女)
 	 */
 	@Column
 	public int getSex() {
@@ -126,20 +121,19 @@ public class ActorDetail implements Serializable {
 	private Map<String, Object> attrs;
 
 	/**
-	 * @param key
-	 *            键
+	 * @param key 键
 	 * @return 指定键的属性值
 	 */
 	@Transient
 	public Object get(String key) {
 		return (attrs != null && attrs.containsKey(key)) ? attrs.get(key)
-				: null;
+			: null;
 	}
 
 	public void set(String key, Object value) {
 		if (logger.isDebugEnabled())
 			logger.debug("key=" + key + ";value=" + value + ";valueType="
-					+ (value != null ? value.getClass() : "?"));
+				+ (value != null ? value.getClass() : "?"));
 		if (key == null)
 			throw new RuntimeException("key can't to be null");
 		if (attrs == null)
@@ -157,8 +151,8 @@ public class ActorDetail implements Serializable {
 		Object v = get(key);
 		if (v != null) {
 			return "true".equalsIgnoreCase(v.toString())
-					|| "yes".equalsIgnoreCase(v.toString())
-					|| "1".equalsIgnoreCase(v.toString());
+				|| "yes".equalsIgnoreCase(v.toString())
+				|| "1".equalsIgnoreCase(v.toString());
 		}
 		return new Boolean(false);
 	}
@@ -187,8 +181,8 @@ public class ActorDetail implements Serializable {
 	public Date getDate(String key) {
 		return (Date) get(key);
 	}
-	
-	
+
+
 	// extends for bc-business
 
 	/**
