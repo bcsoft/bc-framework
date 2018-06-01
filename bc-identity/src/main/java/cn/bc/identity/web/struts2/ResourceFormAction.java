@@ -28,66 +28,66 @@ import java.util.Map.Entry;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ResourceFormAction extends EntityAction<Long, Resource> {
-	private static final long serialVersionUID = 1L;
-	public List<KeyValue> types;// 可选的模块类型
+  private static final long serialVersionUID = 1L;
+  public List<KeyValue> types;// 可选的模块类型
 
-	// 模块类型列表
-	public ResourceFormAction() {
-		types = new ArrayList<>();
-		for (Entry<String, String> e : getModuleTypes().entrySet()) {
-			types.add(new KeyValue(e.getKey(), e.getValue()));
-		}
-	}
+  // 模块类型列表
+  public ResourceFormAction() {
+    types = new ArrayList<>();
+    for (Entry<String, String> e : getModuleTypes().entrySet()) {
+      types.add(new KeyValue(e.getKey(), e.getValue()));
+    }
+  }
 
-	@Override
-	public boolean isReadonly() {
-		// 角色管理或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole("BC_ROLE_MANAGE", "BC_ADMIN");
-	}
+  @Override
+  public boolean isReadonly() {
+    // 角色管理或系统管理员
+    SystemContext context = (SystemContext) this.getContext();
+    return !context.hasAnyRole("BC_ROLE_MANAGE", "BC_ADMIN");
+  }
 
-	@Autowired
-	public void setResourceService(ResourceService resourceService) {
-		this.setCrudService(resourceService);
-	}
+  @Autowired
+  public void setResourceService(ResourceService resourceService) {
+    this.setCrudService(resourceService);
+  }
 
-	@Override
-	protected void afterCreate(Resource entity) {
-		this.getE().setType(Resource.TYPE_INNER_LINK);
-	}
+  @Override
+  protected void afterCreate(Resource entity) {
+    this.getE().setType(Resource.TYPE_INNER_LINK);
+  }
 
-	@Override
-	protected PageOption buildPageOption(boolean editable) {
-		return super.buildPageOption(editable).setWidth(618);
-	}
+  @Override
+  protected PageOption buildPageOption(boolean editable) {
+    return super.buildPageOption(editable).setWidth(618);
+  }
 
-	/**
-	 * 获取资源类型值转换列表
-	 */
-	private Map<String, String> getModuleTypes() {
-		Map<String, String> types = new LinkedHashMap<>();
-		types.put(String.valueOf(Resource.TYPE_FOLDER), getText("resource.type.folder"));
-		types.put(String.valueOf(Resource.TYPE_INNER_LINK), getText("resource.type.innerLink"));
-		types.put(String.valueOf(Resource.TYPE_OUTER_LINK), getText("resource.type.outerLink"));
-		return types;
-	}
+  /**
+   * 获取资源类型值转换列表
+   */
+  private Map<String, String> getModuleTypes() {
+    Map<String, String> types = new LinkedHashMap<>();
+    types.put(String.valueOf(Resource.TYPE_FOLDER), getText("resource.type.folder"));
+    types.put(String.valueOf(Resource.TYPE_INNER_LINK), getText("resource.type.innerLink"));
+    types.put(String.valueOf(Resource.TYPE_OUTER_LINK), getText("resource.type.outerLink"));
+    return types;
+  }
 
-	@Override
-	protected void beforeSave(Resource entity) {
-		// 处理隶属关系
-		Resource belong = this.getE().getBelong();
-		if (belong != null && (belong.getId() == null || belong.getId().longValue() == 0)) {
-			this.getE().setBelong(null);
-		}
-	}
+  @Override
+  protected void beforeSave(Resource entity) {
+    // 处理隶属关系
+    Resource belong = this.getE().getBelong();
+    if (belong != null && (belong.getId() == null || belong.getId().longValue() == 0)) {
+      this.getE().setBelong(null);
+    }
+  }
 
-	@Override
-	protected boolean isQuirksMode() {
-		return false;
-	}
+  @Override
+  protected boolean isQuirksMode() {
+    return false;
+  }
 
-	@Override
-	protected void addJsCss(List<String> container) {
-		if (!isReadonly()) container.add(getActionNamespace() + "/form.js");
-	}
+  @Override
+  protected void addJsCss(List<String> container) {
+    if (!isReadonly()) container.add(getActionNamespace() + "/form.js");
+  }
 }

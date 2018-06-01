@@ -32,234 +32,233 @@ import java.util.*;
 
 /**
  * 订阅监控视图Action
- * 
+ *
  * @author lbj
- * 
  */
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class SubscribesAction extends ViewAction<Map<String, Object>> {
-	private static final long serialVersionUID = 1L;
-	protected Log logger = LogFactory.getLog(SubscribesAction.class);
+  private static final long serialVersionUID = 1L;
+  protected Log logger = LogFactory.getLog(SubscribesAction.class);
 
-	public String status;
-	
-	@Override
-	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：订阅管理角色或系统管理员
-		return !context.hasAnyRole(getText("key.role.bc.subscribe"),
-				getText("key.role.bc.admin"));
-	}
-	
-	public boolean isAccessControl() {
-		// 流程访问控制
-		SystemContext context = (SystemContext) this.getContext();
-		return context
-				.hasAnyRole(getText("key.role.bc.workflow.accessControl"));
-	}
+  public String status;
+
+  @Override
+  public boolean isReadonly() {
+    SystemContext context = (SystemContext) this.getContext();
+    // 配置权限：订阅管理角色或系统管理员
+    return !context.hasAnyRole(getText("key.role.bc.subscribe"),
+      getText("key.role.bc.admin"));
+  }
+
+  public boolean isAccessControl() {
+    // 流程访问控制
+    SystemContext context = (SystemContext) this.getContext();
+    return context
+      .hasAnyRole(getText("key.role.bc.workflow.accessControl"));
+  }
 
 
-	@Override
-	protected OrderCondition getGridOrderCondition() {
-		return new OrderCondition("s.order_");
-	}
+  @Override
+  protected OrderCondition getGridOrderCondition() {
+    return new OrderCondition("s.order_");
+  }
 
-	@Override
-	protected SqlObject<Map<String, Object>> getSqlObject() {
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+  @Override
+  protected SqlObject<Map<String, Object>> getSqlObject() {
+    SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
-		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		StringBuffer sql = new StringBuffer();
-		sql.append("select s.id,s.status_,s.type_,s.order_,s.subject,s.event_code,e.actor_name as author,s.file_date");
-		sql.append(",f.actor_name as modifier,s.modified_date");
-		sql.append(",(select string_agg(a.name,',') from bc_subscribe_actor sa");
-		sql.append(" inner join bc_identity_actor a on a.id = sa.aid where sa.pid=s.id) actornames");
-		sql.append(",getaccessactors4docidtype4docidinteger(s.id,'Subscribe')");
-		sql.append(" from bc_subscribe s");
-		sql.append(" inner join bc_identity_actor_history e on e.id=s.author_id");
-		sql.append(" left join bc_identity_actor_history f on f.id=s.modifier_id");
-		sqlObject.setSql(sql.toString());
+    // 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+    StringBuffer sql = new StringBuffer();
+    sql.append("select s.id,s.status_,s.type_,s.order_,s.subject,s.event_code,e.actor_name as author,s.file_date");
+    sql.append(",f.actor_name as modifier,s.modified_date");
+    sql.append(",(select string_agg(a.name,',') from bc_subscribe_actor sa");
+    sql.append(" inner join bc_identity_actor a on a.id = sa.aid where sa.pid=s.id) actornames");
+    sql.append(",getaccessactors4docidtype4docidinteger(s.id,'Subscribe')");
+    sql.append(" from bc_subscribe s");
+    sql.append(" inner join bc_identity_actor_history e on e.id=s.author_id");
+    sql.append(" left join bc_identity_actor_history f on f.id=s.modifier_id");
+    sqlObject.setSql(sql.toString());
 
-		// 注入参数
-		sqlObject.setArgs(null);
+    // 注入参数
+    sqlObject.setArgs(null);
 
-		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				int i = 0;
-				map.put("id", rs[i++]);
-				map.put("status", rs[i++]);
-				map.put("type", rs[i++]);
-				map.put("orderNo", rs[i++]);
-				map.put("subject", rs[i++]);
-				map.put("eventCode", rs[i++]);
-				map.put("author", rs[i++]);
-				map.put("fileDate", rs[i++]);
-				map.put("modifier", rs[i++]);
-				map.put("modifiedDate", rs[i++]);
-				map.put("actornames", rs[i++]);
-				map.put("accessactors", rs[i++]);
-				map.put("accessControlDocType","Subscribe");
-				return map;
-			}
-		});
-		return sqlObject;
-	}
+    // 数据映射器
+    sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+      public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        int i = 0;
+        map.put("id", rs[i++]);
+        map.put("status", rs[i++]);
+        map.put("type", rs[i++]);
+        map.put("orderNo", rs[i++]);
+        map.put("subject", rs[i++]);
+        map.put("eventCode", rs[i++]);
+        map.put("author", rs[i++]);
+        map.put("fileDate", rs[i++]);
+        map.put("modifier", rs[i++]);
+        map.put("modifiedDate", rs[i++]);
+        map.put("actornames", rs[i++]);
+        map.put("accessactors", rs[i++]);
+        map.put("accessControlDocType", "Subscribe");
+        return map;
+      }
+    });
+    return sqlObject;
+  }
 
-	@Override
-	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("s.id", "id"));
-		columns.add(new TextColumn4MapKey("s.status_", "status",
-				getText("subscribe.status"), 40)
-				.setUseTitleFromLabel(true)
-				.setValueFormater(new KeyValueFormater(getStatuses())));
-		columns.add(new TextColumn4MapKey("s.order_", "orderNo",
-				getText("subscribe.orderNo"),60)
-				.setSortable(true));
-		columns.add(new TextColumn4MapKey("s.subject", "subject",
-				getText("subscribe.subject"),200)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("s.event_code", "eventCode",
-				getText("subscribe.eventCode"))
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("", "actornames",
-				getText("subscribeActor.name"), 120).setUseTitleFromLabel(true));
-		if(this.isAccessControl()){
-			columns.add(new TextColumn4MapKey("", "accessactors",
-					getText("subscribe.accessActorAndRole"),150).setSortable(true)
-					.setUseTitleFromLabel(true));
-		}
-		columns.add(new TextColumn4MapKey("e.actor_name", "author",
-				getText("subscribe.author"), 70).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("s.file_date", "fileDate",
-				getText("subscribe.fileDate"), 90)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new TextColumn4MapKey("f.actor_name", "modifier",
-				getText("subscribe.modifier"), 70)
-				.setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("s.modified_date", "modifiedDate",
-				getText("subscribe.modifiedDate"), 90)
-				.setValueFormater(new CalendarFormater("yyyy-MM-dd")));
-		columns.add(new HiddenColumn4MapKey("accessControlDocType","accessControlDocType"));
-		columns.add(new HiddenColumn4MapKey("accessControlDocName", "subject"));
-		return columns;
-	}
-	
-	/**
-	 * 状态值转换列表：草稿|正常|禁用|全部
-	 * 
-	 * @return
-	 */
-	private Map<String, String> getStatuses() {
-		Map<String, String> statuses = new LinkedHashMap<String, String>();
-		statuses.put(String.valueOf(BCConstants.STATUS_DRAFT),
-				getText("subscribe.status.draft"));
-		statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
-				getText("subscribe.status.enabled"));
-		statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
-				getText("subscribe.status.disable"));
-		statuses.put("", getText("bc.status.all"));
-		return statuses;
-	}
+  @Override
+  protected List<Column> getGridColumns() {
+    List<Column> columns = new ArrayList<Column>();
+    columns.add(new IdColumn4MapKey("s.id", "id"));
+    columns.add(new TextColumn4MapKey("s.status_", "status",
+      getText("subscribe.status"), 40)
+      .setUseTitleFromLabel(true)
+      .setValueFormater(new KeyValueFormater(getStatuses())));
+    columns.add(new TextColumn4MapKey("s.order_", "orderNo",
+      getText("subscribe.orderNo"), 60)
+      .setSortable(true));
+    columns.add(new TextColumn4MapKey("s.subject", "subject",
+      getText("subscribe.subject"), 200)
+      .setUseTitleFromLabel(true));
+    columns.add(new TextColumn4MapKey("s.event_code", "eventCode",
+      getText("subscribe.eventCode"))
+      .setUseTitleFromLabel(true));
+    columns.add(new TextColumn4MapKey("", "actornames",
+      getText("subscribeActor.name"), 120).setUseTitleFromLabel(true));
+    if (this.isAccessControl()) {
+      columns.add(new TextColumn4MapKey("", "accessactors",
+        getText("subscribe.accessActorAndRole"), 150).setSortable(true)
+        .setUseTitleFromLabel(true));
+    }
+    columns.add(new TextColumn4MapKey("e.actor_name", "author",
+      getText("subscribe.author"), 70).setUseTitleFromLabel(true));
+    columns.add(new TextColumn4MapKey("s.file_date", "fileDate",
+      getText("subscribe.fileDate"), 90)
+      .setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+    columns.add(new TextColumn4MapKey("f.actor_name", "modifier",
+      getText("subscribe.modifier"), 70)
+      .setUseTitleFromLabel(true));
+    columns.add(new TextColumn4MapKey("s.modified_date", "modifiedDate",
+      getText("subscribe.modifiedDate"), 90)
+      .setValueFormater(new CalendarFormater("yyyy-MM-dd")));
+    columns.add(new HiddenColumn4MapKey("accessControlDocType", "accessControlDocType"));
+    columns.add(new HiddenColumn4MapKey("accessControlDocName", "subject"));
+    return columns;
+  }
 
-	@Override
-	protected String getGridRowLabelExpression() {
-		return "['subject']+'的订阅配置'";
-	}
+  /**
+   * 状态值转换列表：草稿|正常|禁用|全部
+   *
+   * @return
+   */
+  private Map<String, String> getStatuses() {
+    Map<String, String> statuses = new LinkedHashMap<String, String>();
+    statuses.put(String.valueOf(BCConstants.STATUS_DRAFT),
+      getText("subscribe.status.draft"));
+    statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
+      getText("subscribe.status.enabled"));
+    statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
+      getText("subscribe.status.disable"));
+    statuses.put("", getText("bc.status.all"));
+    return statuses;
+  }
 
-	@Override
-	protected String[] getGridSearchFields() {
-		return new String[] { 
-				"s.order_"
-				,"s.subject"
-				,"s.event_code"
-				,"e.name"
-				,"name"};
-	}
+  @Override
+  protected String getGridRowLabelExpression() {
+    return "['subject']+'的订阅配置'";
+  }
 
-	@Override
-	protected String getFormActionName() {
-		return "subscribe";
-	}
+  @Override
+  protected String[] getGridSearchFields() {
+    return new String[]{
+      "s.order_"
+      , "s.subject"
+      , "s.event_code"
+      , "e.name"
+      , "name"};
+  }
 
-	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
-				.setHeight(400).setMinHeight(300);
-	}
+  @Override
+  protected String getFormActionName() {
+    return "subscribe";
+  }
 
-	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
+  @Override
+  protected PageOption getHtmlPageOption() {
+    return super.getHtmlPageOption().setWidth(800).setMinWidth(400)
+      .setHeight(400).setMinHeight(300);
+  }
 
-		if (!this.isReadonly()) {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
-			// 发布
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-person")
-					.setText(getText("subscribe.release"))
-					.setClick("bc.subscribeView.release"));
-			// 停用
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
-					.setText(getText("subscribe.stop"))
-					.setClick("bc.subscribeView.stop"));
-		} else {
-			// 查看
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		}
-		
-		if(this.isAccessControl()){
-			// 访问监控
-			tb.addButton(new ToolbarButton().setIcon("ui-icon-wrench")
-					.setText(getText("subscribe.accessControl"))
-					.setClick("bc.accessControl"));
-		}
+  @Override
+  protected Toolbar getHtmlPageToolbar() {
+    Toolbar tb = new Toolbar();
 
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
-				"status",3,
-				getText("title.click2changeSearchStatus")));
-		
+    if (!this.isReadonly()) {
+      // 新建按钮
+      tb.addButton(this.getDefaultCreateToolbarButton());
+      // 编辑按钮
+      tb.addButton(this.getDefaultEditToolbarButton());
+      // 发布
+      tb.addButton(new ToolbarButton().setIcon("ui-icon-person")
+        .setText(getText("subscribe.release"))
+        .setClick("bc.subscribeView.release"));
+      // 停用
+      tb.addButton(new ToolbarButton().setIcon("ui-icon-cancel")
+        .setText(getText("subscribe.stop"))
+        .setClick("bc.subscribeView.stop"));
+    } else {
+      // 查看
+      tb.addButton(this.getDefaultOpenToolbarButton());
+    }
 
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
+    if (this.isAccessControl()) {
+      // 访问监控
+      tb.addButton(new ToolbarButton().setIcon("ui-icon-wrench")
+        .setText(getText("subscribe.accessControl"))
+        .setClick("bc.accessControl"));
+    }
 
-		return tb;
-	}
-	
-	@Override
-	protected Condition getGridSpecalCondition() {
-		AndCondition andCondition = new AndCondition();
-		if(status !=null && status.length()>0){
-			String[] ss = status.split(",");
-			if (ss.length == 1) {
-				andCondition.add(new EqualsCondition("s.status_", new Integer(
-						ss[0])));
-			} else {
-				andCondition.add(new InCondition("s.status_",
-						StringUtils.stringArray2IntegerArray(ss)));
-			}
-		}
-		
-		return andCondition.isEmpty()?null:andCondition;
-	}
-	
-	@Override
-    protected void extendGridExtrasData(JSONObject json) throws JSONException {
-        if(status != null && status.length() > 0)
-		    json.put("status", status);
-	}
+    tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+      "status", 3,
+      getText("title.click2changeSearchStatus")));
 
-	@Override
-	protected String getHtmlPageJs() {
-		return this.getModuleContextPath() + "/subscribe/view.js"
-				+","+this.getContextPath()+"/bc/acl/accessControl.js";
-	}
-	
+
+    // 搜索按钮
+    tb.addButton(this.getDefaultSearchToolbarButton());
+
+    return tb;
+  }
+
+  @Override
+  protected Condition getGridSpecalCondition() {
+    AndCondition andCondition = new AndCondition();
+    if (status != null && status.length() > 0) {
+      String[] ss = status.split(",");
+      if (ss.length == 1) {
+        andCondition.add(new EqualsCondition("s.status_", new Integer(
+          ss[0])));
+      } else {
+        andCondition.add(new InCondition("s.status_",
+          StringUtils.stringArray2IntegerArray(ss)));
+      }
+    }
+
+    return andCondition.isEmpty() ? null : andCondition;
+  }
+
+  @Override
+  protected void extendGridExtrasData(JSONObject json) throws JSONException {
+    if (status != null && status.length() > 0)
+      json.put("status", status);
+  }
+
+  @Override
+  protected String getHtmlPageJs() {
+    return this.getModuleContextPath() + "/subscribe/view.js"
+      + "," + this.getContextPath() + "/bc/acl/accessControl.js";
+  }
+
 
 }

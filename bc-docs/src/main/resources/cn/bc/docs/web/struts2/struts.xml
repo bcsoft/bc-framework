@@ -1,178 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-		"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-		"http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 基于Attach的附件上传、下载、查看处理 -->
-	<package name="attach" extends="bc-default" namespace="/bc/attach">
-		<action name="design" class="attachAction" method="design">
-			<result>/bc-test/attach/design.jsp</result>
-		</action>
-		<action name="edit" class="attachAction" method="edit">
-			<result name="form">/bc/docs/attach/form.jsp</result>
-		</action>
-		<action name="paging" class="attachAction" method="paging"/>
-		<action name="data" class="attachAction" method="data"/>
-		<action name="export" class="attachAction" method="export"/>
+  <!-- 基于Attach的附件上传、下载、查看处理 -->
+  <package name="attach" extends="bc-default" namespace="/bc/attach">
+    <action name="design" class="attachAction" method="design">
+      <result>/bc-test/attach/design.jsp</result>
+    </action>
+    <action name="edit" class="attachAction" method="edit">
+      <result name="form">/bc/docs/attach/form.jsp</result>
+    </action>
+    <action name="paging" class="attachAction" method="paging"/>
+    <action name="data" class="attachAction" method="data"/>
+    <action name="export" class="attachAction" method="export"/>
 
-		<action name="delete" class="attachAction" method="delete"/>
-		<action name="deleteAll" class="attachAction" method="deleteAll"/>
-		<action name="download" class="attachAction" method="download">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="downloadAll" class="attachAction" method="downloadAll">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="inline" class="attachAction" method="inline">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="file" class="attachAction" method="file">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}"</param>
-			</result>
-		</action>
-	</package>
+    <action name="delete" class="attachAction" method="delete"/>
+    <action name="deleteAll" class="attachAction" method="deleteAll"/>
+    <action name="download" class="attachAction" method="download">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">attachment; filename="${filename}"</param>
+      </result>
+    </action>
+    <action name="downloadAll" class="attachAction" method="downloadAll">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">attachment; filename="${filename}"</param>
+      </result>
+    </action>
+    <action name="inline" class="attachAction" method="inline">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">inline; filename="${filename}"</param>
+      </result>
+    </action>
+    <action name="file" class="attachAction" method="file">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">inline; filename="${filename}"</param>
+      </result>
+    </action>
+  </package>
 
-	<!-- 直接的附件上传、下载、查看处理 -->
-	<package name="file" extends="bc-default" namespace="/bc/file">
-		<action name="download" class="fileAction" method="download">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="inline" class="fileAction" method="inline">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}"</param>
-			</result>
-		</action>
-	</package>
+  <!-- 直接的附件上传、下载、查看处理 -->
+  <package name="file" extends="bc-default" namespace="/bc/file">
+    <action name="download" class="fileAction" method="download">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">attachment; filename="${filename}"</param>
+      </result>
+    </action>
+    <action name="inline" class="fileAction" method="inline">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">inline; filename="${filename}"</param>
+      </result>
+    </action>
+  </package>
 
-	<!-- 富文本编辑器中上传图片、flash、视频等 -->
-	<package name="upload4xheditor" extends="struts-default"
-	         namespace="/bc/upload4xheditor">
-		<action name="img" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-		        method="img">
-			<interceptor-ref name="fileUploadStack">
-				<!-- <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param> -->
-			</interceptor-ref>
-			<!-- 参考: http://xheditor.com/manual/2 的上传程序开发规范 返回内容必需是标准的json字符串，结构可以是如下： 
-				{"err":"","msg":"200906030521128703.gif"} 或者 {"err":"","msg":{"url":"200906030521128703.jpg","localfile":"test.jpg","id":"1"}} 
-				注：第二种结构适用于html5 -->
-			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
-		</action>
-		<action name="flash" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-		        method="flash">
-			<interceptor-ref name="fileUploadStack"/>
-			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
-		</action>
-		<action name="media" class="cn.bc.docs.web.struts2.XheditorUploadAction"
-		        method="media">
-			<interceptor-ref name="fileUploadStack"/>
-			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
-		</action>
-	</package>
+  <!-- 富文本编辑器中上传图片、flash、视频等 -->
+  <package name="upload4xheditor" extends="struts-default"
+           namespace="/bc/upload4xheditor">
+    <action name="img" class="cn.bc.docs.web.struts2.XheditorUploadAction"
+            method="img">
+      <interceptor-ref name="fileUploadStack">
+        <!-- <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param> -->
+      </interceptor-ref>
+      <!-- 参考: http://xheditor.com/manual/2 的上传程序开发规范 返回内容必需是标准的json字符串，结构可以是如下：
+        {"err":"","msg":"200906030521128703.gif"} 或者 {"err":"","msg":{"url":"200906030521128703.jpg","localfile":"test.jpg","id":"1"}}
+        注：第二种结构适用于html5 -->
+      <result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
+    </action>
+    <action name="flash" class="cn.bc.docs.web.struts2.XheditorUploadAction"
+            method="flash">
+      <interceptor-ref name="fileUploadStack"/>
+      <result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
+    </action>
+    <action name="media" class="cn.bc.docs.web.struts2.XheditorUploadAction"
+            method="media">
+      <interceptor-ref name="fileUploadStack"/>
+      <result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl</result>
+    </action>
+  </package>
 
-	<!-- 图片剪切处理 -->
-	<package name="imageAction" extends="bc-default" namespace="/bc/image">
-		<action name="showCrop" class="imageAction" method="showCrop">
-			<result>/bc/docs/image/showCrop.jsp</result>
-		</action>
-		<action name="doCrop" class="imageAction" method="doCrop">
-			<result>/bc/docs/image/doCrop.jsp</result>
-		</action>
-		<action name="download" class="imageAction" method="download">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}"</param>
-			</result>
-		</action>
-		<action name="userPortrait" class="imageAction" method="userPortrait">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">inline; filename="${filename}</param>
-			</result>
-		</action>
-		<action name="combine" class="imageAction" method="combine"/>
-		<action name="print" class="imageAction" method="print">
-			<result name="success">/bc/docs/image/print.jsp</result>
-		</action>
-	</package>
+  <!-- 图片剪切处理 -->
+  <package name="imageAction" extends="bc-default" namespace="/bc/image">
+    <action name="showCrop" class="imageAction" method="showCrop">
+      <result>/bc/docs/image/showCrop.jsp</result>
+    </action>
+    <action name="doCrop" class="imageAction" method="doCrop">
+      <result>/bc/docs/image/doCrop.jsp</result>
+    </action>
+    <action name="download" class="imageAction" method="download">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">inline; filename="${filename}"</param>
+      </result>
+    </action>
+    <action name="userPortrait" class="imageAction" method="userPortrait">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">inline; filename="${filename}</param>
+      </result>
+    </action>
+    <action name="combine" class="imageAction" method="combine"/>
+    <action name="print" class="imageAction" method="print">
+      <result name="success">/bc/docs/image/print.jsp</result>
+    </action>
+  </package>
 
-	<!-- browser -->
-	<package name="browser" extends="bc-default" namespace="/bc/browser">
-		<action name="list" class="browserAction">
-			<result name="success">/bc/browser/list.jsp</result>
-		</action>
-		<action name="download" class="browserAction" method="download">
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${contentType}</param>
-				<param name="contentLength">${contentLength}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-	</package>
+  <!-- browser -->
+  <package name="browser" extends="bc-default" namespace="/bc/browser">
+    <action name="list" class="browserAction">
+      <result name="success">/bc/browser/list.jsp</result>
+    </action>
+    <action name="download" class="browserAction" method="download">
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${contentType}</param>
+        <param name="contentLength">${contentLength}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">attachment; filename="${filename}"</param>
+      </result>
+    </action>
+  </package>
 </struts>

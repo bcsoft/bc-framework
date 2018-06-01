@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 所有用户的登录日志 -->
-	<package name="syslog" extends="bc-default" namespace="/bc/syslog">
-		<action name="edit" class="syslogAction" method="edit">
-			<result name="form">/bc/log/syslog/form.jsp</result>
-		</action>
-		<action name="open" class="syslogAction" method="open">
-			<result name="formr">/bc/log/syslog/form.jsp</result>
-		</action>
-	</package>
-	<package name="syslogss" extends="bc-default" namespace="/bc/syslogs">
-		<action name="list" class="syslogsAction" method="list" />
-		<action name="paging" class="syslogsAction" method="paging" />
-		<action name="data" class="syslogsAction" method="data" />
-		<action name="export" class="syslogsAction" method="export" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="syslogsAction" method="conditions">
-			<result name="success">/bc/log/syslog/conditions.jsp</result>
-		</action>
-	</package>
-	<!-- 我的登录日志 -->
-	<package name="mysyslog" extends="bc-default" namespace="/bc/mysyslog">
-		<action name="edit" class="syslogAction" method="edit">
-			<param name="my">true</param>
-			<result name="form">/bc/log/syslog/form.jsp</result>
-		</action>
-		<action name="open" class="syslogAction" method="open">
-			<param name="my">true</param>
-			<result name="formr">/bc/log/syslog/form.jsp</result>
-		</action>
-	</package>
-	<package name="mysyslogs" extends="bc-default" namespace="/bc/mysyslogs">
-		<action name="list" class="syslogsAction" method="list">
-			<param name="my">true</param>
-		</action>
-		<action name="paging" class="syslogsAction" method="paging">
-			<param name="my">true</param>
-		</action>
-		<action name="data" class="syslogsAction" method="data">
-			<param name="my">true</param>
-		</action>
-		<action name="export" class="syslogsAction" method="export">
-			<param name="my">true</param>
-		</action>
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="syslogsAction" method="conditions">
-			<result name="success">/bc/log/syslog/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 登录日志统计 -->
-	<package name="syslogStats" extends="bc-default" namespace="/bc/syslogStats">
-		<action name="statsByDay" class="syslogStatsAction" method="statsByDay">
-			<result name="success">/bc/log/syslog/stats/statsByDay.jsp</result>
-		</action>
-	</package>
+  <!-- 所有用户的登录日志 -->
+  <package name="syslog" extends="bc-default" namespace="/bc/syslog">
+    <action name="edit" class="syslogAction" method="edit">
+      <result name="form">/bc/log/syslog/form.jsp</result>
+    </action>
+    <action name="open" class="syslogAction" method="open">
+      <result name="formr">/bc/log/syslog/form.jsp</result>
+    </action>
+  </package>
+  <package name="syslogss" extends="bc-default" namespace="/bc/syslogs">
+    <action name="list" class="syslogsAction" method="list"/>
+    <action name="paging" class="syslogsAction" method="paging"/>
+    <action name="data" class="syslogsAction" method="data"/>
+    <action name="export" class="syslogsAction" method="export"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="syslogsAction" method="conditions">
+      <result name="success">/bc/log/syslog/conditions.jsp</result>
+    </action>
+  </package>
+  <!-- 我的登录日志 -->
+  <package name="mysyslog" extends="bc-default" namespace="/bc/mysyslog">
+    <action name="edit" class="syslogAction" method="edit">
+      <param name="my">true</param>
+      <result name="form">/bc/log/syslog/form.jsp</result>
+    </action>
+    <action name="open" class="syslogAction" method="open">
+      <param name="my">true</param>
+      <result name="formr">/bc/log/syslog/form.jsp</result>
+    </action>
+  </package>
+  <package name="mysyslogs" extends="bc-default" namespace="/bc/mysyslogs">
+    <action name="list" class="syslogsAction" method="list">
+      <param name="my">true</param>
+    </action>
+    <action name="paging" class="syslogsAction" method="paging">
+      <param name="my">true</param>
+    </action>
+    <action name="data" class="syslogsAction" method="data">
+      <param name="my">true</param>
+    </action>
+    <action name="export" class="syslogsAction" method="export">
+      <param name="my">true</param>
+    </action>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="syslogsAction" method="conditions">
+      <result name="success">/bc/log/syslog/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 登录日志统计 -->
+  <package name="syslogStats" extends="bc-default" namespace="/bc/syslogStats">
+    <action name="statsByDay" class="syslogStatsAction" method="statsByDay">
+      <result name="success">/bc/log/syslog/stats/statsByDay.jsp</result>
+    </action>
+  </package>
 </struts>

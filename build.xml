@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bc-framework" basedir="." default="help">
-	<target name="help">
-		<echo message="运行 'ant cleanAll' 删除除源代码之外的所有文件和目录" />
-	</target>
+  <target name="help">
+    <echo message="运行 'ant cleanAll' 删除除源代码之外的所有文件和目录"/>
+  </target>
 
-	<target name="cleanAll">
-		<delete verbose="true" includeemptydirs="true">  
-			<fileset dir="${basedir}">  
-				<include name="**/.classpath"/>
-				<include name="**/.project"/>
-				<include name="**/*.log"/>
-				<include name="**/*.log.*"/>
-				<include name="**/target/**"/>
-				<include name="**/.settings/**"/>
-			</fileset>  
-		</delete>
-	</target>
+  <target name="cleanAll">
+    <delete verbose="true" includeemptydirs="true">
+      <fileset dir="${basedir}">
+        <include name="**/.classpath"/>
+        <include name="**/.project"/>
+        <include name="**/*.log"/>
+        <include name="**/*.log.*"/>
+        <include name="**/target/**"/>
+        <include name="**/.settings/**"/>
+      </fileset>
+    </delete>
+  </target>
 </project>

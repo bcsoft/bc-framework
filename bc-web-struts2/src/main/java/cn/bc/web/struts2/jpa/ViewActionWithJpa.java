@@ -22,25 +22,25 @@ import javax.persistence.PersistenceContext;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public abstract class ViewActionWithJpa<T extends Object> extends AbstractGridPageWithExportAction<T> {
-	private static final long serialVersionUID = 1L;
-	private EntityManager entityManager;
+  private static final long serialVersionUID = 1L;
+  private EntityManager entityManager;
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+  public EntityManager getEntityManager() {
+    return entityManager;
+  }
 
-	@PersistenceContext
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+  @PersistenceContext
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
 
-	/**
-	 * 获取sql查询配置对象
-	 */
-	protected abstract SqlObject<T> getSqlObject();
+  /**
+   * 获取sql查询配置对象
+   */
+  protected abstract SqlObject<T> getSqlObject();
 
-	@Override
-	protected Query<T> getQuery() {
-		return new JpaNativeQuery<>(this.getEntityManager(), getSqlObject());
-	}
+  @Override
+  protected Query<T> getQuery() {
+    return new JpaNativeQuery<>(this.getEntityManager(), getSqlObject());
+  }
 }

@@ -4,12 +4,11 @@ import cn.bc.web.ui.AbstractComponent;
 
 /**
  * tr
- * 
+ *
  * @author dragon
- * 
  */
 public class Tr extends AbstractComponent {
-	public String getTag() {
-		return "tr";
-	}
+  public String getTag() {
+    return "tr";
+  }
 }

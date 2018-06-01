@@ -1,60 +1,66 @@
--- ´´½¨ÐòÁÐ
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 create sequence HIBERNATE_SEQUENCE
-    minvalue 1
-    start with 1
-    increment by 1
-    cache 20;
+  minvalue 1
+  start with 1
+  increment by 1
+  cache 20;
 
--- ´´½¨±í
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 create table TBALE1 (
-    ID NUMBER(19) not null,
-    NAME varchar2(255) not null,
-    CODE VARCHAR2(255),
-    primary key (ID)
+  ID   number(19)    not null,
+  NAME varchar2(255) not null,
+  CODE varchar2(255),
+  primary key (ID)
 );
 
--- ´´½¨±í×¢ÊÍ
-COMMENT ON TABLE TBALE1 IS '²ÎÓëÕßµÄÀ©Õ¹ÊôÐÔ';
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½
+comment on table TBALE1 is 'ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½';
 
--- ´´½¨ÁÐ×¢ÊÍ
-COMMENT ON COLUMN TBALE1.NAME IS '´´½¨Ê±¼ä';
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½
+comment on column TBALE1.NAME is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
 
--- ´´½¨Íâ¼ü
-ALTER TABLE TBALE1 ADD CONSTRAINT FK1 FOREIGN KEY (DETAIL_ID) REFERENCES TBALE2 (ID);
-ALTER TABLE TBALE1 ADD CONSTRAINT FK1 FOREIGN KEY (DETAIL_ID) REFERENCES TBALE2 (ID) ON DELETE CASCADE;
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+alter table TBALE1
+  add constraint FK1 foreign key (DETAIL_ID) references TBALE2 (ID);
+alter table TBALE1
+  add constraint FK1 foreign key (DETAIL_ID) references TBALE2 (ID) on delete cascade;
 
--- ´´½¨Ë÷Òý
-CREATE INDEX IDX1 ON TBALE1 (NAME ASC);
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create index IDX1 on TBALE1 (NAME asc);
 
-
--- ÉèÖÃ½«ÐÅÏ¢Êä³öµ½¿ØÖÆÌ¨£¨Èç¹ûÊÇÔÚSQL PlusÃüÁîÐÐÔËÐÐÕâ¸ösqlÎÄ¼þ£¬ÐëÏÈÐÐÖ´ÐÐÕâ¸öÃüÁî²ÅÄÜ¿´µ½Êä³öÐÅÏ¢£©
+-- ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SQL Plusï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
 -- set serveroutput on;
 
--- ´´½¨É¾³ýÖ¸¶¨ÓÃ»§±íµÄ´æ´¢¹ý³Ì
-CREATE OR REPLACE PROCEDURE dropUserTable
+-- ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ä´æ´¢ï¿½ï¿½ï¿½ï¿½
+create or replace procedure dropUserTable
 (
-   --²ÎÊýIN±íÊ¾ÊäÈë²ÎÊý£¬
-   --OUT±íÊ¾ÊäÈë²ÎÊý£¬ÀàÐÍ¿ÉÒÔÊ¹ÓÃÈÎÒâOracleÖÐµÄºÏ·¨ÀàÐÍ¡£
-   i_table_name IN varchar2
+--ï¿½ï¿½ï¿½ï¿½INï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+--OUTï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oracleï¿½ÐµÄºÏ·ï¿½ï¿½ï¿½ï¿½Í¡ï¿½
+i_table_name in varchar2
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 num number;
-BEGIN
-	select count(1) into num from user_tables where table_name = upper(i_table_name) or table_name = lower(i_table_name); 
-	if num > 0 then 
-		execute immediate 'drop table ' || i_table_name;
-		dbms_output.put_line('±í ' || i_table_name || ' ÒÑÉ¾³ý');
-	end if; 
-	if num <= 0 then 
-		dbms_output.put_line('±í ' || i_table_name || ' ²»´æÔÚ£¬ºöÂÔ');
-	end if; 
-END;
+begin
+select count(1) into num
+from user_tables
+where table_name = upper(i_table_name) or table_name = lower(i_table_name);
+if num > 0 then
+execute immediate 'drop table ' || i_table_name;
+dbms_output.put_line('ï¿½ï¿½ ' || i_table_name || ' ï¿½ï¿½É¾ï¿½ï¿½');
+end if;
+if num <= 0 then
+dbms_output.put_line('ï¿½ï¿½ ' || i_table_name || ' ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½');
+end if;
+end;
 /
 
--- »ñÈ¡ÓÃ»§ËùÁ¥ÊôµÄ×æÏÈ×éÖ¯£¨µ¥Î»¡¢²¿ÃÅ£©
-select f.name,m.name from BC_IDENTITY_ACTOR m,BC_IDENTITY_ACTOR f
-	where f.type_=4 --f.code='qiong'
-    and f.pcode like (case when m.pcode is null then '' else m.pcode || '/' end) || '[' || m.type_ || ']' || m.code || '%'
-    order by m.order_;
+-- ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¯ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Å£ï¿½
+select f.name, m.name
+from BC_IDENTITY_ACTOR m, BC_IDENTITY_ACTOR f
+where f.type_ = 4 --f.code='qiong'
+      and f.pcode like (case when m.pcode is null
+  then ''
+                        else m.pcode || '/' end) || '[' || m.type_ || ']' || m.code || '%'
+order by m.order_;
     

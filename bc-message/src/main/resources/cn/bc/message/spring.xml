@@ -3,9 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- message -->
-    <bean id="messageDao" class="cn.bc.message.dao.jpa.MessageDaoImpl"
-          p:entityClass="cn.bc.message.domain.Message"/>
-    <bean id="messageService" class="cn.bc.message.service.MessageServiceImpl"
-          p:entityClass="cn.bc.message.domain.Message"/>
+  <!-- message -->
+  <bean id="messageDao" class="cn.bc.message.dao.jpa.MessageDaoImpl"
+        p:entityClass="cn.bc.message.domain.Message"/>
+  <bean id="messageService" class="cn.bc.message.service.MessageServiceImpl"
+        p:entityClass="cn.bc.message.domain.Message"/>
 </beans>

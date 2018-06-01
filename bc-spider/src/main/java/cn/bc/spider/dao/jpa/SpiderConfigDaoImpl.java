@@ -13,12 +13,12 @@ import cn.bc.spider.domain.SpiderConfig;
  * @author dragon
  */
 public class SpiderConfigDaoImpl extends JpaCrudDao<SpiderConfig> implements SpiderConfigDao {
-	public SpiderConfig loadByCode(String code) {
-		if (code == null)
-			return null;
-		AndCondition c = new AndCondition();
-		c.add(new EqualsCondition("code", code));
-		c.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED));
-		return this.createQuery().condition(c).singleResult();
-	}
+  public SpiderConfig loadByCode(String code) {
+    if (code == null)
+      return null;
+    AndCondition c = new AndCondition();
+    c.add(new EqualsCondition("code", code));
+    c.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED));
+    return this.createQuery().condition(c).singleResult();
+  }
 }

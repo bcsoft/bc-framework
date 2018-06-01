@@ -21,43 +21,43 @@ import java.util.Calendar;
  * @author dragon
  */
 public class SessionDestroyedNotifier4Syslog implements ApplicationListener<SessionDestroyedEvent> {
-	private static Logger logger = LoggerFactory.getLogger(SessionDestroyedNotifier4Syslog.class);
-	private SyslogService syslogService;
+  private static Logger logger = LoggerFactory.getLogger(SessionDestroyedNotifier4Syslog.class);
+  private SyslogService syslogService;
 
-	@Autowired
-	public void setSyslogService(SyslogService syslogService) {
-		this.syslogService = syslogService;
-	}
+  @Autowired
+  public void setSyslogService(SyslogService syslogService) {
+    this.syslogService = syslogService;
+  }
 
-	public void onApplicationEvent(SessionDestroyedEvent event) {
-		SystemContext context = (SystemContext) event.getContext();
-		if (context != null) {// 表明之前用户已经处于登录状态
-			LoginEvent loginEvent = (LoginEvent) event.getSession().getAttribute("loginEvent");
-			if (logger.isDebugEnabled())
-				logger.debug("session out with user={}, sid=", context.getUserHistory().getName(), event.getSession().getId());
-			// 记录超时日志
-			Syslog log = new Syslog();
-			log.setType(Syslog.TYPE_LOGIN_TIMEOUT);
-			log.setAuthor(context.getUserHistory());
-			log.setFileDate(Calendar.getInstance());
-			log.setSubject(context.getUserHistory().getName() + "登录超时");
-			log.setSid(event.getSid());
+  public void onApplicationEvent(SessionDestroyedEvent event) {
+    SystemContext context = (SystemContext) event.getContext();
+    if (context != null) {// 表明之前用户已经处于登录状态
+      LoginEvent loginEvent = (LoginEvent) event.getSession().getAttribute("loginEvent");
+      if (logger.isDebugEnabled())
+        logger.debug("session out with user={}, sid=", context.getUserHistory().getName(), event.getSession().getId());
+      // 记录超时日志
+      Syslog log = new Syslog();
+      log.setType(Syslog.TYPE_LOGIN_TIMEOUT);
+      log.setAuthor(context.getUserHistory());
+      log.setFileDate(Calendar.getInstance());
+      log.setSubject(context.getUserHistory().getName() + "登录超时");
+      log.setSid(event.getSid());
 
-			if (loginEvent != null) {
-				log.setServerIp(loginEvent.getServerIp());
-				log.setServerName(loginEvent.getServerName());
-				log.setServerInfo(loginEvent.getServerInfo());
+      if (loginEvent != null) {
+        log.setServerIp(loginEvent.getServerIp());
+        log.setServerName(loginEvent.getServerName());
+        log.setServerInfo(loginEvent.getServerInfo());
 
-				log.setClientIp(loginEvent.getClientIp());
-				log.setClientName(loginEvent.getClientName());
-				log.setClientInfo(loginEvent.getClientInfo());
-				log.setClientMac(loginEvent.getClientMac());
-			}
+        log.setClientIp(loginEvent.getClientIp());
+        log.setClientName(loginEvent.getClientName());
+        log.setClientInfo(loginEvent.getClientInfo());
+        log.setClientMac(loginEvent.getClientMac());
+      }
 
-			this.syslogService.save(log);
-		} else {
-			if (logger.isDebugEnabled())
-				logger.debug("session out without context. sid={}", event.getSession().getId());
-		}
-	}
+      this.syslogService.save(log);
+    } else {
+      if (logger.isDebugEnabled())
+        logger.debug("session out without context. sid={}", event.getSession().getId());
+    }
+  }
 }

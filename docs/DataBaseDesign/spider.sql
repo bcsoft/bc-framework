@@ -1,81 +1,100 @@
-DROP TABLE IF EXISTS BC_SPIDER_CFG;
+drop table if exists BC_SPIDER_CFG;
 
 -- 网络抓取配置
-CREATE TABLE BC_SPIDER_CFG(
-	ID INT NOT NULL,
-	STATUS_ INT DEFAULT 0 NOT NULL,
-	ORDER_ VARCHAR(100),
-	CODE VARCHAR(255) NOT NULL,
-	CFG TEXT NOT NULL,
-	AUTHOR_ID INT NOT NULL,
-	FILE_DATE TIMESTAMP NOT NULL,
-	MODIFIER_ID INT NOT NULL,
-	MODIFIED_DATE TIMESTAMP NOT NULL,
-	CONSTRAINT BCPK_SPIDER_CFG PRIMARY KEY (ID),
-	CONSTRAINT BCUK_SPIDER_CFG_CODE UNIQUE (CODE)
+create table BC_SPIDER_CFG (
+  ID            int           not null,
+  STATUS_       int default 0 not null,
+  ORDER_        varchar(100),
+  CODE          varchar(255)  not null,
+  CFG           text          not null,
+  AUTHOR_ID     int           not null,
+  FILE_DATE     timestamp     not null,
+  MODIFIER_ID   int           not null,
+  MODIFIED_DATE timestamp     not null,
+  constraint BCPK_SPIDER_CFG primary key (ID),
+  constraint BCUK_SPIDER_CFG_CODE unique (CODE)
 );
-COMMENT ON TABLE BC_SPIDER_CFG IS '网络抓取配置';
-COMMENT ON COLUMN BC_SPIDER_CFG.ID IS 'ID';
-COMMENT ON COLUMN BC_SPIDER_CFG.STATUS_ IS '状态 : 0-正常,1-已禁用';
-COMMENT ON COLUMN BC_SPIDER_CFG.ORDER_ IS '排序号';
-COMMENT ON COLUMN BC_SPIDER_CFG.CODE IS '编码';
-COMMENT ON COLUMN BC_SPIDER_CFG.CFG IS '配置';
-COMMENT ON COLUMN BC_SPIDER_CFG.AUTHOR_ID IS '创建人ID';
-COMMENT ON COLUMN BC_SPIDER_CFG.FILE_DATE IS '创建时间';
-COMMENT ON COLUMN BC_SPIDER_CFG.MODIFIER_ID IS '最后修改人ID';
-COMMENT ON COLUMN BC_SPIDER_CFG.MODIFIED_DATE IS '最后修改时间';
-ALTER TABLE BC_SPIDER_CFG
-	ADD CONSTRAINT BCFK_SPIDER_CFG_AUTHOR FOREIGN KEY (AUTHOR_ID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE BC_SPIDER_CFG
-	ADD CONSTRAINT BCFK_SPIDER_CFG_MODIFIER FOREIGN KEY (MODIFIER_ID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
+comment on table BC_SPIDER_CFG is '网络抓取配置';
+comment on column BC_SPIDER_CFG.ID is 'ID';
+comment on column BC_SPIDER_CFG.STATUS_ is '状态 : 0-正常,1-已禁用';
+comment on column BC_SPIDER_CFG.ORDER_ is '排序号';
+comment on column BC_SPIDER_CFG.CODE is '编码';
+comment on column BC_SPIDER_CFG.CFG is '配置';
+comment on column BC_SPIDER_CFG.AUTHOR_ID is '创建人ID';
+comment on column BC_SPIDER_CFG.FILE_DATE is '创建时间';
+comment on column BC_SPIDER_CFG.MODIFIER_ID is '最后修改人ID';
+comment on column BC_SPIDER_CFG.MODIFIED_DATE is '最后修改时间';
+alter table BC_SPIDER_CFG
+  add constraint BCFK_SPIDER_CFG_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;
+alter table BC_SPIDER_CFG
+  add constraint BCFK_SPIDER_CFG_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;
 
 -- 资源：友情链接/网络工具
-insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-    select NEXTVAL('CORE_SEQUENCE'), 0, false, 1, m.id, '071000','网络工具', null, 'i0100' 
-    from BC_IDENTITY_RESOURCE m 
-	where m.order_='070000'
-	and not exists (select 0 from BC_IDENTITY_RESOURCE m1 where m1.NAME=m.NAME);
-insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2
-	,(select id from BC_IDENTITY_RESOURCE where order_='071000')
-	, '071001','车管所违法查询(公开)', '/bc/spider/common?code=wscgs_logout_jtwf', 'i0100' 
-	from bc_dual 
-	where not exists (select 0 from BC_IDENTITY_RESOURCE where order_='071001');
-insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2
-	,(select id from BC_IDENTITY_RESOURCE where order_='071000')
-	, '071002','车管所违法查询(企业)', '/bc/spider/common?code=wscgs_login_jtwf', 'i0100' 
-	from bc_dual 
-	where not exists (select 0 from BC_IDENTITY_RESOURCE where order_='071002');
-insert into BC_IDENTITY_RESOURCE (ID,STATUS_,INNER_,TYPE_,BELONG,ORDER_,NAME,URL,ICONCLASS) 
-	select NEXTVAL('CORE_SEQUENCE'), 0, false, 2
-	,(select id from BC_IDENTITY_RESOURCE where order_='071000')
-	, '071099','车管所登录', '/bc/spider/common?code=wscgs_login', 'i0100' 
-	from bc_dual 
-	where not exists (select 0 from BC_IDENTITY_RESOURCE where order_='071099');
+insert into BC_IDENTITY_RESOURCE (ID, STATUS_, INNER_, TYPE_, BELONG, ORDER_, NAME, URL, ICONCLASS)
+  select NEXTVAL('CORE_SEQUENCE'), 0, false, 1, m.id, '071000', '网络工具', null, 'i0100'
+  from BC_IDENTITY_RESOURCE m
+  where m.order_ = '070000'
+        and not exists(select 0
+                       from BC_IDENTITY_RESOURCE m1
+                       where m1.NAME = m.NAME);
+insert into BC_IDENTITY_RESOURCE (ID, STATUS_, INNER_, TYPE_, BELONG, ORDER_, NAME, URL, ICONCLASS)
+  select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, (select id
+                                                 from BC_IDENTITY_RESOURCE
+                                                 where order_ = '071000'), '071001', '车管所违法查询(公开)',
+    '/bc/spider/common?code=wscgs_logout_jtwf', 'i0100'
+  from bc_dual
+  where not exists(select 0
+                   from BC_IDENTITY_RESOURCE
+                   where order_ = '071001');
+insert into BC_IDENTITY_RESOURCE (ID, STATUS_, INNER_, TYPE_, BELONG, ORDER_, NAME, URL, ICONCLASS)
+  select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, (select id
+                                                 from BC_IDENTITY_RESOURCE
+                                                 where order_ = '071000'), '071002', '车管所违法查询(企业)',
+    '/bc/spider/common?code=wscgs_login_jtwf', 'i0100'
+  from bc_dual
+  where not exists(select 0
+                   from BC_IDENTITY_RESOURCE
+                   where order_ = '071002');
+insert into BC_IDENTITY_RESOURCE (ID, STATUS_, INNER_, TYPE_, BELONG, ORDER_, NAME, URL, ICONCLASS)
+  select NEXTVAL('CORE_SEQUENCE'), 0, false, 2, (select id
+                                                 from BC_IDENTITY_RESOURCE
+                                                 where order_ = '071000'), '071099', '车管所登录',
+    '/bc/spider/common?code=wscgs_login', 'i0100'
+  from bc_dual
+  where not exists(select 0
+                   from BC_IDENTITY_RESOURCE
+                   where order_ = '071099');
 
 -- 角色与资源关系配置
 -- 	普通用户、超级管理员
-insert into BC_IDENTITY_ROLE_RESOURCE (RID,SID) 
-	select r.id,m.id from BC_IDENTITY_ROLE r,BC_IDENTITY_RESOURCE m 
-	where r.code in ('BC_COMMON')
-	and m.type_ >= 1 and m.order_ in ('071001','071002','071099')
-	and not exists (select 0 from BC_IDENTITY_ROLE_RESOURCE rr where rr.RID=r.id and rr.SID=m.id);
+insert into BC_IDENTITY_ROLE_RESOURCE (RID, SID)
+  select r.id, m.id
+  from BC_IDENTITY_ROLE r, BC_IDENTITY_RESOURCE m
+  where r.code in ('BC_COMMON')
+        and m.type_ >= 1 and m.order_ in ('071001', '071002', '071099')
+        and not exists(select 0
+                       from BC_IDENTITY_ROLE_RESOURCE rr
+                       where rr.RID = r.id and rr.SID = m.id);
 
 -- 初始数据：网上车管所交通违法查询（公开,非登录状态下的查询）
 -- delete from bc_spider_cfg where code='wscgs_logout_jtwf';
-INSERT INTO bc_spider_cfg(id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
-	select NEXTVAL('CORE_SEQUENCE'), 0, 01, 'wscgs_logout_jtwf'
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, ''
-	from bc_dual
-	where not exists (select 0 from bc_spider_cfg c where c.code='wscgs_logout_jtwf');
-update bc_spider_cfg set cfg='{"group": "wscgs_logout_jtwf",
+insert into bc_spider_cfg (id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
+  select NEXTVAL('CORE_SEQUENCE'), 0, 01, 'wscgs_logout_jtwf', now(), (select id
+                                                                       from bc_identity_actor_history h
+                                                                       where
+                                                                         h.actor_code = 'admin' and h.current = true),
+    now(), (select id
+            from bc_identity_actor_history h
+            where h.actor_code = 'admin' and h.current = true), ''
+  from bc_dual
+  where not exists(select 0
+                   from bc_spider_cfg c
+                   where c.code = 'wscgs_logout_jtwf');
+update bc_spider_cfg set cfg = '{"group": "wscgs_logout_jtwf",
 	"method": "post",
 	"title": "网上车管所交通违法公开查询",
 	"description": "此为网上车管所非登录状态下机动车违法信息的快捷查询，在这里只需输入车牌号码即可，无需输入发动机号、机架号、验证码等繁琐的信息！你也可以<a href=''http://www.gzjd.gov.cn/cgs/html/includes/submain_visitor.html''>点击这里</a>打开网上车管所的原始查询页面！",
@@ -131,18 +150,23 @@ update bc_spider_cfg set cfg='{"group": "wscgs_logout_jtwf",
 		"X-Requested-With": "XMLHttpRequest",
 		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31"
 	}
-}' where code='wscgs_logout_jtwf';
+}'
+where code = 'wscgs_logout_jtwf';
 
 -- 初始数据：网上车管所的登录
 -- delete from bc_spider_cfg where code='wscgs_login';
-INSERT INTO bc_spider_cfg(id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
-	select NEXTVAL('CORE_SEQUENCE'), 0, 02, 'wscgs_login'
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, ''
-	from bc_dual
-	where not exists (select 0 from bc_spider_cfg c where c.code='wscgs_login');
-update bc_spider_cfg set cfg='{"group": "wscgs_login",
+insert into bc_spider_cfg (id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
+  select NEXTVAL('CORE_SEQUENCE'), 0, 02, 'wscgs_login', now(), (select id
+                                                                 from bc_identity_actor_history h
+                                                                 where h.actor_code = 'admin' and h.current = true),
+    now(), (select id
+            from bc_identity_actor_history h
+            where h.actor_code = 'admin' and h.current = true), ''
+  from bc_dual
+  where not exists(select 0
+                   from bc_spider_cfg c
+                   where c.code = 'wscgs_login');
+update bc_spider_cfg set cfg = '{"group": "wscgs_login",
 	"method": "post",
 	"title": "网上车管所登录",
 	"description": "此为登录网上车管所的快捷方式！你也可以<a href=''http://www.gzjd.gov.cn/cgs/html/hall/index.html''>点击这里</a>打开网上车管所的原始登录页面！",
@@ -164,18 +188,24 @@ update bc_spider_cfg set cfg='{"group": "wscgs_login",
 		]},
 		{"label": "验证码", "name": "captchaId", "placeholder": "可不填", "captcha": {"url": "http://www.gzjd.gov.cn/cgs/captcha.jpg", "auto": false}}
 	]
-}' where code='wscgs_login';
+}'
+where code = 'wscgs_login';
 
 -- 初始数据：网上车管所交通违法查询(企业登录,登录状态下的查询)
 -- delete from bc_spider_cfg where code='wscgs_login_jtwf';
-INSERT INTO bc_spider_cfg(id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
-	select NEXTVAL('CORE_SEQUENCE'), 0, 03, 'wscgs_login_jtwf'
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, now(), (select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	, ''
-	from bc_dual
-	where not exists (select 0 from bc_spider_cfg c where c.code='wscgs_login_jtwf');
-update bc_spider_cfg set cfg='{"group": "wscgs_login_jtwf",
+insert into bc_spider_cfg (id, status_, order_, code, file_date, author_id, modified_date, modifier_id, cfg)
+  select NEXTVAL('CORE_SEQUENCE'), 0, 03, 'wscgs_login_jtwf', now(), (select id
+                                                                      from bc_identity_actor_history h
+                                                                      where
+                                                                        h.actor_code = 'admin' and h.current = true),
+    now(), (select id
+            from bc_identity_actor_history h
+            where h.actor_code = 'admin' and h.current = true), ''
+  from bc_dual
+  where not exists(select 0
+                   from bc_spider_cfg c
+                   where c.code = 'wscgs_login_jtwf');
+update bc_spider_cfg set cfg = '{"group": "wscgs_login_jtwf",
 	"method": "post",
 	"title": "网上车管所交通违法登录后查询(宝城、广发)",
 	"description": "此为网上车管所登录状态下机动车违法信息的快捷查询，在这里只需输入帐号密码即可，无需输入验证码等繁琐的信息！你也可以<a href=''http://www.gzjd.gov.cn/cgs/html/hall/index.html''>点击这里</a>打开网上车管所的原始登录页面！",
@@ -199,19 +229,24 @@ update bc_spider_cfg set cfg='{"group": "wscgs_login_jtwf",
 		]},
 		{"label": "验证码", "name": "captchaId", "placeholder": "可不填", "captcha": {"url": "http://www.gzjd.gov.cn/cgs/captcha.jpg", "auto": false}}
 	]
-}' where code='wscgs_login_jtwf';
+}'
+where code = 'wscgs_login_jtwf';
 
 -- 模板数据：网上车管所交通违法公开查询UI模板
 -- delete from bc_template where code='wscgs_logout_jtwf';
-INSERT INTO bc_template(id, status_, inner_, order_, TYPE_ID, category, subject, code, version_, file_date, author_id, uid_, content)
-    select NEXTVAL('CORE_SEQUENCE'),0,true,'2101'
-	,(select id from bc_template_type where code='custom')
-	,'营运系统/网络抓取','网上车管所交通违法公开查询UI模板','wscgs_logout_jtwf','1'
-    ,now(),(select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	,'Template.mt.'|| NEXTVAL('CORE_SEQUENCE'), ''
-	from bc_dual
-	where not exists (select 0 from bc_template t where t.code='wscgs_logout_jtwf');
-update bc_template set content='<#if (_d?size > 0)>
+insert into bc_template (id, status_, inner_, order_, TYPE_ID, category, subject, code, version_, file_date, author_id, uid_, content)
+  select NEXTVAL('CORE_SEQUENCE'), 0, true, '2101', (select id
+                                                     from bc_template_type
+                                                     where code = 'custom'), '营运系统/网络抓取', '网上车管所交通违法公开查询UI模板',
+    'wscgs_logout_jtwf', '1', now(), (select id
+                                      from bc_identity_actor_history h
+                                      where h.actor_code = 'admin' and h.current = true),
+    'Template.mt.' || NEXTVAL('CORE_SEQUENCE'), ''
+  from bc_dual
+  where not exists(select 0
+                   from bc_template t
+                   where t.code = 'wscgs_logout_jtwf');
+update bc_template set content = '<#if (_d?size > 0)>
 <table cellspacing="0" cellpadding="0">
 <colgroup>
 	<col style="width: 2em;">
@@ -267,19 +302,24 @@ update bc_template set content='<#if (_d?size > 0)>
 </table>
 <#else>
 <span style="padding:4px;">无数据！</span>
-</#if>' where code='wscgs_logout_jtwf';
+</#if>'
+where code = 'wscgs_logout_jtwf';
 
 -- 模板数据：网上车管所交通违法查询(帐号登录后的查询)UI模板
 -- delete from bc_template where code='wscgs_login_jtwf';
-INSERT INTO bc_template(id, status_, inner_, order_, TYPE_ID, category, subject, code, version_, file_date, author_id, uid_, content)
-    select NEXTVAL('CORE_SEQUENCE'),0,true,'2102'
-	,(select id from bc_template_type where code='custom')
-	,'营运系统/网络抓取','网上车管所交通违法帐号查询UI模板','wscgs_login_jtwf','1'
-    ,now(),(select id from bc_identity_actor_history h where h.actor_code='admin' and h.current=true)
-	,'Template.mt.'|| NEXTVAL('CORE_SEQUENCE'), ''
-	from bc_dual
-	where not exists (select 0 from bc_template t where t.code='wscgs_login_jtwf');
-update bc_template set content='<#if (_d?size > 0)>
+insert into bc_template (id, status_, inner_, order_, TYPE_ID, category, subject, code, version_, file_date, author_id, uid_, content)
+  select NEXTVAL('CORE_SEQUENCE'), 0, true, '2102', (select id
+                                                     from bc_template_type
+                                                     where code = 'custom'), '营运系统/网络抓取', '网上车管所交通违法帐号查询UI模板',
+    'wscgs_login_jtwf', '1', now(), (select id
+                                     from bc_identity_actor_history h
+                                     where h.actor_code = 'admin' and h.current = true),
+    'Template.mt.' || NEXTVAL('CORE_SEQUENCE'), ''
+  from bc_dual
+  where not exists(select 0
+                   from bc_template t
+                   where t.code = 'wscgs_login_jtwf');
+update bc_template set content = '<#if (_d?size > 0)>
 <table cellspacing="0" cellpadding="0">
 <colgroup>
 	<col style="width: 2.5em;">
@@ -335,7 +375,8 @@ update bc_template set content='<#if (_d?size > 0)>
 </table>
 <#else>
 <span style="padding:4px;">无数据！</span>
-</#if>' where code='wscgs_login_jtwf';
+</#if>'
+where code = 'wscgs_login_jtwf';
 
 -- select * from bc_spider_cfg;
 -- delete from bc_spider_cfg;

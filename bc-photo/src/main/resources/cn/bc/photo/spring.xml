@@ -7,21 +7,21 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd">
-    <!-- 附件信息解析器 -->
-    <util:map id="photoExecutors" key-type="java.lang.String" value-type="cn.bc.photo.service.PhotoExecutor">
-        <entry key="attach" value-ref="photoExecutor4Attach"/>
-        <entry key="wf" value-ref="photoExecutor4FlowAttach"/>
-    </util:map>
-    <bean id="photoService" class="cn.bc.photo.service.PhotoServiceImpl" p:photoExecutors-ref="photoExecutors"/>
+  <!-- 附件信息解析器 -->
+  <util:map id="photoExecutors" key-type="java.lang.String" value-type="cn.bc.photo.service.PhotoExecutor">
+    <entry key="attach" value-ref="photoExecutor4Attach"/>
+    <entry key="wf" value-ref="photoExecutor4FlowAttach"/>
+  </util:map>
+  <bean id="photoService" class="cn.bc.photo.service.PhotoServiceImpl" p:photoExecutors-ref="photoExecutors"/>
 
-    <bean id="ipCameraDao" class="cn.bc.photo.dao.jpa.IpCameraDaoImpl"
-          p:entityClass="cn.bc.photo.domain.IpCamera"/>
-    <bean id="ipCameraService" class="cn.bc.photo.service.IpCameraServiceImpl"
-          p:entityClass="cn.bc.photo.domain.IpCamera"
-          p:ipCameraDao-ref="ipCameraDao"/>
+  <bean id="ipCameraDao" class="cn.bc.photo.dao.jpa.IpCameraDaoImpl"
+        p:entityClass="cn.bc.photo.domain.IpCamera"/>
+  <bean id="ipCameraService" class="cn.bc.photo.service.IpCameraServiceImpl"
+        p:entityClass="cn.bc.photo.domain.IpCamera"
+        p:ipCameraDao-ref="ipCameraDao"/>
 
-    <!-- 标准附件 -->
-    <bean name="photoExecutor4Attach" class="cn.bc.photo.service.PhotoExecutor4Attach"/>
-    <!-- 流程附件 -->
-    <bean name="photoExecutor4FlowAttach" class="cn.bc.photo.service.PhotoExecutor4FlowAttach"/>
+  <!-- 标准附件 -->
+  <bean name="photoExecutor4Attach" class="cn.bc.photo.service.PhotoExecutor4Attach"/>
+  <!-- 流程附件 -->
+  <bean name="photoExecutor4FlowAttach" class="cn.bc.photo.service.PhotoExecutor4FlowAttach"/>
 </beans>

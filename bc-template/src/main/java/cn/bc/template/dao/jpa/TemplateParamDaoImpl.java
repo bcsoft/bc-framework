@@ -23,57 +23,57 @@ import java.util.Map;
  * @author lbj
  */
 public class TemplateParamDaoImpl extends JpaCrudDao<TemplateParam> implements TemplateParamDao {
-	private static Logger logger = LoggerFactory.getLogger(TemplateParamDaoImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(TemplateParamDaoImpl.class);
 
-	private JdbcTemplate jdbcTemplate;
+  private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+  @Autowired
+  public void setDataSource(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
 
-	public Map<String, Object> getMap(String sql) throws Exception {
-		try {
-			return jdbcTemplate.queryForMap(sql);
-		} catch (EmptyResultDataAccessException erde) {
-			logger.warn("sql=" + sql + ",查询无返回结果。");
-			return null;
-		}
-	}
+  public Map<String, Object> getMap(String sql) throws Exception {
+    try {
+      return jdbcTemplate.queryForMap(sql);
+    } catch (EmptyResultDataAccessException erde) {
+      logger.warn("sql=" + sql + ",查询无返回结果。");
+      return null;
+    }
+  }
 
-	public List<Object> getListIncludeObject(String sql) throws Exception {
-		return jdbcTemplate.queryForList(sql, Object.class);
-	}
+  public List<Object> getListIncludeObject(String sql) throws Exception {
+    return jdbcTemplate.queryForList(sql, Object.class);
+  }
 
-	public List<Map<String, Object>> getListIncludeMap(String sql)
-		throws Exception {
-		return jdbcTemplate.queryForList(sql);
-	}
+  public List<Map<String, Object>> getListIncludeMap(String sql)
+    throws Exception {
+    return jdbcTemplate.queryForList(sql);
+  }
 
-	public List<List<Object>> getListIncludeList(String sql) throws Exception {
-		return executeNativeQuery(sql, (Object[]) null, new RowMapper<List<Object>>() {
-			public List<Object> mapRow(Object[] rs, int rowNum) {
-				List<Object> list = new ArrayList<>();
-				for (Object o : rs) {
-					list.add(o);
-				}
-				return list;
-			}
-		});
-	}
+  public List<List<Object>> getListIncludeList(String sql) throws Exception {
+    return executeNativeQuery(sql, (Object[]) null, new RowMapper<List<Object>>() {
+      public List<Object> mapRow(Object[] rs, int rowNum) {
+        List<Object> list = new ArrayList<>();
+        for (Object o : rs) {
+          list.add(o);
+        }
+        return list;
+      }
+    });
+  }
 
-	public String getJsonsString(String sql) throws Exception {
-		try {
-			return jdbcTemplate.queryForObject(sql, String.class);
-		} catch (EmptyResultDataAccessException erde) {
-			logger.warn("sql=" + sql + ",查询无返回结果." + erde.getStackTrace());
-			return null;
-		} catch (IncorrectResultSetColumnCountException irscce) {
-			logger.error("sql=" + sql + ",查询返回多列结果." + irscce.getStackTrace());
-			return null;
-		} catch (IncorrectResultSizeDataAccessException irsdae) {
-			logger.error("sql=" + sql + ",查询返回多行结果." + irsdae.getStackTrace());
-			return null;
-		}
-	}
+  public String getJsonsString(String sql) throws Exception {
+    try {
+      return jdbcTemplate.queryForObject(sql, String.class);
+    } catch (EmptyResultDataAccessException erde) {
+      logger.warn("sql=" + sql + ",查询无返回结果." + erde.getStackTrace());
+      return null;
+    } catch (IncorrectResultSetColumnCountException irscce) {
+      logger.error("sql=" + sql + ",查询返回多列结果." + irscce.getStackTrace());
+      return null;
+    } catch (IncorrectResultSizeDataAccessException irsdae) {
+      logger.error("sql=" + sql + ",查询返回多行结果." + irsdae.getStackTrace());
+      return null;
+    }
+  }
 }

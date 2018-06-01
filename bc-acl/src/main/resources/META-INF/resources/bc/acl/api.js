@@ -16,34 +16,34 @@ bc.namespace("bc.acl");
  * @option {String} name [可选] 对话框的标题
  */
 bc.acl.config = function (option) {
-	if (!option || !option.docType || !option.docId || !option.docName) {
-		bc.msg.alert("必须配置文档标识、类型、名称信息 - bc.acl.control");
-		return;
-	}
+  if (!option || !option.docType || !option.docId || !option.docName) {
+    bc.msg.alert("必须配置文档标识、类型、名称信息 - bc.acl.control");
+    return;
+  }
 
-	// 组装参数
-	var aclData = {
-		docId: option.docId,
-		docType: option.docType,
-		docName: option.docName,
-		bit: option.bit || '01',
-		name: option.name || "[" + option.docName + "]的访问控制",
-		title: option.title || "[" + option.docName + "]的访问控制"
-	};
-	if(option.role) aclData.role = option.role;
+  // 组装参数
+  var aclData = {
+    docId: option.docId,
+    docType: option.docType,
+    docName: option.docName,
+    bit: option.bit || '01',
+    name: option.name || "[" + option.docName + "]的访问控制",
+    title: option.title || "[" + option.docName + "]的访问控制"
+  };
+  if (option.role) aclData.role = option.role;
 
-	// 弹出配置对话框
-	var name = option.name || "[" + option.docName + "]的访问控制";
-	bc.page.newWin({
-		url: bc.root + "/bc/acl/config",
-		data: aclData,
-		mid: option.mid || "aclConfig:" + option.docType + ":" + option.docId,
-		name: name,
-		title: name,
-		afterClose: function(status){
-			if(status && option.onOk){
-				option.onOk.call(this, status);
-			}
-		}
-	});
+  // 弹出配置对话框
+  var name = option.name || "[" + option.docName + "]的访问控制";
+  bc.page.newWin({
+    url: bc.root + "/bc/acl/config",
+    data: aclData,
+    mid: option.mid || "aclConfig:" + option.docType + ":" + option.docId,
+    name: name,
+    title: name,
+    afterClose: function (status) {
+      if (status && option.onOk) {
+        option.onOk.call(this, status);
+      }
+    }
+  });
 };

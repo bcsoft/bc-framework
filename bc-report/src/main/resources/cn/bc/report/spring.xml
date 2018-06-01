@@ -8,37 +8,37 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <bean id="reportTemplateDao" class="cn.bc.report.dao.jpa.ReportTemplateDaoImpl"/>
-    <bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl"/>
+  <bean id="reportTemplateDao" class="cn.bc.report.dao.jpa.ReportTemplateDaoImpl"/>
+  <bean id="reportTemplateService" class="cn.bc.report.service.ReportTemplateServiceImpl"/>
 
-    <!-- reportTask -->
-    <bean id="reportTaskDao" class="cn.bc.report.dao.jpa.ReportTaskDaoImpl"
-          p:entityClass="cn.bc.report.domain.ReportTask"/>
-    <bean id="reportTaskService" class="cn.bc.report.service.ReportTaskServiceImpl"
-          p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
+  <!-- reportTask -->
+  <bean id="reportTaskDao" class="cn.bc.report.dao.jpa.ReportTaskDaoImpl"
+        p:entityClass="cn.bc.report.domain.ReportTask"/>
+  <bean id="reportTaskService" class="cn.bc.report.service.ReportTaskServiceImpl"
+        p:entityClass="cn.bc.report.domain.ReportTask" p:reportTaskDao-ref="reportTaskDao"/>
 
-    <!-- reportHistory -->
-    <bean id="reportHistoryDao" class="cn.bc.report.dao.jpa.ReportHistoryDaoImpl"
-          p:entityClass="cn.bc.report.domain.ReportHistory"/>
-    <bean id="reportHistoryService" class="cn.bc.report.service.ReportHistoryServiceImpl"
-          p:entityClass="cn.bc.report.domain.ReportHistory" p:crudDao-ref="reportHistoryDao"/>
+  <!-- reportHistory -->
+  <bean id="reportHistoryDao" class="cn.bc.report.dao.jpa.ReportHistoryDaoImpl"
+        p:entityClass="cn.bc.report.domain.ReportHistory"/>
+  <bean id="reportHistoryService" class="cn.bc.report.service.ReportHistoryServiceImpl"
+        p:entityClass="cn.bc.report.domain.ReportHistory" p:crudDao-ref="reportHistoryDao"/>
 
-    <!-- reportService事务 -->
-    <aop:config>
-        <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
-            包或实现类使用within关键字，接口实现使用this关键字
-         -->
-        <aop:pointcut id="reportServiceMethod" expression="this(cn.bc.report.service.ReportService)"/>
-        <aop:advisor pointcut-ref="reportServiceMethod" advice-ref="reportServiceTxAdvice"/>
-    </aop:config>
-    <tx:advice id="reportServiceTxAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="run*" propagation="REQUIRED" read-only="false"/>
-        </tx:attributes>
-    </tx:advice>
-    <!-- reportService -->
-    <bean id="reportService" class="cn.bc.report.service.ReportServiceImpl"/>
+  <!-- reportService事务 -->
+  <aop:config>
+    <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+        包或实现类使用within关键字，接口实现使用this关键字
+     -->
+    <aop:pointcut id="reportServiceMethod" expression="this(cn.bc.report.service.ReportService)"/>
+    <aop:advisor pointcut-ref="reportServiceMethod" advice-ref="reportServiceTxAdvice"/>
+  </aop:config>
+  <tx:advice id="reportServiceTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="run*" propagation="REQUIRED" read-only="false"/>
+    </tx:attributes>
+  </tx:advice>
+  <!-- reportService -->
+  <bean id="reportService" class="cn.bc.report.service.ReportServiceImpl"/>
 </beans>

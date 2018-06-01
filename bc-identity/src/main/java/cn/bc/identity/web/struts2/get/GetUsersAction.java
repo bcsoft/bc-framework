@@ -24,64 +24,64 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class GetUsersAction extends ActionSupport {
-	private static final long serialVersionUID = 1L;
-	private static Logger logger = LoggerFactory.getLogger(GetUsersAction.class);
-	private ActorService actorService;
-	public String group;// 指定岗位的编码
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED) + ","
-		+ String.valueOf(BCConstants.STATUS_DISABLED); // 用户的状态，多个用逗号连接sx
-	public String json;
+  private static final long serialVersionUID = 1L;
+  private static Logger logger = LoggerFactory.getLogger(GetUsersAction.class);
+  private ActorService actorService;
+  public String group;// 指定岗位的编码
+  public String status = String.valueOf(BCConstants.STATUS_ENABLED) + ","
+    + String.valueOf(BCConstants.STATUS_DISABLED); // 用户的状态，多个用逗号连接sx
+  public String json;
 
-	@Autowired
-	public void setActorService(ActorService actorService) {
-		this.actorService = actorService;
-	}
+  @Autowired
+  public void setActorService(ActorService actorService) {
+    this.actorService = actorService;
+  }
 
-	@Override
-	public String execute() throws Exception {
-		JSONArray json = new JSONArray();
+  @Override
+  public String execute() throws Exception {
+    JSONArray json = new JSONArray();
 
-		Long groupId = null;
-		if (this.group != null && !this.group.trim().equals("")) {
-			Actor g = this.actorService.loadByCode(group);
-			groupId = g.getId();
-		}
+    Long groupId = null;
+    if (this.group != null && !this.group.trim().equals("")) {
+      Actor g = this.actorService.loadByCode(group);
+      groupId = g.getId();
+    }
 
-		// 获取数据
-		List<Actor> data = this.actorService
-			.findFollowerWithName(groupId, null,
-				new Integer[]{ActorRelation.TYPE_BELONG},
-				new Integer[]{Actor.TYPE_USER},
-				new Integer[]{BCConstants.STATUS_ENABLED});
-		convert2JsonArray(json, data);
-		if (logger.isDebugEnabled())
-			logger.debug("json=" + json);
+    // 获取数据
+    List<Actor> data = this.actorService
+      .findFollowerWithName(groupId, null,
+        new Integer[]{ActorRelation.TYPE_BELONG},
+        new Integer[]{Actor.TYPE_USER},
+        new Integer[]{BCConstants.STATUS_ENABLED});
+    convert2JsonArray(json, data);
+    if (logger.isDebugEnabled())
+      logger.debug("json=" + json);
 
-		// 返回结果
-		this.json = json.toString();
-		return "json";
-	}
+    // 返回结果
+    this.json = json.toString();
+    return "json";
+  }
 
-	/**
-	 * 转换数据为JsonArray格式
-	 *
-	 * @param array
-	 * @param data
-	 */
-	protected void convert2JsonArray(JSONArray array,
-	                                 List<Actor> data) {
-		for (Actor d : data) {
-			array.put(this.convert2JsonObject(d));
-		}
-	}
+  /**
+   * 转换数据为JsonArray格式
+   *
+   * @param array
+   * @param data
+   */
+  protected void convert2JsonArray(JSONArray array,
+                                   List<Actor> data) {
+    for (Actor d : data) {
+      array.put(this.convert2JsonObject(d));
+    }
+  }
 
-	/**
-	 * 转换对象为JsonObject格式
-	 *
-	 * @param obj
-	 * @return
-	 */
-	protected Object convert2JsonObject(Actor obj) {
-		return new JSONObject(obj);
-	}
+  /**
+   * 转换对象为JsonObject格式
+   *
+   * @param obj
+   * @return
+   */
+  protected Object convert2JsonObject(Actor obj) {
+    return new JSONObject(obj);
+  }
 }

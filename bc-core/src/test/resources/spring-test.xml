@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-    <!-- 
-    	启用 Spring 2.5 注释驱动功能: http://www.ibm.com/developerworks/cn/java/j-lo-spring25-ioc/
-     -->
-	<context:annotation-config/>
-	<context:component-scan base-package="cn.bc"/>
+  <!--
+    启用 Spring 2.5 注释驱动功能: http://www.ibm.com/developerworks/cn/java/j-lo-spring25-ioc/
+   -->
+  <context:annotation-config/>
+  <context:component-scan base-package="cn.bc"/>
 
-	<!-- 数据库连接及事务管理配置 -->
-	<import resource="classpath:spring-test-db.xml" />
+  <!-- 数据库连接及事务管理配置 -->
+  <import resource="classpath:spring-test-db.xml"/>
 
-	<!-- 初始化spring的工具类 -->
-	<bean id="springUtils" class="cn.bc.core.util.SpringUtils" />
+  <!-- 初始化spring的工具类 -->
+  <bean id="springUtils" class="cn.bc.core.util.SpringUtils"/>
 </beans>

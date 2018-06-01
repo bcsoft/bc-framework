@@ -6,36 +6,36 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-	<!--
-		启用 Spring 2.5 注释驱动功能: http://www.ibm.com/developerworks/cn/java/j-lo-spring25-ioc/
-	 -->
-	<context:annotation-config/>
-	<context:component-scan base-package="cn.bc"/>
+  <!--
+    启用 Spring 2.5 注释驱动功能: http://www.ibm.com/developerworks/cn/java/j-lo-spring25-ioc/
+   -->
+  <context:annotation-config/>
+  <context:component-scan base-package="cn.bc"/>
 
-	<!-- 数据库连接及事务管理配置 -->
-	<import resource="classpath:spring-test-jpa.xml"/>
-	<import resource="classpath:spring-test-datasource-${datasource.type}.xml"/>
+  <!-- 数据库连接及事务管理配置 -->
+  <import resource="classpath:spring-test-jpa.xml"/>
+  <import resource="classpath:spring-test-datasource-${datasource.type}.xml"/>
 
-	<!-- 标准的crud事务拦截配置：拦截所有实现CrudService接口的类 -->
-	<import resource="classpath:cn/bc/core/spring.xml"/>
+  <!-- 标准的crud事务拦截配置：拦截所有实现CrudService接口的类 -->
+  <import resource="classpath:cn/bc/core/spring.xml"/>
 
-	<!-- 本模块的配置 -->
-	<import resource="classpath:cn/bc/template/spring.xml"/>
-	<import resource="classpath:cn/bc/identity/spring.xml"/>
-	<import resource="classpath:cn/bc/log/spring.xml"/>
-	<import resource="classpath:cn/bc/docs/spring.xml"/>
+  <!-- 本模块的配置 -->
+  <import resource="classpath:cn/bc/template/spring.xml"/>
+  <import resource="classpath:cn/bc/identity/spring.xml"/>
+  <import resource="classpath:cn/bc/log/spring.xml"/>
+  <import resource="classpath:cn/bc/docs/spring.xml"/>
 
-	<!-- ehcache的配置 -->
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-		<property name="configLocation">
-			<value>classpath:ehcache.xml</value>
-		</property>
-		<property name="cacheManagerName">
-			<value>cn.bc.cache.framework</value>
-		</property>
-	</bean>
-	<bean id="bcCache" class="cn.bc.core.cache.EhcacheImpl">
-		<constructor-arg value="cn.bc.cache.framework"/>
-		<constructor-arg ref="cacheManager"/>
-	</bean>
+  <!-- ehcache的配置 -->
+  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation">
+      <value>classpath:ehcache.xml</value>
+    </property>
+    <property name="cacheManagerName">
+      <value>cn.bc.cache.framework</value>
+    </property>
+  </bean>
+  <bean id="bcCache" class="cn.bc.core.cache.EhcacheImpl">
+    <constructor-arg value="cn.bc.cache.framework"/>
+    <constructor-arg ref="cacheManager"/>
+  </bean>
 </beans>

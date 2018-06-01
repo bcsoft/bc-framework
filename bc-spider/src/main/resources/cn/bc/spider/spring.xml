@@ -8,26 +8,26 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <!-- 网络抓取：事务控制 -->
-    <aop:config>
-        <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
-            包或实现类使用within关键字，接口实现使用this关键字 -->
-        <aop:pointcut id="spiderServiceMethod" expression="this(cn.bc.spider.service.SpiderService)"/>
-        <aop:advisor pointcut-ref="spiderServiceMethod" advice-ref="spiderServiceTxAdvice"/>
-    </aop:config>
-    <tx:advice id="spiderServiceTxAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="do*" propagation="REQUIRED" read-only="false"/>
-        </tx:attributes>
-    </tx:advice>
+  <!-- 网络抓取：事务控制 -->
+  <aop:config>
+    <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+        包或实现类使用within关键字，接口实现使用this关键字 -->
+    <aop:pointcut id="spiderServiceMethod" expression="this(cn.bc.spider.service.SpiderService)"/>
+    <aop:advisor pointcut-ref="spiderServiceMethod" advice-ref="spiderServiceTxAdvice"/>
+  </aop:config>
+  <tx:advice id="spiderServiceTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="do*" propagation="REQUIRED" read-only="false"/>
+    </tx:attributes>
+  </tx:advice>
 
-    <!-- 网络抓取：Service -->
-    <bean id="spiderConfigDao" class="cn.bc.spider.dao.jpa.SpiderConfigDaoImpl"
-          p:entityClass="cn.bc.spider.domain.SpiderConfig"/>
-    <bean id="spiderService" class="cn.bc.spider.service.SpiderServiceImpl"/>
+  <!-- 网络抓取：Service -->
+  <bean id="spiderConfigDao" class="cn.bc.spider.dao.jpa.SpiderConfigDaoImpl"
+        p:entityClass="cn.bc.spider.domain.SpiderConfig"/>
+  <bean id="spiderService" class="cn.bc.spider.service.SpiderServiceImpl"/>
 </beans>

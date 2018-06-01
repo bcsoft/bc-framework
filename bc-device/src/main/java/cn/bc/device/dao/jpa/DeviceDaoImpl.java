@@ -17,29 +17,29 @@ import java.sql.SQLException;
  * @author hwx
  */
 public class DeviceDaoImpl extends JpaCrudDao<Device> implements DeviceDao {
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-	public Long checkDeviceCodeIsExist(String code) {
-		// 查询所有状态的设备
-		String sql = "select id from bc_device where code=?";
-		try {
-			return this.jdbcTemplate.queryForObject(sql, new Object[]{code}, Long.class);
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
+  public Long checkDeviceCodeIsExist(String code) {
+    // 查询所有状态的设备
+    String sql = "select id from bc_device where code=?";
+    try {
+      return this.jdbcTemplate.queryForObject(sql, new Object[]{code}, Long.class);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
 
-	public String findDeviceCode(Long id) {
-		String sql = "select code from bc_device where id=?";
-		try {
-			return jdbcTemplate.queryForObject(sql.toString(), new Object[]{id}, new RowMapper<String>() {
-				public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-					return rs.getString(1);
-				}
-			});
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
+  public String findDeviceCode(Long id) {
+    String sql = "select code from bc_device where id=?";
+    try {
+      return jdbcTemplate.queryForObject(sql.toString(), new Object[]{id}, new RowMapper<String>() {
+        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+          return rs.getString(1);
+        }
+      });
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
 }

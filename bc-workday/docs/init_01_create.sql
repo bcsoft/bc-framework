@@ -1,15 +1,15 @@
 -- 工作日模块建表脚本
-DROP TABLE IF EXISTS BC_WORKDAY;
-CREATE TABLE BC_WORKDAY (
-  ID SERIAL NOT NULL PRIMARY KEY,
-  DAYOFF BOOLEAN NOT NULL,
-  FROM_DATE DATE NOT NULL UNIQUE,
-  TO_DATE DATE NOT NULL CHECK(TO_DATE >= FROM_DATE),
-  DESC_ VARCHAR(1000)
+drop table if exists BC_WORKDAY;
+create table BC_WORKDAY (
+  ID        serial  not null primary key,
+  DAYOFF    boolean not null,
+  FROM_DATE date    not null unique,
+  TO_DATE   date    not null check (TO_DATE >= FROM_DATE),
+  DESC_     varchar(1000)
   -- 需要程序约束不同记录不能存在时间出现交叉的情况
 );
-COMMENT ON TABLE BC_WORKDAY IS '工作日';
-COMMENT ON COLUMN BC_WORKDAY.DAYOFF IS 'TRUE: 休息日, FALSE: 工作日';
-COMMENT ON COLUMN BC_WORKDAY.FROM_DATE IS '开始日期';
-COMMENT ON COLUMN BC_WORKDAY.TO_DATE IS '结束日期';
-COMMENT ON COLUMN BC_WORKDAY.DESC_ IS '备注';
+comment on table BC_WORKDAY is '工作日';
+comment on column BC_WORKDAY.DAYOFF is 'TRUE: 休息日, FALSE: 工作日';
+comment on column BC_WORKDAY.FROM_DATE is '开始日期';
+comment on column BC_WORKDAY.TO_DATE is '结束日期';
+comment on column BC_WORKDAY.DESC_ is '备注';

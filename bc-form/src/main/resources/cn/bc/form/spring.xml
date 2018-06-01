@@ -6,25 +6,25 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <!--form -->
-    <bean id="formDao" class="cn.bc.form.dao.jpa.FormDaoImpl"/>
-    <bean id="formService" class="cn.bc.form.service.FormServiceImpl"/>
+  <!--form -->
+  <bean id="formDao" class="cn.bc.form.dao.jpa.FormDaoImpl"/>
+  <bean id="formService" class="cn.bc.form.service.FormServiceImpl"/>
 
-    <!-- field -->
-    <bean id="fieldDao" class="cn.bc.form.dao.jpa.FieldDaoImpl"/>
-    <bean id="fieldService" class="cn.bc.form.service.FieldServiceImpl"/>
+  <!-- field -->
+  <bean id="fieldDao" class="cn.bc.form.dao.jpa.FieldDaoImpl"/>
+  <bean id="fieldService" class="cn.bc.form.service.FieldServiceImpl"/>
 
-    <!-- fieldLog -->
-    <bean id="fieldLogDao" class="cn.bc.form.dao.jpa.FieldLogDaoImpl"/>
-    <bean id="fieldLogService" class="cn.bc.form.service.FieldLogServiceImpl"/>
+  <!-- fieldLog -->
+  <bean id="fieldLogDao" class="cn.bc.form.dao.jpa.FieldLogDaoImpl"/>
+  <bean id="fieldLogService" class="cn.bc.form.service.FieldLogServiceImpl"/>
 
-    <!-- customForm -->
-    <bean id="customFormService" class="cn.bc.form.service.CustomFormServiceImpl"/>
+  <!-- customForm -->
+  <bean id="customFormService" class="cn.bc.form.service.CustomFormServiceImpl"/>
 
-    <aop:config>
-        <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
-            包或实现类使用within关键字，接口实现使用this关键字 -->
-        <aop:pointcut id="customFormServiceMethod" expression="this(cn.bc.form.service.CustomFormService)"/>
-        <aop:advisor pointcut-ref="customFormServiceMethod" advice-ref="crudServiceTxAdvice"/>
-    </aop:config>
+  <aop:config>
+    <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+        包或实现类使用within关键字，接口实现使用this关键字 -->
+    <aop:pointcut id="customFormServiceMethod" expression="this(cn.bc.form.service.CustomFormService)"/>
+    <aop:advisor pointcut-ref="customFormServiceMethod" advice-ref="crudServiceTxAdvice"/>
+  </aop:config>
 </beans>

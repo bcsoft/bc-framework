@@ -30,71 +30,71 @@ import java.util.Map;
  * @author lbj
  */
 public class ReportServiceImpl implements ReportService, BeanFactoryAware {
-	@Autowired
-	protected DataSource dataSource;
-	@PersistenceContext
-	protected EntityManager entityManager;
-	private TemplateService templateService;
-	private ReportTemplateService reportTemplateService;
-	private ReportHistoryService reportHistoryService;
-	private BeanResolver beanResolver;
+  @Autowired
+  protected DataSource dataSource;
+  @PersistenceContext
+  protected EntityManager entityManager;
+  private TemplateService templateService;
+  private ReportTemplateService reportTemplateService;
+  private ReportHistoryService reportHistoryService;
+  private BeanResolver beanResolver;
 
-	@Autowired
-	public void setTemplateService(TemplateService templateService) {
-		this.templateService = templateService;
-	}
+  @Autowired
+  public void setTemplateService(TemplateService templateService) {
+    this.templateService = templateService;
+  }
 
-	@Autowired
-	public void setReportTemplateService(ReportTemplateService reportTemplateService) {
-		this.reportTemplateService = reportTemplateService;
-	}
+  @Autowired
+  public void setReportTemplateService(ReportTemplateService reportTemplateService) {
+    this.reportTemplateService = reportTemplateService;
+  }
 
-	@Autowired
-	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
-		this.reportHistoryService = reportHistoryService;
-	}
+  @Autowired
+  public void setReportHistoryService(ReportHistoryService reportHistoryService) {
+    this.reportHistoryService = reportHistoryService;
+  }
 
-	@Autowired
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this.beanResolver = new BeanFactoryResolver(beanFactory);
-	}
+  @Autowired
+  public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    this.beanResolver = new BeanFactoryResolver(beanFactory);
+  }
 
-	public Query<Map<String, Object>> createSqlQuery(String queryType, SqlObject<Map<String, Object>> sqlObject) {
-		if ("jdbc".equalsIgnoreCase(queryType)) {
-			SpringJdbcQuery<Map<String, Object>> springJdbcQuery = new SpringJdbcQuery<>(dataSource, new ColumnMapRowMapper());
-			springJdbcQuery.setSql(sqlObject.getNativeSql());
-			springJdbcQuery.setSqlArgs(sqlObject.getArgs());
-			return springJdbcQuery;
-		} else {
-			return new JpaNativeQuery<>(entityManager, sqlObject);
-		}
-	}
+  public Query<Map<String, Object>> createSqlQuery(String queryType, SqlObject<Map<String, Object>> sqlObject) {
+    if ("jdbc".equalsIgnoreCase(queryType)) {
+      SpringJdbcQuery<Map<String, Object>> springJdbcQuery = new SpringJdbcQuery<>(dataSource, new ColumnMapRowMapper());
+      springJdbcQuery.setSql(sqlObject.getNativeSql());
+      springJdbcQuery.setSqlArgs(sqlObject.getArgs());
+      return springJdbcQuery;
+    } else {
+      return new JpaNativeQuery<>(entityManager, sqlObject);
+    }
+  }
 
-	public Template loadTemplate(String templateCode) {
-		return this.templateService.loadByCode(templateCode);
-	}
+  public Template loadTemplate(String templateCode) {
+    return this.templateService.loadByCode(templateCode);
+  }
 
-	public ReportTemplate loadReportTemplate(String reportTemplateCode) {
-		return this.reportTemplateService.loadByCode(reportTemplateCode);
-	}
+  public ReportTemplate loadReportTemplate(String reportTemplateCode) {
+    return this.reportTemplateService.loadByCode(reportTemplateCode);
+  }
 
-	public void runReportTemplate2history(String code, Condition condition)
-			throws Exception {
-		// 加载报表模板
-		ReportTemplate tpl = this.loadReportTemplate(code);
-		Assert.notNull(tpl, "指定的报表模板不存在:code=" + code);
+  public void runReportTemplate2history(String code, Condition condition)
+    throws Exception {
+    // 加载报表模板
+    ReportTemplate tpl = this.loadReportTemplate(code);
+    Assert.notNull(tpl, "指定的报表模板不存在:code=" + code);
 
-		// 执行并生成历史报表
-		ReportHistory h = tpl.run2history(this.beanResolver, this, condition);
-		h.setSourceType("用户生成");
-		h.setSourceId(tpl.getId());
-		h.setAuthor(SystemContextHolder.get().getUserHistory());
+    // 执行并生成历史报表
+    ReportHistory h = tpl.run2history(this.beanResolver, this, condition);
+    h.setSourceType("用户生成");
+    h.setSourceId(tpl.getId());
+    h.setAuthor(SystemContextHolder.get().getUserHistory());
 
-		// 保存历史报表
-		this.reportHistoryService.save(h);
-	}
+    // 保存历史报表
+    this.reportHistoryService.save(h);
+  }
 
-	public void saveReportHistory(ReportHistory reportHistory) {
-		this.reportHistoryService.save(reportHistory);
-	}
+  public void saveReportHistory(ReportHistory reportHistory) {
+    this.reportHistoryService.save(reportHistory);
+  }
 }

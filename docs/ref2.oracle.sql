@@ -1,24 +1,27 @@
---Start with...Connect By×Ó¾äµÝ¹é²éÑ¯Ò»°ãÓÃÓÚÒ»¸ö±íÎ¬»¤Ê÷ÐÎ½á¹¹µÄÓ¦ÓÃ¡£
---´´½¨Ê¾Àý±í£º
-CREATE TABLE TBL_TEST
+--Start with...Connect Byï¿½Ó¾ï¿½Ý¹ï¿½ï¿½Ñ¯Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ï¿½Î½á¹¹ï¿½ï¿½Ó¦ï¿½Ã¡ï¿½
+--ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+create table TBL_TEST
 (
-  ID    NUMBER,
-  NAME  VARCHAR2(100 BYTE),
-  PID   NUMBER
+  ID   number,
+  NAME varchar2(100 BYTE),
+  PID  number
 );
- 
---²åÈë²âÊÔÊý¾Ý£º
-INSERT INTO TBL_TEST(ID,NAME,PID) VALUES('1','10','0');
-INSERT INTO TBL_TEST(ID,NAME,PID) VALUES('2','11','1');
-INSERT INTO TBL_TEST(ID,NAME,PID) VALUES('3','20','0');
-INSERT INTO TBL_TEST(ID,NAME,PID) VALUES('4','12','1');
-INSERT INTO TBL_TEST(ID,NAME,PID) VALUES('5','121','2');
- 
---´ÓRootÍùÊ÷Ä©ÉÒµÝ¹é
-select t.*,sys_connect_by_path(t.name,'/'),connect_by_isleaf,connect_by_root id from TBL_TEST t start with id=1 connect by prior id = pid;
- 
---´ÓÄ©ÉÒÍùÊ÷ROOTµÝ¹é
-select t.*,sys_connect_by_path(pid,'/'),connect_by_isleaf,connect_by_root from TBL_TEST t start with id=5 connect by prior pid = id;
- 
---´ÓRootÍùÊ÷Ä©ÉÒµÝ¹é
-select t.*,sys_connect_by_path(t.name,'/'),connect_by_isleaf,connect_by_root id from TBL_TEST t start with id=2 connect by prior id = pid;
+
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½
+insert into TBL_TEST (ID, NAME, PID) values ('1', '10', '0');
+insert into TBL_TEST (ID, NAME, PID) values ('2', '11', '1');
+insert into TBL_TEST (ID, NAME, PID) values ('3', '20', '0');
+insert into TBL_TEST (ID, NAME, PID) values ('4', '12', '1');
+insert into TBL_TEST (ID, NAME, PID) values ('5', '121', '2');
+
+--ï¿½ï¿½Rootï¿½ï¿½ï¿½ï¿½Ä©ï¿½ÒµÝ¹ï¿½
+select t.*, sys_connect_by_path(t.name, '/'), connect_by_isleaf, connect_by_root id
+from TBL_TEST t start with id=1 connect by prior id = pid;
+
+--ï¿½ï¿½Ä©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ROOTï¿½Ý¹ï¿½
+select t.*, sys_connect_by_path(pid, '/'), connect_by_isleaf, connect_by_root
+from TBL_TEST t start with id=5 connect by prior pid = id;
+
+--ï¿½ï¿½Rootï¿½ï¿½ï¿½ï¿½Ä©ï¿½ÒµÝ¹ï¿½
+select t.*, sys_connect_by_path(t.name, '/'), connect_by_isleaf, connect_by_root id
+from TBL_TEST t start with id=2 connect by prior id = pid;

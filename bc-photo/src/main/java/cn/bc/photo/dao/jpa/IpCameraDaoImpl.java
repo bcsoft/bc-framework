@@ -18,11 +18,11 @@ import java.util.List;
  * @author dragon
  */
 public class IpCameraDaoImpl extends JpaCrudDao<IpCamera> implements IpCameraDao {
-	public List<IpCamera> findByOwner(Long ownerId) {
-		Condition c = new OrCondition()
-				.add(new IsNullCondition("owner.id"))
-				.add(new EqualsCondition("owner.id", ownerId))
-				.add(new OrderCondition("owner.orderNo").add("name", Direction.Asc));
-		return this.createQuery().condition(c).list();
-	}
+  public List<IpCamera> findByOwner(Long ownerId) {
+    Condition c = new OrCondition()
+      .add(new IsNullCondition("owner.id"))
+      .add(new EqualsCondition("owner.id", ownerId))
+      .add(new OrderCondition("owner.orderNo").add("name", Direction.Asc));
+    return this.createQuery().condition(c).list();
+  }
 }

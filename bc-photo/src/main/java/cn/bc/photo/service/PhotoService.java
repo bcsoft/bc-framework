@@ -5,10 +5,9 @@ import java.util.Map;
 
 /**
  * 图片Service接口
- * 
+ *
  * @author dragon
- * 
  */
 public interface PhotoService {
-	public Map<String, PhotoExecutor> getPhotoExecutors();
+  public Map<String, PhotoExecutor> getPhotoExecutors();
 }

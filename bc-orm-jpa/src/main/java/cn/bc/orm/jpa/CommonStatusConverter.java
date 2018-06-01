@@ -11,9 +11,9 @@ import javax.persistence.Converter;
  */
 @Converter(autoApply = true)
 public class CommonStatusConverter extends EnumWithValueConverter<CommonStatus> {
-	@Override
-	public CommonStatus convertToEntityAttribute(Integer dbData) {
-		if (dbData == null) throw new IllegalArgumentException("unsupport CommonStatus value: null");
-		return CommonStatus.valueOf(dbData);
-	}
+  @Override
+  public CommonStatus convertToEntityAttribute(Integer dbData) {
+    if (dbData == null) throw new IllegalArgumentException("unsupport CommonStatus value: null");
+    return CommonStatus.valueOf(dbData);
+  }
 }

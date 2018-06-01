@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 网络硬盘 -->
-	<package name="netdiskFile" extends="bc-default" namespace="/bc/netdiskFile">
-		<action name="create" class="netdiskFileAction" method="create">
-			<result name="form">/bc/netdiskFile/form.jsp</result>
-		</action>
-		<action name="open" class="netdiskFileAction" method="open">
-			<result name="formr">/bc/netdiskFile/form.jsp</result>
-		</action>
-		<action name="edit" class="netdiskFileAction" method="edit">
-			<result name="form">/bc/netdiskFile/form.jsp</result>
-		</action>
-		<action name="save" class="netdiskFileAction" method="save" />
-		<action name="delete" class="netdiskFileAction" method="delete" />
-		<!-- 新建对话框 -->
-		<action name="createDialog" class="netdiskFileAction" method="createDialog">
-			<!-- 整理 -->
-			<result name="zhengliwenjian">/bc/netdiskFile/clearUpForm.jsp</result>
-			<!-- 共享 -->
-			<result name="gongxiang">/bc/netdiskFile/shareForm.jsp</result>
-		</action>
-		<!-- 整理 -->
-		<action name="clearUp" class="netdiskFileAction" method="clearUp">
-		</action>
-		<!-- 共享 -->
-		<action name="share" class="netdiskFileAction" method="share">
-		</action>
-		<!-- 上传 文件 -->
-		<action name="uploadfile" class="netdiskFileAction" method="uploadfile">
-		</action>
-		<!-- 上传 文件夹 -->
-		<action name="uploadfolder" class="netdiskFileAction" method="uploadfolder">
-		</action>
-		<!-- 删除 -->
-		<action name="delete" class="netdiskFileAction" method="delete">
-		</action>
-		<!-- 检查是否拥有“公共硬盘”管理权限 -->
-		<action name="checkPublicHardDiskPower" class="netdiskFileAction"
-			method="checkPublicHardDiskPower">
-		</action>
-		<!-- 检查是否拥有选中节点的管理权限 -->
-		<action name="checkSelectNodePower" class="netdiskFileAction"
-			method="checkSelectNodePower">
-		</action>
-	</package>
-	<package name="netdiskFiles" extends="bc-default" namespace="/bc/netdiskFiles">
-		<action name="export" class="netdiskFilesAction" method="export" />
-		<action name="list" class="netdiskFilesAction" method="list" />
-		<action name="paging" class="netdiskFilesAction" method="paging" />
-		<action name="data" class="netdiskFilesAction" method="data" />
-		<action name="loadTreeData" class="netdiskFilesAction" method="loadTreeData" />
-		<action name="loadTreeData4selectFolder" class="netdiskFilesAction"
-			method="loadTreeData">
-			<param name="isSelectFolders">true</param>
-		</action>
-		<action name="selectFolders" class="netdiskFilesAction" method="selectFolders">
-			<param name="isSelectFolders">true</param>
-			<result name="foldersTree">/bc/netdiskFile/selectFolderForm.jsp</result>
-		</action>
-	</package>
+  <!-- 网络硬盘 -->
+  <package name="netdiskFile" extends="bc-default" namespace="/bc/netdiskFile">
+    <action name="create" class="netdiskFileAction" method="create">
+      <result name="form">/bc/netdiskFile/form.jsp</result>
+    </action>
+    <action name="open" class="netdiskFileAction" method="open">
+      <result name="formr">/bc/netdiskFile/form.jsp</result>
+    </action>
+    <action name="edit" class="netdiskFileAction" method="edit">
+      <result name="form">/bc/netdiskFile/form.jsp</result>
+    </action>
+    <action name="save" class="netdiskFileAction" method="save"/>
+    <action name="delete" class="netdiskFileAction" method="delete"/>
+    <!-- 新建对话框 -->
+    <action name="createDialog" class="netdiskFileAction" method="createDialog">
+      <!-- 整理 -->
+      <result name="zhengliwenjian">/bc/netdiskFile/clearUpForm.jsp</result>
+      <!-- 共享 -->
+      <result name="gongxiang">/bc/netdiskFile/shareForm.jsp</result>
+    </action>
+    <!-- 整理 -->
+    <action name="clearUp" class="netdiskFileAction" method="clearUp">
+    </action>
+    <!-- 共享 -->
+    <action name="share" class="netdiskFileAction" method="share">
+    </action>
+    <!-- 上传 文件 -->
+    <action name="uploadfile" class="netdiskFileAction" method="uploadfile">
+    </action>
+    <!-- 上传 文件夹 -->
+    <action name="uploadfolder" class="netdiskFileAction" method="uploadfolder">
+    </action>
+    <!-- 删除 -->
+    <action name="delete" class="netdiskFileAction" method="delete">
+    </action>
+    <!-- 检查是否拥有“公共硬盘”管理权限 -->
+    <action name="checkPublicHardDiskPower" class="netdiskFileAction"
+            method="checkPublicHardDiskPower">
+    </action>
+    <!-- 检查是否拥有选中节点的管理权限 -->
+    <action name="checkSelectNodePower" class="netdiskFileAction"
+            method="checkSelectNodePower">
+    </action>
+  </package>
+  <package name="netdiskFiles" extends="bc-default" namespace="/bc/netdiskFiles">
+    <action name="export" class="netdiskFilesAction" method="export"/>
+    <action name="list" class="netdiskFilesAction" method="list"/>
+    <action name="paging" class="netdiskFilesAction" method="paging"/>
+    <action name="data" class="netdiskFilesAction" method="data"/>
+    <action name="loadTreeData" class="netdiskFilesAction" method="loadTreeData"/>
+    <action name="loadTreeData4selectFolder" class="netdiskFilesAction"
+            method="loadTreeData">
+      <param name="isSelectFolders">true</param>
+    </action>
+    <action name="selectFolders" class="netdiskFilesAction" method="selectFolders">
+      <param name="isSelectFolders">true</param>
+      <result name="foldersTree">/bc/netdiskFile/selectFolderForm.jsp</result>
+    </action>
+  </package>
 </struts>

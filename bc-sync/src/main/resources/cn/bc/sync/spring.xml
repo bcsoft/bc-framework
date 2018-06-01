@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- syncBase -->
-    <bean id="syncBaseDao" class="cn.bc.sync.dao.jpa.SyncBaseDaoImpl"/>
-    <bean id="syncBaseService" class="cn.bc.sync.service.SyncBaseServiceImpl" p:syncBaseDao-ref="syncBaseDao"/>
+  <!-- syncBase -->
+  <bean id="syncBaseDao" class="cn.bc.sync.dao.jpa.SyncBaseDaoImpl"/>
+  <bean id="syncBaseService" class="cn.bc.sync.service.SyncBaseServiceImpl" p:syncBaseDao-ref="syncBaseDao"/>
 </beans>

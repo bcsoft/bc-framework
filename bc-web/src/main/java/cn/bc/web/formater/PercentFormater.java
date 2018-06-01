@@ -11,28 +11,28 @@ import java.text.DecimalFormat;
  * @author dragon
  */
 public class PercentFormater extends AbstractFormater<String> {
-    protected DecimalFormat format;
+  protected DecimalFormat format;
 
-    public PercentFormater() {
-        format = new DecimalFormat("#0.00%");
+  public PercentFormater() {
+    format = new DecimalFormat("#0.00%");
+  }
+
+  public PercentFormater(String pattern) {
+    format = new DecimalFormat(pattern);
+  }
+
+  public String format(Object context, Object value) {
+    if (value == null)
+      return null;
+    if (value instanceof Number) {
+      Number n = (Number) value;
+      if (n.toString().equals("0"))
+        return "0";
+      else
+        return format.format(n);
+
+    } else {
+      return value.toString();
     }
-
-    public PercentFormater(String pattern) {
-        format = new DecimalFormat(pattern);
-    }
-
-    public String format(Object context, Object value) {
-        if (value == null)
-            return null;
-        if (value instanceof Number) {
-            Number n = (Number) value;
-            if (n.toString().equals("0"))
-                return "0";
-            else
-                return format.format(n);
-
-        } else {
-            return value.toString();
-        }
-    }
+  }
 }

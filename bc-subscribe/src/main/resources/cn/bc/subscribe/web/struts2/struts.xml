@@ -1,70 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 订阅部署视图  -->
-	<package name="subscribes" extends="bc-default" namespace="/bc/subscribes">
-		<action name="export" class="subscribesAction" method="export" />
-		<action name="list" class="subscribesAction" method="list" />
-		<action name="paging" class="subscribesAction" method="paging" />
-		<action name="data" class="subscribesAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="subscribesAction" method="conditions">
-			<result name="success">/bc/subscribe/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 我的订阅视图  -->
-	<package name="subscribePersonals" extends="bc-default" namespace="/bc/subscribePersonals">
-		<action name="export" class="subscribePersonalsAction" method="export" />
-		<action name="list" class="subscribePersonalsAction" method="list" />
-		<action name="paging" class="subscribePersonalsAction" method="paging" />
-		<action name="data" class="subscribePersonalsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="subscribePersonalsAction" method="conditions">
-			<result name="success">/bc/subscribe/personal/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 我的订阅视图  -->
-	<package name="subscribeActors" extends="bc-default" namespace="/bc/subscribeActors">
-		<action name="export" class="subscribeActorsAction" method="export" />
-		<action name="list" class="subscribeActorsAction" method="list" />
-		<action name="paging" class="subscribeActorsAction" method="paging" />
-		<action name="data" class="subscribeActorsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="subscribeActorsAction" method="conditions">
-			<result name="success">/bc/subscribe/Actor/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 选择订阅  -->
-	<package name="selectSubscribe" extends="bc-default" namespace="/bc/selectSubscribe">
-		<action name="export" class="selectSubscribeAction" method="export" />
-		<action name="list" class="selectSubscribeAction" method="list" />
-		<action name="paging" class="selectSubscribeAction" method="paging" />
-		<action name="data" class="selectSubscribeAction" method="data" />
-	</package>
-	
-	<package name="subscribe" extends="bc-default" namespace="/bc/subscribe">
-		<action name="create" class="subscribeAction" method="create">
-			<result name="form">/bc/subscribe/form.jsp</result>
-		</action>
-		<action name="edit" class="subscribeAction" method="edit">
-			<result name="form">/bc/subscribe/form.jsp</result>
-		</action>
-		<action name="open" class="subscribeAction" method="open">
-			<result name="formr">/bc/subscribe/form.jsp</result>
-		</action>
-		<action name="save" class="subscribeAction" method="save"/>
-		<action name="delete" class="subscribeAction" method="delete"/>
-		
-		<action name="add4personal" class="subscribeAction" method="add4personal"/>
-		<action name="delete4personal" class="subscribeAction" method="delete4personal"/>
-		<action name="add4manager" class="subscribeAction" method="add4manager"/>
-		<action name="delete4manager" class="subscribeAction" method="delete4manager"/>
-		
-		<action name="update" class="subscribeAction" method="update"/>
-	</package>
+  <!-- 订阅部署视图  -->
+  <package name="subscribes" extends="bc-default" namespace="/bc/subscribes">
+    <action name="export" class="subscribesAction" method="export"/>
+    <action name="list" class="subscribesAction" method="list"/>
+    <action name="paging" class="subscribesAction" method="paging"/>
+    <action name="data" class="subscribesAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="subscribesAction" method="conditions">
+      <result name="success">/bc/subscribe/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 我的订阅视图  -->
+  <package name="subscribePersonals" extends="bc-default" namespace="/bc/subscribePersonals">
+    <action name="export" class="subscribePersonalsAction" method="export"/>
+    <action name="list" class="subscribePersonalsAction" method="list"/>
+    <action name="paging" class="subscribePersonalsAction" method="paging"/>
+    <action name="data" class="subscribePersonalsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="subscribePersonalsAction" method="conditions">
+      <result name="success">/bc/subscribe/personal/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 我的订阅视图  -->
+  <package name="subscribeActors" extends="bc-default" namespace="/bc/subscribeActors">
+    <action name="export" class="subscribeActorsAction" method="export"/>
+    <action name="list" class="subscribeActorsAction" method="list"/>
+    <action name="paging" class="subscribeActorsAction" method="paging"/>
+    <action name="data" class="subscribeActorsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="subscribeActorsAction" method="conditions">
+      <result name="success">/bc/subscribe/Actor/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 选择订阅  -->
+  <package name="selectSubscribe" extends="bc-default" namespace="/bc/selectSubscribe">
+    <action name="export" class="selectSubscribeAction" method="export"/>
+    <action name="list" class="selectSubscribeAction" method="list"/>
+    <action name="paging" class="selectSubscribeAction" method="paging"/>
+    <action name="data" class="selectSubscribeAction" method="data"/>
+  </package>
+
+  <package name="subscribe" extends="bc-default" namespace="/bc/subscribe">
+    <action name="create" class="subscribeAction" method="create">
+      <result name="form">/bc/subscribe/form.jsp</result>
+    </action>
+    <action name="edit" class="subscribeAction" method="edit">
+      <result name="form">/bc/subscribe/form.jsp</result>
+    </action>
+    <action name="open" class="subscribeAction" method="open">
+      <result name="formr">/bc/subscribe/form.jsp</result>
+    </action>
+    <action name="save" class="subscribeAction" method="save"/>
+    <action name="delete" class="subscribeAction" method="delete"/>
+
+    <action name="add4personal" class="subscribeAction" method="add4personal"/>
+    <action name="delete4personal" class="subscribeAction" method="delete4personal"/>
+    <action name="add4manager" class="subscribeAction" method="add4manager"/>
+    <action name="delete4manager" class="subscribeAction" method="delete4manager"/>
+
+    <action name="update" class="subscribeAction" method="update"/>
+  </package>
 </struts>

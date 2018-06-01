@@ -1,524 +1,587 @@
 -- ##BC平台的MYSQL建表脚本##
 
 -- 测试用的表
-CREATE TABLE BC_EXAMPLE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    CODE VARCHAR(255),
-    PRIMARY KEY (ID)
-) COMMENT='测试用的表';
+create table BC_EXAMPLE (
+  ID   bigint       not null AUTO_INCREMENT,
+  NAME varchar(255) not null comment '名称',
+  CODE varchar(255),
+  primary key (ID)
+) comment = '测试用的表';
 
 -- 系统标识相关模块
 -- 系统资源
-CREATE TABLE BC_IDENTITY_RESOURCE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) COMMENT '全局标识',
-    TYPE_ INT(1) NOT NULL COMMENT '类型：1-文件夹,2-内部链接,3-外部链接,4-HTML',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    INNER_ INT(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
-    BELONG BIGINT COMMENT '所隶属的资源',
-    ORDER_ VARCHAR(100) COMMENT '排序号',
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    URL VARCHAR(255) COMMENT '地址',
-    ICONCLASS VARCHAR(255) COMMENT '图标样式',
-    OPTION_ TEXT COMMENT '扩展参数',
-    PNAME TEXT COMMENT '所隶属模块的全名:如系统维护/组织架构/单位配置',
-    PRIMARY KEY (ID)
-) COMMENT='系统资源';
-ALTER TABLE BC_IDENTITY_RESOURCE ADD INDEX BCIDX_RESOURCE_BELONG (BELONG);
+create table BC_IDENTITY_RESOURCE (
+  ID        bigint       not null AUTO_INCREMENT,
+  UID_      varchar(36) comment '全局标识',
+  TYPE_     int (1) not null comment '类型：1-文件夹,2-内部链接,3-外部链接,4-HTML',
+  STATUS_   int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  INNER_    int (1) not null comment '是否为内置对象:0-否,1-是',
+  BELONG    bigint comment '所隶属的资源',
+  ORDER_    varchar(100) comment '排序号',
+  NAME      varchar(255) not null comment '名称',
+  URL       varchar(255) comment '地址',
+  ICONCLASS varchar(255) comment '图标样式',
+  OPTION_   text comment '扩展参数',
+  PNAME     text comment '所隶属模块的全名:如系统维护/组织架构/单位配置',
+  primary key (ID)
+) comment = '系统资源';
+alter table BC_IDENTITY_RESOURCE
+  add INDEX bcidx_resource_belong(BELONG);
 
 -- 角色
-CREATE TABLE BC_IDENTITY_ROLE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    CODE VARCHAR(100) NOT NULL COMMENT '编码',
-    ORDER_ VARCHAR(100) COMMENT '排序号',
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    
-    UID_ VARCHAR(36) COMMENT '全局标识',
-   	TYPE_ INT(1) NOT NULL COMMENT '类型',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    INNER_ INT(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
-    PRIMARY KEY (ID)
-) COMMENT='角色';
+create table BC_IDENTITY_ROLE (
+  ID      bigint       not null AUTO_INCREMENT,
+  CODE    varchar(100) not null comment '编码',
+  ORDER_  varchar(100) comment '排序号',
+  NAME    varchar(255) not null comment '名称',
+
+  UID_    varchar(36) comment '全局标识',
+  TYPE_   int (1) not null comment '类型',
+  STATUS_ int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  INNER_  int (1) not null comment '是否为内置对象:0-否,1-是',
+  primary key (ID)
+) comment = '角色';
 
 -- 角色与资源的关联
-CREATE TABLE BC_IDENTITY_ROLE_RESOURCE (
-    RID BIGINT NOT NULL COMMENT '角色ID',
-    SID BIGINT NOT NULL COMMENT '资源ID',
-    PRIMARY KEY (RID,SID)
-) COMMENT='角色与资源的关联：角色可以访问哪些资源';
-ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT BCFK_RS_ROLE FOREIGN KEY (RID) 
-	REFERENCES BC_IDENTITY_ROLE (ID);
-ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT BCFK_RS_RESOURCE FOREIGN KEY (SID) 
-	REFERENCES BC_IDENTITY_RESOURCE (ID);
+create table BC_IDENTITY_ROLE_RESOURCE (
+  RID bigint not null comment '角色ID',
+  SID bigint not null comment '资源ID',
+  primary key (RID, SID)
+) comment = '角色与资源的关联：角色可以访问哪些资源';
+alter table BC_IDENTITY_ROLE_RESOURCE
+  add constraint BCFK_RS_ROLE foreign key (RID)
+references BC_IDENTITY_ROLE (ID);
+alter table BC_IDENTITY_ROLE_RESOURCE
+  add constraint BCFK_RS_RESOURCE foreign key (SID)
+references BC_IDENTITY_RESOURCE (ID);
 
 -- 职务
-CREATE TABLE BC_IDENTITY_DUTY (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    CODE VARCHAR(100) NOT NULL COMMENT '编码',
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    PRIMARY KEY (ID)
-) COMMENT='职务';
+create table BC_IDENTITY_DUTY (
+  ID   bigint       not null AUTO_INCREMENT,
+  CODE varchar(100) not null comment '编码',
+  NAME varchar(255) not null comment '名称',
+  primary key (ID)
+) comment = '职务';
 
 -- 参与者的扩展属性
-CREATE TABLE BC_IDENTITY_ACTOR_DETAIL (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    CREATE_DATE DATETIME COMMENT '创建时间',
-    WORK_DATE DATE COMMENT 'USER-入职时间',
-    SEX INT(1) DEFAULT 0 COMMENT 'USER-性别：0-未设置,1-男,2-女',
-    ISO INT(1) DEFAULT 0 COMMENT 'USER-iso',
-   	CARD VARCHAR(20) COMMENT 'USER-身份证',
-    DUTY_ID BIGINT COMMENT 'USER-职务ID',
-   	COMMENT_ VARCHAR(1000) COMMENT '备注',
-    PRIMARY KEY (ID)
-) COMMENT='参与者的扩展属性';
-ALTER TABLE BC_IDENTITY_ACTOR_DETAIL ADD CONSTRAINT BCFK_ACTORDETAIL_DUTY FOREIGN KEY (DUTY_ID) 
-	REFERENCES BC_IDENTITY_DUTY (ID);
+create table BC_IDENTITY_ACTOR_DETAIL (
+  ID          bigint not null AUTO_INCREMENT,
+  CREATE_DATE datetime comment '创建时间',
+  WORK_DATE   date comment 'USER-入职时间',
+  SEX         int (1) default 0 comment 'USER-性别：0-未设置,1-男,2-女',
+  ISO         int (1) default 0 comment 'USER-iso',
+  CARD        varchar(20) comment 'USER-身份证',
+  DUTY_ID     bigint comment 'USER-职务ID',
+  COMMENT_    varchar(1000) comment '备注',
+  primary key (ID)
+) comment = '参与者的扩展属性';
+alter table BC_IDENTITY_ACTOR_DETAIL
+  add constraint BCFK_ACTORDETAIL_DUTY foreign key (DUTY_ID)
+references BC_IDENTITY_DUTY (ID);
 
 -- 参与者
-CREATE TABLE BC_IDENTITY_ACTOR (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) NOT NULL COMMENT '全局标识',
-    TYPE_ INT(1) NOT NULL COMMENT '类型：1-用户,2-单位,3-部门,4-岗位',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    CODE VARCHAR(100) NOT NULL COMMENT '编码',
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    PY VARCHAR(255) COMMENT '名称的拼音',
-    ORDER_ VARCHAR(100) COMMENT '同类参与者之间的排序号',
-    EMAIL VARCHAR(255) COMMENT '邮箱',
-    PHONE VARCHAR(255) COMMENT '联系电话',
-    DETAIL_ID BIGINT COMMENT '扩展表的ID',
-    INNER_ INT(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
-    PCODE VARCHAR(4000) COMMENT '隶属机构的全编码',
-    PNAME VARCHAR(4000) COMMENT '隶属机构的全名',
-    PRIMARY KEY (ID)
-) COMMENT='参与者(代表一个人或组织，组织也可以是单位、部门、岗位、团队等)';
-ALTER TABLE BC_IDENTITY_ACTOR ADD CONSTRAINT BCFK_ACTOR_ACTORDETAIL FOREIGN KEY (DETAIL_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_DETAIL (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE BC_IDENTITY_ACTOR ADD INDEX BCIDX_ACTOR_TYPE (TYPE_);
-ALTER TABLE BC_IDENTITY_ACTOR ADD INDEX BCIDX_ACTOR_CODE (CODE);
-ALTER TABLE BC_IDENTITY_ACTOR ADD INDEX BCIDX_ACTOR_DETAIL (DETAIL_ID);
-ALTER TABLE BC_IDENTITY_ACTOR ADD INDEX BCIDX_ACTOR_STATUSTYPE (STATUS_,TYPE_);
+create table BC_IDENTITY_ACTOR (
+  ID        bigint       not null AUTO_INCREMENT,
+  UID_      varchar(36)  not null comment '全局标识',
+  TYPE_     int (1) not null comment '类型：1-用户,2-单位,3-部门,4-岗位',
+  STATUS_   int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  CODE      varchar(100) not null comment '编码',
+  NAME      varchar(255) not null comment '名称',
+  PY        varchar(255) comment '名称的拼音',
+  ORDER_    varchar(100) comment '同类参与者之间的排序号',
+  EMAIL     varchar(255) comment '邮箱',
+  PHONE     varchar(255) comment '联系电话',
+  DETAIL_ID bigint comment '扩展表的ID',
+  INNER_    int (1) not null comment '是否为内置对象:0-否,1-是',
+  PCODE     varchar(4000) comment '隶属机构的全编码',
+  PNAME     varchar(4000) comment '隶属机构的全名',
+  primary key (ID)
+) comment = '参与者(代表一个人或组织，组织也可以是单位、部门、岗位、团队等)';
+alter table BC_IDENTITY_ACTOR
+  add constraint BCFK_ACTOR_ACTORDETAIL foreign key (DETAIL_ID)
+references BC_IDENTITY_ACTOR_DETAIL (ID) on delete cascade on update cascade;
+alter table BC_IDENTITY_ACTOR
+  add INDEX bcidx_actor_type(TYPE_);
+alter table BC_IDENTITY_ACTOR
+  add INDEX bcidx_actor_code(CODE);
+alter table BC_IDENTITY_ACTOR
+  add INDEX bcidx_actor_detail(DETAIL_ID);
+alter table BC_IDENTITY_ACTOR
+  add INDEX bcidx_actor_statustype(STATUS_, TYPE_);
 
 -- 参与者之间的关联关系
-CREATE TABLE BC_IDENTITY_ACTOR_RELATION (
-    TYPE_ INT(2) NOT NULL COMMENT '关联类型',
-    MASTER_ID BIGINT NOT NULL COMMENT '主控方ID',
-   	FOLLOWER_ID BIGINT NOT NULL COMMENT '从属方ID',
-    ORDER_ VARCHAR(100) COMMENT '从属方之间的排序号',
-    PRIMARY KEY (MASTER_ID,FOLLOWER_ID,TYPE_)
-) COMMENT='参与者之间的关联关系';
-ALTER TABLE BC_IDENTITY_ACTOR_RELATION ADD CONSTRAINT BCFK_AR_MASTER FOREIGN KEY (MASTER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_RELATION ADD CONSTRAINT BCFK_AR_FOLLOWER FOREIGN KEY (FOLLOWER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_RELATION ADD INDEX BCIDX_AR_TM (TYPE_, MASTER_ID),ADD INDEX BCIDX_AR_TF (TYPE_, FOLLOWER_ID);
+create table BC_IDENTITY_ACTOR_RELATION (
+  TYPE_       int (2) not null comment '关联类型',
+  MASTER_ID   bigint not null comment '主控方ID',
+  FOLLOWER_ID bigint not null comment '从属方ID',
+  ORDER_      varchar(100) comment '从属方之间的排序号',
+  primary key (MASTER_ID, FOLLOWER_ID, TYPE_)
+) comment = '参与者之间的关联关系';
+alter table BC_IDENTITY_ACTOR_RELATION
+  add constraint BCFK_AR_MASTER foreign key (MASTER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ACTOR_RELATION
+  add constraint BCFK_AR_FOLLOWER foreign key (FOLLOWER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ACTOR_RELATION
+  add INDEX bcidx_ar_tm(TYPE_, MASTER_ID),
+  add INDEX bcidx_ar_tf(TYPE_, FOLLOWER_ID);
 
 -- ACTOR隶属信息的变动历史
-CREATE TABLE BC_IDENTITY_ACTOR_HISTORY(
-   ID                   BIGINT NOT NULL AUTO_INCREMENT,
-   PID                  BIGINT COMMENT '对应旧记录的id',
-   CURRENT              INT(1) NOT NULL DEFAULT 1 COMMENT '是否为当前配置',
-   RANK              	INT(2) NOT NULL DEFAULT 0 COMMENT '多个当前配置间的首选次序，数值越小级别越高，值从0开始递增，只适用于隶属多个组织的情况',
-   CREATE_DATE          DATETIME NOT NULL COMMENT '创建时间',
-   START_DATE           DATETIME COMMENT '起始时段',
-   END_DATE             DATETIME COMMENT '结束时段',
-   ACTOR_TYPE           INT(1) NOT NULL COMMENT 'ACTOR的类型',
-   ACTOR_ID             BIGINT NOT NULL COMMENT 'ACTOR的ID',
-   ACTOR_NAME           VARCHAR(100) NOT NULL COMMENT 'ACTOR的名称',
-   UPPER_ID             BIGINT COMMENT '直属上级ID',
-   UPPER_NAME           VARCHAR(255) COMMENT '直属上级名称',
-   UNIT_ID              BIGINT COMMENT '所在单位ID',
-   UNIT_NAME            VARCHAR(255) COMMENT '所在单位名称',
-   PCODE VARCHAR(4000) COMMENT '直属机构的全编码',
-   PNAME VARCHAR(4000) COMMENT '直属机构的全名',
-   PRIMARY KEY (ID)
-) COMMENT 'ACTOR隶属信息的变动历史';
-ALTER TABLE BC_IDENTITY_ACTOR_HISTORY ADD CONSTRAINT BCFK_ACTORHISTORY_PID FOREIGN KEY (PID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_HISTORY ADD CONSTRAINT BCFK_ACTORHISTORY_ACTOR FOREIGN KEY (ACTOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_HISTORY ADD INDEX BCIDX_ACTORHISTORY_UPPER (UPPER_ID)
-    ,ADD INDEX BCIDX_ACTORHISTORY_UNIT (UNIT_ID)
-    ,ADD INDEX BCIDX_ACTORHISTORY_ACTOR (ACTOR_ID);
+create table BC_IDENTITY_ACTOR_HISTORY (
+  ID          bigint       not null AUTO_INCREMENT,
+  PID         bigint comment '对应旧记录的id',
+  CURRENT     int (1) not null default 1 comment '是否为当前配置',
+  RANK        int (2) not null default 0 comment '多个当前配置间的首选次序，数值越小级别越高，值从0开始递增，只适用于隶属多个组织的情况',
+  CREATE_DATE datetime     not null comment '创建时间',
+  START_DATE  datetime comment '起始时段',
+  END_DATE    datetime comment '结束时段',
+  ACTOR_TYPE  int (1) not null comment 'ACTOR的类型',
+  ACTOR_ID    bigint       not null comment 'ACTOR的ID',
+  ACTOR_NAME  varchar(100) not null comment 'ACTOR的名称',
+  UPPER_ID    bigint comment '直属上级ID',
+  UPPER_NAME  varchar(255) comment '直属上级名称',
+  UNIT_ID     bigint comment '所在单位ID',
+  UNIT_NAME   varchar(255) comment '所在单位名称',
+  PCODE       varchar(4000) comment '直属机构的全编码',
+  PNAME       varchar(4000) comment '直属机构的全名',
+  primary key (ID)
+) comment 'ACTOR隶属信息的变动历史';
+alter table BC_IDENTITY_ACTOR_HISTORY
+  add constraint BCFK_ACTORHISTORY_PID foreign key (PID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_IDENTITY_ACTOR_HISTORY
+  add constraint BCFK_ACTORHISTORY_ACTOR foreign key (ACTOR_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ACTOR_HISTORY
+  add INDEX bcidx_actorhistory_upper(UPPER_ID)
+,
+  add INDEX bcidx_actorhistory_unit(UNIT_ID)
+,
+  add INDEX bcidx_actorhistory_actor(ACTOR_ID);
 
 -- 认证信息
-CREATE TABLE BC_IDENTITY_AUTH (
-    ID BIGINT NOT NULL AUTO_INCREMENT COMMENT '与ACTOR表的ID对应',
-    PASSWORD VARCHAR(32) NOT NULL COMMENT '密码',
-    PRIMARY KEY (ID)
-) COMMENT='认证信息';
-ALTER TABLE BC_IDENTITY_AUTH ADD CONSTRAINT BCFK_AUTH_ACTOR FOREIGN KEY (ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
+create table BC_IDENTITY_AUTH (
+  ID       bigint      not null AUTO_INCREMENT comment '与ACTOR表的ID对应',
+  PASSWORD varchar(32) not null comment '密码',
+  primary key (ID)
+) comment = '认证信息';
+alter table BC_IDENTITY_AUTH
+  add constraint BCFK_AUTH_ACTOR foreign key (ID)
+references BC_IDENTITY_ACTOR (ID);
 
 -- 标识生成器
-CREATE TABLE BC_IDENTITY_IDGENERATOR (
-  TYPE_ VARCHAR(45) NOT NULL COMMENT '分类',
-  VALUE_ BIGINT NOT NULL COMMENT '当前值',
-  FORMAT VARCHAR(45) COMMENT '格式模板,如“CASE-${V}”、“${T}-${V}”,V代表VALUE的值，T代表TYPE_的值' ,
-  PRIMARY KEY (TYPE_)
-) COMMENT = '标识生成器,用于生成主键或唯一编码用';
+create table BC_IDENTITY_IDGENERATOR (
+  TYPE_  varchar(45) not null comment '分类',
+  VALUE_ bigint      not null comment '当前值',
+  FORMAT varchar(45) comment '格式模板,如“CASE-${V}”、“${T}-${V}”,V代表VALUE的值，T代表TYPE_的值',
+  primary key (TYPE_)
+) comment = '标识生成器,用于生成主键或唯一编码用';
 
 -- 参与者与角色的关联
-CREATE TABLE BC_IDENTITY_ROLE_ACTOR (
-    AID BIGINT NOT NULL COMMENT '参与者ID',
-    RID BIGINT NOT NULL COMMENT '角色ID',
-    PRIMARY KEY (AID,RID)
-) COMMENT='参与者与角色的关联：参与者拥有哪些角色';
-ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT BCFK_RA_ACTOR FOREIGN KEY (AID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT BCFK_RA_ROLE FOREIGN KEY (RID) 
-	REFERENCES BC_IDENTITY_ROLE (ID);
-	
+create table BC_IDENTITY_ROLE_ACTOR (
+  AID bigint not null comment '参与者ID',
+  RID bigint not null comment '角色ID',
+  primary key (AID, RID)
+) comment = '参与者与角色的关联：参与者拥有哪些角色';
+alter table BC_IDENTITY_ROLE_ACTOR
+  add constraint BCFK_RA_ACTOR foreign key (AID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ROLE_ACTOR
+  add constraint BCFK_RA_ROLE foreign key (RID)
+references BC_IDENTITY_ROLE (ID);
+
 -- ##系统桌面相关模块##
 -- 桌面快捷方式
-CREATE TABLE BC_DESKTOP_SHORTCUT (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) COMMENT '全局标识',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    ORDER_ VARCHAR(100) NOT NULL COMMENT '排序号',
-    STANDALONE INT(1) NOT NULL COMMENT '是否在独立的浏览器窗口中打开',
-    NAME VARCHAR(255) COMMENT '名称,为空则使用资源的名称',
-    URL VARCHAR(255) COMMENT '地址,为空则使用资源的地址',
-    ICONCLASS VARCHAR(255) COMMENT '图标样式',
-    SID BIGINT NOT NULL DEFAULT 0 COMMENT '对应的资源ID',
-    AID BIGINT NOT NULL DEFAULT 0 COMMENT '所属的参与者(如果为上级参与者,如单位部门,则其下的所有参与者都拥有该快捷方式)',
-    INNER_ INT(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
-    PRIMARY KEY (ID)
-) COMMENT='桌面快捷方式';
-ALTER TABLE BC_DESKTOP_SHORTCUT ADD INDEX BCIDX_SHORTCUT (AID,SID) ;
+create table BC_DESKTOP_SHORTCUT (
+  ID         bigint       not null AUTO_INCREMENT,
+  UID_       varchar(36) comment '全局标识',
+  STATUS_    int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  ORDER_     varchar(100) not null comment '排序号',
+  STANDALONE int (1) not null comment '是否在独立的浏览器窗口中打开',
+  NAME       varchar(255) comment '名称,为空则使用资源的名称',
+  URL        varchar(255) comment '地址,为空则使用资源的地址',
+  ICONCLASS  varchar(255) comment '图标样式',
+  SID        bigint       not null default 0 comment '对应的资源ID',
+  AID        bigint       not null default 0 comment '所属的参与者(如果为上级参与者,如单位部门,则其下的所有参与者都拥有该快捷方式)',
+  INNER_     int (1) not null comment '是否为内置对象:0-否,1-是',
+  primary key (ID)
+) comment = '桌面快捷方式';
+alter table BC_DESKTOP_SHORTCUT
+  add INDEX bcidx_shortcut(AID, SID);
 
 -- 个人设置
-CREATE TABLE BC_DESKTOP_PERSONAL (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) COMMENT '全局标识',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    FONT VARCHAR(2) NOT NULL COMMENT '字体大小，如12、14、16',
-    THEME VARCHAR(255) NOT NULL COMMENT '主题名称,如BASE',
-    AID BIGINT NOT NULL DEFAULT 0 COMMENT '所属的参与者',
-    INNER_ INT(1) NOT NULL COMMENT '是否为内置对象:0-否,1-是',
-    PRIMARY KEY (ID)
-) COMMENT='个人设置';
-ALTER TABLE BC_DESKTOP_PERSONAL ADD UNIQUE INDEX BCUK_PERSONAL_AID (AID) ;
+create table BC_DESKTOP_PERSONAL (
+  ID      bigint       not null AUTO_INCREMENT,
+  UID_    varchar(36) comment '全局标识',
+  STATUS_ int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  FONT    varchar(2)   not null comment '字体大小，如12、14、16',
+  THEME   varchar(255) not null comment '主题名称,如BASE',
+  AID     bigint       not null default 0 comment '所属的参与者',
+  INNER_  int (1) not null comment '是否为内置对象:0-否,1-是',
+  primary key (ID)
+) comment = '个人设置';
+alter table BC_DESKTOP_PERSONAL
+  add unique index BCUK_PERSONAL_AID (AID);
 
 -- 消息模块
-CREATE TABLE BC_MESSAGE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) COMMENT '全局标识',
-    STATUS_ INT(1) NOT NULL DEFAULT 0 COMMENT '状态：0-发送中,1-已发送,2-已删除,3-发送失败',
-    TYPE_ INT(1) NOT NULL DEFAULT 0 COMMENT '消息类型',
-    SENDER_ID BIGINT NOT NULL COMMENT '发送者',
-    SEND_DATE DATETIME NOT NULL COMMENT '发送时间',
-    RECEIVER_ID BIGINT NOT NULL COMMENT '接收者',
-    READ_ INT(1) NOT NULL DEFAULT 0 COMMENT '已阅标记',
-    FROM_ID BIGINT COMMENT '来源标识',
-    FROM_TYPE BIGINT COMMENT '来源类型',
-    SUBJECT VARCHAR(255) NOT NULL COMMENT '标题',
-    CONTENT TEXT COMMENT '内容',
-    PRIMARY KEY (ID)
-) COMMENT='消息';
-ALTER TABLE BC_MESSAGE ADD CONSTRAINT BCFK_MESSAGE_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_MESSAGE ADD CONSTRAINT BCFK_MESSAGE_REVEIVER FOREIGN KEY (RECEIVER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_MESSAGE ADD INDEX BCIDX_MESSAGE_FROMID (FROM_TYPE,FROM_ID);
-ALTER TABLE BC_MESSAGE ADD INDEX BCIDX_MESSAGE_TYPE (TYPE_);
+create table BC_MESSAGE (
+  ID          bigint       not null AUTO_INCREMENT,
+  UID_        varchar(36) comment '全局标识',
+  STATUS_     int (1) not null default 0 comment '状态：0-发送中,1-已发送,2-已删除,3-发送失败',
+  TYPE_       int (1) not null default 0 comment '消息类型',
+  SENDER_ID   bigint       not null comment '发送者',
+  SEND_DATE   datetime     not null comment '发送时间',
+  RECEIVER_ID bigint       not null comment '接收者',
+  READ_       int (1) not null default 0 comment '已阅标记',
+  FROM_ID     bigint comment '来源标识',
+  FROM_TYPE   bigint comment '来源类型',
+  SUBJECT     varchar(255) not null comment '标题',
+  CONTENT     text comment '内容',
+  primary key (ID)
+) comment = '消息';
+alter table BC_MESSAGE
+  add constraint BCFK_MESSAGE_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_MESSAGE
+  add constraint BCFK_MESSAGE_REVEIVER foreign key (RECEIVER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_MESSAGE
+  add INDEX bcidx_message_fromid(FROM_TYPE, FROM_ID);
+alter table BC_MESSAGE
+  add INDEX bcidx_message_type(TYPE_);
 
 -- 工作事项
-CREATE TABLE BC_WORK (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    CLASSIFIER VARCHAR(500) NOT NULL COMMENT '分类词,可多级分类,级间使用/连接,如“发文类/正式发文”',
-    SUBJECT VARCHAR(255) NOT NULL COMMENT '标题',
-    FROM_ID BIGINT COMMENT '来源标识',
-    FROM_TYPE BIGINT COMMENT '来源类型',
-    FROM_INFO VARCHAR(255) COMMENT '来源描述',
-    OPEN_URL VARCHAR(255) COMMENT '打开的URL模板',
-    CONTENT TEXT COMMENT '内容',
-    PRIMARY KEY (ID)
-) COMMENT='工作事项';
-ALTER TABLE BC_WORK ADD INDEX BCIDX_WORK_FROMID (FROM_TYPE,FROM_ID);
+create table BC_WORK (
+  ID         bigint       not null AUTO_INCREMENT,
+  CLASSIFIER varchar(500) not null comment '分类词,可多级分类,级间使用/连接,如“发文类/正式发文”',
+  SUBJECT    varchar(255) not null comment '标题',
+  FROM_ID    bigint comment '来源标识',
+  FROM_TYPE  bigint comment '来源类型',
+  FROM_INFO  varchar(255) comment '来源描述',
+  OPEN_URL   varchar(255) comment '打开的URL模板',
+  CONTENT    text comment '内容',
+  primary key (ID)
+) comment = '工作事项';
+alter table BC_WORK
+  add INDEX bcidx_work_fromid(FROM_TYPE, FROM_ID);
 
 -- 待办事项
-CREATE TABLE BC_WORK_TODO (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    WORK_ID BIGINT NOT NULL COMMENT '工作事项ID',
-    SENDER_ID BIGINT NOT NULL COMMENT '发送者',
-    SEND_DATE DATETIME NOT NULL COMMENT '发送时间',
-    WORKER_ID BIGINT NOT NULL COMMENT '发送者',
-    INFO VARCHAR(255) COMMENT '附加说明',
-    PRIMARY KEY (ID)
-) COMMENT='待办事项';
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_WORK FOREIGN KEY (WORK_ID) 
-	REFERENCES BC_WORK (ID);
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_WORKER FOREIGN KEY (WORKER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
+create table BC_WORK_TODO (
+  ID        bigint   not null AUTO_INCREMENT,
+  WORK_ID   bigint   not null comment '工作事项ID',
+  SENDER_ID bigint   not null comment '发送者',
+  SEND_DATE datetime not null comment '发送时间',
+  WORKER_ID bigint   not null comment '发送者',
+  INFO      varchar(255) comment '附加说明',
+  primary key (ID)
+) comment = '待办事项';
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_WORK foreign key (WORK_ID)
+references BC_WORK (ID);
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_WORKER foreign key (WORKER_ID)
+references BC_IDENTITY_ACTOR (ID);
 
 -- 已办事项
-CREATE TABLE BC_WORK_DONE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    FINISH_DATE DATETIME NOT NULL COMMENT '完成时间',
-    FINISH_YEAR INT(4) NOT NULL COMMENT '完成时间的年度',
-    FINISH_MONTH INT(2) NOT NULL COMMENT '完成时间的月份(1-12)',
-    FINISH_DAY INT(2) NOT NULL COMMENT '完成时间的日(1-31)',
+create table BC_WORK_DONE (
+  ID           bigint   not null AUTO_INCREMENT,
+  FINISH_DATE  datetime not null comment '完成时间',
+  FINISH_YEAR  int (4) not null comment '完成时间的年度',
+  FINISH_MONTH int (2) not null comment '完成时间的月份(1-12)',
+  FINISH_DAY   int (2) not null comment '完成时间的日(1-31)',
 
-    WORK_ID BIGINT NOT NULL COMMENT '工作事项ID',
-    SENDER_ID BIGINT NOT NULL COMMENT '发送者',
-    SEND_DATE DATETIME NOT NULL COMMENT '发送时间',
-    WORKER_ID BIGINT NOT NULL COMMENT '发送者',
-    INFO VARCHAR(255) COMMENT '附加说明',
-    PRIMARY KEY (ID)
-) COMMENT='已办事项';
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_WORK FOREIGN KEY (WORK_ID) 
-	REFERENCES BC_WORK (ID);
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_WORKER FOREIGN KEY (WORKER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_WORK_DONE ADD INDEX BCIDX_DONEWORK_FINISHDATE (FINISH_YEAR,FINISH_MONTH,FINISH_DAY);
+  WORK_ID      bigint   not null comment '工作事项ID',
+  SENDER_ID    bigint   not null comment '发送者',
+  SEND_DATE    datetime not null comment '发送时间',
+  WORKER_ID    bigint   not null comment '发送者',
+  INFO         varchar(255) comment '附加说明',
+  primary key (ID)
+) comment = '已办事项';
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_WORK foreign key (WORK_ID)
+references BC_WORK (ID);
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_WORKER foreign key (WORKER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_WORK_DONE
+  add INDEX bcidx_donework_finishdate(FINISH_YEAR, FINISH_MONTH, FINISH_DAY);
 
 -- 系统日志
-CREATE TABLE BC_LOG_SYSTEM (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    TYPE_ INT(1) NOT NULL COMMENT '类别：0-登录,1-主动注销,2-超时注销',
-    
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '标题',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    C_IP VARCHAR(100) COMMENT '用户机器IP',
-    C_NAME VARCHAR(100) COMMENT '用户机器名称',
-    C_INFO VARCHAR(1000) COMMENT '用户浏览器信息：USER-AGENT',
-    S_IP VARCHAR(100) COMMENT '服务器IP',
-    S_NAME VARCHAR(100) COMMENT '服务器名称',
-    S_INFO VARCHAR(1000) COMMENT '服务器信息',
+create table BC_LOG_SYSTEM (
+  ID        bigint       not null AUTO_INCREMENT,
+  TYPE_     int (1) not null comment '类别：0-登录,1-主动注销,2-超时注销',
 
-    CONTENT TEXT COMMENT '详细内容',
-    PRIMARY KEY (ID)
-) COMMENT='系统日志';
-ALTER TABLE BC_LOG_SYSTEM ADD CONSTRAINT BCFK_SYSLOG_USER FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_LOG_SYSTEM ADD INDEX BCIDX_SYSLOG_CLIENT (C_IP);
-ALTER TABLE BC_LOG_SYSTEM ADD INDEX BCIDX_SYSLOG_SERVER (S_IP);
+  FILE_DATE datetime     not null comment '创建时间',
+  SUBJECT   varchar(500) not null comment '标题',
+  AUTHOR_ID bigint       not null comment '创建人ID',
+  C_IP      varchar(100) comment '用户机器IP',
+  C_NAME    varchar(100) comment '用户机器名称',
+  C_INFO    varchar(1000) comment '用户浏览器信息：USER-AGENT',
+  S_IP      varchar(100) comment '服务器IP',
+  S_NAME    varchar(100) comment '服务器名称',
+  S_INFO    varchar(1000) comment '服务器信息',
+
+  CONTENT   text comment '详细内容',
+  primary key (ID)
+) comment = '系统日志';
+alter table BC_LOG_SYSTEM
+  add constraint BCFK_SYSLOG_USER foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_LOG_SYSTEM
+  add INDEX bcidx_syslog_client(C_IP);
+alter table BC_LOG_SYSTEM
+  add INDEX bcidx_syslog_server(S_IP);
 
 -- 工作日志
-CREATE TABLE BC_LOG_WORK (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) NOT NULL COMMENT '关联附件的标识号',
-    TYPE_ INT(1) NOT NULL COMMENT '类型：0-系统创建,1-用户创建',
-    PTYPE VARCHAR(36) NOT NULL COMMENT '所关联文档的类型',
-    PID VARCHAR(36) NOT NULL COMMENT '所关联文档的标识，通常使用文档的uid或批号',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '标题',
-    CONTENT TEXT COMMENT '详细内容',
-    PRIMARY KEY (ID)
-) COMMENT='工作日志';
-ALTER TABLE BC_LOG_WORK ADD CONSTRAINT BCFK_WORKLOG_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_LOG_WORK ADD INDEX BCIDX_WORKLOG_PARENT (PTYPE,PID);
+create table BC_LOG_WORK (
+  ID        bigint       not null AUTO_INCREMENT,
+  UID_      varchar(36)  not null comment '关联附件的标识号',
+  TYPE_     int (1) not null comment '类型：0-系统创建,1-用户创建',
+  PTYPE     varchar(36)  not null comment '所关联文档的类型',
+  PID       varchar(36)  not null comment '所关联文档的标识，通常使用文档的uid或批号',
+  AUTHOR_ID bigint       not null comment '创建人ID',
+  FILE_DATE datetime     not null comment '创建时间',
+  SUBJECT   varchar(500) not null comment '标题',
+  CONTENT   text comment '详细内容',
+  primary key (ID)
+) comment = '工作日志';
+alter table BC_LOG_WORK
+  add constraint BCFK_WORKLOG_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_LOG_WORK
+  add INDEX bcidx_worklog_parent(PTYPE, PID);
 
 -- 公告模块
-CREATE TABLE BC_BULLETIN (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) NOT NULL COMMENT '关联附件的标识号',
-    UNIT_ID BIGINT COMMENT '公告所属单位ID',
-    SCOPE INT(1) NOT NULL COMMENT '公告发布范围：0-本单位,1-全系统',
-    STATUS_ INT(1) NOT NULL COMMENT '状态:0-草稿,1-已发布,2-已过期',
-   
-    OVERDUE_DATE DATETIME COMMENT '过期日期：为空代表永不过期',
-   	ISSUE_DATE DATETIME COMMENT '发布时间',
-    ISSUER_ID BIGINT COMMENT '发布人ID',
-    ISSUER_NAME VARCHAR(100) COMMENT '发布人姓名',
-    
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '标题',
-    
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    MODIFIER_ID BIGINT COMMENT '最后修改人ID',
-    MODIFIED_DATE DATETIME COMMENT '最后修改时间',
+create table BC_BULLETIN (
+  ID            bigint       not null AUTO_INCREMENT,
+  UID_          varchar(36)  not null comment '关联附件的标识号',
+  UNIT_ID       bigint comment '公告所属单位ID',
+  SCOPE         int (1) not null comment '公告发布范围：0-本单位,1-全系统',
+  STATUS_       int (1) not null comment '状态:0-草稿,1-已发布,2-已过期',
 
-    CONTENT TEXT NOT NULL COMMENT '详细内容',
-    PRIMARY KEY (ID)
-) COMMENT='公告模块';
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_AUTHOR FOREIGN KEY (AUTHOR_ID)
-      REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_ISSUER FOREIGN KEY (ISSUER_ID)
-      REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_MODIFIER FOREIGN KEY (MODIFIER_ID)
-      REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_UNIT FOREIGN KEY (UNIT_ID)
-      REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_BULLETIN ADD INDEX BCIDX_BULLETIN_SEARCH (SCOPE,UNIT_ID,STATUS_);
+  OVERDUE_DATE  datetime comment '过期日期：为空代表永不过期',
+  ISSUE_DATE    datetime comment '发布时间',
+  ISSUER_ID     bigint comment '发布人ID',
+  ISSUER_NAME   varchar(100) comment '发布人姓名',
+
+  SUBJECT       varchar(500) not null comment '标题',
+
+  FILE_DATE     datetime     not null comment '创建时间',
+  AUTHOR_ID     bigint       not null comment '创建人ID',
+  MODIFIER_ID   bigint comment '最后修改人ID',
+  MODIFIED_DATE datetime comment '最后修改时间',
+
+  CONTENT       text         not null comment '详细内容',
+  primary key (ID)
+) comment = '公告模块';
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_ISSUER foreign key (ISSUER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_UNIT foreign key (UNIT_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_BULLETIN
+  add INDEX bcidx_bulletin_search(SCOPE, UNIT_ID, STATUS_);
 
 -- 文档附件
-CREATE TABLE BC_DOCS_ATTACH (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    PTYPE VARCHAR(36) NOT NULL COMMENT '所关联文档的类型',
-    PUID VARCHAR(36) NOT NULL COMMENT '所关联文档的UID',
-   
-    SIZE_ BIGINT NOT NULL COMMENT '文件的大小(单位为字节)',
-    COUNT_ BIGINT NOT NULL DEFAULT 0 COMMENT '文件的下载次数',
-    EXT VARCHAR(10) COMMENT '文件扩展名：如PNG、DOC、MP3等',
-    APPPATH INT(1) NOT NULL COMMENT '指定PATH的值是相对于应用部署目录下路径还是相对于全局配置的APP.DATA目录下的路径',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '文件名称(不带路径的部分)',
-    PATH VARCHAR(500) NOT NULL COMMENT '物理文件保存的相对路径(相对于全局配置的附件根目录下的子路径，如"2011/BULLETIN/XXXX.DOC")',
-    
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    MODIFIER_ID BIGINT COMMENT '最后修改人ID',
-    MODIFIED_DATE DATETIME COMMENT '最后修改时间',
-    PRIMARY KEY (ID)
-) COMMENT='文档附件,记录文档与其相关附件之间的关系';
-ALTER TABLE BC_DOCS_ATTACH ADD CONSTRAINT BCFK_ATTACH_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH ADD INDEX BCIDX_ATTACH_PUID (PUID);
-ALTER TABLE BC_DOCS_ATTACH ADD INDEX BCIDX_ATTACH_PTYPE (PTYPE);
+create table BC_DOCS_ATTACH (
+  ID            bigint       not null AUTO_INCREMENT,
+  STATUS_       int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  PTYPE         varchar(36)  not null comment '所关联文档的类型',
+  PUID          varchar(36)  not null comment '所关联文档的UID',
+
+  SIZE_         bigint       not null comment '文件的大小(单位为字节)',
+  COUNT_        bigint       not null default 0 comment '文件的下载次数',
+  EXT           varchar(10) comment '文件扩展名：如PNG、DOC、MP3等',
+  APPPATH       int (1) not null comment '指定PATH的值是相对于应用部署目录下路径还是相对于全局配置的APP.DATA目录下的路径',
+  SUBJECT       varchar(500) not null comment '文件名称(不带路径的部分)',
+  PATH          varchar(500) not null comment '物理文件保存的相对路径(相对于全局配置的附件根目录下的子路径，如"2011/BULLETIN/XXXX.DOC")',
+
+  FILE_DATE     datetime     not null comment '创建时间',
+  AUTHOR_ID     bigint       not null comment '创建人ID',
+  MODIFIER_ID   bigint comment '最后修改人ID',
+  MODIFIED_DATE datetime comment '最后修改时间',
+  primary key (ID)
+) comment = '文档附件,记录文档与其相关附件之间的关系';
+alter table BC_DOCS_ATTACH
+  add constraint BCFK_ATTACH_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH
+  add INDEX bcidx_attach_puid(PUID);
+alter table BC_DOCS_ATTACH
+  add INDEX bcidx_attach_ptype(PTYPE);
 
 -- 附件处理痕迹
-CREATE TABLE BC_DOCS_ATTACH_HISTORY (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    AID BIGINT NOT NULL COMMENT '附件ID',
-    TYPE_ BIGINT NOT NULL COMMENT '处理类型：0-下载,1-在线查看,2-格式转换',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '简单说明',
-    FORMAT VARCHAR(10) COMMENT '下载的文件格式或转换后的文件格式：如PDF、DOC、MP3等',
-    
-    FILE_DATE DATETIME NOT NULL COMMENT '处理时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '处理人ID',
-    MODIFIER_ID BIGINT COMMENT '最后修改人ID',
-    MODIFIED_DATE DATETIME COMMENT '最后修改时间',
+create table BC_DOCS_ATTACH_HISTORY (
+  ID            bigint       not null AUTO_INCREMENT,
+  AID           bigint       not null comment '附件ID',
+  TYPE_         bigint       not null comment '处理类型：0-下载,1-在线查看,2-格式转换',
+  SUBJECT       varchar(500) not null comment '简单说明',
+  FORMAT        varchar(10) comment '下载的文件格式或转换后的文件格式：如PDF、DOC、MP3等',
 
-    C_IP VARCHAR(100) COMMENT '客户端IP',
-    C_INFO VARCHAR(1000) COMMENT '浏览器信息：USER-AGENT',
-    
-    MEMO VARCHAR(2000) COMMENT '备注',
-    PRIMARY KEY (ID)
-) COMMENT='附件处理痕迹';
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_ATTACH FOREIGN KEY (AID) 
-	REFERENCES BC_DOCS_ATTACH (ID);
+  FILE_DATE     datetime     not null comment '处理时间',
+  AUTHOR_ID     bigint       not null comment '处理人ID',
+  MODIFIER_ID   bigint comment '最后修改人ID',
+  MODIFIED_DATE datetime comment '最后修改时间',
+
+  C_IP          varchar(100) comment '客户端IP',
+  C_INFO        varchar(1000) comment '浏览器信息：USER-AGENT',
+
+  MEMO          varchar(2000) comment '备注',
+  primary key (ID)
+) comment = '附件处理痕迹';
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_ATTACH foreign key (AID)
+references BC_DOCS_ATTACH (ID);
 
 -- 用户反馈
-CREATE TABLE BC_FEEDBACK (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    UID_ VARCHAR(36) NOT NULL COMMENT '关联附件的标识号',
-    STATUS_ INT(1) NOT NULL COMMENT '状态:0-草稿,1-已提交,2-已受理',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '标题',
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    MODIFIER_ID BIGINT COMMENT '最后修改人ID',
-    MODIFIED_DATE DATETIME COMMENT '最后修改时间',
+create table BC_FEEDBACK (
+  ID            bigint       not null AUTO_INCREMENT,
+  UID_          varchar(36)  not null comment '关联附件的标识号',
+  STATUS_       int (1) not null comment '状态:0-草稿,1-已提交,2-已受理',
+  SUBJECT       varchar(500) not null comment '标题',
+  FILE_DATE     datetime     not null comment '创建时间',
+  AUTHOR_ID     bigint       not null comment '创建人ID',
+  MODIFIER_ID   bigint comment '最后修改人ID',
+  MODIFIED_DATE datetime comment '最后修改时间',
 
-    CONTENT TEXT NOT NULL COMMENT '详细内容',
-    PRIMARY KEY (ID)
-) COMMENT='用户反馈';
-ALTER TABLE BC_FEEDBACK ADD CONSTRAINT BCFK_FEEDBACK_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_FEEDBACK ADD CONSTRAINT BCFK_FEEDBACK_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
+  CONTENT       text         not null comment '详细内容',
+  primary key (ID)
+) comment = '用户反馈';
+alter table BC_FEEDBACK
+  add constraint BCFK_FEEDBACK_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_FEEDBACK
+  add constraint BCFK_FEEDBACK_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
 
 -- 用户反馈的回复
-CREATE TABLE BC_FEEDBACK_REPLY (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    PID BIGINT NOT NULL COMMENT '所属反馈的id',
-    UID_ VARCHAR(36) NOT NULL COMMENT '关联附件的标识号',
-    STATUS_ INT(1) NOT NULL COMMENT '状态:0-正常,1-禁用,2-删除',
-    SUBJECT VARCHAR(500) NOT NULL COMMENT '标题',
-    FILE_DATE DATETIME NOT NULL COMMENT '创建时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '创建人ID',
-    MODIFIER_ID BIGINT COMMENT '最后修改人ID',
-    MODIFIED_DATE DATETIME COMMENT '最后修改时间',
-    CONTENT TEXT COMMENT '详细内容',
-    PRIMARY KEY (ID)
-) COMMENT='用户反馈的回复';
-ALTER TABLE BC_FEEDBACK_REPLY ADD CONSTRAINT BCFK_FEEDBACK_REPLY_PID FOREIGN KEY (PID) 
-	REFERENCES BC_FEEDBACK (ID);
-ALTER TABLE BC_FEEDBACK_REPLY ADD CONSTRAINT BCFK_FEEDBACK_REPLY_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_FEEDBACK_REPLY ADD CONSTRAINT BCFK_FEEDBACK_REPLY_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-
+create table BC_FEEDBACK_REPLY (
+  ID            bigint       not null AUTO_INCREMENT,
+  PID           bigint       not null comment '所属反馈的id',
+  UID_          varchar(36)  not null comment '关联附件的标识号',
+  STATUS_       int (1) not null comment '状态:0-正常,1-禁用,2-删除',
+  SUBJECT       varchar(500) not null comment '标题',
+  FILE_DATE     datetime     not null comment '创建时间',
+  AUTHOR_ID     bigint       not null comment '创建人ID',
+  MODIFIER_ID   bigint comment '最后修改人ID',
+  MODIFIED_DATE datetime comment '最后修改时间',
+  CONTENT       text comment '详细内容',
+  primary key (ID)
+) comment = '用户反馈的回复';
+alter table BC_FEEDBACK_REPLY
+  add constraint BCFK_FEEDBACK_REPLY_PID foreign key (PID)
+references BC_FEEDBACK (ID);
+alter table BC_FEEDBACK_REPLY
+  add constraint BCFK_FEEDBACK_REPLY_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_FEEDBACK_REPLY
+  add constraint BCFK_FEEDBACK_REPLY_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
 
 -- 选项模块
 -- 选项分组
-CREATE TABLE BC_OPTION_GROUP (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    KEY_ VARCHAR(255) NOT NULL COMMENT '键',
-    VALUE_ VARCHAR(255) NOT NULL COMMENT '值',
-    ORDER_ VARCHAR(100) COMMENT '排序号',
-    ICON VARCHAR(100) COMMENT '图标样式',
-    PRIMARY KEY (ID)
-) COMMENT='选项分组';
-ALTER TABLE BC_OPTION_GROUP ADD INDEX BCIDX_OPTIONGROUP_KEY (KEY_);
-ALTER TABLE BC_OPTION_GROUP ADD INDEX BCIDX_OPTIONGROUP_VALUE (VALUE_);
+create table BC_OPTION_GROUP (
+  ID     bigint       not null AUTO_INCREMENT,
+  KEY_   varchar(255) not null comment '键',
+  VALUE_ varchar(255) not null comment '值',
+  ORDER_ varchar(100) comment '排序号',
+  ICON   varchar(100) comment '图标样式',
+  primary key (ID)
+) comment = '选项分组';
+alter table BC_OPTION_GROUP
+  add INDEX bcidx_optiongroup_key(KEY_);
+alter table BC_OPTION_GROUP
+  add INDEX bcidx_optiongroup_value(VALUE_);
 
 -- 选项条目
-CREATE TABLE BC_OPTION_ITEM (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    PID BIGINT NOT NULL COMMENT '所属分组的ID',
-    KEY_ VARCHAR(255) NOT NULL COMMENT '键',
-    VALUE_ VARCHAR(255) NOT NULL COMMENT '值',
-    ORDER_ VARCHAR(100) COMMENT '排序号',
-    ICON VARCHAR(100) COMMENT '图标样式',
-    STATUS_ INT(1) NOT NULL COMMENT '状态：0-已禁用,1-启用中,2-已删除',
-    DESC_ VARCHAR(1000) COMMENT '说明',
-    PRIMARY KEY (ID)
-) COMMENT='选项条目';
-ALTER TABLE BC_OPTION_ITEM ADD CONSTRAINT BCFK_OPTIONITEM_OPTIONGROUP FOREIGN KEY (PID) 
-	REFERENCES BC_OPTION_GROUP (ID);
-ALTER TABLE BC_OPTION_ITEM ADD INDEX BCIDX_OPTIONITEM_KEY (KEY_);
-ALTER TABLE BC_OPTION_ITEM ADD INDEX BCIDX_OPTIONITEM_VALUE (VALUE_);
-ALTER TABLE BC_OPTION_ITEM ADD INDEX BCIDX_OPTIONITEM_PID (PID);
+create table BC_OPTION_ITEM (
+  ID      bigint       not null AUTO_INCREMENT,
+  PID     bigint       not null comment '所属分组的ID',
+  KEY_    varchar(255) not null comment '键',
+  VALUE_  varchar(255) not null comment '值',
+  ORDER_  varchar(100) comment '排序号',
+  ICON    varchar(100) comment '图标样式',
+  STATUS_ int (1) not null comment '状态：0-已禁用,1-启用中,2-已删除',
+  DESC_   varchar(1000) comment '说明',
+  primary key (ID)
+) comment = '选项条目';
+alter table BC_OPTION_ITEM
+  add constraint BCFK_OPTIONITEM_OPTIONGROUP foreign key (PID)
+references BC_OPTION_GROUP (ID);
+alter table BC_OPTION_ITEM
+  add INDEX bcidx_optionitem_key(KEY_);
+alter table BC_OPTION_ITEM
+  add INDEX bcidx_optionitem_value(VALUE_);
+alter table BC_OPTION_ITEM
+  add INDEX bcidx_optionitem_pid(PID);
 
 -- 调度任务配置
-CREATE TABLE BC_SD_JOB (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    STATUS_ INT(1)  NOT NULL COMMENT '状态：0-启用中,1-已禁用,2-已删除,3-正在运行,4-暂停',
-    NAME VARCHAR(255) NOT NULL COMMENT '名称',
-    GROUPN VARCHAR(255) NOT NULL COMMENT '分组名',
-    CRON VARCHAR(255) NOT NULL COMMENT '表达式',
-    BEAN VARCHAR(255) NOT NULL COMMENT '要调用的SpringBean名',
-    METHOD VARCHAR(255) NOT NULL COMMENT '要调用的SpringBean方法名',
-    IGNORE_ERROR INT(1) NOT NULL COMMENT '发现异常是否忽略后继续调度:0-否,1-是',
-    ORDER_ VARCHAR(100) COMMENT '排序号',
-    NEXT_DATE datetime COMMENT '任务的下一运行时间',
-    MEMO_ VARCHAR(1000) COMMENT '备注',
-    PRIMARY KEY (ID)
-) COMMENT='调度任务配置';
+create table BC_SD_JOB (
+  ID           bigint       not null AUTO_INCREMENT,
+  STATUS_      int (1) not null comment '状态：0-启用中,1-已禁用,2-已删除,3-正在运行,4-暂停',
+  NAME         varchar(255) not null comment '名称',
+  GROUPN       varchar(255) not null comment '分组名',
+  CRON         varchar(255) not null comment '表达式',
+  BEAN         varchar(255) not null comment '要调用的SpringBean名',
+  METHOD       varchar(255) not null comment '要调用的SpringBean方法名',
+  IGNORE_ERROR int (1) not null comment '发现异常是否忽略后继续调度:0-否,1-是',
+  ORDER_       varchar(100) comment '排序号',
+  NEXT_DATE    datetime comment '任务的下一运行时间',
+  MEMO_        varchar(1000) comment '备注',
+  primary key (ID)
+) comment = '调度任务配置';
 
 -- 任务调度日志
-CREATE TABLE BC_SD_LOG (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    SUCCESS INT(1) NOT NULL COMMENT '任务是否处理成功:0-失败,1-成功',
-    START_DATE datetime NOT NULL COMMENT '任务的启动时间',
-    END_DATE datetime NOT NULL COMMENT '任务的结束时间',
-    CFG_CRON VARCHAR(255) NOT NULL COMMENT '对应ScheduleJob的cron',
-    CFG_NAME VARCHAR(255) COMMENT '对应ScheduleJob的name',
-    CFG_GROUP VARCHAR(255) COMMENT '对应ScheduleJob的groupn',
-    CFG_BEAN VARCHAR(255) COMMENT '对应ScheduleJob的bean',
-    CFG_METHOD VARCHAR(255) COMMENT '对应ScheduleJob的method',
-    ERROR_TYPE VARCHAR(255) COMMENT '异常分类',
-    MSG TEXT COMMENT '异常信息',
-    PRIMARY KEY (ID)
-) COMMENT='任务调度日志';
+create table BC_SD_LOG (
+  ID         bigint       not null AUTO_INCREMENT,
+  SUCCESS    int (1) not null comment '任务是否处理成功:0-失败,1-成功',
+  START_DATE datetime     not null comment '任务的启动时间',
+  END_DATE   datetime     not null comment '任务的结束时间',
+  CFG_CRON   varchar(255) not null comment '对应ScheduleJob的cron',
+  CFG_NAME   varchar(255) comment '对应ScheduleJob的name',
+  CFG_GROUP  varchar(255) comment '对应ScheduleJob的groupn',
+  CFG_BEAN   varchar(255) comment '对应ScheduleJob的bean',
+  CFG_METHOD varchar(255) comment '对应ScheduleJob的method',
+  ERROR_TYPE varchar(255) comment '异常分类',
+  MSG        text comment '异常信息',
+  primary key (ID)
+) comment = '任务调度日志';
 
 -- 同步信息基表
-CREATE TABLE BC_SYNC_BASE (
-    ID BIGINT NOT NULL AUTO_INCREMENT,
-    STATUS_ INT(1) default 0 NOT NULL COMMENT '状态:0-同步后待处理,1-已处理',
-    SYNC_TYPE VARCHAR(255) NOT NULL COMMENT '同步信息的类型',
-    SYNC_CODE VARCHAR(255) NOT NULL COMMENT '同步信息的标识符',
-    SYNC_FROM VARCHAR(1000) NOT NULL COMMENT '同步信息的来源',
-    SYNC_DATE DATETIME NOT NULL COMMENT '同步时间',
-    AUTHOR_ID BIGINT NOT NULL COMMENT '同步人ID',
-    PRIMARY KEY (ID)
-) COMMENT='用户反馈';
-ALTER TABLE BC_SYNC_BASE ADD CONSTRAINT BCFK_SYNC_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_SYNC_BASE ADD INDEX BCUQ_SYNC_ID (SYNC_CODE);
+create table BC_SYNC_BASE (
+  ID        bigint        not null AUTO_INCREMENT,
+  STATUS_   int (1) default 0 not null comment '状态:0-同步后待处理,1-已处理',
+  SYNC_TYPE varchar(255)  not null comment '同步信息的类型',
+  SYNC_CODE varchar(255)  not null comment '同步信息的标识符',
+  SYNC_FROM varchar(1000) not null comment '同步信息的来源',
+  SYNC_DATE datetime      not null comment '同步时间',
+  AUTHOR_ID bigint        not null comment '同步人ID',
+  primary key (ID)
+) comment = '用户反馈';
+alter table BC_SYNC_BASE
+  add constraint BCFK_SYNC_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_SYNC_BASE
+  add INDEX bcuq_sync_id(SYNC_CODE);
 -- ALTER TABLE BC_SYNC_BASE ADD UNIQUE INDEX BCUQ_SYNC_ID (SYNC_TYPE,SYNC_CODE);
 

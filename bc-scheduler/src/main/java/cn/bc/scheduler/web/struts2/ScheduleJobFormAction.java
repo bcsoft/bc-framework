@@ -26,46 +26,46 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ScheduleJobFormAction extends EntityAction<Long, ScheduleJob> {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private SchedulerManage schedulerManage;
+  @Autowired
+  private SchedulerManage schedulerManage;
 
-	@Autowired
-	public void setScheduleJobService(@Qualifier(value = "scheduleJobService") CrudService<ScheduleJob> scheduleJobService) {
-		this.setCrudService(scheduleJobService);
-	}
+  @Autowired
+  public void setScheduleJobService(@Qualifier(value = "scheduleJobService") CrudService<ScheduleJob> scheduleJobService) {
+    this.setCrudService(scheduleJobService);
+  }
 
-	@Override
-	public boolean isReadonly() {
-		// 组织架构管理或系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return schedulerManage.isDisabled() || !context.hasAnyRole("BC_ORGANIZE_MANAGE", "BC_ADMIN");
-	}
+  @Override
+  public boolean isReadonly() {
+    // 组织架构管理或系统管理员
+    SystemContext context = (SystemContext) this.getContext();
+    return schedulerManage.isDisabled() || !context.hasAnyRole("BC_ORGANIZE_MANAGE", "BC_ADMIN");
+  }
 
-	@Override
-	public String getPageNamespace() {
-		return this.getContextPath() + "/bc/schedule/job";
-	}
+  @Override
+  public String getPageNamespace() {
+    return this.getContextPath() + "/bc/schedule/job";
+  }
 
-	@Override
-	protected void addJsCss(List<String> container) {
-		container.add("bc/schedule/job/form.js");
-	}
+  @Override
+  protected void addJsCss(List<String> container) {
+    container.add("bc/schedule/job/form.js");
+  }
 
-	@Override
-	protected PageOption buildPageOption(boolean editable) {
-		return super.buildPageOption(editable).setWidth(635).setMinWidth(280).setMinHeight(200);
-	}
+  @Override
+  protected PageOption buildPageOption(boolean editable) {
+    return super.buildPageOption(editable).setWidth(635).setMinWidth(280).setMinHeight(200);
+  }
 
-	@Override
-	protected void buildPageButtons(PageOption pageOption, boolean editable) {
-		super.buildPageButtons(pageOption, editable);
-	}
+  @Override
+  protected void buildPageButtons(PageOption pageOption, boolean editable) {
+    super.buildPageButtons(pageOption, editable);
+  }
 
-	@Override
-	protected void afterCreate(ScheduleJob entity) {
-		this.getE().setStatus(BCConstants.STATUS_DISABLED);// 初始化为禁用状态
-		this.getE().setGroupn("bc");
-	}
+  @Override
+  protected void afterCreate(ScheduleJob entity) {
+    this.getE().setStatus(BCConstants.STATUS_DISABLED);// 初始化为禁用状态
+    this.getE().setGroupn("bc");
+  }
 }

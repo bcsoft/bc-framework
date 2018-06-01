@@ -1,27 +1,25 @@
 package cn.bc.test.springws;
 
 public class SpringWSTest {
-	//@Test
-	public void test01() throws Exception {
-		// .net webService 地址
-		String url = "http://61.144.39.126/middle/WSMiddle.asmx";
-		// .net webService 命名空间
-		String namespace = "http://tempuri.org/";
-		// .net webService 需调用的方法
-		String methodName = "GetDriverTaxiQY";
-		// .net webService 的SOAPAction
-		String soapActionURI = "http://tempuri.org/GetDriverTaxiQY";
+  //@Test
+  public void test01() throws Exception {
+    // .net webService 地址
+    String url = "http://61.144.39.126/middle/WSMiddle.asmx";
+    // .net webService 命名空间
+    String namespace = "http://tempuri.org/";
+    // .net webService 需调用的方法
+    String methodName = "GetDriverTaxiQY";
+    // .net webService 的SOAPAction
+    String soapActionURI = "http://tempuri.org/GetDriverTaxiQY";
 
-		// 参数
-		String strQYID = "17E0FFF7-7816-46A5-83A7-23D5C9F762AB";// 企业ID
-		String strDriverNO = null;
-		String strCarNO = null;
-		String strMsg = "";
-		Object[] opArgs = new Object[] { strQYID, strDriverNO, strCarNO, strMsg };
+    // 参数
+    String strQYID = "17E0FFF7-7816-46A5-83A7-23D5C9F762AB";// 企业ID
+    String strDriverNO = null;
+    String strCarNO = null;
+    String strMsg = "";
+    Object[] opArgs = new Object[]{strQYID, strDriverNO, strCarNO, strMsg};
 
 
-		
-		
 //		for (Object o : response) {
 //			System.out.println(o.getClass());
 //			if (o instanceof OMText) {
@@ -31,5 +29,5 @@ public class SpringWSTest {
 //			}
 //			System.out.println("===========================================");
 //		}
-	}
+  }
 }

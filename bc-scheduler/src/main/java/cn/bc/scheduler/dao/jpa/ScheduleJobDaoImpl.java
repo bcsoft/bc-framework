@@ -14,12 +14,12 @@ import java.util.List;
  * @since 2011-08-30
  */
 public class ScheduleJobDaoImpl extends JpaCrudDao<ScheduleJob> implements ScheduleJobDao {
-	public List<ScheduleJob> findAllEnabled() {
-		String hql = "from ScheduleJob t where t.status=? order by t.orderNo";
-		return executeQuery(hql, new Object[]{BCConstants.STATUS_ENABLED});
-	}
+  public List<ScheduleJob> findAllEnabled() {
+    String hql = "from ScheduleJob t where t.status=? order by t.orderNo";
+    return executeQuery(hql, new Object[]{BCConstants.STATUS_ENABLED});
+  }
 
-	public List<ScheduleJob> findAll() {
-		return executeQuery("from ScheduleJob t order by t.orderNo", (Object[]) null);
-	}
+  public List<ScheduleJob> findAll() {
+    return executeQuery("from ScheduleJob t order by t.orderNo", (Object[]) null);
+  }
 }

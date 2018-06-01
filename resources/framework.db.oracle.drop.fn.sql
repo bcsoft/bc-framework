@@ -1,95 +1,103 @@
--- ##bcÆ½Ì¨µÄ oracle É¾±í½Å±¾##
+-- ##bcÆ½Ì¨ï¿½ï¿½ oracle É¾ï¿½ï¿½Å±ï¿½##
 
--- ÉèÖÃ½«ÐÅÏ¢Êä³öµ½¿ØÖÆÌ¨£¨Èç¹ûÊÇÔÚSQL PlusÃüÁîÐÐÔËÐÐÕâ¸ösqlÎÄ¼þ£¬ÐëÏÈÐÐÖ´ÐÐÕâ¸öÃüÁî²ÅÄÜ¿´µ½Êä³öÐÅÏ¢£©
+-- ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SQL Plusï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
 -- set serveroutput on;
 
--- ´´½¨É¾³ýÖ¸¶¨ÓÃ»§±íµÄ´æ´¢¹ý³Ì
-CREATE OR REPLACE PROCEDURE DROP_USER_TABLE
+-- ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ä´æ´¢ï¿½ï¿½ï¿½ï¿½
+create or replace procedure DROP_USER_TABLE
 (
-   --²ÎÊýIN±íÊ¾ÊäÈë²ÎÊý£¬
-   --OUT±íÊ¾ÊäÈë²ÎÊý£¬ÀàÐÍ¿ÉÒÔÊ¹ÓÃÈÎÒâOracleÖÐµÄºÏ·¨ÀàÐÍ¡£
-   i_table_name IN varchar2
+--ï¿½ï¿½ï¿½ï¿½INï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+--OUTï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oracleï¿½ÐµÄºÏ·ï¿½ï¿½ï¿½ï¿½Í¡ï¿½
+i_table_name in varchar2
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 num_ number;
 str1 varchar2(1000);
-BEGIN
-  select count(1) into num_ from user_tables where table_name = upper(i_table_name) or table_name = lower(i_table_name); 
-  if num_ > 0 then 
-    str1 := 'DROP TABLE ' || i_table_name;
-    execute immediate str1;
-    dbms_output.put_line('±í ' || i_table_name || ' ÒÑÉ¾³ý');
-  end if; 
-  if num_ <= 0 then 
-    dbms_output.put_line('±í ' || i_table_name || ' ²»´æÔÚ£¬ºöÂÔ');
-  end if; 
-END;
+begin
+select count(1) into num_
+from user_tables
+where table_name = upper(i_table_name) or table_name = lower(i_table_name);
+if num_ > 0 then
+str1 := 'DROP TABLE ' || i_table_name;
+execute immediate str1;
+dbms_output.put_line('ï¿½ï¿½ ' || i_table_name || ' ï¿½ï¿½É¾ï¿½ï¿½');
+end if;
+if num_ <= 0 then
+dbms_output.put_line('ï¿½ï¿½ ' || i_table_name || ' ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½');
+end if;
+end;
 /
 
--- ´´½¨É¾³ýÖ¸¶¨ÐòÁÐµÄ´æ´¢¹ý³Ì
-CREATE OR REPLACE PROCEDURE DROP_USER_SEQUENCE
+-- ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ´æ´¢ï¿½ï¿½ï¿½ï¿½
+create or replace procedure DROP_USER_SEQUENCE
 (
-   i_sequence_name IN varchar2
+i_sequence_name in varchar2
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 num_ number;
 str1 varchar2(1000);
-BEGIN
-  select count(1) into num_ from user_sequences where sequence_name = upper(i_sequence_name) or sequence_name = lower(i_sequence_name); 
-  if num_ > 0 then 
-    str1 := 'DROP SEQUENCE ' || i_sequence_name;
-    execute immediate str1;
-    dbms_output.put_line('ÐòÁÐ ' || i_sequence_name || ' ÒÑÉ¾³ý');
-  end if; 
-  if num_ <= 0 then 
-    dbms_output.put_line('ÐòÁÐ ' || i_sequence_name || ' ²»´æÔÚ£¬ºöÂÔ');
-  end if; 
-END;
+begin
+select count(1) into num_
+from user_sequences
+where sequence_name = upper(i_sequence_name) or sequence_name = lower(i_sequence_name);
+if num_ > 0 then
+str1 := 'DROP SEQUENCE ' || i_sequence_name;
+execute immediate str1;
+dbms_output.put_line('ï¿½ï¿½ï¿½ï¿½ ' || i_sequence_name || ' ï¿½ï¿½É¾ï¿½ï¿½');
+end if;
+if num_ <= 0 then
+dbms_output.put_line('ï¿½ï¿½ï¿½ï¿½ ' || i_sequence_name || ' ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½');
+end if;
+end;
 /
 
--- ´´½¨É¾³ýÖ¸¶¨´æ´¢¹ý³ÌµÄ´æ´¢¹ý³Ì
-CREATE OR REPLACE PROCEDURE DROP_USER_PROCEDURE
+-- ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ÌµÄ´æ´¢ï¿½ï¿½ï¿½ï¿½
+create or replace procedure DROP_USER_PROCEDURE
 (
-   i_proedure_name IN varchar2
+i_proedure_name in varchar2
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 num_ number;
 str1 varchar2(1000);
-BEGIN
-  select count(1) into num_ from user_procedures where object_name = upper(i_proedure_name) or object_name = lower(i_proedure_name); 
-  if num_ > 0 then 
-    str1 := 'DROP PROCEDURE ' || i_proedure_name;
-    execute immediate str1;
-    dbms_output.put_line('´æ´¢¹ý³Ì ' || i_proedure_name || ' ÒÑÉ¾³ý');
-  end if; 
-  if num_ <= 0 then 
-    dbms_output.put_line('´æ´¢¹ý³Ì ' || i_proedure_name || ' ²»´æÔÚ£¬ºöÂÔ');
-  end if; 
-END;
+begin
+select count(1) into num_
+from user_procedures
+where object_name = upper(i_proedure_name) or object_name = lower(i_proedure_name);
+if num_ > 0 then
+str1 := 'DROP PROCEDURE ' || i_proedure_name;
+execute immediate str1;
+dbms_output.put_line('ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ ' || i_proedure_name || ' ï¿½ï¿½É¾ï¿½ï¿½');
+end if;
+if num_ <= 0 then
+dbms_output.put_line('ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ ' || i_proedure_name || ' ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½');
+end if;
+end;
 /
 
--- ´´½¨É¾³ýÖ¸¶¨º¯ÊýµÄ´æ´¢¹ý³Ì
-CREATE OR REPLACE PROCEDURE DROP_USER_FUNCTION
+-- ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´æ´¢ï¿½ï¿½ï¿½ï¿½
+create or replace procedure DROP_USER_FUNCTION
 (
-   i_function_name IN varchar2
+i_function_name in varchar2
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 num_ number;
 str1 varchar2(1000);
-BEGIN
-  select count(1) into num_ from user_procedures where object_name = upper(i_function_name) or object_name = lower(i_function_name); 
-  if num_ > 0 then 
-    str1 := 'DROP FUNCTION ' || i_function_name;
-    execute immediate str1;
-    dbms_output.put_line('º¯Êý ' || i_function_name || ' ÒÑÉ¾³ý');
-  end if; 
-  if num_ <= 0 then 
-    dbms_output.put_line('º¯Êý ' || i_function_name || ' ²»´æÔÚ£¬ºöÂÔ');
-  end if; 
-END;
+begin
+select count(1) into num_
+from user_procedures
+where object_name = upper(i_function_name) or object_name = lower(i_function_name);
+if num_ > 0 then
+str1 := 'DROP FUNCTION ' || i_function_name;
+execute immediate str1;
+dbms_output.put_line('ï¿½ï¿½ï¿½ï¿½ ' || i_function_name || ' ï¿½ï¿½É¾ï¿½ï¿½');
+end if;
+if num_ <= 0 then
+dbms_output.put_line('ï¿½ï¿½ï¿½ï¿½ ' || i_function_name || ' ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½');
+end if;
+end;
 /
 

@@ -10,8 +10,8 @@ import javax.persistence.AttributeConverter;
  * @author dragon 2016-01-04
  */
 public abstract class EnumWithValueConverter<E extends EnumWithValue> implements AttributeConverter<E, Integer> {
-	@Override
-	public Integer convertToDatabaseColumn(E attribute) {
-		return attribute == null ? null : attribute.value();
-	}
+  @Override
+  public Integer convertToDatabaseColumn(E attribute) {
+    return attribute == null ? null : attribute.value();
+  }
 }

@@ -14,10 +14,10 @@ import java.util.List;
  * @author lbj
  */
 public class EmailTrashDaoImpl extends JpaCrudDao<EmailTrash> implements EmailTrashDao {
-	public List<EmailTrash> find4resumableByOwnerId(Long ownerId) {
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("owner.id", ownerId));
-		condition.add(new EqualsCondition("status", EmailTrash.STATUS_RESUMABLE));
-		return this.createQuery().condition(condition).list();
-	}
+  public List<EmailTrash> find4resumableByOwnerId(Long ownerId) {
+    AndCondition condition = new AndCondition();
+    condition.add(new EqualsCondition("owner.id", ownerId));
+    condition.add(new EqualsCondition("status", EmailTrash.STATUS_RESUMABLE));
+    return this.createQuery().condition(condition).list();
+  }
 }

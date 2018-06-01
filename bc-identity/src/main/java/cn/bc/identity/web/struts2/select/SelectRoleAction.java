@@ -29,79 +29,79 @@ import java.util.Map;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class SelectRoleAction extends AbstractSelectPageAction<Map<String, Object>> {
-	@Override
-	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认排序方向：排序号
-		return new OrderCondition("r.order_", Direction.Asc);
-	}
+  @Override
+  protected OrderCondition getGridDefaultOrderCondition() {
+    // 默认排序方向：排序号
+    return new OrderCondition("r.order_", Direction.Asc);
+  }
 
-	@Override
-	protected SqlObject<Map<String, Object>> getSqlObject() {
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
+  @Override
+  protected SqlObject<Map<String, Object>> getSqlObject() {
+    SqlObject<Map<String, Object>> sqlObject = new SqlObject<>();
 
-		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		sqlObject.setSql("select r.id as id, r.order_ as order, r.name as name, r.code as code"
-				+ " from BC_IDENTITY_ROLE r");
+    // 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+    sqlObject.setSql("select r.id as id, r.order_ as order, r.name as name, r.code as code"
+      + " from BC_IDENTITY_ROLE r");
 
-		// 数据映射
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<>();
-				int i = 0;
-				map.put("id", rs[i++]);
-				map.put("order", rs[i++]);
-				map.put("name", rs[i++]);
-				map.put("code", rs[i]);
-				return map;
-			}
-		});
-		return sqlObject;
-	}
+    // 数据映射
+    sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+      public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+        Map<String, Object> map = new HashMap<>();
+        int i = 0;
+        map.put("id", rs[i++]);
+        map.put("order", rs[i++]);
+        map.put("name", rs[i++]);
+        map.put("code", rs[i]);
+        return map;
+      }
+    });
+    return sqlObject;
+  }
 
-	@Override
-	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<>();
-		columns.add(new IdColumn4MapKey("id", "id"));
-		columns.add(new TextColumn4MapKey("order_", "order", getText("label.order"), 80).setSortable(true));
-		columns.add(new TextColumn4MapKey("name", "name", getText("label.name"), 180)
-				.setSortable(true).setUseTitleFromLabel(true));
-		columns.add(new TextColumn4MapKey("code", "code", getText("label.code"))
-				.setSortable(true).setUseTitleFromLabel(true));
-		return columns;
-	}
+  @Override
+  protected List<Column> getGridColumns() {
+    List<Column> columns = new ArrayList<>();
+    columns.add(new IdColumn4MapKey("id", "id"));
+    columns.add(new TextColumn4MapKey("order_", "order", getText("label.order"), 80).setSortable(true));
+    columns.add(new TextColumn4MapKey("name", "name", getText("label.name"), 180)
+      .setSortable(true).setUseTitleFromLabel(true));
+    columns.add(new TextColumn4MapKey("code", "code", getText("label.code"))
+      .setSortable(true).setUseTitleFromLabel(true));
+    return columns;
+  }
 
-	@Override
-	protected String getHtmlPageTitle() {
-		return this.getText("role.title.select");
-	}
+  @Override
+  protected String getHtmlPageTitle() {
+    return this.getText("role.title.select");
+  }
 
-	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(540).setHeight(450);
-	}
+  @Override
+  protected PageOption getHtmlPageOption() {
+    return super.getHtmlPageOption().setWidth(540).setHeight(450);
+  }
 
-	@Override
-	protected String getGridRowLabelExpression() {
-		return "['name']";
-	}
+  @Override
+  protected String getGridRowLabelExpression() {
+    return "['name']";
+  }
 
-	@Override
-	protected String[] getGridSearchFields() {
-		return new String[]{"r.order_", "r.name", "r.code"};
-	}
+  @Override
+  protected String[] getGridSearchFields() {
+    return new String[]{"r.order_", "r.name", "r.code"};
+  }
 
-	@Override
-	protected void addJsCss(List<String> container) {
-		container.add(this.getActionNamespace() + "/select.js");
-	}
+  @Override
+  protected void addJsCss(List<String> container) {
+    container.add(this.getActionNamespace() + "/select.js");
+  }
 
-	@Override
-	protected String getClickOkMethod() {
-		return "onOk";
-	}
+  @Override
+  protected String getClickOkMethod() {
+    return "onOk";
+  }
 
-	@Override
-	protected boolean isQuirksMode() {
-		return false;
-	}
+  @Override
+  protected boolean isQuirksMode() {
+    return false;
+  }
 }

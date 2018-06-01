@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-	<!-- 配置数据库连接及事务管理 -->
-	<context:property-placeholder location="classpath:db.properties"/>
-	<bean id="JdbcUtils" class="cn.bc.db.JdbcUtils">
-		<property name="dbtype" value="${db_type}"/>
-	</bean>
-	<bean class="cn.bc.test.TestUtils">
-		<constructor-arg value="${db_sequence}"/>
-	</bean>
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${db_driverClassName}"/>
-		<property name="url" value="${db_url}"/>
-		<property name="username" value="${db_username}"/>
-		<property name="password" value="${db_password}"/>
-	</bean>
+  <!-- 配置数据库连接及事务管理 -->
+  <context:property-placeholder location="classpath:db.properties"/>
+  <bean id="JdbcUtils" class="cn.bc.db.JdbcUtils">
+    <property name="dbtype" value="${db_type}"/>
+  </bean>
+  <bean class="cn.bc.test.TestUtils">
+    <constructor-arg value="${db_sequence}"/>
+  </bean>
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${db_driverClassName}"/>
+    <property name="url" value="${db_url}"/>
+    <property name="username" value="${db_username}"/>
+    <property name="password" value="${db_password}"/>
+  </bean>
 
-	<!-- for hibernate jpa -->
-	<bean id="entityManagerFactory"
-		  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="persistenceUnit"/>
-		<property name="dataSource" ref="dataSource"/>
-		<property name="jpaProperties">
-			<value>
-				hibernate.dialect=${hibernate_dialect}
-				hibernate.show_sql=${hibernate_showSql}
-				hibernate.hbm2ddl.auto=${hibernate_hbm2ddl_auto}
-			</value>
-		</property>
-	</bean>
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-	</bean>
+  <!-- for hibernate jpa -->
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="persistenceUnit"/>
+    <property name="dataSource" ref="dataSource"/>
+    <property name="jpaProperties">
+      <value>
+        hibernate.dialect=${hibernate_dialect}
+        hibernate.show_sql=${hibernate_showSql}
+        hibernate.hbm2ddl.auto=${hibernate_hbm2ddl_auto}
+      </value>
+    </property>
+  </bean>
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
 </beans>

@@ -13,11 +13,6 @@ import org.quartz.JobExecutionException;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.BeanResolver;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
@@ -34,110 +29,110 @@ import static org.quartz.TriggerKey.triggerKey;
  * @author dragon
  */
 public class RunReportTemplateJobBean extends QuartzJobBean {
-	private static final Logger logger = LoggerFactory.getLogger(RunReportTemplateJobBean.class);
-	private ReportService reportService;
-	private SchedulerService schedulerService;
+  private static final Logger logger = LoggerFactory.getLogger(RunReportTemplateJobBean.class);
+  private ReportService reportService;
+  private SchedulerService schedulerService;
 
-	private ActorHistory executor;// 报表任务的执行者，通常为系统管理员
-	private ReportTask reportTask;// 要执行的报表任务
+  private ActorHistory executor;// 报表任务的执行者，通常为系统管理员
+  private ReportTask reportTask;// 要执行的报表任务
 
-	private ScheduleLog scheduleLog;
-	private BeanResolver beanResolver;
+  private ScheduleLog scheduleLog;
+  private BeanResolver beanResolver;
 
-	public void setReportService(ReportService reportService) {
-		this.reportService = reportService;
-	}
+  public void setReportService(ReportService reportService) {
+    this.reportService = reportService;
+  }
 
-	public void setSchedulerService(SchedulerService schedulerService) {
-		this.schedulerService = schedulerService;
-	}
+  public void setSchedulerService(SchedulerService schedulerService) {
+    this.schedulerService = schedulerService;
+  }
 
-	public void setExecutor(ActorHistory executor) {
-		this.executor = executor;
-	}
+  public void setExecutor(ActorHistory executor) {
+    this.executor = executor;
+  }
 
-	public void setReportTask(ReportTask reportTask) {
-		this.reportTask = reportTask;
-	}
+  public void setReportTask(ReportTask reportTask) {
+    this.reportTask = reportTask;
+  }
 
-	public void setBeanResolver(BeanResolver beanResolver) {
-		this.beanResolver = beanResolver;
-	}
+  public void setBeanResolver(BeanResolver beanResolver) {
+    this.beanResolver = beanResolver;
+  }
 
-	private void stopInError(JobExecutionContext context) {
-		try {
-			logger.error("因发生异常,终止报表任务\"{}\"的后续调度", reportTask.getName());
-			// 把老的任务给停止、删除
-			String jobName = "REPORT_TASK_JOB" + reportTask.getId();
-			context.getScheduler().unscheduleJob(triggerKey(jobName, ReportTask.GROUP_NAME));
-			context.getScheduler().deleteJob(jobKey(jobName, ReportTask.GROUP_NAME));
-		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+  private void stopInError(JobExecutionContext context) {
+    try {
+      logger.error("因发生异常,终止报表任务\"{}\"的后续调度", reportTask.getName());
+      // 把老的任务给停止、删除
+      String jobName = "REPORT_TASK_JOB" + reportTask.getId();
+      context.getScheduler().unscheduleJob(triggerKey(jobName, ReportTask.GROUP_NAME));
+      context.getScheduler().deleteJob(jobKey(jobName, ReportTask.GROUP_NAME));
+    } catch (SchedulerException e) {
+      logger.error(e.getMessage(), e);
+    }
+  }
 
-	private void errorLog(JobExecutionContext context, Exception ex) {
-		// 记录异常日志
-		scheduleLog.setSuccess(false);
-		scheduleLog.setEndDate(Calendar.getInstance());
-		scheduleLog.setErrorType(ex.getClass().getName());
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		ex.printStackTrace(writer);
-		writer.close();
-		scheduleLog.setMsg(strWriter.toString());
-		this.schedulerService.saveScheduleLog(scheduleLog);
-		logger.error("报表任务\"{}\"执行过程发生错误,请检查任务的错误日志信息", reportTask.getName());
+  private void errorLog(JobExecutionContext context, Exception ex) {
+    // 记录异常日志
+    scheduleLog.setSuccess(false);
+    scheduleLog.setEndDate(Calendar.getInstance());
+    scheduleLog.setErrorType(ex.getClass().getName());
+    StringWriter strWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(strWriter);
+    ex.printStackTrace(writer);
+    writer.close();
+    scheduleLog.setMsg(strWriter.toString());
+    this.schedulerService.saveScheduleLog(scheduleLog);
+    logger.error("报表任务\"{}\"执行过程发生错误,请检查任务的错误日志信息", reportTask.getName());
 
-		if (!reportTask.isIgnoreError())
-			stopInError(context);
-	}
+    if (!reportTask.isIgnoreError())
+      stopInError(context);
+  }
 
-	/**
-	 * Invoke the method via the MethodInvoker.
-	 */
-	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-		Date fromDate = new Date();
-		logger.warn("正在执行报表任务\"{}\"", reportTask.getName());
+  /**
+   * Invoke the method via the MethodInvoker.
+   */
+  protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    Date fromDate = new Date();
+    logger.warn("正在执行报表任务\"{}\"", reportTask.getName());
 
-		// 创建日志
-		scheduleLog = new ScheduleLog();
-		scheduleLog.setStartDate(Calendar.getInstance());
-		scheduleLog.setCfgName(reportTask.getName());
-		scheduleLog.setCfgGroup(ReportTask.GROUP_NAME);
-		scheduleLog.setCfgBean("RunReportTemplateJobBean");
-		scheduleLog.setCfgMethod("runReportTemplate");
-		scheduleLog.setCfgCron(reportTask.getCron());
+    // 创建日志
+    scheduleLog = new ScheduleLog();
+    scheduleLog.setStartDate(Calendar.getInstance());
+    scheduleLog.setCfgName(reportTask.getName());
+    scheduleLog.setCfgGroup(ReportTask.GROUP_NAME);
+    scheduleLog.setCfgBean("RunReportTemplateJobBean");
+    scheduleLog.setCfgMethod("runReportTemplate");
+    scheduleLog.setCfgCron(reportTask.getCron());
 
-		try {
-			// 执行报表模板并返回生成的历史报表
-			ReportTemplate tpl = this.reportTask.getTemplate();
-			Assert.notNull(tpl, "报表任务配置的报表模板为空！");
+    try {
+      // 执行报表模板并返回生成的历史报表
+      ReportTemplate tpl = this.reportTask.getTemplate();
+      Assert.notNull(tpl, "报表任务配置的报表模板为空！");
 
-			// 执行并生成历史报表
-			ReportHistory h = tpl.run2history(this.beanResolver, this.reportService, null);
+      // 执行并生成历史报表
+      ReportHistory h = tpl.run2history(this.beanResolver, this.reportService, null);
 
-			// 设置报表历史的一些信息
-			h.setAuthor(this.executor);
-			h.setSourceType("报表任务");
-			h.setSourceId(this.reportTask.getId());
+      // 设置报表历史的一些信息
+      h.setAuthor(this.executor);
+      h.setSourceType("报表任务");
+      h.setSourceId(this.reportTask.getId());
 
-			// 保存历史报表
-			this.reportService.saveReportHistory(h);
+      // 保存历史报表
+      this.reportService.saveReportHistory(h);
 
-			context.setResult(null);
+      context.setResult(null);
 
-			// 记录成功日志
-			scheduleLog.setSuccess(true);
-			scheduleLog.setEndDate(Calendar.getInstance());
-			scheduleLog.setErrorType(null);
-			scheduleLog.setMsg(null);
-			this.schedulerService.saveScheduleLog(scheduleLog);
-		} catch (Exception ex) {
-			// 记录异常日志
-			errorLog(context, ex);
-		}
-		logger.warn("报表任务\"" + reportTask.getName() + "\"执行完毕,耗时"
-				+ DateUtils.getWasteTime(fromDate));
-	}
+      // 记录成功日志
+      scheduleLog.setSuccess(true);
+      scheduleLog.setEndDate(Calendar.getInstance());
+      scheduleLog.setErrorType(null);
+      scheduleLog.setMsg(null);
+      this.schedulerService.saveScheduleLog(scheduleLog);
+    } catch (Exception ex) {
+      // 记录异常日志
+      errorLog(context, ex);
+    }
+    logger.warn("报表任务\"" + reportTask.getName() + "\"执行完毕,耗时"
+      + DateUtils.getWasteTime(fromDate));
+  }
 }

@@ -12,7 +12,7 @@ import java.util.List;
  * @author dragon
  */
 public class OperateLogDaoImpl extends JpaCrudDao<OperateLog> implements OperateLogDao {
-	public List<OperateLog> find(String ptype, String pid) {
-		return executeQuery("from Worklog wl where wl.ptype=? and wl.pid=?", new Object[]{ptype, pid});
-	}
+  public List<OperateLog> find(String ptype, String pid) {
+    return executeQuery("from Worklog wl where wl.ptype=? and wl.pid=?", new Object[]{ptype, pid});
+  }
 }

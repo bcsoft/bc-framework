@@ -9,19 +9,19 @@
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
        http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
-	<!--
-	See https://dzone.com/articles/spring-3-makes-use-embedded-easy
-	The default type is HSQL
-	-->
-	<jdbc:embedded-database id="dataSource" type="HSQL"/>
+  <!--
+  See https://dzone.com/articles/spring-3-makes-use-embedded-easy
+  The default type is HSQL
+  -->
+  <jdbc:embedded-database id="dataSource" type="HSQL"/>
 
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg ref="dataSource"/>
-	</bean>
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"/>
+  </bean>
 
-	<!-- 纯 jdbc 的事务管理 -->
-	<bean id="jdbcTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	<tx:annotation-driven transaction-manager="jdbcTransactionManager"/>
+  <!-- 纯 jdbc 的事务管理 -->
+  <bean id="jdbcTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+  <tx:annotation-driven transaction-manager="jdbcTransactionManager"/>
 </beans>

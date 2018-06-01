@@ -1,21 +1,22 @@
-DROP TABLE if exists bc_jpa_book_detail;
-DROP TABLE if exists bc_jpa_book;
+drop table if exists bc_jpa_book_detail;
+drop table if exists bc_jpa_book;
 
-CREATE TABLE bc_jpa_book (
-  id serial NOT NULL PRIMARY key,
-  name character varying(255), -- 书名
-  bool boolean,
-  date Date,
-  time time,
+create table bc_jpa_book (
+  id        serial not null primary key,
+  name      character varying(255), -- 书名
+  bool      boolean,
+  date      date,
+  time      time,
   timestamp timestamp
 );
 
-CREATE TABLE bc_jpa_book_detail (
-  id integer NOT NULL PRIMARY key,
+create table bc_jpa_book_detail (
+  id        integer not null primary key,
   publisher character varying(255), -- 出版社
-  CONSTRAINT bcfk_jpa_book_detail_id FOREIGN KEY (id)
-      REFERENCES bc_jpa_book (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+  constraint bcfk_jpa_book_detail_id foreign key (id)
+  references bc_jpa_book (id) on update no action on delete no action
 );
 
 
-select * from bc_jpa_book b left join bc_jpa_book_detail d on d.id = b.id;
+select *
+from bc_jpa_book b left join bc_jpa_book_detail d on d.id = b.id;

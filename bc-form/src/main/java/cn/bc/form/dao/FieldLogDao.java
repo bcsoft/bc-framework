@@ -5,9 +5,8 @@ import cn.bc.form.domain.FieldLog;
 
 /**
  * 审计日志Dao
- * 
+ *
  * @author hwx
- * 
  */
 
 public interface FieldLogDao extends CrudDao<FieldLog> {

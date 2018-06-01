@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 将 metadata-complete 设为 false 或不设置，servlet3的注解类方有效 -->
 <web-app
-		xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-		metadata-complete="true"
-		version="3.1">
-	<display-name>BC Converter</display-name>
-    <description>BC Converter</description>
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
-	<session-config>
-		<!-- session超时设置，设为不大于0的数将永远不过时，单位为分钟 -->
-		<session-timeout>60</session-timeout>
-	</session-config>
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  metadata-complete="true"
+  version="3.1">
+  <display-name>BC Converter</display-name>
+  <description>BC Converter</description>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <session-config>
+    <!-- session超时设置，设为不大于0的数将永远不过时，单位为分钟 -->
+    <session-timeout>60</session-timeout>
+  </session-config>
 
-	<!-- 配置Spring加载哪些配置文件，多个文件用逗号连接，可使用通配符， 如/WEB-INF/applicationContext-*.xml,classpath*:applicationContext-*.xml -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:spring.xml</param-value>
-	</context-param>
+  <!-- 配置Spring加载哪些配置文件，多个文件用逗号连接，可使用通配符， 如/WEB-INF/applicationContext-*.xml,classpath*:applicationContext-*.xml -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring.xml</param-value>
+  </context-param>
 
-	<!-- 配置Spring的监听器 -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+  <!-- 配置Spring的监听器 -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
 
-	<!-- 错误页面 -->
-	<error-page>
-		<location>/error.jsp</location>
-	</error-page>
+  <!-- 错误页面 -->
+  <error-page>
+    <location>/error.jsp</location>
+  </error-page>
 </web-app>

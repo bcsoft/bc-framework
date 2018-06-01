@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>摄像头</title>
-<link rel="stylesheet" type="text/css" href="camera.css" />
+  <meta charset="UTF-8">
+  <title>摄像头</title>
+  <link rel="stylesheet" type="text/css" href="camera.css"/>
 </head>
 <body>
-	<div>
-		<button id="startButton">打开摄像头</button>
-		<button id="stopButton" value="0">停止</button>，截图格式：<input
-			type="radio" name="type" value="image/jpeg" checked="checked">jpg
-		<input type="radio" name="type" value="image/png">png <input
-			type="radio" name="type" value="image/webp">webp
-	</div>
-	<div>
-		<span id="msg"></span>
-	</div>
-	<div class="container centerBox">
-		<div class="scanContainer">
-			<video id="video" autoplay></video>
-		</div>
-	</div>
-	<div class="showContainer">
-		<canvas id="canvas"></canvas>
-		<img id="capture">
-	</div>
-	<script type="text/javascript" src="camera.js"></script>
+<div>
+  <button id="startButton">打开摄像头</button>
+  <button id="stopButton" value="0">停止</button>
+  ，截图格式：<input
+  type="radio" name="type" value="image/jpeg" checked="checked">jpg
+  <input type="radio" name="type" value="image/png">png <input
+  type="radio" name="type" value="image/webp">webp
+</div>
+<div>
+  <span id="msg"></span>
+</div>
+<div class="container centerBox">
+  <div class="scanContainer">
+    <video id="video" autoplay></video>
+  </div>
+</div>
+<div class="showContainer">
+  <canvas id="canvas"></canvas>
+  <img id="capture">
+</div>
+<script type="text/javascript" src="camera.js"></script>
 </body>
 </html>

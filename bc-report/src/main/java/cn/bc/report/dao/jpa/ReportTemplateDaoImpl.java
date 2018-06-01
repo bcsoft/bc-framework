@@ -14,20 +14,20 @@ import cn.bc.report.domain.ReportTemplate;
  * @author dragon
  */
 public class ReportTemplateDaoImpl extends JpaCrudDao<ReportTemplate> implements ReportTemplateDao {
-	public ReportTemplate loadByCode(String code) {
-		return this.createQuery().condition(new EqualsCondition("code", code)).singleResult();
-	}
+  public ReportTemplate loadByCode(String code) {
+    return this.createQuery().condition(new EqualsCondition("code", code)).singleResult();
+  }
 
-	public boolean isUniqueCode(Long currentId, String code) {
-		Condition c;
-		if (currentId == null) {
-			c = new EqualsCondition("code", code);
+  public boolean isUniqueCode(Long currentId, String code) {
+    Condition c;
+    if (currentId == null) {
+      c = new EqualsCondition("code", code);
 
-		} else {
-			c = new AndCondition()
-					.add(new EqualsCondition("code", code))
-					.add(new NotEqualsCondition("id", currentId));
-		}
-		return this.createQuery().condition(c).count() > 0;
-	}
+    } else {
+      c = new AndCondition()
+        .add(new EqualsCondition("code", code))
+        .add(new NotEqualsCondition("id", currentId));
+    }
+    return this.createQuery().condition(c).count() > 0;
+  }
 }

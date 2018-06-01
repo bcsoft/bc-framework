@@ -12,16 +12,16 @@ import javax.servlet.http.HttpSessionListener;
  */
 @WebListener("DemoHttpSessionListener")
 public class DemoHttpSessionListener implements HttpSessionListener {
-	private static Logger logger = LoggerFactory.getLogger(DemoHttpSessionListener.class);
+  private static Logger logger = LoggerFactory.getLogger(DemoHttpSessionListener.class);
 
-	@Override
-	public void sessionCreated(HttpSessionEvent se) {
-		// 对异步 Servlet 该监听器测试结果为没有调用
-		logger.debug("sessionCreated: {}", se.getSession().getId());
-	}
+  @Override
+  public void sessionCreated(HttpSessionEvent se) {
+    // 对异步 Servlet 该监听器测试结果为没有调用
+    logger.debug("sessionCreated: {}", se.getSession().getId());
+  }
 
-	@Override
-	public void sessionDestroyed(HttpSessionEvent se) {
-		logger.debug("sessionDestroyed: {}", se.getSession().getId());
-	}
+  @Override
+  public void sessionDestroyed(HttpSessionEvent se) {
+    logger.debug("sessionDestroyed: {}", se.getSession().getId());
+  }
 }

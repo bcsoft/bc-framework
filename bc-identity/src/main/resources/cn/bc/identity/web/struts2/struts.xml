@@ -1,206 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<package name="idGenerator" extends="bc-default" namespace="/bc/id">
-		<action name="nextSN4Month" class="idGeneratorAction" method="nextSN4Month"/>
-	</package>
+  <package name="idGenerator" extends="bc-default" namespace="/bc/id">
+    <action name="nextSN4Month" class="idGeneratorAction" method="nextSN4Month"/>
+  </package>
 
-	<!-- 资源 -->
-	<package name="identity/resource" extends="bc-default" namespace="/bc/identity/resource">
-		<!-- 表单 -->
-		<action name="create" class="resourceFormAction" method="create">
-			<result name="form">/bc/identity/resource/form.jsp</result>
-		</action>
-		<action name="edit" class="resourceFormAction" method="edit">
-			<result name="form">/bc/identity/resource/form.jsp</result>
-		</action>
-		<action name="save" class="resourceFormAction" method="save"/>
-		<action name="delete" class="resourceFormAction" method="delete"/>
+  <!-- 资源 -->
+  <package name="identity/resource" extends="bc-default" namespace="/bc/identity/resource">
+    <!-- 表单 -->
+    <action name="create" class="resourceFormAction" method="create">
+      <result name="form">/bc/identity/resource/form.jsp</result>
+    </action>
+    <action name="edit" class="resourceFormAction" method="edit">
+      <result name="form">/bc/identity/resource/form.jsp</result>
+    </action>
+    <action name="save" class="resourceFormAction" method="save"/>
+    <action name="delete" class="resourceFormAction" method="delete"/>
 
-		<!-- 视图-->
-		<action name="list" class="resourceViewAction" method="list"/>
-		<action name="paging" class="resourceViewAction" method="paging"/>
-		<action name="data" class="resourceViewAction" method="data"/>
-		<action name="export" class="resourceViewAction" method="export"/>
-	</package>
-	<!-- 选择资源 -->
-	<package name="identity/resource/select" extends="bc-default" namespace="/bc/identity/resource/select">
-		<action name="paging" class="selectResourceAction" method="paging"/>
-		<action name="data" class="selectResourceAction" method="data"/>
-	</package>
+    <!-- 视图-->
+    <action name="list" class="resourceViewAction" method="list"/>
+    <action name="paging" class="resourceViewAction" method="paging"/>
+    <action name="data" class="resourceViewAction" method="data"/>
+    <action name="export" class="resourceViewAction" method="export"/>
+  </package>
+  <!-- 选择资源 -->
+  <package name="identity/resource/select" extends="bc-default" namespace="/bc/identity/resource/select">
+    <action name="paging" class="selectResourceAction" method="paging"/>
+    <action name="data" class="selectResourceAction" method="data"/>
+  </package>
 
-	<!-- 角色 -->
-	<package name="bc/identity/role" extends="bc-default" namespace="/bc/identity/role">
-		<!-- 表单 -->
-		<action name="create" class="roleFormAction" method="create">
-			<result name="form">/bc/identity/role/form.jsp</result>
-		</action>
-		<action name="edit" class="roleFormAction" method="edit">
-			<result name="form">/bc/identity/role/form.jsp</result>
-		</action>
-		<action name="save" class="roleFormAction" method="save"/>
-		<action name="delete" class="roleFormAction" method="delete"/>
+  <!-- 角色 -->
+  <package name="bc/identity/role" extends="bc-default" namespace="/bc/identity/role">
+    <!-- 表单 -->
+    <action name="create" class="roleFormAction" method="create">
+      <result name="form">/bc/identity/role/form.jsp</result>
+    </action>
+    <action name="edit" class="roleFormAction" method="edit">
+      <result name="form">/bc/identity/role/form.jsp</result>
+    </action>
+    <action name="save" class="roleFormAction" method="save"/>
+    <action name="delete" class="roleFormAction" method="delete"/>
 
-		<!-- 视图-->
-		<action name="list" class="roleViewAction" method="list"/>
-		<action name="paging" class="roleViewAction" method="paging"/>
-		<action name="data" class="roleViewAction" method="data"/>
-		<action name="export" class="roleViewAction" method="export"/>
-	</package>
-	<!-- 角色表单的资源分配页签 -->
-	<package name="bc/identity/role/resource" extends="bc-default" namespace="/bc/identity/role/resource">
-		<action name="list" class="roleResourceTabAction" method="list"/>
-		<action name="data" class="roleResourceTabAction" method="data"/>
-		<action name="export" class="roleResourceTabAction" method="export"/>
-		<action name="add" class="roleResourceTabAction" method="addResource"/>
-		<action name="delete" class="roleResourceTabAction" method="deleteResource"/>
-	</package>
-	<!-- 角色表单的权限分配页签 -->
-	<package name="bc/identity/role/actor" extends="bc-default" namespace="/bc/identity/role/actor">
-		<action name="list" class="roleActorTabAction" method="list"/>
-		<action name="data" class="roleActorTabAction" method="data"/>
-		<action name="export" class="roleActorTabAction" method="export"/>
-		<action name="add" class="roleActorTabAction" method="addActor"/>
-		<action name="delete" class="roleActorTabAction" method="deleteActor"/>
-	</package>
-	<!-- 选择角色 -->
-	<package name="identity/role/select" extends="bc-default" namespace="/bc/identity/role/select">
-		<action name="paging" class="selectRoleAction" method="paging"/>
-		<action name="data" class="selectRoleAction" method="data"/>
-	</package>
+    <!-- 视图-->
+    <action name="list" class="roleViewAction" method="list"/>
+    <action name="paging" class="roleViewAction" method="paging"/>
+    <action name="data" class="roleViewAction" method="data"/>
+    <action name="export" class="roleViewAction" method="export"/>
+  </package>
+  <!-- 角色表单的资源分配页签 -->
+  <package name="bc/identity/role/resource" extends="bc-default" namespace="/bc/identity/role/resource">
+    <action name="list" class="roleResourceTabAction" method="list"/>
+    <action name="data" class="roleResourceTabAction" method="data"/>
+    <action name="export" class="roleResourceTabAction" method="export"/>
+    <action name="add" class="roleResourceTabAction" method="addResource"/>
+    <action name="delete" class="roleResourceTabAction" method="deleteResource"/>
+  </package>
+  <!-- 角色表单的权限分配页签 -->
+  <package name="bc/identity/role/actor" extends="bc-default" namespace="/bc/identity/role/actor">
+    <action name="list" class="roleActorTabAction" method="list"/>
+    <action name="data" class="roleActorTabAction" method="data"/>
+    <action name="export" class="roleActorTabAction" method="export"/>
+    <action name="add" class="roleActorTabAction" method="addActor"/>
+    <action name="delete" class="roleActorTabAction" method="deleteActor"/>
+  </package>
+  <!-- 选择角色 -->
+  <package name="identity/role/select" extends="bc-default" namespace="/bc/identity/role/select">
+    <action name="paging" class="selectRoleAction" method="paging"/>
+    <action name="data" class="selectRoleAction" method="data"/>
+  </package>
 
-	<package name="duty" extends="bc-default" namespace="/bc/duty">
-		<action name="create" class="dutyAction" method="create">
-<!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
-			<result name="form">/bc/identity/duty/form.jsp</result>
-		</action>
-		<action name="edit" class="dutyAction" method="edit">
-			<result name="form">/bc/identity/duty/form.jsp</result>
-<!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
-		</action>
-		<action name="save" class="dutyAction" method="save"/>
-		<action name="delete" class="dutyAction" method="delete"/>
-		
-		<action name="data" class="dutyAction" method="data">
-			<result name="data">/bc/identity/duty/data.jsp</result>
-		</action>
-		<action name="list" class="dutyAction" method="list">
-			<result name="list">/bc/identity/duty/list.jsp</result>
-		</action>
-		<action name="paging" class="dutyAction" method="paging">
-			<result name="paging">/bc/identity/duty/paging.jsp</result>
-		</action>
-		<action name="export" class="dutyAction" method="export"/>
-	</package>
-	<package name="unit" extends="bc-default" namespace="/bc/unit">
-		<action name="create" class="unitAction" method="create">
-			<result name="form">/bc/identity/unit/form.jsp</result>
-		</action>
-		<action name="edit" class="unitAction" method="edit">
-			<result name="form">/bc/identity/unit/form.jsp</result>
-		</action>
-				
-		<action name="save" class="unitAction" method="save"/>
-		<action name="delete" class="unitAction" method="delete"/>
-		<action name="list" class="unitAction" method="list"/>
-		<action name="paging" class="unitAction" method="paging"/>
-		<action name="data" class="unitAction" method="data"/>
-		<action name="export" class="unitAction" method="export"/>
+  <package name="duty" extends="bc-default" namespace="/bc/duty">
+    <action name="create" class="dutyAction" method="create">
+      <!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
+      <result name="form">/bc/identity/duty/form.jsp</result>
+    </action>
+    <action name="edit" class="dutyAction" method="edit">
+      <result name="form">/bc/identity/duty/form.jsp</result>
+      <!-- 			<result name="form" type="freemarker">/cn/bc/identity/web/struts2/duty.ftl</result> -->
+    </action>
+    <action name="save" class="dutyAction" method="save"/>
+    <action name="delete" class="dutyAction" method="delete"/>
 
-        <action name="findBranchOffice" class="unitAction" method="findBranchOffice"/>
-	</package>
-	<package name="department" extends="bc-default" namespace="/bc/department">
-		<action name="create" class="departmentAction" method="create">
-			<result name="form">/bc/identity/department/form.jsp</result>
-		</action>
-		<action name="edit" class="departmentAction" method="edit">
-			<result name="form">/bc/identity/department/form.jsp</result>
-		</action>
-				
-		<action name="save" class="departmentAction" method="save"/>
-		<action name="delete" class="departmentAction" method="delete"/>
-		<action name="list" class="departmentAction" method="list"/>
-		<action name="paging" class="departmentAction" method="paging"/>
-		<action name="data" class="departmentAction" method="data"/>
-		<action name="export" class="departmentAction" method="export"/>
-	</package>
-	<package name="group" extends="bc-default" namespace="/bc/group">
-		<action name="create" class="groupAction" method="create">
-			<result name="form">/bc/identity/group/form.jsp</result>
-		</action>
-		<action name="edit" class="groupAction" method="edit">
-			<result name="form">/bc/identity/group/form.jsp</result>
-		</action>
-				
-		<action name="save" class="groupAction" method="save"/>
-		<action name="delete" class="groupAction" method="delete"/>
-		<action name="list" class="groupAction" method="list"/>
-		<action name="paging" class="groupAction" method="paging"/>
-		<action name="data" class="groupAction" method="data"/>
-		<action name="export" class="groupAction" method="export"/>
-	</package>
-	<package name="user" extends="bc-default" namespace="/bc/user">
-		<action name="create" class="userAction" method="create">
-			<result name="form">/bc/identity/user/form.jsp</result>
-		</action>
-		<action name="edit" class="userAction" method="edit">
-			<result name="form">/bc/identity/user/form.jsp</result>
-		</action>
-				
-		<action name="save" class="userAction" method="save"/>
-		<action name="delete" class="userAction" method="delete"/>
-		<action name="list" class="userAction" method="list"/>
-		<action name="paging" class="userAction" method="paging"/>
-		<action name="data" class="userAction" method="data"/>
-		<action name="export" class="userAction" method="export"/>
-	</package>
-	
-	<package name="selectUnit" extends="bc-default" namespace="/bc">
-		<action name="selectUnit" class="selectUnitAction">
-			<result>/bc/identity/unit/select.jsp</result>
-		</action>
-	</package>
-	<package name="selectUnitOrDepartment" extends="bc-default" namespace="/bc">
-		<action name="selectUnitOrDepartment" class="selectUnitOrDepartmentAction">
-			<result>/bc/identity/department/select2.jsp</result>
-		</action>
-	</package>
-	<package name="selectDepartment" extends="bc-default" namespace="/bc">
-		<action name="selectDepartment" class="selectDepartmentAction">
-			<result>/bc/identity/department/select.jsp</result>
-		</action>
-	</package>
-	<package name="selectGroup" extends="bc-default" namespace="/bc">
-		<action name="selectGroup" class="selectGroupAction">
-			<result>/bc/identity/group/select.jsp</result>
-		</action>
-	</package>
-	<package name="selectUser" extends="bc-default" namespace="/bc">
-		<action name="selectUser" class="selectUserAction">
-			<result>/bc/identity/user/select.jsp</result>
-		</action>
-	</package>
-	<package name="selectUsers" extends="bc-default" namespace="/bc">
-		<action name="selectUsers" class="selectUsersAction">
-		</action>
-	</package>
-	<package name="authData" extends="bc-default" namespace="/bc/auth">
-		<action name="setPassword" class="authDataAction" method="setPassword">
-			<result name="form">/bc/identity/user/password.jsp</result>
-		</action>
-		<action name="updatePassword" class="authDataAction" method="updatePassword"/>
-	</package>
-	<package name="getUsers" extends="bc-default" namespace="/bc">
-		<action name="getUsers" class="getUsersAction">
-		</action>
-	</package>
-	<package name="getDepartmentMiniInfoByActors" extends="bc-default" namespace="/bc">
-		<action name="getDepartmentMiniInfoByActors" class="getDepartmentMiniInfoByActorsAction">
-		</action>
-	</package>
-	<package name="nextUid" extends="bc-default" namespace="/bc">
-		<action name="nextuid" class="idGeneratorAction" method="nextUid"/>
-	</package>
+    <action name="data" class="dutyAction" method="data">
+      <result name="data">/bc/identity/duty/data.jsp</result>
+    </action>
+    <action name="list" class="dutyAction" method="list">
+      <result name="list">/bc/identity/duty/list.jsp</result>
+    </action>
+    <action name="paging" class="dutyAction" method="paging">
+      <result name="paging">/bc/identity/duty/paging.jsp</result>
+    </action>
+    <action name="export" class="dutyAction" method="export"/>
+  </package>
+  <package name="unit" extends="bc-default" namespace="/bc/unit">
+    <action name="create" class="unitAction" method="create">
+      <result name="form">/bc/identity/unit/form.jsp</result>
+    </action>
+    <action name="edit" class="unitAction" method="edit">
+      <result name="form">/bc/identity/unit/form.jsp</result>
+    </action>
+
+    <action name="save" class="unitAction" method="save"/>
+    <action name="delete" class="unitAction" method="delete"/>
+    <action name="list" class="unitAction" method="list"/>
+    <action name="paging" class="unitAction" method="paging"/>
+    <action name="data" class="unitAction" method="data"/>
+    <action name="export" class="unitAction" method="export"/>
+
+    <action name="findBranchOffice" class="unitAction" method="findBranchOffice"/>
+  </package>
+  <package name="department" extends="bc-default" namespace="/bc/department">
+    <action name="create" class="departmentAction" method="create">
+      <result name="form">/bc/identity/department/form.jsp</result>
+    </action>
+    <action name="edit" class="departmentAction" method="edit">
+      <result name="form">/bc/identity/department/form.jsp</result>
+    </action>
+
+    <action name="save" class="departmentAction" method="save"/>
+    <action name="delete" class="departmentAction" method="delete"/>
+    <action name="list" class="departmentAction" method="list"/>
+    <action name="paging" class="departmentAction" method="paging"/>
+    <action name="data" class="departmentAction" method="data"/>
+    <action name="export" class="departmentAction" method="export"/>
+  </package>
+  <package name="group" extends="bc-default" namespace="/bc/group">
+    <action name="create" class="groupAction" method="create">
+      <result name="form">/bc/identity/group/form.jsp</result>
+    </action>
+    <action name="edit" class="groupAction" method="edit">
+      <result name="form">/bc/identity/group/form.jsp</result>
+    </action>
+
+    <action name="save" class="groupAction" method="save"/>
+    <action name="delete" class="groupAction" method="delete"/>
+    <action name="list" class="groupAction" method="list"/>
+    <action name="paging" class="groupAction" method="paging"/>
+    <action name="data" class="groupAction" method="data"/>
+    <action name="export" class="groupAction" method="export"/>
+  </package>
+  <package name="user" extends="bc-default" namespace="/bc/user">
+    <action name="create" class="userAction" method="create">
+      <result name="form">/bc/identity/user/form.jsp</result>
+    </action>
+    <action name="edit" class="userAction" method="edit">
+      <result name="form">/bc/identity/user/form.jsp</result>
+    </action>
+
+    <action name="save" class="userAction" method="save"/>
+    <action name="delete" class="userAction" method="delete"/>
+    <action name="list" class="userAction" method="list"/>
+    <action name="paging" class="userAction" method="paging"/>
+    <action name="data" class="userAction" method="data"/>
+    <action name="export" class="userAction" method="export"/>
+  </package>
+
+  <package name="selectUnit" extends="bc-default" namespace="/bc">
+    <action name="selectUnit" class="selectUnitAction">
+      <result>/bc/identity/unit/select.jsp</result>
+    </action>
+  </package>
+  <package name="selectUnitOrDepartment" extends="bc-default" namespace="/bc">
+    <action name="selectUnitOrDepartment" class="selectUnitOrDepartmentAction">
+      <result>/bc/identity/department/select2.jsp</result>
+    </action>
+  </package>
+  <package name="selectDepartment" extends="bc-default" namespace="/bc">
+    <action name="selectDepartment" class="selectDepartmentAction">
+      <result>/bc/identity/department/select.jsp</result>
+    </action>
+  </package>
+  <package name="selectGroup" extends="bc-default" namespace="/bc">
+    <action name="selectGroup" class="selectGroupAction">
+      <result>/bc/identity/group/select.jsp</result>
+    </action>
+  </package>
+  <package name="selectUser" extends="bc-default" namespace="/bc">
+    <action name="selectUser" class="selectUserAction">
+      <result>/bc/identity/user/select.jsp</result>
+    </action>
+  </package>
+  <package name="selectUsers" extends="bc-default" namespace="/bc">
+    <action name="selectUsers" class="selectUsersAction">
+    </action>
+  </package>
+  <package name="authData" extends="bc-default" namespace="/bc/auth">
+    <action name="setPassword" class="authDataAction" method="setPassword">
+      <result name="form">/bc/identity/user/password.jsp</result>
+    </action>
+    <action name="updatePassword" class="authDataAction" method="updatePassword"/>
+  </package>
+  <package name="getUsers" extends="bc-default" namespace="/bc">
+    <action name="getUsers" class="getUsersAction">
+    </action>
+  </package>
+  <package name="getDepartmentMiniInfoByActors" extends="bc-default" namespace="/bc">
+    <action name="getDepartmentMiniInfoByActors" class="getDepartmentMiniInfoByActorsAction">
+    </action>
+  </package>
+  <package name="nextUid" extends="bc-default" namespace="/bc">
+    <action name="nextuid" class="idGeneratorAction" method="nextUid"/>
+  </package>
 </struts>

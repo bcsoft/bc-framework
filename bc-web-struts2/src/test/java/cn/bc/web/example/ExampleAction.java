@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.bc.web.example;
 
@@ -8,37 +8,36 @@ import cn.bc.web.struts2.EntityAction;
 
 /**
  * @author dragon
- * 
  */
-public class ExampleAction extends EntityAction<Long,Example> {
-	private static final long serialVersionUID = 1L;
-	private String name;
+public class ExampleAction extends EntityAction<Long, Example> {
+  private static final long serialVersionUID = 1L;
+  private String name;
 
-	@Override
-	protected Class<Example> getEntityClass() {
-		return Example.class;
-	}
+  @Override
+  protected Class<Example> getEntityClass() {
+    return Example.class;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String execute() {
-		setName(getId() + "|" + getName());
-		return SUCCESS;
-	}
+  public String execute() {
+    setName(getId() + "|" + getName());
+    return SUCCESS;
+  }
 
-	// public void validate() {
-	// logger.debug("In method validate. accountBean's state is "
-	// + accountBean);
-	//
-	// if (accountBean.length() == 0) {
-	// addFieldError("accountBean", "accountBean is required.");
-	// }
-	// }
+  // public void validate() {
+  // logger.debug("In method validate. accountBean's state is "
+  // + accountBean);
+  //
+  // if (accountBean.length() == 0) {
+  // addFieldError("accountBean", "accountBean is required.");
+  // }
+  // }
 
 }

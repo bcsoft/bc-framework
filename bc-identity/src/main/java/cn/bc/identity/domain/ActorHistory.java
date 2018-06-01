@@ -1,13 +1,12 @@
 /**
- * 
+ *
  */
 package cn.bc.identity.domain;
-
-import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Actor隶属信息的变动历史：记录用户的直接上级、所属单位的变动信息
@@ -31,166 +30,166 @@ import javax.persistence.Table;
  * current=true)， endDate的值为null。
  * 创建新记录时如果存在旧记录，须将对应的旧记录的endDate值设为新记录的创建时间，该新记录的startDate设为当前时间。</li>
  * </ul>
- * 
+ *
  * @author dragon
  */
 @Entity
 @Table(name = "BC_IDENTITY_ACTOR_HISTORY")
 public class ActorHistory extends cn.bc.core.EntityImpl {
-	private static final long serialVersionUID = 1L;
-	private boolean current;// 是否为当前配置
-	private int rank;// 多个当前配置间的首选次序，数值越小级别越高，值从0开始递增，只适用于隶属多个组织的情况
-	private int actorType;// 对应Actor的type
-	private Long actorId;// 对应Actor的id
-	private Long pid;// 对应旧记录的id
-	private String code;// 对应Actor的code
-	private String name;// 对应Actor的name
-	private Long upperId;// 所属直接上级
-	private String upperName;
-	private Long unitId;// 所属单位
-	private String unitName;
-	private String pcode;// 隶属机构的全编码:如'[1]unitCode1/[2]departmentCode1,[1]unitCode2/[2]departmentCode2'
-	private String pname;// 隶属机构的全名:如'unitName1/departmentName1,unitName2/departmentName2'
-	private Calendar startDate;// 开始时间
-	private Calendar endDate;// 结束时间
-	private Calendar createDate;// 创建时间
+  private static final long serialVersionUID = 1L;
+  private boolean current;// 是否为当前配置
+  private int rank;// 多个当前配置间的首选次序，数值越小级别越高，值从0开始递增，只适用于隶属多个组织的情况
+  private int actorType;// 对应Actor的type
+  private Long actorId;// 对应Actor的id
+  private Long pid;// 对应旧记录的id
+  private String code;// 对应Actor的code
+  private String name;// 对应Actor的name
+  private Long upperId;// 所属直接上级
+  private String upperName;
+  private Long unitId;// 所属单位
+  private String unitName;
+  private String pcode;// 隶属机构的全编码:如'[1]unitCode1/[2]departmentCode1,[1]unitCode2/[2]departmentCode2'
+  private String pname;// 隶属机构的全名:如'unitName1/departmentName1,unitName2/departmentName2'
+  private Calendar startDate;// 开始时间
+  private Calendar endDate;// 结束时间
+  private Calendar createDate;// 创建时间
 
-	public Long getPid() {
-		return pid;
-	}
+  public Long getPid() {
+    return pid;
+  }
 
-	public void setPid(Long pid) {
-		this.pid = pid;
-	}
+  public void setPid(Long pid) {
+    this.pid = pid;
+  }
 
-	public int getRank() {
-		return rank;
-	}
+  public int getRank() {
+    return rank;
+  }
 
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
+  public void setRank(int rank) {
+    this.rank = rank;
+  }
 
-	public boolean isCurrent() {
-		return current;
-	}
+  public boolean isCurrent() {
+    return current;
+  }
 
-	public void setCurrent(boolean current) {
-		this.current = current;
-	}
+  public void setCurrent(boolean current) {
+    this.current = current;
+  }
 
-	public String getPcode() {
-		return pcode;
-	}
+  public String getPcode() {
+    return pcode;
+  }
 
-	public void setPcode(String pcode) {
-		this.pcode = pcode;
-	}
+  public void setPcode(String pcode) {
+    this.pcode = pcode;
+  }
 
-	public String getPname() {
-		return pname;
-	}
+  public String getPname() {
+    return pname;
+  }
 
-	public void setPname(String pname) {
-		this.pname = pname;
-	}
+  public void setPname(String pname) {
+    this.pname = pname;
+  }
 
-	@Column(name = "ACTOR_TYPE")
-	public int getActorType() {
-		return actorType;
-	}
+  @Column(name = "ACTOR_TYPE")
+  public int getActorType() {
+    return actorType;
+  }
 
-	public void setActorType(int actorType) {
-		this.actorType = actorType;
-	}
+  public void setActorType(int actorType) {
+    this.actorType = actorType;
+  }
 
-	@Column(name = "ACTOR_ID")
-	public Long getActorId() {
-		return actorId;
-	}
+  @Column(name = "ACTOR_ID")
+  public Long getActorId() {
+    return actorId;
+  }
 
-	public void setActorId(Long actorId) {
-		this.actorId = actorId;
-	}
+  public void setActorId(Long actorId) {
+    this.actorId = actorId;
+  }
 
-	@Column(name = "ACTOR_CODE")
-	public String getCode() {
-		return code;
-	}
+  @Column(name = "ACTOR_CODE")
+  public String getCode() {
+    return code;
+  }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	@Column(name = "ACTOR_NAME")
-	public String getName() {
-		return name;
-	}
+  @Column(name = "ACTOR_NAME")
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String actorName) {
-		this.name = actorName;
-	}
+  public void setName(String actorName) {
+    this.name = actorName;
+  }
 
-	@Column(name = "UPPER_ID")
-	public Long getUpperId() {
-		return upperId;
-	}
+  @Column(name = "UPPER_ID")
+  public Long getUpperId() {
+    return upperId;
+  }
 
-	public void setUpperId(Long upperId) {
-		this.upperId = upperId;
-	}
+  public void setUpperId(Long upperId) {
+    this.upperId = upperId;
+  }
 
-	@Column(name = "UPPER_NAME")
-	public String getUpperName() {
-		return upperName;
-	}
+  @Column(name = "UPPER_NAME")
+  public String getUpperName() {
+    return upperName;
+  }
 
-	public void setUpperName(String upperName) {
-		this.upperName = upperName;
-	}
+  public void setUpperName(String upperName) {
+    this.upperName = upperName;
+  }
 
-	@Column(name = "UNIT_ID")
-	public Long getUnitId() {
-		return unitId;
-	}
+  @Column(name = "UNIT_ID")
+  public Long getUnitId() {
+    return unitId;
+  }
 
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
-	}
+  public void setUnitId(Long unitId) {
+    this.unitId = unitId;
+  }
 
-	@Column(name = "UNIT_NAME")
-	public String getUnitName() {
-		return unitName;
-	}
+  @Column(name = "UNIT_NAME")
+  public String getUnitName() {
+    return unitName;
+  }
 
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
+  public void setUnitName(String unitName) {
+    this.unitName = unitName;
+  }
 
-	@Column(name = "START_DATE")
-	public Calendar getStartDate() {
-		return startDate;
-	}
+  @Column(name = "START_DATE")
+  public Calendar getStartDate() {
+    return startDate;
+  }
 
-	public void setStartDate(Calendar startDate) {
-		this.startDate = startDate;
-	}
+  public void setStartDate(Calendar startDate) {
+    this.startDate = startDate;
+  }
 
-	@Column(name = "END_DATE")
-	public Calendar getEndDate() {
-		return endDate;
-	}
+  @Column(name = "END_DATE")
+  public Calendar getEndDate() {
+    return endDate;
+  }
 
-	public void setEndDate(Calendar endDate) {
-		this.endDate = endDate;
-	}
+  public void setEndDate(Calendar endDate) {
+    this.endDate = endDate;
+  }
 
-	@Column(name = "CREATE_DATE")
-	public Calendar getCreateDate() {
-		return createDate;
-	}
+  @Column(name = "CREATE_DATE")
+  public Calendar getCreateDate() {
+    return createDate;
+  }
 
-	public void setCreateDate(Calendar createDate) {
-		this.createDate = createDate;
-	}
+  public void setCreateDate(Calendar createDate) {
+    this.createDate = createDate;
+  }
 }

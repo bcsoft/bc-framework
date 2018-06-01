@@ -14,21 +14,21 @@ import org.springframework.util.Assert;
  * @author lbj
  */
 public class SubscribeDaoImpl extends JpaCrudDao<Subscribe> implements SubscribeDao {
-	public Subscribe loadByEventCode(String eventCode) {
-		Assert.notNull(eventCode);
-		EqualsCondition eq = new EqualsCondition("eventCode", eventCode);
-		return this.createQuery().condition(eq).singleResult();
-	}
+  public Subscribe loadByEventCode(String eventCode) {
+    Assert.notNull(eventCode);
+    EqualsCondition eq = new EqualsCondition("eventCode", eventCode);
+    return this.createQuery().condition(eq).singleResult();
+  }
 
-	public boolean isUnique(String eventCode, Long id) {
-		Assert.notNull(eventCode);
-		AndCondition ac = new AndCondition();
-		ac.add(new EqualsCondition("eventCode", eventCode));
+  public boolean isUnique(String eventCode, Long id) {
+    Assert.notNull(eventCode);
+    AndCondition ac = new AndCondition();
+    ac.add(new EqualsCondition("eventCode", eventCode));
 
-		if (id != null) {
-			ac.add(new NotEqualsCondition("id", id));
-		}
+    if (id != null) {
+      ac.add(new NotEqualsCondition("id", id));
+    }
 
-		return !(this.createQuery().condition(ac).list().size() > 0);
-	}
+    return !(this.createQuery().condition(ac).list().size() > 0);
+  }
 }

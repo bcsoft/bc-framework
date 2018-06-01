@@ -16,17 +16,17 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Priority(2000 - 100 - 1)
 public class GensonContextResolver implements ContextResolver<Genson> {
-	@Override
-	public Genson getContext(Class<?> type) {
-		return new GensonBuilder()
-				// copy from com.owlike.genson.ext.jaxrs.GensonJaxRSFeature._defaultGenson
-				.withBundle(new JAXBBundle())
-				.useConstructorWithArguments(true)
+  @Override
+  public Genson getContext(Class<?> type) {
+    return new GensonBuilder()
+      // copy from com.owlike.genson.ext.jaxrs.GensonJaxRSFeature._defaultGenson
+      .withBundle(new JAXBBundle())
+      .useConstructorWithArguments(true)
 
-				.useDateAsTimestamp(false)
+      .useDateAsTimestamp(false)
 
-				// java8 time support
-				.withContextualFactory(new Java8TimeContextualFactory())
-				.create();
-	}
+      // java8 time support
+      .withContextualFactory(new Java8TimeContextualFactory())
+      .create();
+  }
 }

@@ -6,24 +6,24 @@ import java.util.Date;
 
 /**
  * yyyy-MM-dd HH:mm:ss格式的日期
- * 
+ *
  * @author dragon
- * @since 2010-12-01
  * @see Date
+ * @since 2010-12-01
  */
 public class Date2Second extends java.util.Date {
-	private static final long serialVersionUID = 4357927732529538059L;
-	public static final DateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final long serialVersionUID = 4357927732529538059L;
+  public static final DateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	public Date2Second() {
-		super();
-	}
+  public Date2Second() {
+    super();
+  }
 
-	public Date2Second(long date) {
-		super(date);
-	}
+  public Date2Second(long date) {
+    super(date);
+  }
 
-	public String toString() {
-		return formater.format(this);
-	}
+  public String toString() {
+    return formater.format(this);
+  }
 }

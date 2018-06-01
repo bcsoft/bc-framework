@@ -12,11 +12,11 @@ import cn.bc.core.query.QueryOperator;
  * @author dragon
  */
 public class LikeLeftCondition extends SimpleCondition {
-	public LikeLeftCondition(String name, Object value) {
-		super(name, value, QueryOperator.LikeLeft);
-	}
+  public LikeLeftCondition(String name, Object value) {
+    super(name, value, QueryOperator.LikeLeft);
+  }
 
-	public LikeLeftCondition(String name, Object value, boolean ignoreCase) {
-		super(name, value, ignoreCase ? QueryOperator.iLikeLeft : QueryOperator.LikeLeft);
-	}
+  public LikeLeftCondition(String name, Object value, boolean ignoreCase) {
+    super(name, value, ignoreCase ? QueryOperator.iLikeLeft : QueryOperator.LikeLeft);
+  }
 }

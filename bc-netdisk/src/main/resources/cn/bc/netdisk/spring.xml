@@ -3,9 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- 网络文件 -->
-    <bean id="netdiskFileDao" class="cn.bc.netdisk.dao.jpa.NetdiskFileDaoImpl"
-          p:entityClass="cn.bc.netdisk.domain.NetdiskFile"/>
-    <bean id="netdiskFileService" class="cn.bc.netdisk.service.NetdiskFileServiceImpl"
-          p:entityClass="cn.bc.netdisk.domain.NetdiskFile" p:netdiskFileDao-ref="netdiskFileDao"/>
+  <!-- 网络文件 -->
+  <bean id="netdiskFileDao" class="cn.bc.netdisk.dao.jpa.NetdiskFileDaoImpl"
+        p:entityClass="cn.bc.netdisk.domain.NetdiskFile"/>
+  <bean id="netdiskFileService" class="cn.bc.netdisk.service.NetdiskFileServiceImpl"
+        p:entityClass="cn.bc.netdisk.domain.NetdiskFile" p:netdiskFileDao-ref="netdiskFileDao"/>
 </beans>

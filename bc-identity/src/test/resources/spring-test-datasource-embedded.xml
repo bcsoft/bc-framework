@@ -6,9 +6,9 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
-	<!--
-	See https://dzone.com/articles/spring-3-makes-use-embedded-easy
-	The default type is HSQL
-	-->
-	<jdbc:embedded-database id="dataSource" type="HSQL"/>
+  <!--
+  See https://dzone.com/articles/spring-3-makes-use-embedded-easy
+  The default type is HSQL
+  -->
+  <jdbc:embedded-database id="dataSource" type="HSQL"/>
 </beans>

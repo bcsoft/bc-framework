@@ -1,11 +1,10 @@
 package cn.bc.web.struts.beanutils;
 
-import java.text.ParseException;
-import java.util.Date;
-
+import cn.bc.core.exception.CoreException;
 import org.apache.commons.beanutils.Converter;
 
-import cn.bc.core.exception.CoreException;
+import java.text.ParseException;
+import java.util.Date;
 
 
 /**
@@ -24,30 +23,30 @@ import cn.bc.core.exception.CoreException;
  * 3)"" --> null
  * </p>
  * </p>
- * 
+ *
  * @author dragon
- * @since 2010-12-01
  * @see Date2Minute
+ * @since 2010-12-01
  */
 public class Date2MinuteConverter implements Converter {
-	public Object convert(@SuppressWarnings("rawtypes") Class clazz, Object value) {
-		if (value == null)
-			return null;
-		if (value instanceof String) {// String-->Date2Minute
-			if (!"".equals((String) value)) {
-				try {
-					return new Date2Minute(Date2Minute.formater.parse(
-							(String) value).getTime());
-				} catch (ParseException e) {
-					throw new CoreException(e);
-				}
-			} else {
-				return null;
-			}
-		} else if (value instanceof Date) {// Date-->Date2Minute
-			return new Date2Minute(((Date) value).getTime());
-		} else {
-			return value;
-		}
-	}
+  public Object convert(@SuppressWarnings("rawtypes") Class clazz, Object value) {
+    if (value == null)
+      return null;
+    if (value instanceof String) {// String-->Date2Minute
+      if (!"".equals((String) value)) {
+        try {
+          return new Date2Minute(Date2Minute.formater.parse(
+            (String) value).getTime());
+        } catch (ParseException e) {
+          throw new CoreException(e);
+        }
+      } else {
+        return null;
+      }
+    } else if (value instanceof Date) {// Date-->Date2Minute
+      return new Date2Minute(((Date) value).getTime());
+    } else {
+      return value;
+    }
+  }
 }

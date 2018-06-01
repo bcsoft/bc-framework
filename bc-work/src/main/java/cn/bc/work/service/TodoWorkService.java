@@ -5,9 +5,8 @@ import cn.bc.work.domain.TodoWork;
 
 /**
  * 待办事务Service接口
- * 
+ *
  * @author dragon
- * 
  */
 public interface TodoWorkService extends CrudService<TodoWork> {
 }

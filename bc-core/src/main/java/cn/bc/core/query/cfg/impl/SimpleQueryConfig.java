@@ -12,26 +12,26 @@ import java.util.Map;
  * Created by dragon on 2014/6/16.
  */
 public class SimpleQueryConfig extends AbstractQueryConfig {
-    public SimpleQueryConfig() {
-        super();
-    }
+  public SimpleQueryConfig() {
+    super();
+  }
 
-    /**
-     * @param sqlTpl 查询语句模板
-     * @param params 查询参数
-     */
-    public SimpleQueryConfig(String sqlTpl, List<Object> params) {
-        super(sqlTpl, params);
-    }
+  /**
+   * @param sqlTpl 查询语句模板
+   * @param params 查询参数
+   */
+  public SimpleQueryConfig(String sqlTpl, List<Object> params) {
+    super(sqlTpl, params);
+  }
 
-    public String getQueryString(Condition condition) {
-        Assert.hasText(this.queryStringTpl, "queryStringTpl is empty.");
+  public String getQueryString(Condition condition) {
+    Assert.hasText(this.queryStringTpl, "queryStringTpl is empty.");
 
-        Map<String, Object> args = new HashMap<String, Object>();
-        if (condition != null) {
-            String e = condition.getExpression();
-            if(e != null && !e.isEmpty()) args.put("condition", condition.getExpression());
-        }
-        return format(this.queryStringTpl, args);
+    Map<String, Object> args = new HashMap<String, Object>();
+    if (condition != null) {
+      String e = condition.getExpression();
+      if (e != null && !e.isEmpty()) args.put("condition", condition.getExpression());
     }
+    return format(this.queryStringTpl, args);
+  }
 }

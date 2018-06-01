@@ -10,18 +10,18 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class IdEntity<ID> {
-    private ID id;
+  private ID id;
 
-    /**
-     * 1. Overriding the Default JPA Sequence: http://www.georgestragand.com/jpaseq.html
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public ID getId() {
-        return id;
-    }
+  /**
+   * 1. Overriding the Default JPA Sequence: http://www.georgestragand.com/jpaseq.html
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public ID getId() {
+    return id;
+  }
 
-    public void setId(ID id) {
-        this.id = id;
-    }
+  public void setId(ID id) {
+    this.id = id;
+  }
 }

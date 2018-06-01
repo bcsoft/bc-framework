@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-	<!-- 配置crudDao、crudService的实现：这里使用的是模拟的内存实现，没有数据库 -->
-	<bean id="crudService" class="cn.bc.test.mock.CrudServiceMock">
-		<property name="entityClass" value="cn.bc.test.Example"/>
-	</bean>
+  <!-- 配置crudDao、crudService的实现：这里使用的是模拟的内存实现，没有数据库 -->
+  <bean id="crudService" class="cn.bc.test.mock.CrudServiceMock">
+    <property name="entityClass" value="cn.bc.test.Example"/>
+  </bean>
 
-	<!-- struts的配置 -->
-	<bean id="example" class="cn.bc.web.example.ExampleAction" scope="prototype">
-		<property name="crudService" ref="crudService"/>
-	</bean>
-	<bean id="entityAction" class="cn.bc.web.struts2.EntityAction" scope="prototype">
-		<property name="entityClass" value="cn.bc.test.Example"/>
-		<property name="crudService" ref="crudService"/>
-	</bean>
+  <!-- struts的配置 -->
+  <bean id="example" class="cn.bc.web.example.ExampleAction" scope="prototype">
+    <property name="crudService" ref="crudService"/>
+  </bean>
+  <bean id="entityAction" class="cn.bc.web.struts2.EntityAction" scope="prototype">
+    <property name="entityClass" value="cn.bc.test.Example"/>
+    <property name="crudService" ref="crudService"/>
+  </bean>
 </beans>

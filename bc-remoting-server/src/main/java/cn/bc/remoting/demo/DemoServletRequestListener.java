@@ -13,15 +13,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 @WebListener
 public class DemoServletRequestListener implements ServletRequestListener {
-	private static Logger logger = LoggerFactory.getLogger(DemoServletRequestListener.class);
+  private static Logger logger = LoggerFactory.getLogger(DemoServletRequestListener.class);
 
-	@Override
-	public void requestDestroyed(ServletRequestEvent sre) {
-		logger.debug("requestDestroyed: {}", ((HttpServletRequest) sre.getServletRequest()).getRequestURI());
-	}
+  @Override
+  public void requestDestroyed(ServletRequestEvent sre) {
+    logger.debug("requestDestroyed: {}", ((HttpServletRequest) sre.getServletRequest()).getRequestURI());
+  }
 
-	@Override
-	public void requestInitialized(ServletRequestEvent sre) {
-		logger.debug("requestInitialized: {}", ((HttpServletRequest) sre.getServletRequest()).getRequestURI());
-	}
+  @Override
+  public void requestInitialized(ServletRequestEvent sre) {
+    logger.debug("requestInitialized: {}", ((HttpServletRequest) sre.getServletRequest()).getRequestURI());
+  }
 }

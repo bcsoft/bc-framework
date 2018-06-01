@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<package name="aclAPI" extends="bc-default" namespace="/bc/acl">
-		<action name="config" class="aclConfigAction" method="config">
-			<result name="success">/bc/acl/config/config.jsp</result>
-		</action>
-		<action name="saveConfig" class="aclConfigAction" method="saveConfig"/>
-	</package>
+  <package name="aclAPI" extends="bc-default" namespace="/bc/acl">
+    <action name="config" class="aclConfigAction" method="config">
+      <result name="success">/bc/acl/config/config.jsp</result>
+    </action>
+    <action name="saveConfig" class="aclConfigAction" method="saveConfig"/>
+  </package>
 
-	<package name="accessControl" extends="bc-default" namespace="/bc/accessControl">
-		<action name="create" class="accessControlAction" method="create">
-			<result name="form">/bc/acl/control/form.jsp</result>
-		</action>
-		<action name="edit" class="accessControlAction" method="edit">
-			<result name="form">/bc/acl/control/form.jsp</result>
-		</action>
-		<action name="open" class="accessControlAction" method="open">
-			<result name="formr">/bc/acl/control/form.jsp</result>
-		</action>
-		<action name="save" class="accessControlAction" method="save"/>
-		<action name="delete" class="accessControlAction" method="delete"/>
-		<action name="configureFromDoc" class="accessControlAction" method="configureFromDoc">
-			<result name="success">/bc/acl/control/form.jsp</result>
-		</action>
-	</package>
-	
-	<package name="accessControls" extends="bc-default" namespace="/bc/accessControls">
-		<action name="export" class="accessControlsAction" method="export" />
-		<action name="list" class="accessControlsAction" method="list" />
-		<action name="paging" class="accessControlsAction" method="paging" />
-		<action name="data" class="accessControlsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="accessControlsAction" method="conditions">
-			<result name="success">/bc/acl/control/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<package name="accessHistorys" extends="bc-default" namespace="/bc/accessHistorys">
-		<action name="export" class="accessHistorysAction" method="export" />
-		<action name="list" class="accessHistorysAction" method="list" />
-		<action name="paging" class="accessHistorysAction" method="paging" />
-		<action name="data" class="accessHistorysAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="accessHistorysAction" method="conditions">
-			<result name="success">/bc/acl/history/conditions.jsp</result>
-		</action>
-	</package>
+  <package name="accessControl" extends="bc-default" namespace="/bc/accessControl">
+    <action name="create" class="accessControlAction" method="create">
+      <result name="form">/bc/acl/control/form.jsp</result>
+    </action>
+    <action name="edit" class="accessControlAction" method="edit">
+      <result name="form">/bc/acl/control/form.jsp</result>
+    </action>
+    <action name="open" class="accessControlAction" method="open">
+      <result name="formr">/bc/acl/control/form.jsp</result>
+    </action>
+    <action name="save" class="accessControlAction" method="save"/>
+    <action name="delete" class="accessControlAction" method="delete"/>
+    <action name="configureFromDoc" class="accessControlAction" method="configureFromDoc">
+      <result name="success">/bc/acl/control/form.jsp</result>
+    </action>
+  </package>
+
+  <package name="accessControls" extends="bc-default" namespace="/bc/accessControls">
+    <action name="export" class="accessControlsAction" method="export"/>
+    <action name="list" class="accessControlsAction" method="list"/>
+    <action name="paging" class="accessControlsAction" method="paging"/>
+    <action name="data" class="accessControlsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="accessControlsAction" method="conditions">
+      <result name="success">/bc/acl/control/conditions.jsp</result>
+    </action>
+  </package>
+
+  <package name="accessHistorys" extends="bc-default" namespace="/bc/accessHistorys">
+    <action name="export" class="accessHistorysAction" method="export"/>
+    <action name="list" class="accessHistorysAction" method="list"/>
+    <action name="paging" class="accessHistorysAction" method="paging"/>
+    <action name="data" class="accessHistorysAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="accessHistorysAction" method="conditions">
+      <result name="success">/bc/acl/history/conditions.jsp</result>
+    </action>
+  </package>
 </struts>

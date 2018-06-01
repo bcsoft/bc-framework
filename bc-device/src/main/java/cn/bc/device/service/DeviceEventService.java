@@ -5,10 +5,9 @@ import cn.bc.device.domain.DeviceEventEntity;
 
 /**
  * 设备事件Service接口
- * 
- * @author hwx
  *
+ * @author hwx
  */
-public interface DeviceEventService extends CrudService<DeviceEventEntity>{
+public interface DeviceEventService extends CrudService<DeviceEventEntity> {
 
 }

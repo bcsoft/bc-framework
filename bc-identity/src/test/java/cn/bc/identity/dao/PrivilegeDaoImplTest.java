@@ -11,12 +11,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:spring-test.xml")
 @Ignore
 public class PrivilegeDaoImplTest {
-	@Autowired
-	private PrivilegeDao privilegeDao;
+  @Autowired
+  private PrivilegeDao privilegeDao;
 
-	@Test//10114209
-	public void getActorByHistoryActorTest() {
-		Long actorid = privilegeDao.getActorbyHistoryActor(10114209L);
-		System.out.println(actorid);
-	}
+  @Test//10114209
+  public void getActorByHistoryActorTest() {
+    Long actorid = privilegeDao.getActorbyHistoryActor(10114209L);
+    System.out.println(actorid);
+  }
 }
