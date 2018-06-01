@@ -6,8 +6,8 @@ package cn.bc.core;
  * @author dragon 2016-01-04
  */
 public interface EnumWithValue {
-	/**
-	 * 获取持久化值
-	 */
-	int value();
+  /**
+   * 获取持久化值
+   */
+  int value();
 }

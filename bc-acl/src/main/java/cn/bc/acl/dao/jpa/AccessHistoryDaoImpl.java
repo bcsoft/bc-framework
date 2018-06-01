@@ -15,10 +15,10 @@ import java.util.List;
  * @author lbj
  */
 public class AccessHistoryDaoImpl extends JpaCrudDao<AccessHistory> implements AccessHistoryDao {
-	public List<AccessHistory> findByDoc(Long pid) {
-		Assert.notNull(pid);
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("pid", pid));
-		return this.createQuery().condition(condition).list();
-	}
+  public List<AccessHistory> findByDoc(Long pid) {
+    Assert.notNull(pid);
+    AndCondition condition = new AndCondition();
+    condition.add(new EqualsCondition("pid", pid));
+    return this.createQuery().condition(condition).list();
+  }
 }

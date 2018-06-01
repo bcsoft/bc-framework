@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
-	<!-- 属性配置文件 -->
-	<context:property-placeholder location="classpath:global.properties" />
+  <!-- 属性配置文件 -->
+  <context:property-placeholder location="classpath:global.properties"/>
 
-	<!-- 定义服务类 -->
-	<bean id="wordService" class="cn.bc.remoting.service.impl.WordServiceImpl">
-		<!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007)不支持，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
-		<property name="compatible" value="${app.compatible}" />
-		<!-- office 版本：2007|2010|2013 -->
-		<property name="officeVersion" value="${app.officeVersion}" />
-		<!-- 来源文件的根路径 -->
-		<property name="fromRootDir" value="${app.fromRootDir}" />
-		<!-- 转换后文件保存的根路径 -->
-		<property name="toRootDir" value="${app.toRootDir}" />
-		<!-- 临时目录 -->
-		<property name="tempDir" value="${app.tempDir}" />
-	</bean>
+  <!-- 定义服务类 -->
+  <bean id="wordService" class="cn.bc.remoting.service.impl.WordServiceImpl">
+    <!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007)不支持，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
+    <property name="compatible" value="${app.compatible}"/>
+    <!-- office 版本：2007|2010|2013 -->
+    <property name="officeVersion" value="${app.officeVersion}"/>
+    <!-- 来源文件的根路径 -->
+    <property name="fromRootDir" value="${app.fromRootDir}"/>
+    <!-- 转换后文件保存的根路径 -->
+    <property name="toRootDir" value="${app.toRootDir}"/>
+    <!-- 临时目录 -->
+    <property name="tempDir" value="${app.tempDir}"/>
+  </bean>
 
-	<!-- 远程服务配置：通过 rmi://[serverIp]:[serverPort]/[serviceName]访问 -->
-	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
-		<!-- 定义远程服务的名称：RmiServiceExporter 对服务名没有特殊要求 -->
-		<property name="serviceName" value="${app.wordService.name}" />
+  <!-- 远程服务配置：通过 rmi://[serverIp]:[serverPort]/[serviceName]访问 -->
+  <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+    <!-- 定义远程服务的名称：RmiServiceExporter 对服务名没有特殊要求 -->
+    <property name="serviceName" value="${app.wordService.name}"/>
 
-		<!-- 避免与默认的RMI注册端口1099冲突，因此修改为1199 -->
-		<property name="registryPort" value="${app.wordService.port}" />
-		<!-- <property name="servicePort" value="1200"/> -->
+    <!-- 避免与默认的RMI注册端口1099冲突，因此修改为1199 -->
+    <property name="registryPort" value="${app.wordService.port}"/>
+    <!-- <property name="servicePort" value="1200"/> -->
 
-		<property name="service" ref="wordService" />
-		<property name="serviceInterface" value="cn.bc.remoting.service.WordService" />
-	</bean>
+    <property name="service" ref="wordService"/>
+    <property name="serviceInterface" value="cn.bc.remoting.service.WordService"/>
+  </bean>
 </beans>

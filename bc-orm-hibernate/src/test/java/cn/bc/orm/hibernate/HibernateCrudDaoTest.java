@@ -13,16 +13,16 @@ import java.util.Map;
 @Transactional
 @ContextConfiguration("classpath:spring-test.xml")
 public class HibernateCrudDaoTest extends AbstractSpringManageDaoTest {
-	@Override
-	protected Long insertOne(String name) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
-		parameters.put("name", name);
-		Number newId = this.getJdbcInsert().executeAndReturnKey(parameters);
-		
-		//mysql返回为：java.lang.Long,oracle则为java.math.BigDecimal
-		//Assert.assertEquals(Long.class, newId.getClass());
-		Long id = new Long(newId.longValue());
-		Assert.assertTrue(id > 0);
-		return id;
-	}
+  @Override
+  protected Long insertOne(String name) {
+    Map<String, Object> parameters = new HashMap<String, Object>(1);
+    parameters.put("name", name);
+    Number newId = this.getJdbcInsert().executeAndReturnKey(parameters);
+
+    //mysql返回为：java.lang.Long,oracle则为java.math.BigDecimal
+    //Assert.assertEquals(Long.class, newId.getClass());
+    Long id = new Long(newId.longValue());
+    Assert.assertTrue(id > 0);
+    return id;
+  }
 }

@@ -12,12 +12,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:spring-test.xml")
 @Ignore
 public class TemplateUtilsTest {
-	@Test
-	public void getContent() throws Exception{
-		//String code = "BC-EMAIL-SYSTEMAUTOFORWARD:1";// 指定编码和版本号
-		String code = "BC-EMAIL-SYSTEMAUTOFORWARD";// 最新版本
-		String s = TemplateUtils.getContent(code);
-		//System.out.println(s);
-		Assert.assertNotNull(s);
-	}
+  @Test
+  public void getContent() throws Exception {
+    //String code = "BC-EMAIL-SYSTEMAUTOFORWARD:1";// 指定编码和版本号
+    String code = "BC-EMAIL-SYSTEMAUTOFORWARD";// 最新版本
+    String s = TemplateUtils.getContent(code);
+    //System.out.println(s);
+    Assert.assertNotNull(s);
+  }
 }

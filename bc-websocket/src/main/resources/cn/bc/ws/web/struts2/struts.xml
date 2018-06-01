@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- ws -->
-	<package name="websocket" extends="bc-default" namespace="/bc/websocket">
-		<action name="show" class="chatWebSocketAction" method="show"/>
-		<action name="online" class="chatWebSocketAction">
-			<result>/bc/chat/online.jsp</result>
-		</action>
-	</package>
+  <!-- ws -->
+  <package name="websocket" extends="bc-default" namespace="/bc/websocket">
+    <action name="show" class="chatWebSocketAction" method="show"/>
+    <action name="online" class="chatWebSocketAction">
+      <result>/bc/chat/online.jsp</result>
+    </action>
+  </package>
 </struts>

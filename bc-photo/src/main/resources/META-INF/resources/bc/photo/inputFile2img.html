@@ -2,116 +2,116 @@
 
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>input file 显示本地图片</title>
-<script src="../../ui-libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src="../../ui-libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-<style>
-.draggable {
-	width: 90px;
-	height: 90px;
-	float: left;
-	margin: 0;
-}
-</style>
+  <meta charset="utf-8"/>
+  <title>input file 显示本地图片</title>
+  <script src="../../ui-libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="../../ui-libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+  <style>
+    .draggable {
+      width: 90px;
+      height: 90px;
+      float: left;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-	<p>选择图片后不经服务器，直接使用img控件显示选择的图片</p>
-	<input type="file" name="file"><br>
-	<input type="button" name="downloadImg" value="下载图片">
-	<input type="button" name="downloadPage" value="下载网页为图片">
-	<div id="msg"></div>
-	<div class="container">
-		<img alt="显示选中的图片" src="asset/A4-preview.jpg">
-	</div>
-	<script>
-		var imageData;
-		$(function() {
-			var clip = $("img");
-			var msg = $("#msg");
-			if (window.FileReader) 
-				msg.html("Use window.FileReader API");
-			
-			// 图片加载后输出其实际大小的尺寸
-			clip.on("load",function(){
-				msg.html(msg.html()+"    "+this.width+"x"+this.height);
-			});
-			
-			// 选择图片后就显示
-			$("input[type=file]").change(function() {
-				console.log(this);
-				msg.html(msg.html()+"<br>"+this.value);
-				if (window.FileReader) {
-					var reader = new window.FileReader(),
-					file = this.files[0];
-					reader.onload = function(e) {
-						imageData = e.target.result;// 记录图片数据
-						clip.attr("src", e.target.result);
-						console.log(imageData);
-					};
-					reader.readAsDataURL(file);
-				}else {
-					var path = $(this).val();
-					if (/"\w\W"/.test(path)) {
-						path = path.slice(1, -1);
-					}
-					clip.attr("src", path);
-				}
-			});
-		});
-		
-		// 下载图片
-		$("input[name=downloadImg]").on("click",function(){
-			var file = $("input[name=file]")[0];
-			var i=file.value.lastIndexOf(".");
-			var name=file.value.substring(file.value.lastIndexOf("\\")+1,i);
-			var type=file.value.substring(i+1);
-			var filename = file.value.substring(file.value.lastIndexOf("\\")+1);// 下载后的问题名
-			console.log("type="+type+",name="+name+",filename="+filename);
-			
-			// 将mime-type改为image/octet-stream，强制让浏览器直接download
-			imageData = imageData.replace(fixType(type),'image/octet-stream');
-			saveFile(imageData,filename);
-		});
-		
-		/**
-		 * 获取mimeType
-		 * @param  {String} type the old mime-type
-		 * @return the new mime-type
-		 */
-		var fixType = function(type) {
-		    type = type?type.toLowerCase().replace(/jpg/i, 'jpeg'):'png';
-		    var r = type.match(/png|jpeg|bmp|gif/)[0];
-		    return 'image/' + r;
-		};
-		
-		/**
-		 * 在本地进行文件保存
-		 * @param  {String} data     要保存到本地的图片数据
-		 * @param  {String} filename 文件名
-		 */
-		var saveFile = function(data, filename){
-		    var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-		    save_link.href = data;
-		    save_link.download = filename;
-		   
-		    var event = document.createEvent('MouseEvents');
-		    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-		    save_link.dispatchEvent(event);
-		};
-		
-		// 下载网页为图片
-		$("input[name=downloadPage]").on("click",function(){
-	        html2canvas(document.body, {
-	            onrendered: function(canvas) {
-	            	var type = 'png';// 图片导出为 png 格式
-	            	var imageData = canvas.toDataURL(type);
-	    			// 将mime-type改为image/octet-stream，强制让浏览器直接download
-	    			imageData = imageData.replace(fixType(type),'image/octet-stream');
-	    			saveFile(imageData,(new Date()).getTime() + '.' + type);
-	            }
-	        });
-		});
-	</script>
+<p>选择图片后不经服务器，直接使用img控件显示选择的图片</p>
+<input type="file" name="file"><br>
+<input type="button" name="downloadImg" value="下载图片">
+<input type="button" name="downloadPage" value="下载网页为图片">
+<div id="msg"></div>
+<div class="container">
+  <img alt="显示选中的图片" src="asset/A4-preview.jpg">
+</div>
+<script>
+  var imageData;
+  $(function () {
+    var clip = $("img");
+    var msg = $("#msg");
+    if (window.FileReader)
+      msg.html("Use window.FileReader API");
+
+    // 图片加载后输出其实际大小的尺寸
+    clip.on("load", function () {
+      msg.html(msg.html() + "    " + this.width + "x" + this.height);
+    });
+
+    // 选择图片后就显示
+    $("input[type=file]").change(function () {
+      console.log(this);
+      msg.html(msg.html() + "<br>" + this.value);
+      if (window.FileReader) {
+        var reader = new window.FileReader(),
+          file = this.files[0];
+        reader.onload = function (e) {
+          imageData = e.target.result;// 记录图片数据
+          clip.attr("src", e.target.result);
+          console.log(imageData);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        var path = $(this).val();
+        if (/"\w\W"/.test(path)) {
+          path = path.slice(1, -1);
+        }
+        clip.attr("src", path);
+      }
+    });
+  });
+
+  // 下载图片
+  $("input[name=downloadImg]").on("click", function () {
+    var file = $("input[name=file]")[0];
+    var i = file.value.lastIndexOf(".");
+    var name = file.value.substring(file.value.lastIndexOf("\\") + 1, i);
+    var type = file.value.substring(i + 1);
+    var filename = file.value.substring(file.value.lastIndexOf("\\") + 1);// 下载后的问题名
+    console.log("type=" + type + ",name=" + name + ",filename=" + filename);
+
+    // 将mime-type改为image/octet-stream，强制让浏览器直接download
+    imageData = imageData.replace(fixType(type), 'image/octet-stream');
+    saveFile(imageData, filename);
+  });
+
+  /**
+   * 获取mimeType
+   * @param  {String} type the old mime-type
+   * @return the new mime-type
+   */
+  var fixType = function (type) {
+    type = type ? type.toLowerCase().replace(/jpg/i, 'jpeg') : 'png';
+    var r = type.match(/png|jpeg|bmp|gif/)[0];
+    return 'image/' + r;
+  };
+
+  /**
+   * 在本地进行文件保存
+   * @param  {String} data     要保存到本地的图片数据
+   * @param  {String} filename 文件名
+   */
+  var saveFile = function (data, filename) {
+    var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    save_link.href = data;
+    save_link.download = filename;
+
+    var event = document.createEvent('MouseEvents');
+    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    save_link.dispatchEvent(event);
+  };
+
+  // 下载网页为图片
+  $("input[name=downloadPage]").on("click", function () {
+    html2canvas(document.body, {
+      onrendered: function (canvas) {
+        var type = 'png';// 图片导出为 png 格式
+        var imageData = canvas.toDataURL(type);
+        // 将mime-type改为image/octet-stream，强制让浏览器直接download
+        imageData = imageData.replace(fixType(type), 'image/octet-stream');
+        saveFile(imageData, (new Date()).getTime() + '.' + type);
+      }
+    });
+  });
+</script>
 </body>
 </html>

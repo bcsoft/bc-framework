@@ -7,97 +7,96 @@ import cn.bc.web.ui.html.Text;
 
 /**
  * Grid底部工具条的分页按钮
- * 
+ *
  * @author dragon
- * 
  */
 public class SeekGroupButton extends Button {
-	private int pageNo;
-	private int pageCount;
-	private int totalCount;
+  private int pageNo;
+  private int pageCount;
+  private int totalCount;
 
-	public String getTag() {
-		return "li";
-	}
+  public String getTag() {
+    return "li";
+  }
 
-	protected void init() {
-		this.addClazz("pagerIconGroup seek ui-state-default ui-corner-all");
-	}
+  protected void init() {
+    this.addClazz("pagerIconGroup seek ui-state-default ui-corner-all");
+  }
 
-	public SeekGroupButton() {
-		super();
-	}
+  public SeekGroupButton() {
+    super();
+  }
 
-	public int getPageNo() {
-		return pageNo;
-	}
+  public int getPageNo() {
+    return pageNo;
+  }
 
-	public SeekGroupButton setPageNo(int pageNo) {
-		this.pageNo = pageNo;
-		return this;
-	}
+  public SeekGroupButton setPageNo(int pageNo) {
+    this.pageNo = pageNo;
+    return this;
+  }
 
-	public int getPageCount() {
-		return pageCount;
-	}
+  public int getPageCount() {
+    return pageCount;
+  }
 
-	public int getTotalCount() {
-		return totalCount;
-	}
+  public int getTotalCount() {
+    return totalCount;
+  }
 
-	public SeekGroupButton setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
-		return this;
-	}
+  public SeekGroupButton setTotalCount(int totalCount) {
+    this.totalCount = totalCount;
+    return this;
+  }
 
-	public SeekGroupButton setPageCount(int pageCount) {
-		this.pageCount = pageCount;
-		return this;
-	}
+  public SeekGroupButton setPageCount(int pageCount) {
+    this.pageCount = pageCount;
+    return this;
+  }
 
-	public void renderButton(StringBuffer main) {
-		this.addChild(new A()
-				.setId("toFirstPage")
-				.addClazz("pagerIcon ui-state-default ui-corner-all")
-				.addChild(
-						new Span().addClazz("ui-icon ui-icon-seek-first")
-								.setTitle("首页")));
+  public void renderButton(StringBuffer main) {
+    this.addChild(new A()
+      .setId("toFirstPage")
+      .addClazz("pagerIcon ui-state-default ui-corner-all")
+      .addChild(
+        new Span().addClazz("ui-icon ui-icon-seek-first")
+          .setTitle("首页")));
 
-		this.addChild(new A()
-				.setId("toPrevPage")
-				.addClazz("pagerIcon ui-state-default ui-corner-all")
-				.addChild(
-						new Span().addClazz("ui-icon ui-icon-seek-prev")
-								.setTitle("上一页")));
+    this.addChild(new A()
+      .setId("toPrevPage")
+      .addClazz("pagerIcon ui-state-default ui-corner-all")
+      .addChild(
+        new Span().addClazz("ui-icon ui-icon-seek-prev")
+          .setTitle("上一页")));
 
-		this.addChild(new Span()
-				.addClazz("pageNo")
-				// .setTitle("点击选择页码")
-				.addChild(
-						new Span().setId("pageNo").addChild(
-								new Text(this.pageNo + "")))
-				.addChild(new Text("/"))
-				.addChild(
-						new Span().setId("pageCount").addChild(
-								new Text(this.pageCount + "")))
-				.addChild(new Text("("))
-				.addChild(
-						new Span().setId("totalCount").addChild(
-								new Text(this.totalCount + "")))
-				.addChild(new Text(")")));
+    this.addChild(new Span()
+      .addClazz("pageNo")
+      // .setTitle("点击选择页码")
+      .addChild(
+        new Span().setId("pageNo").addChild(
+          new Text(this.pageNo + "")))
+      .addChild(new Text("/"))
+      .addChild(
+        new Span().setId("pageCount").addChild(
+          new Text(this.pageCount + "")))
+      .addChild(new Text("("))
+      .addChild(
+        new Span().setId("totalCount").addChild(
+          new Text(this.totalCount + "")))
+      .addChild(new Text(")")));
 
-		this.addChild(new A()
-				.setId("toNextPage")
-				.addClazz("pagerIcon ui-state-default ui-corner-all")
-				.addChild(
-						new Span().addClazz("ui-icon ui-icon-seek-next")
-								.setTitle("下一页")));
+    this.addChild(new A()
+      .setId("toNextPage")
+      .addClazz("pagerIcon ui-state-default ui-corner-all")
+      .addChild(
+        new Span().addClazz("ui-icon ui-icon-seek-next")
+          .setTitle("下一页")));
 
-		this.addChild(new A()
-				.setId("toLastPage")
-				.addClazz("pagerIcon ui-state-default ui-corner-all")
-				.addChild(
-						new Span().addClazz("ui-icon ui-icon-seek-end")
-								.setTitle("尾页")));
-	}
+    this.addChild(new A()
+      .setId("toLastPage")
+      .addClazz("pagerIcon ui-state-default ui-corner-all")
+      .addChild(
+        new Span().addClazz("ui-icon ui-icon-seek-end")
+          .setTitle("尾页")));
+  }
 }

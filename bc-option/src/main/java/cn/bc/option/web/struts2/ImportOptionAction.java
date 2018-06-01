@@ -20,14 +20,14 @@ import java.util.Map;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ImportOptionAction extends ImportDataAction {
-	private static final long serialVersionUID = 1L;
-	private final static Log logger = LogFactory
-			.getLog(ImportOptionAction.class);
+  private static final long serialVersionUID = 1L;
+  private final static Log logger = LogFactory
+    .getLog(ImportOptionAction.class);
 
-	@Override
-	protected void importData(List<Map<String, Object>> data, JSONObject json, String fileType) throws JSONException {
-		// TODO
-		json.put("msg", "TODO: 成功导入" + data.size() + "条数据！");
-		logger.fatal("TODO: ImportOptionAction.importData");
-	}
+  @Override
+  protected void importData(List<Map<String, Object>> data, JSONObject json, String fileType) throws JSONException {
+    // TODO
+    json.put("msg", "TODO: 成功导入" + data.size() + "条数据！");
+    logger.fatal("TODO: ImportOptionAction.importData");
+  }
 }

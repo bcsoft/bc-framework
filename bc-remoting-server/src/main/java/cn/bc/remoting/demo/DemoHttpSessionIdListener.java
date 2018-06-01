@@ -12,10 +12,10 @@ import javax.servlet.http.HttpSessionIdListener;
  */
 @WebListener("DemoHttpSessionIdListener")
 public class DemoHttpSessionIdListener implements HttpSessionIdListener {
-	private static Logger logger = LoggerFactory.getLogger(DemoHttpSessionIdListener.class);
+  private static Logger logger = LoggerFactory.getLogger(DemoHttpSessionIdListener.class);
 
-	@Override
-	public void sessionIdChanged(HttpSessionEvent event, String oldSessionId) {
-		logger.debug("sessionIdChanged: oldSessionId={}", oldSessionId);
-	}
+  @Override
+  public void sessionIdChanged(HttpSessionEvent event, String oldSessionId) {
+    logger.debug("sessionIdChanged: oldSessionId={}", oldSessionId);
+  }
 }

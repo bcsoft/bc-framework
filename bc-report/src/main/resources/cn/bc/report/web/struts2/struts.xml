@@ -1,151 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<package name="exportsvg" extends="struts-default" namespace="/bc">
-		<action name="exportsvg" class="exportSvgAction">
-			<interceptor-ref name="defaultStack" />
-			<result name="success" type="stream">
-				<!-- 下载文件类型定义 -->
-				<param name="contentType">${type}</param>
-				<!-- 下载文件输出流定义 -->
-				<param name="inputName">inputStream</param>
-				<param name="bufferSize">4096</param>
-				<!-- 下载文件处理方法 -->
-				<param name="contentDisposition">attachment; filename="${filename}"</param>
-			</result>
-		</action>
-	</package>
+  <package name="exportsvg" extends="struts-default" namespace="/bc">
+    <action name="exportsvg" class="exportSvgAction">
+      <interceptor-ref name="defaultStack"/>
+      <result name="success" type="stream">
+        <!-- 下载文件类型定义 -->
+        <param name="contentType">${type}</param>
+        <!-- 下载文件输出流定义 -->
+        <param name="inputName">inputStream</param>
+        <param name="bufferSize">4096</param>
+        <!-- 下载文件处理方法 -->
+        <param name="contentDisposition">attachment; filename="${filename}"</param>
+      </result>
+    </action>
+  </package>
 
-	<!-- 报表执行器 -->
-	<package name="bc-report" extends="bc-default" namespace="/bc/report">
-		<!-- 报表条件 -->
-		<action name="conditions" class="reportAction" method="conditions">
-			<result name="success">${resultPath}</result>
-			<result type="freemarker" name="freemarker">${resultPath}</result>
-			<result type="redirectAction" name="redirectAction">  
-                <param name="actionName">${resultPath}</param>  
-                <param name="namespace">/</param>  
-            </result>  
-		</action>
-		<!-- 执行报表 -->
-		<action name="run" class="reportAction" method="run" >
-			<result name="chart">/bc/report/chart/chart.jsp</result>
-		</action>
-		<!-- 非分页视图 -->
-		<action name="list" class="reportAction" method="list" />
-		<!-- 分页视图 -->
-		<action name="paging" class="reportAction" method="paging" />
-		<!-- 分页数据 -->
-		<action name="data" class="reportAction" method="data" />
-		<!-- 导出 视图数据 -->
-		<action name="export" class="reportAction" method="export" />
-		<!-- 存为历史报表 -->
-		<action name="save2history" class="reportAction" method="save2history" />
-	</package>
-	<!-- 报表模板 -->
-	<package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">
-		<action name="create" class="reportTemplateAction" method="create">
-			<result name="form">/bc/report/template/form.jsp</result>
-		</action>
-		<action name="edit" class="reportTemplateAction" method="edit">
-			<result name="form">/bc/report/template/form.jsp</result>
-		</action>
-		<action name="open" class="reportTemplateAction" method="open">
-			<result name="formr">/bc/report/template/form.jsp</result>
-		</action>
-		<action name="save" class="reportTemplateAction" method="save" />
-		<action name="delete" class="reportTemplateAction" method="delete" />
-		<action name="list" class="reportTemplateAction" method="list" />
-		<action name="paging" class="reportTemplateAction" method="paging" />
-		<action name="data" class="reportTemplateAction" method="data" />
-		<action name="isUniqueCode" class="reportTemplateAction"
-			method="isUniqueCode" />
-	</package>
-	<!-- 我的报表模板 -->
-	<package name="myReportTemplates" extends="bc-default" namespace="/bc/myReportTemplates">
-		<action name="list" class="reportTemplatesAction" method="list" >
-			<param name="my">true</param>
-		</action>
-		<action name="paging" class="reportTemplatesAction" method="paging" >
-			<param name="my">true</param>
-		</action>
-		<action name="data" class="reportTemplatesAction" method="data" >
-			<param name="my">true</param>
-		</action>
-	</package>
-	<!-- 表报模板选择 -->
-	<package name="selectReportTemplate" extends="bc-default" namespace="/bc/selectReportTemplate">
-		<action name="save" class="selectReportTemplateAction" method="save"/>
-		<action name="delete" class="selectReportTemplateAction" method="delete"/>
-		<action name="list" class="selectReportTemplateAction" method="list"/>
-		<action name="paging" class="selectReportTemplateAction" method="paging"/>
-		<action name="data" class="selectReportTemplateAction" method="data"/>
-	</package>
-	
-	<!-- 报表任务 -->
-	<package name="reportTask" extends="bc-default" namespace="/bc/reportTask">
-		<action name="create" class="reportTaskAction" method="create">
-			<result name="form">/bc/report/task/form.jsp</result>
-		</action>
-		<action name="edit" class="reportTaskAction" method="edit">
-			<result name="form">/bc/report/task/form.jsp</result>
-		</action>
-		<action name="open" class="reportTaskAction" method="open">
-			<result name="formr">/bc/report/task/form.jsp</result>
-		</action>
-		<action name="save" class="reportTaskAction" method="save" />
-		<action name="delete" class="reportTaskAction" method="delete" />
-		<action name="list" class="reportTaskAction" method="list" />
-		<action name="paging" class="reportTaskAction" method="paging" />
-		<action name="data" class="reportTaskAction" method="data" />
-		<!-- 启动/重置任务 -->
-		<action name="start" class="reportTaskAction" method="start" />
-		<!-- 停止任务 -->
-		<action name="stop" class="reportTaskAction" method="stop" />
-	</package>
-	
-	<!-- 历史报表 -->
-	<package name="reportHistory" extends="bc-default" namespace="/bc/reportHistory">
-		<action name="create" class="reportHistoryAction" method="create">
-			<result name="form">/bc/report/history/form.jsp</result>
-		</action>
-		<action name="edit" class="reportHistoryAction" method="edit">
-			<result name="form">/bc/report/history/form.jsp</result>
-		</action>
-		<action name="open" class="reportHistoryAction" method="open">
-			<result name="formr">/bc/report/history/form.jsp</result>
-		</action> 
-		<action name="save" class="reportHistoryAction" method="save" />
-		<action name="delete" class="reportHistoryAction" method="delete" />
-		<action name="list" class="reportHistoryAction" method="list" />
-		<action name="paging" class="reportHistoryAction" method="paging" />
-		<action name="data" class="reportHistoryAction" method="data" />
-	</package>
-	
-	<!-- 我的历史报表 -->
-	<package name="myReportHistorys" extends="bc-default" namespace="/bc/myReportHistorys">
-		<action name="list" class="reportHistorysAction" method="list" >
-			<param name="my">true</param>
-		</action>
-		<action name="paging" class="reportHistorysAction" method="paging" >
-			<param name="my">true</param>
-		</action>
-		<action name="data" class="reportHistorysAction" method="data" >
-			<param name="my">true</param>
-		</action>
-		<action name="conditions" class="reportHistorysAction" method="conditions" >
-			<result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
-		</action>
-	</package>
-	<package name="myReportHistory" extends="bc-default" namespace="/bc/myReportHistory">
-		<action name="edit" class="reportHistoryAction" method="edit">
-			<result name="form">/bc/report/history/form.jsp</result>
-		</action>
-		<action name="open" class="reportHistoryAction" method="open">
-			<result name="formr">/bc/report/history/form.jsp</result>
-		</action>
-		<action name="delete" class="reportHistoryAction" method="delete" />
-	</package>
+  <!-- 报表执行器 -->
+  <package name="bc-report" extends="bc-default" namespace="/bc/report">
+    <!-- 报表条件 -->
+    <action name="conditions" class="reportAction" method="conditions">
+      <result name="success">${resultPath}</result>
+      <result type="freemarker" name="freemarker">${resultPath}</result>
+      <result type="redirectAction" name="redirectAction">
+        <param name="actionName">${resultPath}</param>
+        <param name="namespace">/</param>
+      </result>
+    </action>
+    <!-- 执行报表 -->
+    <action name="run" class="reportAction" method="run">
+      <result name="chart">/bc/report/chart/chart.jsp</result>
+    </action>
+    <!-- 非分页视图 -->
+    <action name="list" class="reportAction" method="list"/>
+    <!-- 分页视图 -->
+    <action name="paging" class="reportAction" method="paging"/>
+    <!-- 分页数据 -->
+    <action name="data" class="reportAction" method="data"/>
+    <!-- 导出 视图数据 -->
+    <action name="export" class="reportAction" method="export"/>
+    <!-- 存为历史报表 -->
+    <action name="save2history" class="reportAction" method="save2history"/>
+  </package>
+  <!-- 报表模板 -->
+  <package name="reportTemplate" extends="bc-default" namespace="/bc/reportTemplate">
+    <action name="create" class="reportTemplateAction" method="create">
+      <result name="form">/bc/report/template/form.jsp</result>
+    </action>
+    <action name="edit" class="reportTemplateAction" method="edit">
+      <result name="form">/bc/report/template/form.jsp</result>
+    </action>
+    <action name="open" class="reportTemplateAction" method="open">
+      <result name="formr">/bc/report/template/form.jsp</result>
+    </action>
+    <action name="save" class="reportTemplateAction" method="save"/>
+    <action name="delete" class="reportTemplateAction" method="delete"/>
+    <action name="list" class="reportTemplateAction" method="list"/>
+    <action name="paging" class="reportTemplateAction" method="paging"/>
+    <action name="data" class="reportTemplateAction" method="data"/>
+    <action name="isUniqueCode" class="reportTemplateAction"
+            method="isUniqueCode"/>
+  </package>
+  <!-- 我的报表模板 -->
+  <package name="myReportTemplates" extends="bc-default" namespace="/bc/myReportTemplates">
+    <action name="list" class="reportTemplatesAction" method="list">
+      <param name="my">true</param>
+    </action>
+    <action name="paging" class="reportTemplatesAction" method="paging">
+      <param name="my">true</param>
+    </action>
+    <action name="data" class="reportTemplatesAction" method="data">
+      <param name="my">true</param>
+    </action>
+  </package>
+  <!-- 表报模板选择 -->
+  <package name="selectReportTemplate" extends="bc-default" namespace="/bc/selectReportTemplate">
+    <action name="save" class="selectReportTemplateAction" method="save"/>
+    <action name="delete" class="selectReportTemplateAction" method="delete"/>
+    <action name="list" class="selectReportTemplateAction" method="list"/>
+    <action name="paging" class="selectReportTemplateAction" method="paging"/>
+    <action name="data" class="selectReportTemplateAction" method="data"/>
+  </package>
+
+  <!-- 报表任务 -->
+  <package name="reportTask" extends="bc-default" namespace="/bc/reportTask">
+    <action name="create" class="reportTaskAction" method="create">
+      <result name="form">/bc/report/task/form.jsp</result>
+    </action>
+    <action name="edit" class="reportTaskAction" method="edit">
+      <result name="form">/bc/report/task/form.jsp</result>
+    </action>
+    <action name="open" class="reportTaskAction" method="open">
+      <result name="formr">/bc/report/task/form.jsp</result>
+    </action>
+    <action name="save" class="reportTaskAction" method="save"/>
+    <action name="delete" class="reportTaskAction" method="delete"/>
+    <action name="list" class="reportTaskAction" method="list"/>
+    <action name="paging" class="reportTaskAction" method="paging"/>
+    <action name="data" class="reportTaskAction" method="data"/>
+    <!-- 启动/重置任务 -->
+    <action name="start" class="reportTaskAction" method="start"/>
+    <!-- 停止任务 -->
+    <action name="stop" class="reportTaskAction" method="stop"/>
+  </package>
+
+  <!-- 历史报表 -->
+  <package name="reportHistory" extends="bc-default" namespace="/bc/reportHistory">
+    <action name="create" class="reportHistoryAction" method="create">
+      <result name="form">/bc/report/history/form.jsp</result>
+    </action>
+    <action name="edit" class="reportHistoryAction" method="edit">
+      <result name="form">/bc/report/history/form.jsp</result>
+    </action>
+    <action name="open" class="reportHistoryAction" method="open">
+      <result name="formr">/bc/report/history/form.jsp</result>
+    </action>
+    <action name="save" class="reportHistoryAction" method="save"/>
+    <action name="delete" class="reportHistoryAction" method="delete"/>
+    <action name="list" class="reportHistoryAction" method="list"/>
+    <action name="paging" class="reportHistoryAction" method="paging"/>
+    <action name="data" class="reportHistoryAction" method="data"/>
+  </package>
+
+  <!-- 我的历史报表 -->
+  <package name="myReportHistorys" extends="bc-default" namespace="/bc/myReportHistorys">
+    <action name="list" class="reportHistorysAction" method="list">
+      <param name="my">true</param>
+    </action>
+    <action name="paging" class="reportHistorysAction" method="paging">
+      <param name="my">true</param>
+    </action>
+    <action name="data" class="reportHistorysAction" method="data">
+      <param name="my">true</param>
+    </action>
+    <action name="conditions" class="reportHistorysAction" method="conditions">
+      <result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
+    </action>
+  </package>
+  <package name="myReportHistory" extends="bc-default" namespace="/bc/myReportHistory">
+    <action name="edit" class="reportHistoryAction" method="edit">
+      <result name="form">/bc/report/history/form.jsp</result>
+    </action>
+    <action name="open" class="reportHistoryAction" method="open">
+      <result name="formr">/bc/report/history/form.jsp</result>
+    </action>
+    <action name="delete" class="reportHistoryAction" method="delete"/>
+  </package>
 </struts>

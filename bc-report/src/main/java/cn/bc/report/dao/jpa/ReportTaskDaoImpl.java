@@ -17,12 +17,12 @@ import java.util.List;
  * @author lbj
  */
 public class ReportTaskDaoImpl extends JpaCrudDao<ReportTask> implements ReportTaskDao {
-	public List<ReportTask> findAllEnabled() {
-		return this
-				.createQuery()
-				.condition(new AndCondition()
-						.add(new EqualsCondition("status", BCConstants.STATUS_ENABLED))
-						.add(new OrderCondition("fileDate", Direction.Asc)))
-				.list();
-	}
+  public List<ReportTask> findAllEnabled() {
+    return this
+      .createQuery()
+      .condition(new AndCondition()
+        .add(new EqualsCondition("status", BCConstants.STATUS_ENABLED))
+        .add(new OrderCondition("fileDate", Direction.Asc)))
+      .list();
+  }
 }

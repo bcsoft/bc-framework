@@ -1,104 +1,125 @@
--- ##bcÆ½Ì¨µÄ oracle ×Ô¶¨Òåº¯ÊýºÍ´æ´¢¹ý³Ì##
+-- ##bcÆ½Ì¨ï¿½ï¿½ oracle ï¿½Ô¶ï¿½ï¿½åº¯ï¿½ï¿½ï¿½Í´æ´¢ï¿½ï¿½ï¿½ï¿½##
 
--- ÉèÖÃ½«ÐÅÏ¢Êä³öµ½¿ØÖÆÌ¨£¨Èç¹ûÊÇÔÚSQL PlusÃüÁîÐÐÔËÐÐÕâ¸ösqlÎÄ¼þ£¬ÐëÏÈÐÐÖ´ÐÐÕâ¸öÃüÁî²ÅÄÜ¿´µ½Êä³öÐÅÏ¢£©
--- set serveroutput on; -- pl/sqlµÄSQL´°¿Ú²»Ö§³Ö¸ÃÃüÁî£¬µ«ÔÚÆäÃüÁî´°¿Ú¿ÉÒÔ
+-- ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SQL Plusï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
+-- set serveroutput on; -- pl/sqlï¿½ï¿½SQLï¿½ï¿½ï¿½Ú²ï¿½Ö§ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î´°ï¿½Ú¿ï¿½ï¿½ï¿½
 -- set serveroutput on SIZE number(1000);
 
--- ´´½¨¸üÐÂactorµÄpcodeºÍpnameµÄ´æ´¢¹ý³Ì£º»áµÝ¹é´¦ÀíÏÂ¼¶µ¥Î»ºÍ²¿ÃÅ
-CREATE OR REPLACE PROCEDURE update_actor_pcodepname(
-   --actorËùÁ¥ÊôÉÏ¼¶µÄid£¬Îª0´ú±í¶¥²ãµ¥Î»
-   pid IN number
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½actorï¿½ï¿½pcodeï¿½ï¿½pnameï¿½Ä´æ´¢ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½Ý¹é´¦ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Î»ï¿½Í²ï¿½ï¿½ï¿½
+create or replace procedure update_actor_pcodepname(
+--actorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½idï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½ï¿½ãµ¥Î»
+pid in number
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 pfcode varchar2(4000);
 pfname varchar2(4000);
 cid number;
 ct number;
 pid1 number;
-cursor curChilden is select a.id,a.type_ from bc_identity_actor a inner join bc_identity_actor_relation r on r.follower_id = a.id 
-	where r.type_=0 and r.master_id=pid order by a.order_;
-cursor curTops is select a.id from bc_identity_actor a where a.type_=1 and not exists 
-	(select r.follower_id from bc_identity_actor_relation r where r.type_=0 and a.id=r.follower_id)
-    order by a.order_;
-BEGIN
-	dbms_output.put_line('pid=' || pid);
-    
-  	if pid > 0 then
-		select (case when pcode is null then '' else pcode || '/' end) || '[' || type_ || ']' || code
-        	,(case when pname is null then '' else pname || '/' end) || name
-        	into pfcode,pfname from bc_identity_actor where id=pid;
-        dbms_output.put_line('pfcode='||pfcode||',pfname='||pfname);
-        open curChilden;
-        fetch curChilden into cid,ct;
-        while curChilden%found loop
-            dbms_output.put_line('cid='||cid);
-            update bc_identity_actor a set a.pcode=pfcode,a.pname=pfname where a.id=cid;
-  			if ct < 3 then 
-             	dbms_output.put_line('--');
-           		-- µ¥Î»»ò²¿ÃÅÖ´ÐÐµÝ¹é´¦Àí
-                update_actor_pcodepname(cid);
-			end if;
-            -- ½«ÓÎ±êÖ¸ÏòÏÂÌõ¼ÇÂ¼, ·ñÔòÎªËÀÑ­»·
-            fetch curChilden into cid,ct;
-        end loop;
-        close curChilden;
-	else
-        open curTops;
-        fetch curTops into pid1;
-        while curTops%found loop
-            update_actor_pcodepname(pid1);
-            -- ½«ÓÎ±êÖ¸ÏòÏÂÌõ¼ÇÂ¼, ·ñÔòÎªËÀÑ­»·
-            fetch curTops into pid1;
-        end loop;
-        close curTops;
-  	end if; 
-END;
+cursor curChilden is select a.id, a.type_
+                     from bc_identity_actor a inner join bc_identity_actor_relation r on r.follower_id = a.id
+                     where r.type_ = 0 and r.master_id = pid
+                     order by a.order_;
+cursor curTops is select a.id
+                  from bc_identity_actor a
+                  where a.type_ = 1 and not exists
+                  (select r.follower_id
+                   from bc_identity_actor_relation r
+                   where r.type_ = 0 and a.id = r.follower_id)
+                  order by a.order_;
+begin
+dbms_output.put_line('pid=' || pid);
+
+if pid > 0 then
+select (case when pcode is null
+  then ''
+        else pcode || '/' end) || '[' || type_ || ']' || code, (case when pname is null
+  then ''
+                                                                else pname || '/' end) || name
+into pfcode,pfname from bc_identity_actor where id = pid;
+dbms_output.put_line('pfcode='||pfcode||',pfname='||pfname);
+open curChilden;
+fetch curChilden into cid, ct;
+while curChilden%found loop
+dbms_output.put_line('cid='||cid);
+update bc_identity_actor a set a.pcode = pfcode, a.pname = pfname
+where a.id = cid;
+if ct < 3 then
+dbms_output.put_line('--');
+-- ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ÐµÝ¹é´¦ï¿½ï¿½
+update_actor_pcodepname(cid);
+end if;
+-- ï¿½ï¿½ï¿½Î±ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼, ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ñ­ï¿½ï¿½
+fetch curChilden into cid, ct;
+end loop;
+close curChilden;
+else
+open curTops;
+fetch curTops into pid1;
+while curTops%found loop
+update_actor_pcodepname(pid1);
+-- ï¿½ï¿½ï¿½Î±ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼, ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ñ­ï¿½ï¿½
+fetch curTops into pid1;
+end loop;
+close curTops;
+end if;
+end;
 /
 
--- ´´½¨¸üÐÂresourceµÄpnameµÄ´æ´¢¹ý³Ì£º»áµÝ¹é´¦ÀíÏÂ¼¶×ÊÔ´
-CREATE OR REPLACE PROCEDURE update_resource_pname(
-   --resourceËùÁ¥ÊôµÄid£¬Îª0´ú±í¶¥²ã×ÊÔ´
-   pid IN number
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½resourceï¿½ï¿½pnameï¿½Ä´æ´¢ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½Ý¹é´¦ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ô´
+create or replace procedure update_resource_pname(
+--resourceï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½idï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
+pid in number
 )
-AS
---¶¨Òå±äÁ¿
+as
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 pfname varchar2(4000);
 cid number;
 ct number;
 pid1 number;
-cursor curChilden is select r.id,r.type_ from bc_identity_resource r where r.belong = pid order by r.order_;
-cursor curTops is select r.id from bc_identity_resource r where nvl(r.belong,0) = 0 order by r.order_;
-BEGIN
-	dbms_output.put_line('pid=' || pid);
-    
-  	if pid > 0 then
-		select (case when pname is null then '' else pname || '/' end) || name
-        	into pfname from bc_identity_resource where id=pid;
-        dbms_output.put_line('pfname='||pfname);
-        open curChilden;
-        fetch curChilden into cid,ct;
-        while curChilden%found loop
-            dbms_output.put_line('cid='||cid);
-            update bc_identity_resource r set r.pname=pfname where r.id=cid;
-  			if ct = 1 then 
-             	dbms_output.put_line('--');
-           		-- ·ÖÀàÐÍ×ÊÔ´Ö´ÐÐµÝ¹é´¦Àí
-                update_resource_pname(cid);
-			end if;
-            -- ½«ÓÎ±êÖ¸ÏòÏÂÌõ¼ÇÂ¼, ·ñÔòÎªËÀÑ­»·
-            fetch curChilden into cid,ct;
-        end loop;
-        close curChilden;
-	else
-        open curTops;
-        fetch curTops into pid1;
-        while curTops%found loop
-            update_resource_pname(pid1);
-            -- ½«ÓÎ±êÖ¸ÏòÏÂÌõ¼ÇÂ¼, ·ñÔòÎªËÀÑ­»·
-            fetch curTops into pid1;
-        end loop;
-        close curTops;
-  	end if; 
-END;
+cursor curChilden is select r.id, r.type_
+                     from bc_identity_resource r
+                     where r.belong = pid
+                     order by r.order_;
+cursor curTops is select r.id
+                  from bc_identity_resource r
+                  where nvl(r.belong, 0) = 0
+                  order by r.order_;
+begin
+dbms_output.put_line('pid=' || pid);
+
+if pid > 0 then
+select (case when pname is null
+  then ''
+        else pname || '/' end) || name
+into pfname
+from bc_identity_resource
+where id = pid;
+dbms_output.put_line('pfname='||pfname);
+open curChilden;
+fetch curChilden into cid, ct;
+while curChilden%found loop
+dbms_output.put_line('cid='||cid);
+update bc_identity_resource r set r.pname = pfname
+where r.id = cid;
+if ct = 1 then
+dbms_output.put_line('--');
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ö´ï¿½ÐµÝ¹é´¦ï¿½ï¿½
+update_resource_pname(cid);
+end if;
+-- ï¿½ï¿½ï¿½Î±ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼, ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ñ­ï¿½ï¿½
+fetch curChilden into cid, ct;
+end loop;
+close curChilden;
+else
+open curTops;
+fetch curTops into pid1;
+while curTops%found loop
+update_resource_pname(pid1);
+-- ï¿½ï¿½ï¿½Î±ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼, ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ñ­ï¿½ï¿½
+fetch curTops into pid1;
+end loop;
+close curTops;
+end if;
+end;
 /

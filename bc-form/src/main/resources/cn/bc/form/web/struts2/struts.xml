@@ -1,83 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 表单API -->
-	<package name="customFormAPI" extends="bc-default" namespace="/bc/cform">
-		<action name="render" class="renderFormAction" method="render"/>
-		<action name="delete" class="renderFormAction" method="delete"/>
-		<action name="save" class="renderFormAction" method="save" />
-		<action name="nextver" class="renderFormAction" method="nextVer" />
-	</package>
-	
-	<!-- 自定义表单 -->
-	<package name="customForm" extends="bc-default" namespace="/bc/customForm">
-		<action name="render" class="customFormEntityAction" method="render" />
-		<action name="create" class="customFormEntityAction" method="create" />
-		<action name="edit" class="customFormEntityAction" method="edit" />
-		<action name="open" class="customFormEntityAction" method="open" />
-		<action name="save" class="customFormEntityAction" method="save" />
-		<action name="delete" class="customFormEntityAction" method="delete" />
-	</package>
+  <!-- 表单API -->
+  <package name="customFormAPI" extends="bc-default" namespace="/bc/cform">
+    <action name="render" class="renderFormAction" method="render"/>
+    <action name="delete" class="renderFormAction" method="delete"/>
+    <action name="save" class="renderFormAction" method="save"/>
+    <action name="nextver" class="renderFormAction" method="nextVer"/>
+  </package>
 
-	<!-- 自定义表单管理 -->
-	<package name="formManages" extends="bc-default" namespace="/bc/formManages">
-		<!-- 分页视图 -->
-		<action name="paging" class="formsAction" method="paging" />
-		<!-- 分页数据 -->
-		<action name="data" class="formsAction" method="data" />
-		<!-- 导出 视图数据 -->
-		<action name="export" class="formsAction" method="export" />
-		<!-- 高级搜索 -->
-		<action name="conditions" class="formsAction" method="conditions">
-			<result name="success">/bc-form/form/conditions.jsp
-			</result>
-		</action>
-	</package>
-	
-	
-	<!-- 表单字段管理 -->
-	<package name="fieldManages" extends="bc-default" namespace="/bc/fieldManages">
-		<!-- 分页视图 -->
-		<action name="paging" class="fieldsAction" method="paging" />
-		<!-- 分页数据 -->
-		<action name="data" class="fieldsAction" method="data" />
-		<!-- 导出 视图数据 -->
-		<action name="export" class="fieldsAction" method="export" />
-		<!-- 高级搜索 -->
-		<action name="conditions" class="fieldsAction" method="conditions">
-			<result name="success">/bc-form/field/conditions.jsp
-			</result>
-		</action>
-	</package>
-	<package name="fieldManage" extends="bc-default" namespace="/bc/fieldManage">
-		<!-- 表单 -->
-		<action name="create" class="fieldAction" method="create">
-			<result name="form">/bc/form/field/form.jsp</result>
-		</action>
-		<action name="open" class="fieldAction" method="open">
-			<result name="formr">/bc/form/field/formr.jsp</result>
-		</action>
-		<action name="edit" class="fieldAction" method="edit">
-			<result name="form">/bc/form/field/form.jsp</result>
-		</action>
-		<action name="save" class="fieldAction" method="save" />
-		<action name="delete" class="fieldAction" method="delete" />
-	</package>
-	
-	<!-- 表单审计日志 -->
-	<package name="fieldLogManages" extends="bc-default" namespace="/bc/fieldLogManages">
-		<!-- 分页视图 -->
-		<action name="paging" class="fieldLogsAction" method="paging" />
-		<!-- 分页数据 -->
-		<action name="data" class="fieldLogsAction" method="data" />
-		<!-- 导出 视图数据 -->
-		<action name="export" class="fieldLogsAction" method="export" />
-		<!-- 高级搜索 -->
-		<action name="conditions" class="fieldLogsAction" method="conditions">
-			<result name="success">/bc-form/field/conditions.jsp
-			</result>
-		</action>
-	</package>
+  <!-- 自定义表单 -->
+  <package name="customForm" extends="bc-default" namespace="/bc/customForm">
+    <action name="render" class="customFormEntityAction" method="render"/>
+    <action name="create" class="customFormEntityAction" method="create"/>
+    <action name="edit" class="customFormEntityAction" method="edit"/>
+    <action name="open" class="customFormEntityAction" method="open"/>
+    <action name="save" class="customFormEntityAction" method="save"/>
+    <action name="delete" class="customFormEntityAction" method="delete"/>
+  </package>
+
+  <!-- 自定义表单管理 -->
+  <package name="formManages" extends="bc-default" namespace="/bc/formManages">
+    <!-- 分页视图 -->
+    <action name="paging" class="formsAction" method="paging"/>
+    <!-- 分页数据 -->
+    <action name="data" class="formsAction" method="data"/>
+    <!-- 导出 视图数据 -->
+    <action name="export" class="formsAction" method="export"/>
+    <!-- 高级搜索 -->
+    <action name="conditions" class="formsAction" method="conditions">
+      <result name="success">/bc-form/form/conditions.jsp
+      </result>
+    </action>
+  </package>
+
+
+  <!-- 表单字段管理 -->
+  <package name="fieldManages" extends="bc-default" namespace="/bc/fieldManages">
+    <!-- 分页视图 -->
+    <action name="paging" class="fieldsAction" method="paging"/>
+    <!-- 分页数据 -->
+    <action name="data" class="fieldsAction" method="data"/>
+    <!-- 导出 视图数据 -->
+    <action name="export" class="fieldsAction" method="export"/>
+    <!-- 高级搜索 -->
+    <action name="conditions" class="fieldsAction" method="conditions">
+      <result name="success">/bc-form/field/conditions.jsp
+      </result>
+    </action>
+  </package>
+  <package name="fieldManage" extends="bc-default" namespace="/bc/fieldManage">
+    <!-- 表单 -->
+    <action name="create" class="fieldAction" method="create">
+      <result name="form">/bc/form/field/form.jsp</result>
+    </action>
+    <action name="open" class="fieldAction" method="open">
+      <result name="formr">/bc/form/field/formr.jsp</result>
+    </action>
+    <action name="edit" class="fieldAction" method="edit">
+      <result name="form">/bc/form/field/form.jsp</result>
+    </action>
+    <action name="save" class="fieldAction" method="save"/>
+    <action name="delete" class="fieldAction" method="delete"/>
+  </package>
+
+  <!-- 表单审计日志 -->
+  <package name="fieldLogManages" extends="bc-default" namespace="/bc/fieldLogManages">
+    <!-- 分页视图 -->
+    <action name="paging" class="fieldLogsAction" method="paging"/>
+    <!-- 分页数据 -->
+    <action name="data" class="fieldLogsAction" method="data"/>
+    <!-- 导出 视图数据 -->
+    <action name="export" class="fieldLogsAction" method="export"/>
+    <!-- 高级搜索 -->
+    <action name="conditions" class="fieldLogsAction" method="conditions">
+      <result name="success">/bc-form/field/conditions.jsp
+      </result>
+    </action>
+  </package>
 </struts>

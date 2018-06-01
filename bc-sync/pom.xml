@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>bc-parent</artifactId>
-		<groupId>cn.bc</groupId>
-		<version>${revision}</version>
-		<relativePath>../bc-parent</relativePath>
-	</parent>
-	<artifactId>bc-sync</artifactId>
-	<description>同步处理</description>
-	<dependencies>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-identity</artifactId>
-		</dependency>
-	</dependencies>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>bc-parent</artifactId>
+    <groupId>cn.bc</groupId>
+    <version>${revision}</version>
+    <relativePath>../bc-parent</relativePath>
+  </parent>
+  <artifactId>bc-sync</artifactId>
+  <description>同步处理</description>
+  <dependencies>
+    <dependency>
+      <groupId>cn.bc</groupId>
+      <artifactId>bc-identity</artifactId>
+    </dependency>
+  </dependencies>
 </project>

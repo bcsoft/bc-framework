@@ -3,18 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- shortcut -->
-    <bean id="shortcutDao" class="cn.bc.desktop.dao.jpa.ShortcutDaoImpl"
-          p:entityClass="cn.bc.desktop.domain.Shortcut"/>
-    <bean id="shortcutService" class="cn.bc.desktop.service.ShortcutServiceImpl"
-          p:entityClass="cn.bc.desktop.domain.Shortcut"/>
+  <!-- shortcut -->
+  <bean id="shortcutDao" class="cn.bc.desktop.dao.jpa.ShortcutDaoImpl"
+        p:entityClass="cn.bc.desktop.domain.Shortcut"/>
+  <bean id="shortcutService" class="cn.bc.desktop.service.ShortcutServiceImpl"
+        p:entityClass="cn.bc.desktop.domain.Shortcut"/>
 
-    <!-- 个性化设置 -->
-    <bean id="personalDao" class="cn.bc.desktop.dao.jpa.PersonalDaoImpl"
-          p:entityClass="cn.bc.desktop.domain.Personal"/>
-    <bean id="personalService" class="cn.bc.desktop.service.PersonalServiceImpl"
-          p:entityClass="cn.bc.desktop.domain.Personal"/>
+  <!-- 个性化设置 -->
+  <bean id="personalDao" class="cn.bc.desktop.dao.jpa.PersonalDaoImpl"
+        p:entityClass="cn.bc.desktop.domain.Personal"/>
+  <bean id="personalService" class="cn.bc.desktop.service.PersonalServiceImpl"
+        p:entityClass="cn.bc.desktop.domain.Personal"/>
 
-    <!-- Login -->
-    <bean id="loginService" class="cn.bc.desktop.service.LoginServiceImpl"/>
+  <!-- Login -->
+  <bean id="loginService" class="cn.bc.desktop.service.LoginServiceImpl"/>
 </beans>

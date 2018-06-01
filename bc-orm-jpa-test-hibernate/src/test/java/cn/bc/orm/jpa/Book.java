@@ -16,65 +16,65 @@ import java.util.Date;
 @Entity
 @Table(name = "bc_jpa_book")
 public class Book extends IdEntity<Long> implements Serializable {
-    private String name;// 书名
-    private Boolean bool;
-    private Calendar date;
-    private Date time;// time不能使用Calendar类型
-    private Calendar timestamp;
+  private String name;// 书名
+  private Boolean bool;
+  private Calendar date;
+  private Date time;// time不能使用Calendar类型
+  private Calendar timestamp;
 
-    public Book() {
-    }
+  public Book() {
+  }
 
-    public Book(String name) {
-        this();
-        this.name = name;
-    }
+  public Book(String name) {
+    this();
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Boolean getBool() {
-        return bool;
-    }
+  public Boolean getBool() {
+    return bool;
+  }
 
-    public void setBool(Boolean bool) {
-        this.bool = bool;
-    }
+  public void setBool(Boolean bool) {
+    this.bool = bool;
+  }
 
-    @Temporal(TemporalType.DATE)
-    public Calendar getDate() {
-        return date;
-    }
+  @Temporal(TemporalType.DATE)
+  public Calendar getDate() {
+    return date;
+  }
 
-    public void setDate(Calendar date) {
-        this.date = date;
-    }
+  public void setDate(Calendar date) {
+    this.date = date;
+  }
 
-    @Temporal(TemporalType.TIME)
-    public Date getTime() {
-        return time;
-    }
+  @Temporal(TemporalType.TIME)
+  public Date getTime() {
+    return time;
+  }
 
-    public void setTime(Date time) {
-        this.time = time;
-    }
+  public void setTime(Date time) {
+    this.time = time;
+  }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    public Calendar getTimestamp() {
-        return timestamp;
-    }
+  @Temporal(TemporalType.TIMESTAMP)
+  public Calendar getTimestamp() {
+    return timestamp;
+  }
 
-    public void setTimestamp(Calendar timestamp) {
-        this.timestamp = timestamp;
-    }
+  public void setTimestamp(Calendar timestamp) {
+    this.timestamp = timestamp;
+  }
 
-    @Override
-    public String toString() {
-        return "{id: " + getId() + ", name: " + getName() + "}";
-    }
+  @Override
+  public String toString() {
+    return "{id: " + getId() + ", name: " + getName() + "}";
+  }
 }

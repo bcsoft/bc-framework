@@ -6,8 +6,8 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
-    <context:annotation-config/>
-    <context:component-scan base-package="cn.bc.orm.jpa"/>
-    <import resource="classpath:spring-test-jpa.xml"/>
-    <import resource="classpath:spring-test-datasource-${datasource.type}.xml"/>
+  <context:annotation-config/>
+  <context:component-scan base-package="cn.bc.orm.jpa"/>
+  <import resource="classpath:spring-test-jpa.xml"/>
+  <import resource="classpath:spring-test-datasource-${datasource.type}.xml"/>
 </beans>

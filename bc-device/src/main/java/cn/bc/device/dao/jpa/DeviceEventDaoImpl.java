@@ -8,7 +8,6 @@ import cn.bc.orm.jpa.JpaCrudDao;
  * 设备事件Dao实现
  *
  * @author hwx
- * 
  */
 public class DeviceEventDaoImpl extends JpaCrudDao<DeviceEventEntity> implements DeviceEventDao {
 }

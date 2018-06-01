@@ -4,12 +4,11 @@ import cn.bc.web.ui.AbstractComponent;
 
 /**
  * span
- * 
+ *
  * @author dragon
- * 
  */
 public class Span extends AbstractComponent {
-	public String getTag() {
-		return "span";
-	}
+  public String getTag() {
+    return "span";
+  }
 }

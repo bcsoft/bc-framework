@@ -1,67 +1,60 @@
 package cn.bc.orm.hibernate;
 
+import javax.persistence.*;
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * 仅用于测试时方便构建测试对象
- * 
+ *
  * @author dragon
- * 
  */
 @Entity
 @Table(name = "BC_EXAMPLE")
 //@NamedQueries(value = { @NamedQuery(name = "Example.findAllUsers", query = "from Example") })
 public class Domain implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID")
-	private Long id = null;
-	@Column(name = "CODE")
-	private String code;
-	@Column(name = "NAME", nullable = false)
-	private String name;
+  private static final long serialVersionUID = 1L;
 
-	public Domain() {
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "ID")
+  private Long id = null;
+  @Column(name = "CODE")
+  private String code;
+  @Column(name = "NAME", nullable = false)
+  private String name;
 
-	public Domain(String name) {
-		this.name = name;
-	}
+  public Domain() {
+  }
 
-	public Long getId() {
-		return id;
-	}
+  public Domain(String name) {
+    this.name = name;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public boolean isNew(){
-		return this.id == null;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public boolean isNew() {
+    return this.id == null;
+  }
 
-	public String getCode() {
-		return code;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 }

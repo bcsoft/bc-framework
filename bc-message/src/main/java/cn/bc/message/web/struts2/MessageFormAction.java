@@ -21,27 +21,27 @@ import org.springframework.stereotype.Controller;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class MessageFormAction extends EntityAction<Long, Message> {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Autowired
-	public void setMessageService(MessageService messageService) {
-		this.setCrudService(messageService);
-	}
+  @Autowired
+  public void setMessageService(MessageService messageService) {
+    this.setCrudService(messageService);
+  }
 
-	@Override
-	public boolean isReadonly() {
-		// 系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole("BC_ADMIN");
-	}
+  @Override
+  public boolean isReadonly() {
+    // 系统管理员
+    SystemContext context = (SystemContext) this.getContext();
+    return !context.hasAnyRole("BC_ADMIN");
+  }
 
-	@Override
-	public String getPageNamespace() {
-		return this.getContextPath() + "/bc/message";
-	}
+  @Override
+  public String getPageNamespace() {
+    return this.getContextPath() + "/bc/message";
+  }
 
-	@Override
-	protected PageOption buildFormPageOption(boolean editable) {
-		return super.buildFormPageOption(editable).setWidth(415).setMinWidth(400).setMinHeight(300);
-	}
+  @Override
+  protected PageOption buildFormPageOption(boolean editable) {
+    return super.buildFormPageOption(editable).setWidth(415).setMinWidth(400).setMinHeight(300);
+  }
 }

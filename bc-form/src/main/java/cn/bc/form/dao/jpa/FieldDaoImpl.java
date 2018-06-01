@@ -9,8 +9,8 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 public class FieldDaoImpl extends JpaCrudDao<Field> implements FieldDao {
-	public List<Field> findByParent(Long pid) {
-		Assert.notNull(pid, "pid couldn't be empty");
-		return this.createQuery().condition(new EqualsCondition("form.id", pid)).list();
-	}
+  public List<Field> findByParent(Long pid) {
+    Assert.notNull(pid, "pid couldn't be empty");
+    return this.createQuery().condition(new EqualsCondition("form.id", pid)).list();
+  }
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<!-- scheduler调度管理器：不能配置事务 -->
-	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
-	<bean id="schedulerManage" class="cn.bc.scheduler.service.SchedulerManageImpl">
-		<property name="schedulerService" ref="schedulerService"/>
-		<property name="scheduler" ref="scheduler"/>
-		<!-- 是否全局禁用定时任务 -->
-		<property name="disabled" value="true"/>
-	</bean>
+  <!-- scheduler调度管理器：不能配置事务 -->
+  <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>
+  <bean id="schedulerManage" class="cn.bc.scheduler.service.SchedulerManageImpl">
+    <property name="schedulerService" ref="schedulerService"/>
+    <property name="scheduler" ref="scheduler"/>
+    <!-- 是否全局禁用定时任务 -->
+    <property name="disabled" value="true"/>
+  </bean>
 </beans>

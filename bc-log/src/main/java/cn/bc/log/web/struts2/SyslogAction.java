@@ -1,36 +1,34 @@
 /**
- * 
+ *
  */
 package cn.bc.log.web.struts2;
 
+import cn.bc.log.domain.Syslog;
+import cn.bc.log.service.SyslogService;
+import cn.bc.web.struts2.EntityAction;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import cn.bc.log.domain.Syslog;
-import cn.bc.log.service.SyslogService;
-import cn.bc.web.struts2.EntityAction;
-
 /**
  * 系统日志表单Action
- * 
+ *
  * @author dragon
- * 
  */
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class SyslogAction extends EntityAction<Long, Syslog> implements
-		SessionAware {
-	//private static Log logger = LogFactory.getLog(SyslogAction.class);
-	private static final long serialVersionUID = 1L;
-	public boolean my = false;
+  SessionAware {
+  //private static Log logger = LogFactory.getLog(SyslogAction.class);
+  private static final long serialVersionUID = 1L;
+  public boolean my = false;
 
-	@Autowired
-	public void setSyslogService(SyslogService syslogService) {
-		this.setCrudService(syslogService);
-	}
+  @Autowired
+  public void setSyslogService(SyslogService syslogService) {
+    this.setCrudService(syslogService);
+  }
 
 //	// 记录登陆日志
 //	public static Syslog buildSyslog(Calendar now, Integer type,

@@ -1,28 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>cn.bc</groupId>
-		<artifactId>bc-parent</artifactId>
-		<version>${revision}</version>
-		<relativePath>../bc-parent</relativePath>
-	</parent>
-	<artifactId>bc-chat</artifactId>
-	<description>chat</description>
-	<name>bc-chat</name>
-	<description>系统内聊天 (已过时不用)</description>
-	<dependencies>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-web-struts2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-identity</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-		</dependency>
-	</dependencies>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.bc</groupId>
+    <artifactId>bc-parent</artifactId>
+    <version>${revision}</version>
+    <relativePath>../bc-parent</relativePath>
+  </parent>
+  <artifactId>bc-chat</artifactId>
+  <description>chat</description>
+  <name>bc-chat</name>
+  <description>系统内聊天 (已过时不用)</description>
+  <dependencies>
+    <dependency>
+      <groupId>cn.bc</groupId>
+      <artifactId>bc-web-struts2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>cn.bc</groupId>
+      <artifactId>bc-identity</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+    </dependency>
+  </dependencies>
 </project>

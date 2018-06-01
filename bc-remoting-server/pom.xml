@@ -1,155 +1,155 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>cn.bc</groupId>
-		<artifactId>bc-parent</artifactId>
-		<version>${revision}</version>
-		<relativePath>../bc-parent</relativePath>
-	</parent>
-	<artifactId>bc-remoting-server</artifactId>
-	<packaging>war</packaging>
-	<description>远程服务服务端</description>
-	<properties>
-		<!-- 解决打包成 war 文件，html文件内中文乱码问题 -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<app.debug>false</app.debug>
-		<!-- 临时目录 -->
-		<app.tempDir>/temp</app.tempDir>
-		<!-- 来源文件的根路径 -->
-		<app.fromRootDir>E:/</app.fromRootDir>
-		<!-- 转换后文件保存的根路径 -->
-		<app.toRootDir>F:/</app.toRootDir>
-		<!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007不支持)，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
-		<app.compatible>false</app.compatible>
-		<!-- office 版本：2007|2010|2013 -->
-		<app.officeVersion>2010</app.officeVersion>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.bc</groupId>
+    <artifactId>bc-parent</artifactId>
+    <version>${revision}</version>
+    <relativePath>../bc-parent</relativePath>
+  </parent>
+  <artifactId>bc-remoting-server</artifactId>
+  <packaging>war</packaging>
+  <description>远程服务服务端</description>
+  <properties>
+    <!-- 解决打包成 war 文件，html文件内中文乱码问题 -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <app.debug>false</app.debug>
+    <!-- 临时目录 -->
+    <app.tempDir>/temp</app.tempDir>
+    <!-- 来源文件的根路径 -->
+    <app.fromRootDir>E:/</app.fromRootDir>
+    <!-- 转换后文件保存的根路径 -->
+    <app.toRootDir>F:/</app.toRootDir>
+    <!-- 兼容性配置：true-使用Office2010的SaveAs2接口(Office2007不支持)，否则使用ExportAsFixedFormat接口(Office2007和2010通用但只能转换为pdf) -->
+    <app.compatible>false</app.compatible>
+    <!-- office 版本：2007|2010|2013 -->
+    <app.officeVersion>2010</app.officeVersion>
 
-		<!-- RMI服务的访问名和端口配置：客户端通过 rmi://[serverIp]:[app.wordService.port]/[app.wordService.name]访问 -->
-		<app.wordService.name>word</app.wordService.name>
-		<app.wordService.port>1199</app.wordService.port>
+    <!-- RMI服务的访问名和端口配置：客户端通过 rmi://[serverIp]:[app.wordService.port]/[app.wordService.name]访问 -->
+    <app.wordService.name>word</app.wordService.name>
+    <app.wordService.port>1199</app.wordService.port>
 
-		<!-- jetty 配置 -->
-		<jetty.port>8083</jetty.port>
-		<jetty.path>/rm</jetty.path>
-		<!-- 9.2.7.v20150116,9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905
-		<jetty.version>9.2.7.v20150116</jetty.version> -->
-	</properties>
-	<dependencies>
-		<!-- demo 3 -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+    <!-- jetty 配置 -->
+    <jetty.port>8083</jetty.port>
+    <jetty.path>/rm</jetty.path>
+    <!-- 9.2.7.v20150116,9.2.6.v20141205,9.2.5.v20141112,9.2.4.v20141103,9.2.3.v20140905
+    <jetty.version>9.2.7.v20150116</jetty.version> -->
+  </properties>
+  <dependencies>
+    <!-- demo 3 -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-		<!-- jacob for office -->
-		<dependency>
-			<groupId>net.sf.jacob-project</groupId>
-			<artifactId>jacob</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.jacob-project</groupId>
-			<artifactId>jacob</artifactId>
-			<type>dll</type>
-			<classifier>x64</classifier>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.jacob-project</groupId>
-			<artifactId>jacob</artifactId>
-			<type>dll</type>
-			<classifier>x86</classifier>
-		</dependency>
-		<dependency>
-			<groupId>cn.bc</groupId>
-			<artifactId>bc-remoting-common</artifactId>
-		</dependency>
+    <!-- jacob for office -->
+    <dependency>
+      <groupId>net.sf.jacob-project</groupId>
+      <artifactId>jacob</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jacob-project</groupId>
+      <artifactId>jacob</artifactId>
+      <type>dll</type>
+      <classifier>x64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jacob-project</groupId>
+      <artifactId>jacob</artifactId>
+      <type>dll</type>
+      <classifier>x86</classifier>
+    </dependency>
+    <dependency>
+      <groupId>cn.bc</groupId>
+      <artifactId>bc-remoting-common</artifactId>
+    </dependency>
 
-		<!-- log -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-access</artifactId>
-			<scope>compile</scope>
-		</dependency>-->
-	</dependencies>
-	<build>
-		<defaultGoal>package</defaultGoal>
-		<plugins>
-			<!-- jetty -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-			</plugin>
+    <!-- log -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-access</artifactId>
+      <scope>compile</scope>
+    </dependency>-->
+  </dependencies>
+  <build>
+    <defaultGoal>package</defaultGoal>
+    <plugins>
+      <!-- jetty -->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+      </plugin>
 
-			<!-- 包组装工具 -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
-					</descriptorRefs>
-					<descriptors>
-						<descriptor>src/main/assembly/descriptor.xml</descriptor>
-						<!-- <descriptor>src/main/assembly/win32.xml</descriptor> -->
-						<!-- <descriptor>src/main/assembly/linux-gtk.xml</descriptor> -->
-						<!-- <descriptor>src/main/assembly/macosx.xml</descriptor> -->
-					</descriptors>
-					<finalName>${project.artifactId}-${project.version}</finalName>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>test</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<app.debug>true</app.debug>
-				<app.tempDir>D:/bcdata/temp</app.tempDir>
-				<app.fromRootDir>D:/bcdata</app.fromRootDir>
-				<app.toRootDir>D:/bcdata/convert</app.toRootDir>
-				<app.officeVersion>2013</app.officeVersion>
-			</properties>
-		</profile>
-		<profile>
-			<id>product</id>
-			<properties>
-				<app.debug>false</app.debug>
-				<app.tempDir>F:/temp</app.tempDir>
-				<app.fromRootDir>E:</app.fromRootDir>
-				<app.toRootDir>F:</app.toRootDir>
-			</properties>
-		</profile>
-	</profiles>
+      <!-- 包组装工具 -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
+          </descriptorRefs>
+          <descriptors>
+            <descriptor>src/main/assembly/descriptor.xml</descriptor>
+            <!-- <descriptor>src/main/assembly/win32.xml</descriptor> -->
+            <!-- <descriptor>src/main/assembly/linux-gtk.xml</descriptor> -->
+            <!-- <descriptor>src/main/assembly/macosx.xml</descriptor> -->
+          </descriptors>
+          <finalName>${project.artifactId}-${project.version}</finalName>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <app.debug>true</app.debug>
+        <app.tempDir>D:/bcdata/temp</app.tempDir>
+        <app.fromRootDir>D:/bcdata</app.fromRootDir>
+        <app.toRootDir>D:/bcdata/convert</app.toRootDir>
+        <app.officeVersion>2013</app.officeVersion>
+      </properties>
+    </profile>
+    <profile>
+      <id>product</id>
+      <properties>
+        <app.debug>false</app.debug>
+        <app.tempDir>F:/temp</app.tempDir>
+        <app.fromRootDir>E:</app.fromRootDir>
+        <app.toRootDir>F:</app.toRootDir>
+      </properties>
+    </profile>
+  </profiles>
 </project>

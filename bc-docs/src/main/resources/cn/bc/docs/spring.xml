@@ -3,13 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- attach -->
-    <bean id="attachDao" class="cn.bc.orm.jpa.JpaCrudDao" p:entityClass="cn.bc.docs.domain.Attach"/>
-    <bean id="attachService" class="cn.bc.docs.service.AttachServiceImpl"
-          p:entityClass="cn.bc.docs.domain.Attach" p:crudDao-ref="attachDao"/>
+  <!-- attach -->
+  <bean id="attachDao" class="cn.bc.orm.jpa.JpaCrudDao" p:entityClass="cn.bc.docs.domain.Attach"/>
+  <bean id="attachService" class="cn.bc.docs.service.AttachServiceImpl"
+        p:entityClass="cn.bc.docs.domain.Attach" p:crudDao-ref="attachDao"/>
 
-    <!-- attachHistory -->
-    <bean id="attachHistoryDao" class="cn.bc.docs.dao.jpa.AttachHistoryDaoImpl"/>
-    <bean id="attachHistoryService" class="cn.bc.core.service.DefaultCrudService"
-          p:entityClass="cn.bc.docs.domain.AttachHistory" p:crudDao-ref="attachHistoryDao"/>
+  <!-- attachHistory -->
+  <bean id="attachHistoryDao" class="cn.bc.docs.dao.jpa.AttachHistoryDaoImpl"/>
+  <bean id="attachHistoryService" class="cn.bc.core.service.DefaultCrudService"
+        p:entityClass="cn.bc.docs.domain.AttachHistory" p:crudDao-ref="attachHistoryDao"/>
 </beans>

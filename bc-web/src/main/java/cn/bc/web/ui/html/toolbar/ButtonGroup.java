@@ -4,16 +4,16 @@ import cn.bc.web.ui.html.Span;
 
 /**
  * 按钮分组
- * @author dragon
  *
+ * @author dragon
  */
 public class ButtonGroup extends Span {
-	protected void init() {
-		this.addClazz("bc-buttonGroup");
-	}
+  protected void init() {
+    this.addClazz("bc-buttonGroup");
+  }
 
-	public ButtonGroup addButton(ToolbarButton button) {
-		this.addChild(button);
-		return this;
-	}
+  public ButtonGroup addButton(ToolbarButton button) {
+    this.addChild(button);
+    return this;
+  }
 }

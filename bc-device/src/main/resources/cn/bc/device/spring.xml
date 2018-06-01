@@ -3,18 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--device -->
-    <bean id="deviceDao" class="cn.bc.device.dao.jpa.DeviceDaoImpl"/>
-    <bean id="deviceService" class="cn.bc.device.service.DeviceServiceImpl"/>
+  <!--device -->
+  <bean id="deviceDao" class="cn.bc.device.dao.jpa.DeviceDaoImpl"/>
+  <bean id="deviceService" class="cn.bc.device.service.DeviceServiceImpl"/>
 
-    <!-- deviceEvent -->
-    <bean id="deviceEventDao" class="cn.bc.device.dao.jpa.DeviceEventDaoImpl"/>
-    <bean id="deviceEventService" class="cn.bc.device.service.DeviceEventServiceImpl"/>
+  <!-- deviceEvent -->
+  <bean id="deviceEventDao" class="cn.bc.device.dao.jpa.DeviceEventDaoImpl"/>
+  <bean id="deviceEventService" class="cn.bc.device.service.DeviceEventServiceImpl"/>
 
-    <!-- deviceEventNew -->
-    <bean id="deviceEventNewDao" class="cn.bc.device.dao.jpa.DeviceEventNewDaoImpl"/>
-    <bean id="deviceEventNewService" class="cn.bc.device.service.DeviceEventNewServiceImpl"/>
+  <!-- deviceEventNew -->
+  <bean id="deviceEventNewDao" class="cn.bc.device.dao.jpa.DeviceEventNewDaoImpl"/>
+  <bean id="deviceEventNewService" class="cn.bc.device.service.DeviceEventNewServiceImpl"/>
 
-    <!-- deviceEventNewPublish -->
-    <bean id="deviceEventNewPublishService" class="cn.bc.device.service.DeviceEventNewPublishServiceImpl"/>
+  <!-- deviceEventNewPublish -->
+  <bean id="deviceEventNewPublishService" class="cn.bc.device.service.DeviceEventNewPublishServiceImpl"/>
 </beans>

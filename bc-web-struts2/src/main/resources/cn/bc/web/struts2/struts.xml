@@ -1,162 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-		"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-		"http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 定义平台的全局抽象包 -->
-	<package name="bc-default" extends="struts-default" abstract="true">
-		<interceptors>
-			<!-- 禁用缓存控制的过滤器 -->
-			<interceptor name="noCacheInterceptor"
-			             class="cn.bc.web.struts2.interceptor.CacheInterceptor">
-				<!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
-				<param name="expires">0</param>
-				<!-- 排除下载文件的连接不作处理，否则ie<9时无法下载的 -->
-				<param name="excludePaths">/bc/attach/download*,/bc/attach/inline*,/bc/browser/download*</param>
-			</interceptor>
-			<!-- session超时 -->
-			<interceptor name="authInterceptor"
-			             class="cn.bc.web.struts2.interceptor.AuthIterceptor">
-				<!-- 登录验证信息保存到session的key -->
-				<param name="authKey">bc-context</param>
-				<!-- 排除下载文件的连接不作处理 -->
-				<param name="excludePaths">
-					/logout*,/login*,/relogin*,/bc/login*,/bc/logout*,/bc/relogin*,/bc/attach/download*,/bc/attach/inline*,/changelog/*,/bc/browser/download*
-				</param>
-			</interceptor>
-			<interceptor-stack name="noCacheStack">
-				<interceptor-ref name="noCacheInterceptor"/>
-				<interceptor-ref name="authInterceptor"/>
-				<interceptor-ref name="defaultStack"/>
-			</interceptor-stack>
-		</interceptors>
-		<default-interceptor-ref name="noCacheStack"/>
+  <!-- 定义平台的全局抽象包 -->
+  <package name="bc-default" extends="struts-default" abstract="true">
+    <interceptors>
+      <!-- 禁用缓存控制的过滤器 -->
+      <interceptor name="noCacheInterceptor"
+                   class="cn.bc.web.struts2.interceptor.CacheInterceptor">
+        <!-- 缓存时间配置，正数单位为分钟，负数单位为月，为0代表禁用缓存 -->
+        <param name="expires">0</param>
+        <!-- 排除下载文件的连接不作处理，否则ie<9时无法下载的 -->
+        <param name="excludePaths">/bc/attach/download*,/bc/attach/inline*,/bc/browser/download*</param>
+      </interceptor>
+      <!-- session超时 -->
+      <interceptor name="authInterceptor"
+                   class="cn.bc.web.struts2.interceptor.AuthIterceptor">
+        <!-- 登录验证信息保存到session的key -->
+        <param name="authKey">bc-context</param>
+        <!-- 排除下载文件的连接不作处理 -->
+        <param name="excludePaths">
+          /logout*,/login*,/relogin*,/bc/login*,/bc/logout*,/bc/relogin*,/bc/attach/download*,/bc/attach/inline*,/changelog/*,/bc/browser/download*
+        </param>
+      </interceptor>
+      <interceptor-stack name="noCacheStack">
+        <interceptor-ref name="noCacheInterceptor"/>
+        <interceptor-ref name="authInterceptor"/>
+        <interceptor-ref name="defaultStack"/>
+      </interceptor-stack>
+    </interceptors>
+    <default-interceptor-ref name="noCacheStack"/>
 
-		<global-results>
-			<!-- 当返回login视图名时，转入登录页面 -->
-			<result name="login" type="redirect">/login</result>
+    <global-results>
+      <!-- 当返回login视图名时，转入登录页面 -->
+      <result name="login" type="redirect">/login</result>
 
-			<result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
-			</result>
-			<result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl
-			</result>
-			<result name="container" type="freemarker">/cn/bc/web/struts2/container.ftl
-			</result>
-			<result name="commonSuccess" type="freemarker">/cn/bc/web/struts2/success.ftl
-			</result>
-			<result name="saveSuccess" type="freemarker">/cn/bc/web/struts2/form.save.success.ftl
-			</result>
-			<result name="deleteSuccess" type="freemarker">/cn/bc/web/struts2/form.delete.success.ftl
-			</result>
-			<!-- 导出视图数据为Excel文件 -->
-			<result name="export" type="stream"/>
+      <result name="page" type="freemarker">/cn/bc/web/struts2/page.ftl
+      </result>
+      <result name="json" type="freemarker">/cn/bc/web/struts2/json.ftl
+      </result>
+      <result name="container" type="freemarker">/cn/bc/web/struts2/container.ftl
+      </result>
+      <result name="commonSuccess" type="freemarker">/cn/bc/web/struts2/success.ftl
+      </result>
+      <result name="saveSuccess" type="freemarker">/cn/bc/web/struts2/form.save.success.ftl
+      </result>
+      <result name="deleteSuccess" type="freemarker">/cn/bc/web/struts2/form.delete.success.ftl
+      </result>
+      <!-- 导出视图数据为Excel文件 -->
+      <result name="export" type="stream"/>
 
-			<!-- 全局异常 -->
-			<result name="error" type="freemarker">/cn/bc/web/struts2/error.ftl</result>
-		</global-results>
-		<!-- 全局异常 -->
-		<global-exception-mappings>
-			<exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
-		</global-exception-mappings>
-	</package>
+      <!-- 全局异常 -->
+      <result name="error" type="freemarker">/cn/bc/web/struts2/error.ftl</result>
+    </global-results>
+    <!-- 全局异常 -->
+    <global-exception-mappings>
+      <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+    </global-exception-mappings>
+  </package>
 
-	<!-- 使用通配符的默认配置 -->
-	<package name="bc" extends="bc-default" namespace="/bc">
-		<!-- 新建表单 -->
-		<action name="/*/create" class="{1}Action" method="create">
-			<result name="form">/bc/{1}/form.jsp</result>
-		</action>
-		<!-- 可编辑表单 -->
-		<action name="/*/edit" class="{1}Action" method="edit">
-			<result name="form">/bc/{1}/form.jsp</result>
-		</action>
-		<!-- 只读表单 -->
-		<action name="/*/open" class="{1}Action" method="open">
-			<result name="formr">/bc/{1}/form.jsp</result>
-		</action>
-		<!-- 高级搜索条件窗口 -->
-		<action name="/*/conditions" class="{1}Action" method="conditions">
-			<result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
-		</action>
-		<!-- 保存 -->
-		<action name="/*/save" class="{1}Action" method="save"/>
-		<!-- 删除 -->
-		<action name="/*/delete" class="{1}Action" method="delete"/>
-		<!-- 非分页视图 -->
-		<action name="/*/list" class="{1}Action" method="list"/>
-		<!-- 分页视图 -->
-		<action name="/*/paging" class="{1}Action" method="paging"/>
-		<!-- 分页数据 -->
-		<action name="/*/data" class="{1}Action" method="data"/>
-		<!-- 导出 视图数据-->
-		<action name="/*/export" class="{1}Action" method="export"/>
-	</package>
+  <!-- 使用通配符的默认配置 -->
+  <package name="bc" extends="bc-default" namespace="/bc">
+    <!-- 新建表单 -->
+    <action name="/*/create" class="{1}Action" method="create">
+      <result name="form">/bc/{1}/form.jsp</result>
+    </action>
+    <!-- 可编辑表单 -->
+    <action name="/*/edit" class="{1}Action" method="edit">
+      <result name="form">/bc/{1}/form.jsp</result>
+    </action>
+    <!-- 只读表单 -->
+    <action name="/*/open" class="{1}Action" method="open">
+      <result name="formr">/bc/{1}/form.jsp</result>
+    </action>
+    <!-- 高级搜索条件窗口 -->
+    <action name="/*/conditions" class="{1}Action" method="conditions">
+      <result name="success">${advanceSearchConditionsJspPath}/conditions.jsp</result>
+    </action>
+    <!-- 保存 -->
+    <action name="/*/save" class="{1}Action" method="save"/>
+    <!-- 删除 -->
+    <action name="/*/delete" class="{1}Action" method="delete"/>
+    <!-- 非分页视图 -->
+    <action name="/*/list" class="{1}Action" method="list"/>
+    <!-- 分页视图 -->
+    <action name="/*/paging" class="{1}Action" method="paging"/>
+    <!-- 分页数据 -->
+    <action name="/*/data" class="{1}Action" method="data"/>
+    <!-- 导出 视图数据-->
+    <action name="/*/export" class="{1}Action" method="export"/>
+  </package>
 
-	<!-- 一些通用处理 -->
-	<package name="bccommon" extends="bc-default" namespace="/bc/common">
-		<!-- 选择日期-->
-		<action name="selectDate" class="selectDateAction">
-			<result name="success">/bc/common/selectDate.jsp</result>
-		</action>
-		<!-- 选择日期范围-->
-		<action name="selectDateRange" class="selectDateRangeAction">
-			<result name="success">/bc/common/selectDateRange.jsp</result>
-		</action>
-	</package>
+  <!-- 一些通用处理 -->
+  <package name="bccommon" extends="bc-default" namespace="/bc/common">
+    <!-- 选择日期-->
+    <action name="selectDate" class="selectDateAction">
+      <result name="success">/bc/common/selectDate.jsp</result>
+    </action>
+    <!-- 选择日期范围-->
+    <action name="selectDateRange" class="selectDateRangeAction">
+      <result name="success">/bc/common/selectDateRange.jsp</result>
+    </action>
+  </package>
 
-	<!-- 帮助 -->
-	<package name="help" extends="struts-default" namespace="/">
-		<action name="help" class="helpAction">
-			<result name="file">/help/${f}.html</result>
-			<result name="anchor">/help/index.htm</result>
-		</action>
-	</package>
+  <!-- 帮助 -->
+  <package name="help" extends="struts-default" namespace="/">
+    <action name="help" class="helpAction">
+      <result name="file">/help/${f}.html</result>
+      <result name="anchor">/help/index.htm</result>
+    </action>
+  </package>
 
-	<!-- 用于显示功能待开发的配置 -->
-	<package name="error" extends="bc-default" namespace="/bc/error">
-		<action name="todo" class="errorAction" method="todo">
-			<result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
-		</action>
-		<action name="waiting" class="errorAction" method="waiting">
-			<result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
-		</action>
-	</package>
-	<!-- 用于测试通配符配置 -->
-	<package name="bct" extends="bc-default" namespace="/bct">
-		<action name="/*/form/create" class="{1}Action" method="create">
-			<result name="editableForm">/bc/{1}/form.jsp</result>
-		</action>
-		<action name="/*/form/edit" class="{1}Action" method="edit">
-			<result name="editableForm">/bc/{1}/form.jsp</result>
-		</action>
-		<action name="/*/form/read" class="{1}Action" method="edit">
-			<result name="readonlyForm">/bc/{1}/formr.jsp</result>
-		</action>
-		<action name="/*/save" class="{1}Action" method="save"/>
-		<action name="/*/delete" class="{1}Action" method="delete"/>
-		<action name="/*/list" class="{1}Action" method="list"/>
-		<action name="/*/paging" class="{1}Action" method="paging"/>
-		<action name="/*/data" class="{1}Action" method="data"/>
-		<action name="/*/export" class="{1}Action" method="export"/>
-	</package>
+  <!-- 用于显示功能待开发的配置 -->
+  <package name="error" extends="bc-default" namespace="/bc/error">
+    <action name="todo" class="errorAction" method="todo">
+      <result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
+    </action>
+    <action name="waiting" class="errorAction" method="waiting">
+      <result name="success" type="freemarker">/cn/bc/web/struts2/page.ftl</result>
+    </action>
+  </package>
+  <!-- 用于测试通配符配置 -->
+  <package name="bct" extends="bc-default" namespace="/bct">
+    <action name="/*/form/create" class="{1}Action" method="create">
+      <result name="editableForm">/bc/{1}/form.jsp</result>
+    </action>
+    <action name="/*/form/edit" class="{1}Action" method="edit">
+      <result name="editableForm">/bc/{1}/form.jsp</result>
+    </action>
+    <action name="/*/form/read" class="{1}Action" method="edit">
+      <result name="readonlyForm">/bc/{1}/formr.jsp</result>
+    </action>
+    <action name="/*/save" class="{1}Action" method="save"/>
+    <action name="/*/delete" class="{1}Action" method="delete"/>
+    <action name="/*/list" class="{1}Action" method="list"/>
+    <action name="/*/paging" class="{1}Action" method="paging"/>
+    <action name="/*/data" class="{1}Action" method="data"/>
+    <action name="/*/export" class="{1}Action" method="export"/>
+  </package>
 
-	<!-- for test-->
-	<package name="bctest" extends="bc-default" namespace="/bc-test">
-		<action name="selectIdentity" class="selectIdentityAction" method="selectIdentity">
-			<result>/bc-test/identity/select.jsp</result>
-		</action>
-		<action name="datepicker" class="testAction" method="datepicker">
-			<result>/bc-test/libs/datepicker.jsp</result>
-		</action>
-		<action name="redirect" class="testAction" method="redirect">
-			<result type="redirect">${url}</result>
-		</action>
-		<action name="show" class="testAction" method="show">
-			<result type="">${tpl}</result>
-		</action>
-		<action name="showfm" class="testAction" method="showfm">
-			<result type="freemarker">${tpl}</result>
-		</action>
-		<action name="showHeader" class="testAction" method="showHeader"/>
-	</package>
+  <!-- for test-->
+  <package name="bctest" extends="bc-default" namespace="/bc-test">
+    <action name="selectIdentity" class="selectIdentityAction" method="selectIdentity">
+      <result>/bc-test/identity/select.jsp</result>
+    </action>
+    <action name="datepicker" class="testAction" method="datepicker">
+      <result>/bc-test/libs/datepicker.jsp</result>
+    </action>
+    <action name="redirect" class="testAction" method="redirect">
+      <result type="redirect">${url}</result>
+    </action>
+    <action name="show" class="testAction" method="show">
+      <result type="">${tpl}</result>
+    </action>
+    <action name="showfm" class="testAction" method="showfm">
+      <result type="freemarker">${tpl}</result>
+    </action>
+    <action name="showHeader" class="testAction" method="showHeader"/>
+  </package>
 </struts>

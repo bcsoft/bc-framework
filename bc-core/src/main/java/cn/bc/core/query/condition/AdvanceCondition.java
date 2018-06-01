@@ -13,18 +13,18 @@ import cn.bc.core.query.QueryOperator;
  * @author dragon 2016-10-14
  */
 public interface AdvanceCondition {
-	/**
-	 * 标识符
-	 */
-	String getId();
+  /**
+   * 标识符
+   */
+  String getId();
 
-	/**
-	 * 类型
-	 */
-	QueryOperator getOperator();
+  /**
+   * 类型
+   */
+  QueryOperator getOperator();
 
-	/**
-	 * @return 参数值
-	 */
-	Object getValue();
+  /**
+   * @return 参数值
+   */
+  Object getValue();
 }

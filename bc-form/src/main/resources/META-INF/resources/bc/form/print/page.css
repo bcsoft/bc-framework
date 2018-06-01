@@ -1,6 +1,6 @@
 :root {
-	/*控制打印背景颜色和图片 https://chrome.google.com/webstore/detail/print-background-colors/gjecpgdgnlanljjdacjdeadjkocnnamk?utm_source=gmail*/
-	-webkit-print-color-adjust: exact; /*控制打印背景颜色*/
+  /*控制打印背景颜色和图片 https://chrome.google.com/webstore/detail/print-background-colors/gjecpgdgnlanljjdacjdeadjkocnnamk?utm_source=gmail*/
+  -webkit-print-color-adjust: exact; /*控制打印背景颜色*/
 }
 
 /*纸张方向:http://www.w3.org/TR/css3-page/
@@ -10,17 +10,17 @@ http://www.tutorialspoint.com/css/css_paged_media.htm
  * 指定页边距 margin: 2mm|15mm 10mm 0 5mm|15mm 10mm
  **/
 @page {
-	size: A4 portrait;
+  size: A4 portrait;
 }
 
 .paper {
-	width: 100%;
-	box-shadow: none;
-	margin: 0;
-	padding: 0;
+  width: 100%;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
 }
 
-.row,.row .groupName,.signItem {
-	/* 需要Chrome19+才支持哦 */
-	page-break-inside: avoid;
+.row, .row .groupName, .signItem {
+  /* 需要Chrome19+才支持哦 */
+  page-break-inside: avoid;
 }

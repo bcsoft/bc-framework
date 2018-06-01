@@ -12,10 +12,10 @@ import cn.bc.orm.jpa.JpaCrudDao;
  * @author lbj
  */
 public class EmailHistoryDaoImpl extends JpaCrudDao<EmailHistory> implements EmailHistoryDao {
-	public int getEmailReceiverReadCount(Long emailId, String receiverCode) {
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("email.id", emailId));
-		condition.add(new EqualsCondition("reader.code", receiverCode));
-		return this.createQuery().condition(condition).list().size();
-	}
+  public int getEmailReceiverReadCount(Long emailId, String receiverCode) {
+    AndCondition condition = new AndCondition();
+    condition.add(new EqualsCondition("email.id", emailId));
+    condition.add(new EqualsCondition("reader.code", receiverCode));
+    return this.createQuery().condition(condition).list().size();
+  }
 }

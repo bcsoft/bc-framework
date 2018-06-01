@@ -16,49 +16,49 @@ import java.util.Calendar;
  */
 @MappedSuperclass
 public abstract class FileEntityImpl2 extends EntityImpl2 implements FileEntity<Long> {
-	private static final long serialVersionUID = 1L;
-	private Calendar fileDate;// 创建时间
-	private ActorHistory author;// 创建人
-	private Calendar modifiedDate;// 最后修改时间
-	private ActorHistory modifier;// 最后修改人
+  private static final long serialVersionUID = 1L;
+  private Calendar fileDate;// 创建时间
+  private ActorHistory author;// 创建人
+  private Calendar modifiedDate;// 最后修改时间
+  private ActorHistory modifier;// 最后修改人
 
-	@Column(name = "FILE_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	public Calendar getFileDate() {
-		return fileDate;
-	}
+  @Column(name = "FILE_DATE")
+  @Temporal(TemporalType.TIMESTAMP)
+  public Calendar getFileDate() {
+    return fileDate;
+  }
 
-	public void setFileDate(Calendar fileDate) {
-		this.fileDate = fileDate;
-	}
+  public void setFileDate(Calendar fileDate) {
+    this.fileDate = fileDate;
+  }
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
-	public ActorHistory getAuthor() {
-		return author;
-	}
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+  public ActorHistory getAuthor() {
+    return author;
+  }
 
-	public void setAuthor(ActorHistory author) {
-		this.author = author;
-	}
+  public void setAuthor(ActorHistory author) {
+    this.author = author;
+  }
 
-	@Column(name = "MODIFIED_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
-	public Calendar getModifiedDate() {
-		return modifiedDate;
-	}
+  @Column(name = "MODIFIED_DATE")
+  @Temporal(TemporalType.TIMESTAMP)
+  public Calendar getModifiedDate() {
+    return modifiedDate;
+  }
 
-	public void setModifiedDate(Calendar modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+  public void setModifiedDate(Calendar modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
-	@JoinColumn(name = "MODIFIER_ID", referencedColumnName = "ID")
-	public ActorHistory getModifier() {
-		return modifier;
-	}
+  @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JoinColumn(name = "MODIFIER_ID", referencedColumnName = "ID")
+  public ActorHistory getModifier() {
+    return modifier;
+  }
 
-	public void setModifier(ActorHistory modifier) {
-		this.modifier = modifier;
-	}
+  public void setModifier(ActorHistory modifier) {
+    this.modifier = modifier;
+  }
 }

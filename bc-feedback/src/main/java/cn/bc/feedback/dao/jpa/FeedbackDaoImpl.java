@@ -17,32 +17,32 @@ import java.util.Calendar;
  * @author dragon
  */
 public class FeedbackDaoImpl extends JpaCrudDao<Feedback> implements FeedbackDao {
-	private static Logger logger = LoggerFactory.getLogger(FeedbackDaoImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(FeedbackDaoImpl.class);
 
-	public Reply addReply(Reply reply) {
-		this.getEntityManager().persist(reply);
+  public Reply addReply(Reply reply) {
+    this.getEntityManager().persist(reply);
 
-		// 更新反馈的最后回复信息
-		StringBuffer jpql = new StringBuffer();
-		jpql.append("update Feedback set lastReplyDate=?");
-		jpql.append(",lastReplier=?");
-		jpql.append(",replyCount=replyCount+1");
-		jpql.append(" where id=?");
-		this.executeUpdate(jpql.toString(), new Object[]{reply.getFileDate(), reply.getAuthor(), reply.getFeedback().getId()});
+    // 更新反馈的最后回复信息
+    StringBuffer jpql = new StringBuffer();
+    jpql.append("update Feedback set lastReplyDate=?");
+    jpql.append(",lastReplier=?");
+    jpql.append(",replyCount=replyCount+1");
+    jpql.append(" where id=?");
+    this.executeUpdate(jpql.toString(), new Object[]{reply.getFileDate(), reply.getAuthor(), reply.getFeedback().getId()});
 
-		return reply;
-	}
+    return reply;
+  }
 
-	public void deleteReply(Long replyId) {
-		Reply reply = this.getEntityManager().find(Reply.class, replyId);
-		if (reply == null) {
-			logger.warn("要删除的回复信息已不存在！id={}", replyId);
-			return;
-		}
+  public void deleteReply(Long replyId) {
+    Reply reply = this.getEntityManager().find(Reply.class, replyId);
+    if (reply == null) {
+      logger.warn("要删除的回复信息已不存在！id={}", replyId);
+      return;
+    }
 
-		reply.setModifiedDate(Calendar.getInstance());
-		reply.setModifier(SystemContextHolder.get().getUserHistory());
-		reply.setStatus(BCConstants.STATUS_DELETED);
-		this.getEntityManager().merge(reply);// 更新
-	}
+    reply.setModifiedDate(Calendar.getInstance());
+    reply.setModifier(SystemContextHolder.get().getUserHistory());
+    reply.setStatus(BCConstants.STATUS_DELETED);
+    this.getEntityManager().merge(reply);// 更新
+  }
 }

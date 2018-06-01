@@ -19,27 +19,27 @@ import org.springframework.stereotype.Controller;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ReportHistoryAction extends EntityAction<Long, ReportHistory> {
-	private static final long serialVersionUID = 1L;
-	public ReportHistoryService reportHistoryService;
+  private static final long serialVersionUID = 1L;
+  public ReportHistoryService reportHistoryService;
 
-	@Autowired
-	public void setReportHistoryService(ReportHistoryService reportHistoryService) {
-		this.reportHistoryService = reportHistoryService;
-		this.setCrudService(reportHistoryService);
-	}
+  @Autowired
+  public void setReportHistoryService(ReportHistoryService reportHistoryService) {
+    this.reportHistoryService = reportHistoryService;
+    this.setCrudService(reportHistoryService);
+  }
 
-	@Override
-	public boolean isReadonly() {
-		SystemContext context = (SystemContext) this.getContext();
-		// 配置权限：报表管理员，历史报表管理员、超级管理员
-		return !context.hasAnyRole(getText("key.role.bc.report"),
-				getText("key.role.bc.report.History"),
-				getText("key.role.bc.admin"));
-	}
+  @Override
+  public boolean isReadonly() {
+    SystemContext context = (SystemContext) this.getContext();
+    // 配置权限：报表管理员，历史报表管理员、超级管理员
+    return !context.hasAnyRole(getText("key.role.bc.report"),
+      getText("key.role.bc.report.History"),
+      getText("key.role.bc.admin"));
+  }
 
-	@Override
-	protected PageOption buildPageOption(boolean editable) {
-		return super.buildPageOption(editable).setWidth(500)
-				.setMinHeight(200).setMinWidth(300).setHeight(201);
-	}
+  @Override
+  protected PageOption buildPageOption(boolean editable) {
+    return super.buildPageOption(editable).setWidth(500)
+      .setMinHeight(200).setMinWidth(300).setHeight(201);
+  }
 }

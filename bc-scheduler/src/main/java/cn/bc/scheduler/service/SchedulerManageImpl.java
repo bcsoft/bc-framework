@@ -29,206 +29,206 @@ import static org.quartz.TriggerKey.triggerKey;
  * </p>
  *
  * @author dragon
- * @since 2011-08-30
  * @ref http://quartz-scheduler.org/documentation/quartz-2.x/migration-guide
+ * @since 2011-08-30
  */
 public class SchedulerManageImpl implements SchedulerManage, ApplicationContextAware, InitializingBean {
-	private static final Logger logger = LoggerFactory.getLogger(SchedulerManageImpl.class);
-	private Scheduler scheduler;
-	private SchedulerService schedulerService;
-	private ApplicationContext applicationContext;
-	private boolean disabled = false;
+  private static final Logger logger = LoggerFactory.getLogger(SchedulerManageImpl.class);
+  private Scheduler scheduler;
+  private SchedulerService schedulerService;
+  private ApplicationContext applicationContext;
+  private boolean disabled = false;
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+  public boolean isDisabled() {
+    return disabled;
+  }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
+  }
 
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.applicationContext = applicationContext;
+  }
 
-	public void setScheduler(Scheduler scheduler) {
-		this.scheduler = scheduler;
-	}
+  public void setScheduler(Scheduler scheduler) {
+    this.scheduler = scheduler;
+  }
 
-	public void setSchedulerService(SchedulerService schedulerService) {
-		this.schedulerService = schedulerService;
-	}
+  public void setSchedulerService(SchedulerService schedulerService) {
+    this.schedulerService = schedulerService;
+  }
 
-	public void afterPropertiesSet() throws Exception {
-		// 禁用就不再处理
-		if (isDisabled()) {
-			logger.warn("SchedulerManage was config to disabled");
-			return;
-		}
+  public void afterPropertiesSet() throws Exception {
+    // 禁用就不再处理
+    if (isDisabled()) {
+      logger.warn("SchedulerManage was config to disabled");
+      return;
+    }
 
-		// 立即计划所有可用的调度任务
-		List<ScheduleJob> jobs = this.schedulerService.findAllEnabledScheduleJob();
-		logger.warn("scheduling {} jobs", jobs.size());
-		for (ScheduleJob job : jobs) {
-			this.scheduleJob(job.getId());
-		}
-	}
+    // 立即计划所有可用的调度任务
+    List<ScheduleJob> jobs = this.schedulerService.findAllEnabledScheduleJob();
+    logger.warn("scheduling {} jobs", jobs.size());
+    for (ScheduleJob job : jobs) {
+      this.scheduleJob(job.getId());
+    }
+  }
 
-	public Date scheduleJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return null;
-		}
-		logger.warn("scheduling job:" + scheduleJob.toString());
+  public Date scheduleJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return null;
+    }
+    logger.warn("scheduling job:" + scheduleJob.toString());
 
-		Date nextDate;
-		// 检测是否已经调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				new TriggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null == trigger) {
-			// Trigger不存在，就创建一个新的
-			MethodInvoker methodInvoker = new MethodInvoker();
-			methodInvoker.setTargetObject(this.applicationContext.getBean(scheduleJob.getBean()));
-			methodInvoker.setTargetMethod(scheduleJob.getMethod());
-			methodInvoker.prepare();
+    Date nextDate;
+    // 检测是否已经调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      new TriggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null == trigger) {
+      // Trigger不存在，就创建一个新的
+      MethodInvoker methodInvoker = new MethodInvoker();
+      methodInvoker.setTargetObject(this.applicationContext.getBean(scheduleJob.getBean()));
+      methodInvoker.setTargetMethod(scheduleJob.getMethod());
+      methodInvoker.prepare();
 
-			// 记录状态数据
-			JobDataMap jobDataMap = new JobDataMap();
-			jobDataMap.put("methodInvoker", methodInvoker);// 记录方法调用器
-			jobDataMap.put("scheduleJob", scheduleJob);// 记录配置信息
-			jobDataMap.put("schedulerService", this.schedulerService);
-			JobDetail jobDetail = newJob(MethodInvokingJobEx.class)
-					.withIdentity(scheduleJob.getName(), scheduleJob.getGroupn())
-					.usingJobData(jobDataMap)
-					.build();
+      // 记录状态数据
+      JobDataMap jobDataMap = new JobDataMap();
+      jobDataMap.put("methodInvoker", methodInvoker);// 记录方法调用器
+      jobDataMap.put("scheduleJob", scheduleJob);// 记录配置信息
+      jobDataMap.put("schedulerService", this.schedulerService);
+      JobDetail jobDetail = newJob(MethodInvokingJobEx.class)
+        .withIdentity(scheduleJob.getName(), scheduleJob.getGroupn())
+        .usingJobData(jobDataMap)
+        .build();
 
-			trigger = newTrigger()
-					.withIdentity(scheduleJob.getTriggerName(), scheduleJob.getGroupn())
-					.withSchedule(cronSchedule(scheduleJob.getCron()))
-					.build();
-			nextDate = this.scheduler.scheduleJob(jobDetail, trigger);
-		} else {
-			// Trigger已存在，更新相应的调度设置
-			//trigger.setCronExpression(scheduleJob.getCron());
-			TriggerKey key = trigger.getKey();
-			trigger = newTrigger()
-					.withIdentity(key)
-					.withSchedule(cronSchedule(scheduleJob.getCron()))
-					.build();
-			nextDate = this.scheduler.rescheduleJob(key, trigger);
-		}
+      trigger = newTrigger()
+        .withIdentity(scheduleJob.getTriggerName(), scheduleJob.getGroupn())
+        .withSchedule(cronSchedule(scheduleJob.getCron()))
+        .build();
+      nextDate = this.scheduler.scheduleJob(jobDetail, trigger);
+    } else {
+      // Trigger已存在，更新相应的调度设置
+      //trigger.setCronExpression(scheduleJob.getCron());
+      TriggerKey key = trigger.getKey();
+      trigger = newTrigger()
+        .withIdentity(key)
+        .withSchedule(cronSchedule(scheduleJob.getCron()))
+        .build();
+      nextDate = this.scheduler.rescheduleJob(key, trigger);
+    }
 
-		// 将任务的状态设置为正常
-		if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
-			scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
-			this.schedulerService.saveScheduleJob(scheduleJob);
-		}
+    // 将任务的状态设置为正常
+    if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
+      scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
+      this.schedulerService.saveScheduleJob(scheduleJob);
+    }
 
-		return nextDate;
-	}
+    return nextDate;
+  }
 
-	public Date rescheduleJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return null;
-		}
+  public Date rescheduleJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return null;
+    }
 
-		Date nextDate;
-		// 检测是否已经调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null == trigger) {
-			throw new CoreException("trigger not exist:scheduleJobId=" + scheduleJobId);
-		} else {
-			// Trigger已存在，更新相应的调度设置
-			// trigger.setCronExpression(scheduleJob.getCron());
-			TriggerKey key = trigger.getKey();
-			trigger = newTrigger()
-					.withIdentity(key)
-					.withSchedule(cronSchedule(scheduleJob.getCron()))
-					.build();
-			nextDate = this.scheduler.rescheduleJob(key, trigger);
-		}
+    Date nextDate;
+    // 检测是否已经调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null == trigger) {
+      throw new CoreException("trigger not exist:scheduleJobId=" + scheduleJobId);
+    } else {
+      // Trigger已存在，更新相应的调度设置
+      // trigger.setCronExpression(scheduleJob.getCron());
+      TriggerKey key = trigger.getKey();
+      trigger = newTrigger()
+        .withIdentity(key)
+        .withSchedule(cronSchedule(scheduleJob.getCron()))
+        .build();
+      nextDate = this.scheduler.rescheduleJob(key, trigger);
+    }
 
-		// 将任务的状态设置为正常
-		if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
-			scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
-			this.schedulerService.saveScheduleJob(scheduleJob);
-		}
+    // 将任务的状态设置为正常
+    if (scheduleJob.getStatus() != BCConstants.STATUS_ENABLED) {
+      scheduleJob.setStatus(BCConstants.STATUS_ENABLED);
+      this.schedulerService.saveScheduleJob(scheduleJob);
+    }
 
-		return nextDate;
-	}
+    return nextDate;
+  }
 
-	public void stopJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService
-				.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return;
-		}
+  public void stopJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService
+      .loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return;
+    }
 
-		// 删除调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null != trigger) {
-			this.scheduler.deleteJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
-		}
+    // 删除调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null != trigger) {
+      this.scheduler.deleteJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
+    }
 
-		// 将任务的状态设置为禁用
-		if (scheduleJob.getStatus() != BCConstants.STATUS_DISABLED) {
-			scheduleJob.setStatus(BCConstants.STATUS_DISABLED);
-			this.schedulerService.saveScheduleJob(scheduleJob);
-		}
-	}
+    // 将任务的状态设置为禁用
+    if (scheduleJob.getStatus() != BCConstants.STATUS_DISABLED) {
+      scheduleJob.setStatus(BCConstants.STATUS_DISABLED);
+      this.schedulerService.saveScheduleJob(scheduleJob);
+    }
+  }
 
-	public void deleteJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return;
-		}
+  public void deleteJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return;
+    }
 
-		// 删除调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null != trigger) {
-			this.scheduler.deleteJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
-		}
+    // 删除调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null != trigger) {
+      this.scheduler.deleteJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
+    }
 
-		// 标记为删除状态
-		scheduleJob.setStatus(BCConstants.STATUS_DELETED);
-		this.schedulerService.saveScheduleJob(scheduleJob);
-	}
+    // 标记为删除状态
+    scheduleJob.setStatus(BCConstants.STATUS_DELETED);
+    this.schedulerService.saveScheduleJob(scheduleJob);
+  }
 
-	public void pauseJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return;
-		}
+  public void pauseJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return;
+    }
 
-		// 暂停调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null != trigger) {
-			this.scheduler.pauseJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
-		}
-	}
+    // 暂停调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null != trigger) {
+      this.scheduler.pauseJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
+    }
+  }
 
-	public void resumeJob(Long scheduleJobId) throws Exception {
-		ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
-		if (scheduleJob == null) {
-			logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
-			return;
-		}
+  public void resumeJob(Long scheduleJobId) throws Exception {
+    ScheduleJob scheduleJob = this.schedulerService.loadScheduleJob(scheduleJobId);
+    if (scheduleJob == null) {
+      logger.warn("ignore unknown scheduleJobId: {}", scheduleJobId);
+      return;
+    }
 
-		// 恢复调度
-		CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
-				triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
-		if (null != trigger) {
-			this.scheduler.resumeJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
-		}
-	}
+    // 恢复调度
+    CronTrigger trigger = (CronTrigger) this.scheduler.getTrigger(
+      triggerKey(scheduleJob.getTriggerName(), scheduleJob.getGroupn()));
+    if (null != trigger) {
+      this.scheduler.resumeJob(jobKey(scheduleJob.getName(), scheduleJob.getGroupn()));
+    }
+  }
 }

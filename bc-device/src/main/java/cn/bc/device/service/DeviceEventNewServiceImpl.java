@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author hwx
  */
 public class DeviceEventNewServiceImpl extends DefaultCrudService<DeviceEventNew> implements DeviceEventNewService {
-	private DeviceEventNewDao deviceEventNewDao;
+  private DeviceEventNewDao deviceEventNewDao;
 
-	@Autowired
-	public void setDeviceEventNewDao(DeviceEventNewDao deviceEventNewDao) {
-		this.setCrudDao(deviceEventNewDao);
-		this.deviceEventNewDao = deviceEventNewDao;
-	}
+  @Autowired
+  public void setDeviceEventNewDao(DeviceEventNewDao deviceEventNewDao) {
+    this.setCrudDao(deviceEventNewDao);
+    this.deviceEventNewDao = deviceEventNewDao;
+  }
 }

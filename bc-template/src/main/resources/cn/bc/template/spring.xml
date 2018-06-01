@@ -3,38 +3,38 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- 模板 -->
-    <bean id="templateDao" class="cn.bc.template.dao.jpa.TemplateDaoImpl"
-          p:entityClass="cn.bc.template.domain.Template"/>
-    <bean id="templateService" class="cn.bc.template.service.TemplateServiceImpl"
-          p:entityClass="cn.bc.template.domain.Template" p:templateDao-ref="templateDao"/>
+  <!-- 模板 -->
+  <bean id="templateDao" class="cn.bc.template.dao.jpa.TemplateDaoImpl"
+        p:entityClass="cn.bc.template.domain.Template"/>
+  <bean id="templateService" class="cn.bc.template.service.TemplateServiceImpl"
+        p:entityClass="cn.bc.template.domain.Template" p:templateDao-ref="templateDao"/>
 
-    <!-- 模板类型 -->
-    <bean id="templateTypeDao" class="cn.bc.template.dao.jpa.TemplateTypeDaoImpl"
-          p:entityClass="cn.bc.template.domain.TemplateType"/>
-    <bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
-          p:entityClass="cn.bc.template.domain.TemplateType"
-          p:templateTypeDao-ref="templateTypeDao"/>
+  <!-- 模板类型 -->
+  <bean id="templateTypeDao" class="cn.bc.template.dao.jpa.TemplateTypeDaoImpl"
+        p:entityClass="cn.bc.template.domain.TemplateType"/>
+  <bean id="templateTypeService" class="cn.bc.template.service.TemplateTypeServiceImpl"
+        p:entityClass="cn.bc.template.domain.TemplateType"
+        p:templateTypeDao-ref="templateTypeDao"/>
 
-    <!-- 模板参数 -->
-    <bean id="templateParamDao" class="cn.bc.template.dao.jpa.TemplateParamDaoImpl"
-          p:entityClass="cn.bc.template.domain.TemplateParam"/>
-    <bean id="templateParamService" class="cn.bc.template.service.TemplateParamServiceImpl"
-          p:entityClass="cn.bc.template.domain.TemplateParam"
-          p:templateParamDao-ref="templateParamDao"/>
+  <!-- 模板参数 -->
+  <bean id="templateParamDao" class="cn.bc.template.dao.jpa.TemplateParamDaoImpl"
+        p:entityClass="cn.bc.template.domain.TemplateParam"/>
+  <bean id="templateParamService" class="cn.bc.template.service.TemplateParamServiceImpl"
+        p:entityClass="cn.bc.template.domain.TemplateParam"
+        p:templateParamDao-ref="templateParamDao"/>
 
-    <!-- 模板引擎 -->
-    <bean id="templateEngine"
-          class="cn.bc.template.engine.TemplateEngineImpl">
-        <property name="engines">
-            <map>
-                <entry key="FREEMARKER" value-ref="freeMarkerEngine"/>
-                <entry key="MUSTACHE" value-ref="mustacheEngine"/>
-            </map>
-        </property>
-    </bean>
-    <!-- FreeMarker模板引擎 -->
-    <bean id="freeMarkerEngine" class="cn.bc.template.engine.FreeMarkerEngine"/>
-    <!-- Mustache模板引擎 -->
-    <bean id="mustacheEngine" class="cn.bc.template.engine.MustacheEngine"/>
+  <!-- 模板引擎 -->
+  <bean id="templateEngine"
+        class="cn.bc.template.engine.TemplateEngineImpl">
+    <property name="engines">
+      <map>
+        <entry key="FREEMARKER" value-ref="freeMarkerEngine"/>
+        <entry key="MUSTACHE" value-ref="mustacheEngine"/>
+      </map>
+    </property>
+  </bean>
+  <!-- FreeMarker模板引擎 -->
+  <bean id="freeMarkerEngine" class="cn.bc.template.engine.FreeMarkerEngine"/>
+  <!-- Mustache模板引擎 -->
+  <bean id="mustacheEngine" class="cn.bc.template.engine.MustacheEngine"/>
 </beans>

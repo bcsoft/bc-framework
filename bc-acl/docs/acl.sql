@@ -1,94 +1,94 @@
-DROP TABLE IF EXISTS BC_ACL_HISTORY;
-DROP TABLE IF EXISTS BC_ACL_ACTOR;
-DROP TABLE IF EXISTS BC_ACL_DOC;
+drop table if exists BC_ACL_HISTORY;
+drop table if exists BC_ACL_ACTOR;
+drop table if exists BC_ACL_DOC;
 
 -- 访问对象
-CREATE TABLE BC_ACL_DOC(
-	ID INT NOT NULL,
-	DOC_ID VARCHAR(255) NOT NULL,
-	DOC_TYPE VARCHAR(255) NOT NULL,
-	DOC_NAME VARCHAR(255) NOT NULL,
-	AUTHOR_ID INT NOT NULL,
-	FILE_DATE TIMESTAMP NOT NULL,
-	MODIFIER_ID INT,
-	MODIFIED_DATE TIMESTAMP,
-	CONSTRAINT BCPK_ACL_DOC PRIMARY KEY (ID),
-	CONSTRAINT BCUK_ACL_DOC UNIQUE (DOC_ID, DOC_TYPE)
+create table BC_ACL_DOC (
+  ID            int          not null,
+  DOC_ID        varchar(255) not null,
+  DOC_TYPE      varchar(255) not null,
+  DOC_NAME      varchar(255) not null,
+  AUTHOR_ID     int          not null,
+  FILE_DATE     timestamp    not null,
+  MODIFIER_ID   int,
+  MODIFIED_DATE timestamp,
+  constraint BCPK_ACL_DOC primary key (ID),
+  constraint BCUK_ACL_DOC unique (DOC_ID, DOC_TYPE)
 );
-COMMENT ON TABLE BC_ACL_DOC IS '访问对象';
-COMMENT ON COLUMN BC_ACL_DOC.ID IS 'ID';
-COMMENT ON COLUMN BC_ACL_DOC.DOC_ID IS '文档标识';
-COMMENT ON COLUMN BC_ACL_DOC.DOC_TYPE IS '文档类型';
-COMMENT ON COLUMN BC_ACL_DOC.DOC_NAME IS '文档名称';
-COMMENT ON COLUMN BC_ACL_DOC.AUTHOR_ID IS '创建人ID';
-COMMENT ON COLUMN BC_ACL_DOC.FILE_DATE IS '创建时间';
-COMMENT ON COLUMN BC_ACL_DOC.MODIFIER_ID IS '最后修改人ID';
-COMMENT ON COLUMN BC_ACL_DOC.MODIFIED_DATE IS '最后修改时间';
-ALTER TABLE BC_ACL_DOC
-	ADD CONSTRAINT BCFK_ACL_DOC_AUTHOR FOREIGN KEY (AUTHOR_ID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE BC_ACL_DOC
-	ADD CONSTRAINT BCFK_ACL_DOC_MODIFIER FOREIGN KEY (MODIFIER_ID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
+comment on table BC_ACL_DOC is '访问对象';
+comment on column BC_ACL_DOC.ID is 'ID';
+comment on column BC_ACL_DOC.DOC_ID is '文档标识';
+comment on column BC_ACL_DOC.DOC_TYPE is '文档类型';
+comment on column BC_ACL_DOC.DOC_NAME is '文档名称';
+comment on column BC_ACL_DOC.AUTHOR_ID is '创建人ID';
+comment on column BC_ACL_DOC.FILE_DATE is '创建时间';
+comment on column BC_ACL_DOC.MODIFIER_ID is '最后修改人ID';
+comment on column BC_ACL_DOC.MODIFIED_DATE is '最后修改时间';
+alter table BC_ACL_DOC
+  add constraint BCFK_ACL_DOC_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;
+alter table BC_ACL_DOC
+  add constraint BCFK_ACL_DOC_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;
 
 -- 访问者
-CREATE TABLE BC_ACL_ACTOR(
-	PID INT DEFAULT 0 NOT NULL,
-	AID INT NOT NULL,
-	ROLE VARCHAR(255) NOT NULL,
-	ORDER_ INT DEFAULT 0 NOT NULL,
-	MODIFIER_ID INT NOT NULL,
-	MODIFIED_DATE TIMESTAMP NOT NULL,
-	CONSTRAINT BCPK_ACL_ACTOR PRIMARY KEY (PID, AID)
+create table BC_ACL_ACTOR (
+  PID           int default 0 not null,
+  AID           int           not null,
+  ROLE          varchar(255)  not null,
+  ORDER_        int default 0 not null,
+  MODIFIER_ID   int           not null,
+  MODIFIED_DATE timestamp     not null,
+  constraint BCPK_ACL_ACTOR primary key (PID, AID)
 );
-COMMENT ON TABLE BC_ACL_ACTOR IS '访问者';
-COMMENT ON COLUMN BC_ACL_ACTOR.PID IS '访问对象ID';
-COMMENT ON COLUMN BC_ACL_ACTOR.AID IS '访问者ID : 对应Actor的ID';
-COMMENT ON COLUMN BC_ACL_ACTOR.ROLE IS '访问权限 : 右边数起第1位控制查阅,第2位控制编辑;0代表无此权限,1代表有此权限';
-COMMENT ON COLUMN BC_ACL_ACTOR.MODIFIER_ID IS '最后修改人ID';
-COMMENT ON COLUMN BC_ACL_ACTOR.MODIFIED_DATE IS '最后修改时间';
-COMMENT ON COLUMN BC_ACL_ACTOR.ORDER_ IS '排序号';
-ALTER TABLE BC_ACL_ACTOR
-	ADD CONSTRAINT BCFK_ACL_ACTOR_PID FOREIGN KEY (PID)
-	REFERENCES BC_ACL_DOC (ID)
-	ON UPDATE RESTRICT ON DELETE CASCADE;
-ALTER TABLE BC_ACL_ACTOR
-	ADD CONSTRAINT BCFK_ACL_ACTOR FOREIGN KEY (AID)
-	REFERENCES BC_IDENTITY_ACTOR (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE BC_ACL_ACTOR
-	ADD CONSTRAINT BCFK_ACL_ACTOR_MODIFIER FOREIGN KEY (MODIFIER_ID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
+comment on table BC_ACL_ACTOR is '访问者';
+comment on column BC_ACL_ACTOR.PID is '访问对象ID';
+comment on column BC_ACL_ACTOR.AID is '访问者ID : 对应Actor的ID';
+comment on column BC_ACL_ACTOR.ROLE is '访问权限 : 右边数起第1位控制查阅,第2位控制编辑;0代表无此权限,1代表有此权限';
+comment on column BC_ACL_ACTOR.MODIFIER_ID is '最后修改人ID';
+comment on column BC_ACL_ACTOR.MODIFIED_DATE is '最后修改时间';
+comment on column BC_ACL_ACTOR.ORDER_ is '排序号';
+alter table BC_ACL_ACTOR
+  add constraint BCFK_ACL_ACTOR_PID foreign key (PID)
+references BC_ACL_DOC (ID)
+on update restrict on delete cascade;
+alter table BC_ACL_ACTOR
+  add constraint BCFK_ACL_ACTOR foreign key (AID)
+references BC_IDENTITY_ACTOR (ID)
+on update restrict on delete restrict;
+alter table BC_ACL_ACTOR
+  add constraint BCFK_ACL_ACTOR_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;
 
 -- 访问历史
-CREATE TABLE BC_ACL_HISTORY(
-	ID INT NOT NULL,
-	DOC_ID VARCHAR(255) NOT NULL,
-	DOC_TYPE VARCHAR(255) NOT NULL,
-	DOC_NAME VARCHAR(255) NOT NULL,
-	AHID INT NOT NULL,
-	ACCESS_DATE TIMESTAMP NOT NULL,
-	SRC VARCHAR(255) NOT NULL,
-	URL VARCHAR(1000) NOT NULL,
-	PID INT,
-	ROLE VARCHAR(255),
-	CONSTRAINT BCPK_ACL_HISTORY PRIMARY KEY (ID)
+create table BC_ACL_HISTORY (
+  ID          int           not null,
+  DOC_ID      varchar(255)  not null,
+  DOC_TYPE    varchar(255)  not null,
+  DOC_NAME    varchar(255)  not null,
+  AHID        int           not null,
+  ACCESS_DATE timestamp     not null,
+  SRC         varchar(255)  not null,
+  URL         varchar(1000) not null,
+  PID         int,
+  ROLE        varchar(255),
+  constraint BCPK_ACL_HISTORY primary key (ID)
 );
-COMMENT ON TABLE BC_ACL_HISTORY IS '访问历史';
-COMMENT ON COLUMN BC_ACL_HISTORY.ID IS 'ID';
-COMMENT ON COLUMN BC_ACL_HISTORY.DOC_ID IS '文档标识 : 指实际所访问信息的ID';
-COMMENT ON COLUMN BC_ACL_HISTORY.DOC_TYPE IS '文档类型 : 指实际所访问信息的类型';
-COMMENT ON COLUMN BC_ACL_HISTORY.DOC_NAME IS '文档名称 : 指实际所访问信息的描述';
-COMMENT ON COLUMN BC_ACL_HISTORY.AHID IS '访问者HID';
-COMMENT ON COLUMN BC_ACL_HISTORY.ACCESS_DATE IS '访问时间';
-COMMENT ON COLUMN BC_ACL_HISTORY.SRC IS '来源 : 如流程实例监控、流程部署监控、部门监控等';
-COMMENT ON COLUMN BC_ACL_HISTORY.URL IS '链接';
-COMMENT ON COLUMN BC_ACL_HISTORY.PID IS '访问对象ID : 当从ACL控制中得到访问权限时才记录';
-COMMENT ON COLUMN BC_ACL_HISTORY.ROLE IS '访问权限';
-ALTER TABLE BC_ACL_HISTORY
-	ADD CONSTRAINT BCFK_ACL_HISTORY_ACTORHISTORY FOREIGN KEY (AHID)
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID)
-	ON UPDATE RESTRICT ON DELETE RESTRICT;
+comment on table BC_ACL_HISTORY is '访问历史';
+comment on column BC_ACL_HISTORY.ID is 'ID';
+comment on column BC_ACL_HISTORY.DOC_ID is '文档标识 : 指实际所访问信息的ID';
+comment on column BC_ACL_HISTORY.DOC_TYPE is '文档类型 : 指实际所访问信息的类型';
+comment on column BC_ACL_HISTORY.DOC_NAME is '文档名称 : 指实际所访问信息的描述';
+comment on column BC_ACL_HISTORY.AHID is '访问者HID';
+comment on column BC_ACL_HISTORY.ACCESS_DATE is '访问时间';
+comment on column BC_ACL_HISTORY.SRC is '来源 : 如流程实例监控、流程部署监控、部门监控等';
+comment on column BC_ACL_HISTORY.URL is '链接';
+comment on column BC_ACL_HISTORY.PID is '访问对象ID : 当从ACL控制中得到访问权限时才记录';
+comment on column BC_ACL_HISTORY.ROLE is '访问权限';
+alter table BC_ACL_HISTORY
+  add constraint BCFK_ACL_HISTORY_ACTORHISTORY foreign key (AHID)
+references BC_IDENTITY_ACTOR_HISTORY (ID)
+on update restrict on delete restrict;

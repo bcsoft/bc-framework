@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- chat -->
-	<package name="onlineUser" extends="bc-default" namespace="/bc/chat">
-		<action name="online" class="onlineUserAction">
-			<result>/bc/chat/online.jsp</result>
-		</action>
-		<action name="show" class="onlineUserAction" method="show"/>
-	</package>
-	<package name="onlineMessage" extends="bc-default" namespace="/bc/chat">
-		<action name="message" class="onlineMessageAction">
-			<result>/bc/chat/message.jsp</result>
-		</action>
-	</package>
+  <!-- chat -->
+  <package name="onlineUser" extends="bc-default" namespace="/bc/chat">
+    <action name="online" class="onlineUserAction">
+      <result>/bc/chat/online.jsp</result>
+    </action>
+    <action name="show" class="onlineUserAction" method="show"/>
+  </package>
+  <package name="onlineMessage" extends="bc-default" namespace="/bc/chat">
+    <action name="message" class="onlineMessageAction">
+      <result>/bc/chat/message.jsp</result>
+    </action>
+  </package>
 </struts>

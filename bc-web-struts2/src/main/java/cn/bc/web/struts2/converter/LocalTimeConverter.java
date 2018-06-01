@@ -12,19 +12,19 @@ import java.util.Map;
  * @author dragon 2015-11-10
  */
 public class LocalTimeConverter extends StrutsTypeConverter {
-	private static DateTimeFormatter f = DateTimeFormatter.ISO_LOCAL_TIME;
+  private static DateTimeFormatter f = DateTimeFormatter.ISO_LOCAL_TIME;
 
-	@Override
-	public Object convertFromString(Map context, String[] values, Class toClass) {
-		if (values == null || values.length == 0 || values[0] == null || values[0].isEmpty()) {
-			return null;
-		} else {
-			return LocalTime.parse(values[0], f);
-		}
-	}
+  @Override
+  public Object convertFromString(Map context, String[] values, Class toClass) {
+    if (values == null || values.length == 0 || values[0] == null || values[0].isEmpty()) {
+      return null;
+    } else {
+      return LocalTime.parse(values[0], f);
+    }
+  }
 
-	@Override
-	public String convertToString(Map context, Object o) {
-		return o == null ? null : ((LocalTime) o).format(f);
-	}
+  @Override
+  public String convertToString(Map context, Object o) {
+    return o == null ? null : ((LocalTime) o).format(f);
+  }
 }

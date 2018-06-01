@@ -9,70 +9,70 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- resource
-    <bean id="resourceDao" class="ResourceDaoImpl"
-          p:entityClass="cn.bc.identity.domain.Resource"/>
-    <bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
-          p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao"/> -->
+  <!-- resource
+  <bean id="resourceDao" class="ResourceDaoImpl"
+        p:entityClass="cn.bc.identity.domain.Resource"/>
+  <bean id="resourceService" class="cn.bc.identity.service.ResourceServiceImpl"
+        p:entityClass="cn.bc.identity.domain.Resource" p:resourceDao-ref="resourceDao"/> -->
 
-    <!-- Role
-    <bean id="roleDao" class="RoleDaoImpl"
-        p:entityClass="cn.bc.identity.domain.Role"/>
-    <bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
-        p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" /> -->
+  <!-- Role
+  <bean id="roleDao" class="RoleDaoImpl"
+      p:entityClass="cn.bc.identity.domain.Role"/>
+  <bean id="roleService" class="cn.bc.identity.service.RoleServiceImpl"
+      p:entityClass="cn.bc.identity.domain.Role" p:roleDao-ref="roleDao" /> -->
 
-    <!-- IdGenerator -->
-    <bean id="idGeneratorDao" class="cn.bc.identity.dao.IdGeneratorDaoImpl"/>
-    <bean id="idGeneratorService" class="cn.bc.identity.service.IdGeneratorServiceImpl"/>
+  <!-- IdGenerator -->
+  <bean id="idGeneratorDao" class="cn.bc.identity.dao.IdGeneratorDaoImpl"/>
+  <bean id="idGeneratorService" class="cn.bc.identity.service.IdGeneratorServiceImpl"/>
 
-    <!-- Privilege
-    <bean id="privilegeDao" class="cn.bc.identity.dao.PrivilegeDaoImpl" />
-    <bean id="privilegeService" class="cn.bc.identity.service.PrivilegeServiceImpl" /> -->
+  <!-- Privilege
+  <bean id="privilegeDao" class="cn.bc.identity.dao.PrivilegeDaoImpl" />
+  <bean id="privilegeService" class="cn.bc.identity.service.PrivilegeServiceImpl" /> -->
 
-    <aop:config>
-        <aop:pointcut id="idGeneratorServiceMethod" expression="within(cn.bc.identity.service.IdGeneratorServiceImpl)"/>
-        <aop:advisor pointcut-ref="idGeneratorServiceMethod" advice-ref="idGeneratorServiceTxAdvice"/>
-    </aop:config>
-    <tx:advice id="idGeneratorServiceTxAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="next*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="current*" propagation="REQUIRED" read-only="true"/>
-        </tx:attributes>
-    </tx:advice>
+  <aop:config>
+    <aop:pointcut id="idGeneratorServiceMethod" expression="within(cn.bc.identity.service.IdGeneratorServiceImpl)"/>
+    <aop:advisor pointcut-ref="idGeneratorServiceMethod" advice-ref="idGeneratorServiceTxAdvice"/>
+  </aop:config>
+  <tx:advice id="idGeneratorServiceTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="next*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="current*" propagation="REQUIRED" read-only="true"/>
+    </tx:attributes>
+  </tx:advice>
 
-    <!-- Duty
-    <bean id="dutyDao" class="cn.bc.orm.jpa.JpaCrudDao"/>
-    <bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao"/> -->
+  <!-- Duty
+  <bean id="dutyDao" class="cn.bc.orm.jpa.JpaCrudDao"/>
+  <bean id="dutyService" class="cn.bc.identity.service.DutyServiceImpl" p:crudDao-ref="dutyDao"/> -->
 
-    <!-- ActorRelation -->
-    <bean id="actorRelationDao" class="cn.bc.identity.dao.jpa.ActorRelationDaoImpl"
-          p:entityClass="cn.bc.identity.domain.ActorRelation"/>
-    <bean id="actorRelationService" class="cn.bc.identity.service.ActorRelationServiceImpl"
-          p:entityClass="cn.bc.identity.domain.ActorRelation" p:crudDao-ref="actorRelationDao"/>
+  <!-- ActorRelation -->
+  <bean id="actorRelationDao" class="cn.bc.identity.dao.jpa.ActorRelationDaoImpl"
+        p:entityClass="cn.bc.identity.domain.ActorRelation"/>
+  <bean id="actorRelationService" class="cn.bc.identity.service.ActorRelationServiceImpl"
+        p:entityClass="cn.bc.identity.domain.ActorRelation" p:crudDao-ref="actorRelationDao"/>
 
-    <!-- AuthData -->
-    <bean id="authDataDao" class="cn.bc.identity.dao.jpa.AuthDataDaoImpl"/>
+  <!-- AuthData -->
+  <bean id="authDataDao" class="cn.bc.identity.dao.jpa.AuthDataDaoImpl"/>
 
-    <!-- Actor -->
-    <bean id="actorDao" class="cn.bc.identity.dao.jpa.ActorDaoImpl"
-          p:entityClass="cn.bc.identity.domain.Actor"/>
-    <bean id="actorService" class="cn.bc.identity.service.ActorServiceImpl"
-          p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"/>
+  <!-- Actor -->
+  <bean id="actorDao" class="cn.bc.identity.dao.jpa.ActorDaoImpl"
+        p:entityClass="cn.bc.identity.domain.Actor"/>
+  <bean id="actorService" class="cn.bc.identity.service.ActorServiceImpl"
+        p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"/>
 
-    <!-- ActorHistory -->
-    <bean id="actorHistoryDao" class="cn.bc.identity.dao.jpa.ActorHistoryDaoImpl"
-          p:entityClass="cn.bc.identity.domain.ActorHistory"/>
-    <bean id="actorHistoryService" class="cn.bc.identity.service.ActorHistoryServiceImpl"
-          p:entityClass="cn.bc.identity.domain.ActorHistory"
-          p:actorHistoryDao-ref="actorHistoryDao" p:actorDao-ref="actorDao"/>
+  <!-- ActorHistory -->
+  <bean id="actorHistoryDao" class="cn.bc.identity.dao.jpa.ActorHistoryDaoImpl"
+        p:entityClass="cn.bc.identity.domain.ActorHistory"/>
+  <bean id="actorHistoryService" class="cn.bc.identity.service.ActorHistoryServiceImpl"
+        p:entityClass="cn.bc.identity.domain.ActorHistory"
+        p:actorHistoryDao-ref="actorHistoryDao" p:actorDao-ref="actorDao"/>
 
-    <!-- User -->
-    <bean id="userService" class="cn.bc.identity.service.UserServiceImpl"
-          p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
-          p:authDataDao-ref="authDataDao" p:actorRelationDao-ref="actorRelationDao"/>
+  <!-- User -->
+  <bean id="userService" class="cn.bc.identity.service.UserServiceImpl"
+        p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
+        p:authDataDao-ref="authDataDao" p:actorRelationDao-ref="actorRelationDao"/>
 
-    <!-- Group -->
-    <bean id="groupService" class="cn.bc.identity.service.GroupServiceImpl"
-          p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
-          p:actorRelationDao-ref="actorRelationDao"/>
+  <!-- Group -->
+  <bean id="groupService" class="cn.bc.identity.service.GroupServiceImpl"
+        p:entityClass="cn.bc.identity.domain.Actor" p:actorDao-ref="actorDao"
+        p:actorRelationDao-ref="actorRelationDao"/>
 </beans>

@@ -1,93 +1,120 @@
--- ²éÕÒÖ¸¶¨actorµÄ×æÏÈ£º²¿ÃÅ¡¢µ¥Î»¡¢¸ÚÎ»
-select * from BC_IDENTITY_ACTOR a where a.id in (
-select ar.master_id from BC_IDENTITY_ACTOR_RELATION ar 
-	where ar.type_=0
-	start with ar.follower_id = 9 
-    connect by prior ar.master_id = ar.follower_id
+-- ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½actorï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Î»
+select *
+from BC_IDENTITY_ACTOR a
+where a.id in (
+  select ar.master_id
+  from BC_IDENTITY_ACTOR_RELATION ar
+  where ar.type_ = 0
+start with ar.follower_id = 9
+connect by prior ar.master_id = ar.follower_id
 ) order by a.order_;
 
--- ²éÕÒÖ¸¶¨actorµÄºó´ú£º²¿ÃÅ¡¢µ¥Î»¡¢¸ÚÎ»
-select * from BC_IDENTITY_ACTOR a where a.id in (
-select ar.follower_id,sys_connect_by_path(master_id,'/'),connect_by_isleaf from BC_IDENTITY_ACTOR_RELATION ar 
-	where ar.type_=0
-	start with ar.master_id = 8 
-    connect by prior ar.follower_id = ar.master_id
+-- ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½actorï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Î»
+select *
+from BC_IDENTITY_ACTOR a
+where a.id in (
+  select ar.follower_id, sys_connect_by_path(master_id, '/'), connect_by_isleaf
+  from BC_IDENTITY_ACTOR_RELATION ar
+  where ar.type_ = 0
+start with ar.master_id = 8
+connect by prior ar.follower_id = ar.master_id
 ) order by a.order_;
 
--- ÓÃ»§Ö±½ÓÓµÓÐµÄ½ÇÉ«
-select * from BC_IDENTITY_ROLE ro
-	inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid=ro.id
-    where ro_at.aid = 9;
-    
--- ÓÃ»§¼ä½ÓÓµÓÐµÄ½ÇÉ«
-select * from BC_IDENTITY_ROLE ro
-	inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid=ro.id
-    where ro_at.aid in (
-         select ar.master_id from BC_IDENTITY_ACTOR_RELATION ar 
-             where ar.type_=0
-             start with ar.follower_id = 9 
-             connect by prior ar.master_id = ar.follower_id
-    );
-    
--- ÓÃ»§Ö±½Ó¿É·ÃÎÊµÄ×ÊÔ´
-select distinct res.* from Bc_Identity_Resource res
-	join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid=res.id
-    where ro_res.rid in (
-         select ro.id from BC_IDENTITY_ROLE ro
-             inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid=ro.id
-             where ro_at.aid = 100171
-    );
-    
--- ÓÃ»§¼ä½Ó¿É·ÃÎÊµÄ×ÊÔ´
-select distinct res.* from Bc_Identity_Resource res
-	join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid=res.id
-    where ro_res.rid in (
-        select ro.id from BC_IDENTITY_ROLE ro
-            inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid=ro.id
-            where ro_at.aid in (
-                 select ar.master_id from BC_IDENTITY_ACTOR_RELATION ar 
-                     where ar.type_=0
-                     start with ar.follower_id = 100171 
-                     connect by prior ar.master_id = ar.follower_id
-            )
-    );
+-- ï¿½Ã»ï¿½Ö±ï¿½ï¿½Óµï¿½ÐµÄ½ï¿½É«
+select *
+from BC_IDENTITY_ROLE ro
+inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid = ro.id
+where ro_at.aid = 9;
 
--- ÓÃ»§×Ô½¨µÄ¿ì½Ý·½Ê½
-select * from (
-    select * from BC_DESKTOP_SHORTCUT sc
-        where sc.aid = 100171
-    union all 
-    -- Í¨ÓÃµÄ¿ì½Ý·½Ê½
-    --select * from BC_DESKTOP_SHORTCUT sc
-    --    where sc.aid is null and sc.sid is null
-    --union all 
-    -- ÓÐÈ¨ÏÞ·ÃÎÊµÄ×ÊÔ´¶ÔÓ¦µÄ¿ì½Ý·½Ê½£¨°üÀ¨´ÓÉÏ¼¶¼Ì³ÐµÄ£©
-    select * from BC_DESKTOP_SHORTCUT sc
-        where sc.aid is null and sc.sid in (
-            select distinct res.id from Bc_Identity_Resource res
-                join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid=res.id
-                where ro_res.rid in (
-                    select ro.id from BC_IDENTITY_ROLE ro
-                        inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid=ro.id
-                        where ro_at.aid = 100171 or ro_at.aid in (
-                             select ar.master_id from BC_IDENTITY_ACTOR_RELATION ar 
-                                 where ar.type_=0
-                                 start with ar.follower_id = 100171 
-                                 connect by prior ar.master_id = ar.follower_id
-                        )
-                )    
-        )
+-- ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Óµï¿½ÐµÄ½ï¿½É«
+select *
+from BC_IDENTITY_ROLE ro
+inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid = ro.id
+where ro_at.aid in (
+  select ar.master_id
+  from BC_IDENTITY_ACTOR_RELATION ar
+  where ar.type_ = 0
+start with ar.follower_id = 9
+connect by prior ar.master_id = ar.follower_id
+);
+
+-- ï¿½Ã»ï¿½Ö±ï¿½Ó¿É·ï¿½ï¿½Êµï¿½ï¿½ï¿½Ô´
+select distinct res.*
+from Bc_Identity_Resource res
+join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid = res.id
+where ro_res.rid in (
+  select ro.id
+  from BC_IDENTITY_ROLE ro
+  inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid = ro.id
+  where ro_at.aid = 100171
+);
+
+-- ï¿½Ã»ï¿½ï¿½ï¿½Ó¿É·ï¿½ï¿½Êµï¿½ï¿½ï¿½Ô´
+select distinct res.*
+from Bc_Identity_Resource res
+join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid = res.id
+where ro_res.rid in (
+  select ro.id
+  from BC_IDENTITY_ROLE ro
+  inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid = ro.id
+  where ro_at.aid in (
+    select ar.master_id
+    from BC_IDENTITY_ACTOR_RELATION ar
+    where ar.type_ = 0
+start with ar.follower_id = 100171
+connect by prior ar.master_id = ar.follower_id
+)
+);
+
+-- ï¿½Ã»ï¿½ï¿½Ô½ï¿½ï¿½Ä¿ï¿½Ý·ï¿½Ê½
+select *
+from (
+  select *
+  from BC_DESKTOP_SHORTCUT sc
+  where sc.aid = 100171
+  union all
+  -- Í¨ï¿½ÃµÄ¿ï¿½Ý·ï¿½Ê½
+  --select * from BC_DESKTOP_SHORTCUT sc
+  --    where sc.aid is null and sc.sid is null
+  --union all
+  -- ï¿½ï¿½È¨ï¿½Þ·ï¿½ï¿½Êµï¿½ï¿½ï¿½Ô´ï¿½ï¿½Ó¦ï¿½Ä¿ï¿½Ý·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½Ì³ÐµÄ£ï¿½
+  select *
+  from BC_DESKTOP_SHORTCUT sc
+  where sc.aid is null and sc.sid in (
+    select distinct res.id
+    from Bc_Identity_Resource res
+    join BC_IDENTITY_ROLE_RESOURCE ro_res on ro_res.sid = res.id
+    where ro_res.rid in (
+      select ro.id
+      from BC_IDENTITY_ROLE ro
+      inner join BC_IDENTITY_ROLE_ACTOR ro_at on ro_at.rid = ro.id
+      where ro_at.aid = 100171 or ro_at.aid in (
+        select ar.master_id
+        from BC_IDENTITY_ACTOR_RELATION ar
+        where ar.type_ = 0
+  start with ar.follower_id = 100171
+        connect by prior ar.master_id = ar.follower_id
+)
+)
+)
 ) t order by t.order_;
 
-
 --
-select * from BC_IDENTITY_RESOURCE r;
--- ×ÊÔ´£º´ÓÉÏÏòÏÂÕÒ
-select * from BC_IDENTITY_RESOURCE r start with r.name='ÏµÍ³Î¬»¤' connect by prior r.id = r.belong;
--- ×ÊÔ´£º´ÓÏÂÏòÉÏÕÒ
-select * from BC_IDENTITY_RESOURCE r start with r.name='µ¥Î»ÅäÖÃ' connect by prior r.belong = r.id;
+select *
+from BC_IDENTITY_RESOURCE r;
+-- ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+select *
+from BC_IDENTITY_RESOURCE r start with r.name='ÏµÍ³Î¬ï¿½ï¿½' connect by prior r.id = r.belong;
+-- ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+select *
+from BC_IDENTITY_RESOURCE r start with r.name='ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½' connect by prior r.belong = r.id;
 
--- Á¥Êô¹ØÏµ£º´ÓÏÂÏòÉÏÕÒ
-select a.* ,rowid from BC_IDENTITY_ACTOR a where a.code='daxin' order by a.id;
-select * from BC_IDENTITY_AUTH a order by a.id;
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+select a.*, rowid
+from BC_IDENTITY_ACTOR a
+where a.code = 'daxin'
+order by a.id;
+select *
+from BC_IDENTITY_AUTH a
+order by a.id;
 update BC_IDENTITY_AUTH set password = '21218cca77804d2ba1922c33e0151105';

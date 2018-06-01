@@ -9,31 +9,31 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <!-- 配置实现CrudService接口的通用事务管理(需要预先配置transactionManager的实现)
-        加载该文件后，凡是实现了该接口的Service都无需再声明事务管理了，但如果你的Service
-        定义了其他的接口方法，该方法的名称又与下面声明的不匹配，则需要自己另行配置事务管理 -->
-    <aop:config>
-        <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
-            包或实现类使用within关键字，接口实现使用this关键字 -->
-        <aop:pointcut id="crudServiceMethod" expression="this(cn.bc.core.service.CrudService)"/>
-        <aop:advisor pointcut-ref="crudServiceMethod" advice-ref="crudServiceTxAdvice"/>
-    </aop:config>
-    <tx:advice id="crudServiceTxAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="is*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="had*" propagation="REQUIRED" read-only="true"/>
-            <tx:method name="createQuery" propagation="REQUIRED"
-                       read-only="true"/>
+  <!-- 配置实现CrudService接口的通用事务管理(需要预先配置transactionManager的实现)
+      加载该文件后，凡是实现了该接口的Service都无需再声明事务管理了，但如果你的Service
+      定义了其他的接口方法，该方法的名称又与下面声明的不匹配，则需要自己另行配置事务管理 -->
+  <aop:config>
+    <!-- http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/aop.html#aop-pointcuts
+        包或实现类使用within关键字，接口实现使用this关键字 -->
+    <aop:pointcut id="crudServiceMethod" expression="this(cn.bc.core.service.CrudService)"/>
+    <aop:advisor pointcut-ref="crudServiceMethod" advice-ref="crudServiceTxAdvice"/>
+  </aop:config>
+  <tx:advice id="crudServiceTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="is*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="had*" propagation="REQUIRED" read-only="true"/>
+      <tx:method name="createQuery" propagation="REQUIRED"
+                 read-only="true"/>
 
-            <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="do*" propagation="REQUIRED" read-only="false"/>
-            <tx:method name="add*" propagation="REQUIRED" read-only="false"/>
-        </tx:attributes>
-    </tx:advice>
+      <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="do*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="add*" propagation="REQUIRED" read-only="false"/>
+    </tx:attributes>
+  </tx:advice>
 
-    <!-- 初始化spring的工具类 -->
-    <bean id="springUtils" class="cn.bc.core.util.SpringUtils"/>
+  <!-- 初始化spring的工具类 -->
+  <bean id="springUtils" class="cn.bc.core.util.SpringUtils"/>
 </beans>

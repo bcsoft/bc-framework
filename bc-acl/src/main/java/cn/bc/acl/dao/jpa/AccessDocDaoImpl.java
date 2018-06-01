@@ -13,12 +13,12 @@ import org.springframework.util.Assert;
  * @author lbj
  */
 public class AccessDocDaoImpl extends JpaCrudDao<AccessDoc> implements AccessDocDao {
-	public AccessDoc load(String docId, String docType) {
-		Assert.notNull(docId);
-		Assert.notNull(docType);
-		AndCondition condition = new AndCondition();
-		condition.add(new EqualsCondition("docId", docId));
-		condition.add(new EqualsCondition("docType", docType));
-		return this.createQuery().condition(condition).singleResult();
-	}
+  public AccessDoc load(String docId, String docType) {
+    Assert.notNull(docId);
+    Assert.notNull(docType);
+    AndCondition condition = new AndCondition();
+    condition.add(new EqualsCondition("docId", docId));
+    condition.add(new EqualsCondition("docType", docType));
+    return this.createQuery().condition(condition).singleResult();
+  }
 }

@@ -3,22 +3,22 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- email -->
-    <bean id="emailDao" class="cn.bc.email.dao.jpa.EmailDaoImpl"
-          p:entityClass="cn.bc.email.domain.Email"/>
-    <bean id="emailService" class="cn.bc.email.service.EmailServiceImpl"
-          p:entityClass="cn.bc.email.domain.Email"
-          p:emailDao-ref="emailDao"/>
+  <!-- email -->
+  <bean id="emailDao" class="cn.bc.email.dao.jpa.EmailDaoImpl"
+        p:entityClass="cn.bc.email.domain.Email"/>
+  <bean id="emailService" class="cn.bc.email.service.EmailServiceImpl"
+        p:entityClass="cn.bc.email.domain.Email"
+        p:emailDao-ref="emailDao"/>
 
-    <bean id="emailTrashDao" class="cn.bc.email.dao.jpa.EmailTrashDaoImpl"
-          p:entityClass="cn.bc.email.domain.EmailTrash"/>
-    <bean id="emailTrashService" class="cn.bc.email.service.EmailTrashServiceImpl"
-          p:entityClass="cn.bc.email.domain.EmailTrash"
-          p:emailTrashDao-ref="emailTrashDao"/>
+  <bean id="emailTrashDao" class="cn.bc.email.dao.jpa.EmailTrashDaoImpl"
+        p:entityClass="cn.bc.email.domain.EmailTrash"/>
+  <bean id="emailTrashService" class="cn.bc.email.service.EmailTrashServiceImpl"
+        p:entityClass="cn.bc.email.domain.EmailTrash"
+        p:emailTrashDao-ref="emailTrashDao"/>
 
-    <bean id="emailHistoryDao" class="cn.bc.email.dao.jpa.EmailHistoryDaoImpl"
-          p:entityClass="cn.bc.email.domain.EmailHistory"/>
-    <bean id="emailHistoryService" class="cn.bc.email.service.EmailHistoryServiceImpl"
-          p:entityClass="cn.bc.email.domain.EmailHistory"
-          p:emailHistoryDao-ref="emailHistoryDao"/>
+  <bean id="emailHistoryDao" class="cn.bc.email.dao.jpa.EmailHistoryDaoImpl"
+        p:entityClass="cn.bc.email.domain.EmailHistory"/>
+  <bean id="emailHistoryService" class="cn.bc.email.service.EmailHistoryServiceImpl"
+        p:entityClass="cn.bc.email.domain.EmailHistory"
+        p:emailHistoryDao-ref="emailHistoryDao"/>
 </beans>

@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<!-- 收件箱  -->
-	<package name="emailTos" extends="bc-default" namespace="/bc/emailTos">
-		<action name="export" class="emailTosAction" method="export" />
-		<action name="list" class="emailTosAction" method="list" />
-		<action name="paging" class="emailTosAction" method="paging" />
-		<action name="data" class="emailTosAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailTosAction" method="conditions">
-			<result name="success">/bc/email/to/conditions.jsp</result>
-		</action>
-	</package>
-	
-	 <!-- 发件箱  -->
-	<package name="EmailSends" extends="bc-default" namespace="/bc/emailSends">
-		<action name="export" class="emailSendsAction" method="export" />
-		<action name="list" class="emailSendsAction" method="list" />
-		<action name="paging" class="emailSendsAction" method="paging" />
-		<action name="data" class="emailSendsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailSendsAction" method="conditions">
-			<result name="success">/bc/email/send/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 垃圾箱  -->
-	<package name="emailTrashs" extends="bc-default" namespace="/bc/emailTrashs">
-		<action name="export" class="emailTrashsAction" method="export" />
-		<action name="list" class="emailTrashsAction" method="list" />
-		<action name="paging" class="emailTrashsAction" method="paging" />
-		<action name="data" class="emailTrashsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailTrashsAction" method="conditions">
-			<result name="success">/bc/email/trash/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 草稿箱  -->
-	<package name="emailDrafts" extends="bc-default" namespace="/bc/emailDrafts">
-		<action name="export" class="emailDraftsAction" method="export" />
-		<action name="list" class="emailDraftsAction" method="list" />
-		<action name="paging" class="emailDraftsAction" method="paging" />
-		<action name="data" class="emailDraftsAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailDraftsAction" method="conditions">
-			<result name="success">/bc/email/draft/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<package name="emailDraft" extends="bc-default" namespace="/bc/emailDraft">
-		<action name="delete" class="emailAction" method="delete"/>
-	</package>
-	
-	<package name="email" extends="bc-default" namespace="/bc/email">
-		<action name="create" class="emailAction" method="create">
-			<result name="form">/bc/email/form.jsp</result>
-		</action>
-		<action name="edit" class="emailAction" method="edit">
-			<result name="form">/bc/email/form.jsp</result>
-		</action>
-		<action name="open" class="emailAction" method="open">
-			<result name="formr">/bc/email/formr.jsp</result>
-		</action>
-		<action name="reply" class="emailAction" method="reply">
-			<result name="form">/bc/email/form.jsp</result>
-		</action>
-		<action name="forward" class="emailAction" method="forward">
-			<result name="form">/bc/email/form.jsp</result>
-		</action>
-		<action name="save" class="emailAction" method="save"/>
-		<action name="delete" class="emailAction" method="delete"/>
-		<action name="mark" class="emailAction" method="mark"/>
-		<action name="mark4read" class="emailAction" method="mark4read"/>
-	</package>
-	
-	<!-- 垃圾处理  -->
-	<package name="emailTrash" extends="bc-default" namespace="/bc/emailTrash">
-		<action name="clear" class="emailTrashAction" method="clear"/>
-		<action name="save" class="emailTrashAction" method="save"/>
-		<action name="delete" class="emailTrashAction" method="delete"/>
-		<action name="deleteEmail" class="emailTrashAction" method="deleteEmail"/>
-	</package>
-	
-	<!-- 收件管理 -->
-	<package name="emailTo2Manages" extends="bc-default" namespace="/bc/emailTo2Manages">
-		<action name="export" class="emailTo2ManagesAction" method="export" />
-		<action name="list" class="emailTo2ManagesAction" method="list" />
-		<action name="paging" class="emailTo2ManagesAction" method="paging" />
-		<action name="data" class="emailTo2ManagesAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailTo2ManagesAction" method="conditions">
-			<result name="success">/bc/email/manage/to/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 发件管理-->
-	<package name="emailSend2Manages" extends="bc-default" namespace="/bc/emailSend2Manages">
-		<action name="export" class="emailSend2ManagesAction" method="export" />
-		<action name="list" class="emailSend2ManagesAction" method="list" />
-		<action name="paging" class="emailSend2ManagesAction" method="paging" />
-		<action name="data" class="emailSend2ManagesAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailSend2ManagesAction" method="conditions">
-			<result name="success">/bc/email/manage/send/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 查阅历史管理-->
-	<package name="emailHistory2Manages" extends="bc-default" namespace="/bc/emailHistory2Manages">
-		<action name="export" class="emailHistory2ManagesAction" method="export" />
-		<action name="list" class="emailHistory2ManagesAction" method="list" />
-		<action name="paging" class="emailHistory2ManagesAction" method="paging" />
-		<action name="data" class="emailHistory2ManagesAction" method="data" />
-		<!-- 高级搜索条件窗口 -->
-		<action name="conditions" class="emailHistory2ManagesAction" method="conditions">
-			<result name="success">/bc/email/manage/history/conditions.jsp</result>
-		</action>
-	</package>
-	
-	<!-- 邮件管理-->
-	<package name="email2Manage" extends="bc-default" namespace="/bc/email2Manage">
-		<action name="open" class="email2ManageAction" method="open">
-			<result name="formr">/bc/email/manage/formr.jsp</result>
-		</action>
-	</package>
+  <!-- 收件箱  -->
+  <package name="emailTos" extends="bc-default" namespace="/bc/emailTos">
+    <action name="export" class="emailTosAction" method="export"/>
+    <action name="list" class="emailTosAction" method="list"/>
+    <action name="paging" class="emailTosAction" method="paging"/>
+    <action name="data" class="emailTosAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailTosAction" method="conditions">
+      <result name="success">/bc/email/to/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 发件箱  -->
+  <package name="EmailSends" extends="bc-default" namespace="/bc/emailSends">
+    <action name="export" class="emailSendsAction" method="export"/>
+    <action name="list" class="emailSendsAction" method="list"/>
+    <action name="paging" class="emailSendsAction" method="paging"/>
+    <action name="data" class="emailSendsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailSendsAction" method="conditions">
+      <result name="success">/bc/email/send/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 垃圾箱  -->
+  <package name="emailTrashs" extends="bc-default" namespace="/bc/emailTrashs">
+    <action name="export" class="emailTrashsAction" method="export"/>
+    <action name="list" class="emailTrashsAction" method="list"/>
+    <action name="paging" class="emailTrashsAction" method="paging"/>
+    <action name="data" class="emailTrashsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailTrashsAction" method="conditions">
+      <result name="success">/bc/email/trash/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 草稿箱  -->
+  <package name="emailDrafts" extends="bc-default" namespace="/bc/emailDrafts">
+    <action name="export" class="emailDraftsAction" method="export"/>
+    <action name="list" class="emailDraftsAction" method="list"/>
+    <action name="paging" class="emailDraftsAction" method="paging"/>
+    <action name="data" class="emailDraftsAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailDraftsAction" method="conditions">
+      <result name="success">/bc/email/draft/conditions.jsp</result>
+    </action>
+  </package>
+
+  <package name="emailDraft" extends="bc-default" namespace="/bc/emailDraft">
+    <action name="delete" class="emailAction" method="delete"/>
+  </package>
+
+  <package name="email" extends="bc-default" namespace="/bc/email">
+    <action name="create" class="emailAction" method="create">
+      <result name="form">/bc/email/form.jsp</result>
+    </action>
+    <action name="edit" class="emailAction" method="edit">
+      <result name="form">/bc/email/form.jsp</result>
+    </action>
+    <action name="open" class="emailAction" method="open">
+      <result name="formr">/bc/email/formr.jsp</result>
+    </action>
+    <action name="reply" class="emailAction" method="reply">
+      <result name="form">/bc/email/form.jsp</result>
+    </action>
+    <action name="forward" class="emailAction" method="forward">
+      <result name="form">/bc/email/form.jsp</result>
+    </action>
+    <action name="save" class="emailAction" method="save"/>
+    <action name="delete" class="emailAction" method="delete"/>
+    <action name="mark" class="emailAction" method="mark"/>
+    <action name="mark4read" class="emailAction" method="mark4read"/>
+  </package>
+
+  <!-- 垃圾处理  -->
+  <package name="emailTrash" extends="bc-default" namespace="/bc/emailTrash">
+    <action name="clear" class="emailTrashAction" method="clear"/>
+    <action name="save" class="emailTrashAction" method="save"/>
+    <action name="delete" class="emailTrashAction" method="delete"/>
+    <action name="deleteEmail" class="emailTrashAction" method="deleteEmail"/>
+  </package>
+
+  <!-- 收件管理 -->
+  <package name="emailTo2Manages" extends="bc-default" namespace="/bc/emailTo2Manages">
+    <action name="export" class="emailTo2ManagesAction" method="export"/>
+    <action name="list" class="emailTo2ManagesAction" method="list"/>
+    <action name="paging" class="emailTo2ManagesAction" method="paging"/>
+    <action name="data" class="emailTo2ManagesAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailTo2ManagesAction" method="conditions">
+      <result name="success">/bc/email/manage/to/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 发件管理-->
+  <package name="emailSend2Manages" extends="bc-default" namespace="/bc/emailSend2Manages">
+    <action name="export" class="emailSend2ManagesAction" method="export"/>
+    <action name="list" class="emailSend2ManagesAction" method="list"/>
+    <action name="paging" class="emailSend2ManagesAction" method="paging"/>
+    <action name="data" class="emailSend2ManagesAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailSend2ManagesAction" method="conditions">
+      <result name="success">/bc/email/manage/send/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 查阅历史管理-->
+  <package name="emailHistory2Manages" extends="bc-default" namespace="/bc/emailHistory2Manages">
+    <action name="export" class="emailHistory2ManagesAction" method="export"/>
+    <action name="list" class="emailHistory2ManagesAction" method="list"/>
+    <action name="paging" class="emailHistory2ManagesAction" method="paging"/>
+    <action name="data" class="emailHistory2ManagesAction" method="data"/>
+    <!-- 高级搜索条件窗口 -->
+    <action name="conditions" class="emailHistory2ManagesAction" method="conditions">
+      <result name="success">/bc/email/manage/history/conditions.jsp</result>
+    </action>
+  </package>
+
+  <!-- 邮件管理-->
+  <package name="email2Manage" extends="bc-default" namespace="/bc/email2Manage">
+    <action name="open" class="email2ManageAction" method="open">
+      <result name="formr">/bc/email/manage/formr.jsp</result>
+    </action>
+  </package>
 </struts>

@@ -3,27 +3,27 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!-- 访问对象 -->
-    <bean id="accessDocDao" class="cn.bc.acl.dao.jpa.AccessDocDaoImpl"
-          p:entityClass="cn.bc.acl.domain.AccessDoc"/>
-    <bean id="accessDocService" class="cn.bc.acl.service.AccessDocServiceImpl"
-          p:entityClass="cn.bc.acl.domain.AccessDoc"
-          p:accessDocDao-ref="accessDocDao"/>
+  <!-- 访问对象 -->
+  <bean id="accessDocDao" class="cn.bc.acl.dao.jpa.AccessDocDaoImpl"
+        p:entityClass="cn.bc.acl.domain.AccessDoc"/>
+  <bean id="accessDocService" class="cn.bc.acl.service.AccessDocServiceImpl"
+        p:entityClass="cn.bc.acl.domain.AccessDoc"
+        p:accessDocDao-ref="accessDocDao"/>
 
-    <!-- 访问者 -->
-    <bean id="accessActorDao" class="cn.bc.acl.dao.jpa.AccessActorDaoImpl"
-          p:entityClass="cn.bc.acl.domain.AccessActor"/>
-    <bean id="accessActorService" class="cn.bc.acl.service.AccessActorServiceImpl"
-          p:entityClass="cn.bc.acl.domain.AccessActor"
-          p:accessActorDao-ref="accessActorDao"/>
+  <!-- 访问者 -->
+  <bean id="accessActorDao" class="cn.bc.acl.dao.jpa.AccessActorDaoImpl"
+        p:entityClass="cn.bc.acl.domain.AccessActor"/>
+  <bean id="accessActorService" class="cn.bc.acl.service.AccessActorServiceImpl"
+        p:entityClass="cn.bc.acl.domain.AccessActor"
+        p:accessActorDao-ref="accessActorDao"/>
 
-    <!-- 访问历史 -->
-    <bean id="accessHistoryDao" class="cn.bc.acl.dao.jpa.AccessHistoryDaoImpl"
-          p:entityClass="cn.bc.acl.domain.AccessHistory"/>
-    <bean id="accessHistoryService" class="cn.bc.acl.service.AccessHistoryServiceImpl"
-          p:entityClass="cn.bc.acl.domain.AccessHistory"
-          p:accessHistoryDao-ref="accessHistoryDao"/>
+  <!-- 访问历史 -->
+  <bean id="accessHistoryDao" class="cn.bc.acl.dao.jpa.AccessHistoryDaoImpl"
+        p:entityClass="cn.bc.acl.domain.AccessHistory"/>
+  <bean id="accessHistoryService" class="cn.bc.acl.service.AccessHistoryServiceImpl"
+        p:entityClass="cn.bc.acl.domain.AccessHistory"
+        p:accessHistoryDao-ref="accessHistoryDao"/>
 
-    <!-- 访问控制 -->
-    <bean id="accessService" class="cn.bc.acl.service.AccessServiceImpl"/>
+  <!-- 访问控制 -->
+  <bean id="accessService" class="cn.bc.acl.service.AccessServiceImpl"/>
 </beans>

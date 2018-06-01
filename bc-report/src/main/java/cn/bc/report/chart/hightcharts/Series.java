@@ -5,22 +5,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Series extends JSONObject_ {
-	public Series() {
-		super();
-	}
+  public Series() {
+    super();
+  }
 
-	public Series(JSONObject defaultOption) throws JSONException {
-		super(defaultOption);
-	}
-	public String getName() {
-		return this._getString("name");
-	}
+  public Series(JSONObject defaultOption) throws JSONException {
+    super(defaultOption);
+  }
 
-	public void setName(String name) {
-		this._add("name", name);
-	}
+  public String getName() {
+    return this._getString("name");
+  }
 
-	public void setData(JSONArray data) {
-		this._add("data", data);
-	}
+  public void setName(String name) {
+    this._add("name", name);
+  }
+
+  public void setData(JSONArray data) {
+    this._add("data", data);
+  }
 }

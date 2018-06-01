@@ -18,34 +18,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @ContextConfiguration("classpath:spring-test.xml")
 public class MailServiceImplTest {
-	MailService mailService;
-	@Autowired
-	public ActorService actorService;
-	@Autowired
-	public ActorHistoryService actorHistoryService;
+  MailService mailService;
+  @Autowired
+  public ActorService actorService;
+  @Autowired
+  public ActorHistoryService actorHistoryService;
 
-	@Autowired
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
+  @Autowired
+  public void setMailService(MailService mailService) {
+    this.mailService = mailService;
+  }
 
-	private void doSetUser() {
-		Actor a = actorService.loadByCode("may");
-		ActorHistory ah = actorHistoryService.loadByCode("may");
-		SystemContext context = new SystemContextImpl();
-		context.setAttr(SystemContext.KEY_USER, a);
-		context.setAttr(SystemContext.KEY_USER_HISTORY, ah);
-		SystemContextHolder.set(context);
-	}
+  private void doSetUser() {
+    Actor a = actorService.loadByCode("may");
+    ActorHistory ah = actorHistoryService.loadByCode("may");
+    SystemContext context = new SystemContextImpl();
+    context.setAttr(SystemContext.KEY_USER, a);
+    context.setAttr(SystemContext.KEY_USER_HISTORY, ah);
+    SystemContextHolder.set(context);
+  }
 
-	@Test
-	public void testSend() {
-		doSetUser();
-		Mail mail = new Mail();
-		mail.setSubject("[BCMail:会议提醒]");
-		mail.setContent("[BCMail:提醒内容]\r\n请出准时出席周五的会议！");
-		mail.setHtml(true);
-		mail.setTo(new String[]{"1287635921@qq.com"});
-		this.mailService.send(mail);
-	}
+  @Test
+  public void testSend() {
+    doSetUser();
+    Mail mail = new Mail();
+    mail.setSubject("[BCMail:会议提醒]");
+    mail.setContent("[BCMail:提醒内容]\r\n请出准时出席周五的会议！");
+    mail.setHtml(true);
+    mail.setTo(new String[]{"1287635921@qq.com"});
+    this.mailService.send(mail);
+  }
 }

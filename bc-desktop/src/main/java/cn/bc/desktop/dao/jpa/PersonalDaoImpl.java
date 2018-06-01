@@ -11,18 +11,18 @@ import cn.bc.orm.jpa.JpaCrudDao;
  * @author dragon
  */
 public class PersonalDaoImpl extends JpaCrudDao<Personal> implements PersonalDao {
-	public Personal loadByActor(Long actorId, boolean autoUseGlobal) {
-		Personal pc = this.createQuery()
-				.condition(new EqualsCondition("actorId", actorId))
-				.singleResult();// 个人配置
-		if (pc == null && autoUseGlobal)
-			pc = loadGlobalConfig();// 全局配置
-		return pc;
-	}
+  public Personal loadByActor(Long actorId, boolean autoUseGlobal) {
+    Personal pc = this.createQuery()
+      .condition(new EqualsCondition("actorId", actorId))
+      .singleResult();// 个人配置
+    if (pc == null && autoUseGlobal)
+      pc = loadGlobalConfig();// 全局配置
+    return pc;
+  }
 
-	public Personal loadGlobalConfig() {
-		return this.createQuery()
-				.condition(new EqualsCondition("actorId", new Long(0)))
-				.singleResult();
-	}
+  public Personal loadGlobalConfig() {
+    return this.createQuery()
+      .condition(new EqualsCondition("actorId", new Long(0)))
+      .singleResult();
+  }
 }

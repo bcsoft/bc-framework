@@ -9,56 +9,56 @@
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd">
-	<!-- database setup-->
-	<context:property-placeholder location="classpath:db.properties"/>
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${db_driverClassName}"/>
-		<property name="url" value="${db_url}"/>
-		<property name="username" value="${db_username}"/>
-		<property name="password" value="${db_password}"/>
-	</bean>
+  <!-- database setup-->
+  <context:property-placeholder location="classpath:db.properties"/>
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${db_driverClassName}"/>
+    <property name="url" value="${db_url}"/>
+    <property name="username" value="${db_username}"/>
+    <property name="password" value="${db_password}"/>
+  </bean>
 
-	<!-- jpa setup -->
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<!--<property name="persistenceUnitName" value="default" />-->
-		<property name="dataSource" ref="dataSource"/>
-		<property name="packagesToScan">
-			<list>
-				<value>cn.bc.message</value>
-				<value>cn.bc.identity</value>
-				<value>cn.bc.option</value>
-				<value>cn.bc.orm.jpa</value>
-				<value>cn.bc.log</value>
-				<value>cn.bc.docs</value>
-			</list>
-		</property>
+  <!-- jpa setup -->
+  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <!--<property name="persistenceUnitName" value="default" />-->
+    <property name="dataSource" ref="dataSource"/>
+    <property name="packagesToScan">
+      <list>
+        <value>cn.bc.message</value>
+        <value>cn.bc.identity</value>
+        <value>cn.bc.option</value>
+        <value>cn.bc.orm.jpa</value>
+        <value>cn.bc.log</value>
+        <value>cn.bc.docs</value>
+      </list>
+    </property>
 
-		<!-- 声明使用Hibernate的JPA适配器：注意如果不配置这个，应用异常时activiti的数据并不会回滚 -->
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-		</property>
+    <!-- 声明使用Hibernate的JPA适配器：注意如果不配置这个，应用异常时activiti的数据并不会回滚 -->
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    </property>
 
-		<!-- 声明使用Hibernate的JPA方言：如果配置了jpaVendorAdapter就无需配置这个，
-			因为 HibernateJpaVendorAdapter 默认已使用了 HibernateJpaDialect
-		<property name="jpaDialect">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
-		</property> -->
+    <!-- 声明使用Hibernate的JPA方言：如果配置了jpaVendorAdapter就无需配置这个，
+      因为 HibernateJpaVendorAdapter 默认已使用了 HibernateJpaDialect
+    <property name="jpaDialect">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+    </property> -->
 
-		<property name="jpaPropertyMap">
-			<map>
-				<entry key="hibernate.format_sql" value="true"/>
-				<entry key="hibernate.dialect" value="${hibernate_dialect}"/>
-				<!--<entry key="hibernate.hbm2ddl.auto" value="create"/>-->
-				<!--<entry key="hibernate.show_sql" value="${hibernate_showSql}"/>-->
-			</map>
-		</property>
-	</bean>
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-	</bean>
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+    <property name="jpaPropertyMap">
+      <map>
+        <entry key="hibernate.format_sql" value="true"/>
+        <entry key="hibernate.dialect" value="${hibernate_dialect}"/>
+        <!--<entry key="hibernate.hbm2ddl.auto" value="create"/>-->
+        <!--<entry key="hibernate.show_sql" value="${hibernate_showSql}"/>-->
+      </map>
+    </property>
+  </bean>
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+  <tx:annotation-driven transaction-manager="transactionManager"/>
 
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg ref="dataSource"/>
-	</bean>
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"/>
+  </bean>
 </beans>

@@ -17,100 +17,100 @@ import java.util.List;
  */
 @Component
 public class AuthDataDaoImpl implements AuthDataDao {
-	@PersistenceContext
-	private EntityManager entityManager;
+  @PersistenceContext
+  private EntityManager entityManager;
 
-	public AuthData load(Long id) {
-		return entityManager.find(AuthData.class, id);
-	}
+  public AuthData load(Long id) {
+    return entityManager.find(AuthData.class, id);
+  }
 
-	@SuppressWarnings("unchecked")
-	public List<AuthData> find(Long[] ids) {
-		if (ids == null || ids.length == 0)
-			return new ArrayList<>();
+  @SuppressWarnings("unchecked")
+  public List<AuthData> find(Long[] ids) {
+    if (ids == null || ids.length == 0)
+      return new ArrayList<>();
 
-		ArrayList<Object> args = new ArrayList<>();
-		StringBuffer hql = new StringBuffer();
-		hql.append("from AuthData a");
+    ArrayList<Object> args = new ArrayList<>();
+    StringBuffer hql = new StringBuffer();
+    hql.append("from AuthData a");
 
-		if (ids.length == 1) {
-			hql.append(" where a.id=?");
-			args.add(ids[0]);
-		} else {
-			int i = 0;
-			hql.append(" where a.id in (");
-			for (Long id : ids) {
-				hql.append(i == 0 ? "?" : ",?");
-				args.add(id);
-				i++;
-			}
-			hql.append(")");
-		}
-		return JpaUtils.executeQuery(entityManager, hql.toString(), args);
-	}
+    if (ids.length == 1) {
+      hql.append(" where a.id=?");
+      args.add(ids[0]);
+    } else {
+      int i = 0;
+      hql.append(" where a.id in (");
+      for (Long id : ids) {
+        hql.append(i == 0 ? "?" : ",?");
+        args.add(id);
+        i++;
+      }
+      hql.append(")");
+    }
+    return JpaUtils.executeQuery(entityManager, hql.toString(), args);
+  }
 
-	public int updatePassword(Long[] ids, String password) {
-		if (ids == null || ids.length == 0)
-			return 0;
+  public int updatePassword(Long[] ids, String password) {
+    if (ids == null || ids.length == 0)
+      return 0;
 
-		final List<Object> args = new ArrayList<>();
-		final StringBuffer hql = new StringBuffer();
-		hql.append("update AuthData a set a.password=?");
-		args.add(password);
+    final List<Object> args = new ArrayList<>();
+    final StringBuffer hql = new StringBuffer();
+    hql.append("update AuthData a set a.password=?");
+    args.add(password);
 
-		// ids
-		if (ids.length == 1) {
-			hql.append(" where a.id=?");
-			args.add(ids[0]);
-		} else {
-			int i = 0;
-			hql.append(" where a.id in (");
-			for (Long id : ids) {
-				hql.append(i == 0 ? "?" : ",?");
-				args.add(id);
-				i++;
-			}
-			hql.append(")");
-		}
+    // ids
+    if (ids.length == 1) {
+      hql.append(" where a.id=?");
+      args.add(ids[0]);
+    } else {
+      int i = 0;
+      hql.append(" where a.id in (");
+      for (Long id : ids) {
+        hql.append(i == 0 ? "?" : ",?");
+        args.add(id);
+        i++;
+      }
+      hql.append(")");
+    }
 
-		return JpaUtils.executeUpdate(entityManager, hql.toString(), args);
-	}
+    return JpaUtils.executeUpdate(entityManager, hql.toString(), args);
+  }
 
-	public AuthData save(AuthData authData) {
-		if (null != authData) {
-			if (authData.getId() > 0) {
-				authData = this.entityManager.merge(authData);
-			} else {
-				this.entityManager.persist(authData);
-			}
-		}
-		return authData;
-	}
+  public AuthData save(AuthData authData) {
+    if (null != authData) {
+      if (authData.getId() > 0) {
+        authData = this.entityManager.merge(authData);
+      } else {
+        this.entityManager.persist(authData);
+      }
+    }
+    return authData;
+  }
 
-	public void delete(Long[] ids) {
-		if (ids == null || ids.length == 0)
-			return;
+  public void delete(Long[] ids) {
+    if (ids == null || ids.length == 0)
+      return;
 
-		List<Object> args = new ArrayList<>();
-		StringBuffer hql = new StringBuffer();
-		hql.append("delete AuthData a");
-		if (ids.length == 1) {
-			hql.append(" where a.id=?");
-			args.add(ids[0]);
-		} else {
-			int i = 0;
-			hql.append(" where a.id in (");
-			for (Long id : ids) {
-				hql.append(i == 0 ? "?" : ",?");
-				args.add(id);
-				i++;
-			}
-			hql.append(")");
-		}
-		JpaUtils.executeUpdate(entityManager, hql.toString(), args);
-	}
+    List<Object> args = new ArrayList<>();
+    StringBuffer hql = new StringBuffer();
+    hql.append("delete AuthData a");
+    if (ids.length == 1) {
+      hql.append(" where a.id=?");
+      args.add(ids[0]);
+    } else {
+      int i = 0;
+      hql.append(" where a.id in (");
+      for (Long id : ids) {
+        hql.append(i == 0 ? "?" : ",?");
+        args.add(id);
+        i++;
+      }
+      hql.append(")");
+    }
+    JpaUtils.executeUpdate(entityManager, hql.toString(), args);
+  }
 
-	public void delete(Long id) {
-		if (id != null) this.delete(new Long[]{id});
-	}
+  public void delete(Long id) {
+    if (id != null) this.delete(new Long[]{id});
+  }
 }

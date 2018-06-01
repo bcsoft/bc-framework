@@ -28,189 +28,188 @@ import java.util.*;
 
 /**
  * 籍贯视图Action
- * 
+ *
  * @author lbj
- * 
  */
 
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class PlaceOriginsAction extends ViewAction<Map<String, Object>> {
-	private static final long serialVersionUID = 1L;
-	public String status = String.valueOf(BCConstants.STATUS_ENABLED);
+  private static final long serialVersionUID = 1L;
+  public String status = String.valueOf(BCConstants.STATUS_ENABLED);
 
-	// 权限
-	@Override
-	public boolean isReadonly() {
-		// 系统管理员
-		SystemContext context = (SystemContext) this.getContext();
-		return !context.hasAnyRole(getText("key.role.bc.admin")
-				,getText("key.role.bc.placeorigin"));
-	}
+  // 权限
+  @Override
+  public boolean isReadonly() {
+    // 系统管理员
+    SystemContext context = (SystemContext) this.getContext();
+    return !context.hasAnyRole(getText("key.role.bc.admin")
+      , getText("key.role.bc.placeorigin"));
+  }
 
-	@Override
-	protected OrderCondition getGridDefaultOrderCondition() {
-		// 默认的排序方法
-		return new OrderCondition("a.code", Direction.Asc);
-	}
+  @Override
+  protected OrderCondition getGridDefaultOrderCondition() {
+    // 默认的排序方法
+    return new OrderCondition("a.code", Direction.Asc);
+  }
 
-	@Override
-	protected SqlObject<Map<String, Object>> getSqlObject() {
-		SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
+  @Override
+  protected SqlObject<Map<String, Object>> getSqlObject() {
+    SqlObject<Map<String, Object>> sqlObject = new SqlObject<Map<String, Object>>();
 
-		// 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
-		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id as id,a.code as code, a.type_ as type,a.status_ as status");
-		sql.append(",a.name as name,a.pname as pname");
-		sql.append(" from bc_placeorigin a");
-		sqlObject.setSql(sql.toString());
+    // 构建查询语句,where和order by不要包含在sql中(要统一放到condition中)
+    StringBuffer sql = new StringBuffer();
+    sql.append("select a.id as id,a.code as code, a.type_ as type,a.status_ as status");
+    sql.append(",a.name as name,a.pname as pname");
+    sql.append(" from bc_placeorigin a");
+    sqlObject.setSql(sql.toString());
 
-		// 注入参数
-		sqlObject.setArgs(null);
+    // 注入参数
+    sqlObject.setArgs(null);
 
-		// 数据映射器
-		sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
-			public Map<String, Object> mapRow(Object[] rs, int rowNum) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				int i = 0;
-				map.put("id", rs[i++]);
-				map.put("code", rs[i++]);
-				map.put("type", rs[i++]);
-				map.put("status", rs[i++]);
-				map.put("name", rs[i++]);
-				map.put("pname", rs[i]);
-				return map;
-			}
-		});
-		return sqlObject;
-	}
+    // 数据映射器
+    sqlObject.setRowMapper(new RowMapper<Map<String, Object>>() {
+      public Map<String, Object> mapRow(Object[] rs, int rowNum) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        int i = 0;
+        map.put("id", rs[i++]);
+        map.put("code", rs[i++]);
+        map.put("type", rs[i++]);
+        map.put("status", rs[i++]);
+        map.put("name", rs[i++]);
+        map.put("pname", rs[i]);
+        return map;
+      }
+    });
+    return sqlObject;
+  }
 
-	@Override
-	protected List<Column> getGridColumns() {
-		List<Column> columns = new ArrayList<Column>();
-		columns.add(new IdColumn4MapKey("a.id", "id"));
-		if (!this.isReadonly()) {
-			// 状态
-			columns.add(new TextColumn4MapKey("a.status_", "status",
-					getText("placeorigin.status"), 40).setSortable(true)
-					.setValueFormater(new KeyValueFormater(this.getStatuses())));
-		}
-		// 类型
-		columns.add(new TextColumn4MapKey("a.type_", "type",
-				getText("placeorigin.type"), 40).setSortable(true)
-				.setValueFormater(new KeyValueFormater(this.getTypes())));
-		// 编码
-		columns.add(new TextColumn4MapKey("a.code", "code",
-			getText("placeorigin.code"), 100).setUseTitleFromLabel(true));
-		// 名称
-		columns.add(new TextColumn4MapKey("a.name", "name",
-			getText("placeorigin.name"), 200).setUseTitleFromLabel(true));
-		// 上级
-		columns.add(new TextColumn4MapKey("a.pname", "pname",
-			getText("placeorigin.pname"))
-			.setUseTitleFromLabel(true));
-		return columns;
-	}
+  @Override
+  protected List<Column> getGridColumns() {
+    List<Column> columns = new ArrayList<Column>();
+    columns.add(new IdColumn4MapKey("a.id", "id"));
+    if (!this.isReadonly()) {
+      // 状态
+      columns.add(new TextColumn4MapKey("a.status_", "status",
+        getText("placeorigin.status"), 40).setSortable(true)
+        .setValueFormater(new KeyValueFormater(this.getStatuses())));
+    }
+    // 类型
+    columns.add(new TextColumn4MapKey("a.type_", "type",
+      getText("placeorigin.type"), 40).setSortable(true)
+      .setValueFormater(new KeyValueFormater(this.getTypes())));
+    // 编码
+    columns.add(new TextColumn4MapKey("a.code", "code",
+      getText("placeorigin.code"), 100).setUseTitleFromLabel(true));
+    // 名称
+    columns.add(new TextColumn4MapKey("a.name", "name",
+      getText("placeorigin.name"), 200).setUseTitleFromLabel(true));
+    // 上级
+    columns.add(new TextColumn4MapKey("a.pname", "pname",
+      getText("placeorigin.pname"))
+      .setUseTitleFromLabel(true));
+    return columns;
+  }
 
-	// 状态值转换
-	private Map<String, String> getStatuses() {
-		Map<String, String> mstatus = new LinkedHashMap<String, String>();
-		mstatus.put(String.valueOf(BCConstants.STATUS_ENABLED),
-				getText("placeorigin.status.enabled"));
-		mstatus.put(String.valueOf(BCConstants.STATUS_DISABLED),
-				getText("placeorigin.status.disabled"));
-		mstatus.put("", getText("placeorigin.status.all"));
-		return mstatus;
-	}
+  // 状态值转换
+  private Map<String, String> getStatuses() {
+    Map<String, String> mstatus = new LinkedHashMap<String, String>();
+    mstatus.put(String.valueOf(BCConstants.STATUS_ENABLED),
+      getText("placeorigin.status.enabled"));
+    mstatus.put(String.valueOf(BCConstants.STATUS_DISABLED),
+      getText("placeorigin.status.disabled"));
+    mstatus.put("", getText("placeorigin.status.all"));
+    return mstatus;
+  }
 
-	// 类型值转换
-	private Map<String, String> getTypes() {
-		Map<String, String> mstatus = new HashMap<String, String>();
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_COUNTRY_LEVEL),
-				getText("placeorigin.type.contry"));
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_PROVINCE_LEVEL),
-				getText("placeorigin.type.province"));
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_PLACE_LEVEL),
-				getText("placeorigin.type.place"));
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_COUNTY_LEVEL),
-				getText("placeorigin.type.county"));
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_TOWNSHIP_LEVEL),
-				getText("placeorigin.type.township"));
-		mstatus.put(String.valueOf(PlaceOrigin.TYPE_VILLAGE_LEVEL),
-				getText("placeorigin.type.village"));
-		return mstatus;
-	}
+  // 类型值转换
+  private Map<String, String> getTypes() {
+    Map<String, String> mstatus = new HashMap<String, String>();
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_COUNTRY_LEVEL),
+      getText("placeorigin.type.contry"));
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_PROVINCE_LEVEL),
+      getText("placeorigin.type.province"));
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_PLACE_LEVEL),
+      getText("placeorigin.type.place"));
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_COUNTY_LEVEL),
+      getText("placeorigin.type.county"));
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_TOWNSHIP_LEVEL),
+      getText("placeorigin.type.township"));
+    mstatus.put(String.valueOf(PlaceOrigin.TYPE_VILLAGE_LEVEL),
+      getText("placeorigin.type.village"));
+    return mstatus;
+  }
 
-	@Override
-	protected String getGridRowLabelExpression() {
-		return "['name']";
-	}
+  @Override
+  protected String getGridRowLabelExpression() {
+    return "['name']";
+  }
 
-	@Override
-	protected String[] getGridSearchFields() {
-		return new String[] { "a.code", "a.name", "a.pname" };
-	}
+  @Override
+  protected String[] getGridSearchFields() {
+    return new String[]{"a.code", "a.name", "a.pname"};
+  }
 
-	@Override
-	protected String getFormActionName() {
-		return "placeOrigin";
-	}
+  @Override
+  protected String getFormActionName() {
+    return "placeOrigin";
+  }
 
-	@Override
-	protected Toolbar getHtmlPageToolbar() {
-		Toolbar tb = new Toolbar();
+  @Override
+  protected Toolbar getHtmlPageToolbar() {
+    Toolbar tb = new Toolbar();
 
-		if (this.isReadonly()) {
-			// 查看按钮
-			tb.addButton(this.getDefaultOpenToolbarButton());
-		} else {
-			// 新建按钮
-			tb.addButton(this.getDefaultCreateToolbarButton());
+    if (this.isReadonly()) {
+      // 查看按钮
+      tb.addButton(this.getDefaultOpenToolbarButton());
+    } else {
+      // 新建按钮
+      tb.addButton(this.getDefaultCreateToolbarButton());
 
-			// 编辑按钮
-			tb.addButton(this.getDefaultEditToolbarButton());
+      // 编辑按钮
+      tb.addButton(this.getDefaultEditToolbarButton());
 
-			// 禁用按钮
-			tb.addButton(this.getDefaultDisabledToolbarButton());
-		}
+      // 禁用按钮
+      tb.addButton(this.getDefaultDisabledToolbarButton());
+    }
 
-		// 搜索按钮
-		tb.addButton(this.getDefaultSearchToolbarButton());
-		tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
-				"status", 0, getText("title.click2changeSearchStatus")));
+    // 搜索按钮
+    tb.addButton(this.getDefaultSearchToolbarButton());
+    tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+      "status", 0, getText("title.click2changeSearchStatus")));
 
-		return tb;
-	}
+    return tb;
+  }
 
-	@Override
-	protected PageOption getHtmlPageOption() {
-		return super.getHtmlPageOption().setWidth(800).setMinWidth(450)
-				.setHeight(400).setMinHeight(200);
-	}
+  @Override
+  protected PageOption getHtmlPageOption() {
+    return super.getHtmlPageOption().setWidth(800).setMinWidth(450)
+      .setHeight(400).setMinHeight(200);
+  }
 
-	@Override
-	protected Condition getGridSpecalCondition() {
-		// 状态条件
-		Condition statusCondition = null;
-		if (status != null && status.length() > 0) {
-			String[] ss = status.split(",");
-			if (ss.length == 1) {
-				statusCondition = new EqualsCondition("a.status_", new Integer(
-						ss[0]));
-			} else {
-				statusCondition = new InCondition("a.status_",
-						StringUtils.stringArray2IntegerArray(ss));
-			}
-		}
+  @Override
+  protected Condition getGridSpecalCondition() {
+    // 状态条件
+    Condition statusCondition = null;
+    if (status != null && status.length() > 0) {
+      String[] ss = status.split(",");
+      if (ss.length == 1) {
+        statusCondition = new EqualsCondition("a.status_", new Integer(
+          ss[0]));
+      } else {
+        statusCondition = new InCondition("a.status_",
+          StringUtils.stringArray2IntegerArray(ss));
+      }
+    }
 
-		return statusCondition;
-	}
+    return statusCondition;
+  }
 
-	@Override
-    protected void extendGridExtrasData(JSONObject json) throws JSONException {
-		// 状态条件
-		if (this.status != null || this.status.length() != 0) {
-			json.put("status", status);
-		}
-	}
+  @Override
+  protected void extendGridExtrasData(JSONObject json) throws JSONException {
+    // 状态条件
+    if (this.status != null || this.status.length() != 0) {
+      json.put("status", status);
+    }
+  }
 }

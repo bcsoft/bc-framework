@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<package name="optionGroup" extends="bc-default" namespace="/bc/optionGroup">
-		<action name="create" class="optionGroupAction" method="create">
-			<result name="form">/bc/option/optionGroup/form.jsp</result>
-		</action>
-		<action name="edit" class="optionGroupAction" method="edit">
-			<result name="form">/bc/option/optionGroup/form.jsp</result>
-		</action>
+  <package name="optionGroup" extends="bc-default" namespace="/bc/optionGroup">
+    <action name="create" class="optionGroupAction" method="create">
+      <result name="form">/bc/option/optionGroup/form.jsp</result>
+    </action>
+    <action name="edit" class="optionGroupAction" method="edit">
+      <result name="form">/bc/option/optionGroup/form.jsp</result>
+    </action>
 
-		<action name="save" class="optionGroupAction" method="save" />
-		<action name="delete" class="optionGroupAction" method="delete" />
-		<action name="list" class="optionGroupAction" method="list" />
-		<action name="paging" class="optionGroupAction" method="paging" />
-		<action name="data" class="optionGroupAction" method="data" />
-		<action name="export" class="optionGroupAction" method="export" />
-	</package>
-	<package name="selectOptionGroup" extends="bc-default"
-		namespace="/bc">
-		<action name="selectOptionGroup" class="selectOptionGroupAction">
-			<result>/bc/option/optionGroup/select.jsp</result>
-		</action>
-	</package>
-	<package name="selectOptionGroupByKey" extends="bc-default"
-		namespace="/bc">
-		<action name="selectOptionGroupByKey" class="selectOptionGroupByKeyAction"
-			method="selectOptionGroup" />
-	</package>
-	<package name="optionItem" extends="bc-default" namespace="/bc/optionItem">
-		<action name="create" class="optionItemAction" method="create">
-			<result name="form">/bc/option/optionItem/form.jsp</result>
-		</action>
-		<action name="edit" class="optionItemAction" method="edit">
-			<result name="form">/bc/option/optionItem/form.jsp</result>
-		</action>
+    <action name="save" class="optionGroupAction" method="save"/>
+    <action name="delete" class="optionGroupAction" method="delete"/>
+    <action name="list" class="optionGroupAction" method="list"/>
+    <action name="paging" class="optionGroupAction" method="paging"/>
+    <action name="data" class="optionGroupAction" method="data"/>
+    <action name="export" class="optionGroupAction" method="export"/>
+  </package>
+  <package name="selectOptionGroup" extends="bc-default"
+           namespace="/bc">
+    <action name="selectOptionGroup" class="selectOptionGroupAction">
+      <result>/bc/option/optionGroup/select.jsp</result>
+    </action>
+  </package>
+  <package name="selectOptionGroupByKey" extends="bc-default"
+           namespace="/bc">
+    <action name="selectOptionGroupByKey" class="selectOptionGroupByKeyAction"
+            method="selectOptionGroup"/>
+  </package>
+  <package name="optionItem" extends="bc-default" namespace="/bc/optionItem">
+    <action name="create" class="optionItemAction" method="create">
+      <result name="form">/bc/option/optionItem/form.jsp</result>
+    </action>
+    <action name="edit" class="optionItemAction" method="edit">
+      <result name="form">/bc/option/optionItem/form.jsp</result>
+    </action>
 
-		<action name="save" class="optionItemAction" method="save" />
-		<action name="delete" class="optionItemAction" method="delete" />
-		<action name="list" class="optionItemAction" method="list" />
-		<action name="paging" class="optionItemAction" method="paging" />
-		<action name="data" class="optionItemAction" method="data" />
-		<action name="export" class="optionItemAction" method="export" />
-	</package>
-	
-	<!-- 导入数据 -->
-	<package name="importOption" extends="bc-default" namespace="/bc/option">
-		<action name="import" class="importOptionAction" />
-	</package>
+    <action name="save" class="optionItemAction" method="save"/>
+    <action name="delete" class="optionItemAction" method="delete"/>
+    <action name="list" class="optionItemAction" method="list"/>
+    <action name="paging" class="optionItemAction" method="paging"/>
+    <action name="data" class="optionItemAction" method="data"/>
+    <action name="export" class="optionItemAction" method="export"/>
+  </package>
+
+  <!-- 导入数据 -->
+  <package name="importOption" extends="bc-default" namespace="/bc/option">
+    <action name="import" class="importOptionAction"/>
+  </package>
 </struts>

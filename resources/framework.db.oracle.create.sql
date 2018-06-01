@@ -1,730 +1,762 @@
--- ##bcÆ½Ì¨µÄ oracle ½¨±í½Å±¾##
+-- ##bcÆ½Ì¨ï¿½ï¿½ oracle ï¿½ï¿½ï¿½ï¿½Å±ï¿½##
 
--- md5º¯Êý£ºselect md5('888888') from dual --> 21218cca77804d2ba1922c33e0151105
-CREATE OR REPLACE FUNCTION md5(passwd IN VARCHAR2)
-RETURN VARCHAR2 IS retval varchar2(32);
-BEGIN
-  retval := lower(utl_raw.cast_to_raw(DBMS_OBFUSCATION_TOOLKIT.MD5(INPUT_STRING => passwd)));
-  RETURN retval;
-END;
+-- md5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½select md5('888888') from dual --> 21218cca77804d2ba1922c33e0151105
+create or replace function md5(passwd in varchar2)
+return VARCHAR2 is retval varchar2(32);
+begin
+retval := lower(utl_raw.cast_to_raw(DBMS_OBFUSCATION_TOOLKIT.MD5(INPUT_STRING => passwd)));
+return retval;
+end;
 /
--- ´´½¨IdentityÓÃµÄÐòÁÐ£¬¿ªÊ¼ÓÚ1000
-CREATE sequence CORE_SEQUENCE
-    minvalue 1
-    start with 1000
-    increment by 1
-    cache 20;
+-- ï¿½ï¿½ï¿½ï¿½Identityï¿½Ãµï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½1000
+create sequence CORE_SEQUENCE
+  minvalue 1
+  start with 1000
+  increment by 1
+  cache 20;
 
--- ´´½¨ÐòÁÐ£¬¿ªÊ¼ÓÚ1Ç§Íò£¬·½±ãÀúÊ·Êý¾ÝµÄ×ª»»
-CREATE sequence HIBERNATE_SEQUENCE
-    minvalue 1
-    start with 10000000
-    increment by 1
-    cache 20;
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½1Ç§ï¿½ò£¬·ï¿½ï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½Ýµï¿½×ªï¿½ï¿½
+create sequence HIBERNATE_SEQUENCE
+  minvalue 1
+  start with 10000000
+  increment by 1
+  cache 20;
 
--- ²âÊÔÓÃµÄ±í
-CREATE TABLE BC_EXAMPLE (
-    ID number(19) NOT NULL,
-    NAME varchar2(255) NOT NULL,
-    CODE varchar2(255),
-    PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÄ±ï¿½
+create table BC_EXAMPLE (
+  ID   number(19)    not null,
+  NAME varchar2(255) not null,
+  CODE varchar2(255),
+  primary key (ID)
 );
-COMMENT ON TABLE BC_EXAMPLE IS '²âÊÔÓÃµÄ±í';
-COMMENT ON COLUMN BC_EXAMPLE.NAME IS 'Ãû³Æ';
+comment on table BC_EXAMPLE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÄ±ï¿½';
+comment on column BC_EXAMPLE.NAME is 'ï¿½ï¿½ï¿½ï¿½';
 
--- ÏµÍ³±êÊ¶Ïà¹ØÄ£¿é
--- ÏµÍ³×ÊÔ´
-CREATE TABLE BC_IDENTITY_RESOURCE (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36),
-    TYPE_ number(1)  DEFAULT 0 NOT NULL,
-    STATUS_ number(1)  DEFAULT 0 NOT NULL,
-    INNER_ number(1)  DEFAULT 0 NOT NULL,
-    BELONG number(19),
-    ORDER_ varchar2(100),
-    NAME varchar2(255) NOT NULL,
-    URL varchar2(255),
-    ICONCLASS varchar2(255),
-    OPTION_ varchar2(4000),
-   	PNAME varchar2(4000),
-    CONSTRAINT BCPK_RESOURCE PRIMARY KEY (ID)
+-- ÏµÍ³ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+-- ÏµÍ³ï¿½ï¿½Ô´
+create table BC_IDENTITY_RESOURCE (
+  ID        number(19)          not null,
+  UID_      varchar2(36),
+  TYPE_     number(1) default 0 not null,
+  STATUS_   number(1) default 0 not null,
+  INNER_    number(1) default 0 not null,
+  BELONG    number(19),
+  ORDER_    varchar2(100),
+  NAME      varchar2(255)       not null,
+  URL       varchar2(255),
+  ICONCLASS varchar2(255),
+  OPTION_   varchar2(4000),
+  PNAME     varchar2(4000),
+  constraint BCPK_RESOURCE primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_RESOURCE IS 'ÏµÍ³×ÊÔ´';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.TYPE_ IS 'ÀàÐÍ£º1-ÎÄ¼þ¼Ð,2-ÄÚ²¿Á´½Ó,3-Íâ²¿Á´½Ó,4-html';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.INNER_ IS 'ÊÇ·ñÎªÄÚÖÃ¶ÔÏó:0-·ñ,1-ÊÇ';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.BELONG IS 'ËùÁ¥ÊôµÄ×ÊÔ´';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.ORDER_ IS 'ÅÅÐòºÅ';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.NAME IS 'Ãû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.URL IS 'µØÖ·';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.ICONCLASS IS 'Í¼±êÑùÊ½';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.OPTION_ IS 'À©Õ¹²ÎÊý';
-COMMENT ON COLUMN BC_IDENTITY_RESOURCE.PNAME IS 'ËùÁ¥ÊôÄ£¿éµÄÈ«Ãû:ÈçÏµÍ³Î¬»¤/×éÖ¯¼Ü¹¹/µ¥Î»ÅäÖÃ';
-CREATE INDEX BCIDX_RESOURCE_BELONG ON BC_IDENTITY_RESOURCE (BELONG);
-CREATE INDEX BCIDX_RESOURCE_BELONG_NULL ON BC_IDENTITY_RESOURCE (nvl(BELONG,0));
+comment on table BC_IDENTITY_RESOURCE is 'ÏµÍ³ï¿½ï¿½Ô´';
+comment on column BC_IDENTITY_RESOURCE.TYPE_ is 'ï¿½ï¿½ï¿½Í£ï¿½1-ï¿½Ä¼ï¿½ï¿½ï¿½,2-ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½,3-ï¿½â²¿ï¿½ï¿½ï¿½ï¿½,4-html';
+comment on column BC_IDENTITY_RESOURCE.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_IDENTITY_RESOURCE.INNER_ is 'ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
+comment on column BC_IDENTITY_RESOURCE.BELONG is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´';
+comment on column BC_IDENTITY_RESOURCE.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_RESOURCE.NAME is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_RESOURCE.URL is 'ï¿½ï¿½Ö·';
+comment on column BC_IDENTITY_RESOURCE.ICONCLASS is 'Í¼ï¿½ï¿½ï¿½ï¿½Ê½';
+comment on column BC_IDENTITY_RESOURCE.OPTION_ is 'ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_RESOURCE.PNAME is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½È«ï¿½ï¿½:ï¿½ï¿½ÏµÍ³Î¬ï¿½ï¿½/ï¿½ï¿½Ö¯ï¿½Ü¹ï¿½/ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½';
+create index BCIDX_RESOURCE_BELONG on BC_IDENTITY_RESOURCE (BELONG);
+create index BCIDX_RESOURCE_BELONG_NULL on BC_IDENTITY_RESOURCE (nvl(BELONG, 0));
 
--- ½ÇÉ«
-CREATE TABLE BC_IDENTITY_ROLE (
-    ID number(19) NOT NULL,
-    CODE varchar2(100) NOT NULL,
-    ORDER_ varchar2(100),
-    NAME varchar2(255) NOT NULL,
-    UID_ varchar2(36),
-   	TYPE_ number(1)  NOT NULL,
-    STATUS_ number(1)  NOT NULL,
-    INNER_ number(1)  NOT NULL,
-    CONSTRAINT BCPK_ROLE PRIMARY KEY (ID)
+-- ï¿½ï¿½É«
+create table BC_IDENTITY_ROLE (
+  ID      number(19)    not null,
+  CODE    varchar2(100) not null,
+  ORDER_  varchar2(100),
+  NAME    varchar2(255) not null,
+  UID_    varchar2(36),
+  TYPE_   number(1)     not null,
+  STATUS_ number(1)     not null,
+  INNER_  number(1)     not null,
+  constraint BCPK_ROLE primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_ROLE IS '½ÇÉ«';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.CODE IS '±àÂë';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.ORDER_ IS 'ÅÅÐòºÅ';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.NAME IS 'Ãû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.TYPE_ IS 'ÀàÐÍ';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_IDENTITY_ROLE.INNER_ IS 'ÊÇ·ñÎªÄÚÖÃ¶ÔÏó:0-·ñ,1-ÊÇ';
+comment on table BC_IDENTITY_ROLE is 'ï¿½ï¿½É«';
+comment on column BC_IDENTITY_ROLE.CODE is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ROLE.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ROLE.NAME is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ROLE.TYPE_ is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ROLE.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_IDENTITY_ROLE.INNER_ is 'ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
 
--- ½ÇÉ«Óë×ÊÔ´µÄ¹ØÁª
-CREATE TABLE BC_IDENTITY_ROLE_RESOURCE (
-    RID number(19) NOT NULL,
-    SID number(19) NOT NULL,
-    CONSTRAINT BCPK_ROLE_RESOURCE PRIMARY KEY (RID,SID)
+-- ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ä¹ï¿½ï¿½ï¿½
+create table BC_IDENTITY_ROLE_RESOURCE (
+  RID number(19) not null,
+  SID number(19) not null,
+  constraint BCPK_ROLE_RESOURCE primary key (RID, SID)
 );
-COMMENT ON TABLE BC_IDENTITY_ROLE_RESOURCE IS '½ÇÉ«Óë×ÊÔ´µÄ¹ØÁª£º½ÇÉ«¿ÉÒÔ·ÃÎÊÄÄÐ©×ÊÔ´';
-COMMENT ON COLUMN BC_IDENTITY_ROLE_RESOURCE.RID IS '½ÇÉ«ID';
-COMMENT ON COLUMN BC_IDENTITY_ROLE_RESOURCE.SID IS '×ÊÔ´ID';
-ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT BCFK_RS_ROLE FOREIGN KEY (RID) REFERENCES BC_IDENTITY_ROLE (ID);
-ALTER TABLE BC_IDENTITY_ROLE_RESOURCE ADD CONSTRAINT BCFK_RS_RESOURCE FOREIGN KEY (SID) REFERENCES BC_IDENTITY_RESOURCE (ID);
+comment on table BC_IDENTITY_ROLE_RESOURCE is 'ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½Ô´';
+comment on column BC_IDENTITY_ROLE_RESOURCE.RID is 'ï¿½ï¿½É«ID';
+comment on column BC_IDENTITY_ROLE_RESOURCE.SID is 'ï¿½ï¿½Ô´ID';
+alter table BC_IDENTITY_ROLE_RESOURCE
+  add constraint BCFK_RS_ROLE foreign key (RID) references BC_IDENTITY_ROLE (ID);
+alter table BC_IDENTITY_ROLE_RESOURCE
+  add constraint BCFK_RS_RESOURCE foreign key (SID) references BC_IDENTITY_RESOURCE (ID);
 
--- Ö°Îñ
-CREATE TABLE BC_IDENTITY_DUTY (
-    ID int NOT NULL,
-    CODE varchar2(100) NOT NULL,
-    NAME varchar2(255) NOT NULL,
-    CONSTRAINT BCPK_DUTY PRIMARY KEY (ID)
+-- Ö°ï¿½ï¿½
+create table BC_IDENTITY_DUTY (
+  ID   int           not null,
+  CODE varchar2(100) not null,
+  NAME varchar2(255) not null,
+  constraint BCPK_DUTY primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_DUTY IS 'Ö°Îñ';
-COMMENT ON COLUMN BC_IDENTITY_DUTY.CODE IS '±àÂë';
-COMMENT ON COLUMN BC_IDENTITY_DUTY.NAME IS 'Ãû³Æ';
+comment on table BC_IDENTITY_DUTY is 'Ö°ï¿½ï¿½';
+comment on column BC_IDENTITY_DUTY.CODE is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_DUTY.NAME is 'ï¿½ï¿½ï¿½ï¿½';
 
--- ²ÎÓëÕßµÄÀ©Õ¹ÊôÐÔ
-CREATE TABLE BC_IDENTITY_ACTOR_DETAIL (
-    ID number(19) NOT NULL,
-    CREATE_DATE date,
-    WORK_DATE date,
-    ISO number(1)  default 0,
-    SEX number(1)  default 0,
-   	CARD varchar2(20),
-    DUTY_ID number(19),
-   	COMMENT_ varchar2(4000),
-    CONSTRAINT BCPK_ACTOR_DETAIL PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½
+create table BC_IDENTITY_ACTOR_DETAIL (
+  ID          number(19) not null,
+  CREATE_DATE date,
+  WORK_DATE   date,
+  ISO         number(1) default 0,
+  SEX         number(1) default 0,
+  CARD        varchar2(20),
+  DUTY_ID     number(19),
+  COMMENT_    varchar2(4000),
+  constraint BCPK_ACTOR_DETAIL primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_ACTOR_DETAIL IS '²ÎÓëÕßµÄÀ©Õ¹ÊôÐÔ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_DETAIL.CREATE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_DETAIL.WORK_DATE IS 'user-ÈëÖ°Ê±¼ä';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_DETAIL.SEX IS 'user-ÐÔ±ð£º0-Î´ÉèÖÃ,1-ÄÐ,2-Å®';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_DETAIL.DUTY_ID IS 'user-Ö°ÎñID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_DETAIL.COMMENT_ IS '±¸×¢';
-ALTER TABLE BC_IDENTITY_ACTOR_DETAIL ADD CONSTRAINT BCFK_ACTORDETAIL_DUTY FOREIGN KEY (DUTY_ID) REFERENCES BC_IDENTITY_DUTY (ID);
+comment on table BC_IDENTITY_ACTOR_DETAIL is 'ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_DETAIL.CREATE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_DETAIL.WORK_DATE is 'user-ï¿½ï¿½Ö°Ê±ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_DETAIL.SEX is 'user-ï¿½Ô±ï¿½0-Î´ï¿½ï¿½ï¿½ï¿½,1-ï¿½ï¿½,2-Å®';
+comment on column BC_IDENTITY_ACTOR_DETAIL.DUTY_ID is 'user-Ö°ï¿½ï¿½ID';
+comment on column BC_IDENTITY_ACTOR_DETAIL.COMMENT_ is 'ï¿½ï¿½×¢';
+alter table BC_IDENTITY_ACTOR_DETAIL
+  add constraint BCFK_ACTORDETAIL_DUTY foreign key (DUTY_ID) references BC_IDENTITY_DUTY (ID);
 
--- ²ÎÓëÕß
-CREATE TABLE BC_IDENTITY_ACTOR (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36) NOT NULL,
-    TYPE_ number(1)  DEFAULT 0 NOT NULL,
-    STATUS_ number(1)  DEFAULT 0 NOT NULL,
-    INNER_ number(1)  DEFAULT 0 NOT NULL,
-    CODE varchar2(100) NOT NULL,
-    NAME varchar2(255) NOT NULL,
-    PY varchar2(255),
-    ORDER_ varchar2(100),
-    EMAIL varchar2(255),
-    PHONE varchar2(255),
-    DETAIL_ID number(19),
-    PCODE varchar2(4000),
-    PNAME varchar2(4000),
-    CONSTRAINT BCPK_ACTOR PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_IDENTITY_ACTOR (
+  ID        number(19)          not null,
+  UID_      varchar2(36)        not null,
+  TYPE_     number(1) default 0 not null,
+  STATUS_   number(1) default 0 not null,
+  INNER_    number(1) default 0 not null,
+  CODE      varchar2(100)       not null,
+  NAME      varchar2(255)       not null,
+  PY        varchar2(255),
+  ORDER_    varchar2(100),
+  EMAIL     varchar2(255),
+  PHONE     varchar2(255),
+  DETAIL_ID number(19),
+  PCODE     varchar2(4000),
+  PNAME     varchar2(4000),
+  constraint BCPK_ACTOR primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_ACTOR IS '²ÎÓëÕß(´ú±íÒ»¸öÈË»ò×éÖ¯£¬×éÖ¯Ò²¿ÉÒÔÊÇµ¥Î»¡¢²¿ÃÅ¡¢¸ÚÎ»¡¢ÍÅ¶ÓµÈ)';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.UID_ IS 'È«¾Ö±êÊ¶';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.TYPE_ IS 'ÀàÐÍ£º0-Î´¶¨Òå,1-µ¥Î»,2-²¿ÃÅ,3-¸ÚÎ»,4-ÓÃ»§';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.INNER_ IS 'ÊÇ·ñÎªÄÚÖÃ¶ÔÏó:0-·ñ,1-ÊÇ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.CODE IS '±àÂë';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.NAME IS 'Ãû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.PY IS 'Ãû³ÆµÄÆ´Òô';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.ORDER_ IS 'Í¬Àà²ÎÓëÕßÖ®¼äµÄÅÅÐòºÅ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.EMAIL IS 'ÓÊÏä';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.PHONE IS 'ÁªÏµµç»°';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.DETAIL_ID IS 'À©Õ¹±íµÄID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.PCODE IS 'Á¥Êô»ú¹¹µÄÈ«±àÂë';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR.PNAME IS 'Á¥Êô»ú¹¹µÄÈ«Ãû';
-ALTER TABLE BC_IDENTITY_ACTOR ADD CONSTRAINT BCFK_ACTOR_ACTORDETAIL FOREIGN KEY (DETAIL_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_DETAIL (ID) ON DELETE CASCADE;
-CREATE INDEX BCIDX_ACTOR_CODE ON BC_IDENTITY_ACTOR (CODE ASC);
-CREATE INDEX BCIDX_ACTOR_NAME ON BC_IDENTITY_ACTOR (NAME ASC);
-CREATE INDEX BCIDX_ACTOR_STATUSTYPE ON BC_IDENTITY_ACTOR (STATUS_ ASC,TYPE_ ASC);
-CREATE INDEX BCIDX_ACTOR_TYPE ON BC_IDENTITY_ACTOR (TYPE_ ASC);
-CREATE INDEX BCIDX_ACTOR_DETAIL ON BC_IDENTITY_ACTOR (DETAIL_ID ASC);
+comment on table BC_IDENTITY_ACTOR is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½Ö¯ï¿½ï¿½ï¿½ï¿½Ö¯Ò²ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Å¶Óµï¿½)';
+comment on column BC_IDENTITY_ACTOR.UID_ is 'È«ï¿½Ö±ï¿½Ê¶';
+comment on column BC_IDENTITY_ACTOR.TYPE_ is 'ï¿½ï¿½ï¿½Í£ï¿½0-Î´ï¿½ï¿½ï¿½ï¿½,1-ï¿½ï¿½Î»,2-ï¿½ï¿½ï¿½ï¿½,3-ï¿½ï¿½Î»,4-ï¿½Ã»ï¿½';
+comment on column BC_IDENTITY_ACTOR.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.INNER_ is 'ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.CODE is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.NAME is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.PY is 'ï¿½ï¿½ï¿½Æµï¿½Æ´ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.ORDER_ is 'Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.EMAIL is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.PHONE is 'ï¿½ï¿½Ïµï¿½ç»°';
+comment on column BC_IDENTITY_ACTOR.DETAIL_ID is 'ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ID';
+comment on column BC_IDENTITY_ACTOR.PCODE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR.PNAME is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½';
+alter table BC_IDENTITY_ACTOR
+  add constraint BCFK_ACTOR_ACTORDETAIL foreign key (DETAIL_ID)
+references BC_IDENTITY_ACTOR_DETAIL (ID) on delete cascade;
+create index BCIDX_ACTOR_CODE on BC_IDENTITY_ACTOR (CODE asc);
+create index BCIDX_ACTOR_NAME on BC_IDENTITY_ACTOR (NAME asc);
+create index BCIDX_ACTOR_STATUSTYPE on BC_IDENTITY_ACTOR (STATUS_ asc, TYPE_ asc);
+create index BCIDX_ACTOR_TYPE on BC_IDENTITY_ACTOR (TYPE_ asc);
+create index BCIDX_ACTOR_DETAIL on BC_IDENTITY_ACTOR (DETAIL_ID asc);
 
--- ²ÎÓëÕßÖ®¼äµÄ¹ØÁª¹ØÏµ
-CREATE TABLE BC_IDENTITY_ACTOR_RELATION (
-    TYPE_ number(2) NOT NULL,
-    MASTER_ID number(19) NOT NULL,
-   	FOLLOWER_ID number(19) NOT NULL,
-    ORDER_ varchar2(100),
-    CONSTRAINT BCPK_ACTOR_RELATION PRIMARY KEY (MASTER_ID,FOLLOWER_ID,TYPE_)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ
+create table BC_IDENTITY_ACTOR_RELATION (
+  TYPE_       number(2)  not null,
+  MASTER_ID   number(19) not null,
+  FOLLOWER_ID number(19) not null,
+  ORDER_      varchar2(100),
+  constraint BCPK_ACTOR_RELATION primary key (MASTER_ID, FOLLOWER_ID, TYPE_)
 );
-COMMENT ON TABLE BC_IDENTITY_ACTOR_RELATION IS '²ÎÓëÕßÖ®¼äµÄ¹ØÁª¹ØÏµ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_RELATION.TYPE_ IS '¹ØÁªÀàÐÍ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_RELATION.MASTER_ID IS 'Ö÷¿Ø·½ID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_RELATION.FOLLOWER_ID IS '´ÓÊô·½ID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_RELATION.ORDER_ IS '´ÓÊô·½Ö®¼äµÄÅÅÐòºÅ';
-ALTER TABLE BC_IDENTITY_ACTOR_RELATION ADD CONSTRAINT BCFK_AR_MASTER FOREIGN KEY (MASTER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_RELATION ADD CONSTRAINT BCFK_AR_FOLLOWER FOREIGN KEY (FOLLOWER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-CREATE INDEX BCIDX_AR_TM ON BC_IDENTITY_ACTOR_RELATION (TYPE_, MASTER_ID);
-CREATE INDEX BCIDX_AR_TF ON BC_IDENTITY_ACTOR_RELATION (TYPE_, FOLLOWER_ID);
+comment on table BC_IDENTITY_ACTOR_RELATION is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ';
+comment on column BC_IDENTITY_ACTOR_RELATION.TYPE_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_RELATION.MASTER_ID is 'ï¿½ï¿½ï¿½Ø·ï¿½ID';
+comment on column BC_IDENTITY_ACTOR_RELATION.FOLLOWER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_IDENTITY_ACTOR_RELATION.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+alter table BC_IDENTITY_ACTOR_RELATION
+  add constraint BCFK_AR_MASTER foreign key (MASTER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ACTOR_RELATION
+  add constraint BCFK_AR_FOLLOWER foreign key (FOLLOWER_ID)
+references BC_IDENTITY_ACTOR (ID);
+create index BCIDX_AR_TM on BC_IDENTITY_ACTOR_RELATION (TYPE_, MASTER_ID);
+create index BCIDX_AR_TF on BC_IDENTITY_ACTOR_RELATION (TYPE_, FOLLOWER_ID);
 
--- ACTORÁ¥ÊôÐÅÏ¢µÄ±ä¶¯ÀúÊ·
-CREATE TABLE BC_IDENTITY_ACTOR_HISTORY (
-   ID                   NUMBER(19)           NOT NULL,
-   PID                  NUMBER(19),
-   CURRENT              NUMBER(1) NOT NULL DEFAULT 1,
-   RANK              	NUMBER(2) NOT NULL DEFAULT 0,
-   CREATE_DATE          DATE                 NOT NULL,
-   START_DATE           DATE,
-   END_DATE             DATE,
-   ACTOR_TYPE           NUMBER(1)            NOT NULL,
-   ACTOR_ID             NUMBER(19)           NOT NULL,
-   ACTOR_NAME           VARCHAR2(100)        NOT NULL,
-   UPPER_ID             NUMBER(19),
-   UPPER_NAME           VARCHAR2(255),
-   UNIT_ID              NUMBER(19),
-   UNIT_NAME            VARCHAR2(255),
-   PCODE varchar2(4000),
-   PNAME varchar2(4000),
-   CONSTRAINT BCPK_ACTOR_HISTORY PRIMARY KEY (ID)
+-- ACTORï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ä±ä¶¯ï¿½ï¿½Ê·
+create table BC_IDENTITY_ACTOR_HISTORY (
+  ID          number(19)    not null,
+  PID         number(19),
+  CURRENT     number(1)     not null default 1,
+  RANK        number(2)     not null default 0,
+  CREATE_DATE date          not null,
+  START_DATE  date,
+  END_DATE    date,
+  ACTOR_TYPE  number(1)     not null,
+  ACTOR_ID    number(19)    not null,
+  ACTOR_NAME  varchar2(100) not null,
+  UPPER_ID    number(19),
+  UPPER_NAME  varchar2(255),
+  UNIT_ID     number(19),
+  UNIT_NAME   varchar2(255),
+  PCODE       varchar2(4000),
+  PNAME       varchar2(4000),
+  constraint BCPK_ACTOR_HISTORY primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_ACTOR_HISTORY IS 'ACTORÁ¥ÊôÐÅÏ¢µÄ±ä¶¯ÀúÊ·';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.PID IS '¶ÔÓ¦¾É¼ÇÂ¼µÄid';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.CURRENT IS 'ÊÇ·ñÎªµ±Ç°ÅäÖÃ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.RANK IS '¶à¸öµ±Ç°ÅäÖÃ¼äµÄÊ×Ñ¡´ÎÐò£¬ÊýÖµÔ½Ð¡¼¶±ðÔ½¸ß£¬Öµ´Ó0¿ªÊ¼µÝÔö£¬Ö»ÊÊÓÃÓÚÁ¥Êô¶à¸ö×éÖ¯µÄÇé¿ö';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.CREATE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.START_DATE IS 'ÆðÊ¼Ê±¶Î';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.END_DATE IS '½áÊøÊ±¶Î';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.ACTOR_TYPE IS 'ACTORÀàÐÍ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.ACTOR_ID IS 'ACTORID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.ACTOR_NAME IS 'ACTORÃû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.UPPER_ID IS 'Ö±ÊôÉÏ¼¶ID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.UPPER_NAME IS 'Ö±ÊôÉÏ¼¶Ãû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.UNIT_ID IS 'ËùÔÚµ¥Î»ID';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.UNIT_NAME IS 'ËùÔÚµ¥Î»Ãû³Æ';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.PCODE IS 'Á¥Êô»ú¹¹µÄÈ«±àÂë';
-COMMENT ON COLUMN BC_IDENTITY_ACTOR_HISTORY.PNAME IS 'Á¥Êô»ú¹¹µÄÈ«Ãû';
-ALTER TABLE BC_IDENTITY_ACTOR_HISTORY ADD CONSTRAINT BCFK_ACTORHISTORY_PID FOREIGN KEY (PID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_IDENTITY_ACTOR_HISTORY ADD CONSTRAINT BCFK_ACTORHISTORY_ACTOR FOREIGN KEY (ACTOR_ID)
-      REFERENCES BC_IDENTITY_ACTOR (ID);
-CREATE INDEX BCIDX_ACTORHISTORY_ACTORID ON BC_IDENTITY_ACTOR_HISTORY (ACTOR_ID ASC);
-CREATE INDEX BCIDX_ACTORHISTORY_ACTORNAME ON BC_IDENTITY_ACTOR_HISTORY (ACTOR_NAME ASC);
-CREATE INDEX BCIDX_ACTORHISTORY_UPPER ON BC_IDENTITY_ACTOR_HISTORY (UPPER_ID ASC);
-CREATE INDEX BCIDX_ACTORHISTORY_UNIT ON BC_IDENTITY_ACTOR_HISTORY (UNIT_ID ASC);
+comment on table BC_IDENTITY_ACTOR_HISTORY is 'ACTORï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ä±ä¶¯ï¿½ï¿½Ê·';
+comment on column BC_IDENTITY_ACTOR_HISTORY.PID is 'ï¿½ï¿½Ó¦ï¿½É¼ï¿½Â¼ï¿½ï¿½id';
+comment on column BC_IDENTITY_ACTOR_HISTORY.CURRENT is 'ï¿½Ç·ï¿½Îªï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.RANK is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÔ½Ð¡ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ß£ï¿½Öµï¿½ï¿½0ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¯ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.CREATE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.START_DATE is 'ï¿½ï¿½Ê¼Ê±ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.END_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.ACTOR_TYPE is 'ACTORï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.ACTOR_ID is 'ACTORID';
+comment on column BC_IDENTITY_ACTOR_HISTORY.ACTOR_NAME is 'ACTORï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.UPPER_ID is 'Ö±ï¿½ï¿½ï¿½Ï¼ï¿½ID';
+comment on column BC_IDENTITY_ACTOR_HISTORY.UPPER_NAME is 'Ö±ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.UNIT_ID is 'ï¿½ï¿½ï¿½Úµï¿½Î»ID';
+comment on column BC_IDENTITY_ACTOR_HISTORY.UNIT_NAME is 'ï¿½ï¿½ï¿½Úµï¿½Î»ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.PCODE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_ACTOR_HISTORY.PNAME is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½';
+alter table BC_IDENTITY_ACTOR_HISTORY
+  add constraint BCFK_ACTORHISTORY_PID foreign key (PID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_IDENTITY_ACTOR_HISTORY
+  add constraint BCFK_ACTORHISTORY_ACTOR foreign key (ACTOR_ID)
+references BC_IDENTITY_ACTOR (ID);
+create index BCIDX_ACTORHISTORY_ACTORID on BC_IDENTITY_ACTOR_HISTORY (ACTOR_ID asc);
+create index BCIDX_ACTORHISTORY_ACTORNAME on BC_IDENTITY_ACTOR_HISTORY (ACTOR_NAME asc);
+create index BCIDX_ACTORHISTORY_UPPER on BC_IDENTITY_ACTOR_HISTORY (UPPER_ID asc);
+create index BCIDX_ACTORHISTORY_UNIT on BC_IDENTITY_ACTOR_HISTORY (UNIT_ID asc);
 
--- ÈÏÖ¤ÐÅÏ¢
-CREATE TABLE BC_IDENTITY_AUTH (
-    ID  number(19) NOT NULL,
-    PASSWORD varchar2(32) NOT NULL,
-    CONSTRAINT BCPK_AUTH PRIMARY KEY (ID)
+-- ï¿½ï¿½Ö¤ï¿½ï¿½Ï¢
+create table BC_IDENTITY_AUTH (
+  ID       number(19)   not null,
+  PASSWORD varchar2(32) not null,
+  constraint BCPK_AUTH primary key (ID)
 );
-COMMENT ON TABLE BC_IDENTITY_AUTH IS 'ÈÏÖ¤ÐÅÏ¢';
-COMMENT ON COLUMN BC_IDENTITY_AUTH.ID IS 'ÓëActor±íµÄid¶ÔÓ¦';
-COMMENT ON COLUMN BC_IDENTITY_AUTH.PASSWORD IS '¾­MD5¼ÓÃÜµÄÃÜÂë';
-ALTER TABLE BC_IDENTITY_AUTH ADD CONSTRAINT BCFK_AUTH_ACTOR FOREIGN KEY (ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
+comment on table BC_IDENTITY_AUTH is 'ï¿½ï¿½Ö¤ï¿½ï¿½Ï¢';
+comment on column BC_IDENTITY_AUTH.ID is 'ï¿½ï¿½Actorï¿½ï¿½ï¿½idï¿½ï¿½Ó¦';
+comment on column BC_IDENTITY_AUTH.PASSWORD is 'ï¿½ï¿½MD5ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½';
+alter table BC_IDENTITY_AUTH
+  add constraint BCFK_AUTH_ACTOR foreign key (ID)
+references BC_IDENTITY_ACTOR (ID);
 
--- ±êÊ¶Éú³ÉÆ÷
-CREATE TABLE BC_IDENTITY_IDGENERATOR (
-  TYPE_ varchar2(45) NOT NULL,
-  VALUE_ number(19) NOT NULL,
-  FORMAT varchar2(45) ,
-  CONSTRAINT BCPK_IDGENERATOR PRIMARY KEY (TYPE_)
+-- ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_IDENTITY_IDGENERATOR (
+  TYPE_  varchar2(45) not null,
+  VALUE_ number(19)   not null,
+  FORMAT varchar2(45),
+  constraint BCPK_IDGENERATOR primary key (TYPE_)
 );
-COMMENT ON TABLE BC_IDENTITY_IDGENERATOR IS '±êÊ¶Éú³ÉÆ÷,ÓÃÓÚÉú³ÉÖ÷¼ü»òÎ¨Ò»±àÂëÓÃ';
-COMMENT ON COLUMN BC_IDENTITY_IDGENERATOR.TYPE_ IS '·ÖÀà';
-COMMENT ON COLUMN BC_IDENTITY_IDGENERATOR.VALUE_ IS 'µ±Ç°Öµ';
-COMMENT ON COLUMN BC_IDENTITY_IDGENERATOR.FORMAT IS '¸ñÊ½Ä£°å,Èç¡°case-${V}¡±¡¢¡°${T}-${V}¡±,V´ú±ívalueµÄÖµ£¬T´ú±ítype_µÄÖµ';
+comment on table BC_IDENTITY_IDGENERATOR is 'ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¨Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_IDGENERATOR.TYPE_ is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_IDENTITY_IDGENERATOR.VALUE_ is 'ï¿½ï¿½Ç°Öµ';
+comment on column BC_IDENTITY_IDGENERATOR.FORMAT is 'ï¿½ï¿½Ê½Ä£ï¿½ï¿½,ï¿½ç¡°case-${V}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½${T}-${V}ï¿½ï¿½,Vï¿½ï¿½ï¿½ï¿½valueï¿½ï¿½Öµï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½type_ï¿½ï¿½Öµ';
 
--- ²ÎÓëÕßÓë½ÇÉ«µÄ¹ØÁª
-CREATE TABLE BC_IDENTITY_ROLE_ACTOR (
-    AID number(19) NOT NULL,
-    RID number(19) NOT NULL,
-    CONSTRAINT BCPK_ROLE_ACTOR PRIMARY KEY (AID,RID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Ä¹ï¿½ï¿½ï¿½
+create table BC_IDENTITY_ROLE_ACTOR (
+  AID number(19) not null,
+  RID number(19) not null,
+  constraint BCPK_ROLE_ACTOR primary key (AID, RID)
 );
-ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT BCFK_RA_ACTOR FOREIGN KEY (AID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_IDENTITY_ROLE_ACTOR ADD CONSTRAINT BCFK_RA_ROLE FOREIGN KEY (RID) 
-	REFERENCES BC_IDENTITY_ROLE (ID);
-COMMENT ON TABLE BC_IDENTITY_ROLE_ACTOR IS '²ÎÓëÕßÓë½ÇÉ«µÄ¹ØÁª£º²ÎÓëÕßÓµÓÐÄÄÐ©½ÇÉ«';
-COMMENT ON COLUMN BC_IDENTITY_ROLE_ACTOR.AID IS '²ÎÓëÕßID';
-COMMENT ON COLUMN BC_IDENTITY_ROLE_ACTOR.RID IS '½ÇÉ«ID';
-	
--- ##ÏµÍ³×ÀÃæÏà¹ØÄ£¿é##
--- ×ÀÃæ¿ì½Ý·½Ê½
+alter table BC_IDENTITY_ROLE_ACTOR
+  add constraint BCFK_RA_ACTOR foreign key (AID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_IDENTITY_ROLE_ACTOR
+  add constraint BCFK_RA_ROLE foreign key (RID)
+references BC_IDENTITY_ROLE (ID);
+comment on table BC_IDENTITY_ROLE_ACTOR is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½É«';
+comment on column BC_IDENTITY_ROLE_ACTOR.AID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_IDENTITY_ROLE_ACTOR.RID is 'ï¿½ï¿½É«ID';
+
+-- ##ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½##
+-- ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½Ê½
 create table BC_DESKTOP_SHORTCUT (
-    ID number(19) NOT NULL,
-    UID_ varchar(36),
-    STATUS_ number(1) NOT NULL,
-    INNER_ number(1) NOT NULL,
-    ORDER_ varchar(100) NOT NULL,
-    STANDALONE number(1) NOT NULL,
-    NAME varchar(255),
-    URL varchar(255),
-    ICONCLASS varchar(255),
-    SID number(19) default 0 NOT NULL,
-    AID number(19) default 0 NOT NULL,
-    CONSTRAINT BCPK_DESKTOP_SHORTCUT primary key (ID)
+  ID         number(19)           not null,
+  UID_       varchar(36),
+  STATUS_    number(1)            not null,
+  INNER_     number(1)            not null,
+  ORDER_     varchar(100)         not null,
+  STANDALONE number(1)            not null,
+  NAME       varchar(255),
+  URL        varchar(255),
+  ICONCLASS  varchar(255),
+  SID        number(19) default 0 not null,
+  AID        number(19) default 0 not null,
+  constraint BCPK_DESKTOP_SHORTCUT primary key (ID)
 );
-COMMENT ON TABLE BC_DESKTOP_SHORTCUT IS '×ÀÃæ¿ì½Ý·½Ê½';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.UID_ IS 'È«¾Ö±êÊ¶';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.INNER_ IS 'ÊÇ·ñÎªÄÚÖÃ¶ÔÏó:0-·ñ,1-ÊÇ';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.STANDALONE IS 'ÊÇ·ñÔÚ¶ÀÁ¢µÄä¯ÀÀÆ÷´°¿ÚÖÐ´ò¿ª';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.NAME IS 'Ãû³Æ,Îª¿ÕÔòÊ¹ÓÃÄ£¿éµÄÃû³Æ';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.URL IS 'µØÖ·,Îª¿ÕÔòÊ¹ÓÃÄ£¿éµÄµØÖ·';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.ICONCLASS IS 'Í¼±êÑùÊ½';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.SID IS '¶ÔÓ¦µÄ×ÊÔ´ID';
-COMMENT ON COLUMN BC_DESKTOP_SHORTCUT.AID IS 'ËùÊôµÄ²ÎÓëÕß(Èç¹ûÎªÉÏ¼¶²ÎÓëÕß,Èçµ¥Î»²¿ÃÅ,ÔòÆäÏÂµÄËùÓÐ²ÎÓëÕß¶¼ÓµÓÐ¸Ã¿ì½Ý·½Ê½)';
-CREATE INDEX BCIDX_SHORTCUT ON BC_DESKTOP_SHORTCUT (AID,SID);
+comment on table BC_DESKTOP_SHORTCUT is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½Ê½';
+comment on column BC_DESKTOP_SHORTCUT.UID_ is 'È«ï¿½Ö±ï¿½Ê¶';
+comment on column BC_DESKTOP_SHORTCUT.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_DESKTOP_SHORTCUT.INNER_ is 'ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
+comment on column BC_DESKTOP_SHORTCUT.STANDALONE is 'ï¿½Ç·ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½';
+comment on column BC_DESKTOP_SHORTCUT.NAME is 'ï¿½ï¿½ï¿½ï¿½,Îªï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_DESKTOP_SHORTCUT.URL is 'ï¿½ï¿½Ö·,Îªï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Ä£ï¿½ï¿½Äµï¿½Ö·';
+comment on column BC_DESKTOP_SHORTCUT.ICONCLASS is 'Í¼ï¿½ï¿½ï¿½ï¿½Ê½';
+comment on column BC_DESKTOP_SHORTCUT.SID is 'ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ô´ID';
+comment on column BC_DESKTOP_SHORTCUT.AID is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½Îªï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½çµ¥Î»ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ß¶ï¿½Óµï¿½Ð¸Ã¿ï¿½Ý·ï¿½Ê½)';
+create index BCIDX_SHORTCUT on BC_DESKTOP_SHORTCUT (AID, SID);
 
--- ¸öÈËÉèÖÃ
-CREATE TABLE BC_DESKTOP_PERSONAL (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36),
-    STATUS_ number(1)  NOT NULL,
-    FONT varchar2(2) NOT NULL,
-    THEME varchar2(255) NOT NULL,
-    AID number(19) default 0 NOT NULL,
-    INNER_ number(1)  NOT NULL,
-    CONSTRAINT BCPK_DESKTOP_PERSONAL PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_DESKTOP_PERSONAL (
+  ID      number(19)           not null,
+  UID_    varchar2(36),
+  STATUS_ number(1)            not null,
+  FONT    varchar2(2)          not null,
+  THEME   varchar2(255)        not null,
+  AID     number(19) default 0 not null,
+  INNER_  number(1)            not null,
+  constraint BCPK_DESKTOP_PERSONAL primary key (ID)
 );
-COMMENT ON TABLE BC_DESKTOP_PERSONAL IS '¸öÈËÉèÖÃ';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.UID_ IS 'È«¾Ö±êÊ¶';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.FONT IS '×ÖÌå´óÐ¡£¬Èç12¡¢14¡¢16';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.THEME IS 'Ö÷ÌâÃû³Æ,Èçbase';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.AID IS 'ËùÊôµÄ²ÎÓëÕß';
-COMMENT ON COLUMN BC_DESKTOP_PERSONAL.INNER_ IS 'ÊÇ·ñÎªÄÚÖÃ¶ÔÏó:0-·ñ,1-ÊÇ';
-ALTER TABLE BC_DESKTOP_PERSONAL ADD CONSTRAINT BCUK_PERSONAL_AID UNIQUE (AID);
+comment on table BC_DESKTOP_PERSONAL is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_DESKTOP_PERSONAL.UID_ is 'È«ï¿½Ö±ï¿½Ê¶';
+comment on column BC_DESKTOP_PERSONAL.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_DESKTOP_PERSONAL.FONT is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½12ï¿½ï¿½14ï¿½ï¿½16';
+comment on column BC_DESKTOP_PERSONAL.THEME is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½base';
+comment on column BC_DESKTOP_PERSONAL.AID is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_DESKTOP_PERSONAL.INNER_ is 'ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
+alter table BC_DESKTOP_PERSONAL
+  add constraint BCUK_PERSONAL_AID unique (AID);
 
--- ÏûÏ¢Ä£¿é
-CREATE TABLE BC_MESSAGE (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36),
-    STATUS_ number(1) default 0 NOT NULL,
-    TYPE_ number(1) default 0 NOT NULL,
-    SENDER_ID number(19) NOT NULL,
-    SEND_DATE date NOT NULL,
-    RECEIVER_ID number(19) NOT NULL,
-    READ_ number(1) default 0 NOT NULL,
-    FROM_ID number(19),
-    FROM_TYPE number(19),
-    SUBJECT varchar2(255) NOT NULL,
-    CONTENT varchar2(4000),
-    CONSTRAINT BCPK_MESSAGE PRIMARY KEY (ID)
+-- ï¿½ï¿½Ï¢Ä£ï¿½ï¿½
+create table BC_MESSAGE (
+  ID          number(19)          not null,
+  UID_        varchar2(36),
+  STATUS_     number(1) default 0 not null,
+  TYPE_       number(1) default 0 not null,
+  SENDER_ID   number(19)          not null,
+  SEND_DATE   date                not null,
+  RECEIVER_ID number(19)          not null,
+  READ_       number(1) default 0 not null,
+  FROM_ID     number(19),
+  FROM_TYPE   number(19),
+  SUBJECT     varchar2(255)       not null,
+  CONTENT     varchar2(4000),
+  constraint BCPK_MESSAGE primary key (ID)
 );
-COMMENT ON TABLE BC_MESSAGE IS 'ÏûÏ¢Ä£¿é';
-COMMENT ON COLUMN BC_MESSAGE.STATUS_ IS '×´Ì¬£º0-·¢ËÍÖÐ,1-ÒÑ·¢ËÍ,2-ÒÑÉ¾³ý,3-·¢ËÍÊ§°Ü';
-COMMENT ON COLUMN BC_MESSAGE.TYPE_ IS 'ÏûÏ¢ÀàÐÍ';
-COMMENT ON COLUMN BC_MESSAGE.SENDER_ID IS '·¢ËÍÕß';
-COMMENT ON COLUMN BC_MESSAGE.SEND_DATE IS '·¢ËÍÊ±¼ä';
-COMMENT ON COLUMN BC_MESSAGE.RECEIVER_ID IS '½ÓÊÕÕß';
-COMMENT ON COLUMN BC_MESSAGE.FROM_ID IS 'À´Ô´±êÊ¶';
-COMMENT ON COLUMN BC_MESSAGE.FROM_TYPE IS 'À´Ô´ÀàÐÍ';
-COMMENT ON COLUMN BC_MESSAGE.READ_ IS 'ÒÑÔÄ±ê¼Ç';
-COMMENT ON COLUMN BC_MESSAGE.SUBJECT IS '±êÌâ';
-COMMENT ON COLUMN BC_MESSAGE.CONTENT IS 'ÄÚÈÝ';
-ALTER TABLE BC_MESSAGE ADD CONSTRAINT BCFK_MESSAGE_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_MESSAGE ADD CONSTRAINT BCFK_MESSAGE_REVEIVER FOREIGN KEY (RECEIVER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-CREATE INDEX BCIDX_MESSAGE_FROMID ON BC_MESSAGE (FROM_TYPE,FROM_ID);
-CREATE INDEX BCIDX_MESSAGE_TYPE ON BC_MESSAGE (TYPE_);
+comment on table BC_MESSAGE is 'ï¿½ï¿½Ï¢Ä£ï¿½ï¿½';
+comment on column BC_MESSAGE.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ·ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½,3-ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½';
+comment on column BC_MESSAGE.TYPE_ is 'ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_MESSAGE.SENDER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_MESSAGE.SEND_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_MESSAGE.RECEIVER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_MESSAGE.FROM_ID is 'ï¿½ï¿½Ô´ï¿½ï¿½Ê¶';
+comment on column BC_MESSAGE.FROM_TYPE is 'ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_MESSAGE.READ_ is 'ï¿½ï¿½ï¿½Ä±ï¿½ï¿½';
+comment on column BC_MESSAGE.SUBJECT is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_MESSAGE.CONTENT is 'ï¿½ï¿½ï¿½ï¿½';
+alter table BC_MESSAGE
+  add constraint BCFK_MESSAGE_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_MESSAGE
+  add constraint BCFK_MESSAGE_REVEIVER foreign key (RECEIVER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+create index BCIDX_MESSAGE_FROMID on BC_MESSAGE (FROM_TYPE, FROM_ID);
+create index BCIDX_MESSAGE_TYPE on BC_MESSAGE (TYPE_);
 
--- ¹¤×÷ÊÂÏî
-CREATE TABLE BC_WORK (
-    ID number(19) NOT NULL,
-    CLASSIFIER varchar2(500) NOT NULL,
-    SUBJECT varchar2(255) NOT NULL,
-    FROM_ID number(19),
-    FROM_TYPE number(19),
-    FROM_INFO varchar2(255),
-    OPEN_URL varchar2(255),
-    CONTENT varchar2(4000),
-    CONSTRAINT BCPK_WORK PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_WORK (
+  ID         number(19)    not null,
+  CLASSIFIER varchar2(500) not null,
+  SUBJECT    varchar2(255) not null,
+  FROM_ID    number(19),
+  FROM_TYPE  number(19),
+  FROM_INFO  varchar2(255),
+  OPEN_URL   varchar2(255),
+  CONTENT    varchar2(4000),
+  constraint BCPK_WORK primary key (ID)
 );
-COMMENT ON TABLE BC_WORK IS '¹¤×÷ÊÂÏî';
-COMMENT ON COLUMN BC_WORK.CLASSIFIER IS '·ÖÀà´Ê,¿É¶à¼¶·ÖÀà,¼¶¼äÊ¹ÓÃ/Á¬½Ó,Èç¡°·¢ÎÄÀà/ÕýÊ½·¢ÎÄ¡±';
-COMMENT ON COLUMN BC_WORK.SUBJECT IS '±êÌâ';
-COMMENT ON COLUMN BC_WORK.FROM_ID IS 'À´Ô´±êÊ¶';
-COMMENT ON COLUMN BC_WORK.FROM_TYPE IS 'À´Ô´ÀàÐÍ';
-COMMENT ON COLUMN BC_WORK.FROM_INFO IS 'À´Ô´ÃèÊö';
-COMMENT ON COLUMN BC_WORK.OPEN_URL IS '´ò¿ªµÄUrlÄ£°å';
-COMMENT ON COLUMN BC_WORK.CONTENT IS 'ÄÚÈÝ';
-CREATE INDEX BCIDX_WORK_FROM ON BC_WORK (FROM_TYPE,FROM_ID);
+comment on table BC_WORK is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK.CLASSIFIER is 'ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½É¶à¼¶ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½,ï¿½ç¡°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Ä¡ï¿½';
+comment on column BC_WORK.SUBJECT is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK.FROM_ID is 'ï¿½ï¿½Ô´ï¿½ï¿½Ê¶';
+comment on column BC_WORK.FROM_TYPE is 'ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK.FROM_INFO is 'ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK.OPEN_URL is 'ï¿½ò¿ªµï¿½UrlÄ£ï¿½ï¿½';
+comment on column BC_WORK.CONTENT is 'ï¿½ï¿½ï¿½ï¿½';
+create index BCIDX_WORK_FROM on BC_WORK (FROM_TYPE, FROM_ID);
 
--- ´ý°ìÊÂÏî
-CREATE TABLE BC_WORK_TODO (
-    ID number(19) NOT NULL,
-    WORK_ID number(19) NOT NULL,
-    SENDER_ID number(19) NOT NULL,
-    SEND_DATE date NOT NULL,
-    WORKER_ID number(19) NOT NULL,
-    INFO varchar2(255),
-    CONSTRAINT BCPK_WORK_TODO PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_WORK_TODO (
+  ID        number(19) not null,
+  WORK_ID   number(19) not null,
+  SENDER_ID number(19) not null,
+  SEND_DATE date       not null,
+  WORKER_ID number(19) not null,
+  INFO      varchar2(255),
+  constraint BCPK_WORK_TODO primary key (ID)
 );
-COMMENT ON TABLE BC_WORK_TODO IS '´ý°ìÊÂÏî';
-COMMENT ON COLUMN BC_WORK_TODO.WORK_ID IS '¹¤×÷ÊÂÏîID';
-COMMENT ON COLUMN BC_WORK_TODO.SENDER_ID IS '·¢ËÍÕß';
-COMMENT ON COLUMN BC_WORK_TODO.SEND_DATE IS '·¢ËÍÊ±¼ä';
-COMMENT ON COLUMN BC_WORK_TODO.WORKER_ID IS '·¢ËÍÕß';
-COMMENT ON COLUMN BC_WORK_TODO.INFO IS '¸½¼ÓËµÃ÷';
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_WORK FOREIGN KEY (WORK_ID) 
-	REFERENCES BC_WORK (ID);
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_WORK_TODO ADD CONSTRAINT BCFK_TODOWORK_WORKER FOREIGN KEY (WORKER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
+comment on table BC_WORK_TODO is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_TODO.WORK_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_WORK_TODO.SENDER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_TODO.SEND_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_WORK_TODO.WORKER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_TODO.INFO is 'ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½';
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_WORK foreign key (WORK_ID)
+references BC_WORK (ID);
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_WORK_TODO
+  add constraint BCFK_TODOWORK_WORKER foreign key (WORKER_ID)
+references BC_IDENTITY_ACTOR (ID);
 
--- ÒÑ°ìÊÂÏî
-CREATE TABLE BC_WORK_DONE (
-    ID number(19) NOT NULL,
-    FINISH_DATE date NOT NULL,
-    FINISH_YEAR number(4)  NOT NULL,
-    FINISH_MONTH number(2)  NOT NULL,
-    FINISH_DAY number(2)  NOT NULL,
-    WORK_ID number(19) NOT NULL,
-    SENDER_ID number(19) NOT NULL,
-    SEND_DATE date NOT NULL,
-    WORKER_ID number(19) NOT NULL,
-    INFO varchar2(255),
-    CONSTRAINT BCPK_WORK_DONE PRIMARY KEY (ID)
+-- ï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_WORK_DONE (
+  ID           number(19) not null,
+  FINISH_DATE  date       not null,
+  FINISH_YEAR  number(4)  not null,
+  FINISH_MONTH number(2)  not null,
+  FINISH_DAY   number(2)  not null,
+  WORK_ID      number(19) not null,
+  SENDER_ID    number(19) not null,
+  SEND_DATE    date       not null,
+  WORKER_ID    number(19) not null,
+  INFO         varchar2(255),
+  constraint BCPK_WORK_DONE primary key (ID)
 );
-COMMENT ON TABLE BC_WORK_DONE IS 'ÒÑ°ìÊÂÏî';
-COMMENT ON COLUMN BC_WORK_DONE.FINISH_DATE IS 'Íê³ÉÊ±¼ä';
-COMMENT ON COLUMN BC_WORK_DONE.FINISH_YEAR IS 'Íê³ÉÊ±¼äµÄÄê¶È';
-COMMENT ON COLUMN BC_WORK_DONE.FINISH_MONTH IS 'Íê³ÉÊ±¼äµÄÔÂ·Ý(1-12)';
-COMMENT ON COLUMN BC_WORK_DONE.FINISH_DAY IS 'Íê³ÉÊ±¼äµÄÈÕ(1-31)';
-COMMENT ON COLUMN BC_WORK_DONE.WORK_ID IS '¹¤×÷ÊÂÏîID';
-COMMENT ON COLUMN BC_WORK_DONE.SENDER_ID IS '·¢ËÍÕß';
-COMMENT ON COLUMN BC_WORK_DONE.SEND_DATE IS '·¢ËÍÊ±¼ä';
-COMMENT ON COLUMN BC_WORK_DONE.WORKER_ID IS '·¢ËÍÕß';
-COMMENT ON COLUMN BC_WORK_DONE.INFO IS '¸½¼ÓËµÃ÷';
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_WORK FOREIGN KEY (WORK_ID) 
-	REFERENCES BC_WORK (ID);
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_SENDER FOREIGN KEY (SENDER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_WORK_DONE ADD CONSTRAINT BCFK_DONEWORK_WORKER FOREIGN KEY (WORKER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR (ID);
-CREATE INDEX BCIDX_DONEWORK_FINISHDATE ON BC_WORK_DONE (FINISH_YEAR,FINISH_MONTH,FINISH_DAY);
+comment on table BC_WORK_DONE is 'ï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_DONE.FINISH_DATE is 'ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_WORK_DONE.FINISH_YEAR is 'ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_DONE.FINISH_MONTH is 'ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Â·ï¿½(1-12)';
+comment on column BC_WORK_DONE.FINISH_DAY is 'ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½(1-31)';
+comment on column BC_WORK_DONE.WORK_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_WORK_DONE.SENDER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_DONE.SEND_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_WORK_DONE.WORKER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_WORK_DONE.INFO is 'ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½';
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_WORK foreign key (WORK_ID)
+references BC_WORK (ID);
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_SENDER foreign key (SENDER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_WORK_DONE
+  add constraint BCFK_DONEWORK_WORKER foreign key (WORKER_ID)
+references BC_IDENTITY_ACTOR (ID);
+create index BCIDX_DONEWORK_FINISHDATE on BC_WORK_DONE (FINISH_YEAR, FINISH_MONTH, FINISH_DAY);
 
-
--- ÏµÍ³ÈÕÖ¾
-CREATE TABLE BC_LOG_SYSTEM (
-    ID number(19) NOT NULL,
-    TYPE_ number(1)  NOT NULL,
-    SUBJECT varchar2(500) NOT NULL,
-    FILE_DATE date NOT NULL,
-    AUTHOR_ID number(19) NOT NULL,
-    C_IP varchar2(100),
-    C_NAME varchar2(100),
-    C_INFO varchar2(1000),
-    S_IP varchar2(100),
-    S_NAME varchar2(100),
-    S_INFO varchar2(1000),
-    CONTENT varchar2(4000),
-    CONSTRAINT BCPK_LOG_SYSTEM PRIMARY KEY (ID)
+-- ÏµÍ³ï¿½ï¿½Ö¾
+create table BC_LOG_SYSTEM (
+  ID        number(19)    not null,
+  TYPE_     number(1)     not null,
+  SUBJECT   varchar2(500) not null,
+  FILE_DATE date          not null,
+  AUTHOR_ID number(19)    not null,
+  C_IP      varchar2(100),
+  C_NAME    varchar2(100),
+  C_INFO    varchar2(1000),
+  S_IP      varchar2(100),
+  S_NAME    varchar2(100),
+  S_INFO    varchar2(1000),
+  CONTENT   varchar2(4000),
+  constraint BCPK_LOG_SYSTEM primary key (ID)
 );
-COMMENT ON TABLE BC_LOG_SYSTEM IS 'ÏµÍ³ÈÕÖ¾';
-COMMENT ON COLUMN BC_LOG_SYSTEM.TYPE_ IS 'Àà±ð£º0-µÇÂ¼,1-×¢Ïú,2-³¬Ê±';
-COMMENT ON COLUMN BC_LOG_SYSTEM.FILE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_LOG_SYSTEM.SUBJECT IS '±êÌâ';
-COMMENT ON COLUMN BC_LOG_SYSTEM.AUTHOR_ID IS '´´½¨ÈËID';
-COMMENT ON COLUMN BC_LOG_SYSTEM.C_IP IS 'ÓÃ»§»úÆ÷IP';
-COMMENT ON COLUMN BC_LOG_SYSTEM.C_NAME IS 'ÓÃ»§»úÆ÷Ãû³Æ';
-COMMENT ON COLUMN BC_LOG_SYSTEM.C_INFO IS 'ÓÃ»§ä¯ÀÀÆ÷ÐÅÏ¢£ºUser-Agent';
-COMMENT ON COLUMN BC_LOG_SYSTEM.S_IP IS '·þÎñÆ÷IP';
-COMMENT ON COLUMN BC_LOG_SYSTEM.S_NAME IS '·þÎñÆ÷Ãû³Æ';
-COMMENT ON COLUMN BC_LOG_SYSTEM.S_INFO IS '·þÎñÆ÷ÐÅÏ¢';
-COMMENT ON COLUMN BC_LOG_SYSTEM.CONTENT IS 'ÏêÏ¸ÄÚÈÝ';
-ALTER TABLE BC_LOG_SYSTEM ADD CONSTRAINT BCFK_SYSLOG_USER FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-CREATE INDEX BCIDX_SYSLOG_CLIENT ON BC_LOG_SYSTEM (C_IP);
-CREATE INDEX BCIDX_SYSLOG_SERVER ON BC_LOG_SYSTEM (S_IP);
+comment on table BC_LOG_SYSTEM is 'ÏµÍ³ï¿½ï¿½Ö¾';
+comment on column BC_LOG_SYSTEM.TYPE_ is 'ï¿½ï¿½ï¿½0-ï¿½ï¿½Â¼,1-×¢ï¿½ï¿½,2-ï¿½ï¿½Ê±';
+comment on column BC_LOG_SYSTEM.FILE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_LOG_SYSTEM.SUBJECT is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_LOG_SYSTEM.AUTHOR_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_LOG_SYSTEM.C_IP is 'ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½IP';
+comment on column BC_LOG_SYSTEM.C_NAME is 'ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_LOG_SYSTEM.C_INFO is 'ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½User-Agent';
+comment on column BC_LOG_SYSTEM.S_IP is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IP';
+comment on column BC_LOG_SYSTEM.S_NAME is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_LOG_SYSTEM.S_INFO is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢';
+comment on column BC_LOG_SYSTEM.CONTENT is 'ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½';
+alter table BC_LOG_SYSTEM
+  add constraint BCFK_SYSLOG_USER foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+create index BCIDX_SYSLOG_CLIENT on BC_LOG_SYSTEM (C_IP);
+create index BCIDX_SYSLOG_SERVER on BC_LOG_SYSTEM (S_IP);
 
-
--- ¹«¸æÄ£¿é
-CREATE TABLE BC_BULLETIN (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36) NOT NULL,
-    UNIT_ID number(19),
-    SCOPE number(1)  NOT NULL,
-    STATUS_ number(1)  NOT NULL,
-    OVERDUE_DATE date,
-   	ISSUE_DATE date,
-    ISSUER_ID number(19),
-    SUBJECT varchar2(500) NOT NULL,
-    FILE_DATE date NOT NULL,
-    AUTHOR_ID number(19) NOT NULL,
-    MODIFIER_ID number(19),
-    MODIFIED_DATE date,
-    CONTENT varchar2(4000) NOT NULL,
-    CONSTRAINT BCPK_BULLETIN PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+create table BC_BULLETIN (
+  ID            number(19)     not null,
+  UID_          varchar2(36)   not null,
+  UNIT_ID       number(19),
+  SCOPE         number(1)      not null,
+  STATUS_       number(1)      not null,
+  OVERDUE_DATE  date,
+  ISSUE_DATE    date,
+  ISSUER_ID     number(19),
+  SUBJECT       varchar2(500)  not null,
+  FILE_DATE     date           not null,
+  AUTHOR_ID     number(19)     not null,
+  MODIFIER_ID   number(19),
+  MODIFIED_DATE date,
+  CONTENT       varchar2(4000) not null,
+  constraint BCPK_BULLETIN primary key (ID)
 );
-COMMENT ON TABLE BC_BULLETIN IS '¹«¸æÄ£¿é';
-COMMENT ON COLUMN BC_BULLETIN.UID_ IS '¹ØÁª¸½¼þµÄ±êÊ¶ºÅ';
-COMMENT ON COLUMN BC_BULLETIN.UNIT_ID IS '¹«¸æËùÊôµ¥Î»ID';
-COMMENT ON COLUMN BC_BULLETIN.SCOPE IS '¹«¸æ·¢²¼·¶Î§£º0-±¾µ¥Î»,1-È«ÏµÍ³';
-COMMENT ON COLUMN BC_BULLETIN.STATUS_ IS '×´Ì¬:0-²Ý¸å,1-ÒÑ·¢²¼,2-ÒÑ¹ýÆÚ';
-COMMENT ON COLUMN BC_BULLETIN.OVERDUE_DATE IS '¹ýÆÚÈÕÆÚ£ºÎª¿Õ´ú±íÓÀ²»¹ýÆÚ';
-COMMENT ON COLUMN BC_BULLETIN.ISSUE_DATE IS '·¢²¼Ê±¼ä';
-COMMENT ON COLUMN BC_BULLETIN.ISSUER_ID IS '·¢²¼ÈËID';
-COMMENT ON COLUMN BC_BULLETIN.SUBJECT IS '±êÌâ';
-COMMENT ON COLUMN BC_BULLETIN.FILE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_BULLETIN.AUTHOR_ID IS '´´½¨ÈËID';
-COMMENT ON COLUMN BC_BULLETIN.MODIFIER_ID IS '×îºóÐÞ¸ÄÈËID';
-COMMENT ON COLUMN BC_BULLETIN.MODIFIED_DATE IS '×îºóÐÞ¸ÄÊ±¼ä';
-COMMENT ON COLUMN BC_BULLETIN.CONTENT IS 'ÏêÏ¸ÄÚÈÝ';
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_AUTHOR FOREIGN KEY (AUTHOR_ID)
-      REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_ISSUER FOREIGN KEY (ISSUER_ID)
-      REFERENCES BC_IDENTITY_ACTOR (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_MODIFIER FOREIGN KEY (MODIFIER_ID)
-      REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_BULLETIN ADD CONSTRAINT BCFK_BULLETIN_UNIT FOREIGN KEY (UNIT_ID)
-      REFERENCES BC_IDENTITY_ACTOR (ID);
-CREATE INDEX BCIDX_BULLETIN_SEARCH ON BC_BULLETIN (SCOPE,UNIT_ID,STATUS_);
+comment on table BC_BULLETIN is 'ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½';
+comment on column BC_BULLETIN.UID_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ê¶ï¿½ï¿½';
+comment on column BC_BULLETIN.UNIT_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ID';
+comment on column BC_BULLETIN.SCOPE is 'ï¿½ï¿½ï¿½æ·¢ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½Î»,1-È«ÏµÍ³';
+comment on column BC_BULLETIN.STATUS_ is '×´Ì¬:0-ï¿½Ý¸ï¿½,1-ï¿½Ñ·ï¿½ï¿½ï¿½,2-ï¿½Ñ¹ï¿½ï¿½ï¿½';
+comment on column BC_BULLETIN.OVERDUE_DATE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½Îªï¿½Õ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_BULLETIN.ISSUE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_BULLETIN.ISSUER_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_BULLETIN.SUBJECT is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_BULLETIN.FILE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_BULLETIN.AUTHOR_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_BULLETIN.MODIFIER_ID is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ID';
+comment on column BC_BULLETIN.MODIFIED_DATE is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½Ê±ï¿½ï¿½';
+comment on column BC_BULLETIN.CONTENT is 'ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½';
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_ISSUER foreign key (ISSUER_ID)
+references BC_IDENTITY_ACTOR (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_BULLETIN
+  add constraint BCFK_BULLETIN_UNIT foreign key (UNIT_ID)
+references BC_IDENTITY_ACTOR (ID);
+create index BCIDX_BULLETIN_SEARCH on BC_BULLETIN (SCOPE, UNIT_ID, STATUS_);
 
--- ÎÄµµ¸½¼þ
-CREATE TABLE BC_DOCS_ATTACH (
-    ID number(19) NOT NULL,
-    STATUS_ number(1)  NOT NULL,
-    PTYPE varchar2(36) NOT NULL,
-    PUID varchar2(36) NOT NULL,
-    SIZE_ number(19) NOT NULL,
-    COUNT_ number(19) default 0 NOT NULL,
-    EXT varchar2(10),
-    APPPATH number(1)  NOT NULL,
-    SUBJECT varchar2(500) NOT NULL,
-    PATH varchar2(500) NOT NULL,
-    FILE_DATE date NOT NULL,
-    AUTHOR_ID number(19) NOT NULL,
-    MODIFIER_ID number(19),
-    MODIFIED_DATE date,
-    CONSTRAINT BCPK_ATTACH PRIMARY KEY (ID)
+-- ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_DOCS_ATTACH (
+  ID            number(19)           not null,
+  STATUS_       number(1)            not null,
+  PTYPE         varchar2(36)         not null,
+  PUID          varchar2(36)         not null,
+  SIZE_         number(19)           not null,
+  COUNT_        number(19) default 0 not null,
+  EXT           varchar2(10),
+  APPPATH       number(1)            not null,
+  SUBJECT       varchar2(500)        not null,
+  PATH          varchar2(500)        not null,
+  FILE_DATE     date                 not null,
+  AUTHOR_ID     number(19)           not null,
+  MODIFIER_ID   number(19),
+  MODIFIED_DATE date,
+  constraint BCPK_ATTACH primary key (ID)
 );
-COMMENT ON TABLE BC_DOCS_ATTACH IS 'ÎÄµµ¸½¼þ,¼ÇÂ¼ÎÄµµÓëÆäÏà¹Ø¸½¼þÖ®¼äµÄ¹ØÏµ';
-COMMENT ON COLUMN BC_DOCS_ATTACH.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_DOCS_ATTACH.PTYPE IS 'Ëù¹ØÁªÎÄµµµÄÀàÐÍ';
-COMMENT ON COLUMN BC_DOCS_ATTACH.PUID IS 'Ëù¹ØÁªÎÄµµµÄUID';
-COMMENT ON COLUMN BC_DOCS_ATTACH.SIZE_ IS 'ÎÄ¼þµÄ´óÐ¡(µ¥Î»Îª×Ö½Ú)';
-COMMENT ON COLUMN BC_DOCS_ATTACH.COUNT_ IS 'ÎÄ¼þµÄÏÂÔØ´ÎÊý';
-COMMENT ON COLUMN BC_DOCS_ATTACH.EXT IS 'ÎÄ¼þÀ©Õ¹Ãû£ºÈçpng¡¢doc¡¢mp3µÈ';
-COMMENT ON COLUMN BC_DOCS_ATTACH.APPPATH IS 'Ö¸¶¨pathµÄÖµÊÇÏà¶ÔÓÚÓ¦ÓÃ²¿ÊðÄ¿Â¼ÏÂÂ·¾¶»¹ÊÇÏà¶ÔÓÚÈ«¾ÖÅäÖÃµÄapp.dataÄ¿Â¼ÏÂµÄÂ·¾¶';
-COMMENT ON COLUMN BC_DOCS_ATTACH.SUBJECT IS 'ÎÄ¼þÃû³Æ(²»´øÂ·¾¶µÄ²¿·Ö)';
-COMMENT ON COLUMN BC_DOCS_ATTACH.PATH IS 'ÎïÀíÎÄ¼þ±£´æµÄÏà¶ÔÂ·¾¶(Ïà¶ÔÓÚÈ«¾ÖÅäÖÃµÄ¸½¼þ¸ùÄ¿Â¼ÏÂµÄ×ÓÂ·¾¶£¬Èç"2011/bulletin/xxxx.doc")';
+comment on table BC_DOCS_ATTACH is 'ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Â¼ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ä¹ï¿½Ïµ';
+comment on column BC_DOCS_ATTACH.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.PTYPE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.PUID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½UID';
+comment on column BC_DOCS_ATTACH.SIZE_ is 'ï¿½Ä¼ï¿½ï¿½Ä´ï¿½Ð¡(ï¿½ï¿½Î»Îªï¿½Ö½ï¿½)';
+comment on column BC_DOCS_ATTACH.COUNT_ is 'ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.EXT is 'ï¿½Ä¼ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pngï¿½ï¿½docï¿½ï¿½mp3ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.APPPATH is 'Ö¸ï¿½ï¿½pathï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã²ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½app.dataÄ¿Â¼ï¿½Âµï¿½Â·ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.SUBJECT is 'ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½)';
+comment on column BC_DOCS_ATTACH.PATH is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÄ¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½Âµï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"2011/bulletin/xxxx.doc")';
 
-COMMENT ON COLUMN BC_DOCS_ATTACH.FILE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_DOCS_ATTACH.AUTHOR_ID IS '´´½¨ÈËID';
-COMMENT ON COLUMN BC_DOCS_ATTACH.MODIFIER_ID IS '×îºóÐÞ¸ÄÈËID';
-COMMENT ON COLUMN BC_DOCS_ATTACH.MODIFIED_DATE IS '×îºóÐÞ¸ÄÊ±¼ä';
-ALTER TABLE BC_DOCS_ATTACH ADD CONSTRAINT BCFK_ATTACH_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH ADD CONSTRAINT BCFK_ATTACH_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-CREATE INDEX BCIDX_ATTACH_PUID ON BC_DOCS_ATTACH (PUID);
-CREATE INDEX BCIDX_ATTACH_PTYPE ON BC_DOCS_ATTACH (PTYPE);
+comment on column BC_DOCS_ATTACH.FILE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH.AUTHOR_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_DOCS_ATTACH.MODIFIER_ID is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ID';
+comment on column BC_DOCS_ATTACH.MODIFIED_DATE is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½Ê±ï¿½ï¿½';
+alter table BC_DOCS_ATTACH
+  add constraint BCFK_ATTACH_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH
+  add constraint BCFK_ATTACH_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+create index BCIDX_ATTACH_PUID on BC_DOCS_ATTACH (PUID);
+create index BCIDX_ATTACH_PTYPE on BC_DOCS_ATTACH (PTYPE);
 
--- ¸½¼þ´¦ÀíºÛ¼£
-CREATE TABLE BC_DOCS_ATTACH_HISTORY (
-    ID number(19) NOT NULL,
-    AID number(19) NOT NULL,
-    TYPE_ number(19) NOT NULL,
-    SUBJECT varchar2(500) NOT NULL,
-    FORMAT varchar2(10),
-    FILE_DATE date NOT NULL,
-    AUTHOR_ID number(19) NOT NULL,
-    MODIFIER_ID number(19),
-    MODIFIED_DATE date,
-    C_IP varchar2(100),
-    C_INFO varchar2(1000),
-    MEMO varchar2(2000),
-    CONSTRAINT BCPK_ATTACH_HISTORY PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½
+create table BC_DOCS_ATTACH_HISTORY (
+  ID            number(19)    not null,
+  AID           number(19)    not null,
+  TYPE_         number(19)    not null,
+  SUBJECT       varchar2(500) not null,
+  FORMAT        varchar2(10),
+  FILE_DATE     date          not null,
+  AUTHOR_ID     number(19)    not null,
+  MODIFIER_ID   number(19),
+  MODIFIED_DATE date,
+  C_IP          varchar2(100),
+  C_INFO        varchar2(1000),
+  MEMO          varchar2(2000),
+  constraint BCPK_ATTACH_HISTORY primary key (ID)
 );
-COMMENT ON TABLE BC_DOCS_ATTACH_HISTORY IS '¸½¼þ´¦ÀíºÛ¼£';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.AID IS '¸½¼þID';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.TYPE_ IS '´¦ÀíÀàÐÍ£º0-ÏÂÔØ,1-ÔÚÏß²é¿´,2-¸ñÊ½×ª»»';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.SUBJECT IS '¼òµ¥ËµÃ÷';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.FORMAT IS 'ÏÂÔØµÄÎÄ¼þ¸ñÊ½»ò×ª»»ºóµÄÎÄ¼þ¸ñÊ½£ºÈçpdf¡¢doc¡¢mp3µÈ';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.C_IP IS '¿Í»§¶ËIP';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.C_INFO IS 'ä¯ÀÀÆ÷ÐÅÏ¢£ºUser-Agent';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.MEMO IS '±¸×¢';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.FILE_DATE IS '´¦ÀíÊ±¼ä';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.AUTHOR_ID IS '´´½¨ÈËID';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.MODIFIER_ID IS '×îºóÐÞ¸ÄÈËID';
-COMMENT ON COLUMN BC_DOCS_ATTACH_HISTORY.MODIFIED_DATE IS '×îºóÐÞ¸ÄÊ±¼ä';
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_DOCS_ATTACH_HISTORY ADD CONSTRAINT BCFK_ATTACHHISTORY_ATTACH FOREIGN KEY (AID) 
-	REFERENCES BC_DOCS_ATTACH (ID);
+comment on table BC_DOCS_ATTACH_HISTORY is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½';
+comment on column BC_DOCS_ATTACH_HISTORY.AID is 'ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_DOCS_ATTACH_HISTORY.TYPE_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½0-ï¿½ï¿½ï¿½ï¿½,1-ï¿½ï¿½ï¿½ß²é¿´,2-ï¿½ï¿½Ê½×ªï¿½ï¿½';
+comment on column BC_DOCS_ATTACH_HISTORY.SUBJECT is 'ï¿½ï¿½Ëµï¿½ï¿½';
+comment on column BC_DOCS_ATTACH_HISTORY.FORMAT is 'ï¿½ï¿½ï¿½Øµï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½pdfï¿½ï¿½docï¿½ï¿½mp3ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH_HISTORY.C_IP is 'ï¿½Í»ï¿½ï¿½ï¿½IP';
+comment on column BC_DOCS_ATTACH_HISTORY.C_INFO is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½User-Agent';
+comment on column BC_DOCS_ATTACH_HISTORY.MEMO is 'ï¿½ï¿½×¢';
+comment on column BC_DOCS_ATTACH_HISTORY.FILE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_DOCS_ATTACH_HISTORY.AUTHOR_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_DOCS_ATTACH_HISTORY.MODIFIER_ID is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ID';
+comment on column BC_DOCS_ATTACH_HISTORY.MODIFIED_DATE is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½Ê±ï¿½ï¿½';
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_DOCS_ATTACH_HISTORY
+  add constraint BCFK_ATTACHHISTORY_ATTACH foreign key (AID)
+references BC_DOCS_ATTACH (ID);
 
--- ÓÃ»§·´À¡
-CREATE TABLE BC_FEEDBACK (
-    ID number(19) NOT NULL,
-    UID_ varchar2(36) NOT NULL,
-    STATUS_ number(1)  NOT NULL,
-    SUBJECT varchar2(500) NOT NULL,
-    FILE_DATE date NOT NULL,
-    AUTHOR_ID number(19) NOT NULL,
-    MODIFIER_ID number(19),
-    MODIFIED_DATE date,
-    CONTENT varchar2(4000) NOT NULL,
-    CONSTRAINT BCPK_FEEDBACK PRIMARY KEY (ID)
+-- ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_FEEDBACK (
+  ID            number(19)     not null,
+  UID_          varchar2(36)   not null,
+  STATUS_       number(1)      not null,
+  SUBJECT       varchar2(500)  not null,
+  FILE_DATE     date           not null,
+  AUTHOR_ID     number(19)     not null,
+  MODIFIER_ID   number(19),
+  MODIFIED_DATE date,
+  CONTENT       varchar2(4000) not null,
+  constraint BCPK_FEEDBACK primary key (ID)
 );
-COMMENT ON TABLE BC_FEEDBACK IS 'ÓÃ»§·´À¡';
-COMMENT ON COLUMN BC_FEEDBACK.UID_ IS '¹ØÁª¸½¼þµÄ±êÊ¶ºÅ';
-COMMENT ON COLUMN BC_FEEDBACK.STATUS_ IS '×´Ì¬:0-²Ý¸å,1-ÒÑÌá½»,2-ÒÑÊÜÀí';
-COMMENT ON COLUMN BC_FEEDBACK.FILE_DATE IS '´´½¨Ê±¼ä';
-COMMENT ON COLUMN BC_FEEDBACK.SUBJECT IS '±êÌâ';
-COMMENT ON COLUMN BC_FEEDBACK.CONTENT IS 'ÏêÏ¸ÄÚÈÝ';
+comment on table BC_FEEDBACK is 'ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_FEEDBACK.UID_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ê¶ï¿½ï¿½';
+comment on column BC_FEEDBACK.STATUS_ is '×´Ì¬:0-ï¿½Ý¸ï¿½,1-ï¿½ï¿½ï¿½á½»,2-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_FEEDBACK.FILE_DATE is 'ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_FEEDBACK.SUBJECT is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_FEEDBACK.CONTENT is 'ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½';
 
-COMMENT ON COLUMN BC_FEEDBACK.AUTHOR_ID IS '´´½¨ÈËID';
-COMMENT ON COLUMN BC_FEEDBACK.MODIFIER_ID IS '×îºóÐÞ¸ÄÈËID';
-COMMENT ON COLUMN BC_FEEDBACK.MODIFIED_DATE IS '×îºóÐÞ¸ÄÊ±¼ä';
-ALTER TABLE BC_FEEDBACK ADD CONSTRAINT BCFK_FEEDBACK_AUTHOR FOREIGN KEY (AUTHOR_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_FEEDBACK ADD CONSTRAINT BCFK_FEEDBACK_MODIFIER FOREIGN KEY (MODIFIER_ID) 
-	REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
+comment on column BC_FEEDBACK.AUTHOR_ID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_FEEDBACK.MODIFIER_ID is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ID';
+comment on column BC_FEEDBACK.MODIFIED_DATE is 'ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½Ê±ï¿½ï¿½';
+alter table BC_FEEDBACK
+  add constraint BCFK_FEEDBACK_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_FEEDBACK
+  add constraint BCFK_FEEDBACK_MODIFIER foreign key (MODIFIER_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
 
-
--- ##Ñ¡ÏîÄ£¿é##
--- Ñ¡Ïî·Ö×é
-CREATE TABLE BC_OPTION_GROUP (
-    ID number(19) NOT NULL,
-    KEY_ varchar2(255) NOT NULL,
-    VALUE_ varchar2(255) NOT NULL,
-    ORDER_ varchar2(100),
-    ICON varchar2(100),
-    CONSTRAINT BCPK_OPTION_GROUP PRIMARY KEY (ID)
+-- ##Ñ¡ï¿½ï¿½Ä£ï¿½ï¿½##
+-- Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_OPTION_GROUP (
+  ID     number(19)    not null,
+  KEY_   varchar2(255) not null,
+  VALUE_ varchar2(255) not null,
+  ORDER_ varchar2(100),
+  ICON   varchar2(100),
+  constraint BCPK_OPTION_GROUP primary key (ID)
 );
-COMMENT ON TABLE BC_OPTION_GROUP IS 'Ñ¡Ïî·Ö×é';
-COMMENT ON COLUMN BC_OPTION_GROUP.KEY_ IS '¼ü';
-COMMENT ON COLUMN BC_OPTION_GROUP.VALUE_ IS 'Öµ';
-COMMENT ON COLUMN BC_OPTION_GROUP.ORDER_ IS 'ÅÅÐòºÅ';
-COMMENT ON COLUMN BC_OPTION_GROUP.ICON IS 'Í¼±êÑùÊ½';
-CREATE INDEX BCIDX_OPTIONGROUP_KEY ON BC_OPTION_GROUP (KEY_);
-CREATE INDEX BCIDX_OPTIONGROUP_VALUE ON BC_OPTION_GROUP (VALUE_);
+comment on table BC_OPTION_GROUP is 'Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_OPTION_GROUP.KEY_ is 'ï¿½ï¿½';
+comment on column BC_OPTION_GROUP.VALUE_ is 'Öµ';
+comment on column BC_OPTION_GROUP.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_OPTION_GROUP.ICON is 'Í¼ï¿½ï¿½ï¿½ï¿½Ê½';
+create index BCIDX_OPTIONGROUP_KEY on BC_OPTION_GROUP (KEY_);
+create index BCIDX_OPTIONGROUP_VALUE on BC_OPTION_GROUP (VALUE_);
 
--- Ñ¡ÏîÌõÄ¿
-CREATE TABLE BC_OPTION_ITEM (
-    ID number(19) NOT NULL,
-    PID number(19) NOT NULL,
-    KEY_ varchar2(255) NOT NULL,
-    VALUE_ varchar2(255) NOT NULL,
-    ORDER_ varchar2(100),
-    ICON varchar2(100),
-    STATUS_ number(1)  NOT NULL,
-    DESC_ varchar2(1000),
-    CONSTRAINT BCPK_OPTION_ITEM PRIMARY KEY (ID)
+-- Ñ¡ï¿½ï¿½ï¿½ï¿½Ä¿
+create table BC_OPTION_ITEM (
+  ID      number(19)    not null,
+  PID     number(19)    not null,
+  KEY_    varchar2(255) not null,
+  VALUE_  varchar2(255) not null,
+  ORDER_  varchar2(100),
+  ICON    varchar2(100),
+  STATUS_ number(1)     not null,
+  DESC_   varchar2(1000),
+  constraint BCPK_OPTION_ITEM primary key (ID)
 );
-COMMENT ON TABLE BC_OPTION_ITEM IS 'Ñ¡ÏîÌõÄ¿';
-COMMENT ON COLUMN BC_OPTION_ITEM.PID IS 'ËùÊô·Ö×éµÄID';
-COMMENT ON COLUMN BC_OPTION_ITEM.KEY_ IS '¼ü';
-COMMENT ON COLUMN BC_OPTION_ITEM.VALUE_ IS 'Öµ';
-COMMENT ON COLUMN BC_OPTION_ITEM.ORDER_ IS 'ÅÅÐòºÅ';
-COMMENT ON COLUMN BC_OPTION_ITEM.ICON IS 'Í¼±êÑùÊ½';
-COMMENT ON COLUMN BC_OPTION_ITEM.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý';
-COMMENT ON COLUMN BC_OPTION_ITEM.DESC_ IS 'ËµÃ÷';
-ALTER TABLE BC_OPTION_ITEM ADD CONSTRAINT BCFK_OPTIONITEM_OPTIONGROUP FOREIGN KEY (PID) 
-	REFERENCES BC_OPTION_GROUP (ID);
-CREATE INDEX BCIDX_OPTIONITEM_KEY ON BC_OPTION_ITEM (KEY_);
-CREATE INDEX BCIDX_OPTIONITEM_VALUE ON BC_OPTION_ITEM (VALUE_);
-CREATE INDEX BCIDX_OPTIONITEM_PID ON BC_OPTION_ITEM (PID);
+comment on table BC_OPTION_ITEM is 'Ñ¡ï¿½ï¿½ï¿½ï¿½Ä¿';
+comment on column BC_OPTION_ITEM.PID is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID';
+comment on column BC_OPTION_ITEM.KEY_ is 'ï¿½ï¿½';
+comment on column BC_OPTION_ITEM.VALUE_ is 'Öµ';
+comment on column BC_OPTION_ITEM.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_OPTION_ITEM.ICON is 'Í¼ï¿½ï¿½ï¿½ï¿½Ê½';
+comment on column BC_OPTION_ITEM.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½';
+comment on column BC_OPTION_ITEM.DESC_ is 'Ëµï¿½ï¿½';
+alter table BC_OPTION_ITEM
+  add constraint BCFK_OPTIONITEM_OPTIONGROUP foreign key (PID)
+references BC_OPTION_GROUP (ID);
+create index BCIDX_OPTIONITEM_KEY on BC_OPTION_ITEM (KEY_);
+create index BCIDX_OPTIONITEM_VALUE on BC_OPTION_ITEM (VALUE_);
+create index BCIDX_OPTIONITEM_PID on BC_OPTION_ITEM (PID);
 
--- µ÷¶ÈÈÎÎñÅäÖÃ
-CREATE TABLE BC_SD_JOB (
-    ID number(19) NOT NULL,
-    STATUS_ number(1)  NOT NULL,
-    NAME varchar2(255) NOT NULL,
-    GROUPN varchar2(255) NOT NULL,
-    CRON varchar2(255) NOT NULL,
-    BEAN varchar2(255) NOT NULL,
-    METHOD varchar2(255) NOT NULL,
-    IGNORE_ERROR number(1) NOT NULL,
-    ORDER_ varchar2(100),
-    NEXT_DATE date,
-    MEMO_ varchar2(1000),
-    CONSTRAINT BCPK_SD_JOB PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+create table BC_SD_JOB (
+  ID           number(19)    not null,
+  STATUS_      number(1)     not null,
+  NAME         varchar2(255) not null,
+  GROUPN       varchar2(255) not null,
+  CRON         varchar2(255) not null,
+  BEAN         varchar2(255) not null,
+  METHOD       varchar2(255) not null,
+  IGNORE_ERROR number(1)     not null,
+  ORDER_       varchar2(100),
+  NEXT_DATE    date,
+  MEMO_        varchar2(1000),
+  constraint BCPK_SD_JOB primary key (ID)
 );
-COMMENT ON TABLE BC_SD_JOB IS 'µ÷¶ÈÈÎÎñÅäÖÃ';
-COMMENT ON COLUMN BC_SD_JOB.NAME IS 'Ãû³Æ';
-COMMENT ON COLUMN BC_SD_JOB.BEAN IS 'Òªµ÷ÓÃµÄSpringBeanÃû';
-COMMENT ON COLUMN BC_SD_JOB.METHOD IS 'Òªµ÷ÓÃµÄSpringBean·½·¨Ãû';
-COMMENT ON COLUMN BC_SD_JOB.IGNORE_ERROR IS '·¢ÏÖÒì³£ÊÇ·ñºöÂÔºó¼ÌÐøµ÷¶È:0-·ñ,1-ÊÇ';
-COMMENT ON COLUMN BC_SD_JOB.MEMO_ IS '±¸×¢';
-COMMENT ON COLUMN BC_SD_JOB.STATUS_ IS '×´Ì¬£º0-ÆôÓÃÖÐ,1-ÒÑ½ûÓÃ,2-ÒÑÉ¾³ý,3-ÕýÔÚÔËÐÐ,4-ÔÝÍ£';
-COMMENT ON COLUMN BC_SD_JOB.GROUPN IS '·Ö×éÃû';
-COMMENT ON COLUMN BC_SD_JOB.CRON IS '±í´ïÊ½';
-COMMENT ON COLUMN BC_SD_JOB.ORDER_ IS 'ÅÅÐòºÅ';
-COMMENT ON COLUMN BC_SD_JOB.NEXT_DATE IS 'ÈÎÎñµÄÏÂÒ»ÔËÐÐÊ±¼ä';
+comment on table BC_SD_JOB is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_JOB.NAME is 'ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_JOB.BEAN is 'Òªï¿½ï¿½ï¿½Ãµï¿½SpringBeanï¿½ï¿½';
+comment on column BC_SD_JOB.METHOD is 'Òªï¿½ï¿½ï¿½Ãµï¿½SpringBeanï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_JOB.IGNORE_ERROR is 'ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½Ç·ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:0-ï¿½ï¿½,1-ï¿½ï¿½';
+comment on column BC_SD_JOB.MEMO_ is 'ï¿½ï¿½×¢';
+comment on column BC_SD_JOB.STATUS_ is '×´Ì¬ï¿½ï¿½0-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ½ï¿½ï¿½ï¿½,2-ï¿½ï¿½É¾ï¿½ï¿½,3-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,4-ï¿½ï¿½Í£';
+comment on column BC_SD_JOB.GROUPN is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_JOB.CRON is 'ï¿½ï¿½ï¿½Ê½';
+comment on column BC_SD_JOB.ORDER_ is 'ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_JOB.NEXT_DATE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
 
--- ÈÎÎñµ÷¶ÈÈÕÖ¾
-CREATE TABLE BC_SD_LOG (
-    ID number(19) NOT NULL,
-    SUCCESS number(1)  NOT NULL,
-    START_DATE DATE NOT NULL,
-    END_DATE DATE NOT NULL,
-    CFG_CRON varchar2(255) NOT NULL,
-    CFG_NAME varchar2(255),
-    CFG_GROUP varchar2(255),
-    CFG_BEAN varchar2(255),
-    CFG_METHOD varchar2(255),
-    ERROR_TYPE varchar2(255),
-    MSG CLOB,
-    CONSTRAINT BCPK_SD_LOG PRIMARY KEY (ID)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
+create table BC_SD_LOG (
+  ID         number(19)    not null,
+  SUCCESS    number(1)     not null,
+  START_DATE date          not null,
+  END_DATE   date          not null,
+  CFG_CRON   varchar2(255) not null,
+  CFG_NAME   varchar2(255),
+  CFG_GROUP  varchar2(255),
+  CFG_BEAN   varchar2(255),
+  CFG_METHOD varchar2(255),
+  ERROR_TYPE varchar2(255),
+  MSG        clob,
+  constraint BCPK_SD_LOG primary key (ID)
 );
-COMMENT ON TABLE BC_SD_LOG IS 'ÈÎÎñµ÷¶ÈÈÕÖ¾';
-COMMENT ON COLUMN BC_SD_LOG.SUCCESS IS 'ÈÎÎñÊÇ·ñ´¦Àí³É¹¦:0-Ê§°Ü,1-³É¹¦';
-COMMENT ON COLUMN BC_SD_LOG.START_DATE IS 'ÈÎÎñµÄÆô¶¯Ê±¼ä';
-COMMENT ON COLUMN BC_SD_LOG.END_DATE IS 'ÈÎÎñµÄ½áÊøÊ±¼ä';
-COMMENT ON COLUMN BC_SD_LOG.ERROR_TYPE IS 'Òì³£·ÖÀà';
-COMMENT ON COLUMN BC_SD_LOG.MSG IS 'Òì³£ÐÅÏ¢';
-COMMENT ON COLUMN BC_SD_LOG.CFG_CRON IS '¶ÔÓ¦ScheduleJobµÄcron';
-COMMENT ON COLUMN BC_SD_LOG.CFG_NAME IS '¶ÔÓ¦ScheduleJobµÄname';
-COMMENT ON COLUMN BC_SD_LOG.CFG_GROUP IS '¶ÔÓ¦ScheduleJobµÄgroupn';
-COMMENT ON COLUMN BC_SD_LOG.CFG_BEAN IS '¶ÔÓ¦ScheduleJobµÄbean';
-COMMENT ON COLUMN BC_SD_LOG.CFG_METHOD IS '¶ÔÓ¦ScheduleJobµÄmethod';
+comment on table BC_SD_LOG is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾';
+comment on column BC_SD_LOG.SUCCESS is 'ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½É¹ï¿½:0-Ê§ï¿½ï¿½,1-ï¿½É¹ï¿½';
+comment on column BC_SD_LOG.START_DATE is 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_SD_LOG.END_DATE is 'ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_SD_LOG.ERROR_TYPE is 'ï¿½ì³£ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SD_LOG.MSG is 'ï¿½ì³£ï¿½ï¿½Ï¢';
+comment on column BC_SD_LOG.CFG_CRON is 'ï¿½ï¿½Ó¦ScheduleJobï¿½ï¿½cron';
+comment on column BC_SD_LOG.CFG_NAME is 'ï¿½ï¿½Ó¦ScheduleJobï¿½ï¿½name';
+comment on column BC_SD_LOG.CFG_GROUP is 'ï¿½ï¿½Ó¦ScheduleJobï¿½ï¿½groupn';
+comment on column BC_SD_LOG.CFG_BEAN is 'ï¿½ï¿½Ó¦ScheduleJobï¿½ï¿½bean';
+comment on column BC_SD_LOG.CFG_METHOD is 'ï¿½ï¿½Ó¦ScheduleJobï¿½ï¿½method';
 
--- Í¬²½ÐÅÏ¢»ù±í
-CREATE TABLE BC_SYNC_BASE (
-    ID number(19) NOT NULL,
-    STATUS_ number(1) default 0 NOT NULL,
-    SYNC_TYPE varchar2(255) NOT NULL,
-    SYNC_CODE varchar2(255) NOT NULL,
-    SYNC_FROM varchar2(1000) NOT NULL,
-    SYNC_DATE DATE NOT NULL,
-    AUTHOR_ID NUMBER(19) NOT NULL,
-    CONSTRAINT BCPK_SYNC_BASE PRIMARY KEY (ID)
+-- Í¬ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+create table BC_SYNC_BASE (
+  ID        number(19)          not null,
+  STATUS_   number(1) default 0 not null,
+  SYNC_TYPE varchar2(255)       not null,
+  SYNC_CODE varchar2(255)       not null,
+  SYNC_FROM varchar2(1000)      not null,
+  SYNC_DATE date                not null,
+  AUTHOR_ID number(19)          not null,
+  constraint BCPK_SYNC_BASE primary key (ID)
 );
-COMMENT ON TABLE BC_SYNC_BASE IS 'Í¬²½ÐÅÏ¢»ù±í';
-COMMENT ON COLUMN BC_SYNC_BASE.STATUS_ IS '×´Ì¬:0-Í¬²½ºó´ý´¦Àí,1-ÒÑ´¦Àí';
-COMMENT ON COLUMN BC_SYNC_BASE.SYNC_TYPE IS 'Í¬²½ÐÅÏ¢µÄÀàÐÍ';
-COMMENT ON COLUMN BC_SYNC_BASE.SYNC_CODE IS 'Í¬²½ÐÅÏ¢µÄ±êÊ¶·û';
-COMMENT ON COLUMN BC_SYNC_BASE.SYNC_FROM IS 'Í¬²½ÐÅÏ¢µÄÀ´Ô´';
-COMMENT ON COLUMN BC_SYNC_BASE.SYNC_DATE IS 'Í¬²½Ê±¼ä';
-COMMENT ON COLUMN BC_SYNC_BASE.AUTHOR_ID IS 'Í¬²½ÈËID';
-ALTER TABLE BC_SYNC_BASE ADD CONSTRAINT BCFK_SYNC_AUTHOR FOREIGN KEY (AUTHOR_ID)
-      REFERENCES BC_IDENTITY_ACTOR_HISTORY (ID);
-ALTER TABLE BC_SYNC_BASE ADD CONSTRAINT BCUK_SYNC_ID UNIQUE (SYNC_TYPE,SYNC_CODE);
+comment on table BC_SYNC_BASE is 'Í¬ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SYNC_BASE.STATUS_ is '×´Ì¬:0-Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1-ï¿½Ñ´ï¿½ï¿½ï¿½';
+comment on column BC_SYNC_BASE.SYNC_TYPE is 'Í¬ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
+comment on column BC_SYNC_BASE.SYNC_CODE is 'Í¬ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ä±ï¿½Ê¶ï¿½ï¿½';
+comment on column BC_SYNC_BASE.SYNC_FROM is 'Í¬ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ô´';
+comment on column BC_SYNC_BASE.SYNC_DATE is 'Í¬ï¿½ï¿½Ê±ï¿½ï¿½';
+comment on column BC_SYNC_BASE.AUTHOR_ID is 'Í¬ï¿½ï¿½ï¿½ï¿½ID';
+alter table BC_SYNC_BASE
+  add constraint BCFK_SYNC_AUTHOR foreign key (AUTHOR_ID)
+references BC_IDENTITY_ACTOR_HISTORY (ID);
+alter table BC_SYNC_BASE
+  add constraint BCUK_SYNC_ID unique (SYNC_TYPE, SYNC_CODE);

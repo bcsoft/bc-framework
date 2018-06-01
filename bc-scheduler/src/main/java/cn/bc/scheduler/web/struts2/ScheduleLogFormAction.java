@@ -24,33 +24,33 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class ScheduleLogFormAction extends EntityAction<Long, ScheduleLog> {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private SchedulerManage schedulerManage;
+  @Autowired
+  private SchedulerManage schedulerManage;
 
-	@Autowired
-	public void setScheduleLogService(@Qualifier(value = "scheduleLogService") CrudService<ScheduleLog> crudService) {
-		this.setCrudService(crudService);
-	}
+  @Autowired
+  public void setScheduleLogService(@Qualifier(value = "scheduleLogService") CrudService<ScheduleLog> crudService) {
+    this.setCrudService(crudService);
+  }
 
-	@Override
-	public boolean isReadonly() {
-		return true;
-	}
+  @Override
+  public boolean isReadonly() {
+    return true;
+  }
 
-	@Override
-	public String getPageNamespace() {
-		return this.getContextPath() + "/bc/schedule/log";
-	}
+  @Override
+  public String getPageNamespace() {
+    return this.getContextPath() + "/bc/schedule/log";
+  }
 
-	@Override
-	protected void addJsCss(List<String> container) {
-		container.add("bc/schedule/log/form.js");
-	}
+  @Override
+  protected void addJsCss(List<String> container) {
+    container.add("bc/schedule/log/form.js");
+  }
 
-	@Override
-	protected PageOption buildPageOption(boolean editable) {
-		return super.buildPageOption(editable).setWidth(618).setMinWidth(250).setMinHeight(150);
-	}
+  @Override
+  protected PageOption buildPageOption(boolean editable) {
+    return super.buildPageOption(editable).setWidth(618).setMinWidth(250).setMinHeight(150);
+  }
 }
