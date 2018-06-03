@@ -21,7 +21,7 @@
     <bc-framework.version>4.0-SNAPSHOT</bc-framework.version>
 
     <!-- main 3rd-party package version -->
-    <spring.version>4.2.1.RELEASE</spring.version>
+    <spring.version>5.0.6.RELEASE</spring.version>
     <spring-struts.version>3.2.11.RELEASE</spring-struts.version>
     <spring-ws.version>2.2.2.RELEASE</spring-ws.version>
     <hibernate.version>5.0.6.Final</hibernate.version>
