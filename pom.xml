@@ -5,6 +5,7 @@
     <groupId>tech.simter</groupId>
     <artifactId>simter-build</artifactId>
     <version>0.5.0</version>
+    <relativePath/>
   </parent>
   <groupId>cn.bc</groupId>
   <artifactId>bc-framework-build</artifactId>
