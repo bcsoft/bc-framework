@@ -39,7 +39,7 @@
     <module>bc-db-jdbc</module>
     <module>bc-orm-jpa</module>
     <module>bc-orm-jpa-test-hibernate</module>
-    <module>bc-orm-hibernate</module>
+    <!-- <module>bc-orm-hibernate</module> -->
     <module>bc-scheduler</module>
     <module>bc-acl</module>
     <module>bc-email</module>
