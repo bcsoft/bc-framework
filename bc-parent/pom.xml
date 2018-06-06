@@ -1097,6 +1097,14 @@
                     </includes>
                     <filtering>true</filtering>
                   </resource>
+                  <resource>
+                    <directory>src/main/resources</directory>
+                    <excludes>
+                      <exclude>**/*.properties</exclude>
+                      <exclude>**/*.xml</exclude>
+                    </excludes>
+                    <filtering>false</filtering>
+                  </resource>
                 </resources>
               </configuration>
             </execution>
@@ -1115,6 +1123,14 @@
                       <include>**/*.xml</include>
                     </includes>
                     <filtering>true</filtering>
+                  </resource>
+                  <resource>
+                    <directory>src/test/resources</directory>
+                    <excludes>
+                      <exclude>**/*.properties</exclude>
+                      <exclude>**/*.xml</exclude>
+                    </excludes>
+                    <filtering>false</filtering>
                   </resource>
                 </resources>
               </configuration>
