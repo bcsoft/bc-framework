@@ -248,6 +248,11 @@
         <artifactId>bc-rest-test</artifactId>
         <version>${bc-framework.version}</version>
       </dependency>
+      <dependency>
+        <groupId>cn.bc.rest</groupId>
+        <artifactId>bc-rest-demo</artifactId>
+        <version>${bc-framework.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>
