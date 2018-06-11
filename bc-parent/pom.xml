@@ -1137,44 +1137,6 @@
             </execution>
           </executions>
         </plugin>
-
-        <!-- http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html
-          jetty6: groupId=org.mortbay.jetty, artifactId=maven-jetty-plugin
-          jetty7: groupId=org.mortbay.jetty, artifactId=jetty-maven-plugin
-          jetty9: groupId=org.eclipse.jetty, artifactId=jetty-maven-plugin
-        -->
-        <plugin>
-          <groupId>org.eclipse.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <version>${jetty.version}</version>
-          <!-- 修改端口：mvn jetty:run -Djetty.port=8081 -->
-
-          <!-- 配置参考：http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html -->
-          <configuration>
-            <!--<scanIntervalSeconds>5</scanIntervalSeconds>-->
-            <httpConnector>
-              <port>${jetty.port}</port>
-              <idleTimeout>60000</idleTimeout>
-            </httpConnector>
-            <webApp>
-              <contextPath>${jetty.path}</contextPath>
-              <!-- 默认为： /${project.artifactId} -->
-              <defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
-              <!-- session 持久化配置 -->
-              <sessionHandler implementation="org.eclipse.jetty.server.session.SessionHandler">
-                <sessionManager implementation="org.eclipse.jetty.server.session.HashSessionManager">
-                  <storeDirectory>${project.basedir}/target/jetty-sessions</storeDirectory>
-                  <!-- 默认为0秒: Configures the period in seconds after which a session is deemed idle and saved to save on session memory.-->
-                  <idleSavePeriod>1</idleSavePeriod>
-                  <!-- 默认30秒: the period in seconds at which a check is made for sessions to be invalidated.-->
-                  <scavengePeriod>600</scavengePeriod>
-                  <!-- 默认false: Delaying Session Load -->
-                  <lazyLoad>true</lazyLoad>
-                </sessionManager>
-              </sessionHandler>
-            </webApp>
-          </configuration>
-        </plugin>
         <!-- 版本管理工具 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
