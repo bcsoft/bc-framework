@@ -1179,8 +1179,8 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-plugin</artifactId>
-          <!-- 1.9.4(2015-03-28), 1.9.2(2014-09-13)-->
-          <version>1.9.4</version>
+          <!-- 1.10.0(2018-05-25), 1.9.4(2015-03-28), 1.9.2(2014-09-13)-->
+          <version>1.10.0</version>
           <configuration>
             <!--<goals>install</goals> -->
             <connectionType>developerConnection</connectionType>
