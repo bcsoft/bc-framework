@@ -1137,21 +1137,6 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <!-- 2.6(2015-01-09), 2.5(2014-10-09)-->
-          <version>2.6</version>
-          <configuration>
-            <webResources>
-              <resource>
-                <!-- this is relative to the pom.xml directory -->
-                <directory>src/main/webapp</directory>
-                <filtering>true</filtering>
-              </resource>
-            </webResources>
-          </configuration>
-        </plugin>
 
         <!-- http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html
           jetty6: groupId=org.mortbay.jetty, artifactId=maven-jetty-plugin
