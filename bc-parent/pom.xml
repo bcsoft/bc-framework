@@ -87,7 +87,7 @@
         <groupId>ognl</groupId>
         <artifactId>ognl</artifactId>
         <!-- 3.1(2015-09-01), 3.0.8(2013-09-24) -->
-        <version>3.1</version>
+        <version>${ognl.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javassist</groupId>
