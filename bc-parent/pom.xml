@@ -124,7 +124,7 @@
       <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.2</version>
       </dependency>
 
       <!-- slf4j：jcl-over-slf4j 用于桥接commons-logging 到 slf4j  -->
