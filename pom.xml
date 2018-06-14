@@ -22,7 +22,7 @@
     <bc-framework.version>${revision}</bc-framework.version>
 
     <!-- main 3rd-party package version -->
-    <spring.version>5.0.6.RELEASE</spring.version>
+    <spring.version>5.0.5.RELEASE</spring.version>
     <spring-struts.version>3.2.11.RELEASE</spring-struts.version>
     <spring-ws.version>2.2.2.RELEASE</spring-ws.version>
     <hibernate.version>5.1.14.Final</hibernate.version>
