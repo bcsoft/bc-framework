@@ -355,7 +355,7 @@
         <groupId>org.freemarker</groupId>
         <artifactId>freemarker</artifactId>
         <!-- 2.3.23(2015-07-05), 2.3.21(2014-10-23) -->
-        <version>2.3.23</version>
+        <version>${freemarker.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.struts</groupId>
