@@ -298,7 +298,7 @@ public class ImageAction extends ActionSupport implements SessionAware {
       try {
         inputStream = new FileInputStream(file);
       } catch (FileNotFoundException e1) {
-        logger.error(e.getMessage(), e);
+        logger.error(e.getMessage());
       }
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
