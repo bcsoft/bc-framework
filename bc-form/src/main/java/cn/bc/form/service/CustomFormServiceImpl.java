@@ -152,7 +152,7 @@ public class CustomFormServiceImpl implements CustomFormService {
     if (json.has("status")) form.setStatus(json.getInt("status"));
     if (json.has("subject")) form.setSubject(json.getString("subject"));
     if (json.has("tpl")) form.setTpl(json.getString("tpl"));
-    if (json.has("version")) form.setVer(new Float(json.getString("version")));
+    if (json.has("version")) form.setVer(new Float(json.getDouble("version")));
     if (json.has("description")) form.setDescription(json.getString("description"));
     if (json.has("ext01")) form.setExt01(json.getString("ext01"));
     if (json.has("ext02")) form.setExt02(json.getString("ext02"));
