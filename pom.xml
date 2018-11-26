@@ -18,7 +18,7 @@
     <source.skip>false</source.skip>
 
     <!-- framework version -->
-    <revision>4.0-SNAPSHOT</revision>
+    <revision>4.0.0</revision>
     <bc-framework.version>${revision}</bc-framework.version>
 
     <!-- main 3rd-party package version -->
