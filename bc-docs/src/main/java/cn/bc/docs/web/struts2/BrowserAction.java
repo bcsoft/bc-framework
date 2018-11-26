@@ -61,9 +61,9 @@ public class BrowserAction extends ActionSupport {
 
     int os_bit = (Integer) b.get("os_bit");
     if (os_bit == 1) {
-      fn += "-32位";
+      fn += "-x86";
     } else if (os_bit == 2) {
-      fn += "-64位";
+      fn += "-x64";
     }
 
     fn += "." + b.get("format");
