@@ -180,7 +180,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
       getText("template.status"), 40).setSortable(true)
       .setValueFormater(new KeyValueFormater(this.getStatuses())));
     columns.add(new TextColumn4MapKey("t.order_", "orderNo",
-      getText("template.order"), 60).setSortable(true));
+      getText("template.order"), 80).setSortable(true));
     // 所属分类
     columns.add(new TextColumn4MapKey("category", "category",
       getText("template.category"), 150)
