@@ -1,5 +1,13 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.0 (2018-11-26)
+- bc-docs: 优化下载浏览器的文件名
+- bc-form: 修正获取 Form version 的类型错误
+- bc-docs: 下载图片不存在时仅输出简易异常信息，不输出堆栈
+- 升级框架组件
+- 使用两空格缩进重新格式化所有源码
+- 添加单元测试 profile 例子：dev-hsql、dev-postgres、dev-mysql
+
 ## release v3.2.11 (2018-04-25)
 - bc-identity : 添加批量查询指定用户当前所属部门的简易信息接口、实现和 struts 配置
 
