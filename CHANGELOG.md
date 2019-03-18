@@ -1,5 +1,8 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.1 (2019-03-18)
+- 优化模板配置视图排序号列宽
+
 ## release v4.0.0 (2018-11-26)
 - bc-docs: 优化下载浏览器的文件名
 - bc-form: 修正获取 Form version 的类型错误
