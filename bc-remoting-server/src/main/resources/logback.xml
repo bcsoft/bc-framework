@@ -46,13 +46,14 @@
     </triggeringPolicy>
   </appender>
 
-  <!-- this -->
-  <logger name="cn.bc.remoting" level="ERROR"/>
-  <logger name="cn.bc.remoting.demo" level="ERROR"/>
-
   <!-- 设置默认的日志级别: TRACE < DEBUG < INFO < WARN < ERROR -->
   <root level="ERROR">
     <appender-ref ref="console"/>
     <appender-ref ref="rollingFile"/>
   </root>
+
+  <!-- this -->
+  <logger name="org.springframework" level="ERROR"/>
+  <logger name="org.springframework.remoting" level="INFO"/>
+  <logger name="cn.bc.remoting" level="WARN"/>
 </configuration>

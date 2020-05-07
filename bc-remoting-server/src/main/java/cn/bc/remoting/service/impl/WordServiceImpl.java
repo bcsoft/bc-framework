@@ -8,6 +8,7 @@ import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -23,7 +24,7 @@ import java.util.Date;
  *
  * @author dragon
  */
-public class WordServiceImpl implements WordService {
+public class WordServiceImpl implements WordService, InitializingBean {
   private static Logger logger = LoggerFactory.getLogger(WordServiceImpl.class);
   private static String TEMP_DIR = "/data_rmi/temp";
   private static String FROM_ROOT_DIR = "/data_rmi/source";
@@ -32,6 +33,20 @@ public class WordServiceImpl implements WordService {
   private int officeVersion = 2010;// office版本号：2007|2010|2013
   private DateFormat df4fileName = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
   private DateFormat df4yearMonth = new SimpleDateFormat("yyyyMM");
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    logger.warn("\n\tFROM_ROOT_DIR={}" +
+        "\n\tTO_ROOT_DIR={}" +
+        "\n\tTEMP_DIR={}" +
+        "\n\tofficeVersion={}" +
+        "\n\tcompatible={}",
+      FROM_ROOT_DIR,
+      TO_ROOT_DIR,
+      TEMP_DIR,
+      officeVersion,
+      compatible);
+  }
 
   public void setTempDir(String tempDir) {
     TEMP_DIR = tempDir;
@@ -105,7 +120,7 @@ public class WordServiceImpl implements WordService {
     }
 
     // 记录一条转换日志
-    logger.warn("convert:token={}, fromFile={}, toFile={}", token, fromFile, toFile);
+    logger.info("convert:token={}, fromFile={}, toFile={}", token, fromFile, toFile);
     return true;
   }
 
