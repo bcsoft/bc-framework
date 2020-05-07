@@ -8,7 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-remoting-server</artifactId>
-  <version>4.0-SNAPSHOT</version>
+  <version>4.0.0</version>
   <packaging>war</packaging>
   <description>Office 文档转换服务</description>
   <properties>
