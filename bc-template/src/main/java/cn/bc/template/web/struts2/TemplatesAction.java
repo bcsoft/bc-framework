@@ -206,7 +206,7 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
       .setUseTitleFromLabel(true));
     // 标题
     columns.add(new TextColumn4MapKey("t.subject", "subject",
-      getText("template.tfsubject"), 220)
+      getText("template.tfsubject"), 370)
       .setValueFormater(new AbstractFormater<Object>() {
         @SuppressWarnings("unchecked")
         @Override
@@ -225,10 +225,10 @@ public class TemplatesAction extends TreeViewAction<Map<String, Object>> {
         }
       }).setSortable(true).setUseTitleFromLabel(true));
     columns.add(new TextColumn4MapKey("t.code", "code",
-      getText("template.code"), 160).setSortable(true)
+      getText("template.code"), 300).setSortable(true)
       .setUseTitleFromLabel(true));
     columns.add(new TextColumn4MapKey("t.version_", "version",
-      getText("template.version"), 60).setSortable(true)
+      getText("template.version"), 240).setSortable(true)
       .setUseTitleFromLabel(true));
     columns.add(new TextColumn4MapKey("t.formatted", "formatted",
       getText("template.file.formatted"), 40)
