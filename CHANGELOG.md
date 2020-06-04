@@ -1,5 +1,8 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.2 (2020-06-04)
+- 优化模板配置视图标题、编号和版本列宽
+
 ## release v4.0.1 (2019-03-18)
 - 优化模板配置视图排序号列宽
 
