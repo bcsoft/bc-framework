@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.3 (2020-07-14)
+
+- Add property bc-workflow.version=4.1.1
+
 ## release v4.0.2 (2020-06-04)
 - 优化模板配置视图标题、编号和版本列宽
 
