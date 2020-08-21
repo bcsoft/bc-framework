@@ -140,9 +140,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
         // 解析响应返回结果
         return getResult();
       } else {// 请求失败
-        return new Result<>(new RuntimeException(
-          "response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
-            + ",Reason=" + response.getStatusLine().getReasonPhrase()));
+        return defaultBadResult(response);
       }
     } catch (SocketTimeoutException e) {
       logger.info("连接超时, url={}", request.getURI());
@@ -399,6 +397,17 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
       logger.warn(e.getMessage(), e);
       return new Result<>(e);
     }
+  }
+
+  /**
+   * 设置默认请求失败返回值
+   *
+   * @return 返回失败的异常信息
+   */
+  protected Result<V> defaultBadResult(CloseableHttpResponse response) {
+    return new Result<>(new RuntimeException(
+      "response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
+        + ",Reason=" + response.getStatusLine().getReasonPhrase()));
   }
 
   protected Object getFailedData() throws IOException {
