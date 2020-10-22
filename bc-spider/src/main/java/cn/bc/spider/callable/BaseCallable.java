@@ -3,10 +3,7 @@ package cn.bc.spider.callable;
 import cn.bc.core.exception.CoreException;
 import cn.bc.spider.Result;
 import cn.bc.spider.http.HttpClientFactory;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -404,7 +401,7 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
    *
    * @return 返回失败的异常信息
    */
-  protected Result<V> defaultBadResult(CloseableHttpResponse response) {
+  protected Result<V> defaultBadResult(HttpResponse response) {
     return new Result<>(new RuntimeException(
       "response is not ok. StatusCode=" + response.getStatusLine().getStatusCode()
         + ",Reason=" + response.getStatusLine().getReasonPhrase()));
