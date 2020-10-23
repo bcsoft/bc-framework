@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.4 (2020-10-23)
+
+- 优化 bc-spider 的 BaseCallable，使请求失败的返回值可以方便的通过方法 defaultBadResult 复写
+- 更新 bc-workflow 版本到 4.2.0
+
 ## release v4.0.3 (2020-07-14)
 
 - Add property bc-workflow.version=4.1.1
