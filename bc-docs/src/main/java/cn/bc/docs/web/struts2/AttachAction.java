@@ -549,4 +549,10 @@ public class AttachAction extends EntityAction<Long, Attach> implements
   protected String getJs() {
     return this.getContextPath() + "/bc/docs/attach/list.js";
   }
+
+  public String loadId() {
+    Attach attach = attachService.loadByPtype(ptype, puid);
+    this.json = attach == null ? "" : new Json().put("id", attach.getId()).toString();
+    return "json";
+  }
 }

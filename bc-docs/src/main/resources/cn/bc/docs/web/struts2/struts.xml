@@ -64,6 +64,7 @@
         <param name="contentDisposition">inline; filename="${filename}"</param>
       </result>
     </action>
+    <action name="loadId" class="attachAction" method="loadId"/>
   </package>
 
   <!-- 直接的附件上传、下载、查看处理 -->
