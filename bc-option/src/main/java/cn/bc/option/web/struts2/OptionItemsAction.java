@@ -3,7 +3,11 @@
  */
 package cn.bc.option.web.struts2;
 
+import cn.bc.BCConstants;
+import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.Direction;
+import cn.bc.core.query.condition.impl.AndCondition;
+import cn.bc.core.query.condition.impl.EqualsCondition;
 import cn.bc.core.query.condition.impl.OrderCondition;
 import cn.bc.db.jdbc.RowMapper;
 import cn.bc.db.jdbc.SqlObject;
@@ -15,15 +19,13 @@ import cn.bc.web.ui.html.grid.FooterButton;
 import cn.bc.web.ui.html.grid.IdColumn4MapKey;
 import cn.bc.web.ui.html.grid.TextColumn4MapKey;
 import cn.bc.web.ui.html.page.PageOption;
+import cn.bc.web.ui.html.toolbar.Toolbar;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 选项条目视图Action
@@ -33,6 +35,8 @@ import java.util.Map;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class OptionItemsAction extends ViewAction<Map<String, Object>> {
+  public String status = String.valueOf(BCConstants.STATUS_ENABLED);
+
   private static final long serialVersionUID = 1L;
 
   @Override
@@ -95,7 +99,7 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
     columns.add(new IdColumn4MapKey("i.id", "id"));
     columns.add(new TextColumn4MapKey("i.status_", "status",
       getText("label.status"), 60).setSortable(true)
-      .setValueFormater(new KeyValueFormater(getEntityStatuses())));
+      .setValueFormater(new KeyValueFormater(this.getStatuses())));
     columns.add(new TextColumn4MapKey("i.order_", "orderNo",
       getText("label.order"), 70).setSortable(true));
     columns.add(new TextColumn4MapKey("g.value_", "pvalue",
@@ -111,6 +115,57 @@ public class OptionItemsAction extends ViewAction<Map<String, Object>> {
       getText("option.desc"), 200).setSortable(false));
 
     return columns;
+  }
+
+  // 状态键值转换
+  private Map<String, String> getStatuses() {
+    Map<String, String> statuses = new LinkedHashMap<String, String>();
+    statuses.put(String.valueOf(BCConstants.STATUS_ENABLED),
+      getText("optionItem.status.normal"));
+    statuses.put(String.valueOf(BCConstants.STATUS_DISABLED),
+      getText("optionItem.status.disabled"));
+    statuses.put("", getText("optionItem.status.all"));
+    return statuses;
+  }
+
+  @Override
+  protected Toolbar getHtmlPageToolbar() {
+    Toolbar tb = new Toolbar();
+
+    if (this.isReadonly()) {
+      // 查看按钮
+      tb.addButton(getDefaultOpenToolbarButton());
+    } else {
+      // 新建按钮
+      tb.addButton(getDefaultCreateToolbarButton());
+
+      // 编辑按钮
+      tb.addButton(getDefaultEditToolbarButton());
+
+      // 删除按钮
+      tb.addButton(getDefaultDeleteToolbarButton());
+    }
+
+    // 状态按钮组
+    tb.addButton(Toolbar.getDefaultToolbarRadioGroup(this.getStatuses(),
+      "status", 0, getText("optionItem.status.tips")));
+
+    // 搜索按钮
+    tb.addButton(getDefaultSearchToolbarButton());
+
+    return tb;
+  }
+
+  @Override
+  protected Condition getGridSpecalCondition() {
+    // 状态条件
+    Condition condition = null;
+    if (status != null && status.length() > 0) {
+      condition = new AndCondition(new EqualsCondition("i.status_",
+        Integer.parseInt(status)));
+    }
+
+    return condition;
   }
 
   @Override
