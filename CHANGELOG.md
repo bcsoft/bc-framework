@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.5 (2021-07-30)
+
+- 选项管理视图添加状态按钮组
+
 ## release v4.0.4 (2020-10-23)
 
 - 优化 bc-spider 的 BaseCallable，使请求失败的返回值可以方便的通过方法 defaultBadResult 复写
