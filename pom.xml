@@ -18,7 +18,7 @@
     <source.skip>false</source.skip>
 
     <!-- framework version -->
-    <revision>4.0-SNAPSHOT</revision>
+    <revision>4.0.6</revision>
     <bc-framework.version>${revision}</bc-framework.version>
     <bc-workflow.version>4.2.0</bc-workflow.version>
 
