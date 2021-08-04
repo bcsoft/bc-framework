@@ -1,5 +1,29 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.0.6 (2021-08-04)
+
+- 附件模块增加通过 ptype、puid 值获取最新的附件 ID 值接口
+
+    请求：
+    ```
+    GET /bc/attach/loadId?ptype=x&puid=x
+    ```
+    | Name  | Require | Description
+    |-------|---------|-------------
+    | ptype | true    | 所关联文档的分类
+    | puid  | true    | 所关联文档的UID
+    
+    找到则响应最新的那个附件的 ID：
+    ```
+    200 OK
+    
+    { id }
+    ```
+    如果无查到指定附件时返回：
+    ```
+    200 OK
+    ```
+
 ## release v4.0.5 (2021-07-30)
 
 - 选项管理视图添加状态按钮组
