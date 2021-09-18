@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.4.0 (2021-09-18)
+
+- 对齐版本号
+
 ## release v4.0.6 (2021-08-04)
 
 - 附件模块增加通过 ptype、puid 值获取最新的附件 ID 值接口
