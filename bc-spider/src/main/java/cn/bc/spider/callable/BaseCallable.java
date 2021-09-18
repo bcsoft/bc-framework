@@ -26,12 +26,10 @@ import org.springframework.util.FileCopyUtils;
 import java.io.*;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * 基本的网络请求Callable，需要子类解析响应的结果
@@ -158,18 +156,26 @@ public abstract class BaseCallable<V> implements Callable<Result<V>> {
   }
 
   /**
-   * 判断请求是否成功的响应代码
-   *
-   * @return 默认为 200
+   * 获取指定名称的响应头的值
    */
   public String getResponseHeader(String name) {
-    String value = null;
     if (httpResponseHeaders != null && httpResponseHeaders.length > 0) {
       for (Header h : httpResponseHeaders) {
         if (h.getName().equalsIgnoreCase(name)) return h.getValue();
       }
     }
-    return value;
+    return null;
+  }
+
+  /**
+   * 获取所有响应头的值
+   */
+  public List<Entry<String, String>> getResponseHeaders() {
+    List<Map.Entry<String, String>> responseHeaders = new ArrayList<>();
+    if (httpResponseHeaders == null) return null;
+    return Arrays.stream(httpResponseHeaders)
+      .map(h -> new AbstractMap.SimpleImmutableEntry<>(h.getName(), h.getValue()))
+      .collect(Collectors.toList());
   }
 
   /**
