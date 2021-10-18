@@ -216,8 +216,17 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
       // 构建图表的数据信息
       initChartData(chartOption);
       return "chart";
+    } else if ("no-ui-sql".equals(type)) { // v4.4.1 版新增：后端执行原生 sql 生成历史报表
+      try {
+        this.reportService.runReportTemplate2history(this.code, null);
+        this.json = "报表执行成功！请到历史报表中查阅！";
+      } catch (Exception e) {
+        this.json = "报表执行失败：" + e.getMessage();
+      }
+      this.json = "<div data-type='form' class='bc-page' title='报表执行结果'>" + this.json + "</div>";
+      return "json";
     } else {
-      throw new CoreException("unsupport report type");
+      throw new CoreException("unsupported report type");
     }
   }
 

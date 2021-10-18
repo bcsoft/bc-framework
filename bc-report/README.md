@@ -1,4 +1,4 @@
-# 报表管理
+﻿# 报表管理
 
 ## 报表模板配置规范
 
@@ -7,6 +7,7 @@
   // 报表类型：
   // 1. data - 数据报表，不配置时默认为此值
   // 2. chart - 图表报表
+  // 3. no-ui-sql - 代表没有UI界面只能后台执行的纯原生 sql 报表
   type: "..."
 
   // 报表 sql：
@@ -21,6 +22,8 @@
   export: "tpl:car.list.excel", 
   // 生成的历史报表附件的文件扩展名，默认为 xls
   extension: "xls",
+  // 额外配置的 Excel 模板参数，标准 json 对象格式即可
+  exportExtParams: {...},
 
   // 通过 spel 表达式配置获取报表文件流
   // 如果配置了 columns 则忽略此配置
