@@ -1,5 +1,11 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.4.1 (2021-10-18)
+
+- 报表模板增加对 type=no-ui-sql 的纯原生 sql 后端报表支持
+    > 仅 bc-report 模块
+- 修正 logback 相关包的版本号不一致的问题
+
 ## release v4.4.0 (2021-09-18)
 
 - 对齐版本号
