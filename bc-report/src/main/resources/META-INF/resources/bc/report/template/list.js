@@ -20,7 +20,7 @@ bc.reportTemplateList = {
         bc.page.newWin({
           url: bc.root + "/bc/report/run?code=" + code,
           name: name,
-          title: name,
+          //title: name,
           mid: code
         });
       });
