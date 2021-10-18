@@ -40,6 +40,10 @@
 
     <!-- 导出Excel需要的包 -->
     <dependency>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sf.jxls</groupId>
       <artifactId>jxls-core</artifactId>
     </dependency>
