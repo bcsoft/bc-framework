@@ -14,6 +14,8 @@
   // 1. 格式为 `tpl:${模板编码}` 代表使用模板的内容作为 sql
   // 2. 否则视为纯 sql 代码使用
   sql: "tpl:car.list.sql", 
+  // sql 数据转换器注册到 spring 的名称（转换器需实现 `cn.bc.report.SqlDataMapper` 接口）
+  mapper: "${spring-bean-name}", 
   // sql 的查询方式：
   // 1. jpa - jpql
   // 2. jdbc - 原生 sql

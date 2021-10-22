@@ -4,11 +4,13 @@ import cn.bc.core.exception.CoreException;
 import cn.bc.core.query.condition.Condition;
 import cn.bc.core.query.condition.impl.MixCondition;
 import cn.bc.core.util.DateUtils;
+import cn.bc.core.util.SpringUtils;
 import cn.bc.core.util.TemplateUtils;
 import cn.bc.db.jdbc.SqlObject;
 import cn.bc.docs.domain.Attach;
 import cn.bc.identity.domain.Actor;
 import cn.bc.identity.domain.FileEntityImpl;
+import cn.bc.report.SqlDataMapper;
 import cn.bc.report.service.ReportService;
 import cn.bc.template.domain.Template;
 import cn.bc.web.ui.html.grid.Column;
@@ -545,7 +547,16 @@ public class ReportTemplate extends FileEntityImpl {
    */
   private void sqlExport(ReportService reportService, JSONObject config, File toFile, Condition condition) throws Exception {
     // 1. 执行原生 sql 得到数据
-    List<Map<String, Object>> sqlData = reportService.createSqlQuery("jdbc", this.getConfigSqlObject(reportService, condition)).list();
+    List<Map<String, Object>> sqlData_ = reportService.createSqlQuery("jdbc", this.getConfigSqlObject(reportService, condition)).list();
+
+    // 如果配置了数据映射器则调用其转换一下数据
+    Object sqlData;
+    if (config.has("mapper")) {
+      @SuppressWarnings("unchecked")
+      SqlDataMapper<Object> mapper = (SqlDataMapper<Object>) SpringUtils.getBean(config.getString("mapper"));
+      if (mapper == null) throw new CoreException("在 spring 上下文找不到所配置的转换器：mapper=" + config.getString("mapper"));
+      sqlData = mapper.map(sqlData_);
+    } else sqlData = sqlData_;
 
     // 2. 导出为 Excel
     try (
