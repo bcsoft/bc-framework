@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.4.2 (2021-10-22)
+
+- 报表模板的纯原生 sql 报表增加数据转换支持
+    > 转换器需实现 `cn.bc.report.SqlDataMapper` 接口并注册到 spring 中。
+
 ## release v4.4.1 (2021-10-18)
 
 - 报表模板增加对 type=no-ui-sql 的纯原生 sql 后端报表支持
