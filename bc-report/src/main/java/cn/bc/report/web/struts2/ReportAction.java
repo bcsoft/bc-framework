@@ -216,7 +216,9 @@ public class ReportAction extends ViewAction<Map<String, Object>> {
       // 构建图表的数据信息
       initChartData(chartOption);
       return "chart";
-    } else if ("no-ui-sql".equals(type)) { // v4.4.1 版新增：后端执行原生 sql 生成历史报表
+    } else if ("no-ui-sql".equals(type) || "no-ui-stream".equals(type)) {
+      // v4.4.1 版新增： "no-ui-sql" 后端执行原生 sql 生成历史报表
+      // v4.4.3 版新增： "no-ui-stream" 后端执行 stream 表达式生成历史报表
       try {
         this.reportService.runReportTemplate2history(this.code, null);
         this.json = "报表执行成功！请到历史报表中查阅！";

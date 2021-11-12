@@ -482,6 +482,8 @@ public class ReportTemplate extends FileEntityImpl {
       }
     } else if ("no-ui-sql".equalsIgnoreCase(type)) { // v4.4.1 版新增：后端执行原生 sql 生成历史报表
       sqlExport(reportService, config, toFile, condition);
+    } else if ("no-ui-stream".equalsIgnoreCase(type)) { // v4.4.3 版新增：后端执行 stream 表达式生成历史报表
+      streamExport(beanResolver, config, toFile, condition);
     } else {
       throw new IllegalArgumentException("不支持的报表模版配置！type=" + config.getString("type"));
     }
