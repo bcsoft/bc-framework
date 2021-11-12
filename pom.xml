@@ -18,9 +18,9 @@
     <source.skip>false</source.skip>
 
     <!-- framework version -->
-    <revision>4.4-SNAPSHOT</revision>
+    <revision>4.4.0</revision>
     <bc-framework.version>${revision}</bc-framework.version>
-    <bc-workflow.version>4.4-SNAPSHOT</bc-workflow.version>
+    <bc-workflow.version>4.4.0</bc-workflow.version>
 
     <!-- main 3rd-party package version -->
     <!-- 5.0.7(2018-06-13), 5.0.5(2018-04-04), 5.0.0(2017-09-28), 4.3.0(2016-06-10), 4.2.9(2016-12-21), 4.2.1(2015-09-01) -->
