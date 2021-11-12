@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.4.3 (2021-11-12)
+
+- 报表模板增加对 type=no-ui-stream 的后端报表支持
+
 ## release v4.4.2 (2021-10-22)
 
 - 报表模板的纯原生 sql 报表增加数据转换支持
