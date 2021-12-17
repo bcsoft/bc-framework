@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.4.4 (2021-12-17)
+
+- 修正获取 freemarker 模板 key 的正则表达式错误
+    > 在 bc-template 模块中使用正则表达式获取 freemarker 模板中 key 时不支持带有括号，如 `${(xxx + 1) / 2}`，修改后该正则表达式匹配允许是任意数字、字母和符号，从而可以获取到 `(xxx + 1) / 2` 这整块字符。
+
 ## release v4.4.3 (2021-11-12)
 
 - 报表模板增加对 type=no-ui-stream 的后端报表支持
