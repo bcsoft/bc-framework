@@ -36,5 +36,5 @@ public class BCConstants {
   /**
    * 查找 key 的通用正则表达式(${...}或<#if...>)
    */
-  public static final String PATTERN_FIND_SPEC_KEYS = "(?<=\\$\\{)([\\w\u4e00-\u9fa5]+(\\.?[\\w\u4e00-\u9fa5]*)*)(?=\\!|\\?|\\})|(?<=\\<\\#if\\s)([\\w\u4e00-\u9fa5]+(\\.?[\\w\u4e00-\u9fa5]*)*)(?=\\?\\?|\\=\\=|\\>)";
+  public static final String PATTERN_FIND_SPEC_KEYS = "(?<=\\$\\{)(.*)(?=\\!|\\?|\\})|(?<=\\<\\#if\\s)([\\w\u4e00-\u9fa5]+(\\.?[\\w\u4e00-\u9fa5]*)*)(?=\\?\\?|\\=\\=|\\>)";
 }
