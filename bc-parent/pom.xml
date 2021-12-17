@@ -575,17 +575,12 @@
       <dependency>
         <groupId>org.jxls</groupId>
         <artifactId>jxls</artifactId>
-        <version>2.3.0</version>
+        <version>2.11.0</version>
       </dependency>
       <dependency>
         <groupId>org.jxls</groupId>
         <artifactId>jxls-poi</artifactId>
-        <version>1.0.11</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jxls</groupId>
-        <artifactId>jxls-jexcel</artifactId>
-        <version>1.0.6</version>
+        <version>2.11.0</version>
       </dependency>
 
       <!-- jxls 1.x -->
