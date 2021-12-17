@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-core</artifactId>
+  <version>4.4.4</version>
   <description>BC Framework Core</description>
   <name>bc-core</name>
   <dependencies>
