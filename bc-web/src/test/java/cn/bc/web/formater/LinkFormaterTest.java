@@ -18,7 +18,7 @@ public class LinkFormaterTest {
 
     Object r = lf.format(null, "张三");
     Assert.assertEquals(
-      "<a href=\"/bs/carman/edit?id=111\" class=\"bc-link\" data-mtype=\"user\">张三</a>",
+      "<a href=\"/bs/carman/edit?id=111\" class=\"bc-link\" data-mtype=\"user\" data-title=\"张三\" data-mid=\"user张三\">张三</a>",
       r);
   }
 

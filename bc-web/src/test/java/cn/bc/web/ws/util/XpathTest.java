@@ -3,10 +3,6 @@
  */
 package cn.bc.web.ws.util;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -23,18 +19,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 
 public class XpathTest {
-
-  @Test
-  public void test01() throws Exception {
-    String t = "2015-06-19T09:25:00.0010001+08:00";
-    DateTimeFormatter f = ISODateTimeFormat.dateTime();
-    f = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZZ");
-    DateTime dt = f.parseDateTime(t);
-    System.out.println(dt);
-    System.out.println(f.print(dt));
-    //System.out.println("粤A.12345".replace(".", ""));
-  }
-
   @Test
   public void testParseXml() throws Exception {
     String xml = "<root><id name=\"_id\">1</id><中文 name=\"_中文\">中国</中文><strMsg name=\"msg\" xmlns=\"http://tempuri.org/\"/></root>";
@@ -58,9 +42,9 @@ public class XpathTest {
     for (int i = 0; i < nodes.getLength(); i++) {
       n = nodes.item(i);
       Assert.assertEquals(1, n.getNodeType());
-      System.out.println("tagName=" + n.getNodeName());
-      System.out.println("attr name=" + n.getAttributes().getNamedItem("name").getTextContent());
-      System.out.println("content=" + n.getTextContent());// not n.getNodeValue()
+      //System.out.println("tagName=" + n.getNodeName());
+      //System.out.println("attr name=" + n.getAttributes().getNamedItem("name").getTextContent());
+      //System.out.println("content=" + n.getTextContent());// not n.getNodeValue()
     }
 
     expr = xpath.compile("//strMsg");
@@ -79,7 +63,7 @@ public class XpathTest {
 
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
-    XPathExpression expr = xpath.compile("//[@name]");
+    XPathExpression expr = xpath.compile("//*[@name]");
 
     NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
     Assert.assertNotNull(nodes);
