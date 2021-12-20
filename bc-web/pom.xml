@@ -30,20 +30,12 @@
 
     <!-- 导出Excel需要的包 -->
     <dependency>
-      <groupId>net.sf.jxls</groupId>
-      <artifactId>jxls-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.jxls</groupId>
-      <artifactId>jxls-reader</artifactId>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls-poi</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
-      <artifactId>poi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi-scratchpad</artifactId>
+      <artifactId>poi-ooxml-schemas</artifactId>
     </dependency>
 
     <!-- jsoup用到的包 -->
