@@ -11,10 +11,8 @@ import java.io.OutputStream;
 public class DocumentCopyTest {
   // 加载xml文档的内容
   private HWPFDocument loadDocument() throws Exception {
-    InputStream is = new ClassPathResource(
-      "cn/bc/template/word/docTpl.doc").getInputStream();
-    HWPFDocument document = new HWPFDocument(is);
-    return document;
+    InputStream is = new ClassPathResource("cn/bc/template/word/docTpl.doc").getInputStream();
+    return new HWPFDocument(is);
   }
 
   @Test
@@ -22,7 +20,7 @@ public class DocumentCopyTest {
     HWPFDocument document = this.loadDocument();
 
     // 输出word文件
-    OutputStream os = new FileOutputStream("/t/docTpl_copy.doc");
+    OutputStream os = new FileOutputStream("target/word/docTpl_copy.doc");
     document.write(os);
     os.close();
   }

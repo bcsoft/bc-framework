@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,7 +38,7 @@ import java.util.*;
  * @author lbj
  */
 public class TemplateServiceImpl extends DefaultCrudService<Template> implements TemplateService {
-  private static Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
   private TemplateDao templateDao;
   private OperateLogService operateLogService;
@@ -151,8 +152,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
       if ("word-docx".equals(tpl.getTemplateType().getCode())
         && "docx".equals(extension)) {
-        XWPFDocument docx = DocxUtils
-          .format(is, args);
+        XWPFDocument docx = DocxUtils.format(is, args);
         try {
           docx.write(out);
           out.flush();

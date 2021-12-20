@@ -22,8 +22,7 @@ public class DocumentPropertiesTest {
     InputStream is = new ClassPathResource(
       "cn/bc/template/word/docxTpl.docx")
       .getInputStream();
-    OPCPackage p = OPCPackage.open(is);
-    return p;
+    return OPCPackage.open(is);
   }
 
   // 读取主文档部件
@@ -61,9 +60,9 @@ public class DocumentPropertiesTest {
 
     PackageProperties pp = p.getPackageProperties();
 
-    System.out.println("Creator=" + pp.getCreatorProperty().getValue()
-      + ",Title=" + pp.getTitleProperty().getValue() + ",Subject="
-      + pp.getSubjectProperty().getValue());
+    System.out.println("Creator=" + pp.getCreatorProperty().orElse(null)
+      + ",Title=" + pp.getTitleProperty().orElse(null) + ",Subject="
+      + pp.getSubjectProperty().orElse(null));
   }
 
   // 获取扩展属性：需要自己解析xml文档
@@ -73,7 +72,7 @@ public class DocumentPropertiesTest {
 
     // Get core properties part relationship
     PackageRelationship relationship = p.getRelationshipsByType(
-      PackageRelationshipTypes.EXTENDED_PROPERTIES)
+        PackageRelationshipTypes.EXTENDED_PROPERTIES)
       .getRelationship(0);
 
     // Get extended properties part from the previous relationship
@@ -191,8 +190,8 @@ public class DocumentPropertiesTest {
     XWPFDocument newDoc = new XWPFDocument(p);
     newDoc.write(new FileOutputStream("/t/newDoc_properties.docx"));
 
-    System.out.println("Creator=" + pp.getCreatorProperty().getValue()
-      + ",Title=" + pp.getTitleProperty().getValue() + ",Subject="
-      + pp.getSubjectProperty().getValue());
+    System.out.println("Creator=" + pp.getCreatorProperty().orElse(null)
+      + ",Title=" + pp.getTitleProperty().orElse(null) + ",Subject="
+      + pp.getSubjectProperty().orElse(null));
   }
 }
