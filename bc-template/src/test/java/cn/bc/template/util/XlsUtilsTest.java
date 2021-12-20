@@ -4,10 +4,6 @@
 package cn.bc.template.util;
 
 import cn.bc.core.util.DateUtils;
-import net.sf.jxls.transformer.XLSTransformer;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -23,10 +19,8 @@ import java.util.*;
  */
 public class XlsUtilsTest {
   // 加载docx文档
-  private InputStream getDocumentInputStream() throws IOException,
-    InvalidFormatException {
-    return new ClassPathResource("cn/bc/template/excel/xlsTpl.xls")
-      .getInputStream();
+  private InputStream getDocumentInputStream() throws IOException {
+    return new ClassPathResource("cn/bc/template/excel/xlsTpl.xls").getInputStream();
   }
 
   @Test
@@ -63,14 +57,19 @@ public class XlsUtilsTest {
       new String[]{"2001", "100"}, new String[]{"2002", "50"},
       new String[]{"2003", "150"}});
 
-    HSSFWorkbook workbook = XlsUtils.format(getDocumentInputStream(),
-      markerValues);
-    Assert.assertNotNull(workbook);
+    // 读取模板
+    InputStream in = getDocumentInputStream();
 
-    workbook.write(new FileOutputStream(new File("/t/xlsTpl.xls")));
-
-    // 输出格式化后的文本内容
-    // System.out.println(XlsUtils.loadText(workbook));
+    // 格式化模板
+    File fileOut = new File("target/excel/xlsTpl.xls");
+    if (fileOut.exists()) fileOut.delete();
+    XlsUtils.formatTo(
+      in,
+      new FileOutputStream(fileOut),
+      markerValues
+    );
+    Assert.assertTrue(fileOut.exists());
+    Assert.assertTrue(fileOut.length() > 0);
   }
 
   @Test
@@ -86,13 +85,19 @@ public class XlsUtilsTest {
     rowDatas.add(new Object[]{"D", 70, 20});
     markerValues.put("rowDatas", rowDatas);
 
-    XLSTransformer transformer = new XLSTransformer();
-    Workbook workbook = transformer.transformXLS(new ClassPathResource(
-        "cn/bc/template/excel/chart_fixedSize.xls").getInputStream(),
-      markerValues);
-    Assert.assertNotNull(workbook);
+    // 读取模板
+    InputStream in = new ClassPathResource("cn/bc/template/excel/chart_fixedSize.xls").getInputStream();
 
-    workbook.write(new FileOutputStream(new File("/t/chart_fixedSize.xls")));
+    // 格式化模板
+    File fileOut = new File("target/excel/chart_fixedSize.xls");
+    if (fileOut.exists()) fileOut.delete();
+    XlsUtils.formatTo(
+      in,
+      new FileOutputStream(fileOut),
+      markerValues
+    );
+    Assert.assertTrue(fileOut.exists());
+    Assert.assertTrue(fileOut.length() > 0);
   }
 
   @Test
@@ -112,16 +117,17 @@ public class XlsUtilsTest {
     markerValues.put("rowDatas", rowDatas);
 
     // 读取模板
-    InputStream in = new ClassPathResource(
-      "cn/bc/template/excel/chart_dynamic.xls").getInputStream();
-    // System.out.println(XlsUtils.loadText(in));
+    InputStream in = new ClassPathResource("cn/bc/template/excel/chart_dynamic.xls").getInputStream();
 
-    // 格式化Excel模板
-    XLSTransformer transformer = new XLSTransformer();
-    Workbook workbook = transformer.transformXLS(in, markerValues);
-    Assert.assertNotNull(workbook);
-
-    // 导出为文件
-    workbook.write(new FileOutputStream(new File("/t/chart_dynamic.xls")));
+    // 格式化模板
+    File fileOut = new File("target/excel/chart_dynamic.xls");
+    if (fileOut.exists()) fileOut.delete();
+    XlsUtils.formatTo(
+      in,
+      new FileOutputStream(fileOut),
+      markerValues
+    );
+    Assert.assertTrue(fileOut.exists());
+    Assert.assertTrue(fileOut.length() > 0);
   }
 }

@@ -138,16 +138,14 @@ public class TemplateFileAction extends ActionSupport {
         //xls
       } else if (typeCode.equals("xls")) {
         params = getParams(template);
-        HSSFWorkbook xls = XlsUtils.format(inputStream, params);
-        xls.write(out);
+        XlsUtils.formatTo(inputStream, out, params);
         this.inputStream = new ByteArrayInputStream(out.toByteArray());
         out.close();
         this.contentLength = this.inputStream.available();
         //xlsx
       } else if (typeCode.equals("xlsx")) {
         params = getParams(template);
-        XSSFWorkbook xlsx = XlsxUtils.format(inputStream, params);
-        xlsx.write(out);
+        XlsxUtils.formatTo(inputStream, out, params);
         this.inputStream = new ByteArrayInputStream(out.toByteArray());
         out.close();
         this.contentLength = this.inputStream.available();
@@ -295,15 +293,13 @@ public class TemplateFileAction extends ActionSupport {
           //xls
         } else if (typeCode.equals("xls")) {
           params = getParams(template);
-          HSSFWorkbook xls = XlsUtils.format(inputStream, params);
-          xls.write(out);
+          XlsUtils.formatTo(inputStream, out, params);
           is = new ByteArrayInputStream(out.toByteArray());
           out.close();
           //xlsx
         } else if (typeCode.equals("xlsx")) {
           params = getParams(template);
-          XSSFWorkbook xlsx = XlsxUtils.format(inputStream, params);
-          xlsx.write(out);
+          XlsxUtils.formatTo(inputStream, out, params);
           is = new ByteArrayInputStream(out.toByteArray());
           out.close();
           //html

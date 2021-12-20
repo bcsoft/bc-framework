@@ -4,7 +4,6 @@
 package cn.bc.template.util;
 
 import cn.bc.core.util.TemplateUtils;
-import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -77,37 +77,8 @@ public class XlsUtils {
     return TemplateUtils.findMarkers(loadText(is));
   }
 
-  /**
-   * 格式化文档
-   *
-   * @param is
-   * @param markerValues 格式化参数
-   * @return 返回格式化后的文档
-   */
-  public static HSSFWorkbook format(InputStream is,
-                                    Map<String, Object> markerValues) {
-    HSSFWorkbook document = loadDocument(is);
-    return format(document, markerValues);
-  }
-
-  /**
-   * 格式化文档：使用jxls组件的XLSTransformer
-   *
-   * @param workbook
-   * @param markerValues 格式化参数
-   * @return 返回格式化后的文档
-   */
-  public static HSSFWorkbook format(HSSFWorkbook workbook,
-                                    Map<String, Object> markerValues) {
-    if (workbook == null) {
-      if (logger.isWarnEnabled())
-        logger.warn("format error:document is null");
-      return null;
-    }
-
-    XLSTransformer transformer = new XLSTransformer();
-    transformer.transformWorkbook(workbook, markerValues);
-    return workbook;
+  public static void formatTo(InputStream is, OutputStream out, Map<String, Object> args) {
+    XlsxUtils.formatTo(is, out, args);
   }
 
   // 加载文档
