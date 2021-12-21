@@ -29,6 +29,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  * WebUI的辅助函数库
@@ -176,6 +179,23 @@ public class WebUtils implements ServletContextAware {
       _fileName = srcFileName;
     }
     return _fileName;
+  }
+
+  /**
+   * Build a http 'Content-Disposition' header value.
+   *
+   * Return a value with pattern `$type; filename="...ISO_8859_1..." filename*="...UTF-8..."`.
+   */
+  public static String  buildContentDisposition(String type, String filename) {
+    String filename8859 = new String(filename.getBytes(), ISO_8859_1);
+    try {
+      String filenameUtf8 = URLEncoder.encode(filename, "UTF-8");
+      return type +
+        "; filename=\"" + filename8859 + "\"" +
+        "; filename*=\"UTF-8''" + filenameUtf8 + "\"";
+    } catch (UnsupportedEncodingException e) {
+      throw new CoreException(e.getMessage(), e);
+    }
   }
 
   /**
