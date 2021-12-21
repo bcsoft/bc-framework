@@ -6,7 +6,6 @@ import cn.bc.core.util.DateUtils;
 import cn.bc.web.struts2.event.ExportViewDataEvent;
 import cn.bc.web.ui.html.grid.*;
 import cn.bc.web.util.WebUtils;
-import org.apache.struts2.ServletActionContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -54,12 +53,10 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
     Date startTime = new Date();
     // 确定下载文件的名称(解决跨浏览器中文文件名乱码问题)
     if (this.fileName == null || this.fileName.length() == 0) this.fileName = this.getDefaultExportFileName();
-
     String title = this.fileName;
-    this.fileName = WebUtils.encodeFileName(ServletActionContext.getRequest(), this.fileName);
 
-    // 确定下载文件处理方法
-    this.contentDisposition = "attachment;filename=\"" + fileName + ".xls\"";// 以附件方式下载
+    // 确定下载文件处理方法：以附件方式下载
+    this.contentDisposition = createContentDisposition(title);
 
     if (logger.isDebugEnabled()) {
       logger.debug("exportKeys=" + exportKeys);
@@ -100,6 +97,14 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
     // 163下载.html：text/html
     // 163下载.rar|.reg：application/octet-stream
     // application/x-msdownload
+  }
+
+  protected String createContentDisposition(String fileName) {
+    String name;
+    if (fileName == null || fileName.isEmpty()) name = "Export.xlsx";
+    else if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) name = fileName;
+    else name = fileName + ".xlsx";
+    return WebUtils.buildContentDisposition("attachment", name);
   }
 
   /**
