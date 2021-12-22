@@ -15,6 +15,9 @@
   <scm>
     <url>https://github.com/bcsoft/bc-framework.git</url>
   </scm>
+  <properties>
+    <bc-framework-upgrade.version>4.4.5</bc-framework-upgrade.version>
+  </properties>
   <dependencyManagement>
     <dependencies>
       <!-- 平台通用 -->
@@ -36,7 +39,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-core</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>4.4.4</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>
@@ -146,7 +149,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-report</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${bc-framework-upgrade.version}</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>
@@ -171,7 +174,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-template</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${bc-framework-upgrade.version}</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>
@@ -181,7 +184,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-web</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${bc-framework-upgrade.version}</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>
@@ -191,7 +194,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-web-struts2</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${bc-framework-upgrade.version}</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>

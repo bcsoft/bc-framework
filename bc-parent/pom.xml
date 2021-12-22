@@ -52,7 +52,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-framework-bom</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${revision}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
