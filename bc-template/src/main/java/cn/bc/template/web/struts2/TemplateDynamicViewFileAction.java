@@ -170,13 +170,11 @@ public class TemplateDynamicViewFileAction extends ActionSupport {
           this.inputStream = new ByteArrayInputStream(out.toByteArray());
           //xls
         } else if (typeCode.equals("xls")) {
-          HSSFWorkbook xls = XlsUtils.format(getInputStream(), params);
-          xls.write(out);
+          XlsUtils.formatTo(getInputStream(), out, params);
           this.inputStream = new ByteArrayInputStream(out.toByteArray());
           //xlsx
         } else if (typeCode.equals("xlsx")) {
-          XSSFWorkbook xlsx = XlsxUtils.format(getInputStream(), params);
-          xlsx.write(out);
+          XlsxUtils.formatTo(getInputStream(), out, params);
           this.inputStream = new ByteArrayInputStream(out.toByteArray());
           //html
         } else if (typeCode.equals("html")) {
@@ -237,13 +235,11 @@ public class TemplateDynamicViewFileAction extends ActionSupport {
           is = new ByteArrayInputStream(out.toByteArray());
           //xls
         } else if (typeCode.equals("xls")) {
-          HSSFWorkbook xls = XlsUtils.format(getInputStream(), params);
-          xls.write(out);
+          XlsUtils.formatTo(getInputStream(), out, params);
           is = new ByteArrayInputStream(out.toByteArray());
           //xlsx
         } else if (typeCode.equals("xlsx")) {
-          XSSFWorkbook xlsx = XlsxUtils.format(getInputStream(), params);
-          xlsx.write(out);
+          XlsxUtils.formatTo(getInputStream(), out, params);
           is = new ByteArrayInputStream(out.toByteArray());
           //html
         } else if (typeCode.equals("html")) {
@@ -266,8 +262,7 @@ public class TemplateDynamicViewFileAction extends ActionSupport {
       }
 
       //文件输出
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-        BUFFER);
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream(BUFFER);
       if (officeConvert) {
         // convert
         OfficeUtils.convert(is, this.from, outputStream, this.to);
