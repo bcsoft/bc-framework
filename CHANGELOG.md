@@ -1,5 +1,25 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.0 2021-12-24
+
+- 升级 poi-v3 到 v4.1.2
+- 升级 jxls-v2 到 v2.11.0
+- 删除 jxls-v1 及其相关依赖
+- 升级日志组件：
+    - 升级 slf4j 到 v1.7.32
+    - 升级 logback 到 1.2.9
+
+涉及到修改的模块：
+
+- bc-framework-build：升级 poi 3.14 到 4.1.2
+- bc-framework-bom
+- bc-parent：删除 jxls1 依赖，升级 jxls2、slf4j 和 logback
+- bc-web：GridExporter 改用 jxls2 实现
+- bc-web-struts2：优化下载文件的配置及代码
+- bc-template：改用 jxls2 实现原 jxls1 和 poi3 的代码
+- bc-report：移除 jxls 的显式依赖（因其依赖的 bc-template 已依赖好）
+- bc-docs：升级 poi3 代码到 poi4
+
 ## release v4.4.4 (2021-12-17)
 
 - 修正获取 freemarker 模板 key 的正则表达式错误
