@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,7 +38,7 @@ import java.util.*;
  * @author lbj
  */
 public class TemplateServiceImpl extends DefaultCrudService<Template> implements TemplateService {
-  private static Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
   private TemplateDao templateDao;
   private OperateLogService operateLogService;
@@ -151,8 +152,7 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
       if ("word-docx".equals(tpl.getTemplateType().getCode())
         && "docx".equals(extension)) {
-        XWPFDocument docx = DocxUtils
-          .format(is, args);
+        XWPFDocument docx = DocxUtils.format(is, args);
         try {
           docx.write(out);
           out.flush();
@@ -168,39 +168,10 @@ public class TemplateServiceImpl extends DefaultCrudService<Template> implements
 
       } else if ("xls".equals(tpl.getTemplateType().getCode())
         && "xls".equals(extension)) {
-        HSSFWorkbook xls = XlsUtils.format(is, args);
-        try {
-          xls.write(out);
-          out.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-          logger.warn("formatTo 写入数据到流错误：" + e.getMessage());
-        } finally {
-          try {
-            is.close();
-            out.close();
-          } catch (IOException ex) {
-          }
-        }
-
+        XlsUtils.formatTo(is, out, args);
       } else if ("xlsx".equals(tpl.getTemplateType().getCode())
         && "xlsx".equals(extension)) {// Excel2007+
-
-        XSSFWorkbook xlsx = XlsxUtils.format(is, args);
-        try {
-          xlsx.write(out);
-          out.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-          logger.warn("formatTo 写入数据到流错误：" + e.getMessage());
-        } finally {
-          try {
-            is.close();
-            out.close();
-          } catch (IOException ex) {
-          }
-        }
-
+        XlsxUtils.formatTo(is, out, args);
       } else if ("html".equals(tpl.getTemplateType().getCode())
         && "html".equals(extension)) {// html
         String source = FreeMarkerUtils.format(TemplateUtils.loadText(is), args);

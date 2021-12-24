@@ -2,14 +2,13 @@ package cn.bc.web.ui.html.grid;
 
 import cn.bc.core.export.Exporter;
 import cn.bc.core.util.DateUtils;
-import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.jxls.common.Context;
+import org.jxls.util.JxlsHelper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.expression.ExpressionParser;
 
-import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -124,15 +123,15 @@ public class GridExporter implements Exporter {
     Date startTime = new Date();
     if (logger.isDebugEnabled())
       logger.debug("templateFile=" + this.getTemplateFile());
-    XLSTransformer transformer = new XLSTransformer();
     InputStream is = this.getTemplateFile();
     if (is == null)
-      is = new ClassPathResource("cn/bc/web/template/export.xls")
+      is = new ClassPathResource("cn/bc/web/template/export.xlsx")
         .getInputStream();// 使用默认的模板
 
     if (logger.isDebugEnabled())
       logger.debug("exportTo 1:" + DateUtils.getWasteTime(startTime));
-    transformer.transformXLS(is, this.parseData()).write(outputStream);
+
+    JxlsHelper.getInstance().processTemplate(is, outputStream, new Context(this.parseData()));
     if (logger.isDebugEnabled())
       logger.debug("exportTo 2:" + DateUtils.getWasteTime(startTime));
     is.close();
@@ -141,15 +140,15 @@ public class GridExporter implements Exporter {
   }
 
   public void exportTo(String outputFile) throws Exception {
-    XLSTransformer transformer = new XLSTransformer();
-    Workbook workbook = transformer.transformXLS(this.getTemplateFile(),
-      this.parseData());
-    OutputStream os = new BufferedOutputStream(new FileOutputStream(
-      outputFile));
-    workbook.write(os);
+    FileOutputStream targetStream = new FileOutputStream(outputFile);
+    JxlsHelper.getInstance().processTemplate(
+      this.getTemplateFile(),
+      targetStream,
+      new Context(this.parseData())
+    );
     this.getTemplateFile().close();
-    os.flush();
-    os.close();
+    targetStream.flush();
+    targetStream.close();
   }
 
   /**

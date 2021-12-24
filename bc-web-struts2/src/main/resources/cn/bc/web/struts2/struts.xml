@@ -49,8 +49,12 @@
       <result name="deleteSuccess" type="freemarker">/cn/bc/web/struts2/form.delete.success.ftl
       </result>
       <!-- 导出视图数据为Excel文件 -->
-      <result name="export" type="stream"/>
-
+      <result name="export" type="stream">
+        <param name="contentType">${contentType}</param>
+        <param name="inputName">inputStream</param>
+        <param name="contentDisposition">${contentDisposition}</param>
+        <param name="bufferSize">1024</param>
+      </result>
       <!-- 全局异常 -->
       <result name="error" type="freemarker">/cn/bc/web/struts2/error.ftl</result>
     </global-results>

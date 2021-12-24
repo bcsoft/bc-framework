@@ -6,6 +6,7 @@ import cn.bc.docs.domain.Attach;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -246,22 +247,22 @@ public abstract class ImportDataAction extends ActionSupport {
   protected Object getCellValue(Cell cell, String columnName, String fileType) {
     if (cell == null)
       return null;
-    if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 字符串
+    if (cell.getCellType() == CellType.STRING) {// 字符串
       // 列名去空格
       if (cell.getStringCellValue() != null) {
         return cell.getStringCellValue().trim();
       } else {
         return cell.getStringCellValue();
       }
-    } else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {// 布尔
+    } else if (cell.getCellType() == CellType.BOOLEAN) {// 布尔
       return cell.getBooleanCellValue();
-    } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {// 数字
+    } else if (cell.getCellType() == CellType.NUMERIC) {// 数字
       return cell.getNumericCellValue();
-    } else if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+    } else if (cell.getCellType() == CellType.BLANK) {
       return null;
-    } else if (cell.getCellType() == Cell.CELL_TYPE_ERROR) {
+    } else if (cell.getCellType() == CellType.ERROR) {
       return cell.getErrorCellValue();
-    } else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {// 公式
+    } else if (cell.getCellType() == CellType.FORMULA) {// 公式
       return cell.getStringCellValue();
     } else {// 日期
       return cell.getDateCellValue();
@@ -280,7 +281,7 @@ public abstract class ImportDataAction extends ActionSupport {
    * 获取单元格的日期值
    */
   protected Calendar getCellCalendar(Cell cell) {
-    if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {// xls中为日期类型时，jxls对应数字类型
+    if (cell.getCellType() == CellType.NUMERIC) {// xls中为日期类型时，jxls对应数字类型
       Date d = cell.getDateCellValue();
       if (d != null) {
         Calendar c = Calendar.getInstance();
@@ -289,7 +290,7 @@ public abstract class ImportDataAction extends ActionSupport {
       } else {
         return null;
       }
-    } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {// 将字符串转换为数字
+    } else if (cell.getCellType() == CellType.STRING) {// 将字符串转换为数字
       String d = cell.getStringCellValue();
       if (d != null && !d.isEmpty()) {
         return DateUtils.getCalendarEx(d);

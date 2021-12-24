@@ -35,6 +35,11 @@
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
     </dependency>
+    <!-- jxls -->
+    <dependency>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls-poi</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>ooxml-schemas</artifactId>
@@ -79,6 +84,11 @@
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-scratchpad</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -347,18 +347,10 @@ public class Template extends RichFileEntityImpl {
         out.close();
       } else if ("xls".equalsIgnoreCase(this.getTemplateType()
         .getExtension())) {// Excel97-2003
-        HSSFWorkbook xls = XlsUtils.format(this.getInputStream(),
-          params);
-        FileOutputStream out = new FileOutputStream(realpath);
-        xls.write(out);
-        out.close();
+        XlsUtils.formatTo(this.getInputStream(), new FileOutputStream(realpath), params);
       } else if ("xlsx".equalsIgnoreCase(this.getTemplateType()
         .getExtension())) {// Excel2007+
-        XSSFWorkbook xlsx = XlsxUtils.format(this.getInputStream(),
-          params);
-        FileOutputStream out = new FileOutputStream(realpath);
-        xlsx.write(out);
-        out.close();
+        XlsxUtils.formatTo(this.getInputStream(), new FileOutputStream(realpath), params);
       } else if ("html".equalsIgnoreCase(this.getTemplateType()
         .getExtension())) {// html
         String s = FreeMarkerUtils.format(

@@ -3,17 +3,21 @@
  */
 package cn.bc.template.util;
 
+import cn.bc.core.exception.CoreException;
 import cn.bc.core.util.TemplateUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jxls.common.Context;
+import org.jxls.util.JxlsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +84,25 @@ public class XlsxUtils {
     if (is == null)
       return null;
     return TemplateUtils.findMarkers(loadText(is));
+  }
+
+  /**
+   * 格式化 Excel 模板文档到指定的输出流
+   *
+   * @param templateStream Excel模板文档
+   * @param markerValues   格式化参数
+   * @param targetStream   输出流
+   */
+  public static void formatTo(InputStream templateStream, OutputStream targetStream, Map<String, Object> markerValues) {
+    Context context;
+    if (markerValues == null || markerValues.isEmpty()) context = new Context();
+    else context = new Context(markerValues);
+
+    try {
+      JxlsHelper.getInstance().processTemplate(templateStream, targetStream, context);
+    } catch (IOException e) {
+      throw new CoreException(e.getMessage(), e);
+    }
   }
 
   /**
