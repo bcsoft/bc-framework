@@ -16,7 +16,7 @@
     <url>https://github.com/bcsoft/bc-framework.git</url>
   </scm>
   <properties>
-    <bc-cert.version>2.4-SNAPSHOT</bc-cert.version>
+    <bc-cert.version>2.4.0</bc-cert.version>
   </properties>
   <dependencyManagement>
     <dependencies>
