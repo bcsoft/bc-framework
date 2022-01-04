@@ -15,6 +15,9 @@
   <scm>
     <url>https://github.com/bcsoft/bc-framework.git</url>
   </scm>
+  <properties>
+    <bc-cert.version>2.4-SNAPSHOT</bc-cert.version>
+  </properties>
   <dependencyManagement>
     <dependencies>
       <!-- 平台通用 -->
@@ -211,7 +214,7 @@
       <dependency>
         <groupId>cn.bc</groupId>
         <artifactId>bc-cert</artifactId>
-        <version>${bc-framework.version}</version>
+        <version>${bc-cert.version}</version>
       </dependency>
       <dependency>
         <groupId>cn.bc</groupId>
