@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-template</artifactId>
+  <version>4.5.1</version>
   <description>模板管理</description>
   <dependencies>
     <dependency>

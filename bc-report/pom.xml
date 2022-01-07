@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-report</artifactId>
+  <version>4.5.1</version>
   <description>报表管理</description>
   <name>bc-report</name>
   <packaging>jar</packaging>
