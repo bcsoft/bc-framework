@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.1 2022-01-07
+
+- 修正 Jxls 处理 Excel 公式的问题
+    > 同过 .setEvaluateFormulas(true) 来处理
+
 ## release v4.5.0 2021-12-24
 
 - 升级 poi-v3 到 v4.1.2
