@@ -131,7 +131,7 @@ public class GridExporter implements Exporter {
     if (logger.isDebugEnabled())
       logger.debug("exportTo 1:" + DateUtils.getWasteTime(startTime));
 
-    JxlsHelper.getInstance().processTemplate(is, outputStream, new Context(this.parseData()));
+    JxlsHelper.getInstance().setEvaluateFormulas(true).processTemplate(is, outputStream, new Context(this.parseData()));
     if (logger.isDebugEnabled())
       logger.debug("exportTo 2:" + DateUtils.getWasteTime(startTime));
     is.close();
@@ -141,7 +141,7 @@ public class GridExporter implements Exporter {
 
   public void exportTo(String outputFile) throws Exception {
     FileOutputStream targetStream = new FileOutputStream(outputFile);
-    JxlsHelper.getInstance().processTemplate(
+    JxlsHelper.getInstance().setEvaluateFormulas(true).processTemplate(
       this.getTemplateFile(),
       targetStream,
       new Context(this.parseData())

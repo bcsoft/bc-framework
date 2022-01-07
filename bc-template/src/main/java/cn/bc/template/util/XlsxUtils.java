@@ -99,7 +99,7 @@ public class XlsxUtils {
     else context = new Context(markerValues);
 
     try {
-      JxlsHelper.getInstance().processTemplate(templateStream, targetStream, context);
+      JxlsHelper.getInstance().setEvaluateFormulas(true).processTemplate(templateStream, targetStream, context);
     } catch (IOException e) {
       throw new CoreException(e.getMessage(), e);
     }

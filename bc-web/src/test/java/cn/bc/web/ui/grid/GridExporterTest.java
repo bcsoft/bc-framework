@@ -27,7 +27,7 @@ public class GridExporterTest {
     Map<String, Object> map = buildData();
     File fileOut = new File("target/export.xlsx");
     if (fileOut.exists()) fileOut.delete();
-    JxlsHelper.getInstance().processTemplate(
+    JxlsHelper.getInstance().setEvaluateFormulas(true).processTemplate(
       is,
       new FileOutputStream(fileOut),
       new Context(map)

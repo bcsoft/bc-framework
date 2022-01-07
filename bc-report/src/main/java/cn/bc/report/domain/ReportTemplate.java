@@ -588,7 +588,7 @@ public class ReportTemplate extends FileEntityImpl {
       context.putVar(sqlDataKey, sqlData);
 
       // 2.2 生成 Excel 文件
-      JxlsHelper.getInstance().processTemplate(is, os, context);
+      JxlsHelper.getInstance().setEvaluateFormulas(true).processTemplate(is, os, context);
     }
   }
 }
