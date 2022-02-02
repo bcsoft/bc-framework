@@ -666,7 +666,7 @@
         <artifactId>postgresql</artifactId>
         <!-- 9.4.1211 (jdk1.8 jdbc42 2016-09-18), 9.4.1211.jre7 (jdk1.7 jdbc41 2016-09-19), 9.4.1211.jre6 (jdk1.6 jdbc4 2016-09-19) -->
         <!-- 9.3-1102-jdbc41 2014-07-18, 9.3-1102-jdbc4, 9.2-1004-jdbc41, 9.2-1004-jdbc4 -->
-        <version>42.2.2</version>
+        <version>42.2.25</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
