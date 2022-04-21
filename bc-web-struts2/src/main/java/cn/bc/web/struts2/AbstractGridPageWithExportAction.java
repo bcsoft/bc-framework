@@ -34,6 +34,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
   public boolean exporting;// 标记当前处于导出状态
   public String exportKeys;// 要导出列的标识，用逗号连接多个
   public String fileName;// 下载的文件名
+  public String fileType;// 下载的文件类型
   public InputStream inputStream;// 下载文件对应的流
   public String contentType = "application/vnd.ms-excel";// 下载文件类型定义
   public int bufferSize = 4096;
@@ -53,6 +54,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
     Date startTime = new Date();
     // 确定下载文件的名称(解决跨浏览器中文文件名乱码问题)
     if (this.fileName == null || this.fileName.length() == 0) this.fileName = this.getDefaultExportFileName();
+    if (this.fileType == null || this.fileType.length() == 0) this.fileType = this.getDefaultExportFileType();
     String title = this.fileName;
 
     // 确定下载文件处理方法：以附件方式下载
@@ -61,6 +63,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
     if (logger.isDebugEnabled()) {
       logger.debug("exportKeys=" + exportKeys);
       logger.debug("fileName=" + fileName);
+      logger.debug("fileType=" + fileType);
       logger.debug("contentType=" + contentType);
       logger.debug("bufferSize=" + bufferSize);
       logger.debug("contentDisposition=" + contentDisposition);
@@ -85,7 +88,7 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
     this.inputStream = new ByteArrayInputStream(data);
 
     // 发布用户导出数据事件
-    ExportViewDataEvent event = new ExportViewDataEvent(this, getModuleType(), "0", title, "xls", data);
+    ExportViewDataEvent event = new ExportViewDataEvent(this, getModuleType(), "0", title, this.fileType, data);
     this.eventPublisher.publishEvent(event);
 
     return "export";
@@ -191,6 +194,13 @@ public abstract class AbstractGridPageWithExportAction<T extends Object> extends
    */
   protected String getDefaultExportFileName() {
     return getText("export.default.fileName") + getText(StringUtils.uncapitalize(getModuleType()));// 默认的文件名
+  }
+
+  /**
+   * 获取默认的导出文件类型（文件后缀名）
+   */
+  protected String getDefaultExportFileType() {
+    return "xlsx";
   }
 
   @Override
