@@ -641,9 +641,9 @@ public abstract class AbstractGridPageAction<T extends Object> extends
     boolean s = value.startsWith("%");
     boolean e = value.endsWith("%");
     if (s && !e) {
-      return new LikeRightCondition(field, "%" + value);
+      return new LikeRightCondition(field, value);
     } else if (!s && e) {
-      return new LikeLeftCondition(field, value + "%");
+      return new LikeLeftCondition(field, value);
     } else {
       return new LikeCondition(field, value);
     }
