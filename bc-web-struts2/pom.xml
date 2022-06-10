@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-web-struts2</artifactId>
+  <version>4.5.2</version>
   <dependencies>
     <dependency>
       <groupId>ognl</groupId>
