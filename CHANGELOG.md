@@ -1,9 +1,15 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.2 2022-06-10
+
+- 更改默认导出的文件类型为 `xlsx`
+- 修正 `AbstractGridPageAction.buildDefaultLikeCondition` 方法中多余添加的 `%`
+- 修改视图的模糊查询全局默认忽略大小写。
+
 ## release v4.5.1 2022-01-07
 
 - 修正 Jxls 处理 Excel 公式的问题
-    > 同过 .setEvaluateFormulas(true) 来处理
+    > 使用 `.setEvaluateFormulas(true)` 来处理
 
 ## release v4.5.0 2021-12-24
 
