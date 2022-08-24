@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.3 2022-08-24
+
+- 配置 CrudService 默认事务针对任何异常均回滚
+
 ## release v4.5.2 2022-06-10
 
 - 更改默认导出的文件类型为 `xlsx`
