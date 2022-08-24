@@ -20,17 +20,16 @@
   </aop:config>
   <tx:advice id="crudServiceTxAdvice" transaction-manager="transactionManager">
     <tx:attributes>
-      <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
-      <tx:method name="is*" propagation="REQUIRED" read-only="true"/>
-      <tx:method name="had*" propagation="REQUIRED" read-only="true"/>
-      <tx:method name="createQuery" propagation="REQUIRED"
-                 read-only="true"/>
+      <tx:method name="load*" propagation="REQUIRED" read-only="true" rollback-for="Throwable"/>
+      <tx:method name="is*" propagation="REQUIRED" read-only="true" rollback-for="Throwable"/>
+      <tx:method name="had*" propagation="REQUIRED" read-only="true" rollback-for="Throwable"/>
+      <tx:method name="createQuery" propagation="REQUIRED" read-only="true" rollback-for="Throwable"/>
 
-      <tx:method name="save*" propagation="REQUIRED" read-only="false"/>
-      <tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
-      <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
-      <tx:method name="do*" propagation="REQUIRED" read-only="false"/>
-      <tx:method name="add*" propagation="REQUIRED" read-only="false"/>
+      <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="Throwable"/>
+      <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="Throwable"/>
+      <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="Throwable"/>
+      <tx:method name="do*" propagation="REQUIRED" read-only="false" rollback-for="Throwable"/>
+      <tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="Throwable"/>
     </tx:attributes>
   </tx:advice>
 
