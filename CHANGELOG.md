@@ -1,5 +1,10 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.4 2023-05-05
+
+- bc-web 增加从请求信息解析出 Context 的接口 `HttpContextParser`
+- bc-web-struts2 的认证过滤器 `AuthIterceptor` 增加无 cookie-session 下可以自定义从请求解析 Context 的处理
+
 ## release v4.5.3 2022-08-24
 
 - 配置 CrudService 默认事务针对任何异常均回滚
