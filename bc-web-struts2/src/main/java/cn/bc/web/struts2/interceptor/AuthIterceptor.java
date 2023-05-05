@@ -5,6 +5,8 @@ package cn.bc.web.struts2.interceptor;
 
 import cn.bc.Context;
 import cn.bc.ContextHolder;
+import cn.bc.core.util.SpringUtils;
+import cn.bc.web.HttpContextParser;
 import cn.bc.web.util.WebUtils;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
@@ -12,6 +14,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsStatics;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,8 +41,7 @@ public class AuthIterceptor extends CanExcludeInterceptor {
 
   @Override
   public String intercept(ActionInvocation invocation) throws Exception {
-    if (logger.isDebugEnabled())
-      logger.debug("authKey=" + getAuthKey());
+    if (logger.isDebugEnabled()) logger.debug("authKey=" + getAuthKey());
     ActionContext context = invocation.getInvocationContext();
     HttpServletRequest request = (HttpServletRequest) context
       .get(StrutsStatics.HTTP_REQUEST);
@@ -49,11 +51,28 @@ public class AuthIterceptor extends CanExcludeInterceptor {
       HttpSession session = request.getSession();
       Object auth = session.getAttribute(authKey);
       if (auth == null) {
+        try {
+          // 尝试从请求信息解析出 context
+          HttpContextParser parser = SpringUtils.getBean(HttpContextParser.class);
+          Context webContext = parser.parse(request);
+          if (webContext != null) {
+            // 记录到 session
+            session.setAttribute(getAuthKey(), webContext);
+            // 记录到线程变量
+            ContextHolder.set(webContext);
+
+            return invocation.invoke();
+          }
+        } catch (NoSuchBeanDefinitionException e) {
+          logger.warn("缺少 JwtContextParser 实现！");
+        }
+
+        // 其它情况统一返回登录页面
         context.put("bcauth", "false");
         return Action.LOGIN;
       } else {
         // 将系统上下文设置到线程变量
-        this.initContextHolder(request.getSession());
+        this.initContextHolder(session);
         return invocation.invoke();
       }
     } else {
