@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-web</artifactId>
+  <version>4.5.4</version>
   <dependencies>
     <!-- log4j -->
     <dependency>
