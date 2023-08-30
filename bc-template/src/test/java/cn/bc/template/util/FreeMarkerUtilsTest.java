@@ -127,4 +127,23 @@ public class FreeMarkerUtilsTest {
     System.out.println(FreeMarkerUtils.format(tpl, args));
     ;
   }
+
+  @Test
+  public void testEvalJson() {
+    String tpl = "<#assign jsonObjectStr='{\"a\":\"a\", \"b\":\"2\"}'>\n" + 
+        "<#assign m=jsonObjectStr?eval_json>\n" + 
+        "<#list m as k, v>  ${k}=${v}<#sep>\n</#list>";
+    System.out.println("tpl:\n" + tpl);
+    Map<String, Object> args = new HashMap<String, Object>();
+    // args.put("f1", "f1v");
+    System.out.println("result:\n" + FreeMarkerUtils.format(tpl, args));
+    
+    tpl = "<#assign jsonObjectStr='[{\"a\":\"a\", \"b\":\"2\"}]'>\n" + 
+        "<#assign array=jsonObjectStr?eval_json>\n" + 
+        "<#list array as m>\n" + 
+        "  ${m?index}:<#list m as k, v>${k}=${v}<#sep>, </#list>\n" + 
+        "</#list>";
+    System.out.println("tpl:\n" + tpl);
+    System.out.println("result:\n" + FreeMarkerUtils.format(tpl, args));
+  }
 }
