@@ -41,8 +41,8 @@
     <ognl.version>3.1.15</ognl.version>
     <!-- 5.1.0(2021-10-25), 5.0.0(2021-01-13), 4.1.2(2020-02-11), 3.17(2017-09-09), 3.16(2017-04-12), 3.15(2016-09-18), 3.14(2016-03-06) -->
     <poi.version>4.1.2</poi.version>
-    <!-- 2.3.28(2018-03-31), 2.3.23(2015-07-05) -->
-    <freemarker.version>2.3.28</freemarker.version>
+    <!-- 2.3.32(2023-01-07), 2.3.31(2021-02-10), 2.3.28(2018-03-31), 2.3.23(2015-07-05) -->
+    <freemarker.version>2.3.32</freemarker.version>
   </properties>
   <modules>
     <module>bc-framework-bom</module>
