@@ -16,6 +16,19 @@ import java.util.Map;
  */
 public class FreeMarkerUtilsTest {
   @Test
+  public void testFormatNumber() {
+    Map<String, Object> args = new HashMap<String, Object>();
+    args.put("n1", 1234567890);
+    args.put("n", null);
+    Assert.assertEquals("1,234,567,890", FreeMarkerUtils.format("${n1}", args));
+    Assert.assertEquals("1234567890", FreeMarkerUtils.format("${n1?c}", args));
+    Assert.assertEquals("null", FreeMarkerUtils.format("${n?cn}", args));
+    Assert.assertEquals("null", FreeMarkerUtils.format("${notExists?cn}", args));
+    Assert.assertEquals("1,234,567,890.00", FreeMarkerUtils.format("${n1?string(',##0.00')}", args));
+    Assert.assertEquals("￥1,234,567,890.00", FreeMarkerUtils.format("${n1?string.currency}", args));
+  }
+
+  @Test
   public void testFormatByMapParams() {
     String tpl = "${k1}-${k2}";
     Map<String, Object> args = new HashMap<String, Object>();
@@ -142,7 +155,7 @@ public class FreeMarkerUtilsTest {
         "<#assign array=jsonObjectStr?eval_json>\n" + 
         "<#list array as m>\n" + 
         "  ${m?index}:<#list m as k, v>${k}=${v}<#sep>, </#list>\n" + 
-        "</#list>";
+        "</#list>中文";
     System.out.println("tpl:\n" + tpl);
     System.out.println("result:\n" + FreeMarkerUtils.format(tpl, args));
   }
