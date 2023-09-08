@@ -159,4 +159,13 @@ public class FreeMarkerUtilsTest {
     System.out.println("tpl:\n" + tpl);
     System.out.println("result:\n" + FreeMarkerUtils.format(tpl, args));
   }
+
+  @Test
+  public void testDynamicVar() {
+    String tpl = "<#assign my_variable = \"my_value\">${\"my_variable\"?eval}";
+    System.out.println("tpl:\n" + tpl);
+    Map<String, Object> args = new HashMap<String, Object>();
+    // args.put("f1", "f1v");
+    System.out.println("result:\n" + FreeMarkerUtils.format(tpl, args));
+  }
 }
