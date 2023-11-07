@@ -699,8 +699,8 @@
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
         <!-- 20150507: 1.5.2>1.8.2
-             20210916: 1.8.2>1.14.2 -->
-        <version>1.14.2</version>
+             20210916: 1.8.2>1.15.3 -->
+        <version>1.15.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.axis2</groupId>
