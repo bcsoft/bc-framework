@@ -88,13 +88,6 @@
     <!-- Deprecate modules
     <module>bc-websocket</module>
     <module>bc-chat</module>-->
-
-    <!-- Separate modules -->
-    <module>bc-category</module>
-    <module>bc-cert</module>
-    <module>bc-express</module>
-    <module>bc-workflow</module>
-    <module>bc-rest</module>
   </modules>
   <url>https://github.com/bcsoft/bc-framework</url>
   <organization>
