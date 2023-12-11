@@ -1,6 +1,3 @@
-[submodule "bc-cert"]
-	path = bc-cert
-	url = git@github.com:bcsoft/bc-cert.git
 [submodule "bc-express"]
 	path = bc-express
 	url = git@github.com:bcsoft/bc-express.git
