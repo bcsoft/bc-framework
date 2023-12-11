@@ -4,6 +4,3 @@
 [submodule "bc-rest"]
 	path = bc-rest
 	url = git@github.com:bcsoft/bc-rest.git
-[submodule "bc-workflow-examples"]
-	path = bc-workflow-examples
-	url = git@github.com:bcsoft/bc-workflow-examples.git
