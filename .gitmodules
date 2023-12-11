@@ -1,3 +1,0 @@
-[submodule "bc-rest"]
-	path = bc-rest
-	url = git@github.com:bcsoft/bc-rest.git
