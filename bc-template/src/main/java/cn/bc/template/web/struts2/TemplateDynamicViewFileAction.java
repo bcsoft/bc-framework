@@ -245,11 +245,11 @@ public class TemplateDynamicViewFileAction extends ActionSupport {
         } else if (typeCode.equals("html")) {
           //设置html格式的查看
           this.to = ext;
-          bs = FreeMarkerUtils.format(TemplateUtils.loadText(getInputStream()), params).getBytes();
+          bs = FreeMarkerUtils.format(TemplateUtils.loadText(getInputStream()), params).getBytes("UTF-8");
           // 不使用office转换服务
           officeConvert = false;
         } else if (template.isPureText()) {
-          bs = FreeMarkerUtils.format(template.getContentEx(), params).getBytes();
+          bs = FreeMarkerUtils.format(template.getContentEx(), params).getBytes("UTF-8");
           // 不使用office转换服务
           officeConvert = false;
         } else {

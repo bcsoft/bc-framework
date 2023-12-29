@@ -356,12 +356,12 @@ public class Template extends RichFileEntityImpl {
         String s = FreeMarkerUtils.format(
           TemplateUtils.loadText(this.getInputStream()), params);
         FileOutputStream out = new FileOutputStream(realpath);
-        out.write(s.getBytes());
+        out.write(s.getBytes("UTF-8"));
         out.close();
       } else if (this.getTemplateType().isPureText()) {// 纯文本
         String s = this.getContentEx(params);
         FileOutputStream out = new FileOutputStream(realpath);
-        out.write(s.getBytes());
+        out.write(s.getBytes("UTF-8"));
         out.close();
       } else {// 其它类型直接复制附件
         if (logger.isInfoEnabled())
