@@ -1,4 +1,4 @@
--- #### identity 相关 sql 参考 ####
+﻿-- #### identity 相关 sql 参考 ####
 
 -- drop function identity_find_actor_belong_ids(int)
 create or replace function identity_find_actor_belong_ids(actor_id int)
@@ -255,3 +255,75 @@ begin
 end;
 $$ language plpgsql;
 
+/**
+-- 查找 pcode、pname 有异常的 status_ = 0 的 actor
+select * from (
+  select a.id, a.type_, a.code, a.name, a.pcode, a.pname, identity_gen_actor_pcode_pname(a.id) as pcn
+  from bc_identity_actor a
+  where a.status_ = 0
+  order by a.order_
+) t where pcode != pcn[1] or pname != pcn[2];
+
+-- 查找异常的 actor_history 进行修正
+---- 查找 upper、unit、pcode、pname 有异常的 actor.status_ = 0 and current 的 actor_history
+with error_actor_history(
+  id, create_date, end_date, actor_id, actor_type, actor_code, actor_name,
+  unit_id, unit_name, upper_id, upper_name, pcode, pname,
+  r_id, r_type, r_code, r_name, r_unit_id, r_unit_name, r_upper_id, r_upper_name, r_pcode, r_pname
+) as (
+  select id, create_date, end_date, actor_id, actor_type, actor_code, actor_name,
+    unit_id, unit_name, upper_id, upper_name, pcode, pname,
+    r_id, r_type, r_code, r_name, r_unit_id, r_unit_name, r_upper_id, r_upper_name, r_pcode, r_pname
+  from (
+    select t.*, r_pcode_pname[1] as r_pcode, r_pcode_pname[2] as r_pname,
+      a.id as r_id, a.type_ as r_type, a.code as r_code, a.name as r_name, u.name as r_unit_name, d.name as r_upper_name
+    from (
+      select h.*,
+        identity_gen_actor_pcode_pname(h.actor_id) as r_pcode_pname,
+        identity_find_actor_upper_unit_id(h.actor_id) as r_unit_id,
+        identity_find_actor_upper_id(h.actor_id) as r_upper_id
+      from bc_identity_actor_history h
+      inner join bc_identity_actor a on a.id = h.actor_id
+      where h.current and a.status_ = 0
+      order by h.create_date desc
+    ) t
+    left join bc_identity_actor u on u.id = r_unit_id
+    left join bc_identity_actor d on d.id = r_upper_id
+    left join bc_identity_actor a on a.id = actor_id
+  ) t
+  --where t.actor_type != 3
+  where true
+  and (
+    pcode != r_pcode or pname != r_pname
+    or unit_name != r_unit_name
+    or upper_name != r_upper_name
+    or actor_name != r_name
+  )
+)
+-- select array_agg(h.id order by h.id) from error_actor_history h;
+-- select * from error_actor_history h order by h.create_date desc;
+---- 插入新的纠正后的 actor_history: start_date='2024-05-01 00:00:00'
+, new_actor_history(id) as (
+  insert into bc_identity_actor_history (
+    id, pid, current, rank, create_date, start_date, end_date,
+    actor_id, actor_type, actor_code, actor_name,
+    unit_id, unit_name, upper_id, upper_name, pcode, pname
+  )
+  select nextval('core_sequence') as id, h.id as pid, true, 0, now(), '2024-05-01 00:00:00'::timestamp, null,
+    h.r_id, h.r_type, h.r_code, h.r_name,
+    h.r_unit_id, h.r_unit_name, h.r_upper_id, h.r_upper_name, h.r_pcode, h.r_pname
+  from error_actor_history h
+  returning id
+)
+---- 更新错误的 actor_history 的 current=false, end_date='2024-05-01 00:00:00'
+, fixed_actor_history(id) as (
+  update bc_identity_actor_history h1 set
+    current = false, end_date = '2024-05-01 00:00:00'::timestamp
+  from error_actor_history h2
+  where h2.id = h1.id
+  returning h1.id
+) select
+  (select array_agg(id) from error_actor_history) as error_actor_history_ids,
+  (select array_agg(id) from new_actor_history) as new_actor_history_ids,
+  (select array_agg(id) from fixed_actor_history) as fixed_actor_history_ids;
+*/
