@@ -1,4 +1,4 @@
-﻿-- #### identity 相关 sql 参考 ####
+-- #### identity 相关 sql 参考 ####
 
 -- drop function identity_find_actor_belong_ids(int)
 create or replace function identity_find_actor_belong_ids(actor_id int)
@@ -133,6 +133,7 @@ begin
              ) a on a.id = ra.aid;
 end;
 $BODY$ language plpgsql;
+
 /*
 select a.name,r.name,r.code from bc_identity_role r 
 	inner join identity_find_actor_role_ids(100052) b on b.rid = r.id
@@ -141,3 +142,116 @@ select a.name,r.name,r.code from bc_identity_role r
 	inner join identity_find_actor_role_ids('hrj') b on b.rid = r.id
 	inner join bc_identity_actor a on a.id = b.aid;
 */
+
+-- drop function identity_find_actor_upper_id(int)
+-- select * from bc_identity_actor where id = identity_find_actor_upper_id(48607933);
+create or replace function identity_find_actor_upper_id(actor_id int)
+  returns int as
+$$
+  /** 获取 actor 直属上级的ID(单位或部门)
+   *	@param actor_id 单位、部门、岗位或用户的id
+   */
+declare
+  upper_id int := null;
+begin
+  if $1 is null then
+    return null;
+  end if;
+
+  select m.id into upper_id
+  from bc_identity_actor m
+  inner join bc_identity_actor_relation r on r.master_id = m.id and r.type_ = 0
+  inner join bc_identity_actor f on f.id = r.follower_id
+  where f.id = $1
+  and m.type_ in (1, 2); -- 直属上级(单位或部门)
+
+  return upper_id;
+end;
+$$ language plpgsql;
+
+-- drop function identity_find_actor_upper_unit_id(int)
+-- select * from bc_identity_actor where id = identity_find_actor_upper_unit_id(100444);
+-- select * from bc_identity_actor where id = identity_find_actor_upper_unit_id(48607933);
+create or replace function identity_find_actor_upper_unit_id(actor_id int)
+  returns int as
+$$
+  /** 获取 actor 直属单位的ID
+   *	@param actor_id 单位、部门、岗位或用户的id
+   */
+declare
+  upper_type int := null;
+  upper_id int := null;
+  fid int := $1;
+begin
+  if fid is null then
+    return null;
+  end if;
+
+  loop
+    select m.type_, m.id into upper_type, upper_id
+    from bc_identity_actor m
+    inner join bc_identity_actor_relation r on r.master_id = m.id and r.type_ = 0
+    inner join bc_identity_actor f on f.id = r.follower_id
+    where f.id = fid
+    and m.type_ in (1, 2); -- 直属上级(单位或部门)
+
+    if upper_type is null then -- 无 upper 返回 null
+      return null;
+    elsif upper_type = 1 then -- upper 是单位直接返回
+      return upper_id;
+    else -- 其它情况继续向上找
+      fid := upper_id;
+    end if;
+  end loop;
+end;
+$$ language plpgsql;
+
+-- drop function identity_find_actor_uppers(int)
+-- select * from identity_find_actor_uppers(5862) order by deep;
+create or replace function identity_find_actor_uppers(actor_id int)
+  returns table(deep int, id int, type int, code text, name text, cid int) as
+$$
+  /** 获取 actor 隶属的祖先组织（单位或部门）
+   *	@param actor_id 单位、部门、岗位或用户的id
+   */
+begin
+  return query
+  with recursive upper(deep, id, code, name, cid) as (
+    -- 直属组织（单位或部门）
+    select 1 as deep, m.id, m.type_, m.code::text, m.name::text, a.id as cid
+    from bc_identity_actor a
+    inner join bc_identity_actor_relation r on r.follower_id = a.id and r.type_ = 0 -- 隶属关系
+    inner join bc_identity_actor m on m.id = r.master_id and m.type_ in (1, 2) -- 直属单位或部门
+    where a.id = $1
+
+    union all
+
+    -- 递归获取上级的上级
+    select upper.deep + 1, m.id, m.type_, m.code, m.name, r.follower_id
+    from bc_identity_actor_relation r
+    inner join upper on upper.id = r.follower_id and r.type_ = 0 -- 隶属关系
+    inner join bc_identity_actor m on m.id = r.master_id and m.type_ in (1, 2) -- 直属单位或部门
+  ) select * from upper order by deep;
+end;
+$$ language plpgsql;
+
+-- drop function identity_gen_actor_pcode_pname(int)
+-- select identity_gen_actor_pcode_pname(5862);
+create or replace function identity_gen_actor_pcode_pname(actor_id int)
+  returns text[] as
+$$
+  /** 生成 actor 的 pcode、pname 值
+   *	@param actor_id actor 的 id 值
+   *	@return [pcode, pname]
+   */
+declare
+  r text[];
+begin
+  select array[
+    string_agg('[' || p.type || ']' || p.code, '/' order by p.deep desc),
+    string_agg(p.name, '/' order by p.deep desc)
+  ] into r from identity_find_actor_uppers($1) p;
+  return r;
+end;
+$$ language plpgsql;
+
