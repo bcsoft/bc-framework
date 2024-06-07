@@ -10,6 +10,7 @@ import cn.bc.identity.domain.*;
 import cn.bc.identity.service.DutyService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.service.UserService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import org.apache.struts2.ServletActionContext;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用户Action
@@ -74,6 +76,15 @@ public class UserAction extends AbstractActorAction {
   @Override
   protected PageOption buildFormPageOption(boolean editable) {
     return super.buildFormPageOption(editable).setWidth(665).setHeight(600);
+  }
+
+  @Override
+  protected void buildPageButtons(PageOption pageOption, boolean editable) {
+    super.buildPageButtons(pageOption, editable);
+
+    SystemContext context = (SystemContext) this.getContext();
+    if (!this.getE().isNew() && context.hasAnyRole(getText("key.role.bc.user.copy.role")))
+      pageOption.addButton(new ButtonOption(getText("user.copyUserRole"), null, "bc.userForm.openCopyUserRole"));
   }
 
   @Override
@@ -169,5 +180,80 @@ public class UserAction extends AbstractActorAction {
     // 加载可选的职务列表
     this.duties = this.dutyService.createQuery()
       .condition(new OrderCondition("code", Direction.Asc)).list();
+  }
+
+  public String openCopyUserRole() {
+    SystemContext context = (SystemContext) this.getContext();
+    if(!context.hasAnyRole(getText("key.role.bc.user.copy.role")))
+      throw new SecurityException("没有“复制用户角色“的权限！");
+
+    // 加载上级信息
+    super.initBelongs();
+
+    // 加载已拥有的岗位信息
+    this.ownedGroups = this.userService.findMaster(this.getId(),
+      new Integer[]{ActorRelation.TYPE_BELONG},
+      new Integer[]{Actor.TYPE_GROUP});
+
+    // 加载直接分配的角色和从上级继承的角色
+    super.dealRoles4Edit();
+    return SUCCESS;
+  }
+
+  public String doCopyUserRole() {
+    JSONObject json = new JSONObject();
+    try {
+      SystemContext context = (SystemContext) this.getContext();
+      if(!context.hasAnyRole(getText("key.role.bc.user.copy.role")))
+        throw new SecurityException("没有“复制用户角色“的权限！");
+
+      // 加载接收人
+      this.setE(userService.load(this.getId()));
+
+      // 加载上级信息
+      super.initBelongs();
+
+      // 添加复制的角色到账号中
+      Set<Role> roles = null;
+      if (this.assignRoleIds != null && this.assignRoleIds.length() > 0) {
+        roles = new HashSet<>();
+        String[] rids = this.assignRoleIds.split(",");
+        Role r;
+        for (String rid : rids) {
+          r = new Role();
+          r.setId(new Long(rid));
+          roles.add(r);
+        }
+      }
+      if (this.getE().getRoles() != null) {
+        this.getE().getRoles().addAll(roles);
+      } else {
+        this.getE().setRoles(roles);
+      }
+
+      // 添加复制的岗位到账号中
+      Set<Long> groupIds = this.userService.findMaster(this.getId(),
+          new Integer[]{ActorRelation.TYPE_BELONG},
+          new Integer[]{Actor.TYPE_GROUP}).stream()
+        .map(Actor::getId).collect(Collectors.toSet());
+      if (this.assignGroupIds != null && this.assignGroupIds.length() > 0) {
+        String[] gids = this.assignGroupIds.split(",");
+        for (int i = 0; i < gids.length; i++) {
+          groupIds.add(new Long(gids[i]));
+        }
+      }
+
+      // 保存
+      this.userService.save(this.getE(), this.buildBelongIds(), groupIds.stream().toArray(Long[]::new));
+      json.put("success", true);
+      json.put("msg", "权限复制成功");
+    } catch (Exception e) {
+      logger.warn(e.getMessage(), e);
+      json.put("success", false);
+      json.put("msg", e.getMessage());
+    }
+
+    this.json = json.toString();
+    return "json";
   }
 }

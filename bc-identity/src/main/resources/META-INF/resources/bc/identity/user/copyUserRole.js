@@ -1,30 +1,12 @@
-bc.userForm = {
-  init: function (option, readonly) {
-    if (readonly) return;
-
+if (!window['bc']) window['bc'] = {};
+bc.copyUserRole = {
+  init: function () {
     var $form = $(this);
-    //绑定选择上级的按钮事件处理
-    $form.find("#selectBelong").click(function () {
-      var selecteds = $form.find(":input[name='belongIds']").val();
-      bc.identity.selectUnitOrDepartment({
-        selecteds: selecteds,
-        multiple: true,
-        onOk: function (actors) {
-          //单选
-          //$form.find(":input[name='belongNames']").val(actor.name);
-          //$form.find(":input[name='belongIds']").val(actor.id);
 
-          //多选
-          var ids = [], names = [];
-          for (var i = 0; i < actors.length; i++) {
-            ids.push(actors[i].id);
-            names.push(actors[i].name);
-          }
-          $form.find(":input[name='belongNames']").val(names.join(","));
-          $form.find(":input[name='belongIds']").val(ids.join(","));
-        }
-      });
-    });
+    let data = $form.data("data");
+
+    $form.find("input[name='copyFromId']").val(data.id)
+    $form.find("input[name='copyFrom']").val(data.name)
 
     var liTpl = '<li class="horizontal ui-widget-content ui-corner-all ui-state-highlight" data-id="{0}">' +
       '<span class="text">{1}</span>' +
@@ -99,48 +81,55 @@ bc.userForm = {
       $(this).parent().remove();
     });
 
-    //绑定图片的修改
-    $form.find("#portrait").click(function () {
-      bc.image.edit({
-        puid: $form.find(":input[name='e.uid']").val(),
-        ptype: "portrait",
-        onOk: function (json) {
-          //更新图片的连接地址，注意要添加时间戳，应浏览器会缓存img的请求
-          var newImgUrl = bc.root + '/bc/image/download?id=' + json.id + "&ts=" + new Date().getTime();
-          $form.find("#portrait").attr("src", newImgUrl);
+    //绑定添加用户的按钮事件处理
+    $form.find("#selectCopyTo").click(function () {
+      bc.identity.selectUser({
+        multiple: false,
+        history: false,
+        onOk: function (actor) {
+          $form.find("input[name='copyTo']").val(actor.name)
+          $form.find("input[name='copyToId']").val(actor.id)
         }
       });
     });
   },
-  /**保存的处理*/
-  save: function () {
-    $page = $(this);
-    //先将岗位和角色的id合并到隐藏域
-    var ids = [];
-    $page.find("#assignGroups li").each(function () {
-      ids.push($(this).attr("data-id"));
-    });
-    $page.find(":input[name=assignGroupIds]").val(ids.join(","));
-    ids = [];
-    $page.find("#assignRoles li").each(function () {
-      ids.push($(this).attr("data-id"));
-    });
-    $page.find(":input[name=assignRoleIds]").val(ids.join(","));
+  /** 点击确认按钮后的处理函数 */
+  clickOk: function () {
+    var $form = $(this);
 
-    //调用标准的方法执行保存
-    bc.page.save.call(this);
-  },
-  openCopyUserRole:function(){
-    $form = $(this);
-    let copyUserId = $form.find("input[name='e.id']").val()
-    let copyUserName = $form.find("input[name='e.name']").val()
+    if (!bc.validator.validate($form)) return;
 
-    require([`text!${bc.root}/bc/user/openCopyUserRole?id=${copyUserId}`], function success(html) {
-      bc.page.newWin({
-        html: html,
-        mid: `copy-user-role-${copyUserId}`,
-        name: "复制用户权限",
-        data: {id: copyUserId, name: copyUserName}
+    let copyTo = $form.find("input[name='copyTo']").val();
+    let copyFrom = $form.find("input[name='copyFrom']").val();
+    bc.msg.confirm(`确定要复制<b>${copyFrom}</b>用户的岗位和角色给<b>${copyTo}</b>用户吗？`, function () {
+      require(["bc/libs/request"], function success(request) {
+        let id = $form.find("input[name='copyToId']").val();
+        //先将岗位和角色的id合并到隐藏域
+        let assignGroupIds = [], assignRoleIds = [];
+        $form.find("#assignGroups li").each(function () {
+          assignGroupIds.push($(this).attr("data-id"));
+        });
+        $form.find("#assignRoles li").each(function () {
+          assignRoleIds.push($(this).attr("data-id"));
+        });
+
+        request.request({
+          method: "POST",
+          contentType: "application/x-www-form-urlencoded",
+          credentials: "same-origin",
+          url: `${bc.root}/bc/user/doCopyUserRole`,
+          body: `id=${id}&assignGroupIds=${assignGroupIds}&assignRoleIds=${assignRoleIds}`,
+        }).then(result => {
+          result = JSON.parse(result)
+          // 成功执行绑定或解绑操作
+          if (result.success) {
+            bc.msg.slide("权限复制成功");
+            $form.dialog("close");
+          } else bc.msg.info(`权限复制失败：${result.message}`);
+        }).catch(e => {
+          // 提示错误信息
+          bc.msg.info(e.message);
+        });
       });
     });
   }
