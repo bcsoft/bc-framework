@@ -441,7 +441,7 @@ public class ImageUtils {
         // 从配置中计算出间隙
         k = h_cfgs[j].indexOf(":");
         if (k != -1) {
-          _gaps = h_cfgs[j].substring(k + 1).split(" ");
+          _gaps = h_cfgs[j].split(":")[1].split(" ");
         } else {
           _gaps = null;
         }
@@ -463,7 +463,7 @@ public class ImageUtils {
             gaps[2] = Integer.parseInt(_gaps[2]);
             gaps[3] = Integer.parseInt(_gaps[3]);
           } else {
-            throw new CoreException("不支持的间隙配置：" + h_cfgs[j].substring(k + 1));
+            throw new CoreException("不支持的间隙配置：" + h_cfgs[j].split(":")[1]);
           }
         }
 
