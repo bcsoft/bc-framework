@@ -1,5 +1,13 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.5 2024-06-26
+
+- 图片水平合并增加缩放的实现
+- 添加获取 actor 的上级组织(单位或部门)的存储函数
+- 使用 UTF-8 编码获取 bytes 避免 windows 平台中文乱码
+- Downgrade gson to 1.6 to avoid jdk8 error
+- Upgrade to freemarker-2.3.32(2023-01-07)
+
 ## release v4.5.4 2023-05-05
 
 - bc-web 增加从请求信息解析出 Context 的接口 `HttpContextParser`
