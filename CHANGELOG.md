@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.6 2024-06-28
+
+- 添加复制用户权限功能
+
 ## release v4.5.5 2024-06-26
 
 - 图片水平合并增加缩放的实现
