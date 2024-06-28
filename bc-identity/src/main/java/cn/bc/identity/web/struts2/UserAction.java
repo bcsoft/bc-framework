@@ -10,6 +10,7 @@ import cn.bc.identity.domain.*;
 import cn.bc.identity.service.DutyService;
 import cn.bc.identity.service.IdGeneratorService;
 import cn.bc.identity.service.UserService;
+import cn.bc.identity.web.SystemContext;
 import cn.bc.web.ui.html.page.ButtonOption;
 import cn.bc.web.ui.html.page.PageOption;
 import org.apache.struts2.ServletActionContext;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用户Action
@@ -74,6 +76,16 @@ public class UserAction extends AbstractActorAction {
   @Override
   protected PageOption buildFormPageOption(boolean editable) {
     return super.buildFormPageOption(editable).setWidth(665).setHeight(600);
+  }
+
+
+  @Override
+  protected void buildPageButtons(PageOption pageOption, boolean editable) {
+    super.buildPageButtons(pageOption, editable);
+
+    SystemContext context = (SystemContext) this.getContext();
+    if (context.hasAnyRole(getText("key.role.bc.user.copy.role")))
+      pageOption.addButton(new ButtonOption(getText("user.copyUserRole"), null, "bc.userForm.copyUserRole"));
   }
 
   @Override
@@ -169,5 +181,42 @@ public class UserAction extends AbstractActorAction {
     // 加载可选的职务列表
     this.duties = this.dutyService.createQuery()
       .condition(new OrderCondition("code", Direction.Asc)).list();
+  }
+
+  public Long actorId;
+  public String findGroupsAndRoles() {
+    JSONObject json = new JSONObject();
+    try {
+      Actor actor = userService.load(actorId);
+      List<Map<String, Object>> roles = actor.getRoles().stream().map(r -> new HashMap<String, Object>() {{
+        put("id", r.getId());
+        put("name", r.getName());
+      }}).collect(Collectors.toList());
+      // 加载已拥有的岗位信息
+      List<Actor> groupsData = this.userService.findMaster(actorId,
+        new Integer[]{ActorRelation.TYPE_BELONG},
+        new Integer[]{Actor.TYPE_GROUP});
+      List<Map<String, Object>> groups = groupsData.stream().map(r -> new HashMap<String, Object>() {{
+        put("id", r.getId());
+        put("name", r.getName());
+      }}).collect(Collectors.toList());
+
+      // 加载从岗位间接获取的角色信息
+      List<Map<String, Object>> inheritRolesFromGroups = groupsData.stream()
+        .flatMap(ir -> ir.getRoles().stream().map(r -> new HashMap<String, Object>() {{
+          put("id", r.getId());
+          put("name", r.getName());
+        }})).collect(Collectors.toList());
+
+      json.put("roles", roles);
+      json.put("groups", groups);
+      json.put("inheritRolesFromGroups", inheritRolesFromGroups);
+    } catch (Exception e) {
+      logger.warn(e.getMessage(), e);
+      json.put("success", false);
+      json.put("msg", e.getMessage());
+    }
+    this.json = json.toString();
+    return "json";
   }
 }
