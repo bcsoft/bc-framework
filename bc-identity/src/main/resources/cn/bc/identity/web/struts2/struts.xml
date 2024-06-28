@@ -155,6 +155,7 @@
     <action name="paging" class="userAction" method="paging"/>
     <action name="data" class="userAction" method="data"/>
     <action name="export" class="userAction" method="export"/>
+    <action name="findGroupsAndRoles" class="userAction" method="findGroupsAndRoles"/>
   </package>
 
   <package name="selectUnit" extends="bc-default" namespace="/bc">
