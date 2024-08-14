@@ -8,6 +8,7 @@
     <relativePath>../bc-parent</relativePath>
   </parent>
   <artifactId>bc-cache</artifactId>
+  <version>4.5.7</version>
   <description>缓存管理</description>
   <name>bc-cache</name>
   <dependencies>
