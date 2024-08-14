@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.7 2024-08-14
+
+- 修正清空局部缓存失败的问题
+
 ## release v4.5.6 2024-06-28
 
 - 添加复制用户权限功能
