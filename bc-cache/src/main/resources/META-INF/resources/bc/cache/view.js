@@ -23,7 +23,7 @@ bc.cache.view = {
       msg: "确定要清空容器的缓存吗？",
       url: bc.root + "/bc/cache/delContainer",
       data: {
-        containerName: $(this).closest("td").text()
+        containerName: $(this.eventTarget).closest("td").text()
       }
     };
 
@@ -39,8 +39,8 @@ bc.cache.view = {
       msg: "确定要删除缓存吗？",
       url: bc.root + "/bc/cache/delCacheKey",
       data: {
-        containerName: $(this).closest("td").siblings("td[data-column='containerName']").text(),
-        cacheKey: $(this).closest("td").text()
+        containerName: $(this.eventTarget).closest("td").siblings("td[data-column='containerName']").text(),
+        cacheKey: $(this.eventTarget).closest("td").text()
       }
     };
 
