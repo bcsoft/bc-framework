@@ -73,16 +73,16 @@
 					<s:if test="%{type == 4}">
 						<s:property value="name" />
 					</s:if><s:else>
-						<s:set name="owen_user_index" value='0' />
-						<s:set name="owen_group_users" value='""' />
+						<s:set var="owen_user_index" value='0' />
+						<s:set var="owen_group_users" value='""' />
 						<s:iterator var="map" value="owenGroupUserMap">
 							<s:if test="%{id == key}">
 								<s:iterator var="list" value="value">
 									<s:if test="%{#owen_user_index > 0}">
-										<s:set name="owen_group_users" value='%{#owen_group_users+"、"}' />
+										<s:set var="owen_group_users" value='%{#owen_group_users+"、"}' />
 									</s:if>
-									<s:set name="owen_group_users" value='%{#owen_group_users+name}' />
-									<s:set name="owen_user_index" value="%{#owen_user_index+1}" />
+									<s:set var="owen_group_users" value='%{#owen_group_users+name}' />
+									<s:set var="owen_user_index" value="%{#owen_user_index+1}" />
 								</s:iterator>
 							</s:if>
 						</s:iterator>
@@ -101,16 +101,16 @@
 					<s:if test="%{type == 4}">
 						<s:property value="name" />
 					</s:if><s:else>
-						<s:set name="owen_user_index" value='0' />
-						<s:set name="owen_group_users" value='""' />
+						<s:set var="owen_user_index" value='0' />
+						<s:set var="owen_group_users" value='""' />
 						<s:iterator var="map" value="owenGroupUserMap">
 							<s:if test="%{id == key}">
 								<s:iterator var="list" value="value">
 									<s:if test="%{#owen_user_index > 0}">
-										<s:set name="owen_group_users" value='%{#owen_group_users+"、"}' />
+										<s:set var="owen_group_users" value='%{#owen_group_users+"、"}' />
 									</s:if>
-									<s:set name="owen_group_users" value='%{#owen_group_users+name}' />
-									<s:set name="owen_user_index" value="%{#owen_user_index+1}" />
+									<s:set var="owen_group_users" value='%{#owen_group_users+name}' />
+									<s:set var="owen_user_index" value="%{#owen_user_index+1}" />
 								</s:iterator>
 							</s:if>
 						</s:iterator>
@@ -129,16 +129,16 @@
 					<s:if test="%{type == 4}">
 						<s:property value="name" />
 					</s:if><s:else>
-						<s:set name="owen_user_index" value='0' />
-						<s:set name="owen_group_users" value='""' />
+						<s:set var="owen_user_index" value='0' />
+						<s:set var="owen_group_users" value='""' />
 						<s:iterator var="map" value="owenGroupUserMap">
 							<s:if test="%{id == key}">
 								<s:iterator var="list" value="value">
 									<s:if test="%{#owen_user_index > 0}">
-										<s:set name="owen_group_users" value='%{#owen_group_users+"、"}' />
+										<s:set var="owen_group_users" value='%{#owen_group_users+"、"}' />
 									</s:if>
-									<s:set name="owen_group_users" value='%{#owen_group_users+name}' />
-									<s:set name="owen_user_index" value="%{#owen_user_index+1}" />
+									<s:set var="owen_group_users" value='%{#owen_group_users+name}' />
+									<s:set var="owen_user_index" value="%{#owen_user_index+1}" />
 								</s:iterator>
 							</s:if>
 						</s:iterator>
