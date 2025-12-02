@@ -8,6 +8,8 @@ import cn.bc.core.util.FreeMarkerUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,14 +29,31 @@ public class FreeMarkerUtilsTest {
     Assert.assertEquals("1,234,567,890.00", FreeMarkerUtils.format("${n1?string(',##0.00')}", args));
     Assert.assertEquals("￥1,234,567,890.00", FreeMarkerUtils.format("${n1?string.currency}", args));
   }
+  public static class Info {
+    public String p1;
+    private String p2;
+    public String getP2() {
+      return p2;
+    }
+    public void setP2(String p2) {
+      this.p2 = p2;
+    }
+  }
 
   @Test
   public void testFormatByMapParams() {
-    String tpl = "${k1}-${k2}";
-    Map<String, Object> args = new HashMap<String, Object>();
+    // 不能使用 ${k3.p1}
+    String tpl = "${k1}-${k2.p}-${k3.p2}";
+    Map<String, Object> args = new HashMap<>();
     args.put("k1", "v1");
-    args.put("k2", 2);
-    Assert.assertEquals("v1-2", FreeMarkerUtils.format(tpl, args));
+    Map<String, Object> k2 = new HashMap<>();
+    args.put("k2", k2);
+    k2.put("p", 2);
+    Info k3 = new Info();
+    args.put("k3", k3);
+    k3.setP2("3");
+    k3.p1 = "3";
+    Assert.assertEquals("v1-2-3", FreeMarkerUtils.format(tpl, args));
   }
 
   // 日期格式化
@@ -47,6 +66,26 @@ public class FreeMarkerUtilsTest {
     args.put("d", DateUtils.getDate("2012-01-01 12:10:05"));
     Assert.assertEquals("2012-01-01 12:10:05",
       FreeMarkerUtils.format(tpl, args));
+  }
+
+  // 字符转日期再格式化（字符必须为 freemarker 默认的 yyyy-MM-dd 格式）
+  @Test
+  public void testFormatStringDate() {
+    String tpl = "${d?date('MM/dd/yyyy')?string('yyyy年M月d日')}";
+    Map<String, Object> args = new HashMap<String, Object>();
+    args.put("d", "12/01/2020");
+    Assert.assertEquals("2020年12月1日", FreeMarkerUtils.format(tpl, args));
+  }
+
+  // 日期计算
+  @Test
+  public void testDateCalc() {
+    String tpl = "${(d[0..3]?number+3)?c}${d[4..]}";
+
+    // Date类型,不支持Calendar类型
+    Map<String, Object> args = new HashMap<String, Object>();
+    args.put("d", "2025-01-20");
+    Assert.assertEquals("2028-01-20", FreeMarkerUtils.format(tpl, args));
   }
 
   // 日期格式化
