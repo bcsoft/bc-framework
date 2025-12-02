@@ -1,5 +1,9 @@
 ﻿# [BC 平台](https://github.com/bcsoft/bc-framework)变更日志
 
+## release v4.5.8 2025-12-02
+
+- bc-template 加宽选择模板参数的名称列
+
 ## release v4.5.7 2024-08-14
 
 - 修正清空局部缓存失败的问题
