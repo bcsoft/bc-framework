@@ -88,7 +88,7 @@ public class SelectTemplateParamAction extends
     List<Column> columns = new ArrayList<Column>();
     columns.add(new IdColumn4MapKey("a.id", "id"));
     columns.add(new TextColumn4MapKey("a.name", "name",
-      getText("template.name"), 180).setUseTitleFromLabel(true));
+      getText("template.name"), 400).setUseTitleFromLabel(true));
     columns.add(new TextColumn4MapKey("a.desc_", "desc_",
       getText("template.desc")).setUseTitleFromLabel(true));
     columns.add(new TextColumn4MapKey("b.actor_name", "actor_name",
